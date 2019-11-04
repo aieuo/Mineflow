@@ -5,6 +5,7 @@ namespace aieuo\mineflow;
 use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\command\MineflowCommand;
 
 class Main extends PluginBase {
 
@@ -38,6 +39,8 @@ class Main extends PluginBase {
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }
+
+        $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
         $loaded = true;
     }
