@@ -1,0 +1,8 @@
+---
+name: Mineflow
+main: aieuo\mineflow\Main
+version: 0.0.1
+api: 3.0.0
+load: POSTWORLD
+author: aieuo
+...
