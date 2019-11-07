@@ -5,9 +5,52 @@ namespace aieuo\mineflow\action\script;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\action\Action;
 
-abstract class Script extends Action implements ScriptIds {
+abstract class Script implements ScriptIds {
+
+    /** @var string */
+    protected $id;
+
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $description;
+    /** @var string */
+    protected $detail;
+
+    /** @var int */
+    protected $category;
+
+    /** @var string */
+    private $customName;
+
+    public function getId(): string {
+        return $this->id;
+    }
+
+    public function getName(): string {
+        $name = $this->name;
+        if (($name[0] ?? "") === "@") {
+            $name = Language::get(substr($name, 1));
+        }
+        return $name;
+    }
+
+    public function getDescription(): string {
+        $description = $this->description;
+        if (($description[0] ?? "") === "@") {
+            $description = Language::get(substr($description, 1));
+        }
+        return $description;
+    }
+
+    public function getDetail(): string {
+        $detail = $this->detail;
+        if (($detail[0] ?? "") === "@") {
+            $detail = Language::get(substr($detail, 1));
+        }
+        return $detail;
+    }
 
     public function jsonSerialize(): array {
         return [
@@ -15,6 +58,18 @@ abstract class Script extends Action implements ScriptIds {
             "id" => $this->getId(),
             "contents" => $this->serializeContents(),
         ];
+    }
+
+    public function setCustomName(?string $name = null): void {
+        $this->customName = $name;
+    }
+
+    public function getCustomName(): string {
+        return $this->customName ?? $this->getName();
+    }
+
+    public function getCategory(): int {
+        return $this->category;
     }
 
     /**

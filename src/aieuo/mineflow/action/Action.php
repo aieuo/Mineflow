@@ -3,71 +3,28 @@
 namespace aieuo\mineflow\action;
 
 use pocketmine\entity\Entity;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 
-abstract class Action implements \JsonSerializable {
+interface Action extends \JsonSerializable {
 
-    /** @var string */
-    protected $id;
+    public function getId(): string;
 
-    /** @var string */
-    protected $name;
-    /** @var string */
-    protected $description;
-    /** @var string */
-    protected $detail;
+    public function getName(): string;
 
-    /** @var int */
-    protected $category;
+    public function getDescription(): string;
 
-    /** @var string */
-    private $customName;
+    public function getDetail(): string;
 
-    public function getId(): string {
-        return $this->id;
-    }
+    public function setCustomName(?string $name = null): void;
 
-    public function getName(): string {
-        $name = $this->name;
-        if (($name[0] ?? "") === "@") {
-            $name = Language::get(substr($name, 1));
-        }
-        return $name;
-    }
+    public function getCustomName(): string;
 
-    public function getDescription(): string {
-        $description = $this->description;
-        if (($description[0] ?? "") === "@") {
-            $description = Language::get(substr($description, 1));
-        }
-        return $description;
-    }
-
-    public function getDetail(): string {
-        $detail = $this->detail;
-        if (($detail[0] ?? "") === "@") {
-            $detail = Language::get(substr($detail, 1));
-        }
-        return $detail;
-    }
-
-    public function setCustomName(?string $name = null) {
-        $this->customName = $name;
-    }
-
-    public function getCustomName(): string {
-        return $this->customName ?? $this->getName();
-    }
-
-    public function getCategory(): int {
-        return $this->category;
-    }
+    public function getCategory(): int;
 
     /**
      * @param Entity|null
      * @param Recipe|null
      * @return boolean|null
      */
-    abstract public function execute(?Entity $target, ?Recipe $origin = null): ?bool;
+    public function execute(?Entity $target, ?Recipe $origin = null): ?bool;
 }
