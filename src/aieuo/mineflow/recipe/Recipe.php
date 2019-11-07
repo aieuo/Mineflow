@@ -127,7 +127,7 @@ class Recipe implements \JsonSerializable {
         return [
             "name" => $this->name,
             "actions" => $this->actions,
-            "targetType" => $this->target,
+            "targetType" => $this->targetType,
             "targetOptions" => $this->targetOptions
         ];
     }
