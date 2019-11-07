@@ -5,6 +5,7 @@ namespace aieuo\mineflow\formAPI;
 use pocketmine\utils\TextFormat;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
+use aieuo\mineflow\utils\Language;
 
 abstract class Form implements PMForm {
 

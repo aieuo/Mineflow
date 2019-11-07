@@ -5,8 +5,20 @@ namespace aieuo\mineflow\recipe;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\Player;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\action\script\Script;
+use aieuo\mineflow\action\process\Process;
+use aieuo\mineflow\action\Action;
+use aieuo\mineflow\utils\Logger;
 
 class Recipe implements \JsonSerializable {
+
+    const BLOCK = 0;
+    const COMMAND = 1;
+    const EVENT = 2;
+    const CHAIN = 3;
+    const FORM = 4;
+
     const CONTENT_TYPE_PROCESS = "action";
     const CONTENT_TYPE_CONDITION = "condition";
     const CONTENT_TYPE_SCRIPT = "script";
@@ -130,5 +142,27 @@ class Recipe implements \JsonSerializable {
             "targetType" => $this->targetType,
             "targetOptions" => $this->targetOptions
         ];
+    }
+
+    public function parseFromSaveData(array $datas): ?self {
+        foreach ($datas as $i => $content) {
+            switch ($content["type"]) {
+                case self::CONTENT_TYPE_PROCESS:
+                    $action = Process::parseFromSaveDataStatic($content);
+                    break;
+                case self::CONTENT_TYPE_SCRIPT:
+                    $action = Script::parseFromSaveDataStatic($content);
+                    break;
+                default:
+                    return null;
+            }
+            if ($action === null) {
+                Logger::warning(Language::get("recipe.load.faild.action", [$i, $content["id"] ?? "null", implode(",", $content["contents"] ?? ["null"])]));
+                return null;
+            }
+
+            $this->addAction($action);
+        }
+        return $this;
     }
 }

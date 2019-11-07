@@ -30,7 +30,10 @@ abstract class Process extends Action implements ProcessIds {
 
     public static function parseFromSaveDataStatic(array $content): ?self {
         $process = ProcessFactory::get($content["id"]);
-        if ($process === null) return null;
+        if ($process === null) {
+            Logger::warning(Language::get("action.not.found", [$content["id"]]));
+            return null;
+        }
 
         return $process->parseFromSaveData($content["contents"]);
     }
