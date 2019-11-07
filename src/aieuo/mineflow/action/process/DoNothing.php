@@ -22,6 +22,14 @@ class DoNothing extends Process {
         return true;
     }
 
+    public function isDataValid(): bool {
+        return true;
+    }
+
+    public function parseFromSaveData(array $content): ?Process {
+        return $this;
+    }
+
     public function serializeContents(): array {
         return [];
     }

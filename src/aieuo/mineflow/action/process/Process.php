@@ -19,7 +19,25 @@ abstract class Process extends Action implements ProcessIds {
     }
 
     /**
+     * @return boolean
+     */
+    abstract public function isDataValid(): bool;
+
+    /**
      * @return array
      */
     abstract public function serializeContents(): array;
+
+    public static function parseFromSaveDataStatic(array $content): ?self {
+        $process = ProcessFactory::get($content["id"]);
+        if ($process === null) return null;
+
+        return $process->parseFromSaveData($content["contents"]);
+    }
+
+    /**
+     * @param array $content
+     * @return Process|null
+     */
+    abstract public function parseFromSaveData(array $content): ?Process;
 }

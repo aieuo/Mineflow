@@ -7,6 +7,11 @@ class ProcessFactory {
 
     public static function init(): void {
         self::register(new DoNothing);
+        self::register(new SendMessage);
+        self::register(new SendTip);
+        self::register(new SendPopup);
+        self::register(new SendBroadcastMessage);
+        self::register(new SendMessageToOp);
     }
 
     /**
