@@ -45,6 +45,9 @@ class Recipe implements \JsonSerializable {
     /** @var array */
     private $targetOptions = [];
 
+    /** @var array */
+    private $triggers = [];
+
     public function __construct(string $name) {
         $this->name = $name;
     }
@@ -82,7 +85,7 @@ class Recipe implements \JsonSerializable {
         return $this->actions;
     }
 
-    public function setTarget(int $type, array $options) {
+    public function setTarget(int $type, array $options): void {
         $this->targetType = $type;
         $this->targetOptions = $options;
     }
@@ -139,9 +142,14 @@ class Recipe implements \JsonSerializable {
         return [
             "name" => $this->name,
             "actions" => $this->actions,
+            "triggers" => $this->triggers,
             "targetType" => $this->targetType,
             "targetOptions" => $this->targetOptions
         ];
+    }
+
+    public function save(string $dir): void {
+        file_put_contents($dir.$this->getName().".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 
     public function parseFromSaveData(array $datas): ?self {

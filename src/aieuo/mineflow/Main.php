@@ -5,7 +5,7 @@ namespace aieuo\mineflow;
 use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\manager\BlockRecipeManager;
+use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\action\script\ScriptFactory;
@@ -21,6 +21,9 @@ class Main extends PluginBase {
 
     /** @var bool */
     private $loaded = false;
+
+    /** @var RecipeManager */
+    private $recipeManager;
 
     public static function getInstance(): ?self {
         return self::$instance;
@@ -50,21 +53,21 @@ class Main extends PluginBase {
         ProcessFactory::init();
         ConditionFactory::init();
 
-        $this->blockRecipe = new BlockRecipeManager($this);
+        $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
 
         $this->loaded = true;
     }
 
     public function onDisable() {
         if (!$this->loaded) return;
-        $this->blockRecipe->saveAll();
+        $this->recipeManager->saveAll();
     }
 
     public function getConfig(): Config {
         return $this->config;
     }
 
-    public function getBlockRecipeManager(): BlockRecipeManager {
-        return $this->blockRecipe;
+    public function getRecipeManager(): RecipeManager {
+        return $this->recipeManager;
     }
 }
