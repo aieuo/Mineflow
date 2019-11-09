@@ -179,11 +179,11 @@ class RecipeForm {
                         $this->sendChangeName($player, $recipe);
                         break;
                     case 2:
-                        $this->sendConfirmDelete($player, $recipe->getName(), function (bool $result) use ($player, $recipe) {
+                        $this->sendConfirmDelete($player, $recipe, function (bool $result) use ($player, $recipe) {
                             if ($result) {
                                 $manager = Main::getInstance()->getRecipeManager();
                                 $manager->remove($recipe->getName());
-                                $this->sendMenu($player, ["@form.recipe.delete.success"]);
+                                $this->sendMenu($player, ["@form.delete.success"]);
                             } else {
                                 $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
                             }
@@ -198,7 +198,7 @@ class RecipeForm {
             })->addArgs($recipe)->addMessages($messages)->show($player);
     }
 
-    public function sendActionList(Player $player, Recipe $recipe) {
+    public function sendActionList(Player $player, Recipe $recipe, array $messages = []) {
         $actions = $recipe->getActions();
 
         $buttons = [new Button("@form.back"), new Button("@form.recipe.actions.add")];
@@ -206,7 +206,7 @@ class RecipeForm {
             $buttons[] = new Button($action->getDetail());
         }
 
-        (new ListForm("@form.recipe.actions.title"))
+        (new ListForm(Language::get("form.recipe.actions.title", [$recipe->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $actions) {
@@ -222,8 +222,9 @@ class RecipeForm {
                 $data -= 2;
 
                 $action = $actions[$data];
+                Session::getSession($player)->set("actions_selected", $data);
                 (new ActionForm)->sendAddedActionMenu($player, $recipe, $action);
-            })->addArgs($recipe, $actions)->show($player);
+            })->addArgs($recipe, $actions)->addMessages($messages)->show($player);
     }
 
     public function sendChangeName(Player $player, Recipe $recipe, ?string $default = null, string $error = null) {
@@ -262,14 +263,14 @@ class RecipeForm {
             })->addArgs($recipe)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, string $name, callable $callback) {
-        (new ModalForm("@form.recipe.delete.title"))
-            ->setContent(Language::get("form.recipe.delete.content", [$name]))
+    public function sendConfirmDelete(Player $player, Recipe $recipe, callable $callback) {
+        (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
+            ->setContent(Language::get("form.confirmDelete", [$recipe->getName()]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, string $nam, callable $callback) {
+            ->onRecive(function (Player $player, ?bool $data, callable $callback) {
                 if ($data === null) return;
                 call_user_func_array($callback, [$data]);
-            })->addArgs($name, $callback)->show($player);
+            })->addArgs($callback)->show($player);
     }
 }
