@@ -24,6 +24,10 @@ class ActionForm {
 
                 switch ($data) {
                     case 0:
+                        $action->getEditForm()
+                            ->addArgs($recipe, $action)
+                            ->onRecive([$this, "onUpdateAction"])
+                            ->show($player);
                         break;
                     case 1:
                         $this->sendConfirmDelete($player, $action, function ($result) use ($player, $recipe, $action) {
@@ -41,6 +45,30 @@ class ActionForm {
                         break;
                 }
             })->addArgs($recipe, $action)->addMessages($messages)->show($player);
+    }
+
+    public function onUpdateAction(Player $player, ?array $data, Recipe $recipe, Action $action) {
+        if ($data === null) return;
+
+        $datas = $action->parseFromFormData($data);
+        if ($datas["cancel"]) {
+            $this->sendAddedActionMenu($player, $recipe, $action, ["@form.cancelled"]);
+            return;
+        }
+
+        if ($datas["status"] === false) {
+            $action->getEditForm($data, $datas["errors"])
+                ->addArgs($recipe, $action)
+                ->onRecive([$this, "onUpdateAction"])
+                ->show($player);
+            return;
+        }
+        $action->parseFromSaveData($datas["contents"]);
+        $this->sendAddedActionMenu($player, $recipe, $action, ["@form.changed"]);
+    }
+
+    public function selectAction(Player $player, Recipe $recipe) {
+
     }
 
     public function sendConfirmDelete(Player $player, Action $action, callable $callback) {

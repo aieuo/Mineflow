@@ -4,7 +4,10 @@ namespace aieuo\mineflow\action\process;
 
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\Action;
+use aieuo\mineflow\FormAPI\element\Toggle;
 
 abstract class Process implements Action, ProcessIds {
 
@@ -79,6 +82,18 @@ abstract class Process implements Action, ProcessIds {
      * @return boolean
      */
     abstract public function isDataValid(): bool;
+
+    public function getEditForm(array $default = [], array $errors = []) {
+        return (new CustomForm($this->getName()))
+            ->setContents([
+                new Label($this->getDescription()),
+                new Toggle("@form.cancelAndBack")
+            ])->addErrors($errors);
+    }
+
+    public function parseFromFormData(array $data): array {
+        return ["status" => true, "contents" => [], "cancel" => $data[1], "errors" => []];
+    }
 
     /**
      * @return array
