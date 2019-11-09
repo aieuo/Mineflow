@@ -76,4 +76,14 @@ class RecipeManager {
             $recipe->save($this->getSaveDir());
         }
     }
+
+    public function getNotDuplicatedName(string $name): string {
+        if (!$this->exists($name)) return $name;
+        $count = 2;
+        while ($this->exists($name." (".$count.")")) {
+            $count ++;
+        }
+        $name = $name." (".$count.")";
+        return $name;
+    }
 }

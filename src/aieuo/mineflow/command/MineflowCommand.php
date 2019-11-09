@@ -2,10 +2,21 @@
 
 namespace aieuo\mineflow\command;
 
-use aieuo\mineflow\command\subcommand\LanguageCommand;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
+use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\ui\HomeForm;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\command\subcommand\LanguageCommand;
+use aieuo\mineflow\action\process\SendTip;
+use aieuo\mineflow\action\process\SendPopup;
+use aieuo\mineflow\action\process\SendMessageToOp;
+use aieuo\mineflow\action\process\SendMessage;
+use aieuo\mineflow\action\process\SendBroadcastMessage;
+use aieuo\mineflow\action\process\ProcessFactory;
+use aieuo\mineflow\action\process\Process;
+use aieuo\mineflow\Main;
 
 class MineflowCommand extends Command {
 
@@ -18,7 +29,7 @@ class MineflowCommand extends Command {
         if (!$this->testPermission($sender)) return;
 
         if (!isset($args[0]) and $sender instanceof Player) {
-            // TODO: フォーム送信
+            (new HomeForm)->sendMenuForm($sender);
             return;
         } elseif (!isset($args[0])) {
             $sender->sendMessage(Language::get("command.mineflow.usage.console"));
@@ -34,7 +45,7 @@ class MineflowCommand extends Command {
                     $sender->sendMessage(Language::get("command.mineflow.usage.console"));
                     return true;
                 }
-                // TODO: フォーム送信
+                (new HomeForm)->sendMenuForm($sender);
                 break;
         }
     }

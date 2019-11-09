@@ -45,13 +45,13 @@ class CustomForm extends Form {
     }
 
     public function reflectErrors(array $form): array {
-        if (!empty($this->messages) and !empty($this->contents)) {
-            $form["content"][0]->setText(implode("\n", array_keys($this->messages))."\n".$form["content"][0]->getText());
-        }
         for ($i=0; $i<count($form["content"]); $i++) {
             if (empty($this->highlights[$i])) continue;
             $content = $form["content"][$i];
             $content->setText("§e".preg_replace("/§[a-f0-9]/", "", $content->getText()));
+        }
+        if (!empty($this->messages) and !empty($this->contents)) {
+            $form["content"][0]->setText(implode("\n", array_keys($this->messages))."\n".$form["content"][0]->getText());
         }
         return $form;
     }
