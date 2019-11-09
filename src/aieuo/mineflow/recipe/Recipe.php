@@ -81,6 +81,9 @@ class Recipe implements \JsonSerializable {
         $this->actions = array_merge($this->actions);
     }
 
+    /**
+     * @return Action[]
+     */
     public function getActions(): array {
         return $this->actions;
     }

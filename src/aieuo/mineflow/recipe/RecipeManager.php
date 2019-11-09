@@ -42,7 +42,7 @@ class RecipeManager {
             );
             var_dump($recipe, $recipe->getDetail());
 
-            $this->add($recipe);
+            $this->add($recipe, false);
         }
     }
 
@@ -50,8 +50,11 @@ class RecipeManager {
         return isset($this->recipes[$name]);
     }
 
-    public function add(Recipe $recipe): void {
+    public function add(Recipe $recipe, bool $createFile = true): void {
         $this->recipes[$recipe->getName()] = $recipe;
+        if ($createFile and !file_exists($this->getSaveDir().$recipe->getName().".json")) {
+            $recipe->save($this->getSaveDir());
+        }
     }
 
     public function get(string $name): ?Recipe {
@@ -85,5 +88,14 @@ class RecipeManager {
         }
         $name = $name." (".$count.")";
         return $name;
+    }
+
+    public function rename(string $recipeName, string $newName): void {
+        if (!$this->exists($recipeName)) return;
+        $recipe = $this->get($recipeName);
+        $recipe->setName($newName);
+        unset($this->recipes[$recipeName]);
+        $this->recipes[$newName] = $recipe;
+        rename($this->getSaveDir().$recipeName.".json", $this->saveDir.$newName.".json");
     }
 }

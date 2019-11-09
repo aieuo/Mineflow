@@ -16,6 +16,7 @@ use aieuo\mineflow\action\process\SendMessage;
 use aieuo\mineflow\action\process\SendBroadcastMessage;
 use aieuo\mineflow\action\process\ProcessFactory;
 use aieuo\mineflow\action\process\Process;
+use aieuo\mineflow\command\subcommand\RecipeCommand;
 use aieuo\mineflow\Main;
 
 class MineflowCommand extends Command {
@@ -29,7 +30,7 @@ class MineflowCommand extends Command {
         if (!$this->testPermission($sender)) return;
 
         if (!isset($args[0]) and $sender instanceof Player) {
-            (new HomeForm)->sendMenuForm($sender);
+            (new HomeForm)->sendMenu($sender);
             return;
         } elseif (!isset($args[0])) {
             $sender->sendMessage(Language::get("command.mineflow.usage.console"));
@@ -40,12 +41,19 @@ class MineflowCommand extends Command {
             case "language":
                 (new LanguageCommand)->execute($sender, $args);
                 break;
+            case "recipe":
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.noconsole"));
+                    return true;
+                }
+                (new RecipeCommand)->execute($sender, $args);
+                break;
             default:
                 if (!($sender instanceof Player)) {
                     $sender->sendMessage(Language::get("command.mineflow.usage.console"));
                     return true;
                 }
-                (new HomeForm)->sendMenuForm($sender);
+                (new HomeForm)->sendMenu($sender);
                 break;
         }
     }

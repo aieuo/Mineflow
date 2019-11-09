@@ -49,6 +49,8 @@ class Main extends PluginBase {
 
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+
         ScriptFactory::init();
         ProcessFactory::init();
         ConditionFactory::init();

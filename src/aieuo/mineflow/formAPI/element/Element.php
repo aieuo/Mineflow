@@ -36,7 +36,7 @@ abstract class Element implements \JsonSerializable {
      * @return string
      */
     public function checkTranslate(string $text): string {
-        $text = preg_replace_callback("/@([a-zA-Z.]+)/", function ($matches) {
+        $text = preg_replace_callback("/@([a-zA-Z0-9.]+)/", function ($matches) {
             return Language::get($matches[1]);
         }, $text);
         return $text;

@@ -8,7 +8,7 @@ use aieuo\mineflow\FormAPI\element\Button;
 
 class HomeForm {
 
-    public function sendMenuForm(Player $player) {
+    public function sendMenu(Player $player) {
         (new ListForm("@fome.home.title"))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -18,7 +18,7 @@ class HomeForm {
                 if ($data === null) return;
                 switch ($data) {
                     case 0:
-                        (new RecipeForm)->sendMenuForm($player);
+                        (new RecipeForm)->sendMenu($player);
                         break;
                 }
             })->show($player);
