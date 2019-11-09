@@ -166,6 +166,8 @@ class RecipeForm {
             ->addButtons([
                 new Button("@form.recipe.recipeMenu.editAction"),
                 new Button("@form.recipe.recipeMenu.changeName"),
+                new Button("@form.recipe.recipeMenu.execute"),
+                new Button("@form.recipe.recipeMenu.save"),
                 new Button("@form.delete"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, Recipe $recipe) {
@@ -179,6 +181,13 @@ class RecipeForm {
                         $this->sendChangeName($player, $recipe);
                         break;
                     case 2:
+                        $recipe->execute($player);
+                        break;
+                    case 3:
+                        $recipe->save(Main::getInstance()->getRecipeManager()->getSaveDir());
+                        $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
+                        break;
+                    case 4:
                         $this->sendConfirmDelete($player, $recipe, function (bool $result) use ($player, $recipe) {
                             if ($result) {
                                 $manager = Main::getInstance()->getRecipeManager();
