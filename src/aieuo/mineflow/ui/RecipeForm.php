@@ -226,6 +226,7 @@ class RecipeForm {
                     return;
                 }
                 if ($data === 1) {
+                    (new ActionForm)->selectActionCategory($player, $recipe);
                     return;
                 }
                 $data -= 2;
