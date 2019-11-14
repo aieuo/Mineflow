@@ -11,4 +11,5 @@ interface ProcessIds {
     const SEND_POPUP = "sendPopup";
     const SEND_BROADCAST_MESSAGE = "broadcastMessage";
     const SEND_MESSAGE_TO_OP= "sendMessageToOp";
+    const SEND_TITLE = "sendTitle";
 }
