@@ -9,9 +9,10 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\action\script\Script;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\Action;
+use aieuo\mineflow\action\ActionContainer;
 use aieuo\mineflow\utils\Logger;
 
-class Recipe implements \JsonSerializable {
+class Recipe implements \JsonSerializable, ActionContainer {
 
     const BLOCK = 0;
     const COMMAND = 1;

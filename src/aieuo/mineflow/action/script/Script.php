@@ -86,4 +86,10 @@ abstract class Script implements ScriptIds {
 
         return $script->parseFromSaveData($content["contents"]);
     }
+
+    /**
+     * @param array $content
+     * @return Script|null
+     */
+    abstract public function parseFromSaveData(array $content): ?Script;
 }

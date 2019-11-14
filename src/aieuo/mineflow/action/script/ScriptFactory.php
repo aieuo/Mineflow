@@ -6,6 +6,7 @@ class ScriptFactory {
     private static $list = [];
 
     public static function init(): void {
+        self::register(new IFScript);
     }
 
     /**
