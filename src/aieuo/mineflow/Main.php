@@ -37,6 +37,7 @@ class Main extends PluginBase {
             "language" => $serverLanguage,
         ]);
         $this->config->save();
+        $this->favorites = new Config($this->getDataFolder()."favorites.yml", Config::YAML);
 
         Language::setLanguage($this->config->get("language", "eng"));
         if (!Language::loadMessage()) {
@@ -67,6 +68,10 @@ class Main extends PluginBase {
 
     public function getConfig(): Config {
         return $this->config;
+    }
+
+    public function getFavorites(): Config {
+        return $this->favorites;
     }
 
     public function getRecipeManager(): RecipeManager {

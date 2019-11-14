@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\action\script\Script;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
@@ -54,7 +55,6 @@ class RecipeForm {
                 new Toggle("@form.cancelAndBack"),
             ])->onRecive(function (Player $player, ?array $data, string $defaultName) {
                 if ($data === null) return;
-
                 if ($data[1]) {
                     $this->sendMenu($player);
                     return;
@@ -160,7 +160,7 @@ class RecipeForm {
     }
 
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []) {
-        $detail = $recipe->getDetail();
+        $detail = trim($recipe->getDetail());
         (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getName()])))
             ->setContent(empty($detail) ? "@form.recipe.recipeMenu.noActions" : $detail)
             ->addButtons([
@@ -175,7 +175,8 @@ class RecipeForm {
 
                 switch ($data) {
                     case 0:
-                        $this->sendActionList($player, $recipe);
+                        Session::getSession($player)->set("parents", []);
+                        (new ActionContainerForm)->sendActionList($player, $recipe);
                         break;
                     case 1:
                         $this->sendChangeName($player, $recipe);
@@ -188,15 +189,7 @@ class RecipeForm {
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
                     case 4:
-                        $this->sendConfirmDelete($player, $recipe, function (bool $result) use ($player, $recipe) {
-                            if ($result) {
-                                $manager = Main::getInstance()->getRecipeManager();
-                                $manager->remove($recipe->getName());
-                                $this->sendMenu($player, ["@form.delete.success"]);
-                            } else {
-                                $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
-                            }
-                        });
+                        $this->sendConfirmDelete($player, $recipe);
                         break;
                     default:
                         $prev = Session::getSession($player)->get("recipe_menu_prev");
@@ -207,39 +200,9 @@ class RecipeForm {
             })->addArgs($recipe)->addMessages($messages)->show($player);
     }
 
-    public function sendActionList(Player $player, Recipe $recipe, array $messages = []) {
-        $actions = $recipe->getActions();
-
-        $buttons = [new Button("@form.back"), new Button("@form.recipe.actions.add")];
-        foreach ($actions as $action) {
-            $buttons[] = new Button($action->getDetail());
-        }
-
-        (new ListForm(Language::get("form.recipe.actions.title", [$recipe->getName()])))
-            ->setContent("@form.selectButton")
-            ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $actions) {
-                if ($data === null) return;
-
-                if ($data === 0) {
-                    $this->sendRecipeMenu($player, $recipe);
-                    return;
-                }
-                if ($data === 1) {
-                    (new ActionForm)->selectActionCategory($player, $recipe);
-                    return;
-                }
-                $data -= 2;
-
-                $action = $actions[$data];
-                Session::getSession($player)->set("actions_selected", $data);
-                (new ActionForm)->sendAddedActionMenu($player, $recipe, $action);
-            })->addArgs($recipe, $actions)->addMessages($messages)->show($player);
-    }
-
     public function sendChangeName(Player $player, Recipe $recipe, ?string $default = null, string $error = null) {
-        (new CustomForm(Language::get("form.setName.title", [$recipe->getName()])))
-            ->setContents([
+        $form = new CustomForm(Language::get("form.setName.title", [$recipe->getName()]));
+        $form->setContents([
                 new Label("@form.setName.content0"),
                 new Input("@form.setName.content1", "", $default ?? $recipe->getName()),
                 new Toggle("@form.cancelAndBack")
@@ -270,17 +233,26 @@ class RecipeForm {
                 }
                 $manager->rename($recipe->getName(), $data[1]);
                 $this->sendRecipeMenu($player, $recipe, ["@form.recipe.changeName.success"]);
-            })->addArgs($recipe)->show($player);
+            })->addArgs($recipe);
+        if ($error) $form->addError($error, 1);
+        $form->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, Recipe $recipe, callable $callback) {
+    public function sendConfirmDelete(Player $player, Recipe $recipe) {
         (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
             ->setContent(Language::get("form.confirmDelete", [$recipe->getName()]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, callable $callback) {
+            ->onRecive(function (Player $player, ?bool $data, Recipe $recipe) {
                 if ($data === null) return;
-                call_user_func_array($callback, [$data]);
-            })->addArgs($callback)->show($player);
+
+                if ($data) {
+                    $manager = Main::getInstance()->getRecipeManager();
+                    $manager->remove($recipe->getName());
+                    $this->sendMenu($player, ["@form.delete.success"]);
+                } else {
+                    $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
+                }
+            })->addArgs($recipe)->show($player);
     }
 }

@@ -48,7 +48,7 @@ class CustomForm extends Form {
         for ($i=0; $i<count($form["content"]); $i++) {
             if (empty($this->highlights[$i])) continue;
             $content = $form["content"][$i];
-            $content->setText("§e".preg_replace("/§[a-f0-9]/", "", $content->getText()));
+            $content->setText("§e".preg_replace("/§[a-f0-9]/", "", $content->getText())); // UTF-8!!!! あいうえお
         }
         if (!empty($this->messages) and !empty($this->contents)) {
             $form["content"][0]->setText(implode("\n", array_keys($this->messages))."\n".$form["content"][0]->getText());
