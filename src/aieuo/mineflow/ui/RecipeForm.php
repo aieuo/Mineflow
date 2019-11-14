@@ -68,7 +68,7 @@ class RecipeForm {
                             $manager = Main::getInstance()->getRecipeManager();
                             $recipe = new Recipe($newName);
                             $manager->add($recipe);
-                            Session::getSession($player)->set("form_prev", [$this, "sendMenu"]);
+                            Session::getSession($player)->set("recipe_menu_prev", [$this, "sendMenu"]);
                             $this->sendRecipeMenu($player, $recipe);
                         } else {
                             $this->sendAddRecipe($player, $name, Language::get("form.recipe.exists", [$name]));
@@ -79,7 +79,7 @@ class RecipeForm {
 
                 $recipe = new Recipe($name);
                 $manager->add($recipe);
-                Session::getSession($player)->set("form_prev", [$this, "sendSelectRecipe"]);
+                Session::getSession($player)->set("recipe_menu_prev", [$this, "sendSelectRecipe"]);
                 $this->sendRecipeMenu($player, $recipe);
             })->addArgs($name);
         if ($error) $form->addError($error, 0);
@@ -126,7 +126,7 @@ class RecipeForm {
                 }
 
                 $recipe = $manager->get($name);
-                Session::getSession($player)->set("form_prev", [$this, "sendSelectRecipe"]);
+                Session::getSession($player)->set("recipe_menu_prev", [$this, "sendSelectRecipe"]);
                 $this->sendRecipeMenu($player, $recipe);
             });
         if ($error) $form->addError($error, 0);
@@ -154,7 +154,7 @@ class RecipeForm {
                 $data --;
 
                 $recipe = $recipes[$data];
-                Session::getSession($player)->set("form_prev", [$this, "sendRecipeList"]);
+                Session::getSession($player)->set("recipe_menu_prev", [$this, "sendRecipeList"]);
                 $this->sendRecipeMenu($player, $recipe);
             })->addArgs(array_values($recipes))->show($player);
     }
@@ -199,7 +199,7 @@ class RecipeForm {
                         });
                         break;
                     default:
-                        $prev = Session::getSession($player)->get("form_prev");
+                        $prev = Session::getSession($player)->get("recipe_menu_prev");
                         if (is_callable($prev)) call_user_func_array($prev, [$player]);
                         else $this->sendMenu($player);
                         break;
