@@ -10,6 +10,7 @@ use aieuo\mineflow\script\Script;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\Action;
 use aieuo\mineflow\action\ActionContainer;
+use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\utils\Logger;
 
 class Recipe implements \JsonSerializable, ActionContainer {
@@ -133,6 +134,43 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 break;
         }
         return $targets;
+    }
+
+    public function addTrigger(array $trigger): void {
+        switch ($trigger[0]) {
+            case TriggerManager::TRIGGER_BLOCK:
+                TriggerManager::getManager(TriggerManager::TRIGGER_BLOCK)->add($trigger[1], $this);
+                break;
+        }
+        $this->triggers[] = $trigger;
+    }
+
+    public function removeTrigger(array $trigger): void {
+        switch ($trigger[0]) {
+            case TriggerManager::TRIGGER_BLOCK:
+                TriggerManager::getManager(TriggerManager::TRIGGER_BLOCK)->removeRecipe($trigger[1], $this->getName());
+                break;
+        }
+        $index = array_search($trigger, $this->triggers);
+        unset($this->triggers[$index]);
+        $this->triggers = array_values($this->triggers);
+    }
+
+    public function setTriggers(array $triggers) {
+        foreach ($this->getTriggers() as $trigger) {
+            $this->removeTrigger($trigger);
+        }
+        foreach ($triggers as $trigger) {
+            $this->addTrigger($trigger);
+        }
+    }
+
+    public function existsTrigger(array $trigger): bool {
+        return in_array($trigger, $this->getTriggers());
+    }
+
+    public function getTriggers(): array {
+        return $this->triggers;
     }
 
     public function execute(?Entity $player = null): ?bool {

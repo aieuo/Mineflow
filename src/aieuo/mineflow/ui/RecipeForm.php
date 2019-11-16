@@ -166,6 +166,7 @@ class RecipeForm {
                 new Button("@action.edit"),
                 new Button("@form.recipe.recipeMenu.changeName"),
                 new Button("@form.recipe.recipeMenu.execute"),
+                new Button("@form.recipe.recipeMenu.setTrigger"),
                 new Button("@form.recipe.recipeMenu.save"),
                 new Button("@form.delete"),
                 new Button("@form.back"),
@@ -184,10 +185,13 @@ class RecipeForm {
                         $recipe->execute($player);
                         break;
                     case 3:
+                        $this->sendTriggerList($player, $recipe);
+                        break;
+                    case 4:
                         $recipe->save(Main::getInstance()->getRecipeManager()->getSaveDir());
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
-                    case 4:
+                    case 5:
                         $this->sendConfirmDelete($player, $recipe);
                         break;
                     default:
@@ -235,6 +239,35 @@ class RecipeForm {
             })->addArgs($recipe);
         if ($error) $form->addError($error, 1);
         $form->show($player);
+    }
+
+    public function sendTriggerList(Player $player, Recipe $recipe, array $messages = []) {
+        $triggers = $recipe->getTriggers();
+
+        $buttons = [new Button("@form.back"), new Button("@trigger.add")];
+        foreach ($triggers as $trigger) {
+            $buttons[] = new Button($trigger[0].": ".$trigger[1]);
+        }
+
+        (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))
+            ->setContent("@form.selectButton")
+            ->addButtons($buttons)
+            ->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $triggers) {
+                if ($data === null) return;
+
+                if ($data === 0) {
+                    $this->sendRecipeMenu($player, $recipe);
+                    return;
+                }
+                if ($data === 1) {
+                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    return;
+                }
+                $data -= 2;
+
+                $trigger = $triggers[$data];
+                (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
+            })->addArgs($recipe, $triggers)->addMessages($messages)->show($player);
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe) {

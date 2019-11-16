@@ -36,6 +36,10 @@ class RecipeContainer {
         unset($this->recipes[$key]);
     }
 
+    public function existsRecipe(string $key): bool {
+        return isset($this->recipes[$key]);
+    }
+
     public function getRecipeCount(): int {
         return count($this->getAllRecipe());
     }

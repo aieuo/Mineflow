@@ -11,6 +11,7 @@ use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\action\process\ProcessFactory;
+use aieuo\mineflow\trigger\TriggerManager;
 
 class Main extends PluginBase {
 
@@ -51,13 +52,16 @@ class Main extends PluginBase {
 
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
-        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-
         (new Economy($this))->loadPlugin();
+
+        TriggerManager::init();
 
         ScriptFactory::init();
         ProcessFactory::init();
         ConditionFactory::init();
+
+        $events = new Config($this->getDataFolder()."events.yml", Config::YAML);
+        (new EventListener($this, $events))->registerEvents();
 
         $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
 
