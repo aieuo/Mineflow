@@ -1,15 +1,12 @@
 <?php
 
-namespace aieuo\mineflow\condition;
+namespace aieuo\mineflow\script;
 
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\FormAPI\element\Toggle;
 
-abstract class Condition implements Conditionable, ConditionIds {
+abstract class Script implements ScriptIds {
 
     /** @var string */
     protected $id;
@@ -55,6 +52,14 @@ abstract class Condition implements Conditionable, ConditionIds {
         return $detail;
     }
 
+    public function jsonSerialize(): array {
+        return [
+            "type" => Recipe::CONTENT_TYPE_SCRIPT,
+            "id" => $this->getId(),
+            "contents" => $this->serializeContents(),
+        ];
+    }
+
     public function setCustomName(?string $name = null): void {
         $this->customName = $name;
     }
@@ -67,49 +72,24 @@ abstract class Condition implements Conditionable, ConditionIds {
         return $this->category;
     }
 
-    public function jsonSerialize(): array {
-        return [
-            "type" => Recipe::CONTENT_TYPE_CONDITION,
-            "id" => $this->id,
-            "contents" => $this->serializeContents(),
-        ];
-    }
-
-    /**
-     * @return boolean
-     */
-    abstract public function isDataValid(): bool;
-
-    public function getEditForm(array $default = [], array $errors = []) {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["status" => true, "contents" => [], "cancel" => $data[1], "errors" => []];
-    }
-
     /**
      * @return array
      */
     abstract public function serializeContents(): array;
 
     public static function parseFromSaveDataStatic(array $content): ?self {
-        $condition = ConditionFactory::get($content["id"]);
-        if ($condition === null) {
-            Logger::warning(Language::get("condition.not.found", [$content["id"]]));
+        $script = ScriptFactory::get($content["id"]);
+        if ($script === null) {
+            Logger::warning(Language::get("action.not.found", [$content["id"]]));
             return null;
         }
 
-        return $condition->parseFromSaveData($content["contents"]);
+        return $script->parseFromSaveData($content["contents"]);
     }
 
     /**
      * @param array $content
-     * @return Condition|null
+     * @return Script|null
      */
-    abstract public function parseFromSaveData(array $content): ?Condition;
+    abstract public function parseFromSaveData(array $content): ?Script;
 }

@@ -6,7 +6,7 @@ use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\action\script\Script;
+use aieuo\mineflow\script\Script;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\Action;
 use aieuo\mineflow\action\ActionContainer;
@@ -48,6 +48,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var array */
     private $triggers = [];
+
+    /** @var bool|null */
+    private $lastResult = null;
 
     public function __construct(string $name) {
         $this->name = $name;
@@ -136,7 +139,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
         $targets = $this->getTargets($player);
         foreach ($targets as $target) {
             foreach ($this->actions as $action) {
-                $action->execute($target, $this);
+                $this->lastResult = $action->execute($target, $this);
             }
         }
         return true;
@@ -176,5 +179,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $this->addAction($action);
         }
         return $this;
+    }
+
+    public function getLastActionResult(): ?bool {
+        return $this->lastResult;
     }
 }

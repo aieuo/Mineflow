@@ -8,7 +8,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
-use aieuo\mineflow\action\script\ScriptFactory;
+use aieuo\mineflow\script\ScriptFactory;
 use aieuo\mineflow\action\process\ProcessFactory;
 
 class Main extends PluginBase {

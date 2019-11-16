@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\action\script\Script;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;

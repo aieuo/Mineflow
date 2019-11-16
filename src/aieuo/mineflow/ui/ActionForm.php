@@ -6,12 +6,9 @@ use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\action\script\ScriptFactory;
-use aieuo\mineflow\action\script\Script;
-use aieuo\mineflow\action\script\IFScript;
+use aieuo\mineflow\script\ScriptFactory;
 use aieuo\mineflow\action\script\ActionScript;
 use aieuo\mineflow\action\process\ProcessFactory;
 use aieuo\mineflow\action\ActionContainer;
@@ -95,6 +92,7 @@ class ActionForm {
                     return;
                 }
                 if ($data === 1) {
+                    // TODO: お気に入り
                     return;
                 }
                 $data -= 2;
