@@ -8,10 +8,19 @@ class ConditionFactory {
     private static $list = [];
 
     public static function init() {
+        /* common */
         self::register(new CheckNothing);
         self::register(new IsOp);
         self::register(new IsSneaking);
         self::register(new IsFlying);
+        /* money */
+        self::register(new OverMoney);
+        self::register(new LessMoney);
+        self::register(new TakeMoney);
+        /* item */
+        self::register(new InHand);
+        self::register(new ExistsItem);
+        self::register(new CanAddItem);
     }
 
     /**
