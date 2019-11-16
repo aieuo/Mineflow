@@ -5,10 +5,11 @@ namespace aieuo\mineflow;
 use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\script\ScriptFactory;
 use aieuo\mineflow\recipe\RecipeManager;
+use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
-use aieuo\mineflow\script\ScriptFactory;
 use aieuo\mineflow\action\process\ProcessFactory;
 
 class Main extends PluginBase {
@@ -51,6 +52,8 @@ class Main extends PluginBase {
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+
+        (new Economy($this))->loadPlugin();
 
         ScriptFactory::init();
         ProcessFactory::init();
