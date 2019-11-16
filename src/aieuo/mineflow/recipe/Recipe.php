@@ -172,7 +172,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                     return null;
             }
             if ($action === null) {
-                Logger::warning(Language::get("recipe.load.faild.action", [$i, $content["id"] ?? "null", implode(",", $content["contents"] ?? ["null"])]));
+                Logger::warning(Language::get("recipe.load.faild.action", [$i, $content["id"] ?? "id?"]));
                 return null;
             }
 

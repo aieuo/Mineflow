@@ -119,7 +119,7 @@ class ConditionForm {
         foreach ($conditions as $condition) {
             $buttons[] = new Button($condition->getName());
         }
-        (new ListForm(Language::get("form.condition.select.title", [$category])))
+        (new ListForm(Language::get("form.condition.select.title", [$container->getName(), $category])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {

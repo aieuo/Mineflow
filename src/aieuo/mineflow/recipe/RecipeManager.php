@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 
