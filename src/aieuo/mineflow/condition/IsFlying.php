@@ -15,7 +15,7 @@ class IsFlying extends Condition {
     protected $description = "@condition.isFlying.description";
     protected $detail = "@condition.isFlying.detail";
 
-    protected $category = Categories::CATEGORY_CONDITION_OTHER;
+    protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Player)) return null;

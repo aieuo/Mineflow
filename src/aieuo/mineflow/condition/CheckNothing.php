@@ -14,7 +14,7 @@ class CheckNothing extends Condition {
     protected $description = "@condition.noCheck.description";
     protected $detail = "@condition.noCheck.detail";
 
-    protected $category = Categories::CATEGORY_CONDITION_OTHER;
+    protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         return true;

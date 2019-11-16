@@ -15,7 +15,7 @@ class IsSneaking extends Condition {
     protected $description = "@condition.isSneaking.description";
     protected $detail = "@condition.isSneaking.detail";
 
-    protected $category = Categories::CATEGORY_CONDITION_OTHER;
+    protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Player)) return null;

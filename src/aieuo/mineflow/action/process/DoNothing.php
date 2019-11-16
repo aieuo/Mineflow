@@ -14,7 +14,7 @@ class DoNothing extends Process {
     protected $description = "@action.doNothing.description";
     protected $detail = "@action.doNothing.detail";
 
-    protected $category = Categories::CATEGORY_ACTION_OTHER;
+    protected $category = Categories::CATEGORY_ACTION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_NONE;
 

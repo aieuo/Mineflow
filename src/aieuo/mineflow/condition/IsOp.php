@@ -15,7 +15,7 @@ class IsOp extends Condition {
     protected $description = "@condition.isOp.description";
     protected $detail = "@condition.isOp.detail";
 
-    protected $category = Categories::CATEGORY_CONDITION_OTHER;
+    protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Player)) return null;
