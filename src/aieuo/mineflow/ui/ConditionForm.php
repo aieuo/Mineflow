@@ -81,7 +81,7 @@ class ConditionForm {
         foreach ($categories as $category) {
             $buttons[] = new Button($category);
         }
-        (new ListForm("@form.condition.category.title"))
+        (new ListForm(Language::get("form.condition.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $categories) {
@@ -92,7 +92,16 @@ class ConditionForm {
                     return;
                 }
                 if ($data === 1) {
-                    // TODO: お気に入り
+                    $favorites = Main::getInstance()->getFavorites()->getNested($player->getName().".condition", []);
+                    $conditions = [];
+                    foreach ($favorites as $favorite) {
+                        $condition = ConditionFactory::get($favorite);
+                        if ($condition === null) $condition = ScriptFactory::get($favorite);
+                        if ($condition === null) continue;
+
+                        $conditions[] = $condition;
+                    }
+                    $this->sendSelectCondition($player, $container, $conditions, Language::get("form.items.category.favorite"));
                     return;
                 }
                 $data -= 2;
@@ -135,7 +144,7 @@ class ConditionForm {
             ->setContent($condition->getDescription())
             ->addButtons([
                 new Button("@form.add"),
-                new Button(in_array($condition->getName(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
+                new Button(in_array($condition->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
@@ -162,11 +171,11 @@ class ConditionForm {
                     case 1:
                         $config = Main::getInstance()->getFavorites();
                         $favorites = $config->getNested($player->getName().".condition", []);
-                        if (in_array($condition->getName(), $favorites)) {
-                            $favorites = array_diff($favorites, [$condition->getName()]);
+                        if (in_array($condition->getId(), $favorites)) {
+                            $favorites = array_diff($favorites, [$condition->getId()]);
                             $favorites = array_values($favorites);
                         } else {
-                            $favorites[] = $condition->getName();
+                            $favorites[] = $condition->getId();
                         }
                         $config->setNested($player->getName().".condition", $favorites);
                         $config->save();

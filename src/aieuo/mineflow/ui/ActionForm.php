@@ -92,7 +92,16 @@ class ActionForm {
                     return;
                 }
                 if ($data === 1) {
-                    // TODO: お気に入り
+                    $favorites = Main::getInstance()->getFavorites()->getNested($player->getName().".action", []);
+                    $actions = [];
+                    foreach ($favorites as $favorite) {
+                        $action = ProcessFactory::get($favorite);
+                        if ($action === null) $action = ScriptFactory::get($favorite);
+                        if ($action === null) continue;
+
+                        $actions[] = $action;
+                    }
+                    $this->sendSelectAction($player, $container, $actions, Language::get("form.items.category.favorite"));
                     return;
                 }
                 $data -= 2;
@@ -135,7 +144,7 @@ class ActionForm {
             ->setContent($action->getDescription())
             ->addButtons([
                 new Button("@form.add"),
-                new Button(in_array($action->getName(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
+                new Button(in_array($action->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
                 if ($data === null) return;
@@ -162,11 +171,11 @@ class ActionForm {
                     case 1:
                         $config = Main::getInstance()->getFavorites();
                         $favorites = $config->getNested($player->getName().".action", []);
-                        if (in_array($action->getName(), $favorites)) {
-                            $favorites = array_diff($favorites, [$action->getName()]);
+                        if (in_array($action->getId(), $favorites)) {
+                            $favorites = array_diff($favorites, [$action->getId()]);
                             $favorites = array_values($favorites);
                         } else {
-                            $favorites[] = $action->getName();
+                            $favorites[] = $action->getId();
                         }
                         $config->setNested($player->getName().".action", $favorites);
                         $config->save();
