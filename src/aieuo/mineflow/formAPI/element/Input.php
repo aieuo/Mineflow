@@ -53,7 +53,7 @@ class Input extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->text),
+            "text" => $this->reflectHighlight($this->checkTranslate($this->text)),
             "placeholder" => $this->checkTranslate($this->placeholder),
             "default" => $this->checkTranslate($this->default),
         ];

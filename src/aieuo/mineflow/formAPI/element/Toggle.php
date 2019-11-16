@@ -34,7 +34,7 @@ class Toggle extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->text),
+            "text" => $this->reflectHighlight($this->checkTranslate($this->text)),
             "default" => $this->default,
         ];
     }

@@ -61,7 +61,7 @@ class Dropdown extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->text),
+            "text" => $this->reflectHighlight($this->checkTranslate($this->text)),
             "options" => $this->options,
             "default" => $this->default,
         ];

@@ -10,6 +10,8 @@ abstract class Element implements \JsonSerializable {
     protected $type;
     /** @var string */
     protected $text = "";
+    /** @var string|null */
+    protected $highlight = null;
 
     public function __construct(string $text) {
         $this->text = $text;
@@ -31,6 +33,10 @@ abstract class Element implements \JsonSerializable {
         return $this->text;
     }
 
+    public function setHighlight(?string $color): void {
+        $this->highlight = $color;
+    }
+
     /**
      * @param string $text
      * @return string
@@ -40,6 +46,15 @@ abstract class Element implements \JsonSerializable {
             return Language::get($matches[1]);
         }, $text);
         return $text;
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    public function reflectHighlight(string $text): string {
+        if (empty($this->highlight)) return $text;
+        return $this->highlight.preg_replace("/§[a-f0-9]/", "", $text);
     }
 
     /**
