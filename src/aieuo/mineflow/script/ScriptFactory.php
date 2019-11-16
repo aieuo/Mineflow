@@ -5,12 +5,16 @@ namespace aieuo\mineflow\script;
 use aieuo\mineflow\condition\script\ORScript;
 use aieuo\mineflow\condition\script\AndScript;
 use aieuo\mineflow\action\script\IFScript;
+use aieuo\mineflow\action\script\ElseifScript;
+use aieuo\mineflow\action\script\ElseScript;
 
 class ScriptFactory {
     private static $list = [];
 
     public static function init(): void {
         self::register(new IFScript);
+        self::register(new ElseScript);
+        self::register(new ElseifScript);
 
         self::register(new AndScript);
         self::register(new ORScript);
