@@ -76,7 +76,7 @@ class IFScript extends ActionScript implements ActionContainer, ConditionContain
     }
 
     public function getDetail(): string {
-        $details = ["", "==============if=============="];
+        $details = ["", "==============if================"];
         foreach ($this->conditions as $condition) {
             $details[] = $condition->getDetail();
         }
@@ -91,7 +91,7 @@ class IFScript extends ActionScript implements ActionContainer, ConditionContain
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         $matched = true;
         foreach ($this->conditions as $condition) {
-            $result = $condition->execute($target);
+            $result = $condition->execute($target, $origin);
             if ($result === null) return null;
             if (!$result) $matched = false;
         }
@@ -106,7 +106,7 @@ class IFScript extends ActionScript implements ActionContainer, ConditionContain
     public function sendEditForm(Player $player, array $messages = []) {
         $detail = trim($this->getDetail());
         (new ListForm($this->getName()))
-            ->setContent(empty($detail) ? "@ecipe.noActions" : $detail)
+            ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
                 new Button("@condition.edit"),
                 new Button("@action.edit"),

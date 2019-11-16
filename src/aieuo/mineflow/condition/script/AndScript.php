@@ -63,7 +63,7 @@ class AndScript extends ConditionScript implements ConditionContainer {
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         $matched = true;
         foreach ($this->conditions as $condition) {
-            $result = $condition->execute($target);
+            $result = $condition->execute($target, $origin);
             if ($result === null) return null;
             if (!$result) $matched = false;
         }

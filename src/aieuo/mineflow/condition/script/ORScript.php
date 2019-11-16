@@ -24,7 +24,7 @@ class ORScript extends AndScript {
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         $matched = false;
         foreach ($this->conditions as $condition) {
-            $result = $condition->execute($target);
+            $result = $condition->execute($target, $origin);
             if ($result === null) return null;
             if ($result) $matched = true;
         }
