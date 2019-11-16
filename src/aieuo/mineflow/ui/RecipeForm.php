@@ -120,7 +120,7 @@ class RecipeForm {
                 $manager = Main::getInstance()->getRecipeManager();
                 $name = $data[0];
                 if (!$manager->exists($name)) {
-                    $this->sendSelectRecipe($player, $name, "@form.recipe.select.notfount");
+                    $this->sendSelectRecipe($player, $name, "@form.recipe.select.notfound");
                     return;
                 }
 
@@ -161,9 +161,9 @@ class RecipeForm {
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []) {
         $detail = trim($recipe->getDetail());
         (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getName()])))
-            ->setContent(empty($detail) ? "@form.recipe.recipeMenu.noActions" : $detail)
+            ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
-                new Button("@form.recipe.recipeMenu.editAction"),
+                new Button("@action.edit"),
                 new Button("@form.recipe.recipeMenu.changeName"),
                 new Button("@form.recipe.recipeMenu.execute"),
                 new Button("@form.recipe.recipeMenu.save"),
@@ -200,10 +200,10 @@ class RecipeForm {
     }
 
     public function sendChangeName(Player $player, Recipe $recipe, ?string $default = null, string $error = null) {
-        $form = new CustomForm(Language::get("form.setName.title", [$recipe->getName()]));
+        $form = new CustomForm(Language::get("form.recipe.changeName.title", [$recipe->getName()]));
         $form->setContents([
-                new Label("@form.setName.content0"),
-                new Input("@form.setName.content1", "", $default ?? $recipe->getName()),
+                new Label("@form.recipe.changeName.content0"),
+                new Input("@form.recipe.changeName.content1", "", $default ?? $recipe->getName()),
                 new Toggle("@form.cancelAndBack")
             ])->onRecive(function (Player $player, ?array $data, Recipe $recipe) {
                 if ($data === null) return;
@@ -239,7 +239,7 @@ class RecipeForm {
 
     public function sendConfirmDelete(Player $player, Recipe $recipe) {
         (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
-            ->setContent(Language::get("form.confirmDelete", [$recipe->getName()]))
+            ->setContent(Language::get("form.delete.confirm", [$recipe->getName()]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onRecive(function (Player $player, ?bool $data, Recipe $recipe) {

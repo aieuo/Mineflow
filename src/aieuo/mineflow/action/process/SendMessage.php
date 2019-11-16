@@ -11,9 +11,9 @@ class SendMessage extends TypeMessage {
 
     protected $id = self::SEND_MESSAGE;
 
-    protected $name = "@process.sendmessage.name";
-    protected $description = "@process.sendmessage.description";
-    protected $detail = "process.sendmessage.detail";
+    protected $name = "@action.sendMessage.name";
+    protected $description = "@action.sendMessage.description";
+    protected $detail = "action.sendMessage.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
@@ -21,7 +21,7 @@ class SendMessage extends TypeMessage {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
             return false;
         }
 

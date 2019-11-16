@@ -106,10 +106,10 @@ class IFScript extends ActionScript implements ActionContainer, ConditionContain
     public function sendEditForm(Player $player, array $messages = []) {
         $detail = trim($this->getDetail());
         (new ListForm($this->getName()))
-            ->setContent(empty($detail) ? "@form.recipe.recipeMenu.noActions" : $detail)
+            ->setContent(empty($detail) ? "@ecipe.noActions" : $detail)
             ->addButtons([
-                new Button("@form.script.if.editCondition"),
-                new Button("@form.script.if.editAction"),
+                new Button("@condition.edit"),
+                new Button("@action.edit"),
                 new Button("@form.delete"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {

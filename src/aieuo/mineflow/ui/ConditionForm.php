@@ -19,7 +19,7 @@ use aieuo\mineflow\FormAPI\element\Button;
 class ConditionForm {
 
     public function sendAddedConditionMenu(Player $player, ConditionContainer $container, Conditionable $condition, array $messages = []) {
-        (new ListForm(Language::get("form.action.addedActionMenu.title", [$container->getName(), $condition->getName()])))
+        (new ListForm(Language::get("form.condition.addedConditionMenu.title", [$container->getName(), $condition->getName()])))
             ->setContent(trim($condition->getDetail()))
             ->addButtons([// TODO: 移動させるボタン
                 new Button("@form.edit"),
@@ -76,12 +76,12 @@ class ConditionForm {
     }
 
     public function selectConditionCategory(Player $player, ConditionContainer $container) {
-        $buttons = [new Button("@form.back"), new Button("@form.action.category.favorite")];
+        $buttons = [new Button("@form.back"), new Button("@form.items.category.favorite")];
         $categories = Categories::getConditionCategories();
         foreach ($categories as $category) {
             $buttons[] = new Button($category);
         }
-        (new ListForm("@form.action.category.title"))
+        (new ListForm("@form.condition.category.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $categories) {
@@ -110,7 +110,7 @@ class ConditionForm {
         foreach ($conditions as $condition) {
             $buttons[] = new Button($condition->getName());
         }
-        (new ListForm(Language::get("form.action.select.title", [$category])))
+        (new ListForm(Language::get("form.condition.select.title", [$category])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
@@ -131,11 +131,11 @@ class ConditionForm {
     public function sendConditionMenu(Player $player, ConditionContainer $container, Conditionable $condition, array $messages = []) {
         $config = Main::getInstance()->getFavorites();
         $favorites = $config->getNested($player->getName().".condition", []);
-        (new ListForm(Language::get("form.action.menu.title", [$condition->getName()])))
+        (new ListForm(Language::get("form.condition.menu.title", [$condition->getName()])))
             ->setContent($condition->getDescription())
             ->addButtons([
                 new Button("@form.add"),
-                new Button(in_array($condition->getName(), $favorites) ? "@form.action.removeFavorite" : "@form.action.addFavorite"),
+                new Button(in_array($condition->getName(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
@@ -181,8 +181,8 @@ class ConditionForm {
     }
 
     public function sendConfirmDelete(Player $player, Conditionable $condition, ConditionContainer $container) {
-        (new ModalForm(Language::get("form.recipe.delete.title", [$condition->getName()])))
-            ->setContent(Language::get("form.confirmDelete", [trim($condition->getDetail())]))
+        (new ModalForm(Language::get("form.items.delete.title", [$condition->getName()])))
+            ->setContent(Language::get("form.delete.confirm", [trim($condition->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onRecive(function (Player $player, ?bool $data, Conditionable $condition, ConditionContainer $container) {

@@ -12,16 +12,16 @@ class SendBroadcastMessage extends TypeMessage {
 
     protected $id = self::SEND_BROADCAST_MESSAGE;
 
-    protected $name = "@process.broadcastmessage.name";
-    protected $description = "@process.broadcastmessage.description";
-    protected $detail = "process.broadcastmessage.detail";
+    protected $name = "@action.broadcastMessage.name";
+    protected $description = "@action.broadcastMessage.description";
+    protected $detail = "action.broadcastMessage.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
     public function execute(?Entity $target, ?Recipe $original = null): ?bool {
         if (!$this->isDataValid()) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("input.invalid", [$this->getName()]));
-            else Server::getInstance()->getLogger()->info(Language::get("input.invalid", [$this->getName()]));
+            if ($target instanceof Player) $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            else Server::getInstance()->getLogger()->info(Language::get("invalid.contents", [$this->getName()]));
             return false;
         }
 

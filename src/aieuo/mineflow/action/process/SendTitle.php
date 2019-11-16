@@ -16,9 +16,9 @@ class SendTitle extends Process {
 
     protected $id = self::SEND_TITLE;
 
-    protected $name = "@process.sendtitle.name";
-    protected $description = "@process.sendtitle.description";
-    protected $detail = "process.sendtitle.detail";
+    protected $name = "@action.sendTitle.name";
+    protected $description = "@action.sendTitle.description";
+    protected $detail = "action.sendTitle.detail";
 
     protected $category = Categories::CATEGRY_ACTION_MESSAGE;
 
@@ -81,7 +81,7 @@ class SendTitle extends Process {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
             return false;
         }
 
@@ -93,8 +93,8 @@ class SendTitle extends Process {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@process.sendtitle.form.title", Language::get("input.example", ["aieuo"]), $default[1] ?? $this->getTitle()),
-                new Input("@process.sendtitle.form.subtitle", Language::get("input.example", ["aieuo"]), $default[2] ?? $this->getSubTitle()),
+                new Input("@action.sendTitle.form.title", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getTitle()),
+                new Input("@action.sendTitle.form.subtitle", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getSubTitle()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

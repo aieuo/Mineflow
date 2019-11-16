@@ -11,9 +11,9 @@ class IsSneaking extends Condition {
 
     protected $id = self::IS_SNEAKING;
 
-    protected $name = "@condition.issneaking.name";
-    protected $description = "@condition.issneaking.description";
-    protected $detail = "@condition.issneaking.detail";
+    protected $name = "@condition.isSneaking.name";
+    protected $description = "@condition.isSneaking.description";
+    protected $detail = "@condition.isSneaking.detail";
 
     protected $category = Categories::CATEGORY_CONDITION_OTHER;
 

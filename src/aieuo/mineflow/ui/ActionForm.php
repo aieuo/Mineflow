@@ -76,12 +76,12 @@ class ActionForm {
     }
 
     public function selectActionCategory(Player $player, ActionContainer $container) {
-        $buttons = [new Button("@form.back"), new Button("@form.action.category.favorite")];
+        $buttons = [new Button("@form.back"), new Button("@form.items.category.favorite")];
         $categories = Categories::getActionCategories();
         foreach ($categories as $category) {
             $buttons[] = new Button($category);
         }
-        (new ListForm("@form.action.category.title"))
+        (new ListForm(Language::get("form.action.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ActionContainer $container, array $categories) {
@@ -110,7 +110,7 @@ class ActionForm {
         foreach ($actions as $action) {
             $buttons[] = new Button($action->getName());
         }
-        (new ListForm(Language::get("form.action.select.title", [$category])))
+        (new ListForm(Language::get("form.action.select.title", [$container->getName(), $category])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
@@ -131,11 +131,11 @@ class ActionForm {
     public function sendActionMenu(Player $player, ActionContainer $container, Action $action, array $messages = []) {
         $config = Main::getInstance()->getFavorites();
         $favorites = $config->getNested($player->getName().".action", []);
-        (new ListForm(Language::get("form.action.menu.title", [$action->getName()])))
+        (new ListForm(Language::get("form.action.menu.title", [$container->getName(), $action->getName()])))
             ->setContent($action->getDescription())
             ->addButtons([
                 new Button("@form.add"),
-                new Button(in_array($action->getName(), $favorites) ? "@form.action.removeFavorite" : "@form.action.addFavorite"),
+                new Button(in_array($action->getName(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
                 if ($data === null) return;
@@ -144,7 +144,7 @@ class ActionForm {
                     case 0:
                         $session = Session::getSession($player);
                         $session->set("parents", array_merge($session->get("parents"), [$container]));
-                        if ($action instanceof ActionScript) { // TODO: script? actionscript??
+                        if ($action instanceof ActionScript) {
                             $container->addAction($action);
                             $action->sendEditForm($player);
                             return;
@@ -181,8 +181,8 @@ class ActionForm {
     }
 
     public function sendConfirmDelete(Player $player, Action $action, ActionContainer $container) {
-        (new ModalForm(Language::get("form.recipe.delete.title", [$action->getName()])))
-            ->setContent(Language::get("form.confirmDelete", [trim($action->getDetail())]))
+        (new ModalForm(Language::get("form.items.delete.title", [$container->getName(), $action->getName()])))
+            ->setContent(Language::get("form.delete.confirm", [trim($action->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onRecive(function (Player $player, ?bool $data, Action $action, ActionContainer $container) {

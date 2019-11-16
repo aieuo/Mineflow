@@ -11,9 +11,9 @@ class SendTip extends TypeMessage {
 
     protected $id = self::SEND_TIP;
 
-    protected $name = "@process.sendtip.name";
-    protected $description = "@process.sendtip.description";
-    protected $detail = "process.sendtip.detail";
+    protected $name = "@action.sendTip.name";
+    protected $description = "@action.sendTip.description";
+    protected $detail = "action.sendTip.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
@@ -21,7 +21,7 @@ class SendTip extends TypeMessage {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
             return false;
         }
 

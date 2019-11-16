@@ -43,7 +43,7 @@ class MineflowCommand extends Command {
                 break;
             case "recipe":
                 if (!($sender instanceof Player)) {
-                    $sender->sendMessage(Language::get("command.noconsole"));
+                    $sender->sendMessage(Language::get("command.console"));
                     return true;
                 }
                 (new RecipeCommand)->execute($sender, $args);

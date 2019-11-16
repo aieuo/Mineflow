@@ -10,9 +10,9 @@ class DoNothing extends Process {
 
     protected $id = self::DO_NOTHINIG;
 
-    protected $name = "@process.donothing.name";
-    protected $description = "@process.donothing.description";
-    protected $detail = "@process.donothing.detail";
+    protected $name = "@action.doNothing.name";
+    protected $description = "@action.doNothing.description";
+    protected $detail = "@action.doNothing.detail";
 
     protected $category = Categories::CATEGORY_ACTION_OTHER;
 

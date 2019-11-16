@@ -11,9 +11,9 @@ class IsOp extends Condition {
 
     protected $id = self::IS_OP;
 
-    protected $name = "@condition.isop.name";
-    protected $description = "@condition.isop.description";
-    protected $detail = "@condition.isop.detail";
+    protected $name = "@condition.isOp.name";
+    protected $description = "@condition.isOp.description";
+    protected $detail = "@condition.isOp.detail";
 
     protected $category = Categories::CATEGORY_CONDITION_OTHER;
 

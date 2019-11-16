@@ -11,9 +11,9 @@ class SendPopup extends TypeMessage {
 
     protected $id = self::SEND_POPUP;
 
-    protected $name = "@process.sendpopup.name";
-    protected $description = "@process.sendpopup.description";
-    protected $detail = "process.sendpopup.detail";
+    protected $name = "@action.sendPopup.name";
+    protected $description = "@action.sendPopup.description";
+    protected $detail = "action.sendPopup.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
@@ -21,7 +21,7 @@ class SendPopup extends TypeMessage {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("input.invalid", [$this->getName()]));
+            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
             return false;
         }
 

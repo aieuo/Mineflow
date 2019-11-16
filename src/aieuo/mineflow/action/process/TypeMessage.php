@@ -43,7 +43,7 @@ abstract class TypeMessage extends Process {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@process.message.form.message", Language::get("input.example", ["aieuo"]), $default[1] ?? $this->getMessage()),
+                new Input("@action.message.form.message", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getMessage()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

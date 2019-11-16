@@ -9,7 +9,7 @@ use aieuo\mineflow\FormAPI\element\Button;
 class HomeForm {
 
     public function sendMenu(Player $player) {
-        (new ListForm("@fome.home.title"))
+        (new ListForm("@form.home.title"))
             ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@mineflow.recipe"),

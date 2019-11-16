@@ -73,9 +73,9 @@ class AndScript extends ConditionScript implements ConditionContainer {
     public function sendEditForm(Player $player, array $messages = []) {
         $detail = trim($this->getDetail());
         (new ListForm($this->getName()))
-            ->setContent(empty($detail) ? "@form.recipe.recipeMenu.noActions" : $detail)
+            ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
-                new Button("@form.script.if.editCondition"),
+                new Button("@condition.edit"),
                 new Button("@form.delete"),
                 new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {

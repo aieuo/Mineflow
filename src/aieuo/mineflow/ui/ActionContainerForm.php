@@ -18,12 +18,12 @@ class ActionContainerForm {
     public function sendActionList(Player $player, ActionContainer $container, array $messages = []) {
         $actions = $container->getActions();
 
-        $buttons = [new Button("@form.back"), new Button("@form.recipe.actions.add")];
+        $buttons = [new Button("@form.back"), new Button("@action.add")];
         foreach ($actions as $action) {
             $buttons[] = new Button(trim($action->getDetail()));
         }
 
-        (new ListForm(Language::get("form.recipe.actions.title", [$container->getName()])))
+        (new ListForm(Language::get("form.actionContainer.actionList.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {

@@ -10,9 +10,9 @@ class CheckNothing extends Condition {
 
     protected $id = self::CHECK_NOTHING;
 
-    protected $name = "@condition.nocheck.name";
-    protected $description = "@condition.nocheck.description";
-    protected $detail = "@condition.nocheck.detail";
+    protected $name = "@condition.noCheck.name";
+    protected $description = "@condition.noCheck.description";
+    protected $detail = "@condition.noCheck.detail";
 
     protected $category = Categories::CATEGORY_CONDITION_OTHER;
 

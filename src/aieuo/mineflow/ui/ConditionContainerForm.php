@@ -15,12 +15,12 @@ class ConditionContainerForm {
     public function sendConditionList(Player $player, ConditionContainer $container, array $messages = []) {
         $conditions = $container->getConditions();
 
-        $buttons = [new Button("@form.back"), new Button("@form.recipe.conditions.add")];
+        $buttons = [new Button("@form.back"), new Button("@condition.add")];
         foreach ($conditions as $condition) {
             $buttons[] = new Button(trim($condition->getDetail()));
         }
 
-        (new ListForm(Language::get("form.recipe.editConditions.title", [$container->getName()])))
+        (new ListForm(Language::get("form.conditionContainer.conditionList.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {

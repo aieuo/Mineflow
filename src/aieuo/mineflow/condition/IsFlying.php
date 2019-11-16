@@ -11,9 +11,9 @@ class IsFlying extends Condition {
 
     protected $id = self::IS_FLYING;
 
-    protected $name = "@condition.isflying.name";
-    protected $description = "@condition.isflying.description";
-    protected $detail = "@condition.isflying.detail";
+    protected $name = "@condition.isFlying.name";
+    protected $description = "@condition.isFlying.description";
+    protected $detail = "@condition.isFlying.detail";
 
     protected $category = Categories::CATEGORY_CONDITION_OTHER;
 
