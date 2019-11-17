@@ -4,6 +4,7 @@ namespace aieuo\mineflow;
 
 use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
+use pocketmine\event\server\CommandEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
@@ -13,6 +14,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
@@ -24,6 +26,7 @@ use pocketmine\event\inventory\FurnaceBurnEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\block\SignChangeEvent;
@@ -32,13 +35,12 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\EventPriority;
 use pocketmine\event\Event;
+use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\Main;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 
 class EventListener implements Listener {
 
@@ -104,6 +106,7 @@ class EventListener implements Listener {
         $this->registerEvent(PlayerJoinEvent::class, "onJoin");
         $this->registerEvent(PlayerQuitEvent::class, "onQuit");
         $this->registerEvent(PlayerInteractEvent::class, "onInteract");
+        $this->registerEvent(CommandEvent::class, "command");
 
         foreach ($this->enabledEvents as $event => $value) {
             $this->registerEvent($manager->getEventPath($event), $this->eventMethods[$event]);
@@ -161,6 +164,27 @@ class EventListener implements Listener {
         if (isset($this->enabledEvents["PlayerInteractEvent"])) $this->onEvent($event, "PlayerInteractEvent");
     }
 
+    public function command(CommandEvent $event) {
+        $sender = $event->getSender();
+        if (!($sender instanceof Player)) return;
+        if ($event->isCancelled()) return;
+
+        $cmd = $event->getCommand();
+        $manager = TriggerManager::getManager(TriggerManager::TRIGGER_COMMAND);
+        $commands = explode(" ", $cmd);
+
+        $count = count($commands);
+        for ($i=0; $i<$count; $i++) {
+            $command = implode(" ", $commands);
+            if ($manager->exists($command)) {
+                $recipes = $manager->get($command);
+                $recipes->executeAll($sender);
+                break;
+            }
+            array_pop($commands);
+        }
+    }
+
     public function onEvent(Event $event, string $eventName): void {
         $manager = TriggerManager::getManager(TriggerManager::TRIGGER_EVENT);
         if ($manager->exists($eventName)) {
@@ -168,6 +192,8 @@ class EventListener implements Listener {
             $target = null;
             if ($event instanceof PlayerEvent or $event instanceof BlockBreakEvent or $event instanceof BlockPlaceEvent) {
                 $target = $event->getPlayer();
+            } elseif ($event instanceof EntityDamageByEntityEvent) {
+                $target = $event->getDamager();
             } elseif ($event instanceof EntityEvent) {
                 $target = $event->getEntity();
             }

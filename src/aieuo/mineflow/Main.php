@@ -11,6 +11,7 @@ use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\action\process\ProcessFactory;
+use aieuo\mineflow\command\CommandManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\trigger\TriggerManager;
 
@@ -31,6 +32,9 @@ class Main extends PluginBase {
 
     /** @var RecipeManager */
     private $recipeManager;
+
+    /** @var CommandManager */
+    private $commandManager;
 
     public static function getInstance(): ?self {
         return self::$instance;
@@ -68,6 +72,10 @@ class Main extends PluginBase {
         $this->events = new Config($this->getDataFolder()."events.yml", Config::YAML);
         (new EventListener($this, $this->events))->registerEvents();
 
+        $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
+        $this->commandManager = new CommandManager($this, $commands);
+        $this->commandManager->addCommand("test a b c d e", "test2", "test3", "test4");
+
         $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
 
         $this->loaded = true;
@@ -94,5 +102,9 @@ class Main extends PluginBase {
 
     public function getRecipeManager(): RecipeManager {
         return $this->recipeManager;
+    }
+
+    public function getCommandManager(): CommandManager {
+        return $this->commandManager;
     }
 }

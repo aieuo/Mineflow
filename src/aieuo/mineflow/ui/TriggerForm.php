@@ -21,9 +21,12 @@ class TriggerForm {
             case TriggerManager::TRIGGER_EVENT:
                 (new EventTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
                 return;
+            case TriggerManager::TRIGGER_COMMAND:
+                (new CommandTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
+                return;
         }
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
-            ->setContent("type: ".$trigger[0]."\n".$trigger[1])
+            ->setContent("type: @trigger.type.".$trigger[0]."\n".$trigger[1])
             ->addButtons([
                 new Button("@form.delete"),
                 new Button("@form.back"),
@@ -48,6 +51,7 @@ class TriggerForm {
                 new Button("@form.back"),
                 new Button("@trigger.type.block"),
                 new Button("@trigger.type.event"),
+                new Button("@trigger.type.command"),
             ])->onRecive(function (Player $player, ?int $data, Recipe $recipe) {
                 if ($data === null) return;
 
@@ -60,6 +64,9 @@ class TriggerForm {
                         break;
                     case 2:
                         (new EventTriggerForm)->sendEventTriggerList($player, $recipe);
+                        break;
+                    case 3:
+                        (new CommandTriggerForm)->sendSelectCommand($player, $recipe);
                         break;
                 }
             })->addArgs($recipe)->show($player);

@@ -16,7 +16,7 @@ class BlockTriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, array $trigger, array $messages = []) {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
-            ->setContent("type: ".$trigger[0]."\n".$trigger[1])
+            ->setContent("type: @trigger.type.".$trigger[0]."\n".$trigger[1])
             ->addButtons([
                 new Button("@form.delete"),
                 new Button("@trigger.block.warp"),

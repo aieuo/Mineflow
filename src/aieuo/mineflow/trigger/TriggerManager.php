@@ -9,6 +9,7 @@ class TriggerManager {
 
     const TRIGGER_BLOCK = "block";
     const TRIGGER_EVENT = "event";
+    const TRIGGER_COMMAND = "command";
 
     /** @var RecipeContainer[]*/
     protected $recipes = [];
@@ -20,6 +21,7 @@ class TriggerManager {
         self::$managers = [
             self::TRIGGER_BLOCK => new BlockTriggerManager,
             self::TRIGGER_EVENT => new EventTriggerManager,
+            self::TRIGGER_COMMAND => new CommandTriggerManager,
         ];
     }
 

@@ -63,7 +63,8 @@ class RecipeForm {
                 $manager = Main::getInstance()->getRecipeManager();
                 $name = $data[0] === "" ? $defaultName : $data[0];
                 if ($manager->exists($name)) {
-                    $this->sendConfirmRename($player, $name, function (bool $result, string $name, string $newName) use ($player) {
+                    $newName = $manager->getNotDuplicatedName($name);
+                    (new HomeForm)->sendConfirmRename($player, $name, $newName, function (bool $result, string $name, string $newName) use ($player) {
                         if ($result) {
                             $manager = Main::getInstance()->getRecipeManager();
                             $recipe = new Recipe($newName);
@@ -84,20 +85,6 @@ class RecipeForm {
             })->addArgs($name);
         if ($error) $form->addError($error, 0);
         $form->show($player);
-    }
-
-    public function sendConfirmRename(Player $player, string $name, callable $callback) {
-        $manager = Main::getInstance()->getRecipeManager();
-        $newName = $manager->getNotDuplicatedName($name);
-
-        (new ModalForm("@form.recipe.renameRecipe.title"))
-            ->setContent(Language::get("form.recipe.renameRecipe.content", [$name, $newName]))
-            ->setButton1("@form.yes")
-            ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, string $name, string $newName, callable $callback) {
-                if ($data === null) return;
-                call_user_func_array($callback, [$data, $name, $newName]);
-            })->addArgs($name, $newName, $callback)->show($player);
     }
 
     public function sendSelectRecipe(Player $player, string $default = "", string $error = null) {
@@ -225,7 +212,8 @@ class RecipeForm {
 
                 $manager = Main::getInstance()->getRecipeManager();
                 if ($manager->exists($data[1])) {
-                    $this->sendConfirmRename($player, $data[1], function (bool $result, string $name, string $newName) use ($player, $recipe, $manager) {
+                    $newName = $manager->getNotDuplicatedName($data[1]);
+                    (new HomeForm)->sendConfirmRename($player, $data[1], $newName, function (bool $result, string $name, string $newName) use ($player, $recipe, $manager) {
                         if ($result) {
                             $manager->rename($recipe->getName(), $newName);
                             $this->sendRecipeMenu($player, $recipe);
@@ -249,10 +237,10 @@ class RecipeForm {
         foreach ($triggers as $trigger) {
             switch ($trigger[0]) {
                 case TriggerManager::TRIGGER_EVENT:
-                    $content = $trigger[0].": @trigger.event.".$trigger[1];
+                    $content = "@trigger.type.".$trigger[0].": @trigger.event.".$trigger[1];
                     break;
                 default:
-                    $content = $trigger[0].": ".$trigger[1];
+                    $content = "@trigger.type.".$trigger[0].": ".$trigger[1];
             }
             $buttons[] = new Button($content);
         }

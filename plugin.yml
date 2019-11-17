@@ -9,4 +9,10 @@ permissions:
   mineflow.command.mineflow:
     default: op
     description: "mineflow.command.mineflow"
+  mineflow.customcommand.op:
+    default: op
+    description: "mineflow.customcommand.op"
+  mineflow.customcommand.true:
+    default: true
+    description: "mineflow.customcommand.true"
 ...
