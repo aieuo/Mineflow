@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\FormAPI\element\Toggle;
 use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\trigger\TriggerManager;
 
 class RecipeForm {
 
@@ -246,7 +247,14 @@ class RecipeForm {
 
         $buttons = [new Button("@form.back"), new Button("@trigger.add")];
         foreach ($triggers as $trigger) {
-            $buttons[] = new Button($trigger[0].": ".$trigger[1]);
+            switch ($trigger[0]) {
+                case TriggerManager::TRIGGER_EVENT:
+                    $content = $trigger[0].": @trigger.event.".$trigger[1];
+                    break;
+                default:
+                    $content = $trigger[0].": ".$trigger[1];
+            }
+            $buttons[] = new Button($content);
         }
 
         (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))

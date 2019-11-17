@@ -137,20 +137,12 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function addTrigger(array $trigger): void {
-        switch ($trigger[0]) {
-            case TriggerManager::TRIGGER_BLOCK:
-                TriggerManager::getManager(TriggerManager::TRIGGER_BLOCK)->add($trigger[1], $this);
-                break;
-        }
+        TriggerManager::getManager($trigger[0])->add($trigger[1], $this);
         $this->triggers[] = $trigger;
     }
 
     public function removeTrigger(array $trigger): void {
-        switch ($trigger[0]) {
-            case TriggerManager::TRIGGER_BLOCK:
-                TriggerManager::getManager(TriggerManager::TRIGGER_BLOCK)->removeRecipe($trigger[1], $this->getName());
-                break;
-        }
+        TriggerManager::getManager($trigger[0])->removeRecipe($trigger[1], $this->getName());
         $index = array_search($trigger, $this->triggers);
         unset($this->triggers[$index]);
         $this->triggers = array_values($this->triggers);

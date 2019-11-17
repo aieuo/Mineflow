@@ -4,7 +4,6 @@ namespace aieuo\mineflow;
 
 use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
-use pocketmine\event\server\LowMemoryEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
@@ -26,6 +25,7 @@ use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
@@ -35,7 +35,10 @@ use pocketmine\event\Event;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\trigger\TriggerManager;
+use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\Main;
+use pocketmine\event\entity\EntityEvent;
+use pocketmine\event\player\PlayerEvent;
 
 class EventListener implements Listener {
 
@@ -54,9 +57,10 @@ class EventListener implements Listener {
         "PlayerQuitEvent" => "onQuit",
         "BlockBreakEvent" => "onBlockBreak",
         "BlockPlaceEvent" => "onBlockPlace",
+        "ServerStartEvent" => "onServerStart",
         "SignChangeEvent" => "onSignChange",
         "EntityDamageEvent" => "onEntityDamage",
-        // "EntityAttackEvent" => "onEntityAttack",
+        "EntityAttackEvent" => "onEntityAttack",
         "PlayerToggleFlightEvent" => "onToggleFlight",
         "PlayerDeathEvent" => "onDeath",
         "EntityLevelChangeEvent" => "onLevelChange",
@@ -71,7 +75,6 @@ class EventListener implements Listener {
         "PlayerMoveEvent" => "onMove",
         "PlayerToggleSneakEvent" => "onToggleSneak",
         "PlayerToggleSprintEvent" => "onToggleSprint",
-        "LowMemoryEvent" => "onLowMemory",
         "ProjectileHitEntityEvent" => "onProjectileHit",
     ];
 
@@ -140,11 +143,11 @@ class EventListener implements Listener {
                     $recipe = $session->get("blockTriggerRecipe");
                     $trigger = [TriggerManager::TRIGGER_BLOCK, $position];
                     if ($recipe->existsTrigger($trigger)) {
-                        (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.block.alreadyExists"]);
+                        (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                         return;
                     }
                     $recipe->addTrigger($trigger);
-                    (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.block.add.success"]);
+                    (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
                     break;
             }
             $session->remove("blockTriggerAction");
@@ -159,7 +162,17 @@ class EventListener implements Listener {
     }
 
     public function onEvent(Event $event, string $eventName): void {
-
+        $manager = TriggerManager::getManager(TriggerManager::TRIGGER_EVENT);
+        if ($manager->exists($eventName)) {
+            $recipes = $manager->get($eventName);
+            $target = null;
+            if ($event instanceof PlayerEvent or $event instanceof BlockBreakEvent or $event instanceof BlockPlaceEvent) {
+                $target = $event->getPlayer();
+            } elseif ($event instanceof EntityEvent) {
+                $target = $event->getEntity();
+            }
+            $recipes->executeAll($target);
+        }
     }
 
     public function onChat(PlayerChatEvent $event) {
@@ -174,11 +187,17 @@ class EventListener implements Listener {
     public function onBlockPlace(BlockPlaceEvent $event) {
         $this->onEvent($event, "BlockPlaceEvent");
     }
+    public function onServerStart(ServerStartEvent $event) {
+        $this->onEvent($event, "ServerStartEvent");
+    }
     public function onSignChange(SignChangeEvent $event) {
         $this->onEvent($event, "SignChangeEvent");
     }
     public function onEntityDamage(EntityDamageEvent $event) {
         $this->onEvent($event, "EntityDamageEvent");
+    }
+    public function onEntityAttack(EntityDamageByEntityEvent $event) {
+        $this->onEvent($event, "EntityAttackEvent");
     }
     public function onToggleFlight(PlayerToggleFlightEvent $event) {
         $this->onEvent($event, "PlayerToggleFlightEvent");
@@ -221,9 +240,6 @@ class EventListener implements Listener {
     }
     public function onToggleSprint(PlayerToggleSprintEvent $event) {
         $this->onEvent($event, "PlayerToggleSprintEvent");
-    }
-    public function onLowMemory(LowMemoryEvent $event) {
-        $this->onEvent($event, "LowMemoryEvent");
     }
     public function onProjectileHit(ProjectileHitEntityEvent $event) {
         $this->onEvent($event, "ProjectileHitEntityEvent");

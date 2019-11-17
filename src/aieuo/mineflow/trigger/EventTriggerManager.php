@@ -2,9 +2,11 @@
 
 namespace aieuo\mineflow\trigger;
 
+use aieuo\mineflow\event\ServerStartEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
@@ -26,38 +28,37 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
-use pocketmine\event\server\LowMemoryEvent;
 
 class EventTriggerManager extends TriggerManager {
 
     /** @var array */
     private $events = [ // TODO: 名前
-        "PlayerChatEvent" => [PlayerChatEvent::class, ""],
-        "PlayerCommandPreprocessEvent" => [PlayerCommandPreprocessEvent::class, ""],
-        "PlayerInteractEvent" => [PlayerInteractEvent::class, ""],
-        "PlayerJoinEvent" => [PlayerJoinEvent::class, ""],
-        "PlayerQuitEvent" => [PlayerQuitEvent::class, ""],
-        "BlockBreakEvent" => [BlockBreakEvent::class, ""],
-        "BlockPlaceEvent" => [BlockPlaceEvent::class, ""],
-        "SignChangeEvent" => [SignChangeEvent::class, ""],
-        "EntityDamageEvent" => [EntityDamageEvent::class, ""],
-        // "EntityAttackEvent" => [, ""],
-        "PlayerToggleFlightEvent" => [PlayerToggleFlightEvent::class, ""],
-        "PlayerDeathEvent" => [PlayerDeathEvent::class, ""],
-        "EntityLevelChangeEvent" => [EntityLevelChangeEvent::class, ""],
-        "CraftItemEvent" => [CraftItemEvent::class, ""],
-        "PlayerDropItemEvent" => [PlayerDropItemEvent::class, ""],
-        "FurnaceBurnEvent" => [FurnaceBurnEvent::class, ""],
-        "LevelLoadEvent" => [LevelLoadEvent::class, ""],
-        "PlayerBedEnterEvent" => [PlayerBedEnterEvent::class, ""],
-        "PlayerChangeSkinEvent" => [PlayerChangeSkinEvent::class, ""],
-        "PlayerExhaustEvent" => [PlayerExhaustEvent::class, ""],
-        "PlayerItemConsumeEvent" => [PlayerItemConsumeEvent::class, ""],
-        "PlayerMoveEvent" => [PlayerMoveEvent::class, ""],
-        "PlayerToggleSneakEvent" => [PlayerToggleSneakEvent::class, ""],
-        "PlayerToggleSprintEvent" => [PlayerToggleSprintEvent::class, ""],
-        "LowMemoryEvent" => [LowMemoryEvent::class, ""],
-        "ProjectileHitEntityEvent" => [ProjectileHitEntityEvent::class, ""],
+        "PlayerChatEvent" => [PlayerChatEvent::class, "trigger.event.PlayerChatEvent"],
+        "PlayerCommandPreprocessEvent" => [PlayerCommandPreprocessEvent::class, "trigger.event.PlayerCommandPreprocessEvent"],
+        "PlayerInteractEvent" => [PlayerInteractEvent::class, "trigger.event.PlayerInteractEvent"],
+        "PlayerJoinEvent" => [PlayerJoinEvent::class, "trigger.event.PlayerJoinEvent"],
+        "PlayerQuitEvent" => [PlayerQuitEvent::class, "trigger.event.PlayerQuitEvent"],
+        "BlockBreakEvent" => [BlockBreakEvent::class, "trigger.event.BlockBreakEvent"],
+        "BlockPlaceEvent" => [BlockPlaceEvent::class, "trigger.event.BlockPlaceEvent"],
+        "ServerStartEvent" => [ServerStartEvent::class, "trigger.event.ServerStartEvent"],
+        "SignChangeEvent" => [SignChangeEvent::class, "trigger.event.SignChangeEvent"],
+        "EntityDamageEvent" => [EntityDamageEvent::class, "trigger.event.EntityDamageEvent"],
+        "EntityAttackEvent" => [EntityDamageByEntityEvent::class, "trigger.event.EntityAttackEvent"],
+        "PlayerToggleFlightEvent" => [PlayerToggleFlightEvent::class, "trigger.event.PlayerToggleFlightEvent"],
+        "PlayerDeathEvent" => [PlayerDeathEvent::class, "trigger.event.PlayerDeathEvent"],
+        "EntityLevelChangeEvent" => [EntityLevelChangeEvent::class, "trigger.event.EntityLevelChangeEvent"],
+        "CraftItemEvent" => [CraftItemEvent::class, "trigger.event.CraftItemEvent"],
+        "PlayerDropItemEvent" => [PlayerDropItemEvent::class, "trigger.event.PlayerDropItemEvent"],
+        "FurnaceBurnEvent" => [FurnaceBurnEvent::class, "trigger.event.FurnaceBurnEvent"],
+        "LevelLoadEvent" => [LevelLoadEvent::class, "trigger.event.LevelLoadEvent"],
+        "PlayerBedEnterEvent" => [PlayerBedEnterEvent::class, "trigger.event.PlayerBedEnterEvent"],
+        "PlayerChangeSkinEvent" => [PlayerChangeSkinEvent::class, "trigger.event.PlayerChangeSkinEvent"],
+        "PlayerExhaustEvent" => [PlayerExhaustEvent::class, "trigger.event.PlayerExhaustEvent"],
+        "PlayerItemConsumeEvent" => [PlayerItemConsumeEvent::class, "trigger.event.PlayerItemConsumeEvent"],
+        "PlayerMoveEvent" => [PlayerMoveEvent::class, "trigger.event.PlayerMoveEvent"],
+        "PlayerToggleSneakEvent" => [PlayerToggleSneakEvent::class, "trigger.event.PlayerToggleSneakEvent"],
+        "PlayerToggleSprintEvent" => [PlayerToggleSprintEvent::class, "trigger.event.PlayerToggleSprintEvent"],
+        "ProjectileHitEntityEvent" => [ProjectileHitEntityEvent::class, "trigger.event.ProjectileHitEntityEvent"],
     ];
 
     /** @var array */
@@ -68,6 +69,7 @@ class EventTriggerManager extends TriggerManager {
         "PlayerJoinEvent",
         "BlockBreakEvent",
         "BlockPlaceEvent",
+        "ServerStartEvent",
         "EntityDamageEvent",
         "EntityAttackEvent",
         "PlayerToggleFlightEvent",
@@ -92,6 +94,6 @@ class EventTriggerManager extends TriggerManager {
     }
 
     public function getEventPath(string $event): ?string {
-        return $this->getEvents[$event][0] ?? null;
+        return $this->getEvents()[$event][0] ?? null;
     }
 }

@@ -11,6 +11,7 @@ use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\action\process\ProcessFactory;
+use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\trigger\TriggerManager;
 
 class Main extends PluginBase {
@@ -20,6 +21,10 @@ class Main extends PluginBase {
 
     /** @var Config */
     private $config;
+    /** @var Config */
+    private $favorites;
+    /** @var Config */
+    private $events;
 
     /** @var bool */
     private $loaded = false;
@@ -60,12 +65,14 @@ class Main extends PluginBase {
         ProcessFactory::init();
         ConditionFactory::init();
 
-        $events = new Config($this->getDataFolder()."events.yml", Config::YAML);
-        (new EventListener($this, $events))->registerEvents();
+        $this->events = new Config($this->getDataFolder()."events.yml", Config::YAML);
+        (new EventListener($this, $this->events))->registerEvents();
 
         $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
 
         $this->loaded = true;
+
+        (new ServerStartEvent($this))->call();
     }
 
     public function onDisable() {
@@ -79,6 +86,10 @@ class Main extends PluginBase {
 
     public function getFavorites(): Config {
         return $this->favorites;
+    }
+
+    public function getEvents(): Config {
+        return $this->events;
     }
 
     public function getRecipeManager(): RecipeManager {

@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\ui;
 
 use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\trigger\TriggerManager;
@@ -15,6 +14,14 @@ use aieuo\mineflow\FormAPI\element\Button;
 class TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, array $trigger, array $messages = []) {
+        switch ($trigger[0]) {
+            case TriggerManager::TRIGGER_BLOCK:
+                (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
+                return;
+            case TriggerManager::TRIGGER_EVENT:
+                (new EventTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
+                return;
+        }
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
             ->setContent("type: ".$trigger[0]."\n".$trigger[1])
             ->addButtons([
@@ -40,6 +47,7 @@ class TriggerForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@trigger.type.block"),
+                new Button("@trigger.type.event"),
             ])->onRecive(function (Player $player, ?int $data, Recipe $recipe) {
                 if ($data === null) return;
 
@@ -48,33 +56,13 @@ class TriggerForm {
                         (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
-                        $this->sendTriggerMenu($player, $recipe, TriggerManager::TRIGGER_BLOCK);
+                        (new BlockTriggerForm)->sendMenu($player, $recipe);
+                        break;
+                    case 2:
+                        (new EventTriggerForm)->sendEventTriggerList($player, $recipe);
                         break;
                 }
             })->addArgs($recipe)->show($player);
-    }
-
-    public function sendTriggerMenu(Player $player, Recipe $recipe, string $type) {
-        (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), $type])))
-            ->setContent("@form.selectButton")
-            ->addButtons([
-                new Button("@form.back"),
-                new Button("@form.add"),
-            ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, string $type) {
-                if ($data === null) return;
-
-                if ($data === 0) {
-                    $this->sendSelectTriggerType($player, $recipe);
-                    return;
-                }
-
-                switch ($type) {
-                    case TriggerManager::TRIGGER_BLOCK:
-                        Session::getSession($player)->set("blockTriggerAction", "add")->set("blockTriggerRecipe", $recipe);
-                        $player->sendMessage(Language::get("trigger.block.add.touch"));
-                        break;
-                }
-            })->addArgs($recipe, $type)->show($player);
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe, array $trigger) {
