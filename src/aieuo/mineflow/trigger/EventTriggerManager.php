@@ -32,7 +32,7 @@ use pocketmine\event\player\PlayerToggleSprintEvent;
 class EventTriggerManager extends TriggerManager {
 
     /** @var array */
-    private $events = [ // TODO: 名前
+    private $events = [
         "PlayerChatEvent" => [PlayerChatEvent::class, "trigger.event.PlayerChatEvent"],
         "PlayerCommandPreprocessEvent" => [PlayerCommandPreprocessEvent::class, "trigger.event.PlayerCommandPreprocessEvent"],
         "PlayerInteractEvent" => [PlayerInteractEvent::class, "trigger.event.PlayerInteractEvent"],
