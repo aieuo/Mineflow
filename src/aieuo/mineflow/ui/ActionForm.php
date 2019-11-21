@@ -79,7 +79,7 @@ class ActionForm {
         $buttons = [new Button("@form.back"), new Button("@form.items.category.favorite")];
         $categories = Categories::getActionCategories();
         foreach ($categories as $category) {
-            $buttons[] = new Button($category);
+            $buttons[] = new Button("@category.".$category);
         }
         (new ListForm(Language::get("form.action.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")

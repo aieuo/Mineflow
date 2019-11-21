@@ -26,4 +26,9 @@ interface ProcessIds {
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";
+
+    const FOUR_ARITHMETIC_OPERATIONS = "fourArithmeticOperations";
+    const CALCULATE = "calculate";
+    const GET_PI = "getPi";
+    const GET_E = "getE";
 }
