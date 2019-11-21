@@ -14,6 +14,11 @@ class ProcessFactory {
         self::register(new SendBroadcastMessage);
         self::register(new SendMessageToOp);
         self::register(new SendTitle);
+        /* money */
+        self::register(new AddMoney);
+        self::register(new TakeMoney);
+        self::register(new SetMoney);
+        self::register(new GetMoney);
     }
 
     /**
