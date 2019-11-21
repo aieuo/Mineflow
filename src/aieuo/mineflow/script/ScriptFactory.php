@@ -7,6 +7,7 @@ use aieuo\mineflow\condition\script\AndScript;
 use aieuo\mineflow\action\script\IFScript;
 use aieuo\mineflow\action\script\ElseifScript;
 use aieuo\mineflow\action\script\ElseScript;
+use aieuo\mineflow\action\script\RepeatScript;
 
 class ScriptFactory {
     private static $list = [];
@@ -15,6 +16,7 @@ class ScriptFactory {
         self::register(new IFScript);
         self::register(new ElseScript);
         self::register(new ElseifScript);
+        self::register(new RepeatScript);
 
         self::register(new AndScript);
         self::register(new ORScript);

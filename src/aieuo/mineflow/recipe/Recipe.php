@@ -231,7 +231,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function addVariable(Variable $variable) {
-        $this->variables[] = $variable;
+        $this->variables[$variable->getName()] = $variable;
     }
 
     public function replaceVariables(string $text) {
