@@ -2,18 +2,20 @@
 
 namespace aieuo\mineflow\recipe;
 
+use pocketmine\event\Event;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\Player;
+use aieuo\mineflow\variable\Variable;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\script\Script;
 use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\action\Action;
+use aieuo\mineflow\action\process\EventCancel;
 use aieuo\mineflow\action\ActionContainer;
+use aieuo\mineflow\action\Action;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\trigger\TriggerManager;
-use aieuo\mineflow\utils\Logger;
-use aieuo\mineflow\variable\Variable;
 
 class Recipe implements \JsonSerializable, ActionContainer {
 
@@ -170,11 +172,12 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->triggers;
     }
 
-    public function execute(?Entity $player = null, array $variables = []): ?bool {
+    public function execute(?Entity $player = null, array $variables = [], ?Event $event = null): ?bool {
         $this->variables = $variables;
         $targets = $this->getTargets($player);
         foreach ($targets as $target) {
             foreach ($this->actions as $action) {
+                if ($action instanceof EventCancel) $action->setEvent($event);
                 $this->lastResult = $action->execute($target, $this);
 
                 if ($this->lastResult === null and $target instanceof Player) {
@@ -186,7 +189,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 }
             }
         }
-        $this->Variables = [];
+        $this->variables = [];
         return true;
     }
 
@@ -232,6 +235,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function addVariable(Variable $variable) {
         $this->variables[$variable->getName()] = $variable;
+    }
+
+    public function getVariables(): array {
+        return $this->variables;
     }
 
     public function replaceVariables(string $text) {

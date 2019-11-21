@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\recipe;
 
 use pocketmine\entity\Entity;
+use pocketmine\event\Event;
 
 class RecipeContainer {
 
@@ -44,9 +45,9 @@ class RecipeContainer {
         return count($this->getAllRecipe());
     }
 
-    public function executeAll(Entity $target = null, array $variables = []) {
+    public function executeAll(Entity $target = null, array $variables = [], ?Event $event = null) {
         foreach ($this->getAllRecipe() as $recipe) {
-            $recipe->execute($target, $variables);
+            $recipe->execute($target, $variables, $event);
         }
     }
 }

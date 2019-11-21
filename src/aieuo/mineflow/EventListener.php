@@ -43,6 +43,7 @@ use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\DefaultVariables;
 use pocketmine\event\block\BlockEvent;
+use pocketmine\event\Cancellable;
 
 class EventListener implements Listener {
 
@@ -159,7 +160,7 @@ class EventListener implements Listener {
         if ($manager->exists($position)) {
             $recipes = $manager->get($position);
             $variables = array_merge(DefaultVariables::getBlockVariables($block), DefaultVariables::getPlayerVariables($player));
-            $recipes->executeAll($player, $variables);
+            $recipes->executeAll($player, $variables, $event);
         }
 
         if (isset($this->enabledEvents["PlayerInteractEvent"])) $this->onEvent($event, "PlayerInteractEvent");
@@ -180,7 +181,7 @@ class EventListener implements Listener {
             if ($manager->exists($command)) {
                 $recipes = $manager->get($command);
                 $variables = array_merge(DefaultVariables::getCommandVariables($event->getCommand()), DefaultVariables::getPlayerVariables($sender));
-                $recipes->executeAll($sender, $variables);
+                $recipes->executeAll($sender, $variables, $event);
                 break;
             }
             array_pop($commands);
@@ -200,7 +201,7 @@ class EventListener implements Listener {
                 $target = $event->getEntity();
             }
             $variables = DefaultVariables::getEventVariables($event, $eventName);
-            $recipes->executeAll($target, $variables);
+            $recipes->executeAll($target, $variables, $event);
         }
     }
 

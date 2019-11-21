@@ -1,0 +1,99 @@
+<?php
+
+namespace aieuo\mineflow\action\process;
+
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\action\process\Process;
+use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\Main;
+use pocketmine\level\Level;
+use pocketmine\math\Vector3;
+use pocketmine\Server;
+
+abstract class TypePosition extends Process {
+
+    /** @var string */
+    private $x;
+    /** @var string */
+    private $y;
+    /** @var string */
+    private $z;
+    /** @var string */
+    private $level = "{target.level}";
+
+    public function __construct(Vector3 $position = null, Level $level = null) {
+        if ($position !== null) {
+            $this->x = $position->x;
+            $this->y = $position->y;
+            $this->z = $position->z;
+        }
+        if ($level !== null) $this->level = $level->getFolderName();
+    }
+
+    public function setPosition(string $x, string $y, string $z, string $level = "{target.level}"): self {
+        $this->x = $x;
+        $this->y = $y;
+        $this->z = $z;
+        $this->level = $level;
+        return $this;
+    }
+
+    public function getPosition(): array {
+        return [$this->x, $this->y, $this->z, $this->level];
+    }
+
+    public function isDataValid(): bool {
+        return !empty($this->x) and !empty($this->y) and !empty($this->z);
+    }
+
+    public function getDetail(): string {
+        if (!$this->isDataValid()) return $this->getName();
+        return Language::get($this->detail, $this->getPosition());
+    }
+
+    public function getEditForm(array $default = [], array $errors = []) {
+        $pos = $this->getPosition();
+        $defaultpos = !$this->isDataValid() ? "" : ($pos[0].",".$pos[1].",".$pos[2]);
+        return (new CustomForm($this->getName()))
+            ->setContents([
+                new Label($this->getDescription()),
+                new Input("@action.position.form.position", Language::get("form.example", ["2,16,8"]), $default[1] ?? $defaultpos),
+                new Input("@action.position.form.level", Language::get("form.example", ["world"]), $default[2] ?? ($pos[3] ?? "")),
+                new Toggle("@form.cancelAndBack")
+            ])->addErrors($errors);
+    }
+
+    public function parseFromFormData(array $data): array {
+        $status = true;
+        $errors = [];
+        $pos = array_map(function ($value) {
+            return trim(rtrim($value));
+        }, explode(",", $data[1]));
+        if ($data[1] === "") {
+            $status = false;
+            $errors = [["@form.insufficient", 1]];
+        } elseif (!isset($pos[2])) {
+            $status = false;
+            $errors = [["@action.position.notEnough", 1]];
+        }
+        if (!Main::getInstance()->getVariableHelper()->containsVariable($data[2]) and Server::getInstance()->getLevelByName($data[2]) === null) {
+            $status = false;
+            $errors = [["@action.position.level.notFound", 2]];
+        }
+        return ["status" => $status, "contents" => [$pos[0], $pos[1], $pos[2], $data[2]], "cancel" => $data[3], "errors" => $errors];
+    }
+
+    public function parseFromSaveData(array $content): ?Process {
+        if (empty($content[3])) return null;
+
+        $this->setPosition(...$content);
+        return $this;
+    }
+
+    public function serializeContents(): array {
+        return $this->getPosition();
+    }
+}

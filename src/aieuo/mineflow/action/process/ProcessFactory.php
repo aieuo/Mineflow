@@ -7,6 +7,7 @@ class ProcessFactory {
 
     public static function init(): void {
         self::register(new DoNothing);
+        self::register(new EventCancel);
         /* message */
         self::register(new SendMessage);
         self::register(new SendTip);
@@ -16,11 +17,17 @@ class ProcessFactory {
         self::register(new SendTitle);
         /* entity */
         self::register(new GetEntity);
+        self::register(new Teleport);
+        self::register(new Motion);
+        self::register(new SetSleeping);
         /* money */
         self::register(new AddMoney);
         self::register(new TakeMoney);
         self::register(new SetMoney);
         self::register(new GetMoney);
+        /* script */
+        self::register(new ExecuteRecipe);
+        self::register(new ExecuteRecipeWithEntity);
     }
 
     /**
