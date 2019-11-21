@@ -56,9 +56,6 @@ class EventListener implements Listener {
     private $eventMethods = [
         "PlayerChatEvent" => "onChat",
         "PlayerCommandPreprocessEvent" => "onCommandPreprocess",
-        "PlayerInteractEvent" => "onInteract",
-        "PlayerJoinEvent" => "onJoin",
-        "PlayerQuitEvent" => "onQuit",
         "BlockBreakEvent" => "onBlockBreak",
         "BlockPlaceEvent" => "onBlockPlace",
         "ServerStartEvent" => "onServerStart",
@@ -111,6 +108,7 @@ class EventListener implements Listener {
         $this->registerEvent(CommandEvent::class, "command");
 
         foreach ($this->enabledEvents as $event => $value) {
+            if (!isset($this->eventMethods[$event])) continue;
             $this->registerEvent($manager->getEventPath($event), $this->eventMethods[$event]);
         }
     }
