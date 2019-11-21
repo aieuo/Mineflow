@@ -4,6 +4,8 @@ namespace aieuo\mineflow;
 
 use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
+use pocketmine\network\mcpe\protocol\InteractPacket;
+use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\CommandEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
@@ -31,19 +33,20 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\EventPriority;
 use pocketmine\event\Event;
 use pocketmine\Player;
+use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\event\ServerStartEvent;
+use aieuo\mineflow\action\process\SetSitting;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\variable\DefaultVariables;
-use pocketmine\event\block\BlockEvent;
-use pocketmine\event\Cancellable;
+use pocketmine\event\entity\EntityTeleportEvent;
 
 class EventListener implements Listener {
 
@@ -64,8 +67,6 @@ class EventListener implements Listener {
         "EntityDamageEvent" => "onEntityDamage",
         "EntityAttackEvent" => "onEntityAttack",
         "PlayerToggleFlightEvent" => "onToggleFlight",
-        "PlayerDeathEvent" => "onDeath",
-        "EntityLevelChangeEvent" => "onLevelChange",
         "CraftItemEvent" => "onCraftItem",
         "PlayerDropItemEvent" => "onDropItem",
         "FurnaceBurnEvent" => "onFurnaceBurn",
@@ -106,7 +107,10 @@ class EventListener implements Listener {
         $this->registerEvent(PlayerJoinEvent::class, "onJoin");
         $this->registerEvent(PlayerQuitEvent::class, "onQuit");
         $this->registerEvent(PlayerInteractEvent::class, "onInteract");
+        $this->registerEvent(PlayerDeathEvent::class, "onDeath");
         $this->registerEvent(CommandEvent::class, "command");
+        $this->registerEvent(DataPacketReceiveEvent::class, "receive");
+        $this->registerEvent(EntityTeleportEvent::class, "teleport");
 
         foreach ($this->enabledEvents as $event => $value) {
             if (!isset($this->eventMethods[$event])) continue;
@@ -205,6 +209,33 @@ class EventListener implements Listener {
         }
     }
 
+    public function onDeath(PlayerDeathEvent $event) {
+        if (isset($this->enabledEvents["PlayerDeathEvent"])) $this->onEvent($event, "PlayerDeathEvent");
+        $player = $event->getPlayer();
+        if ($player instanceof Player) SetSitting::leave($player);
+    }
+
+    public function onLevelChange(EntityLevelChangeEvent $event) {
+        if (isset($this->enabledEvents["EntityLevelChangeEvent"])) $this->onEvent($event, "EntityLevelChangeEvent");
+        $player = $event->getEntity();
+        if ($player instanceof Player) SetSitting::leave($player);
+    }
+
+    public function receive(DataPacketReceiveEvent $event) {
+        $pk = $event->getPacket();
+        $player = $event->getPlayer();
+        if ($pk instanceof InteractPacket) {
+            if ($pk->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
+                SetSitting::leave($player);
+            }
+        }
+    }
+
+    public function teleport(EntityTeleportEvent $event) {
+        $player = $event->getEntity();
+        if ($player instanceof Player) SetSitting::leave($player);
+    }
+
     public function onChat(PlayerChatEvent $event) {
         $this->onEvent($event, "PlayerChatEvent");
     }
@@ -231,12 +262,6 @@ class EventListener implements Listener {
     }
     public function onToggleFlight(PlayerToggleFlightEvent $event) {
         $this->onEvent($event, "PlayerToggleFlightEvent");
-    }
-    public function onDeath(PlayerDeathEvent $event) {
-        $this->onEvent($event, "PlayerDeathEvent");
-    }
-    public function onLevelChange(EntityLevelChangeEvent $event) {
-        $this->onEvent($event, "EntityLevelChangeEvent");
     }
     public function onCraftItem(CraftItemEvent $event) {
         $this->onEvent($event, "CraftItemEvent");

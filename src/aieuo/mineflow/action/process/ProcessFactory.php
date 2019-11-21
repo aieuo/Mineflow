@@ -19,7 +19,9 @@ class ProcessFactory {
         self::register(new GetEntity);
         self::register(new Teleport);
         self::register(new Motion);
+        /* player */
         self::register(new SetSleeping);
+        self::register(new SetSitting);
         /* money */
         self::register(new AddMoney);
         self::register(new TakeMoney);
