@@ -22,8 +22,8 @@ abstract class TypeMoney extends Condition {
         $this->amount = (string)$amount;
     }
 
-    public function setAmount(int $amount): self {
-        $this->amount = (string)$amount;
+    public function setAmount(string $amount): self {
+        $this->amount = $amount;
         return $this;
     }
 

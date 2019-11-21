@@ -12,7 +12,7 @@ use aieuo\mineflow\FormAPI\element\Toggle;
 
 abstract class TypeMessage extends Process {
 
-    protected $category = Categories::CATEGRY_ACTION_MESSAGE;
+    protected $category = Categories::CATEGORY_ACTION_MESSAGE;
 
     /** @var string */
     private $message;
@@ -55,7 +55,7 @@ abstract class TypeMessage extends Process {
             $status = false;
             $errors = [["@form.insufficient", 1]];
         }
-        return ["status" => $status, "contents" => [$data[1]], "cancel" => $data[2], "delete" => $data[3] ?? false, "errors" => $errors];
+        return ["status" => $status, "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
     public function parseFromSaveData(array $content): ?Process {

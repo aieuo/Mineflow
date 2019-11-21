@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
+use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -20,7 +21,7 @@ class SendTitle extends Process {
     protected $description = "@action.sendTitle.description";
     protected $detail = "action.sendTitle.detail";
 
-    protected $category = Categories::CATEGRY_ACTION_MESSAGE;
+    protected $category = Categories::CATEGORY_ACTION_MESSAGE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
@@ -69,7 +70,7 @@ class SendTitle extends Process {
     }
 
     public function isDataValid(): bool {
-        return $this->getTitle() === "" or $this->getSubTitle() === "";
+        return $this->getTitle() !== "" or $this->getSubTitle() !== "";
     }
 
     public function getDetail(): string {
