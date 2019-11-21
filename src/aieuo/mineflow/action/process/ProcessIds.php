@@ -13,6 +13,8 @@ interface ProcessIds {
     const SEND_MESSAGE_TO_OP= "sendMessageToOp";
     const SEND_TITLE = "sendTitle";
 
+    const GET_ENTITY = "getEntity";
+
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
     const TAKE_MONEY = "takeMoney";

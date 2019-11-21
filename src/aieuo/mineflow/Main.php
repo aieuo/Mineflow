@@ -15,6 +15,7 @@ use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\command\CommandManager;
 use aieuo\mineflow\action\process\ProcessFactory;
+use aieuo\mineflow\utils\EntityHolder;
 
 class Main extends PluginBase {
 
@@ -83,6 +84,8 @@ class Main extends PluginBase {
         $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.yml", Config::YAML));
 
         $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
+
+        new EntityHolder();
 
         $this->loaded = true;
 

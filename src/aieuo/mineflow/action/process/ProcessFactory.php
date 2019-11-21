@@ -14,6 +14,8 @@ class ProcessFactory {
         self::register(new SendBroadcastMessage);
         self::register(new SendMessageToOp);
         self::register(new SendTitle);
+        /* entity */
+        self::register(new GetEntity);
         /* money */
         self::register(new AddMoney);
         self::register(new TakeMoney);
