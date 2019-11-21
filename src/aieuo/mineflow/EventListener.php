@@ -41,6 +41,8 @@ use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\variable\DefaultVariables;
+use pocketmine\event\block\BlockEvent;
 
 class EventListener implements Listener {
 
@@ -158,7 +160,8 @@ class EventListener implements Listener {
         }
         if ($manager->exists($position)) {
             $recipes = $manager->get($position);
-            $recipes->executeAll($player);
+            $variables = array_merge(DefaultVariables::getBlockVariables($block), DefaultVariables::getPlayerVariables($player));
+            $recipes->executeAll($player, $variables);
         }
 
         if (isset($this->enabledEvents["PlayerInteractEvent"])) $this->onEvent($event, "PlayerInteractEvent");
@@ -178,7 +181,8 @@ class EventListener implements Listener {
             $command = implode(" ", $commands);
             if ($manager->exists($command)) {
                 $recipes = $manager->get($command);
-                $recipes->executeAll($sender);
+                $variables = array_merge(DefaultVariables::getCommandVariables($event->getCommand()), DefaultVariables::getPlayerVariables($sender));
+                $recipes->executeAll($sender, $variables);
                 break;
             }
             array_pop($commands);
@@ -190,14 +194,15 @@ class EventListener implements Listener {
         if ($manager->exists($eventName)) {
             $recipes = $manager->get($eventName);
             $target = null;
-            if ($event instanceof PlayerEvent or $event instanceof BlockBreakEvent or $event instanceof BlockPlaceEvent) {
+            if ($event instanceof PlayerEvent or $event instanceof BlockEvent or $event instanceof CraftItemEvent) {
                 $target = $event->getPlayer();
             } elseif ($event instanceof EntityDamageByEntityEvent) {
                 $target = $event->getDamager();
             } elseif ($event instanceof EntityEvent) {
                 $target = $event->getEntity();
             }
-            $recipes->executeAll($target);
+            $variables = DefaultVariables::getEventVariables($event, $eventName);
+            $recipes->executeAll($target, $variables);
         }
     }
 

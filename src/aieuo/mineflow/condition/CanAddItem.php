@@ -25,6 +25,29 @@ class CanAddItem extends TypeItem {
         }
 
         $item = $this->getItem();
+        $id = $item[0];
+        $count = $item[1];
+        $name = $item[2];
+        if ($origin instanceof Recipe) {
+            $id = $origin->replaceVariables($id);
+            $count = $origin->replaceVariables($count);
+            $name = $origin->replaceVariables($name);
+        }
+
+        if (!is_numeric($count)) {
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.item.count.notNumber")]));
+            return null;
+        } elseif ((int)$count <= 0) {
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.item.count.zero")]));
+            return null;
+        }
+
+        $item = $this->parseItem($id, (int)$count, $name);
+        if ($item === null) {
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.item.notFound")]));
+            return null;
+        }
+
         return $target->getInventory()->canAddItem($item);
     }
 }

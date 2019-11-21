@@ -17,7 +17,7 @@ class SendMessage extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(?Entity $target, ?Recipe $original = null): ?bool {
+    public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
@@ -25,7 +25,12 @@ class SendMessage extends TypeMessage {
             return false;
         }
 
-        $target->sendMessage($this->getMessage());
+        $message = $this->getMessage();
+        if ($origin instanceof Recipe) {
+            $message = $origin->replaceVariables($message);
+        }
+
+        $target->sendMessage($message);
         return true;
     }
 }

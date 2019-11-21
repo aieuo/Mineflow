@@ -8,6 +8,15 @@ class ListVariable extends Variable {
 
     public $type = Variable::LIST;
 
+    /** @var string */
+    private $showString = "";
+
+    public function __construct($name, $value, ?string $str = "") {
+        $this->name = $name;
+        $this->value = $value;
+        $this->showString = $str;
+    }
+
     public function addition(Variable $var, string $name = "result"): Variable {
         if ($var->getType() !== Variable::LIST) {
             return new StringVariable("ERROR", Language::get("variable.list.add.error"));
@@ -60,6 +69,7 @@ class ListVariable extends Variable {
     }
 
     public function __toString() {
+        if (!empty($this->showString)) return $this->showString;
         $values = [];
         foreach ($this->getValue() as $value) {
             if ($value instanceof Variable) {

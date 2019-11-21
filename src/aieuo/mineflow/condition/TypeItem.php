@@ -11,47 +11,52 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\condition\Condition;
 use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\Main;
 
 abstract class TypeItem extends Condition {
 
     protected $category = Categories::CATEGORY_CONDITION_ITEM;
 
-    /** @var Item */
-    private $item;
+    /** @var string */
+    private $itemId;
+    /** @var string */
+    private $itemCount;
+    /** @var string|null */
+    private $itemName;
 
     public function __construct(Item $item = null) {
-        $this->item = $item;
+        if ($item === null) return;
+        $this->itemId = $item->getId().":".$item->getDamage();
+        $this->itemCount = (string)$item->getCount();
+        $this->itemName = $item->hasCustomName() ? $item->getName() : null;
     }
 
-    public function setItem(Item $item): self {
-        $this->item = $item;
+    public function setItem(string $id, string $count, string $name = null): self {
+        $this->itemId = $id;
+        $this->itemCount = $count;
+        $this->itemName = $name;
         return $this;
     }
 
-    public function getItem(): ?Item {
-        return $this->item;
+    public function getItem(): array {
+        return [$this->itemId, $this->itemCount, $this->itemName];
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
         $item = $this->getItem();
-        return Language::get($this->detail, [$item->getId(), $item->getDamage(), $item->getName(), $item->getCount()]);
+        return Language::get($this->detail, $item);
     }
 
     public function isDataValid(): bool {
-        return $this->item instanceof Item and $this->item->getCount() > 0;
+        return $this->itemId !== null and $this->itemCount !== null;
     }
 
     public function getEditForm(array $default = [], array $errors = []) {
         $item = $this->getItem();
-        $id = "";
-        $count = "";
-        $name = "";
-        if ($item instanceof Item) {
-            $id = $item->getId().":".$item->getDamage();
-            $count = $item->getCount();
-            $name = $item->hasCustomName() ? $item->getName() : "";
-        }
+        $id = $item[0] ?? "";
+        $count = $item[1] ?? "";
+        $name = $item[2] ?? "";
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
@@ -62,21 +67,36 @@ abstract class TypeItem extends Condition {
             ])->addErrors($errors);
     }
 
+    public function parseItem(string $id, int $count, string $name = ""): ?Item {
+        try {
+            $item = ItemFactory::fromString($id);
+        } catch (\InvalidArgumentException $e) {
+            return null;
+        }
+        $item->setCount($count);
+        if (!empty($name)) $item->setCustomName($name);
+        return $item;
+    }
+
     public function parseFromFormData(array $data): array {
         $errors = [];
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
         }
-        try {
-            ItemFactory::fromString($data[1]);
-        } catch (\InvalidArgumentException $e) {
-            $errors[] = ["@condition.item.notFound", 1];
+        $helper = Main::getInstance()->getVariableHelper();
+        if (!$helper->containsVariable($data[1])) {
+            try {
+                ItemFactory::fromString($data[1]);
+            } catch (\InvalidArgumentException $e) {
+                $errors[] = ["@condition.item.notFound", 1];
+            }
         }
+        $containsVariable = $helper->containsVariable($data[2]);
         if ($data[2] === "") {
             $errors[] = ["@form.insufficient", 2];
-        } elseif (!is_numeric($data[2])) {
+        } elseif (!$containsVariable and !is_numeric($data[2])) {
             $errors[] = ["@condition.item.count.notNumber", 2];
-        } elseif ((int)$data[2] <= 0) {
+        } elseif (!$containsVariable and (int)$data[2] <= 0) {
             $errors[] = ["@condition.item.form.zero", 2];
         }
         return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
@@ -84,23 +104,11 @@ abstract class TypeItem extends Condition {
 
     public function parseFromSaveData(array $content): ?Condition {
         if (!isset($content[1])) return null;
-        try {
-            $item = ItemFactory::fromString($content[0]);
-        } catch (\InvalidArgumentException $e) {
-            return null;
-        }
-        $item->setCount((int)$content[1]);
-        if (!empty($content[2])) $item->setCustomName($content[2]);
-        $this->setItem($item);
+        $this->setItem($content[0], $content[1], $content[2] ?? "");
         return $this;
     }
 
     public function serializeContents(): array {
-        $item = $this->getItem();
-        return [
-            $item->getId().":".$item->getDamage(),
-            $item->getCount(),
-            $item->hasCustomName() ? $item->getCustomName() : "",
-        ];
+        return $this->getItem();
     }
 }

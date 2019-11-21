@@ -15,6 +15,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\FormAPI\element\Toggle;
 use aieuo\mineflow\FormAPI\element\Button;
 use aieuo\mineflow\trigger\TriggerManager;
+use aieuo\mineflow\variable\DefaultVariables;
 
 class RecipeForm {
 
@@ -170,7 +171,8 @@ class RecipeForm {
                         $this->sendChangeName($player, $recipe);
                         break;
                     case 2:
-                        $recipe->execute($player);
+                        $variables = array_merge(DefaultVariables::getServerVariables(), DefaultVariables::getPlayerVariables($player));
+                        $recipe->execute($player, $variables);
                         break;
                     case 3:
                         $this->sendTriggerList($player, $recipe);

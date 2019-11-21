@@ -83,6 +83,13 @@ class VariableHelper {
         $this->file->remove($name);
     }
 
+    public function saveAll() {
+        foreach ($this->variables as $variable) {
+            $this->add($variable, true);
+        }
+        $this->variables = [];
+    }
+
     public function findVariables(string $string): array {
         $variables = [];
         if (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
@@ -139,6 +146,10 @@ class VariableHelper {
             return str_replace("{".$replace."}", "§cUndefined variable: ".$name."§r", $string);
         }
         $value = $variable->getValue();
+        if (empty($names)) {
+            $value = $variable->toStringVariable()->getValue();
+            return str_replace("{".$replace."}", $value, $string);
+        }
 
         foreach ($names as $name) {
             if (!is_array($value) and !($value instanceof ListVariable or $value instanceof MapVariable)) {

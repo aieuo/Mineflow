@@ -29,7 +29,17 @@ class LessMoney extends TypeMoney {
             return null;
         }
 
+        $amount = $this->getAmount();
+        if ($origin instanceof Recipe) {
+            $amount = $origin->replaceVariables($amount);
+        }
+
+        if (!is_numeric($amount)) {
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.money.notNumber")]));
+            return null;
+        }
+
         $mymoney = Economy::getPlugin()->getMoney($target->getName());
-        return $mymoney >= $this->getAmount();
+        return $mymoney <= (int)$amount;
     }
 }

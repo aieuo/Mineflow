@@ -92,6 +92,7 @@ class Main extends PluginBase {
     public function onDisable() {
         if (!$this->loaded) return;
         $this->recipeManager->saveAll();
+        $this->variableHelper->saveAll();
     }
 
     public function getConfig(): Config {

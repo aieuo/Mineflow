@@ -18,17 +18,22 @@ class SendMessageToOp extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(?Entity $target, ?Recipe $original = null): ?bool {
+    public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
             if ($target instanceof Player) $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
             else Server::getInstance()->getLogger()->info(Language::get("invalid.contents", [$this->getName()]));
             return false;
         }
 
+        $message = $this->getMessage();
+        if ($origin instanceof Recipe) {
+            $message = $origin->replaceVariables($message);
+        }
+
         $players = Server::getInstance()->getOnlinePlayers();
         foreach ($players as $player) {
             if ($player->isOp()) {
-                $player->sendMessage($this->getMessage());
+                $player->sendMessage($message);
             }
         }
         return true;

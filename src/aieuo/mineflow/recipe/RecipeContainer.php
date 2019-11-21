@@ -44,9 +44,9 @@ class RecipeContainer {
         return count($this->getAllRecipe());
     }
 
-    public function executeAll(Entity $target = null) {
+    public function executeAll(Entity $target = null, array $variables = []) {
         foreach ($this->getAllRecipe() as $recipe) {
-            $recipe->execute($target);
+            $recipe->execute($target, $variables);
         }
     }
 }

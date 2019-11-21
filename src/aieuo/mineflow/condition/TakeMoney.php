@@ -29,10 +29,23 @@ class TakeMoney extends TypeMoney {
             return null;
         }
 
+        $amount = $this->getAmount();
+        if ($origin instanceof Recipe) {
+            $amount = $origin->replaceVariables($amount);
+        }
+
+        if (!is_numeric($amount)) {
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.money.notNumber")]));
+            return null;
+        } elseif ((int)$amount <= 0) {
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.money.zero")]));
+            return null;
+        }
+
         $economy = Economy::getPlugin();
         $mymoney = $economy->getMoney($target->getName());
         if ($mymoney >= $this->getAmount()) {
-            $economy->takeMoney($target->getName(), $this->getAmount());
+            $economy->takeMoney($target->getName(), (int)$amount);
             return true;
         }
 

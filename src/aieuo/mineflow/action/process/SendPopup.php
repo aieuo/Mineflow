@@ -17,7 +17,7 @@ class SendPopup extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(?Entity $target, ?Recipe $original = null): ?bool {
+    public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
@@ -25,7 +25,12 @@ class SendPopup extends TypeMessage {
             return false;
         }
 
-        $target->sendPopup($this->getMessage());
+        $message = $this->getMessage();
+        if ($origin instanceof Recipe) {
+            $message = $origin->replaceVariables($message);
+        }
+
+        $target->sendPopup($message);
         return true;
     }
 }

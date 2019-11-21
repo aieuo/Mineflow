@@ -10,8 +10,10 @@ use aieuo\mineflow\script\Script;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\Action;
 use aieuo\mineflow\action\ActionContainer;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\utils\Logger;
+use aieuo\mineflow\variable\Variable;
 
 class Recipe implements \JsonSerializable, ActionContainer {
 
@@ -52,6 +54,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var bool|null */
     private $lastResult = null;
+
+    /** @var array */
+    private $variables = [];
 
     public function __construct(string $name) {
         $this->name = $name;
@@ -165,7 +170,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->triggers;
     }
 
-    public function execute(?Entity $player = null): ?bool {
+    public function execute(?Entity $player = null, array $variables = []): ?bool {
+        $this->variables = $variables;
         $targets = $this->getTargets($player);
         foreach ($targets as $target) {
             foreach ($this->actions as $action) {
@@ -180,6 +186,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 }
             }
         }
+        $this->Variables = [];
         return true;
     }
 
@@ -221,5 +228,13 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function getLastActionResult(): ?bool {
         return $this->lastResult;
+    }
+
+    public function addVariable(Variable $variable) {
+        $this->variables[] = $variable;
+    }
+
+    public function replaceVariables(string $text) {
+        return Main::getInstance()->getVariableHelper()->replaceVariables($text, $this->variables);
     }
 }

@@ -28,12 +28,12 @@ class SendTitle extends Process {
     private $title;
     /** @var string */
     private $subtitle;
-    /** @var int */
-    private $fadeIn = -1;
-    /** @var int */
-    private $stay = -1;
-    /** @var int */
-    private $fadeOut = -1;
+    /** @var string */
+    private $fadeIn = "-1";
+    /** @var string */
+    private $stay = "-1";
+    /** @var string */
+    private $fadeOut = "-1";
 
     public function __construct(string $title = "", string $subtitle = "", int $fadeIn = -1, int $stay = -1, int $fadeOut = -1) {
         $this->title = $title;
@@ -58,9 +58,9 @@ class SendTitle extends Process {
     }
 
     public function setTime(int $fadeIn = -1, int $stay = -1, int $fadeOut = -1): self {
-        $this->fadeIn = $fadeIn;
-        $this->stay = $stay;
-        $this->fadeOut = $fadeOut;
+        $this->fadeIn = (string)$fadeIn;
+        $this->stay = (string)$stay;
+        $this->fadeOut = (string)$fadeOut;
         return $this;
     }
 
@@ -77,7 +77,7 @@ class SendTitle extends Process {
         return Language::get($this->detail, [$this->getTitle(), $this->getSubTitle()]);
     }
 
-    public function execute(?Entity $target, ?Recipe $original = null): ?bool {
+    public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Player)) return false;
 
         if (!$this->isDataValid()) {
@@ -85,7 +85,18 @@ class SendTitle extends Process {
             return false;
         }
 
-        $target->addTitle($this->getTitle(), $this->getSubTitle(), ...$this->getTime());
+        $title = $this->getTitle();
+        $subtitle = $this->getSubTitle();
+        $times = $this->getTime();
+        if ($origin instanceof Recipe) {
+            $title = $origin->replaceVariables($title);
+            $subtitle = $origin->replaceVariables($subtitle);
+            $times = array_map(function ($time) use ($origin) {
+                return $origin->replaceVariables($time);
+            }, $times);
+        }
+
+        $target->addTitle($title, $subtitle, ...$times);
         return true;
     }
 
@@ -106,14 +117,14 @@ class SendTitle extends Process {
             $status = false;
             $errors = [["@form.insufficient", 1], ["@form.insufficient", 2]];
         }
-        return ["status" => $status, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["status" => $status, "contents" => [$data[1], $data[2], "-1", "-1", "-1"], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function parseFromSaveData(array $content): ?Process {
-        if (!isset($content[1]) or !is_string($content[0]) or !is_string($content[1])) return null;
+        if (!isset($content[1])) return null;
         $this->setTitle($content[0], $content[1]);
         if (isset($content[4])) {
-            $this->setTime((int)$content[2], (int)$content[3], (int)$content[4]);
+            $this->setTime($content[2], $content[3], $content[4]);
         }
         return $this;
     }

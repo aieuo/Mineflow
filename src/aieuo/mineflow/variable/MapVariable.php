@@ -3,10 +3,20 @@
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\utils\Language;
+use Error;
 
 class MapVariable extends Variable {
 
     public $type = Variable::MAP;
+
+    /** @var string */
+    private $showString = "";
+
+    public function __construct($name, $value, ?string $str = "") {
+        $this->name = $name;
+        $this->value = $value;
+        $this->showString = $str;
+    }
 
     public function addition(Variable $var, string $name = "result"): Variable {
         if ($var->getType() !== Variable::LIST and $var->getType() !== Variable::MAP) {
@@ -51,6 +61,7 @@ class MapVariable extends Variable {
     }
 
     public function __toString() {
+        if (!empty($this->showString)) return $this->showString;
         $values = [];
         foreach ($this->getValue() as $key => $value) {
             if ($value instanceof Variable) {
