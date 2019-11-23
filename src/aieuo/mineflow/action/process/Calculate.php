@@ -3,7 +3,9 @@
 namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
+use pocketmine\Server;
 use pocketmine\Player;
+use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -11,9 +13,8 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\FormAPI\element\Dropdown;
 use aieuo\mineflow\FormAPI\element\Toggle;
-use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\FormAPI\element\Dropdown;
 
 class Calculate extends Process {
 
@@ -109,7 +110,8 @@ class Calculate extends Process {
         }
 
         if (!is_numeric($value)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
 
