@@ -172,7 +172,7 @@ class RecipeForm {
                         break;
                     case 2:
                         $variables = array_merge(DefaultVariables::getServerVariables(), DefaultVariables::getPlayerVariables($player));
-                        $recipe->execute($player, $variables);
+                        $recipe->executeAllTargets($player, $variables);
                         break;
                     case 3:
                         $this->sendTriggerList($player, $recipe);

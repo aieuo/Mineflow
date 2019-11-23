@@ -70,9 +70,14 @@ class ExecuteRecipe extends Process {
             return null;
         }
 
-        $variables = [];
-        if ($origin instanceof Recipe) $variables = $origin->getVariables();
-        $recipe->execute($target, $variables);
+        $recipe = clone $recipe;
+        if ($origin instanceof Recipe) {
+            $variables = $origin->getVariables();
+            $recipe->addVariables($variables);
+            $recipe->setSourceRecipe($origin);
+            $origin->wait();
+        }
+        $recipe->execute($target);
         return true;
     }
 
@@ -81,6 +86,7 @@ class ExecuteRecipe extends Process {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.executeRecipe.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getRecipeName()),
+                new Input("@action.executeRecipe.form.args", Language::get("form.example", ["{target}, 1, aieuo"]), $default[1] ?? $this->getRecipeName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

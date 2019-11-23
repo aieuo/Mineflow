@@ -77,7 +77,7 @@ class Motion extends Process {
         }
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.position.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
 
@@ -108,7 +108,7 @@ class Motion extends Process {
                 $errors[] = ["@form.insufficient", $i];
             } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {
                 $status = false;
-                $errors[] = ["@action.position.notNumber", $i];
+                $errors[] = ["@mineflow.contents.notNumber", $i];
             }
         }
         return ["status" => $status, "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];

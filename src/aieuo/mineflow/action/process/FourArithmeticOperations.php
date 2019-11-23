@@ -112,11 +112,11 @@ class FourArithmeticOperations extends Process {
         }
 
         if (!is_numeric($value1)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.fourArithmeticOperations.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
         if (!is_numeric($value2)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.fourArithmeticOperations.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
 

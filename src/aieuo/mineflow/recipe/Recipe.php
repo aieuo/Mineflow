@@ -60,6 +60,14 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /** @var array */
     private $variables = [];
 
+    /** @var bool */
+    private $wait = false;
+    /** @var array */
+    private $last;
+
+    /** @var Recipe|null */
+    private $sourceRecipe;
+
     public function __construct(string $name) {
         $this->name = $name;
     }
@@ -172,25 +180,81 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->triggers;
     }
 
-    public function execute(?Entity $player = null, array $variables = [], ?Event $event = null): ?bool {
-        $this->variables = $variables;
+    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null): ?bool {
         $targets = $this->getTargets($player);
         foreach ($targets as $target) {
-            foreach ($this->actions as $action) {
-                if ($action instanceof EventCancel) $action->setEvent($event);
-                $this->lastResult = $action->execute($target, $this);
+            $recipe = clone $this;
+            $recipe->addVariables($variables);
+            $recipe->execute($target, $event);
+        }
+        return true;
+    }
 
-                if ($this->lastResult === null and $target instanceof Player) {
-                    $player->sendMessage(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]));
-                    continue;
-                } elseif ($this->lastResult === null) {
-                    Logger::warning(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]));
-                    continue;
-                }
+    public function execute(?Entity $target, ?Event $event = null, int $start = 0): ?bool {
+        $actions = $this->getActions();
+        $count = count($actions);
+        for ($i=$start; $i<$count; $i++) {
+            $action = $actions[$i];
+            if ($action instanceof EventCancel) $action->setEvent($event);
+            $this->lastResult = $action->execute($target, $this);
+
+            if ($this->lastResult === null and $target instanceof Player) {
+                $target->sendMessage(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]));
+                return false;
+            } elseif ($this->lastResult === null) {
+                Logger::warning(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]));
+                return false;
+            }
+
+            if ($this->wait) {
+                $this->last = [$target, $event, $i + 1];
+                return true;
             }
         }
-        $this->variables = [];
+        if ($this->sourceRecipe instanceof Recipe) $this->sourceRecipe->resume();
         return true;
+    }
+
+    public function getLastActionResult(): ?bool {
+        return $this->lastResult;
+    }
+
+    public function addVariable(Variable $variable) {
+        $this->variables[$variable->getName()] = $variable;
+    }
+
+    public function addVariables(array $variables) {
+        $this->variables = array_merge($this->variables, $variables);
+    }
+
+    public function getVariable(string $name): ?Variable {
+        return $this->variables[$name] ?? null;
+    }
+
+    public function getVariables(): array {
+        return $this->variables;
+    }
+
+    public function removeVariable(string $name) {
+        unset($this->variables[$name]);
+    }
+
+    public function replaceVariables(string $text) {
+        return Main::getInstance()->getVariableHelper()->replaceVariables($text, $this->variables);
+    }
+
+    public function setSourceRecipe(?Recipe $recipe) {
+        $this->sourceRecipe = $recipe;
+    }
+
+    public function wait() {
+        $this->wait = true;
+    }
+
+    public function resume() {
+        $this->wait = false;
+        if ($this->last === null) return;
+        $this->execute(...$this->last);
     }
 
     public function jsonSerialize(): array {
@@ -227,21 +291,5 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $this->addAction($action);
         }
         return $this;
-    }
-
-    public function getLastActionResult(): ?bool {
-        return $this->lastResult;
-    }
-
-    public function addVariable(Variable $variable) {
-        $this->variables[$variable->getName()] = $variable;
-    }
-
-    public function getVariables(): array {
-        return $this->variables;
-    }
-
-    public function replaceVariables(string $text) {
-        return Main::getInstance()->getVariableHelper()->replaceVariables($text, $this->variables);
     }
 }

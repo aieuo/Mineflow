@@ -95,7 +95,7 @@ abstract class TypeItem extends Condition {
         if ($data[2] === "") {
             $errors[] = ["@form.insufficient", 2];
         } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@condition.item.count.notNumber", 2];
+            $errors[] = ["@mineflow.contents.notNumber", 2];
         } elseif (!$containsVariable and (int)$data[2] <= 0) {
             $errors[] = ["@condition.item.form.zero", 2];
         }

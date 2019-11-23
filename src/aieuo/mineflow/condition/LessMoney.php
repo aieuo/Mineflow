@@ -35,7 +35,7 @@ class LessMoney extends TypeMoney {
         }
 
         if (!is_numeric($amount)) {
-            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.money.notNumber")]));
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
 

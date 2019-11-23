@@ -72,7 +72,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
         }
 
         if (!is_numeric($id)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.getEntity.id.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
 
@@ -82,10 +82,15 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
             return null;
         }
 
-        $variables = [];
-        if ($origin instanceof Recipe) $variables = $origin->getVariables();
-        $variables["target"] = $entity instanceof Player ? DefaultVariables::getPlayerVariables($entity) : DefaultVariables::getEntityVariables($entity);
-        $recipe->execute($entity, $variables);
+        $recipe = clone $recipe;
+        if ($origin instanceof Recipe) {
+            $variables = $origin->getVariables();
+            $variables["target"] = $entity instanceof Player ? DefaultVariables::getPlayerVariables($entity) : DefaultVariables::getEntityVariables($entity);
+            $recipe->addVariables($variables);
+            $recipe->setSourceRecipe($origin);
+            $origin->wait();
+        }
+        $recipe->execute($entity);
         return true;
     }
 

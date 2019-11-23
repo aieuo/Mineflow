@@ -56,6 +56,6 @@ class EntityHolder {
     public function isActive(int $id): bool {
         $entity = $this->findEntity($id);
         if ($entity === null) return false;
-        return !$entity->isAlive() and $entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());
+        return $entity->isAlive() and !$entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());
     }
 }

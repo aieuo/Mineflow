@@ -47,7 +47,7 @@ class RecipeContainer {
 
     public function executeAll(Entity $target = null, array $variables = [], ?Event $event = null) {
         foreach ($this->getAllRecipe() as $recipe) {
-            $recipe->execute($target, $variables, $event);
+            $recipe->executeAllTargets($target, $variables, $event);
         }
     }
 }

@@ -38,7 +38,7 @@ class SetSleeping extends TypePosition {
         }
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.position.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
         $level = Server::getInstance()->getLevelByName($positions[3]);

@@ -38,7 +38,7 @@ class SetMoney extends TypeMoney {
         }
 
         if (!is_numeric($amount)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.money.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         } elseif ((int)$amount <= 0) {
             $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.money.zero")]));

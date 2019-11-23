@@ -35,7 +35,7 @@ class InHand extends TypeItem {
         }
 
         if (!is_numeric($count)) {
-            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.item.count.notNumber")]));
+            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         } elseif ((int)$count <= 0) {
             $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("condition.item.count.zero")]));

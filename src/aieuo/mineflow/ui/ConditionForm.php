@@ -79,7 +79,7 @@ class ConditionForm {
         $buttons = [new Button("@form.back"), new Button("@form.items.category.favorite")];
         $categories = Categories::getConditionCategories();
         foreach ($categories as $category) {
-            $buttons[] = new Button("category.".$category);
+            $buttons[] = new Button("@category.".$category);
         }
         (new ListForm(Language::get("form.condition.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")
@@ -140,7 +140,7 @@ class ConditionForm {
     public function sendConditionMenu(Player $player, ConditionContainer $container, Conditionable $condition, array $messages = []) {
         $config = Main::getInstance()->getFavorites();
         $favorites = $config->getNested($player->getName().".condition", []);
-        (new ListForm(Language::get("form.condition.menu.title", [$condition->getName()])))
+        (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getName()])))
             ->setContent($condition->getDescription())
             ->addButtons([
                 new Button("@form.add"),

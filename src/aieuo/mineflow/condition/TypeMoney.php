@@ -58,12 +58,12 @@ abstract class TypeMoney extends Condition {
             $errors = [["@form.insufficient", 1]];
         } elseif (!$containsVariable and !is_numeric($data[1])) {
             $status = false;
-            $errors = [["@condition.money.notNumber", 1]];
+            $errors = [["@mineflow.contents.notNumber", 1]];
         } elseif (!$containsVariable and (int)$data[1] <= 0) {
             $status = false;
             $errors = [["@condition.money.zero", 1]];
         }
-        return ["status" => $status, "contents" => [(int)$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => $status, "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
     public function parseFromSaveData(array $content): ?Condition {

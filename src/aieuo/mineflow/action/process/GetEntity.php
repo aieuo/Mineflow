@@ -81,7 +81,7 @@ class GetEntity extends Process {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         if (!is_numeric($id)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.getEntity.id.notNumber")]));
+            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
             return null;
         }
 
