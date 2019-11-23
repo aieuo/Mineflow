@@ -3,11 +3,14 @@
 namespace aieuo\mineflow\script;
 
 use aieuo\mineflow\condition\script\ORScript;
+use aieuo\mineflow\condition\script\NorScript;
+use aieuo\mineflow\condition\script\NandScript;
 use aieuo\mineflow\condition\script\AndScript;
+use aieuo\mineflow\action\script\WhileScript;
+use aieuo\mineflow\action\script\RepeatScript;
 use aieuo\mineflow\action\script\IFScript;
 use aieuo\mineflow\action\script\ElseifScript;
 use aieuo\mineflow\action\script\ElseScript;
-use aieuo\mineflow\action\script\RepeatScript;
 
 class ScriptFactory {
     private static $list = [];
@@ -17,9 +20,12 @@ class ScriptFactory {
         self::register(new ElseScript);
         self::register(new ElseifScript);
         self::register(new RepeatScript);
+        self::register(new WhileScript);
 
         self::register(new AndScript);
         self::register(new ORScript);
+        self::register(new NandScript);
+        self::register(new NorScript);
     }
 
     /**

@@ -8,7 +8,10 @@ interface ScriptIds {
     const SCRIPT_ELSE = "else";
     const SCRIPT_ELSEIF = "elseif";
     const SCRIPT_REPEAT = "repeat";
+    const SCRIPT_WHILE = "while";
 
     const SCRIPT_AND = "and";
     const SCRIPT_OR = "or";
+    const SCRIPT_NAND = "nand";
+    const SCRIPT_NOR = "nor";
 }
