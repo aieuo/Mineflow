@@ -17,6 +17,7 @@ interface ProcessIds {
     const GET_ENTITY = "getEntity";
     const TELEPORT = "teleport";
     const MOTION = "motion";
+    const ADD_DAMAGE = "addDamage";
 
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";

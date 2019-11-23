@@ -21,6 +21,12 @@ class ConditionFactory {
         self::register(new InHand);
         self::register(new ExistsItem);
         self::register(new CanAddItem);
+        /* script */
+        self::register(new ComparisonNumber);
+        /* entity */
+        self::register(new IsActiveEntity);
+        self::register(new IsPlayer);
+        self::register(new IsCreature);
         /* variable */
         self::register(new ExistsListVariableKey);
     }

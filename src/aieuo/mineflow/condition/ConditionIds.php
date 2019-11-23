@@ -17,5 +17,11 @@ interface ConditionIds {
     const EXISTS_ITEM = "existsItem";
     const IN_HAND = "isHandItem";
 
+    const COMPARISON_NUMBER = "comparisonNumber";
+
+    const IS_ACTIVE_ENTITY = "isActiveEntity";
+    const IS_PLAYER = "isPlayer";
+    const IS_CREATURE = "isCreature";
+
     const EXISTS_LIST_VARIABLE_KEY = "existsListVariableKey";
 }

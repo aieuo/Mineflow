@@ -19,6 +19,7 @@ class ProcessFactory {
         self::register(new GetEntity);
         self::register(new Teleport);
         self::register(new Motion);
+        self::register(new AddDamage);
         /* player */
         self::register(new SetSleeping);
         self::register(new SetSitting);
