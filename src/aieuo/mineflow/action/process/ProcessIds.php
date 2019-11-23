@@ -33,4 +33,9 @@ interface ProcessIds {
     const CALCULATE = "calculate";
     const GET_PI = "getPi";
     const GET_E = "getE";
+
+    const ADD_VARIABLE = "addVariable";
+    const DELETE_VARIABLE = "deleteVariable";
+    const ADD_LIST_VARIABLE = "addListVariable";
+    const ADD_MAP_VARIABLE = "addMapVariable";
 }

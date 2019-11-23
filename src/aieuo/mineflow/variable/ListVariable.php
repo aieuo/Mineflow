@@ -54,6 +54,16 @@ class ListVariable extends Variable {
         return new StringVariable("ERROR", Language::get("variable.list.mod.error"));
     }
 
+    public function addValue($value) {
+        $this->value[] = $value;
+    }
+
+    public function removeValue($value) {
+        $index = array_search($value, $this->value);
+        if ($index === false) return;
+        unset($this->value[$index]);
+    }
+
     public function getValueFromIndex($index) {
         if (!isset($this->value[$index])) return null;
         return $this->value[$index];

@@ -16,4 +16,6 @@ interface ConditionIds {
     const CAN_ADD_ITEM = "canAddItem";
     const EXISTS_ITEM = "existsItem";
     const IN_HAND = "isHandItem";
+
+    const EXISTS_LIST_VARIABLE_KEY = "existsListVariableKey";
 }

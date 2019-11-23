@@ -35,6 +35,11 @@ class ProcessFactory {
         self::register(new Calculate);
         self::register(new GetPi);
         self::register(new GetE);
+        /* variable */
+        self::register(new AddVariable);
+        self::register(new DeleteVariable);
+        self::register(new AddListVariable);
+        self::register(new AddMapVariable);
     }
 
     /**

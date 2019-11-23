@@ -11,11 +11,14 @@ class Categories {
     const CATEGORY_ACTION_PLAYER = 4;
     const CATEGORY_ACTION_MONEY = 5;
     const CATEGORY_ACTION_CALCULATION = 6;
+    const CATEGORY_ACTION_VARIABLE = 7;
 
     const CATEGORY_CONDITION_COMMON = 1000;
     const CATEGORY_CONDITION_SCRIPT = 1001;
     const CATEGORY_CONDITION_MONEY = 1002;
     const CATEGORY_CONDITION_ITEM = 1003;
+    const CATRGORY_CONDITION_ENTITY = 1004;
+    const CATEGORY_CONDITION_VARIABLE = 1005;
 
     public static function getActionCategories(): array {
         return [
@@ -26,6 +29,7 @@ class Categories {
             self::CATEGORY_ACTION_SCRIPT => "script",
             self::CATEGORY_ACTION_MONEY => "money",
             self::CATEGORY_ACTION_CALCULATION => "calculation",
+            self::CATEGORY_ACTION_VARIABLE => "variable",
         ];
     }
 
@@ -35,6 +39,8 @@ class Categories {
             self::CATEGORY_CONDITION_SCRIPT => "script",
             self::CATEGORY_CONDITION_MONEY => "money",
             self::CATEGORY_CONDITION_ITEM => "item",
+            self::CATRGORY_CONDITION_ENTITY => "entity",
+            self::CATEGORY_CONDITION_VARIABLE => "variable",
         ];
     }
 }

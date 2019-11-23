@@ -11,7 +11,7 @@ abstract class Variable {
 
     /** @var string 変数の名前 */
     protected $name;
-    /** @var string 変数の値 */
+    /** @var string|int|array 変数の値 */
     protected $value;
     /** @var int 変数の型 */
     public $type;
@@ -46,6 +46,10 @@ abstract class Variable {
 
     public function getName(): string {
         return $this->name;
+    }
+
+    public function setValue($value) {
+        $this->value = $value;
     }
 
     /**

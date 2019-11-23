@@ -21,6 +21,8 @@ class ConditionFactory {
         self::register(new InHand);
         self::register(new ExistsItem);
         self::register(new CanAddItem);
+        /* variable */
+        self::register(new ExistsListVariableKey);
     }
 
     /**

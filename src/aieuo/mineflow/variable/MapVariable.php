@@ -46,6 +46,15 @@ class MapVariable extends Variable {
         return new StringVariable("ERROR", Language::get("variable.map.mod.error"));
     }
 
+    public function addValue(string $key, $value) {
+        $this->value[$key] = $value;
+    }
+
+    public function removeValue(string $key) {
+        unset($this->value[$key]);
+    }
+
+
     public function getValueFromIndex($index) {
         if (!isset($this->value[$index])) return null;
         return $this->value[$index];
