@@ -82,7 +82,8 @@ class RepeatScript extends ActionScript implements ActionContainer {
         for ($i=0; $i<$this->repeatCount; $i++) {
             if ($origin instanceof Recipe) $origin->addVariable(new NumberVariable("i", $i));
             foreach ($this->actions as $action) {
-                $action->execute($target, $origin);
+                $result = $action->execute($target, $origin);
+                if ($result === null) return null;
             }
         }
         return true;
@@ -93,10 +94,10 @@ class RepeatScript extends ActionScript implements ActionContainer {
         (new ListForm($this->getName()))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@action.edit"),
                 new Button("@script.repeat.editCount"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {
                 $session = Session::getSession($player);
                 if ($data === null) {
@@ -107,18 +108,18 @@ class RepeatScript extends ActionScript implements ActionContainer {
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
-                        (new ActionContainerForm)->sendActionList($player, $this);
-                        break;
-                    case 1:
-                        (new ScriptForm)->sendSetRepeatCount($player, $this);
-                        break;
-                    case 2:
-                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
-                        break;
-                    case 3:
                         array_pop($parents);
                         $session->set("parents", $parents);
                         (new ActionContainerForm)->sendActionList($player, $parent);
+                        break;
+                    case 1:
+                        (new ActionContainerForm)->sendActionList($player, $this);
+                        break;
+                    case 2:
+                        (new ScriptForm)->sendSetRepeatCount($player, $this);
+                        break;
+                    case 3:
+                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
             })->addMessages($messages)->show($player);

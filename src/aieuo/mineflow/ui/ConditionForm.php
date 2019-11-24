@@ -22,14 +22,21 @@ class ConditionForm {
         (new ListForm(Language::get("form.condition.addedConditionMenu.title", [$container->getName(), $condition->getName()])))
             ->setContent(trim($condition->getDetail()))
             ->addButtons([// TODO: 移動させるボタン
+                new Button("@form.back"),
                 new Button("@form.edit"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
+                        $session = Session::getSession($player);
+                        $parents = $session->get("parents");
+                        array_pop($parents);
+                        $session->set("parents", $parents);
+                        (new ConditionContainerForm)->sendConditionList($player, $container);
+                        break;
+                    case 1:
                         if ($condition instanceof ConditionScript) {
                             $session = Session::getSession($player);
                             $session->set("parents", array_merge($session->get("parents"), [$container]));
@@ -41,15 +48,8 @@ class ConditionForm {
                                 $this->sendAddedConditionMenu($player, $container, $condition, [$result ? "@form.changed" : "@form.cancelled"]);
                             })->onRecive([$this, "onUpdateCondition"])->show($player);
                         break;
-                    case 1:
+                    case 2:
                         $this->sendConfirmDelete($player, $condition, $container);
-                        break;
-                    default:
-                        $session = Session::getSession($player);
-                        $parents = $session->get("parents");
-                        array_pop($parents);
-                        $session->set("parents", $parents);
-                        (new ConditionContainerForm)->sendConditionList($player, $container);
                         break;
                 }
             })->addArgs($container, $condition)->addMessages($messages)->show($player);
@@ -143,14 +143,18 @@ class ConditionForm {
         (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getName()])))
             ->setContent($condition->getDescription())
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.add"),
                 new Button(in_array($condition->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
+                        $conditions = Session::getSession($player)->get("conditions");
+                        $this->sendSelectCondition($player, $container, $conditions);
+                        break;
+                    case 1:
                         $session = Session::getSession($player);
                         $session->set("parents", array_merge($session->get("parents"), [$container]));
                         if ($condition instanceof ConditionScript) {
@@ -168,7 +172,7 @@ class ConditionForm {
                                 }
                             })->onRecive([$this, "onUpdateCondition"])->show($player);
                         break;
-                    case 1:
+                    case 2:
                         $config = Main::getInstance()->getFavorites();
                         $favorites = $config->getNested($player->getName().".condition", []);
                         if (in_array($condition->getId(), $favorites)) {
@@ -180,10 +184,6 @@ class ConditionForm {
                         $config->setNested($player->getName().".condition", $favorites);
                         $config->save();
                         $this->sendConditionMenu($player, $container, $condition, ["@form.changed"]);
-                        break;
-                    default:
-                        $conditions = Session::getSession($player)->get("conditions");
-                        $this->sendSelectCondition($player, $container, $conditions);
                         break;
                 }
             })->addArgs($container, $condition)->addMessages($messages)->show($player);

@@ -22,14 +22,21 @@ class ActionForm {
         (new ListForm(Language::get("form.action.addedActionMenu.title", [$container->getName(), $action->getName()])))
             ->setContent(trim($action->getDetail()))
             ->addButtons([// TODO: 移動させるボタン
+                new Button("@form.back"),
                 new Button("@form.edit"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
+                        $session = Session::getSession($player);
+                        $parents = $session->get("parents");
+                        array_pop($parents);
+                        $session->set("parents", $parents);
+                        (new ActionContainerForm)->sendActionList($player, $container);
+                        break;
+                    case 1:
                         if ($action instanceof ActionScript) {
                             $session = Session::getSession($player);
                             $session->set("parents", array_merge($session->get("parents"), [$container]));
@@ -41,15 +48,8 @@ class ActionForm {
                                 $this->sendAddedActionMenu($player, $container, $action, [$result ? "@form.changed" : "@form.cancelled"]);
                             })->onRecive([$this, "onUpdateAction"])->show($player);
                         break;
-                    case 1:
+                    case 2:
                         $this->sendConfirmDelete($player, $action, $container);
-                        break;
-                    default:
-                        $session = Session::getSession($player);
-                        $parents = $session->get("parents");
-                        array_pop($parents);
-                        $session->set("parents", $parents);
-                        (new ActionContainerForm)->sendActionList($player, $container);
                         break;
                 }
             })->addArgs($container, $action)->addMessages($messages)->show($player);

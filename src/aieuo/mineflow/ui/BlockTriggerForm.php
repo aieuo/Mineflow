@@ -18,17 +18,20 @@ class BlockTriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
             ->setContent("type: @trigger.type.".$trigger[0]."\n".$trigger[1])
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.block.warp"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
-                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
+                        (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
+                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
+                        break;
+                    case 2:
                         $datas = explode(",", $trigger[1]);
                         $level = Server::getInstance()->getLevelByName($datas[3]);
                         if ($level === null) {
@@ -37,9 +40,6 @@ class BlockTriggerForm {
                         }
                         $pos = new Position((int)$datas[0], (int)$datas[1], (int)$datas[2], $level);
                         $player->teleport($pos);
-                        break;
-                    default:
-                        (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                 }
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);

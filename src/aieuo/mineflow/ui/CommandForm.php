@@ -22,24 +22,24 @@ class CommandForm {
         (new ListForm("@form.command.menu.title"))
             ->setContent("@form.selectButton")
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.add"),
                 new Button("@form.edit"),
                 new Button("@form.command.menu.commandList"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {
                 if ($data === null) return;
                 switch ($data) {
                     case 0:
-                        $this->sendAddCommand($player);
+                        (new HomeForm)->sendMenu($player);
                         break;
                     case 1:
-                        $this->sendSelectCommand($player);
+                        $this->sendAddCommand($player);
                         break;
                     case 2:
-                        $this->sendCommandList($player);
+                        $this->sendSelectCommand($player);
                         break;
-                    default:
-                        (new HomeForm)->sendMenu($player);
+                    case 3:
+                        $this->sendCommandList($player);
                         break;
                 }
             })->addMessages($messages)->show($player);

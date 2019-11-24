@@ -20,23 +20,23 @@ class CommandTriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
             ->setContent("type: ".$trigger[0]."\n/".$trigger[1])
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.command.edit.title"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
-                        $this->sendConfirmDelete($player, $recipe, $trigger);
+                        (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
+                        $this->sendConfirmDelete($player, $recipe, $trigger);
+                        break;
+                    case 2:
                         $manager = Main::getInstance()->getCommandManager();
                         $command = $manager->getCommand($manager->getOriginCommand($trigger[1]));
                         $this->sendCommandMenu($player, $command);
-                        break;
-                    default:
-                        (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                 }
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);

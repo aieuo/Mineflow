@@ -141,7 +141,8 @@ class WhileScript extends ActionScript implements ActionContainer, ConditionCont
         }
 
         foreach ($this->actions as $action) {
-            $action->execute($target, $origin);
+            $result = $action->execute($target, $origin);
+            if ($result === null) return null;
         }
     }
 
@@ -150,11 +151,11 @@ class WhileScript extends ActionScript implements ActionContainer, ConditionCont
         (new ListForm($this->getName()))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@condition.edit"),
                 new Button("@action.edit"),
                 new Button("@script.while.editInterval"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {
                 $session = Session::getSession($player);
                 if ($data === null) {
@@ -165,21 +166,21 @@ class WhileScript extends ActionScript implements ActionContainer, ConditionCont
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
-                        (new ConditionContainerForm)->sendConditionList($player, $this);
-                        break;
-                    case 1:
-                        (new ActionContainerForm)->sendActionList($player, $this);
-                        break;
-                    case 2:
-                        (new ScriptForm)->sendSetWhileInterval($player, $this);
-                        break;
-                    case 3:
-                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
-                        break;
-                    case 4:
                         array_pop($parents);
                         $session->set("parents", $parents);
                         (new ActionContainerForm)->sendActionList($player, $parent);
+                        break;
+                    case 1:
+                        (new ConditionContainerForm)->sendConditionList($player, $this);
+                        break;
+                    case 2:
+                        (new ActionContainerForm)->sendActionList($player, $this);
+                        break;
+                    case 3:
+                        (new ScriptForm)->sendSetWhileInterval($player, $this);
+                        break;
+                    case 4:
+                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
             })->addMessages($messages)->show($player);

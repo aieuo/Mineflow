@@ -41,7 +41,8 @@ class ElseifScript extends IFScript {
         if (!$matched) return false;
 
         foreach ($this->getActions() as $action) {
-            $action->execute($target, $origin);
+            $result = $action->execute($target, $origin);
+            if ($result === null) return null;
         }
         return true;
     }

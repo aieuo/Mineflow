@@ -75,9 +75,9 @@ class AndScript extends ConditionScript implements ConditionContainer {
         (new ListForm($this->getName()))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@condition.edit"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {
                 $session = Session::getSession($player);
                 if ($data === null) {
@@ -88,15 +88,15 @@ class AndScript extends ConditionScript implements ConditionContainer {
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
-                        (new ConditionContainerForm)->sendConditionList($player, $this);
-                        break;
-                    case 1:
-                        (new ConditionForm)->sendConfirmDelete($player, $this, $parent);
-                        break;
-                    case 2:
                         array_pop($parents);
                         $session->set("parents", $parents);
                         (new ConditionContainerForm)->sendConditionList($player, $parent);
+                        break;
+                    case 1:
+                        (new ConditionContainerForm)->sendConditionList($player, $this);
+                        break;
+                    case 2:
+                        (new ConditionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
             })->addMessages($messages)->show($player);

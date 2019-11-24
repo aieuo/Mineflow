@@ -18,17 +18,17 @@ class EventTriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
             ->setContent("type: @trigger.type.".$trigger[0]."\n@trigger.event.".$trigger[1])
             ->addButtons([
-                new Button("@form.delete"),
                 new Button("@form.back"),
+                new Button("@form.delete"),
             ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
-                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
-                        break;
-                    default:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
+                        break;
+                    case 1:
+                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                 }
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);

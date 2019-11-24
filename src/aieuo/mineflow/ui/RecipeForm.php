@@ -23,24 +23,24 @@ class RecipeForm {
         (new ListForm("@mineflow.recipe"))
             ->setContent("@form.selectButton")
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.add"),
                 new Button("@form.edit"),
                 new Button("@form.recipe.menu.recipeList"),
-                new Button("@form.back"),
             ])->onRecive(function (Player $player, ?int $data) {
                 if ($data === null) return;
                 switch ($data) {
                     case 0:
-                        $this->sendAddRecipe($player);
+                        (new HomeForm)->sendMenu($player);
                         break;
                     case 1:
-                        $this->sendSelectRecipe($player);
+                        $this->sendAddRecipe($player);
                         break;
                     case 2:
-                        $this->sendRecipeList($player);
+                        $this->sendSelectRecipe($player);
                         break;
-                    default:
-                        (new HomeForm)->sendMenu($player);
+                    case 3:
+                        $this->sendRecipeList($player);
                         break;
                 }
             })->addMessages($messages)->show($player);
