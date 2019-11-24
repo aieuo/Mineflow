@@ -5,6 +5,7 @@ namespace aieuo\mineflow\condition;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
 use aieuo\mineflow\variable\Variable;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -65,7 +66,7 @@ class ExistsListVariableKey extends Condition {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -78,8 +79,7 @@ class ExistsListVariableKey extends Condition {
             $name = $origin->replaceVariables($name);
             $key = $origin->replaceVariables($key);
         } elseif (!$this->isLocal) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("action.error.recipe")]));
-            else Server::getInstance()->getLogger()->info(Language::get("condition.error", [$this->getName(), Language::get("action.error.recipe")]));
+            Logger::warning(Language::get("condition.error", [Language::get("action.error.recipe"), $this->getName()]), $target);
             return null;
         }
 

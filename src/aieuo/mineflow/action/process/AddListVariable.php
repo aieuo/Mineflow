@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
-use pocketmine\Server;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -13,6 +12,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\ListVariable;
 
 class AddListVariable extends Process {
@@ -67,7 +67,7 @@ class AddListVariable extends Process {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -80,8 +80,7 @@ class AddListVariable extends Process {
             $name = $origin->replaceVariables($name);
             $value = $origin->replaceVariables($value);
         } elseif (!$this->isLocal) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]));
-            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]), $target);
             return null;
         }
 

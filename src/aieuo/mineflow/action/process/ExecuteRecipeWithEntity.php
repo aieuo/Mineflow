@@ -4,6 +4,8 @@ namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
 use pocketmine\Player;
+use aieuo\mineflow\variable\DefaultVariables;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Categories;
@@ -14,7 +16,6 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\FormAPI\element\Toggle;
-use aieuo\mineflow\variable\DefaultVariables;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipe {
 
@@ -51,10 +52,8 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
     }
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
-        if (!($target instanceof Player)) return null;
-
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -67,18 +66,18 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
 
         $recipe = Main::getInstance()->getRecipeManager()->get($name);
         if ($recipe === null) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]), $target);
             return null;
         }
 
         if (!is_numeric($id)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
 
         $entity = EntityHolder::getInstance()->findEntity((int)$id);
         if (!($entity instanceof Entity)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.executeRecipeWithEntity.notFound")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.executeRecipeWithEntity.notFound")]), $target);
             return null;
         }
 

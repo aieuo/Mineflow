@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\condition;
 
 use pocketmine\entity\Entity;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -80,7 +81,7 @@ class ComparisonNumber extends Condition {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -93,11 +94,11 @@ class ComparisonNumber extends Condition {
         }
 
         if (!is_numeric($value1)) {
-            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
         if (!is_numeric($value2)) {
-            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
 

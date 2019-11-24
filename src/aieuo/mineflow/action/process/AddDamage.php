@@ -4,6 +4,7 @@ namespace aieuo\mineflow\action\process;
 
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\entity\Entity;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -11,8 +12,8 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\FormAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\FormAPI\element\Toggle;
 
 class AddDamage extends Process {
 
@@ -64,7 +65,7 @@ class AddDamage extends Process {
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!($target instanceof Entity)) return null;
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -75,10 +76,10 @@ class AddDamage extends Process {
         }
 
         if (!is_numeric($damage)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         } elseif ((float)$damage < 1) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.addDamage.form.error")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.addDamage.form.error")]), $target);
             return null;
         }
 

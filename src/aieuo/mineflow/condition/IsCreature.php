@@ -3,11 +3,11 @@
 namespace aieuo\mineflow\condition;
 
 use pocketmine\entity\Entity;
-use pocketmine\Server;
+use pocketmine\entity\Creature;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\entity\Creature;
 
 class IsCreature extends IsActiveEntity {
 
@@ -19,8 +19,7 @@ class IsCreature extends IsActiveEntity {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
-            else Server::getInstance()->getLogger()->info(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -30,7 +29,7 @@ class IsCreature extends IsActiveEntity {
             $id = $origin->replaceVariables($id);
         }
         if (!is_numeric($id)) {
-            $target->sendMessage(Language::get("condition.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("condition.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
 

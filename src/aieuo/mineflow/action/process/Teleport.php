@@ -2,12 +2,13 @@
 
 namespace aieuo\mineflow\action\process;
 
-use pocketmine\entity\Entity;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Categories;
 use pocketmine\level\Position;
+use pocketmine\entity\Entity;
 use pocketmine\Server;
+use aieuo\mineflow\utils\Logger;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\recipe\Recipe;
 
 class Teleport extends TypePosition {
 
@@ -25,7 +26,7 @@ class Teleport extends TypePosition {
         if (!($target instanceof Entity)) return false;
 
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -37,12 +38,12 @@ class Teleport extends TypePosition {
         }
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
         $level = Server::getInstance()->getLevelByName($positions[3]);
         if ($level === null) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.position.level.notFound")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.position.level.notFound")]), $target);
             return null;
         }
 

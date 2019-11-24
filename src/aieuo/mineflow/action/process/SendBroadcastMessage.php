@@ -3,10 +3,10 @@
 namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
-use pocketmine\Player;
+use pocketmine\Server;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\Server;
 
 class SendBroadcastMessage extends TypeMessage {
 
@@ -20,8 +20,7 @@ class SendBroadcastMessage extends TypeMessage {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
-            else Server::getInstance()->getLogger()->info(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return false;
         }
 

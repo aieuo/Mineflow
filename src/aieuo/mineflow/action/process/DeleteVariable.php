@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
-use pocketmine\Server;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -55,7 +55,7 @@ class DeleteVariable extends Process {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -69,8 +69,7 @@ class DeleteVariable extends Process {
             return true;
         }
         if (!($origin instanceof Recipe)) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]));
-            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]), $target);
             return null;
         }
         $origin->removeVariable($name);

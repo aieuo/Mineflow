@@ -3,9 +3,8 @@
 namespace aieuo\mineflow\action\process;
 
 use pocketmine\entity\Entity;
-use pocketmine\Server;
-use pocketmine\Player;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -94,11 +93,11 @@ class FourArithmeticOperations extends Process {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
         if (!($origin instanceof Recipe)) {
-            $target->sendMessage(Language::get("action.error", [Language::get("action.error.recipe"), $this->getName()]));
+            Logger::warning(Language::get("action.error", [Language::get("action.error.recipe"), $this->getName()]), $target);
             return null;
         }
 
@@ -113,13 +112,11 @@ class FourArithmeticOperations extends Process {
         }
 
         if (!is_numeric($value1)) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
-            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
         if (!is_numeric($value2)) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
-            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
 
@@ -135,8 +132,7 @@ class FourArithmeticOperations extends Process {
                 break;
             case self::DIVISION:
                 if ((float)$value2 == 0) {
-                    if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("variable.number.div.0")]));
-                    else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("variable.number.div.0")]));
+                    Logger::warning(Language::get("action.error", [$this->getName(), Language::get("variable.number.div.0")]), $target);
                     return null;
                 }
                 $result = (float)$value1 / (float)$value2;

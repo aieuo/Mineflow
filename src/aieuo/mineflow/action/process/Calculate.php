@@ -6,6 +6,7 @@ use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\Player;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -93,11 +94,11 @@ class Calculate extends Process {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
         if (!($origin instanceof Recipe)) {
-            $target->sendMessage(Language::get("action.error", [Language::get("action.error.recipe"), $this->getName()]));
+            Logger::warning(Language::get("action.error", [Language::get("action.error.recipe"), $this->getName()]), $target);
             return null;
         }
 
@@ -110,8 +111,7 @@ class Calculate extends Process {
         }
 
         if (!is_numeric($value)) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
-            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
 

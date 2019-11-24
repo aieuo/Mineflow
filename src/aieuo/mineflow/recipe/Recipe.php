@@ -198,11 +198,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
             if ($action instanceof EventCancel) $action->setEvent($event);
             $this->lastResult = $action->execute($target, $this);
 
-            if ($this->lastResult === null and $target instanceof Player) {
-                $target->sendMessage(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]));
-                return false;
-            } elseif ($this->lastResult === null) {
-                Logger::warning(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]));
+            if ($this->lastResult === null) {
+                Logger::warning(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]), $target);
                 return false;
             }
 

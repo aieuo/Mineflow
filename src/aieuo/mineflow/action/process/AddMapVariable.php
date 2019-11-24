@@ -2,12 +2,9 @@
 
 namespace aieuo\mineflow\action\process;
 
-use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\entity\Entity;
-use pocketmine\Server;
-use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -15,11 +12,8 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\FormAPI\element\Dropdown;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\FormAPI\element\Toggle;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\MapVariable;
 
 class AddMapVariable extends Process {
 
@@ -84,7 +78,7 @@ class AddMapVariable extends Process {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
 
@@ -99,8 +93,7 @@ class AddMapVariable extends Process {
             $key = $origin->replaceVariables($key);
             $value = $origin->replaceVariables($value);
         } elseif (!$this->isLocal) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]));
-            else Server::getInstance()->getLogger()->info(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("action.error.recipe")]), $target);
             return null;
         }
 

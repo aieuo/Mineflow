@@ -5,7 +5,11 @@ namespace aieuo\mineflow\action\process;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\Player;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\DefaultVariables;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
@@ -13,9 +17,6 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\FormAPI\element\Toggle;
-use aieuo\mineflow\utils\EntityHolder;
-use aieuo\mineflow\variable\DefaultVariables;
-use aieuo\mineflow\variable\MapVariable;
 
 class GetEntity extends Process {
 
@@ -68,12 +69,11 @@ class GetEntity extends Process {
 
     public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
         if (!$this->isDataValid()) {
-            if ($target instanceof Player) $target->sendMessage(Language::get("invalid.contents", [$this->getName()]));
-            else Server::getInstance()->getLogger()->info(Language::get("invalid.contents", [$this->getName()]));
+            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
             return null;
         }
         if (!($origin instanceof Recipe)) {
-            $target->sendMessage(Language::get("action.error", [Language::get("action.error.recipe"), $this->getName()]));
+            Logger::warning(Language::get("action.error", [Language::get("action.error.recipe"), $this->getName()]), $target);
             return null;
         }
 
@@ -81,7 +81,7 @@ class GetEntity extends Process {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         if (!is_numeric($id)) {
-            $target->sendMessage(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]));
+            Logger::warning(Language::get("action.error", [$this->getName(), Language::get("mineflow.contents.notNumber")]), $target);
             return null;
         }
 
