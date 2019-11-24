@@ -79,7 +79,6 @@ class Main extends PluginBase {
 
         $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
         $this->commandManager = new CommandManager($this, $commands);
-        $this->commandManager->addCommand("test a b c d e", "test2", "test3", "test4");
 
         $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.yml", Config::YAML));
 

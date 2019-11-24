@@ -38,6 +38,10 @@ class AndScript extends ConditionScript implements ConditionContainer {
         $this->conditions[] = $condition;
     }
 
+    public function setConditions(array $conditions): void {
+        $this->conditions = $conditions;
+    }
+
     public function getCondition(int $index): ?Conditionable {
         return $this->conditions[$index] ?? null;
     }

@@ -16,14 +16,12 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\condition\Conditionable;
 use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\condition\Condition;
-use aieuo\mineflow\action\script\ActionScript;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\ActionContainer;
 use aieuo\mineflow\action\Action;
 use aieuo\mineflow\FormAPI\element\Button;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\task\WhileScriptTask;
-use pocketmine\Server;
 
 class WhileScript extends ActionScript implements ActionContainer, ConditionContainer {
 
@@ -54,6 +52,14 @@ class WhileScript extends ActionScript implements ActionContainer, ConditionCont
 
     public function addCondition(Conditionable $condition): void {
         $this->conditions[] = $condition;
+    }
+
+    public function setConditions(array $conditions): void {
+        $this->conditions = $conditions;
+    }
+
+    public function setActions(array $actions): void {
+        $this->actions = $actions;
     }
 
     public function getCondition(int $index): ?Conditionable {

@@ -33,7 +33,7 @@ class RecipeManager {
 
             $recipe = (new Recipe($data["name"]))->parseFromSaveData($data["actions"]);
             if ($recipe === null) {
-                Logger::warning(Language::get("recipe.load.faild", [$data["name"]]));
+                Logger::warning(Language::get("recipe.load.failed", [$data["name"]]));
                 continue;
             }
 

@@ -21,9 +21,10 @@ class ActionForm {
     public function sendAddedActionMenu(Player $player, ActionContainer $container, Action $action, array $messages = []) {
         (new ListForm(Language::get("form.action.addedActionMenu.title", [$container->getName(), $action->getName()])))
             ->setContent(trim($action->getDetail()))
-            ->addButtons([// TODO: 移動させるボタン
+            ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.edit"),
+                new Button("@form.move"),
                 new Button("@form.delete"),
             ])->onRecive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
                 if ($data === null) return;
@@ -49,6 +50,9 @@ class ActionForm {
                             })->onRecive([$this, "onUpdateAction"])->show($player);
                         break;
                     case 2:
+                        (new ActionContainerForm)->sendMoveAction($player, $container, array_search($action, $container->getActions()));
+                        break;
+                    case 3:
                         $this->sendConfirmDelete($player, $action, $container);
                         break;
                 }

@@ -15,7 +15,6 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\condition\Conditionable;
 use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\condition\Condition;
-use aieuo\mineflow\action\script\ActionScript;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\ActionContainer;
 use aieuo\mineflow\action\Action;
@@ -45,6 +44,10 @@ class IFScript extends ActionScript implements ActionContainer, ConditionContain
         $this->conditions[] = $condition;
     }
 
+    public function setConditions(array $conditions): void {
+        $this->conditions = $conditions;
+    }
+
     public function getCondition(int $index): ?Conditionable {
         return $this->conditions[$index] ?? null;
     }
@@ -60,6 +63,10 @@ class IFScript extends ActionScript implements ActionContainer, ConditionContain
 
     public function addAction(Action $action): void {
         $this->actions[] = $action;
+    }
+
+    public function setActions(array $actions): void {
+        $this->actions = $actions;
     }
 
     public function getAction(int $index): ?Action {

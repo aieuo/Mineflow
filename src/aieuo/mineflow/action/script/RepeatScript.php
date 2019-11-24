@@ -11,7 +11,6 @@ use aieuo\mineflow\ui\ActionContainerForm;
 use aieuo\mineflow\script\Script;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\action\script\ActionScript;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\ActionContainer;
 use aieuo\mineflow\action\Action;
@@ -42,6 +41,10 @@ class RepeatScript extends ActionScript implements ActionContainer {
 
     public function addAction(Action $action): void {
         $this->actions[] = $action;
+    }
+
+    public function setActions(array $actions): void {
+        $this->actions = $actions;
     }
 
     public function getAction(int $index): ?Action {

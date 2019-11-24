@@ -21,9 +21,10 @@ class ConditionForm {
     public function sendAddedConditionMenu(Player $player, ConditionContainer $container, Conditionable $condition, array $messages = []) {
         (new ListForm(Language::get("form.condition.addedConditionMenu.title", [$container->getName(), $condition->getName()])))
             ->setContent(trim($condition->getDetail()))
-            ->addButtons([// TODO: 移動させるボタン
+            ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.edit"),
+                new Button("@form.move"),
                 new Button("@form.delete"),
             ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
@@ -49,6 +50,9 @@ class ConditionForm {
                             })->onRecive([$this, "onUpdateCondition"])->show($player);
                         break;
                     case 2:
+                        (new ConditionContainerForm)->sendMoveCondition($player, $container, array_search($condition, $container->getConditions()));
+                        break;
+                    case 3:
                         $this->sendConfirmDelete($player, $condition, $container);
                         break;
                 }

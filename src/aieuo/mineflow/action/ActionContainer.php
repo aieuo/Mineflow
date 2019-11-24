@@ -10,6 +10,8 @@ interface ActionContainer {
 
     public function removeAction(int $index): void;
 
+    public function setActions(array $actions): void;
+
     /**
      * @return Action[]
      */

@@ -42,6 +42,10 @@ class ElseScript extends ActionScript implements ActionContainer {
         return $this->actions[$index] ?? null;
     }
 
+    public function setActions(array $actions): void {
+        $this->actions = $actions;
+    }
+
     public function getActions(): array {
         return $this->actions;
     }

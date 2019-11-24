@@ -92,6 +92,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
         $this->actions[] = $action;
     }
 
+    public function setActions(array $actions): void {
+        $this->actions = $actions;
+    }
+
     public function getAction(int $index): ?Action {
         return $this->actions[$index] ?? null;
     }
@@ -199,7 +203,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $this->lastResult = $action->execute($target, $this);
 
             if ($this->lastResult === null) {
-                Logger::warning(Language::get("recipe.execute.faild", [$this->getName(), $action->getName()]), $target);
+                Logger::warning(Language::get("recipe.execute.failed", [$this->getName(), $action->getName()]), $target);
                 return false;
             }
 
@@ -268,8 +272,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
         file_put_contents($dir.$this->getName().".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 
-    public function parseFromSaveData(array $datas): ?self {
-        foreach ($datas as $i => $content) {
+    public function parseFromSaveData(array $contents): ?self {
+        foreach ($contents as $i => $content) {
             switch ($content["type"]) {
                 case self::CONTENT_TYPE_PROCESS:
                     $action = Process::parseFromSaveDataStatic($content);
@@ -281,7 +285,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                     return null;
             }
             if ($action === null) {
-                Logger::warning(Language::get("recipe.load.faild.action", [$i, $content["id"] ?? "id?"]));
+                Logger::warning(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?"]));
                 return null;
             }
 

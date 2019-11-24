@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\condition\script\ConditionScript;
 use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\FormAPI\element\Button;
+use pocketmine\utils\TextFormat;
 
 class ConditionContainerForm {
 
@@ -46,5 +47,34 @@ class ConditionContainerForm {
                 }
                 (new ConditionForm)->sendAddedConditionMenu($player, $container, $condition);
             })->addArgs($container, $conditions)->addMessages($messages)->show($player);
+    }
+
+    public function sendMoveCondition(Player $player, ConditionContainer $container, int $selected, array $messages = [], int $count = 0) {
+        $conditions = $container->getConditions();
+        $selectedCondition = $conditions[$selected];
+
+        $buttons = [new Button("@form.back")];
+        foreach ($conditions as $i => $condition) {
+            $buttons[] = new Button(($i === $selected ? TextFormat::AQUA : "").trim($condition->getDetail()));
+        }
+        $buttons[] = new Button("");
+
+        (new ListForm(Language::get("form.conditionContainer.moveCondition.title", [$container->getName(), $selectedCondition->getName()])))
+            ->setContent("@form.conditionContainer.moveCondition.content")
+            ->addButtons($buttons)
+            ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, int $selected, array $conditions, int $count = 0) {
+                if ($data === null) return;
+
+                $move = $conditions[$selected];
+                if ($data === 0) {
+                    (new ConditionForm)->sendAddedConditionMenu($player, $container, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);
+                    return;
+                }
+                $data -= 1;
+
+                $conditions = (new ActionContainerForm)->getMovedContents($conditions, $selected, $data);
+                $container->setConditions($conditions);
+                $this->sendMoveCondition($player, $container, $selected < $data ? $data-1 : $data, ["@form.moved"], ++$count);
+            })->addArgs($container, $selected, $conditions, $count)->addMessages($messages)->show($player);
     }
 }
