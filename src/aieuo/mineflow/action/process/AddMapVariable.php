@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 
 class AddMapVariable extends Process {
 

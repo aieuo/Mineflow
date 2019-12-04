@@ -14,7 +14,7 @@ use aieuo\mineflow\condition\Conditionable;
 use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 
 class ConditionForm {
 

@@ -15,7 +15,7 @@ use aieuo\mineflow\action\script\ActionScript;
 use aieuo\mineflow\action\process\Process;
 use aieuo\mineflow\action\ActionContainer;
 use aieuo\mineflow\action\Action;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 
 class ElseScript extends ActionScript implements ActionContainer {
 

@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 
 class CommandTriggerForm {
 

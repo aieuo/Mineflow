@@ -8,7 +8,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 use pocketmine\level\Position;
 use pocketmine\Server;
 

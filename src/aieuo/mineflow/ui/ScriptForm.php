@@ -7,7 +7,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\action\script\RepeatScript;
 use aieuo\mineflow\action\script\WhileScript;
-use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 
 class ScriptForm {

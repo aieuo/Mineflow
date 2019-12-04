@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\FormAPI\element;
+namespace aieuo\mineflow\formAPI\element;
 
 class Button extends Element {
     public function jsonSerialize(): array {

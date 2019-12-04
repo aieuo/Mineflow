@@ -1,11 +1,11 @@
 <?php
 
-namespace aieuo\mineflow\FormAPI\element;
+namespace aieuo\mineflow\formAPI\element;
 
 class Slider extends Element {
 
     /** @var string */
-    protected $type = "slider";
+    protected $type = self::ELEMENT_SLIDER;
 
     /** @var float */
     private $min = [];

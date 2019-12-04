@@ -11,8 +11,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\condition\Condition;
-use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 
 class IsActiveEntity extends Condition {
 
@@ -22,7 +21,7 @@ class IsActiveEntity extends Condition {
     protected $description = "@condition.isActiveEntity.description";
     protected $detail = "condition.isActiveEntity.detail";
 
-    protected $category = Categories::CATRGORY_CONDITION_ENTITY;
+    protected $category = Categories::CATEGORY_CONDITION_ENTITY;
 
     /** @var string */
     private $entityId = "";

@@ -7,8 +7,7 @@ use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 
 abstract class TypeMessage extends Process {
 

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI;
 
+use aieuo\mineflow\formAPI\element\Element;
 use pocketmine\utils\TextFormat;
 
 class CustomForm extends Form {
@@ -22,7 +23,7 @@ class CustomForm extends Form {
      * @param Element $content
      * @return self
      */
-    public function addContent(Element ...$content): self {
+    public function addContent(Element $content): self {
         $this->contents[] = $content;
         return $this;
     }

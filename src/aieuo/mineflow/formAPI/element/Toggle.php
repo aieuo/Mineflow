@@ -1,11 +1,11 @@
 <?php
 
-namespace aieuo\mineflow\FormAPI\element;
+namespace aieuo\mineflow\formAPI\element;
 
 class Toggle extends Element {
 
     /** @var string */
-    protected $type = "toggle";
+    protected $type = self::ELEMENT_TOGGLE;
 
     /** @var boolean */
     private $default = false;

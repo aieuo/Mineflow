@@ -7,7 +7,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 
 abstract class Condition implements Conditionable, ConditionIds {
 

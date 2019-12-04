@@ -45,7 +45,6 @@ use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\action\process\SetSitting;
-use aieuo\mineflow\Main;
 use pocketmine\event\entity\EntityTeleportEvent;
 
 class EventListener implements Listener {

@@ -1,10 +1,17 @@
 <?php
 
-namespace aieuo\mineflow\FormAPI\element;
+namespace aieuo\mineflow\formAPI\element;
 
 use aieuo\mineflow\utils\Language;
 
 abstract class Element implements \JsonSerializable {
+
+    const ELEMENT_LABEL = "label";
+    const ELEMENT_INPUT = "input";
+    const ELEMENT_SLIDER = "slider";
+    const ELEMENT_STEP_SLIDER = "step_slider";
+    const ELEMENT_DROPDOWN = "dropdown";
+    const ELEMENT_TOGGLE = "toggle";
 
     /** @var string */
     protected $type;

@@ -1,11 +1,11 @@
 <?php
 
-namespace aieuo\mineflow\FormAPI\element;
+namespace aieuo\mineflow\formAPI\element;
 
 class StepSlider extends Dropdown {
 
     /** @var string */
-    protected $type = "step_slider";
+    protected $type = self::ELEMENT_STEP_SLIDER;
 
     public function jsonSerialize(): array {
         return [

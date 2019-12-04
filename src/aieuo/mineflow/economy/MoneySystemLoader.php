@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\ip\economy;
+namespace aieuo\mineflow\economy;
 
 class MoneySystemLoader implements EconomyLoader {
 

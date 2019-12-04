@@ -11,11 +11,10 @@ use aieuo\mineflow\ui\ConditionContainerForm;
 use aieuo\mineflow\script\Script;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\condition\script\ConditionScript;
 use aieuo\mineflow\condition\Conditionable;
 use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\condition\Condition;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 
 class AndScript extends ConditionScript implements ConditionContainer {
 

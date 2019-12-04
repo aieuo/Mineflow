@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\formAPI;
 
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 
 class ListForm extends Form {
 

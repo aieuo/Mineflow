@@ -5,7 +5,7 @@ namespace aieuo\mineflow\formAPI\element;
 class Label extends Element {
 
     /** @var string */
-    protected $type = "label";
+    protected $type = self::ELEMENT_LABEL;
 
     public function jsonSerialize(): array {
         return [

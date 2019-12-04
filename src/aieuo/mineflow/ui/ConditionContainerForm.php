@@ -8,7 +8,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\condition\script\ConditionScript;
 use aieuo\mineflow\condition\ConditionContainer;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 use pocketmine\utils\TextFormat;
 
 class ConditionContainerForm {

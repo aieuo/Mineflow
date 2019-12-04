@@ -9,6 +9,10 @@ use aieuo\mineflow\utils\Language;
 
 abstract class Form implements PMForm {
 
+    const MODAL_FORM = "modal";
+    const LIST_FORM = "form";
+    const CUSTOM_FORM = "custom_form";
+
     /** @var string */
     protected $title = "";
 

@@ -19,12 +19,6 @@ use aieuo\mineflow\Main;
 
 class Recipe implements \JsonSerializable, ActionContainer {
 
-    const BLOCK = 0;
-    const COMMAND = 1;
-    const EVENT = 2;
-    const CHAIN = 3;
-    const FORM = 4;
-
     const CONTENT_TYPE_PROCESS = "action";
     const CONTENT_TYPE_CONDITION = "condition";
     const CONTENT_TYPE_SCRIPT = "script";

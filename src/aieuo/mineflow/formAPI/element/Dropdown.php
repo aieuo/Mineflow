@@ -1,10 +1,10 @@
 <?php
 
-namespace aieuo\mineflow\FormAPI\element;
+namespace aieuo\mineflow\formAPI\element;
 
 class Dropdown extends Element {
     /** @var string */
-    protected $type = "dropdown";
+    protected $type = self::ELEMENT_DROPDOWN;
 
     /** @var array */
     protected $options = [];

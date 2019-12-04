@@ -40,7 +40,7 @@ class ModalForm extends Form {
 
     public function jsonSerialize(): array {
         $form = [
-            "type" => "modal",
+            "type" => self::MODAL_FORM,
             "title" => $this->checkTranslate($this->title),
             "content" => $this->checkTranslate($this->content),
             "button1" => $this->checkTranslate($this->button1),

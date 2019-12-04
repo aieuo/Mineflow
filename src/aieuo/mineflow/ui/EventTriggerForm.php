@@ -4,13 +4,11 @@ namespace aieuo\mineflow\ui;
 
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\ui\TriggerForm;
-use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\FormAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Button;
 
 class EventTriggerForm {
 

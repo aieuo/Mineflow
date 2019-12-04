@@ -5,7 +5,7 @@ namespace aieuo\mineflow\formAPI\element;
 class Input extends Element {
 
     /** @var string */
-    protected $type = "input";
+    protected $type = self::ELEMENT_INPUT;
 
     /** @var string */
     private $placeholder = "";

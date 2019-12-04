@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\condition;
 
 use pocketmine\entity\Entity;
-use pocketmine\Server;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
@@ -12,9 +11,8 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\condition\Condition;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\FormAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 
 class ExistsListVariableKey extends Condition {
 
