@@ -17,7 +17,7 @@ class Categories {
     const CATEGORY_CONDITION_SCRIPT = 1001;
     const CATEGORY_CONDITION_MONEY = 1002;
     const CATEGORY_CONDITION_ITEM = 1003;
-    const CATRGORY_CONDITION_ENTITY = 1004;
+    const CATEGORY_CONDITION_ENTITY = 1004;
     const CATEGORY_CONDITION_VARIABLE = 1005;
 
     public static function getActionCategories(): array {
@@ -39,7 +39,7 @@ class Categories {
             self::CATEGORY_CONDITION_SCRIPT => "script",
             self::CATEGORY_CONDITION_MONEY => "money",
             self::CATEGORY_CONDITION_ITEM => "item",
-            self::CATRGORY_CONDITION_ENTITY => "entity",
+            self::CATEGORY_CONDITION_ENTITY => "entity",
             self::CATEGORY_CONDITION_VARIABLE => "variable",
         ];
     }
