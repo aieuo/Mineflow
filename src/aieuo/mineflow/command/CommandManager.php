@@ -133,7 +133,7 @@ class CommandManager {
 
         $command = $this->getCommand($original);
         $keys = $command["recipes"][$recipe->getName()] ?? [];
-        if (is_array($commandStr, $keys)) {
+        if (in_array($commandStr, $keys)) {
             $keys = array_diff($keys, [$commandStr]);
             $keys = array_values($keys);
             $command["recipes"][$recipe->getName()] = $keys;

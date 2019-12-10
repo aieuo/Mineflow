@@ -89,7 +89,6 @@ class ActionContainerForm {
         unset($contents[$from]);
         $newContents = [];
         foreach (array_values($contents) as $i => $action) {
-            var_dump($i, $to);
             if ($i === $to) $newContents[] = $move;
             $newContents[] = $action;
         }

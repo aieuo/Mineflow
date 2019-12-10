@@ -64,11 +64,11 @@ class CommandForm {
                 $manager = Main::getInstance()->getCommandManager();
                 $original = $manager->getOriginCommand($data[0]);
                 if (!$manager->isSubcommand($data[0]) and $manager->existsCommand($original)) {
-                    $this->sendAddCommand($player, $data[0], ["@form.command.alreadyExists", 0]);
+                    $this->sendAddCommand($player, $data, [["@form.command.alreadyExists", 0]]);
                     return;
                 }
                 if ($manager->isRegisterd($original)) {
-                    $this->sendAddCommand($player, $data[0], ["@form.command.alreadyUsed", 0]);
+                    $this->sendAddCommand($player, $data, [["@form.command.alreadyUsed", 0]]);
                     return;
                 }
                 $permission = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[2]];
