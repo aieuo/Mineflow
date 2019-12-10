@@ -86,7 +86,7 @@ class ElseScript extends ActionScript implements ActionContainer {
                 new Button("@form.back"),
                 new Button("@action.edit"),
                 new Button("@form.delete"),
-            ])->onRecive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, ?int $data) {
                 $session = Session::getSession($player);
                 if ($data === null) {
                     $session->removeAll();

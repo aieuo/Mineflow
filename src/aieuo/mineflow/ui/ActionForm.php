@@ -26,7 +26,7 @@ class ActionForm {
                 new Button("@form.edit"),
                 new Button("@form.move"),
                 new Button("@form.delete"),
-            ])->onRecive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
+            ])->onReceive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -47,7 +47,7 @@ class ActionForm {
                         $action->getEditForm()
                             ->addArgs($container, $action, function ($result) use ($player, $container, $action) {
                                 $this->sendAddedActionMenu($player, $container, $action, [$result ? "@form.changed" : "@form.cancelled"]);
-                            })->onRecive([$this, "onUpdateAction"])->show($player);
+                            })->onReceive([$this, "onUpdateAction"])->show($player);
                         break;
                     case 2:
                         (new ActionContainerForm)->sendMoveAction($player, $container, array_search($action, $container->getActions()));
@@ -71,7 +71,7 @@ class ActionForm {
         if ($datas["status"] === false) {
             $action->getEditForm($data, $datas["errors"])
                 ->addArgs($container, $action, $callback)
-                ->onRecive([$this, "onUpdateAction"])
+                ->onReceive([$this, "onUpdateAction"])
                 ->show($player);
             return;
         }
@@ -88,7 +88,7 @@ class ActionForm {
         (new ListForm(Language::get("form.action.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ActionContainer $container, array $categories) {
+            ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $categories) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -126,7 +126,7 @@ class ActionForm {
         (new ListForm(Language::get("form.action.select.title", [$container->getName(), $category])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
+            ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -150,7 +150,7 @@ class ActionForm {
                 new Button("@form.add"),
                 new Button(in_array($action->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
                 new Button("@form.back"),
-            ])->onRecive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
+            ])->onReceive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -170,7 +170,7 @@ class ActionForm {
                                 } else {
                                     $this->sendActionMenu($player, $container, $action, ["@form.cancelled"]);
                                 }
-                            })->onRecive([$this, "onUpdateAction"])->show($player);
+                            })->onReceive([$this, "onUpdateAction"])->show($player);
                         break;
                     case 1:
                         $config = Main::getInstance()->getFavorites();
@@ -198,7 +198,7 @@ class ActionForm {
             ->setContent(Language::get("form.delete.confirm", [trim($action->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, Action $action, ActionContainer $container) {
+            ->onReceive(function (Player $player, ?bool $data, Action $action, ActionContainer $container) {
                 if ($data === null) return;
 
                 if ($data) {

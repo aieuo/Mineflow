@@ -24,7 +24,7 @@ class ConditionContainerForm {
         (new ListForm(Language::get("form.conditionContainer.conditionList.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
+            ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -62,7 +62,7 @@ class ConditionContainerForm {
         (new ListForm(Language::get("form.conditionContainer.moveCondition.title", [$container->getName(), $selectedCondition->getName()])))
             ->setContent("@form.conditionContainer.moveCondition.content")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, int $selected, array $conditions, int $count = 0) {
+            ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, int $selected, array $conditions, int $count = 0) {
                 if ($data === null) return;
 
                 $move = $conditions[$selected];

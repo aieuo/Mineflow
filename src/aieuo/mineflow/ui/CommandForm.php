@@ -25,7 +25,7 @@ class CommandForm {
                 new Button("@form.add"),
                 new Button("@form.edit"),
                 new Button("@form.command.menu.commandList"),
-            ])->onRecive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, ?int $data) {
                 if ($data === null) return;
                 switch ($data) {
                     case 0:
@@ -54,7 +54,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                 ]),
                 new Toggle("@form.cancelAndBack"),
-            ])->onRecive(function (Player $player, ?array $data) {
+            ])->onReceive(function (Player $player, ?array $data) {
                 if ($data === null) return;
                 if ($data[3]) {
                     $this->sendMenu($player);
@@ -85,7 +85,7 @@ class CommandForm {
             ->setContents([
                 new Input("@form.command.name", "", $defaults[0] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onRecive(function (Player $player, ?array $data) {
+            ])->onReceive(function (Player $player, ?array $data) {
                 if ($data === null) return;
 
                 if ($data[1]) {
@@ -121,7 +121,7 @@ class CommandForm {
         (new ListForm("@form.command.commandList.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, array $commands) {
+            ->onReceive(function (Player $player, ?int $data, array $commands) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -145,7 +145,7 @@ class CommandForm {
                 new Button("@form.command.commandMenu.editPermission"),
                 new Button("@form.delete"),
                 new Button("@form.back"),
-            ])->onRecive(function (Player $player, ?int $data, array $command) {
+            ])->onReceive(function (Player $player, ?int $data, array $command) {
                 if ($data === null) return;
                 switch ($data) {
                     case 0:
@@ -171,7 +171,7 @@ class CommandForm {
             ->setContents([
                 new Input("@form.command.description", "", $command["description"] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onRecive(function (Player $player, ?array $data, array $command) {
+            ])->onReceive(function (Player $player, ?array $data, array $command) {
                 if ($data === null) return;
 
                 if ($data[1]) {
@@ -195,7 +195,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                 ], $permissions[$command["permission"]]),
                 new Toggle("@form.cancelAndBack"),
-            ])->onRecive(function (Player $player, ?array $data, array $command) {
+            ])->onReceive(function (Player $player, ?array $data, array $command) {
                 if ($data === null) return;
 
                 if ($data[1]) {
@@ -215,7 +215,7 @@ class CommandForm {
             ->setContent(Language::get("form.delete.confirm", ["/".$command["command"]]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, array $command) {
+            ->onReceive(function (Player $player, ?bool $data, array $command) {
                 if ($data === null) return;
 
                 if ($data) {

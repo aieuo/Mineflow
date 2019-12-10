@@ -21,7 +21,7 @@ class BlockTriggerForm {
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.block.warp"),
-            ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -51,7 +51,7 @@ class BlockTriggerForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),
-            ])->onRecive(function (Player $player, ?int $data, Recipe $recipe) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
                 if ($data === null) return;
 
                 if ($data === 0) {

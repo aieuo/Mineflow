@@ -16,7 +16,7 @@ class ScriptForm {
             ->setContents([
                 new Input("@script.repeat.repeatCount", Language::get("form.example", ["10"]), $default[0] ?? $script->getRepeatCount()),
                 new Toggle("@form.cancelAndBack")
-            ])->onRecive(function (Player $player, ?array $data, RepeatScript $script) {
+            ])->onReceive(function (Player $player, ?array $data, RepeatScript $script) {
                 if ($data === null) return;
 
                 if ($data[1]) {
@@ -44,7 +44,7 @@ class ScriptForm {
             ->setContents([
                 new Input("@script.while.interval", Language::get("form.example", ["20"]), $default[0] ?? $script->getInterval()),
                 new Toggle("@form.cancelAndBack")
-            ])->onRecive(function (Player $player, ?array $data, WhileScript $script) {
+            ])->onReceive(function (Player $player, ?array $data, WhileScript $script) {
                 if ($data === null) return;
 
                 if ($data[1]) {

@@ -43,7 +43,7 @@ abstract class Form implements PMForm {
      * @param callable $callable
      * @return self
      */
-    public function onRecive(callable $callable): self {
+    public function onReceive(callable $callable): self {
         $this->callable = $callable;
         return $this;
     }

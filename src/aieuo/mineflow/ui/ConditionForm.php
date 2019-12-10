@@ -26,7 +26,7 @@ class ConditionForm {
                 new Button("@form.edit"),
                 new Button("@form.move"),
                 new Button("@form.delete"),
-            ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
+            ])->onReceive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -47,7 +47,7 @@ class ConditionForm {
                         $condition->getEditForm()
                             ->addArgs($container, $condition, function ($result) use ($player, $container, $condition) {
                                 $this->sendAddedConditionMenu($player, $container, $condition, [$result ? "@form.changed" : "@form.cancelled"]);
-                            })->onRecive([$this, "onUpdateCondition"])->show($player);
+                            })->onReceive([$this, "onUpdateCondition"])->show($player);
                         break;
                     case 2:
                         (new ConditionContainerForm)->sendMoveCondition($player, $container, array_search($condition, $container->getConditions()));
@@ -71,7 +71,7 @@ class ConditionForm {
         if ($datas["status"] === false) {
             $condition->getEditForm($data, $datas["errors"])
                 ->addArgs($container, $condition, $callback)
-                ->onRecive([$this, "onUpdateCondition"])
+                ->onReceive([$this, "onUpdateCondition"])
                 ->show($player);
             return;
         }
@@ -88,7 +88,7 @@ class ConditionForm {
         (new ListForm(Language::get("form.condition.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $categories) {
+            ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $categories) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -126,7 +126,7 @@ class ConditionForm {
         (new ListForm(Language::get("form.condition.select.title", [$container->getName(), $category])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
+            ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -150,7 +150,7 @@ class ConditionForm {
                 new Button("@form.back"),
                 new Button("@form.add"),
                 new Button(in_array($condition->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
-            ])->onRecive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
+            ])->onReceive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -174,7 +174,7 @@ class ConditionForm {
                                 } else {
                                     $this->sendConditionMenu($player, $container, $condition, ["@form.cancelled"]);
                                 }
-                            })->onRecive([$this, "onUpdateCondition"])->show($player);
+                            })->onReceive([$this, "onUpdateCondition"])->show($player);
                         break;
                     case 2:
                         $config = Main::getInstance()->getFavorites();
@@ -198,7 +198,7 @@ class ConditionForm {
             ->setContent(Language::get("form.delete.confirm", [trim($condition->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, Conditionable $condition, ConditionContainer $container) {
+            ->onReceive(function (Player $player, ?bool $data, Conditionable $condition, ConditionContainer $container) {
                 if ($data === null) return;
 
                 if ($data) {

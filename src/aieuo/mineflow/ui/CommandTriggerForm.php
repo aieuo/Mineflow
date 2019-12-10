@@ -23,7 +23,7 @@ class CommandTriggerForm {
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.command.edit.title"),
-            ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -46,7 +46,7 @@ class CommandTriggerForm {
         (new CustomForm(Language::get("trigger.command.select.title", [$recipe->getName()])))
             ->setContents([
                 new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? ""),
-            ])->onRecive(function (Player $player, ?array $data, Recipe $recipe) {
+            ])->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
                 if ($data === null) return;
 
                 if (empty($data[0])) {
@@ -83,7 +83,7 @@ class CommandTriggerForm {
             ->setContent(Language::get("trigger.command.confirmCreate.content", [$name]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, callable $callback) {
+            ->onReceive(function (Player $player, ?bool $data, callable $callback) {
                 if ($data === null) return;
                 call_user_func_array($callback, [$data]);
             })->addArgs($callback)->show($player);
@@ -94,7 +94,7 @@ class CommandTriggerForm {
             ->setContent(Language::get("form.delete.confirm", [$trigger[0].": ".$trigger[1]]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, Recipe $recipe, array $trigger) {
+            ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 if ($data) {

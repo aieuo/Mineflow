@@ -30,7 +30,7 @@ class TriggerForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
-            ])->onRecive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -52,7 +52,7 @@ class TriggerForm {
                 new Button("@trigger.type.block"),
                 new Button("@trigger.type.event"),
                 new Button("@trigger.type.command"),
-            ])->onRecive(function (Player $player, ?int $data, Recipe $recipe) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -77,7 +77,7 @@ class TriggerForm {
             ->setContent(Language::get("form.delete.confirm", [$trigger[0].": ".$trigger[1]]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onRecive(function (Player $player, ?bool $data, Recipe $recipe, array $trigger) {
+            ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, array $trigger) {
                 if ($data === null) return;
 
                 if ($data) {

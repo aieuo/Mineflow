@@ -25,7 +25,7 @@ class ActionContainerForm {
         (new ListForm(Language::get("form.actionContainer.actionList.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
+            ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -67,7 +67,7 @@ class ActionContainerForm {
         (new ListForm(Language::get("form.actionContainer.moveAction.title", [$container->getName(), $selectedAction->getName()])))
             ->setContent("@form.actionContainer.moveAction.content")
             ->addButtons($buttons)
-            ->onRecive(function (Player $player, ?int $data, ActionContainer $container, int $selected, array $actions, int $count = 0) {
+            ->onReceive(function (Player $player, ?int $data, ActionContainer $container, int $selected, array $actions, int $count = 0) {
                 if ($data === null) return;
 
                 $move = $actions[$selected];
