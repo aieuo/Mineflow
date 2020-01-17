@@ -2,45 +2,37 @@
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\utils\Language;
-
-class StringVariable extends Variable {
+class StringVariable extends Variable implements \JsonSerializable {
 
     public $type = Variable::STRING;
 
-    public function addition(Variable $var, string $name = "result"): Variable {
+    /**
+     * @return String
+     */
+    public function getValue() {
+        return parent::getValue();
+    }
+
+    public function append(StringVariable $var, string $resultName = "result"): StringVariable {
         $result = $this->getValue().$var->getValue();
-        return new StringVariable($name, $result);
+        return new StringVariable($result, $resultName);
     }
 
-    public function subtraction(Variable $var, string $name = "result"): Variable {
+    public function replace(StringVariable $var, string $resultName = "result"): StringVariable {
         $result = str_replace((string)$var->getValue(), "", $this->getValue());
-        return new StringVariable($name, $result);
+        return new StringVariable($result, $resultName);
     }
 
-    public function multiplication(Variable $var, string $name = "result"): Variable {
-        if ($var->getType() !== Variable::NUMBER) {
-            return new StringVariable("ERROR", Language::get("variable.string.mul.error"));
-        }
-        if ($var->getValue() <= 0) {
-            return new StringVariable("ERROR", Language::get("variable.string.mul.0"));
-        }
+    public function repeat(StringVariable $var, string $resultName = "result"): StringVariable {
         $result = str_repeat($this->getValue(), (int)$var->getValue());
-        return new StringVariable($name, $result);
+        return new StringVariable($result, $resultName);
     }
 
-    public function division(Variable $var, string $name = "result"): Variable {
-        if ($var->getType() !== Variable::STRING) {
-            return new StringVariable("ERROR", Language::get("variable.string.div.error"));
-        }
+    public function split(StringVariable $var, string $resultName = "result"): ListVariable {
         $result = array_map(function ($value) {
             return trim(rtrim($value));
         }, explode((string)$var->getValue(), (string)$this->getValue()));
-        return new ListVariable($name, $result);
-    }
-
-    public function modulo(Variable $var, string $name = "result"): Variable {
-        return new StringVariable("ERROR", Language::get("variable.string.mod.error"));
+        return new ListVariable($result, $resultName);
     }
 
     public function toStringVariable(): StringVariable {
@@ -49,5 +41,18 @@ class StringVariable extends Variable {
 
     public function __toString() {
         return $this->getValue();
+    }
+
+    public function jsonSerialize() {
+        return [
+            "name" => $this->getName(),
+            "type" => $this->getType(),
+            "value" => $this->getValue(),
+        ];
+    }
+
+    public static function fromArray(array $data): ?Variable {
+        if (!isset($data["value"])) return null;
+        return new self($data["value"], $data["name"] ?? "");
     }
 }

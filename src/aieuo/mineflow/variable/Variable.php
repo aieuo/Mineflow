@@ -1,59 +1,60 @@
 <?php
+
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\variable\StringVariable;
-
 abstract class Variable {
+
     const STRING = 0;
     const NUMBER = 1;
     const LIST = 2;
     const MAP = 3;
+    const OBJECT = 4;
 
     /** @var string 変数の名前 */
     protected $name;
-    /** @var string|int|array 変数の値 */
+    /** @var string|int|array|object 変数の値 */
     protected $value;
     /** @var int 変数の型 */
     public $type;
     /** @var array 型の一覧 */
-    public $typeNames = ["string", "number", "list", "map"];
+    public $typeNames = ["string", "number", "list", "map", "object"];
 
-    public static function create($name, $value, $type = self::STRING) {
-        if ($type === self::STRING) {
-            $var = new StringVariable($name, $value);
-        } elseif ($type === self::NUMBER) {
-            $var = new NumberVariable($name, $value);
-        } elseif ($type === self::LIST) {
-            if (is_array($value)) {
-                $var = new ListVariable($name, $value);
-            } else {
-                $var = ListVariable::fromString($name, (string)$value);
-            }
-        } elseif ($type === self::MAP) {
-            if (is_array($value)) {
-                $var = new MapVariable($name, $value);
-            } else {
-                $var = MapVariable::fromString($name, (string)$value);
-            }
+    public static function create($value, string $name = "", int $type = self::STRING): ?self {
+        $variable = null;
+        switch ($type) {
+            case self::STRING:
+                $variable = StringVariable::fromArray(["name" => $name, "value" => (string)$value]);
+                break;
+            case self::NUMBER:
+                $variable = NumberVariable::fromArray(["name" => $name, "value" => (float)$value]);
+                break;
+            case self::LIST:
+                $variable = ListVariable::fromArray(["name" => $name, "value" => $value]);
+                break;
+            case self::MAP:
+                $variable = MapVariable::fromArray(["name" => $name, "value" => $value]);
+                break;
+            default:
+                return null;
         }
-        return $var;
+        return $variable;
     }
 
-    public function __construct($name, $value) {
-        $this->name = $name;
+    public function __construct($value, string $name = "") {
         $this->value = $value;
+        $this->name = $name;
     }
 
     public function getName(): string {
         return $this->name;
     }
 
-    public function setValue($value) {
+    public function setValue($value): void {
         $this->value = $value;
     }
 
     /**
-     * @return string|int|array
+     * @return string|int|array|object
      */
     public function getValue() {
         return $this->value;
@@ -63,40 +64,11 @@ abstract class Variable {
         return $this->type;
     }
 
-    /**
-     * 変数同士を足す
-     * @param Variable $var
-     * @param string   $name
-     */
-    abstract public function addition(Variable $var, string $name = "result"): Variable;
-
-    /**
-     * 変数同士を引く
-     * @param Variable $var
-     * @param string   $name
-     */
-    abstract public function subtraction(Variable $var, string $name = "result"): Variable;
-
-    /**
-     * 変数同士を掛ける
-     * @param Variable $var
-     * @param string   $name
-     */
-    abstract public function multiplication(Variable $var, string $name = "result"): Variable;
-
-    /**
-     * 変数同士を割る
-     * @param Variable $var
-     * @param string   $name
-     */
-    abstract public function division(Variable $var, string $name = "result"): Variable;
-
-    /**
-     * 変数同士を割った余り
-     * @param Variable $var
-     * @param string   $name
-     */
-    abstract public function modulo(Variable $var, string $name = "result"): Variable;
+    public function isSavable(): bool {
+        return true;
+    }
 
     abstract public function toStringVariable(): StringVariable;
+
+    abstract public static function fromArray(array $data): ?Variable;
 }

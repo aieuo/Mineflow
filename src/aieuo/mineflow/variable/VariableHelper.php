@@ -5,6 +5,7 @@ namespace aieuo\mineflow\variable;
 use pocketmine\utils\Config;
 use aieuo\mineflow\Main;
 use pocketmine\Player;
+use pocketmine\utils\UUID;
 
 class VariableHelper {
 
@@ -13,6 +14,8 @@ class VariableHelper {
 
     /** @var Config */
     private $file;
+    /* @var Main */
+    private $owner;
 
     public function __construct(Main $owner, Config $file) {
         $this->owner = $owner;
@@ -39,19 +42,8 @@ class VariableHelper {
         if (isset($this->variables[$name]) and !$save) return $this->variables[$name];
         if (!$this->exists($name)) return null;
 
-        $datas = $this->file->get($name);
-        switch ($datas["type"]) {
-            case Variable::STRING:
-                return new StringVariable($datas["name"], $datas["value"]);
-            case Variable::NUMBER:
-                return new NumberVariable($datas["name"], $datas["value"]);
-            case Variable::LIST:
-                return new ListVariable($datas["name"], $datas["value"]);
-            case Variable::MAP:
-                return new MapVariable($datas["name"], $datas["value"]);
-            default:
-                return null;
-        }
+        $data = $this->file->get($name);
+        return Variable::create($data["value"], $data["name"], $data["type"]);
     }
 
     /**
@@ -64,18 +56,14 @@ class VariableHelper {
             return;
         }
 
-        $datas = [
-            "name" => $variable->getName(),
-            "type" => $variable->getType(),
-            "value" => $variable->getValue(),
-        ];
-        $this->file->set($variable->getName(), $datas);
+        if (!$variable->isSavable() or empty($variable->getName())) return;
+        $this->file->set($variable->getName(), $variable);
         $this->file->save();
     }
 
     /**
-     * @param  String $name
-     * @return bool
+     * @param String $name
+     * @return void
      */
     public function delete(String $name) {
         unset($this->variables[$name]);
@@ -108,18 +96,18 @@ class VariableHelper {
 
     /**
      * 文字列の中にある変数を置き換える
-     * @param  string $string
-     * @param  array $variables
+     * @param string $string
+     * @param array $variables
+     * @param bool $global
      * @return string
      */
     public function replaceVariables(string $string, array $variables = [], bool $global = true) {
         $limit = 10;
-        while (preg_match_all("/(\{(?:[^{}]+|(?R))*\})/", $string, $matches)) {
+        while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
                     $name = $this->replaceVariables($name, $variables, $global);
-                    continue;
                 }
                 $string = $this->replace($string, $name, $variables, $global);
             }
@@ -130,15 +118,16 @@ class VariableHelper {
 
     /**
      * 変数を置き換える
-     * @param  string $string
-     * @param  string $replace
-     * @param  array $variables
+     * @param string $string
+     * @param string $replace
+     * @param array $variables
+     * @param bool $global
      * @return string
      */
     public function replace(string $string, string $replace, array $variables = [], bool $global = true) {
         if (strpos($string, "{".$replace."}") === false) return $string;
 
-        $names = explode(".", preg_replace("/\[([^\[\]]+)\]/", '.${1}', $replace));
+        $names = explode(".", preg_replace("/\[([^\[\]]+)]/", '.${1}', $replace));
         $name = array_shift($names);
 
         $variable = $variables[$name] ?? ($global ? $this->get($name) : null);
@@ -146,37 +135,27 @@ class VariableHelper {
             return str_replace("{".$replace."}", "§cUndefined variable: ".$name."§r", $string);
         }
         $value = $variable->getValue();
+
         if (empty($names)) {
             $value = $variable->toStringVariable()->getValue();
             return str_replace("{".$replace."}", $value, $string);
         }
 
+        $tmp = $name;
         foreach ($names as $name) {
-            if (!is_array($value) and !($value instanceof ListVariable or $value instanceof MapVariable)) {
-                if ($value instanceof Variable) $value = $value->toStringVariable()->getValue();
-                if (is_array($value)) {
-                    if (array_values($value) === $value) $value = (new ListVariable($name, $value))->__toString();
-                    else $value = (new MapVariable($name, $value))->__toString();
-                }
-                return str_replace("{".$replace."}", "§cUndefined index: ".$value.".".$name."§r", $string);
+            if (!($variable instanceof Variable) or $variable instanceof StringVariable or $variable instanceof NumberVariable) {
+                return str_replace("{".$replace."}", "§cUndefined index: ".$tmp.".§l".$name."§r", $string);
             }
 
-            $variable = $value;
-            $value = $variable instanceof Variable ? $variable->getValueFromIndex($name) : ($variable[$name] ?? null);
+            $value = $variable->getValueFromIndex($name);
             if ($value === null) {
-                if ($variable instanceof Variable) $variable = $variable->toStringVariable()->getValue();
-                if (is_array($variable)) {
-                    if (array_values($variable) === $variable) $variable = (new ListVariable($name, $variable))->__toString();
-                    else $variable = (new MapVariable($name, $variable))->__toString();
-                }
-                return str_replace("{".$replace."}", "§cUndefined index: ".$variable.".".$name."§r", $string);
+                return str_replace("{".$replace."}", "§cUndefined index: ".$tmp.".§l".$name."§r", $string);
             }
+
+            $tmp .= ".".$name;
+            $variable = $value;
         }
         if ($value instanceof Variable) $value = $value->toStringVariable()->getValue();
-        if (is_array($value)) {
-            if (array_values($value) === $value) $value = (new ListVariable($name, $value))->__toString();
-            else $value = (new MapVariable($name, $value))->__toString();
-        }
         return str_replace("{".$replace."}", $value, $string);
     }
 
@@ -208,8 +187,6 @@ class VariableHelper {
             $type = Variable::STRING;
         } elseif (substr($string, 0, 5) === "(num)") {
             $type = Variable::NUMBER;
-        } elseif (substr($string, 0, 6) === "(list)") {
-            $type = Variable::LIST;
         } elseif (is_numeric($string)) {
             $type = Variable::NUMBER;
         } else {
@@ -220,7 +197,7 @@ class VariableHelper {
 
     /**
      * 文字列の型を変更する
-     * @param  string $string
+     * @param string $value
      * @return string|float
      */
     public function currentType(string $value) {
@@ -229,9 +206,6 @@ class VariableHelper {
         } elseif (mb_substr($value, 0, 5) === "(num)") {
             $value = mb_substr($value, 5);
             if (!$this->containsVariable($value)) $value = (float)$value;
-        } elseif (substr($value, 0, 6) === "(list)") {
-            $value = mb_substr($value, 6);
-            if (!$this->containsVariable($value)) $value = Variable::create("list", $value, Variable::LIST)->getValue();
         } elseif (is_numeric($value)) {
             $value = (float)$value;
         }
