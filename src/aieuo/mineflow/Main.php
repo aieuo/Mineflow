@@ -80,9 +80,9 @@ class Main extends PluginBase {
         $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
         $this->commandManager = new CommandManager($this, $commands);
 
-        $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.yml", Config::YAML));
 
         $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
+        $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
 
         new EntityHolder();
 
