@@ -12,28 +12,21 @@ class EntityHolder {
     private static $instance;
 
     /** @var Entity[] */
-    private $entities = [];
+    private static $entities = [];
 
-    public function __construct() {
-        self::$instance = $this;
-    }
-
-    public static function getInstance(): self {
-        return self::$instance;
-    }
-
-    public function getPlayerByName(string $name): ?Player {
+    public static function getPlayerByName(string $name): ?Player {
         $player = Server::getInstance()->getPlayer($name);
-        if ($player instanceof Player) $this->entities[$player->getId()] = $player;
+        if ($player instanceof Player) self::$entities[$player->getId()] = $player;
         return $player;
     }
 
-    public function findEntity(int $id): ?Entity {
+    public static function findEntity(int $id): ?Entity {
         if ($id > Entity::$entityCount) return null;
-        if (isset($this->entities[$id])) {
-            $entity = $this->entities[$id];
+        $entity = null;
+        if (isset(self::$entities[$id])) {
+            $entity = self::$entities[$id];
             if (!$entity->isAlive() or $entity->isClosed() or ($entity instanceof Player and !$entity->isOnline())) {
-                $this->entities[$id] = null;
+                self::$entities[$id] = null;
                 return null;
             }
             return $entity;
@@ -43,18 +36,18 @@ class EntityHolder {
             $entity = $level->getEntity($id);
             if ($entity instanceof Entity) break;
         }
-        $this->entities[$id] = $entity;
+        self::$entities[$id] = $entity;
         if (empty($entity)) return null;
         return $entity;
     }
 
-    public function isPlayer(int $id): bool {
-        $entity = $this->findEntity($id);
+    public static function isPlayer(int $id): bool {
+        $entity = self::findEntity($id);
         return $entity instanceof Player;
     }
 
-    public function isActive(int $id): bool {
-        $entity = $this->findEntity($id);
+    public static function isActive(int $id): bool {
+        $entity = self::findEntity($id);
         if ($entity === null) return false;
         return $entity->isAlive() and !$entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());
     }
