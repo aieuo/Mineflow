@@ -43,6 +43,7 @@ class Language {
         if (isset(self::$messages[$key])) {
             $message = self::$messages[$key];
             foreach ($replaces as $cnt => $value) {
+                if (is_array($value)) $value = self::get($value[0], $value[1] ?? []);
                 $message = str_replace("{%".$cnt."}", $value, $message);
             }
             $message = str_replace(["\\n", "\\q", "\\dq"], ["\n", "'", "\""], $message);

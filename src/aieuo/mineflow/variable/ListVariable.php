@@ -31,7 +31,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     public function removeValue(Variable $value) {
-        $index = array_search($value, $this->value);
+        $index = array_search($value, $this->value, true);
         if ($index === false) return;
         unset($this->value[$index]);
         $this->value = array_merge($this->value);

@@ -2,23 +2,28 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\flowItem\condition\Condition;
+use aieuo\mineflow\flowItem\condition\ConditionContainer;
+use aieuo\mineflow\flowItem\condition\ConditionFactory;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\recipe\Recipe;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
-use aieuo\mineflow\script\ScriptFactory;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\condition\script\ConditionScript;
-use aieuo\mineflow\condition\Conditionable;
-use aieuo\mineflow\condition\ConditionFactory;
-use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Button;
 
 class ConditionForm {
 
-    public function sendAddedConditionMenu(Player $player, ConditionContainer $container, Conditionable $condition, array $messages = []) {
+    public function sendAddedConditionMenu(Player $player, ConditionContainer $container, Condition $condition, array $messages = []) {
+        if ($condition->hasCustomMenu()) {
+            $condition->sendCustomMenu($player);
+            return;
+        }
+        /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.condition.addedConditionMenu.title", [$container->getName(), $condition->getName()])))
             ->setContent(trim($condition->getDetail()))
             ->addButtons([
@@ -26,7 +31,7 @@ class ConditionForm {
                 new Button("@form.edit"),
                 new Button("@form.move"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
+            ])->onReceive(function (Player $player, ?int $data, ConditionContainer $container, Condition $condition) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -38,10 +43,10 @@ class ConditionForm {
                         (new ConditionContainerForm)->sendConditionList($player, $container);
                         break;
                     case 1:
-                        if ($condition instanceof ConditionScript) {
+                        if ($condition->hasCustomMenu()) {
                             $session = Session::getSession($player);
                             $session->set("parents", array_merge($session->get("parents"), [$container]));
-                            $condition->sendEditForm($player);
+                            $condition->sendCustomMenu($player);
                             return;
                         }
                         $condition->getEditForm()
@@ -50,7 +55,7 @@ class ConditionForm {
                             })->onReceive([$this, "onUpdateCondition"])->show($player);
                         break;
                     case 2:
-                        (new ConditionContainerForm)->sendMoveCondition($player, $container, array_search($condition, $container->getConditions()));
+                        (new ConditionContainerForm)->sendMoveCondition($player, $container, array_search($condition, $container->getConditions(), true));
                         break;
                     case 3:
                         $this->sendConfirmDelete($player, $condition, $container);
@@ -59,23 +64,23 @@ class ConditionForm {
             })->addArgs($container, $condition)->addMessages($messages)->show($player);
     }
 
-    public function onUpdateCondition(Player $player, ?array $data, ConditionContainer $container, Conditionable $condition, callable $callback) {
-        if ($data === null) return;
+    public function onUpdateCondition(Player $player, ?array $formData, ConditionContainer $container, Condition $condition, callable $callback) {
+        if ($formData === null) return;
 
-        $datas = $condition->parseFromFormData($data);
-        if ($datas["cancel"]) {
+        $data = $condition->parseFromFormData($formData);
+        if ($data["cancel"]) {
             call_user_func_array($callback, [false]);
             return;
         }
 
-        if ($datas["status"] === false) {
-            $condition->getEditForm($data, $datas["errors"])
+        if ($data["status"] === false) {
+            $condition->getEditForm($formData, $data["errors"])
                 ->addArgs($container, $condition, $callback)
                 ->onReceive([$this, "onUpdateCondition"])
                 ->show($player);
             return;
         }
-        $condition->parseFromSaveData($datas["contents"]);
+        $condition->loadSaveData($data["contents"]);
         call_user_func_array($callback, [true]);
     }
 
@@ -85,6 +90,7 @@ class ConditionForm {
         foreach ($categories as $category) {
             $buttons[] = new Button("@category.".$category);
         }
+        /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.condition.category.title", [$container->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
@@ -100,7 +106,6 @@ class ConditionForm {
                     $conditions = [];
                     foreach ($favorites as $favorite) {
                         $condition = ConditionFactory::get($favorite);
-                        if ($condition === null) $condition = ScriptFactory::get($favorite);
                         if ($condition === null) continue;
 
                         $conditions[] = $condition;
@@ -112,7 +117,6 @@ class ConditionForm {
 
                 $category = $categories[$data];
                 $conditions = ConditionFactory::getByCategory($category);
-                $conditions = array_merge($conditions, ScriptFactory::getByCategory($category));
 
                 $this->sendSelectCondition($player, $container, $conditions, Categories::getConditionCategories()[$category]);
             })->addArgs($container, array_keys($categories))->show($player);
@@ -123,6 +127,7 @@ class ConditionForm {
         foreach ($conditions as $condition) {
             $buttons[] = new Button($condition->getName());
         }
+        /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.condition.select.title", [$container->getName(), $category])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
@@ -141,16 +146,17 @@ class ConditionForm {
             })->addArgs($container, $conditions)->show($player);
     }
 
-    public function sendConditionMenu(Player $player, ConditionContainer $container, Conditionable $condition, array $messages = []) {
+    public function sendConditionMenu(Player $player, ConditionContainer $container, Condition $condition, array $messages = []) {
         $config = Main::getInstance()->getFavorites();
         $favorites = $config->getNested($player->getName().".condition", []);
+        /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getName()])))
             ->setContent($condition->getDescription())
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),
                 new Button(in_array($condition->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
-            ])->onReceive(function (Player $player, ?int $data, ConditionContainer $container, Conditionable $condition) {
+            ])->onReceive(function (Player $player, ?int $data, ConditionContainer $container, Condition $condition) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -161,16 +167,16 @@ class ConditionForm {
                     case 1:
                         $session = Session::getSession($player);
                         $session->set("parents", array_merge($session->get("parents"), [$container]));
-                        if ($condition instanceof ConditionScript) {
+                        if ($condition->hasCustomMenu()) {
                             $container->addCondition($condition);
-                            $condition->sendEditForm($player);
+                            $condition->sendCustomMenu($player);
                             return;
                         }
                         $condition->getEditForm()
                             ->addArgs($container, $condition, function ($result) use ($player, $container, $condition) {
                                 if ($result) {
                                     $container->addCondition($condition);
-                                    $this->sendAddedConditionMenu($player, $container, $condition, ["@form.changed"]);
+                                    (new ConditionContainerForm)->sendConditionList($player, $container, ["@form.added"]);
                                 } else {
                                     $this->sendConditionMenu($player, $container, $condition, ["@form.cancelled"]);
                                 }
@@ -193,24 +199,30 @@ class ConditionForm {
             })->addArgs($container, $condition)->addMessages($messages)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, Conditionable $condition, ConditionContainer $container) {
+    /**
+     * @param Player $player
+     * @param Condition $condition
+     * @param ConditionContainer $container
+     * @uses \aieuo\mineflow\flowItem\condition\ConditionContainerTrait::removeCondition()
+     */
+    public function sendConfirmDelete(Player $player, Condition $condition, ConditionContainer $container) {
         (new ModalForm(Language::get("form.items.delete.title", [$condition->getName()])))
             ->setContent(Language::get("form.delete.confirm", [trim($condition->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, Conditionable $condition, ConditionContainer $container) {
+            ->onReceive(function (Player $player, ?bool $data, Condition $condition, ConditionContainer $container) {
                 if ($data === null) return;
 
                 if ($data) {
-                    $index = array_search($condition, $container->getConditions());
+                    $index = array_search($condition, $container->getConditions(), true);
                     $container->removeCondition($index);
                     $session = Session::getSession($player);
                     $parents = $session->get("parents");
                     array_pop($parents);
                     $session->set("parents", $parents);
                     (new ConditionContainerForm)->sendConditionList($player, $container, ["@form.delete.success"]);
-                } elseif ($container instanceof ConditionScript) {
-                    $container->sendEditForm($player, false, ["@form.cancelled"]);
+                } elseif ($container instanceof FlowItem and $container->hasCustomMenu()) {
+                    $container->sendCustomMenu($player, ["@form.cancelled"]);
                 } else {
                     $this->sendAddedConditionMenu($player, $container, $condition, ["@form.cancelled"]);
                 }

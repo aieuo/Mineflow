@@ -5,9 +5,11 @@ namespace aieuo\mineflow\command\subcommand;
 use pocketmine\command\CommandSender;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\ui\CommandForm;
+use pocketmine\Player;
 
 class CustomCommandCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {
+        if (!($sender instanceof Player)) return;
         if (!isset($args[0])) {
             (new CommandForm)->sendMenu($sender);
             return;

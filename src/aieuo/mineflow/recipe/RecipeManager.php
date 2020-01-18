@@ -31,7 +31,7 @@ class RecipeManager {
             if ($data === null) continue;
             if (!isset($data["name"]) or !isset($data["actions"])) continue;
 
-            $recipe = (new Recipe($data["name"]))->parseFromSaveData($data["actions"]);
+            $recipe = (new Recipe($data["name"]))->loadSaveData($data["actions"]);
             if ($recipe === null) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"]]));
                 continue;

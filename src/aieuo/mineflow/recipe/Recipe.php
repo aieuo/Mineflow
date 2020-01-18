@@ -2,6 +2,10 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\flowItem\action\ActionContainer;
+use aieuo\mineflow\flowItem\action\ActionContainerTrait;
+use aieuo\mineflow\flowItem\action\EventCancel;
+use aieuo\mineflow\flowItem\action\Action;
 use pocketmine\event\Event;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
@@ -11,13 +15,10 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\script\Script;
-use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\action\process\EventCancel;
-use aieuo\mineflow\action\ActionContainer;
-use aieuo\mineflow\action\Action;
 use aieuo\mineflow\Main;
 
 class Recipe implements \JsonSerializable, ActionContainer {
+    use ActionContainerTrait;
 
     const CONTENT_TYPE_PROCESS = "action";
     const CONTENT_TYPE_CONDITION = "condition";
@@ -36,9 +37,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var string */
     private $name;
-
-    /** @var Action[] */
-    private $actions = [];
 
     /** @var int */
     private $targetType = self::TARGET_DEFAULT;
@@ -80,30 +78,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $details[] = $action->getDetail();
         }
         return implode("\n", $details);
-    }
-
-    public function addAction(Action $action): void {
-        $this->actions[] = $action;
-    }
-
-    public function setActions(array $actions): void {
-        $this->actions = $actions;
-    }
-
-    public function getAction(int $index): ?Action {
-        return $this->actions[$index] ?? null;
-    }
-
-    public function removeAction(int $index): void {
-        unset($this->actions[$index]);
-        $this->actions = array_merge($this->actions);
-    }
-
-    /**
-     * @return Action[]
-     */
-    public function getActions(): array {
-        return $this->actions;
     }
 
     public function setTarget(int $type, array $options): void {
@@ -156,7 +130,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function removeTrigger(array $trigger): void {
         TriggerManager::getManager($trigger[0])->removeRecipe($trigger[1], $this->getName());
-        $index = array_search($trigger, $this->triggers);
+        $index = array_search($trigger, $this->triggers, true);
         unset($this->triggers[$index]);
         $this->triggers = array_values($this->triggers);
     }
@@ -266,14 +240,14 @@ class Recipe implements \JsonSerializable, ActionContainer {
         file_put_contents($dir.$this->getName().".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 
-    public function parseFromSaveData(array $contents): ?self {
+    public function loadSaveData(array $contents): ?self {
         foreach ($contents as $i => $content) {
             switch ($content["type"]) {
                 case self::CONTENT_TYPE_PROCESS:
-                    $action = Process::parseFromSaveDataStatic($content);
+                    $action = Action::loadSaveDataStatic($content);
                     break;
                 case self::CONTENT_TYPE_SCRIPT:
-                    $action = Script::parseFromSaveDataStatic($content);
+                    $action = Script::loadSaveDataStatic($content);
                     break;
                 default:
                     return null;

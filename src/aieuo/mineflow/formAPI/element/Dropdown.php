@@ -18,7 +18,7 @@ class Dropdown extends Element {
     }
 
     /**
-     * @param string $options
+     * @param string $option
      * @return self
      */
     public function addOption(string $option): self {

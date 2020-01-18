@@ -2,12 +2,14 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\flowItem\condition\Condition;
+use aieuo\mineflow\flowItem\condition\ConditionContainer;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\recipe\Recipe;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\condition\script\ConditionScript;
-use aieuo\mineflow\condition\ConditionContainer;
 use aieuo\mineflow\formAPI\element\Button;
 use pocketmine\utils\TextFormat;
 
@@ -28,7 +30,12 @@ class ConditionContainerForm {
                 if ($data === null) return;
 
                 if ($data === 0) {
-                    $container->sendEditForm($player);
+                    if ($container instanceof Recipe) {
+                        (new RecipeForm)->sendRecipeMenu($player, $container);
+                    } else {
+                        /** @var FlowItem $container */
+                        $container->sendCustomMenu($player);
+                    }
                     return;
                 }
                 if ($data === 1) {
@@ -37,14 +44,11 @@ class ConditionContainerForm {
                 }
                 $data -= 2;
 
+                /** @var Condition $condition */
                 $condition = $conditions[$data];
                 $session = Session::getSession($player);
                 $session->set("parents", array_merge($session->get("parents"), [$container]));
 
-                if ($condition instanceof ConditionScript) {
-                    $condition->sendEditForm($player);
-                    return;
-                }
                 (new ConditionForm)->sendAddedConditionMenu($player, $container, $condition);
             })->addArgs($container, $conditions)->addMessages($messages)->show($player);
     }
@@ -59,6 +63,7 @@ class ConditionContainerForm {
         }
         $buttons[] = new Button("");
 
+        /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.conditionContainer.moveCondition.title", [$container->getName(), $selectedCondition->getName()])))
             ->setContent("@form.conditionContainer.moveCondition.content")
             ->addButtons($buttons)

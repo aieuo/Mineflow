@@ -36,14 +36,14 @@ class Session {
 ////////////////////////////////////////////////////////////////////////
 
     /** @var array */
-    private $datas = [];
+    private $data = [];
 
     /**
      * @param string $key
      * @return boolean
      */
     public function exists(string $key): bool {
-        return isset($this->datas[$key]);
+        return isset($this->data[$key]);
     }
 
     /**
@@ -52,8 +52,8 @@ class Session {
      * @return mixed
      */
     public function get(string $key, $default = null) {
-        if (!isset($this->datas[$key])) return $default;
-        return $this->datas[$key];
+        if (!isset($this->data[$key])) return $default;
+        return $this->data[$key];
     }
 
     /**
@@ -62,7 +62,7 @@ class Session {
      * @return self
      */
     public function set(string $key, $data): self {
-        $this->datas[$key] = $data;
+        $this->data[$key] = $data;
         return $this;
     }
 
@@ -71,7 +71,7 @@ class Session {
      * @return self
      */
     public function remove(string $key): self {
-        unset($this->datas[$key]);
+        unset($this->data[$key]);
         return $this;
     }
 
@@ -79,7 +79,7 @@ class Session {
      * @return self
      */
     public function removeAll(): self {
-        $this->datas = [];
+        $this->data = [];
         return $this;
     }
 }

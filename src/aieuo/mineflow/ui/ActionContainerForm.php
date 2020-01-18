@@ -2,12 +2,13 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\flowItem\action\Action;
+use aieuo\mineflow\flowItem\action\ActionContainer;
+use aieuo\mineflow\flowItem\FlowItem;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\action\script\ActionScript;
-use aieuo\mineflow\action\ActionContainer;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\utils\TextFormat;
@@ -32,7 +33,8 @@ class ActionContainerForm {
                     if ($container instanceof Recipe) {
                         (new RecipeForm)->sendRecipeMenu($player, $container);
                     } else {
-                        $container->sendEditForm($player);
+                        /** @var FlowItem $container */
+                        $container->sendCustomMenu($player);
                     }
                     return;
                 }
@@ -42,14 +44,11 @@ class ActionContainerForm {
                 }
                 $data -= 2;
 
+                /** @var Action $action */
                 $action = $actions[$data];
                 $session = Session::getSession($player);
                 $session->set("parents", array_merge($session->get("parents"), [$container]));
 
-                if ($action instanceof ActionScript) {
-                    $action->sendEditForm($player);
-                    return;
-                }
                 (new ActionForm)->sendAddedActionMenu($player, $container, $action);
             })->addArgs($container, $actions)->addMessages($messages)->show($player);
     }

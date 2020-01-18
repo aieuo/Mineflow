@@ -2,19 +2,19 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\flowItem\action\ActionFactory;
+use aieuo\mineflow\flowItem\condition\ConditionFactory;
+use aieuo\mineflow\utils\FormManager;
 use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use aieuo\mineflow\variable\VariableHelper;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\trigger\TriggerManager;
-use aieuo\mineflow\script\ScriptFactory;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\economy\Economy;
-use aieuo\mineflow\condition\ConditionFactory;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\command\CommandManager;
-use aieuo\mineflow\action\process\ProcessFactory;
 use aieuo\mineflow\utils\EntityHolder;
 
 class Main extends PluginBase {
@@ -70,8 +70,7 @@ class Main extends PluginBase {
 
         TriggerManager::init();
 
-        ScriptFactory::init();
-        ProcessFactory::init();
+        ActionFactory::init();
         ConditionFactory::init();
 
         $this->events = new Config($this->getDataFolder()."events.yml", Config::YAML);
@@ -81,13 +80,11 @@ class Main extends PluginBase {
         $this->commandManager = new CommandManager($this, $commands);
 
 
-        $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
 
-        new EntityHolder();
+        $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
 
         $this->loaded = true;
-
         (new ServerStartEvent($this))->call();
     }
 

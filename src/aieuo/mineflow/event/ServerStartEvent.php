@@ -14,6 +14,7 @@ class ServerStartEvent extends PluginEvent {
     private $date;
 
     public function __construct(Main $owner) {
+        parent::__construct($owner);
         $this->microtime = microtime(true);
         $this->date = date("Y-m-d H:i:s");
     }

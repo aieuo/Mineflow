@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\task;
 
-use aieuo\mineflow\action\script\WhileScript;
+use aieuo\mineflow\flowItem\action\WhileScript;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\entity\Entity;
 use pocketmine\scheduler\Task;

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\flowItem\action\SetSitting;
 use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\network\mcpe\protocol\InteractPacket;
@@ -44,7 +45,6 @@ use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\event\ServerStartEvent;
-use aieuo\mineflow\action\process\SetSitting;
 use pocketmine\event\entity\EntityTeleportEvent;
 
 class EventListener implements Listener {

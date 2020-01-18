@@ -5,9 +5,11 @@ namespace aieuo\mineflow\command\subcommand;
 use pocketmine\command\CommandSender;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
+use pocketmine\Player;
 
 class RecipeCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {
+        if (!($sender instanceof Player)) return;
         if (!isset($args[0])) {
             (new RecipeForm)->sendMenu($sender);
             return;

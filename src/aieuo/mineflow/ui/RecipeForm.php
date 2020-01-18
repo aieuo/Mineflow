@@ -152,42 +152,42 @@ class RecipeForm {
         (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getName()])))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@action.edit"),
                 new Button("@form.recipe.recipeMenu.changeName"),
                 new Button("@form.recipe.recipeMenu.execute"),
                 new Button("@form.recipe.recipeMenu.setTrigger"),
                 new Button("@form.recipe.recipeMenu.save"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
-                        Session::getSession($player)->set("parents", []);
-                        (new ActionContainerForm)->sendActionList($player, $recipe);
-                        break;
-                    case 1:
-                        $this->sendChangeName($player, $recipe);
-                        break;
-                    case 2:
-                        $variables = array_merge(DefaultVariables::getServerVariables(), DefaultVariables::getPlayerVariables($player));
-                        $recipe->executeAllTargets($player, $variables);
-                        break;
-                    case 3:
-                        $this->sendTriggerList($player, $recipe);
-                        break;
-                    case 4:
-                        $recipe->save(Main::getInstance()->getRecipeManager()->getSaveDir());
-                        $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
-                        break;
-                    case 5:
-                        $this->sendConfirmDelete($player, $recipe);
-                        break;
-                    default:
                         $prev = Session::getSession($player)->get("recipe_menu_prev");
                         if (is_callable($prev)) call_user_func_array($prev, [$player]);
                         else $this->sendMenu($player);
+                        break;
+                    case 1:
+                        Session::getSession($player)->set("parents", []);
+                        (new ActionContainerForm)->sendActionList($player, $recipe);
+                        break;
+                    case 2:
+                        $this->sendChangeName($player, $recipe);
+                        break;
+                    case 3:
+                        $variables = array_merge(DefaultVariables::getServerVariables(), DefaultVariables::getPlayerVariables($player));
+                        $recipe->executeAllTargets($player, $variables);
+                        break;
+                    case 4:
+                        $this->sendTriggerList($player, $recipe);
+                        break;
+                    case 5:
+                        $recipe->save(Main::getInstance()->getRecipeManager()->getSaveDir());
+                        $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
+                        break;
+                    case 6:
+                        $this->sendConfirmDelete($player, $recipe);
                         break;
                 }
             })->addArgs($recipe)->addMessages($messages)->show($player);
