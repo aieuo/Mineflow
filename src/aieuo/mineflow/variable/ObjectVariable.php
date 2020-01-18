@@ -6,12 +6,17 @@ class ObjectVariable extends Variable {
 
     public $type = Variable::NUMBER;
 
+    /* @var string|null */
+    private $showString;
+
     /**
      * @param object $value
      * @param string $name
+     * @param string $str
      */
-    public function __construct($value, string $name = "") {
+    public function __construct(object $value, string $name = "", ?string $str = null) {
         parent::__construct($value, $name);
+        $this->showString = $str;
     }
 
     /**
@@ -34,6 +39,7 @@ class ObjectVariable extends Variable {
     }
 
     public function __toString() {
+        if (!empty($this->showString)) return $this->showString;
         if (method_exists($this->getValue(), "__toString")) {
             $str = $this->getValue()->__toString();
         } else {
@@ -48,5 +54,10 @@ class ObjectVariable extends Variable {
             $this->getType(),
             $this->getValue(),
         ];
+    }
+
+    public static function fromArray(array $data): ?Variable {
+        if (!isset($data["value"])) return null;
+        return new self($data["value"], $data["name"] ?? "");
     }
 }

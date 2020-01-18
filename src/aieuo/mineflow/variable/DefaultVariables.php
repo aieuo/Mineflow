@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\variable\object\EntityObjectVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\tile\Sign;
 use pocketmine\item\Item;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -31,38 +33,11 @@ class DefaultVariables {
     }
 
     public static function getEntityVariables(Entity $target, string $name = "target"): array {
-        return [
-            $name => new MapVariable([
-                "id" => $target->getId(),
-                "nametag" => $target->getNameTag(),
-                "x" => $target->x,
-                "y" => $target->y,
-                "z" => $target->z,
-                "level" => $target->level->getFolderName(),
-            ], $name, $target->__toString()),
-        ];
+        return [$name => new EntityObjectVariable($target, $name, $target->getNameTag())];
     }
 
     public static function getPlayerVariables(Player $target, string $name = "target"): array {
-        $hand = $target->getInventory()->getItemInHand();
-        return [
-            $name => new MapVariable([
-                "id" => $target->getId(),
-                "name" => $target->getName(),
-                "nametag" => $target->getNameTag(),
-                "x" => $target->x,
-                "y" => $target->y,
-                "z" => $target->z,
-                "level" => $target->level->getFolderName(),
-                "hand" => new MapVariable([
-                    "index" => $target->getInventory()->getHeldItemIndex(),
-                    "name" => $hand->getName(),
-                    "id" => $hand->getId(),
-                    "damage" => $hand->getDamage(),
-                    "count" => $hand->getCount(),
-                ], "hand", $hand->__toString())
-            ], $name, $target->__toString()),
-        ];
+        return [$name => new PlayerObjectVariable($target, $name, $target->getName())];
     }
 
     public static function getBlockVariables(Block $block, string $name = "block", bool $checkSign = true): array {
@@ -80,7 +55,7 @@ class DefaultVariables {
         if ($checkSign and $block instanceof SignPost) {
             $sign = $block->level->getTile($block);
             if ($sign instanceof Sign) {
-                $variables["sign_lines"] = new ListVariable("sign_lines", $sign->getText());
+                $variables["sign_lines"] = new ListVariable($sign->getText(), "sign_lines");
             }
         }
         return $variables;
