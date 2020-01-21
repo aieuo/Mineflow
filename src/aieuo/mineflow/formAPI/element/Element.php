@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\formAPI\element;
 
 use aieuo\mineflow\utils\Language;
+use pocketmine\utils\UUID;
 
 abstract class Element implements \JsonSerializable {
 
@@ -20,8 +21,12 @@ abstract class Element implements \JsonSerializable {
     /** @var string|null */
     protected $highlight = null;
 
-    public function __construct(string $text) {
+    /** @var string|null */
+    private $uuid;
+
+    public function __construct(string $text, ?string $uuid = null) {
         $this->text = $text;
+        $this->uuid = $uuid;
     }
 
     /**
@@ -40,8 +45,25 @@ abstract class Element implements \JsonSerializable {
         return $this->text;
     }
 
+    /**
+     * @return string
+     */
+    public function getType(): string {
+        return $this->type;
+    }
+
+    /**
+     * @param string|null $color
+     */
     public function setHighlight(?string $color): void {
         $this->highlight = $color;
+    }
+
+    /**
+     * @return String
+     */
+    public function getUUId(): string {
+        return !empty($this->uuid) ? $this->uuid : UUID::fromRandom()->toString();
     }
 
     /**

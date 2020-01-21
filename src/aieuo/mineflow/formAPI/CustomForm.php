@@ -7,6 +7,8 @@ use pocketmine\utils\TextFormat;
 
 class CustomForm extends Form {
 
+    protected $type = self::CUSTOM_FORM;
+
     /** @var Element[] */
     private $contents = [];
 
@@ -21,11 +23,19 @@ class CustomForm extends Form {
 
     /**
      * @param Element $content
+     * @param bool $add
      * @return self
      */
-    public function addContent(Element $content): self {
-        $this->contents[] = $content;
+    public function addContent(Element $content, bool $add = true): self {
+        if ($add) $this->contents[] = $content;
         return $this;
+    }
+
+    /**
+     * @return Element[]
+     */
+    public function getContents(): array {
+        return $this->contents;
     }
 
     /**

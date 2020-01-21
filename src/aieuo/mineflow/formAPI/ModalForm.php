@@ -4,6 +4,8 @@ namespace aieuo\mineflow\formAPI;
 
 class ModalForm extends Form {
 
+    protected $type = self::MODAL_FORM;
+
     /** @var string */
     private $content = "";
     /** @var string */
@@ -21,6 +23,13 @@ class ModalForm extends Form {
     }
 
     /**
+     * @return string
+     */
+    public function getContent(): string {
+        return $this->content;
+    }
+
+    /**
      * @param string $text
      * @return self
      */
@@ -30,12 +39,26 @@ class ModalForm extends Form {
     }
 
     /**
+     * @return string
+     */
+    public function getButton1(): string {
+        return $this->button1;
+    }
+
+    /**
      * @param string $text
      * @return self
      */
     public function setButton2(string $text): self {
         $this->button2 = $text;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getButton2(): string {
+        return $this->button2;
     }
 
     public function jsonSerialize(): array {

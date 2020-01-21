@@ -6,6 +6,8 @@ use aieuo\mineflow\formAPI\element\Button;
 
 class ListForm extends Form {
 
+    protected $type = self::LIST_FORM;
+
     /** @var string */
     private $content = "";
     /** @var Button[] */
@@ -18,6 +20,13 @@ class ListForm extends Form {
     public function setContent(string $content): self {
         $this->content = $content;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string {
+        return $this->content;
     }
 
     /**
@@ -36,6 +45,20 @@ class ListForm extends Form {
     public function addButtons(array $buttons): self {
         $this->buttons = array_merge($this->buttons, $buttons);
         return $this;
+    }
+
+    /**
+     * @param Button[] $buttons
+     */
+    public function setButtons(array $buttons): void {
+        $this->buttons = $buttons;
+    }
+
+    /**
+     * @return Button[]
+     */
+    public function getButtons(): array {
+        return $this->buttons;
     }
 
     public function jsonSerialize(): array {

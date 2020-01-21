@@ -21,7 +21,7 @@ class Slider extends Element {
         $this->min = $min;
         $this->max = $max;
         $this->step = $step;
-        $this->default = $default;
+        $this->default = $default ?? $min;
     }
 
     /**

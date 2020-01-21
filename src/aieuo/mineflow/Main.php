@@ -40,6 +40,10 @@ class Main extends PluginBase {
 
     /** @var VariableHelper */
     private $variableHelper;
+    /**
+     * @var FormManager
+     */
+    private $formManager;
 
     public static function getInstance(): ?self {
         return self::$instance;
@@ -79,6 +83,7 @@ class Main extends PluginBase {
         $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
         $this->commandManager = new CommandManager($this, $commands);
 
+        $this->formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
 
         $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
 
@@ -91,6 +96,7 @@ class Main extends PluginBase {
     public function onDisable() {
         if (!$this->loaded) return;
         $this->recipeManager->saveAll();
+        $this->formManager->saveAll();
         $this->variableHelper->saveAll();
     }
 
@@ -112,6 +118,10 @@ class Main extends PluginBase {
 
     public function getCommandManager(): CommandManager {
         return $this->commandManager;
+    }
+
+    public function getFormManager(): FormManager {
+        return $this->formManager;
     }
 
     public function getVariableHelper(): VariableHelper {
