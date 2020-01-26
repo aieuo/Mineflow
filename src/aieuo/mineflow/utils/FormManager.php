@@ -36,7 +36,9 @@ class FormManager {
     }
 
     public function getForm(string $name): ?Form {
-        $data = $this->config->get($name, null);
+        $data = $this->config->get($name);
+        if ($data["form"] instanceof Form) return $data["form"];
+        if ($data === false) return null;;
         return Form::createFromArray($data["form"], $data["name"]);
     }
 
@@ -48,23 +50,21 @@ class FormManager {
         $this->config->remove($name);
     }
 
-    public function addRecipe(string $name, Recipe $recipe) {
+    public function addRecipe(string $name, Recipe $recipe, string $button = "") {
         if (!$this->existsForm($name)) return;
 
-        $data = $this->getForm($name);
-        $data["recipes"][$recipe->getName()] = true;
-        $this->config->set($name, $data);
-        $this->config->save();
+        $form = $this->getForm($name);
+        $form->addRecipe($recipe->getName(), $button);
+        $this->addForm($name, $form);
     }
 
-    public function removeRecipe(string $name, Recipe $recipe): ?int {
+    public function removeRecipe(string $name, Recipe $recipe, string $button = ""): ?int {
         if (!$this->existsForm($name)) return null;
 
-        $data = $this->getForm($name);
-        unset($data["recipes"][$recipe->getName()]);
-        $this->config->set($name, $data);
-        $this->config->save();
-        return count($data["recipes"]);
+        $form = $this->getForm($name);
+        $form->removeRecipe($recipe->getName(), $button);
+        $this->addForm($name, $form);
+        return count($form["recipes"]);
     }
 
     public function getNotDuplicatedName(string $name): string {
