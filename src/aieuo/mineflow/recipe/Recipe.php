@@ -58,6 +58,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var Recipe|null */
     private $sourceRecipe;
+    /* @var array */
+    private $arguments = [];
+    /* @var array */
+    private $returnValues = [];
 
     public function __construct(string $name) {
         $this->name = $name;
@@ -168,7 +172,20 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return true;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, int $start = 0): ?bool {
+    public function execute(?Entity $target, ?Event $event = null, array $args = [], int $start = 0): ?bool {
+        $helper = Main::getInstance()->getVariableHelper();
+        foreach ($this->getArguments() as $i => $argument) {
+            if (isset($args[$i])) {
+                $arg = $args[$i];
+                if ($arg instanceof Variable) {
+                    $arg->setName($argument);
+                } else {
+                    $type = $helper->getType($arg);
+                    $arg = Variable::create($helper->currentType($arg), $argument, $type);
+                }
+                $this->addVariable($arg);
+            }
+        }
         $actions = $this->getActions();
         $count = count($actions);
         for ($i=$start; $i<$count; $i++) {
@@ -182,16 +199,38 @@ class Recipe implements \JsonSerializable, ActionContainer {
             }
 
             if ($this->wait) {
-                $this->last = [$target, $event, $i + 1];
+                $this->last = [$target, $event, $args, $i + 1];
                 return true;
             }
         }
-        if ($this->sourceRecipe instanceof Recipe) $this->sourceRecipe->resume();
+        if ($this->sourceRecipe instanceof Recipe) {
+            foreach ($this->getReturnValues() as $i => $value) {
+                $variable = $this->getVariable($value);
+                if ($variable instanceof Variable) $this->sourceRecipe->addVariable($variable);
+            }
+            $this->sourceRecipe->resume();
+        }
         return true;
     }
 
     public function getLastActionResult(): ?bool {
         return $this->lastResult;
+    }
+
+    public function setArguments(array $arguments): void {
+        $this->arguments = $arguments;
+    }
+
+    public function getArguments(): array {
+        return $this->arguments;
+    }
+
+    public function setReturnValues(array $returnValues): void {
+        $this->returnValues = $returnValues;
+    }
+
+    public function getReturnValues(): array {
+        return $this->returnValues;
     }
 
     public function addVariable(Variable $variable) {
@@ -238,7 +277,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
             "actions" => $this->actions,
             "triggers" => $this->triggers,
             "targetType" => $this->targetType,
-            "targetOptions" => $this->targetOptions
+            "targetOptions" => $this->targetOptions,
+            "arguments" => $this->getArguments(),
+            "returnValues" => $this->getReturnValues(),
         ];
     }
 

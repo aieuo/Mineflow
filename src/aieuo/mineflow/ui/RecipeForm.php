@@ -157,6 +157,7 @@ class RecipeForm {
                 new Button("@form.recipe.recipeMenu.changeName"),
                 new Button("@form.recipe.recipeMenu.execute"),
                 new Button("@form.recipe.recipeMenu.setTrigger"),
+                new Button("@form.recipe.args.return.set"),
                 new Button("@form.recipe.recipeMenu.save"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
@@ -183,10 +184,33 @@ class RecipeForm {
                         $this->sendTriggerList($player, $recipe);
                         break;
                     case 5:
+                        (new ListForm("@form.recipe.args.return.set"))
+                            ->setContent("@form.selectButton")
+                            ->setButtons([
+                                new Button("@form.back"),
+                                new Button("@form.recipe.args.set"),
+                                new Button("@form.recipe.returnValue.set"),
+                            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
+                                if ($data === null) return;
+
+                                switch ($data) {
+                                    case 0:
+                                        $this->sendRecipeMenu($player, $recipe);
+                                        break;
+                                    case 1:
+                                        $this->sendSetArgs($player, $recipe);
+                                        break;
+                                    case 2:
+                                        $this->sendSetReturns($player, $recipe);
+                                        break;
+                                }
+                            })->addArgs($recipe)->show($player);
+                        break;
+                    case 6:
                         $recipe->save(Main::getInstance()->getRecipeManager()->getSaveDir());
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
-                    case 6:
+                    case 7:
                         $this->sendConfirmDelete($player, $recipe);
                         break;
                 }
@@ -266,6 +290,52 @@ class RecipeForm {
                 $trigger = $triggers[$data];
                 (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
             })->addArgs($recipe, $triggers)->addMessages($messages)->show($player);
+    }
+
+    public function sendSetArgs(Player $player, Recipe $recipe, array $messages = []) {
+        $contents = [new Toggle("@form.exit")];
+        foreach ($recipe->getArguments() as $i => $argument) {
+            $contents[] = new Input(Language::get("form.recipe.args", [$i]), "", $argument);
+        }
+        $contents[] = new Input("@form.recipe.args.add");
+        (new CustomForm("@form.recipe.args.set"))
+            ->setContents($contents)
+            ->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
+                if ($data === null or $data[0]) {
+                    $this->sendRecipeMenu($player, $recipe);
+                    return;
+                }
+
+                $arguments = [];
+                for ($i=1; $i<count($data); $i++) {
+                    if ($data[$i] !== "") $arguments[] = $data[$i];
+                }
+                $recipe->setArguments($arguments);
+                $this->sendSetArgs($player, $recipe, ["@form.changed"]);
+            })->addArgs($recipe)->show($player);
+    }
+
+    public function sendSetReturns(Player $player, Recipe $recipe, array $messages = []) {
+        $contents = [new Toggle("@form.exit")];
+        foreach ($recipe->getReturnValues() as $i => $value) {
+            $contents[] = new Input(Language::get("form.recipe.returnValue", [$i]), "", $value);
+        }
+        $contents[] = new Input("@form.recipe.returnValue.add");
+        (new CustomForm("@form.recipe.returnValue.set"))
+            ->setContents($contents)
+            ->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
+                if ($data === null or $data[0]) {
+                    $this->sendRecipeMenu($player, $recipe);
+                    return;
+                }
+
+                $returnValues = [];
+                for ($i=1; $i<count($data); $i++) {
+                    if ($data[$i] !== "") $returnValues[] = $data[$i];
+                }
+                $recipe->setReturnValues($returnValues);
+                $this->sendSetReturns($player, $recipe, ["@form.changed"]);
+            })->addArgs($recipe)->show($player);
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe) {

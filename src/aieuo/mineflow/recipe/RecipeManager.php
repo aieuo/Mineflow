@@ -42,6 +42,8 @@ class RecipeManager {
                 $data["targetOptions"] ?? []
             );
             $recipe->setTriggersFromArray($data["triggers"] ?? []);
+            $recipe->setArguments($data["arguments"] ?? []);
+            $recipe->setReturnValues($data["returnValues"] ?? []);
 
             $this->add($recipe, false);
         }
