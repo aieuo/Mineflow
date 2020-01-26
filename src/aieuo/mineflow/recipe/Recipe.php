@@ -6,6 +6,8 @@ use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\ActionContainerTrait;
 use aieuo\mineflow\flowItem\action\EventCancel;
 use aieuo\mineflow\flowItem\action\Action;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\event\Event;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
@@ -13,8 +15,6 @@ use pocketmine\Player;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\trigger\TriggerManager;
-use aieuo\mineflow\script\Script;
 use aieuo\mineflow\Main;
 
 class Recipe implements \JsonSerializable, ActionContainer {
@@ -22,7 +22,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     const CONTENT_TYPE_PROCESS = "action";
     const CONTENT_TYPE_CONDITION = "condition";
-    const CONTENT_TYPE_SCRIPT = "script";
 
     const TARGET_DEFAULT = 0;
     const TARGET_SPECIFIED = 1;
@@ -43,7 +42,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /** @var array */
     private $targetOptions = [];
 
-    /** @var array */
+    /** @var Trigger[] */
     private $triggers = [];
 
     /** @var bool|null */
@@ -123,31 +122,34 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $targets;
     }
 
-    public function addTrigger(array $trigger): void {
-        TriggerManager::getManager($trigger[0])->add($trigger[1], $this);
+    public function addTrigger(Trigger $trigger): void {
+        TriggerHolder::getInstance()->addRecipe($trigger, $this);
         $this->triggers[] = $trigger;
     }
 
-    public function removeTrigger(array $trigger): void {
-        TriggerManager::getManager($trigger[0])->removeRecipe($trigger[1], $this->getName());
+    public function removeTrigger(Trigger $trigger): void {
+        TriggerHolder::getInstance()->removeRecipe($trigger, $this);
         $index = array_search($trigger, $this->triggers, true);
         unset($this->triggers[$index]);
         $this->triggers = array_values($this->triggers);
     }
 
-    public function setTriggers(array $triggers) {
+    public function setTriggersFromArray(array $triggers) {
         foreach ($this->getTriggers() as $trigger) {
             $this->removeTrigger($trigger);
         }
         foreach ($triggers as $trigger) {
-            $this->addTrigger($trigger);
+            $this->addTrigger(new Trigger($trigger["type"], $trigger["key"]));
         }
     }
 
-    public function existsTrigger(array $trigger): bool {
+    public function existsTrigger(Trigger $trigger): bool {
         return in_array($trigger, $this->getTriggers());
     }
 
+    /**
+     * @return Trigger[]
+     */
     public function getTriggers(): array {
         return $this->triggers;
     }
@@ -245,9 +247,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
             switch ($content["type"]) {
                 case self::CONTENT_TYPE_PROCESS:
                     $action = Action::loadSaveDataStatic($content);
-                    break;
-                case self::CONTENT_TYPE_SCRIPT:
-                    $action = Script::loadSaveDataStatic($content);
                     break;
                 default:
                     return null;

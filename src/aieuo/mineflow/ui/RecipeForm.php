@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
@@ -14,7 +15,6 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\variable\DefaultVariables;
 
 class RecipeForm {
@@ -237,12 +237,12 @@ class RecipeForm {
 
         $buttons = [new Button("@form.back"), new Button("@trigger.add")];
         foreach ($triggers as $trigger) {
-            switch ($trigger[0]) {
-                case TriggerManager::TRIGGER_EVENT:
-                    $content = "@trigger.type.".$trigger[0].": @trigger.event.".$trigger[1];
+            switch ($trigger->getType()) {
+                case Trigger::TYPE_EVENT:
+                    $content = "@trigger.type.".$trigger->getType().": @trigger.event.".$trigger->getKey();
                     break;
                 default:
-                    $content = "@trigger.type.".$trigger[0].": ".$trigger[1];
+                    $content = "@trigger.type.".$trigger->getType().": ".$trigger->getKey();
             }
             $buttons[] = new Button($content);
         }

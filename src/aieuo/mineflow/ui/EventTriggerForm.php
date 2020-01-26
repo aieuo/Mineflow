@@ -2,9 +2,10 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\trigger\EventTriggers;
+use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
@@ -12,13 +13,13 @@ use aieuo\mineflow\formAPI\element\Button;
 
 class EventTriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, array $trigger, array $messages = []) {
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
-            ->setContent("type: @trigger.type.".$trigger[0]."\n@trigger.event.".$trigger[1])
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
+            ->setContent("type: @trigger.type.".$trigger->getType()."\n@trigger.event.".$trigger->getKey())
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Trigger $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -58,7 +59,7 @@ class EventTriggerForm {
     }
 
     public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName) {
-        $event = TriggerManager::getManager(TriggerManager::TRIGGER_EVENT)->getEvents()[$eventName];
+        $event = EventTriggers::getEvents()[$eventName];
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
             ->setContent($eventName."\n@".$event[1]) // TODO: イベントの詳しい説明
             ->addButtons([
@@ -72,7 +73,7 @@ class EventTriggerForm {
                     return;
                 }
 
-                $trigger = [TriggerManager::TRIGGER_EVENT, $eventName];
+                $trigger = new Trigger(Trigger::TYPE_EVENT, $eventName);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;

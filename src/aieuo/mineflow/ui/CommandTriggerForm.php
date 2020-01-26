@@ -2,10 +2,9 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\ui\RecipeForm;
-use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ModalForm;
@@ -16,14 +15,14 @@ use aieuo\mineflow\formAPI\element\Button;
 
 class CommandTriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, array $trigger, array $messages = []) {
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger[1]])))
-            ->setContent("type: ".$trigger[0]."\n/".$trigger[1])
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
+            ->setContent("type: ".$trigger->getType()."\n/".$trigger->getKey())
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.command.edit.title"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $trigger) {
+            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Trigger $trigger) {
                 if ($data === null) return;
 
                 switch ($data) {
@@ -35,8 +34,8 @@ class CommandTriggerForm {
                         break;
                     case 2:
                         $manager = Main::getInstance()->getCommandManager();
-                        $command = $manager->getCommand($manager->getOriginCommand($trigger[1]));
-                        $this->sendCommandMenu($player, $command);
+                        $command = $manager->getCommand($manager->getOriginCommand($trigger->getKey()));
+                        (new CommandForm)->sendCommandMenu($player, $command);
                         break;
                 }
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
@@ -67,7 +66,7 @@ class CommandTriggerForm {
                     return;
                 }
 
-                $trigger = [TriggerManager::TRIGGER_COMMAND, $data[0]];
+                $trigger = new Trigger(Trigger::TYPE_COMMAND, $data[0]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;
@@ -89,20 +88,20 @@ class CommandTriggerForm {
             })->addArgs($callback)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, Recipe $recipe, array $trigger) {
-        (new ModalForm(Language::get("form.items.delete.title", [$recipe->getName(), $trigger[1]])))
-            ->setContent(Language::get("form.delete.confirm", [$trigger[0].": ".$trigger[1]]))
+    public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger) {
+        (new ModalForm(Language::get("form.items.delete.title", [$recipe->getName(), $trigger->getKey()])))
+            ->setContent(Language::get("form.delete.confirm", [$trigger->getType().": ".$trigger->getKey()]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, array $trigger) {
+            ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, Trigger $trigger) {
                 if ($data === null) return;
 
                 if ($data) {
                     $recipe->removeTrigger($trigger);
                     $manager = Main::getInstance()->getCommandManager();
-                    $count = $manager->removeRecipe($manager->getOriginCommand($trigger[1]), $recipe);
+                    $count = $manager->removeRecipe($manager->getOriginCommand($trigger->getKey()), $recipe);
                     if ($count === 0) {
-                        $manager->removeCommand($manager->getOriginCommand($trigger[1]));
+                        $manager->removeCommand($manager->getOriginCommand($trigger->getKey()));
                     }
                     (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
                 } else {

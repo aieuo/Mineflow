@@ -29,10 +29,10 @@ use pocketmine\event\player\PlayerToggleFlightEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
 
-class EventTriggerManager extends TriggerManager {
+class EventTriggers {
 
     /** @var array */
-    private $events = [
+    private static $events = [
         "PlayerChatEvent" => [PlayerChatEvent::class, "trigger.event.PlayerChatEvent"],
         "PlayerCommandPreprocessEvent" => [PlayerCommandPreprocessEvent::class, "trigger.event.PlayerCommandPreprocessEvent"],
         "PlayerInteractEvent" => [PlayerInteractEvent::class, "trigger.event.PlayerInteractEvent"],
@@ -62,7 +62,7 @@ class EventTriggerManager extends TriggerManager {
     ];
 
     /** @var array */
-    private $defaultEnableEvents = [
+    private static $defaultEnableEvents = [
         "PlayerChatEvent",
         "PlayerCommandPreprocessEvent",
         "PlayerInteractEvent",
@@ -78,13 +78,13 @@ class EventTriggerManager extends TriggerManager {
         "CraftItemEvent",
     ];
 
-    public function getEvents(): array {
-        return $this->events;
+    public static function getEvents(): array {
+        return self::$events;
     }
 
-    public function getDefaultEventSettings(): array {
-        $events = $this->getEvents();
-        $enables = $this->defaultEnableEvents;
+    public static function getDefaultEventSettings(): array {
+        $events = self::getEvents();
+        $enables = self::$defaultEnableEvents;
         $settings = [];
 
         foreach ($events as $event => $value) {
@@ -93,7 +93,7 @@ class EventTriggerManager extends TriggerManager {
         return $settings;
     }
 
-    public function getEventPath(string $event): ?string {
-        return $this->getEvents()[$event][0] ?? null;
+    public static function getEventPath(string $event): ?string {
+        return self::getEvents()[$event][0] ?? null;
     }
 }

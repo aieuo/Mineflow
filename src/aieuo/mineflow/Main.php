@@ -9,13 +9,11 @@ use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use aieuo\mineflow\variable\VariableHelper;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\command\CommandManager;
-use aieuo\mineflow\utils\EntityHolder;
 
 class Main extends PluginBase {
 
@@ -71,8 +69,6 @@ class Main extends PluginBase {
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
         (new Economy($this))->loadPlugin();
-
-        TriggerManager::init();
 
         ActionFactory::init();
         ConditionFactory::init();

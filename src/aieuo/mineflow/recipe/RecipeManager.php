@@ -41,7 +41,7 @@ class RecipeManager {
                 $data["targetType"] ?? Recipe::TARGET_DEFAULT,
                 $data["targetOptions"] ?? []
             );
-            $recipe->setTriggers($data["triggers"] ?? []);
+            $recipe->setTriggersFromArray($data["triggers"] ?? []);
 
             $this->add($recipe, false);
         }

@@ -3,6 +3,9 @@
 namespace aieuo\mineflow;
 
 use aieuo\mineflow\flowItem\action\SetSitting;
+use aieuo\mineflow\trigger\EventTriggers;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\network\mcpe\protocol\InteractPacket;
@@ -43,7 +46,6 @@ use pocketmine\Player;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\ui\TriggerForm;
-use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 
@@ -90,7 +92,7 @@ class EventListener implements Listener {
     }
 
     public function checkEventSettings(Config $eventSettings) {
-        $defaults = TriggerManager::getManager(TriggerManager::TRIGGER_EVENT)->getDefaultEventSettings();
+        $defaults = EventTriggers::getDefaultEventSettings();
 
         $eventSettings->setDefaults($defaults);
         $eventSettings->save();
@@ -101,8 +103,6 @@ class EventListener implements Listener {
     }
 
     public function registerEvents() {
-        $manager = TriggerManager::getManager(TriggerManager::TRIGGER_EVENT);
-
         $this->registerEvent(PlayerJoinEvent::class, "onJoin");
         $this->registerEvent(PlayerQuitEvent::class, "onQuit");
         $this->registerEvent(PlayerInteractEvent::class, "onInteract");
@@ -113,7 +113,7 @@ class EventListener implements Listener {
 
         foreach ($this->enabledEvents as $event => $value) {
             if (!isset($this->eventMethods[$event])) continue;
-            $this->registerEvent($manager->getEventPath($event), $this->eventMethods[$event]);
+            $this->registerEvent(EventTriggers::getEventPath($event), $this->eventMethods[$event]);
         }
     }
 
@@ -141,14 +141,14 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         $block = $event->getBlock();
         $session = Session::getSession($player);
-        $manager = TriggerManager::getManager(TriggerManager::TRIGGER_BLOCK);
+        $holder = TriggerHolder::getInstance();
         $position = $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
 
         if ($player->isOp() and $session->exists("blockTriggerAction")) {
             switch ($session->get("blockTriggerAction")) {
                 case "add":
                     $recipe = $session->get("blockTriggerRecipe");
-                    $trigger = [TriggerManager::TRIGGER_BLOCK, $position];
+                    $trigger = new Trigger(Trigger::TYPE_BLOCK, $position);
                     if ($recipe->existsTrigger($trigger)) {
                         (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                         return;
@@ -160,8 +160,8 @@ class EventListener implements Listener {
             $session->remove("blockTriggerAction");
             return;
         }
-        if ($manager->exists($position)) {
-            $recipes = $manager->get($position);
+        if ($holder->existsRecipe(Trigger::TYPE_BLOCK, $position)) {
+            $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_BLOCK, $position));
             $variables = array_merge(DefaultVariables::getBlockVariables($block), DefaultVariables::getPlayerVariables($player));
             $recipes->executeAll($player, $variables, $event);
         }
@@ -175,14 +175,14 @@ class EventListener implements Listener {
         if ($event->isCancelled()) return;
 
         $cmd = $event->getCommand();
-        $manager = TriggerManager::getManager(TriggerManager::TRIGGER_COMMAND);
+        $holder = TriggerHolder::getInstance();
         $commands = explode(" ", $cmd);
 
         $count = count($commands);
         for ($i=0; $i<$count; $i++) {
             $command = implode(" ", $commands);
-            if ($manager->exists($command)) {
-                $recipes = $manager->get($command);
+            if ($holder->existsRecipe(Trigger::TYPE_COMMAND, $command)) {
+                $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_COMMAND, $command));
                 $variables = array_merge(DefaultVariables::getCommandVariables($event->getCommand()), DefaultVariables::getPlayerVariables($sender));
                 $recipes->executeAll($sender, $variables, $event);
                 break;
@@ -192,9 +192,9 @@ class EventListener implements Listener {
     }
 
     public function onEvent(Event $event, string $eventName): void {
-        $manager = TriggerManager::getManager(TriggerManager::TRIGGER_EVENT);
-        if ($manager->exists($eventName)) {
-            $recipes = $manager->get($eventName);
+        $holder = TriggerHolder::getInstance();
+        if ($holder->existsRecipe(Trigger::TYPE_EVENT, $eventName)) {
+            $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_EVENT, $eventName));
             $target = null;
             if ($event instanceof PlayerEvent or $event instanceof BlockEvent or $event instanceof CraftItemEvent) {
                 $target = $event->getPlayer();

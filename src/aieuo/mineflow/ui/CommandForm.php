@@ -2,10 +2,10 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\trigger\TriggerManager;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
@@ -222,12 +222,12 @@ class CommandForm {
                     $commandManager = Main::getInstance()->getCommandManager();
                     $recipeManager = Main::getInstance()->getRecipeManager();
 
-                    foreach ($command["recipes"] as $recipe => $cmds) {
+                    foreach ($command["recipes"] as $recipe => $commands) {
                         $recipe = $recipeManager->get($recipe);
                         if ($recipe === null) continue;
 
-                        foreach ($cmds as $cmd) {
-                            $recipe->removeTrigger([TriggerManager::TRIGGER_COMMAND, $cmd]);
+                        foreach ($commands as $cmd) {
+                            $recipe->removeTrigger(new Trigger(Trigger::TYPE_COMMAND,  $cmd));
                         }
                     }
                     $commandManager->removeCommand($command["command"]);
