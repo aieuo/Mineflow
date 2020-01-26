@@ -29,9 +29,10 @@ class FormManager {
             "name" => $name,
             "type" => $form->getType(),
             "form" => $form,
-            "recipes" => [],
+            "recipes" => $form->getRecipes(),
         ];
         $this->config->set($name, $data);
+        $this->config->save();
     }
 
     public function getForm(string $name): ?Form {
