@@ -37,6 +37,7 @@ class ActionFactory {
         self::register(new ElseAction);
         self::register(new RepeatScript);
         self::register(new WhileScript);
+        self::register(new CallRecipe);
         self::register(new ExecuteRecipe);
         self::register(new ExecuteRecipeWithEntity);
         /* calculation */
