@@ -12,6 +12,7 @@ class Categories {
     const CATEGORY_ACTION_MONEY = 5;
     const CATEGORY_ACTION_CALCULATION = 6;
     const CATEGORY_ACTION_VARIABLE = 7;
+    const CATEGORY_ACTION_FORM = 8;
 
     const CATEGORY_CONDITION_COMMON = 1000;
     const CATEGORY_CONDITION_SCRIPT = 1001;
@@ -30,6 +31,7 @@ class Categories {
             self::CATEGORY_ACTION_MONEY => "money",
             self::CATEGORY_ACTION_CALCULATION => "calculation",
             self::CATEGORY_ACTION_VARIABLE => "variable",
+            self::CATEGORY_ACTION_FORM => "form",
         ];
     }
 

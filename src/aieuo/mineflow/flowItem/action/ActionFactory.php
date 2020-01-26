@@ -49,6 +49,8 @@ class ActionFactory {
         self::register(new DeleteVariable);
         self::register(new AddListVariable);
         self::register(new AddMapVariable);
+        /* form */
+        self::register(new SendForm);
     }
 
     /**

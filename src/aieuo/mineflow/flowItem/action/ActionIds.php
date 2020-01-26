@@ -6,6 +6,7 @@ interface ActionIds {
 
     const DO_NOTHING = "doNothing";
     const EVENT_CANCEL = "eventCancel";
+    const SEND_FORM = "sendForm";
 
     const SEND_MESSAGE = "sendMessage";
     const SEND_TIP = "sendTip";

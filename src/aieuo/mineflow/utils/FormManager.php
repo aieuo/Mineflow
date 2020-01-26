@@ -3,8 +3,18 @@
 
 namespace aieuo\mineflow\utils;
 
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\Variable;
 use pocketmine\utils\Config;
 
 class FormManager {
@@ -75,5 +85,67 @@ class FormManager {
         }
         $name = $name." (".$count.")";
         return $name;
+    }
+
+    public function getFormDataVariable(Form $form, $data): array {
+        switch ($form) {
+            case $form instanceof ModalForm:
+                $variable = new MapVariable([
+                    "data" => new NumberVariable($data ? 0 : 1),
+                    "button1" => new MapVariable([
+                        "selected" => new StringVariable($data ? "true" : "false"),
+                        "text" => new StringVariable($form->getButton1()),
+                    ], "button1", $form->getButton1()),
+                    "button2" => new MapVariable([
+                        "selected" => new StringVariable($data ? "false" : "true"),
+                        "text" => new StringVariable($form->getButton2()),
+                    ], "button2", $form->getButton2()),
+                ], "form");
+                break;
+            case $form instanceof ListForm:
+                $variable = new MapVariable([
+                    "data" => new NumberVariable($data),
+                    "button" => new StringVariable($form->getButton($data)->getText()),
+                ], "form");
+                break;
+            case $form instanceof CustomForm:
+                $dataVariables = [];
+                $dropdownVariables = [];
+                $dropdown = 0;
+                foreach ($form->getContents() as $i => $content) {
+                    switch ($content->getType()) {
+                        case Element::ELEMENT_INPUT:
+                            $var = new StringVariable($data[$i]);
+                            break;
+                        case Element::ELEMENT_TOGGLE:
+                            $var = new StringVariable($data[$i] ? "true" : "false");
+                            break;
+                        case Element::ELEMENT_SLIDER:
+                        case Element::ELEMENT_STEP_SLIDER:
+                        case Element::ELEMENT_DROPDOWN:
+                            $var = new NumberVariable($data[$i]);
+                            break;
+                        default:
+                            $var = new StringVariable("");
+                            break;
+                    }
+                    $dataVariables[$i] = $var;
+                    if ($content instanceof Dropdown) {
+                        $selected = $content->getOptions()[$data[$i]];
+                        $dropdownVariables[] = new StringVariable($selected);
+                        $dropdown ++;
+                    }
+                }
+                $variable = new MapVariable([
+                    "data" => new ListVariable($dataVariables),
+                ], "form");
+                if (!empty($dropdownVariables)) {
+                    $variable->addValue(new ListVariable($dropdownVariables, "selected"));
+                }
+                break;
+            default:
+                return [];
+        }
+        return ["form" => $variable];
     }
 }
