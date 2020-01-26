@@ -7,18 +7,9 @@ use pocketmine\command\Command;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\ui\HomeForm;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\command\subcommand\RecipeCommand;
 use aieuo\mineflow\command\subcommand\LanguageCommand;
 use aieuo\mineflow\command\subcommand\CustomCommandCommand;
-use aieuo\mineflow\action\process\SendTip;
-use aieuo\mineflow\action\process\SendPopup;
-use aieuo\mineflow\action\process\SendMessageToOp;
-use aieuo\mineflow\action\process\SendMessage;
-use aieuo\mineflow\action\process\SendBroadcastMessage;
-use aieuo\mineflow\action\process\ProcessFactory;
-use aieuo\mineflow\action\process\Process;
-use aieuo\mineflow\Main;
 
 class MineflowCommand extends Command {
 
@@ -45,21 +36,21 @@ class MineflowCommand extends Command {
             case "recipe":
                 if (!($sender instanceof Player)) {
                     $sender->sendMessage(Language::get("command.console"));
-                    return true;
+                    return;
                 }
                 (new RecipeCommand)->execute($sender, $args);
                 break;
             case "command":
                 if (!($sender instanceof Player)) {
                     $sender->sendMessage(Language::get("command.console"));
-                    return true;
+                    return;
                 }
                 (new CustomCommandCommand)->execute($sender, $args);
                 break;
             default:
                 if (!($sender instanceof Player)) {
                     $sender->sendMessage(Language::get("command.mineflow.usage.console"));
-                    return true;
+                    return;
                 }
                 (new HomeForm)->sendMenu($sender);
                 break;
