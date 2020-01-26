@@ -49,9 +49,11 @@ class ListForm extends Form {
 
     /**
      * @param Button[] $buttons
+     * @return self
      */
-    public function setButtons(array $buttons): void {
+    public function setButtons(array $buttons): self {
         $this->buttons = $buttons;
+        return $this;
     }
 
     /**

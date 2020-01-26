@@ -70,9 +70,7 @@ abstract class TypePosition extends Action {
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $pos = array_map(function ($value) {
-            return trim(rtrim($value));
-        }, explode(",", $data[1]));
+        $pos = array_map("trim", explode(",", $data[1]));
         if (!isset($pos[0]) or $pos[0] === "") $pos[0] = "{target.x}";
         if (!isset($pos[1]) or $pos[1] === "") $pos[1] = "{target.y}";
         if (!isset($pos[2]) or $pos[2] === "") $pos[2] = "{target.z}";

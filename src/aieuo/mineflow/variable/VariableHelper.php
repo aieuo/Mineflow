@@ -164,8 +164,8 @@ class VariableHelper {
      * @param  string  $variable
      * @return boolean
      */
-    public function isVariable(string $variable) {
-        return preg_match("/^{.+}$/", $variable);
+    public function isVariableString(string $variable) {
+        return preg_match("/^{[^{}\[\].]+}$/", $variable);
     }
 
     /**
