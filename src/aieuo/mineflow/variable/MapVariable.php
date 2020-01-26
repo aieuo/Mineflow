@@ -13,8 +13,8 @@ class MapVariable extends ListVariable {
     public function __toString() {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
-        foreach ($this->getValue() as $value) {
-            $values[] = $value->__toString();
+        foreach ($this->getValue() as $key => $value) {
+            $values[$key] = $value->__toString();
         }
         return str_replace(["{", "}"] ,["<", ">"], json_encode($values));
     }
