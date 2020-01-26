@@ -56,8 +56,8 @@ class CustomFormForm {
                 new Input("@customForm.name", "", $defaults[0] ?? ""),
                 new Dropdown("@form.form.addForm.type", [
                     Language::get("customForm.modal"),
-                    Language::get("customForm.list"),
-                    Language::get("customForm.custom"),
+                    Language::get("customForm.form"),
+                    Language::get("customForm.custom_form"),
                 ]),
                 new Toggle("@form.cancelAndBack"),
             ])->onReceive(function (Player $player, ?array $data) {
@@ -145,7 +145,7 @@ class CustomFormForm {
         $forms = $manager->getAllFormData();
         $buttons = [new Button("@form.back")];
         foreach ($forms as $form) {
-            $buttons[] = new Button($form["name"].": ".$form["type"]);
+            $buttons[] = new Button($form["name"].": ".Language::get("customForm.".$form["type"]));
         }
 
         (new ListForm("@form.form.menu.formList"))
@@ -203,7 +203,7 @@ class CustomFormForm {
                     case 0:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendModalFormMenu($player, $form);
-                        })->show($player); // TODO: 反応させる
+                        })->show($player);
                         break;
                     case 1:
                         $this->sendChangeFormTitle($player, $form);
@@ -214,17 +214,20 @@ class CustomFormForm {
                     case 3:
                         (new CustomForm("@form.form.formMenu.modal.button1"))
                             ->setContents([
+                                new Label(Language::get("customForm.receive", ["true"])."\n".
+                                    Language::get("customForm.receive.modal.button", ["1"])."\n".
+                                    Language::get("customForm.receive.modal.button.text", ["1", $form->getButton1()])),
                                 new Input("@customForm.text", "", $form->getButton1()),
                                 new Toggle("@form.cancelAndBack"),
                             ])->onReceive(function (Player $player, ?array $data, ModalForm $form) {
                                 if ($data === null) return;
 
-                                if ($data[1]) {
+                                if ($data[2]) {
                                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
                                     return;
                                 }
 
-                                $form->setButton1($data[0]);
+                                $form->setButton1($data[1]);
                                 Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
@@ -232,17 +235,20 @@ class CustomFormForm {
                     case 4:
                         (new CustomForm("@form.form.formMenu.modal.button2"))
                             ->setContents([
+                                new Label(Language::get("customForm.receive", ["false"])."\n".
+                                    Language::get("customForm.receive.modal.button", ["2"])."\n".
+                                    Language::get("customForm.receive.modal.button.text", ["2", $form->getButton2()])),
                                 new Input("@customForm.text", "", $form->getButton2()),
                                 new Toggle("@form.cancelAndBack"),
                             ])->onReceive(function (Player $player, ?array $data, ModalForm $form) {
                                 if ($data === null) return;
 
-                                if ($data[1]) {
+                                if ($data[0]) {
                                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
                                     return;
                                 }
 
-                                $form->setButton2($data[0]);
+                                $form->setButton2($data[1]);
                                 Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
@@ -286,7 +292,7 @@ class CustomFormForm {
                     case 0:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendListFormMenu($player, $form);
-                        })->show($player); // TODO: 反応させる
+                        })->show($player);
                         return;
                     case 1:
                         $this->sendChangeFormTitle($player, $form);
@@ -318,16 +324,18 @@ class CustomFormForm {
                 $button = $buttons[$data];
                 (new CustomForm($button->getText()))
                     ->setContents([
+                        new Label(Language::get("customForm.receive", [$data])."\n".
+                            Language::get("customForm.receive.list.button", [$button->getText()])),
                         new Input("@customForm.list.editButton", "", $button->getText()),
                     ])->onReceive(function (Player $player, ?array $data, ListForm $form, int $selected, array $buttons) {
                         if ($data === null) return;
 
                         /** @var Button $button */
                         $button = $buttons[$selected];
-                        if ($data[0] === "") {
+                        if ($data[1] === "") {
                             unset($buttons[$selected]);
                         } else {
-                            $buttons[$selected] = $button->setText($data[0]);
+                            $buttons[$selected] = $button->setText($data[1]);
                         }
                         $buttons = array_values($buttons);
                         $form->setButtons($buttons);
@@ -345,7 +353,7 @@ class CustomFormForm {
         ];
         $elements = $form->getContents();
         foreach ($elements as $element) {
-            $buttons[] = new Button(Language::get("form.form.formMenu.custom.element", [$element->getType(), $element->getText()]));
+            $buttons[] = new Button(Language::get("customForm.custom.element", [["customForm.".$element->getType(), [""]], $element->getText()]));
         }
         $buttons[] = new Button("@customForm.custom.element.add");
         $buttons[] = new Button("@form.form.formMenu.changeName");
@@ -361,7 +369,7 @@ class CustomFormForm {
                     case 0:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendCustomFormMenu($player, $form);
-                        })->show($player); // TODO: 反応させる
+                        })->show($player);
                         return;
                     case 1:
                         $this->sendChangeFormTitle($player, $form);
@@ -489,6 +497,7 @@ class CustomFormForm {
                 }
 
                 $form->addButton(new Button($data[0]));
+                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
                 $this->sendListFormMenu($player, $form, ["@form.added"]);
             })->addArgs($form)->addErrors($errors)->show($player);
     }
@@ -497,11 +506,12 @@ class CustomFormForm {
         (new CustomForm("@customForm.custom.element.add"))
             ->setContents([
                 new Dropdown("@customForm.custom.element.select", [
-                    "label",
-                    "input",
-                    "slider",
-                    "stepSlider",
-                    "dropdown"
+                    Language::get("customForm.label", [" (label)"]),
+                    Language::get("customForm.input", [" (input)"]),
+                    Language::get("customForm.slider", [" (slider)"]),
+                    Language::get("customForm.step_slider", [" (step_slider)"]),
+                    Language::get("customForm.dropdown", [" (dropdown)"]),
+                    Language::get("customForm.toggle", [" (toggle)"]),
                 ]),
                 new Input("@customForm.text"),
                 new Toggle("@form.cancelAndBack")
@@ -529,6 +539,9 @@ class CustomFormForm {
                     case 4:
                         $element = new Dropdown($data[1]);
                         break;
+                    case 5:
+                        $element = new Toggle($data[1]);
+                        break;
                     default:
                         return;
                 }
@@ -542,15 +555,22 @@ class CustomFormForm {
         $contents = [
             new Input("@customForm.text", "", $element->getText())
         ];
+        $index = array_search($element, $form->getContents(), true);
         switch ($element) {
             case $element instanceof Toggle:
+                array_unshift($messages, Language::get("customForm.receive.custom", [$index, "(true | false)"]));
                 $contents[] = new Toggle("@customForm.default", $element->getDefault());
                 break;
+            case $element instanceof Label:
+                array_unshift($messages, Language::get("customForm.receive.custom", [$index, ""]));
+                break;
             case $element instanceof Input:
+                array_unshift($messages, Language::get("customForm.receive.custom.input", [$index]));
                 $contents[] = new Input("@customForm.input.placeholder", "", $element->getPlaceholder());
                 $contents[] = new Input("@customForm.default", "", $element->getDefault());
                 break;
             case $element instanceof Slider:
+                array_unshift($messages, Language::get("customForm.receive.custom.slider", [$index]));
                 $contents[] = new Input("@customForm.slider.min", "", (string)$element->getMin());
                 $contents[] = new Input("@customForm.slider.max", "", (string)$element->getMax());
                 $contents[] = new Input("@customForm.slider.step", "", (string)$element->getStep());
@@ -558,8 +578,13 @@ class CustomFormForm {
                 break;
             case $element instanceof Dropdown:
             case $element instanceof StepSlider:
-                foreach ($element->getOptions() as $option) {
-                    $contents[] = new Input("@customForm.dropdown.option", "", $option);
+                $dropdown = array_search($element, array_values(array_filter($form->getContents(), function (Element $element) {
+                    return $element instanceof Dropdown;
+                })), true);
+                array_unshift($messages, Language::get("customForm.receive.custom.dropdown.text", [$dropdown]));
+                array_unshift($messages, Language::get("customForm.receive.custom.dropdown", [$index]));
+                foreach ($element->getOptions() as $i => $option) {
+                    $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), "", $option);
                 }
                 $contents[] = new Input("@customForm.dropdown.option.add");
                 break;
