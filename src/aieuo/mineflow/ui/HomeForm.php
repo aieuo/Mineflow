@@ -17,6 +17,7 @@ class HomeForm {
                 new Button("@mineflow.recipe"),
                 new Button("@mineflow.command"),
                 new Button("@mineflow.form"),
+                new Button("@mineflow.settings"),
                 new Button("@form.exit"),
             ])->onReceive(function (Player $player, ?int $data) {
                 if ($data === null) return;
@@ -29,6 +30,9 @@ class HomeForm {
                         break;
                     case 2:
                         (new CustomFormForm)->sendMenu($player);
+                        break;
+                    case 3:
+                        (new SettingForm)->sendMenu($player);
                 }
             })->show($player);
     }

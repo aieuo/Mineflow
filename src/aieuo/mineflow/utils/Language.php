@@ -13,6 +13,10 @@ class Language {
     /** @var array */
     private static $availableLanguages = ["jpn", "eng"];
 
+    public static function getLanguage(): string {
+        return self::$language;
+    }
+
     public static function setLanguage(string $languageName): void {
         self::$language = $languageName;
     }

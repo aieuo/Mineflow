@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\flowItem\action\SetSitting;
 use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
@@ -55,7 +56,10 @@ class EventListener implements Listener {
     private $owner;
 
     /** @var array */
-    private $enabledEvents = [];
+    private static $enabledEvents = [];
+
+    /** @var Config */
+    private static $config;
 
     /** @var array */
     private $eventMethods = [
@@ -82,8 +86,23 @@ class EventListener implements Listener {
         "ProjectileHitEntityEvent" => "onProjectileHit",
     ];
 
+    public static function getEnabledEvents(): array {
+        return self::$enabledEvents;
+    }
+
+    public static function setEventEnabled(string $event, bool $enable) {
+        self::$config->set($event, $enable);
+        self::$config->save();
+        if ($enable) {
+            self::$enabledEvents[$event] = true;
+        } else {
+            unset(self::$enabledEvents[$event]);
+        }
+    }
+
     public function __construct(Main $owner, Config $eventSettings) {
         $this->owner = $owner;
+        self::$config = $eventSettings;
         $this->checkEventSettings($eventSettings);
     }
 
@@ -98,7 +117,7 @@ class EventListener implements Listener {
         $eventSettings->save();
 
         foreach ($eventSettings->getAll() as $event => $value) {
-            if ($value) $this->enabledEvents[$event] = true;
+            if ($value) self::$enabledEvents[$event] = true;
         }
     }
 
@@ -111,7 +130,7 @@ class EventListener implements Listener {
         $this->registerEvent(DataPacketReceiveEvent::class, "receive");
         $this->registerEvent(EntityTeleportEvent::class, "teleport");
 
-        foreach ($this->enabledEvents as $event => $value) {
+        foreach (self::$enabledEvents as $event => $value) {
             if (!isset($this->eventMethods[$event])) continue;
             $this->registerEvent(EventTriggers::getEventPath($event), $this->eventMethods[$event]);
         }
@@ -203,7 +222,7 @@ class EventListener implements Listener {
             } elseif ($event instanceof EntityEvent) {
                 $target = $event->getEntity();
             }
-            $variables = DefaultVariables::getEventVariables($event, $eventName);
+            $variables = DefaultVariables::getEventVariables($event);
             $recipes->executeAll($target, $variables, $event);
         }
     }
@@ -255,8 +274,11 @@ class EventListener implements Listener {
     }
     public function onEntityDamage(EntityDamageEvent $event) {
         $this->onEvent($event, "EntityDamageEvent");
+        if ($event instanceof EntityDamageByEntityEvent) {
+            (new EntityAttackEvent($event->getEntity(), $event->getDamager(), $event->getCause(), $event->getBaseDamage()))->call();
+        }
     }
-    public function onEntityAttack(EntityDamageByEntityEvent $event) {
+    public function onEntityAttack(EntityAttackEvent $event) {
         $this->onEvent($event, "EntityAttackEvent");
     }
     public function onToggleFlight(PlayerToggleFlightEvent $event) {

@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\command;
 
+use aieuo\mineflow\ui\CustomFormForm;
+use aieuo\mineflow\ui\SettingForm;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\Player;
@@ -46,6 +48,20 @@ class MineflowCommand extends Command {
                     return;
                 }
                 (new CustomCommandCommand)->execute($sender, $args);
+                break;
+            case "form":
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.console"));
+                    return;
+                }
+                (new CustomFormForm())->sendMenu($sender);
+                break;
+            case "settings":
+                if (!($sender instanceof Player)) {
+                    $sender->sendMessage(Language::get("command.console"));
+                    return;
+                }
+                (new SettingForm)->sendMenu($sender);
                 break;
             default:
                 if (!($sender instanceof Player)) {
