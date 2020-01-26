@@ -38,6 +38,10 @@ class CustomForm extends Form {
         return $this->contents;
     }
 
+    public function getContent(int $index): ?Element {
+        return $this->contents[$index] ?? null;
+    }
+
     /**
      * @param Element[] $contents
      * @return self
@@ -53,6 +57,7 @@ class CustomForm extends Form {
             "title" => $this->checkTranslate($this->title),
             "content" => $this->contents
         ];
+        if (!empty($this->getRecipes())) $form["recipes"] = $this->getRecipes();
         $form = $this->reflectErrors($form);
         return $form;
     }

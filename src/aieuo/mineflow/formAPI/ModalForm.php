@@ -69,6 +69,7 @@ class ModalForm extends Form {
             "button1" => $this->checkTranslate($this->button1),
             "button2" => $this->checkTranslate($this->button2)
         ];
+        if (!empty($this->getRecipes())) $form["recipes"] = $this->getRecipes();
         $form = $this->reflectErrors($form);
         return $form;
     }

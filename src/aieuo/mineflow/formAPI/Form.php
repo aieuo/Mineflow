@@ -37,6 +37,8 @@ abstract class Form implements PMForm {
     protected $messages = [];
     /** @var array */
     protected $highlights = [];
+    /** @var string[][] */
+    private $recipes;
 
     public function __construct(string $title = "") {
         $this->title = $title;
@@ -238,5 +240,23 @@ abstract class Form implements PMForm {
         }
         $form->setName($name);
         return $form;
+    }
+
+    public function addRecipe(string $name, string $button = "") {
+        if (!isset($this->recipes[$button])) $this->recipes[$button] = [];
+        if (!in_array($name, $this->recipes[$button])) {
+            $this->recipes[$button][] = $name;
+        }
+    }
+
+    public function removeRecipe(string $name, string $button = "") {
+        if (isset($this->recipes[$button])) {
+            $this->recipes[$button] = array_diff([$name], $this->recipes[$button]);
+            if (empty($this->recipes[$button])) unset($this->recipes[$button]);
+        }
+    }
+
+    public function getRecipes($button = ""): array {
+        return $this->recipes[$button] ?? [];
     }
 }
