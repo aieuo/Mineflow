@@ -278,6 +278,7 @@ class RecipeForm {
 
                 if ($data) {
                     $manager = Main::getInstance()->getRecipeManager();
+                    $recipe->removeTriggerAll();
                     $manager->remove($recipe->getName());
                     $this->sendMenu($player, ["@form.delete.success"]);
                 } else {
