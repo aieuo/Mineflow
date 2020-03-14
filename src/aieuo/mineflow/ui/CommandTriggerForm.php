@@ -99,10 +99,7 @@ class CommandTriggerForm {
                 if ($data) {
                     $recipe->removeTrigger($trigger);
                     $manager = Main::getInstance()->getCommandManager();
-                    $count = $manager->removeRecipe($manager->getOriginCommand($trigger->getKey()), $recipe);
-                    if ($count === 0) {
-                        $manager->removeCommand($manager->getOriginCommand($trigger->getKey()));
-                    }
+                    $manager->removeRecipe($manager->getOriginCommand($trigger->getKey()), $recipe);
                     (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
                 } else {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@form.cancelled"]);

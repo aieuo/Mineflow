@@ -61,7 +61,7 @@ class EventTriggerForm {
     public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName) {
         $event = EventTriggers::getEvents()[$eventName];
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
-            ->setContent($eventName."\n@".$event[1]) // TODO: イベントの詳しい説明
+            ->setContent($eventName."\n@".$event[1])
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),

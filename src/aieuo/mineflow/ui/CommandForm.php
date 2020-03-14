@@ -143,6 +143,7 @@ class CommandForm {
             ->addButtons([
                 new Button("@form.command.commandMenu.editDescription"),
                 new Button("@form.command.commandMenu.editPermission"),
+                new Button("@form.command.recipes"),
                 new Button("@form.delete"),
                 new Button("@form.back"),
             ])->onReceive(function (Player $player, ?int $data, array $command) {
@@ -155,6 +156,9 @@ class CommandForm {
                         $this->changePermission($player, $command);
                         break;
                     case 2:
+                        $this->sendRecipeList($player, $command);
+                        break;
+                    case 3:
                         $this->sendConfirmDelete($player, $command);
                         break;
                     default:
@@ -236,5 +240,53 @@ class CommandForm {
                     $this->sendCommandMenu($player, $command, ["@form.cancelled"]);
                 }
             })->addArgs($command)->show($player);
+    }
+
+    public function sendRecipeList(Player $player, array $command) {
+        $buttons = [new Button("@form.back")];
+        foreach ($command["recipes"] as $name => $commands) {
+            $buttons[] = new Button($name." | ".count($commands));
+        }
+        (new ListForm(Language::get("form.command.recipes.title", ["/".$command["command"]])))
+            ->setContent("@form.selectButton")
+            ->setButtons($buttons)
+            ->onReceive(function (Player $player, ?int $data, array $command) {
+                if ($data === null) return;
+
+                if ($data === 0) {
+                    $this->sendCommandMenu($player, $command);
+                    return;
+                }
+                $data --;
+
+                $this->sendRecipeMenu($player, $command, $data);
+            })->addArgs($command)->show($player);
+    }
+
+    public function sendRecipeMenu(Player $player, array $command, int $index) {
+        $command = Main::getInstance()->getCommandManager()->getCommand($command["command"]);
+        $triggers = array_values($command["recipes"])[$index];
+        $content = implode("\n", array_map(function (String $cmd) {
+            return "/".$cmd;
+        }, $triggers));
+        (new ListForm(Language::get("form.command.recipes.title", ["/".$command["command"]])))
+            ->setContent($content)
+            ->setButtons([
+                new Button("@form.back"),
+                new Button("@form.edit")
+            ])->onReceive(function (Player $player, ?int $data, array $command, int $index) {
+                if ($data === null) return;
+
+                if ($data === 0) {
+                    $this->sendRecipeList($player, $command);
+                } elseif ($data === 1) {
+                    Session::getSession($player)
+                        ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
+                        ->set("recipe_menu_prev_data", [$command, $index]);
+                    $recipeName = array_keys($command["recipes"])[$index];
+                    $recipe = Main::getInstance()->getRecipeManager()->get($recipeName);
+                    (new RecipeForm())->sendTriggerList($player, $recipe);
+                }
+            })->addArgs($command, $index)->show($player);
     }
 }
