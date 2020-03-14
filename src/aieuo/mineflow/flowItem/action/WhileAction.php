@@ -18,9 +18,9 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\task\WhileScriptTask;
+use aieuo\mineflow\task\WhileActionTask;
 
-class WhileScript extends Action implements ActionContainer, ConditionContainer {
+class WhileAction extends Action implements ActionContainer, ConditionContainer {
     use ActionContainerTrait, ConditionContainerTrait;
 
     protected $id = self::ACTION_WHILE;
@@ -85,7 +85,7 @@ class WhileScript extends Action implements ActionContainer, ConditionContainer 
     public function execute(?Entity $target, Recipe $origin): ?bool {
         $script = clone $this;
         $origin->wait();
-        $handler = Main::getInstance()->getScheduler()->scheduleRepeatingTask(new WhileScriptTask($script, $target, $origin), $this->interval);
+        $handler = Main::getInstance()->getScheduler()->scheduleRepeatingTask(new WhileActionTask($script, $target, $origin), $this->interval);
         $script->setTaskId($handler->getTaskId());
         return true;
     }

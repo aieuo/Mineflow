@@ -88,7 +88,7 @@ class GetEntity extends Action {
             return true;
         }
         $origin->addVariable(new MapVariable([], $resultName)); // TODO: .
-        return false;
+        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

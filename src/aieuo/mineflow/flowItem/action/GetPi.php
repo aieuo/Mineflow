@@ -49,7 +49,7 @@ class GetPi extends Action {
 
         $resultName = $origin->replaceVariables($this->getResultName());
         $origin->addVariable(new NumberVariable(M_PI, $resultName));
-        return false;
+        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

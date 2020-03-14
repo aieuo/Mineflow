@@ -45,7 +45,8 @@ class EventCancel extends Action {
     }
 
     public function isDataValid(): bool {
-        return true;    }
+        return true;
+    }
 
     public function loadSaveData(array $content): ?Action {
         return $this;

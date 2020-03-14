@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\ui\ScriptForm;
 use aieuo\mineflow\variable\NumberVariable;
 
-class RepeatScript extends Action implements ActionContainer {
+class RepeatAction extends Action implements ActionContainer {
     use ActionContainerTrait;
 
     protected $id = self::ACTION_REPEAT;

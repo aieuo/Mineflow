@@ -35,8 +35,8 @@ class ActionFactory {
         self::register(new IFAction);
         self::register(new ElseifAction);
         self::register(new ElseAction);
-        self::register(new RepeatScript);
-        self::register(new WhileScript);
+        self::register(new RepeatAction);
+        self::register(new WhileAction);
         self::register(new CallRecipe);
         self::register(new ExecuteRecipe);
         self::register(new ExecuteRecipeWithEntity);

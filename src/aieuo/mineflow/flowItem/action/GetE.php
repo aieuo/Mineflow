@@ -50,7 +50,7 @@ class GetE extends Action {
 
         $resultName = $origin->replaceVariables($this->getResultName());
         $origin->addVariable(new NumberVariable(M_E, $resultName));
-        return false;
+        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

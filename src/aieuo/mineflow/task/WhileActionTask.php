@@ -2,14 +2,14 @@
 
 namespace aieuo\mineflow\task;
 
-use aieuo\mineflow\flowItem\action\WhileScript;
+use aieuo\mineflow\flowItem\action\WhileAction;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\entity\Entity;
 use pocketmine\scheduler\Task;
 
-class WhileScriptTask extends Task {
+class WhileActionTask extends Task {
 
-    /** @var WhileScript */
+    /** @var WhileAction */
     private $script;
     /** @var Entity|null */
     private $entity;
@@ -18,7 +18,7 @@ class WhileScriptTask extends Task {
     /** @var int */
     private $count = 0;
 
-    public function __construct(WhileScript $script, ?Entity $entity, ?Recipe $recipe) {
+    public function __construct(WhileAction $script, ?Entity $entity, ?Recipe $recipe) {
         $this->script = $script;
         $this->entity = $entity;
         $this->recipe = $recipe;
