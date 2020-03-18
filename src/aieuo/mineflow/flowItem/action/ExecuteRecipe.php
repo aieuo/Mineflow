@@ -56,7 +56,7 @@ class ExecuteRecipe extends Action {
 
         $name = $origin->replaceVariables($this->getRecipeName());
 
-        $recipe = Main::getInstance()->getRecipeManager()->get($name);
+        $recipe = Main::getRecipeManager()->get($name);
         if ($recipe === null) {
             Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]), $target);
             return null;
@@ -83,7 +83,7 @@ class ExecuteRecipe extends Action {
         if ($data[1] === "") {
             $errors = [["@form.insufficient", 1]];
         }
-        if (!Main::getInstance()->getVariableHelper()->containsVariable($data[1]) and !Main::getInstance()->getRecipeManager()->exists($data[1])) {
+        if (!Main::getVariableHelper()->containsVariable($data[1]) and !Main::getRecipeManager()->exists($data[1])) {
             $errors = [["@action.executeRecipe.notFound", 1]];
         }
         return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];

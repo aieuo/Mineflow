@@ -93,7 +93,7 @@ class Motion extends Action {
     public function parseFromFormData(array $data): array {
         $status = true;
         $errors = [];
-        $helper = Main::getInstance()->getVariableHelper();
+        $helper = Main::getVariableHelper();
 
         for ($i=1; $i<=3; $i++) {
             if ($data[$i] === "") {

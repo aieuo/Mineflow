@@ -59,7 +59,7 @@ class SendForm extends Action {
         if (!$this->canExecute($target)) return null;
 
         $name = $origin->replaceVariables($this->getFormName());
-        $manager = Main::getInstance()->getFormManager();
+        $manager = Main::getFormManager();
         $form = $manager->getForm($name);
         if ($form === null) {
             Logger::warning(Language::get("action.sendForm.notFound", [$this->getName()]), $target);
@@ -82,7 +82,7 @@ class SendForm extends Action {
             }
             return;
         }
-        $variables = Main::getInstance()->getFormManager()->getFormDataVariable($form, $data);
+        $variables = Main::getFormManager()->getFormDataVariable($form, $data);
         if ($holder->existsRecipeByTrigger($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player, $variables);

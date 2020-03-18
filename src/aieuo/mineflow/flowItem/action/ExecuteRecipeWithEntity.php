@@ -58,7 +58,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
         $name = $origin->replaceVariables($this->getRecipeName());
         $id = $origin->replaceVariables($this->getEntityId());
 
-        $recipe = Main::getInstance()->getRecipeManager()->get($name);
+        $recipe = Main::getRecipeManager()->get($name);
         if ($recipe === null) {
             Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]), $target);
             return null;
@@ -100,7 +100,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
             $status = false;
             $errors = [["@form.insufficient", 1]];
         }
-        if (!Main::getInstance()->getVariableHelper()->containsVariable($data[1]) and !Main::getInstance()->getRecipeManager()->exists($data[1])) {
+        if (!Main::getVariableHelper()->containsVariable($data[1]) and !Main::getRecipeManager()->exists($data[1])) {
             $status = false;
             $errors = [["@action.executeRecipe.notFound", 1]];
         }

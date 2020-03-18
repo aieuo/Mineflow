@@ -35,7 +35,7 @@ class FormTriggerForm {
                         (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
-                        $manager = Main::getInstance()->getFormManager();
+                        $manager = Main::getFormManager();
                         $form = $manager->getForm(explode(";", $trigger->getKey())[0]);
                         (new CustomFormForm)->sendFormMenu($player, $form);
                         break;
@@ -61,7 +61,7 @@ class FormTriggerForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getFormManager();
+                $manager = Main::getFormManager();
                 if (!$manager->existsForm($data[0])) {
                     $this->sendConfirmCreate($player, $data[0], function (bool $result) use ($player, $recipe, $data) {
                         if ($result) {
@@ -103,7 +103,7 @@ class FormTriggerForm {
                             $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                             return;
                         }
-                        $manager = Main::getInstance()->getFormManager();
+                        $manager = Main::getFormManager();
                         $recipe->addTrigger($trigger);
                         $manager->addRecipe($form->getName(), $recipe);
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
@@ -136,7 +136,7 @@ class FormTriggerForm {
                             $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                             return;
                         }
-                        $manager = Main::getInstance()->getFormManager();
+                        $manager = Main::getFormManager();
                         $recipe->addTrigger($trigger);
                         $manager->addRecipe($form->getName(), $recipe);
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
@@ -176,7 +176,7 @@ class FormTriggerForm {
                             $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                             return;
                         }
-                        $manager = Main::getInstance()->getFormManager();
+                        $manager = Main::getFormManager();
                         $recipe->addTrigger($trigger);
                         $manager->addRecipe($form->getName(), $recipe);
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);

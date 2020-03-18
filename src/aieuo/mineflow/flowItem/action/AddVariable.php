@@ -95,7 +95,7 @@ class AddVariable extends Action {
         if ($this->isLocal) {
             $origin->addVariable($variable);
         } else {
-            Main::getInstance()->getVariableHelper()->add($variable);
+            Main::getVariableHelper()->add($variable);
         }
         return true;
     }
@@ -120,7 +120,7 @@ class AddVariable extends Action {
         if ($name === "") {
             $errors[] = ["@form.insufficient", 1];
         }
-        $containsVariable = Main::getInstance()->getVariableHelper()->containsVariable($value);
+        $containsVariable = Main::getVariableHelper()->containsVariable($value);
         if ($value === "") {
             $errors[] = ["@form.insufficient", 1];
         } elseif ($type === Variable::NUMBER and !$containsVariable and !is_numeric($value)) {

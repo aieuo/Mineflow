@@ -173,7 +173,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function execute(?Entity $target, ?Event $event = null, array $args = [], int $start = 0): ?bool {
-        $helper = Main::getInstance()->getVariableHelper();
+        $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {
                 $arg = $args[$i];
@@ -254,7 +254,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function replaceVariables(string $text) {
-        return Main::getInstance()->getVariableHelper()->replaceVariables($text, $this->variables);
+        return Main::getVariableHelper()->replaceVariables($text, $this->variables);
     }
 
     public function setSourceRecipe(?Recipe $recipe) {

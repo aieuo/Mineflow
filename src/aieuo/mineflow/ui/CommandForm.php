@@ -61,7 +61,7 @@ class CommandForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getCommandManager();
+                $manager = Main::getCommandManager();
                 $original = $manager->getOriginCommand($data[0]);
                 if (!$manager->isSubcommand($data[0]) and $manager->existsCommand($original)) {
                     $this->sendAddCommand($player, $data, [["@form.command.alreadyExists", 0]]);
@@ -98,7 +98,7 @@ class CommandForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getCommandManager();
+                $manager = Main::getCommandManager();
                 if (!$manager->existsCommand($manager->getOriginCommand($data[0]))) {
                     $this->sendSelectCommand($player, $data, [["@form.command.notFound", 0]]);
                     return;
@@ -111,7 +111,7 @@ class CommandForm {
     }
 
     public function sendCommandList(Player $player) {
-        $manager = Main::getInstance()->getCommandManager();
+        $manager = Main::getCommandManager();
         $commands = $manager->getCommandAll();
         $buttons = [new Button("@form.back")];
         foreach ($commands as $command) {
@@ -183,7 +183,7 @@ class CommandForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getCommandManager();
+                $manager = Main::getCommandManager();
                 $command["description"] = $data[0];
                 $manager->updateCommand($command);
                 $this->sendCommandMenu($player, $command);
@@ -207,7 +207,7 @@ class CommandForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getCommandManager();
+                $manager = Main::getCommandManager();
                 $command["permission"] = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[0]];
                 $manager->updateCommand($command);
                 $this->sendCommandMenu($player, $command);
@@ -223,8 +223,8 @@ class CommandForm {
                 if ($data === null) return;
 
                 if ($data) {
-                    $commandManager = Main::getInstance()->getCommandManager();
-                    $recipeManager = Main::getInstance()->getRecipeManager();
+                    $commandManager = Main::getCommandManager();
+                    $recipeManager = Main::getRecipeManager();
 
                     foreach ($command["recipes"] as $recipe => $commands) {
                         $recipe = $recipeManager->get($recipe);
@@ -264,7 +264,7 @@ class CommandForm {
     }
 
     public function sendRecipeMenu(Player $player, array $command, int $index) {
-        $command = Main::getInstance()->getCommandManager()->getCommand($command["command"]);
+        $command = Main::getCommandManager()->getCommand($command["command"]);
         $triggers = array_values($command["recipes"])[$index];
         $content = implode("\n", array_map(function (String $cmd) {
             return "/".$cmd;
@@ -284,7 +284,7 @@ class CommandForm {
                         ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
                         ->set("recipe_menu_prev_data", [$command, $index]);
                     $recipeName = array_keys($command["recipes"])[$index];
-                    $recipe = Main::getInstance()->getRecipeManager()->get($recipeName);
+                    $recipe = Main::getRecipeManager()->get($recipeName);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
             })->addArgs($command, $index)->show($player);

@@ -137,13 +137,13 @@ class ComparisonNumber extends Condition {
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $containsVariable = Main::getInstance()->getVariableHelper()->containsVariable($data[1]);
+        $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
         } elseif (!$containsVariable and !is_numeric($data[1])) {
             $errors[] = ["@mineflow.contents.notNumber", 1];
         }
-        $containsVariable = Main::getInstance()->getVariableHelper()->containsVariable($data[3]);
+        $containsVariable = Main::getVariableHelper()->containsVariable($data[3]);
         if ($data[3] === "") {
             $errors[] = ["@form.insufficient", 3];
         } elseif (!$containsVariable and !is_numeric($data[3])) {

@@ -87,7 +87,7 @@ class AddDamage extends Action {
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $containsVariable = Main::getInstance()->getVariableHelper()->containsVariable($data[1]);
+        $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
         } elseif (!$containsVariable and !is_numeric($data[1])) {

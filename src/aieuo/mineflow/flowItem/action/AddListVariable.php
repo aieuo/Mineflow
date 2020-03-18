@@ -68,7 +68,7 @@ class AddListVariable extends Action {
     public function execute(?Entity $target, Recipe $origin): ?bool {
         if (!$this->canExecute($target)) return null;
 
-        $helper = Main::getInstance()->getVariableHelper();
+        $helper = Main::getVariableHelper();
         $name = $origin->replaceVariables($this->getVariableName());
         $value = $origin->replaceVariables($this->getVariableValue());
 

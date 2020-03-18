@@ -31,17 +31,16 @@ class Main extends PluginBase {
     private $loaded = false;
 
     /** @var RecipeManager */
-    private $recipeManager;
+    private static $recipeManager;
 
     /** @var CommandManager */
-    private $commandManager;
+    private static $commandManager;
 
     /** @var VariableHelper */
-    private $variableHelper;
-    /**
-     * @var FormManager
-     */
-    private $formManager;
+    private static $variableHelper;
+
+    /** @var FormManager */
+    private static $formManager;
 
     public static function getInstance(): ?self {
         return self::$instance;
@@ -77,13 +76,13 @@ class Main extends PluginBase {
         (new EventListener($this, $this->events))->registerEvents();
 
         $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
-        $this->commandManager = new CommandManager($this, $commands);
+        self::$commandManager = new CommandManager($this, $commands);
 
-        $this->formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
+        self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
 
-        $this->variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
+        self::$variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
 
-        $this->recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
+        self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
 
         $this->loaded = true;
         (new ServerStartEvent($this))->call();
@@ -91,9 +90,9 @@ class Main extends PluginBase {
 
     public function onDisable() {
         if (!$this->loaded) return;
-        $this->recipeManager->saveAll();
-        $this->formManager->saveAll();
-        $this->variableHelper->saveAll();
+        self::$recipeManager->saveAll();
+        self::$formManager->saveAll();
+        self::$variableHelper->saveAll();
     }
 
     public function getConfig(): Config {
@@ -108,19 +107,19 @@ class Main extends PluginBase {
         return $this->events;
     }
 
-    public function getRecipeManager(): RecipeManager {
-        return $this->recipeManager;
+    public static function getRecipeManager(): RecipeManager {
+        return self::$recipeManager;
     }
 
-    public function getCommandManager(): CommandManager {
-        return $this->commandManager;
+    public static function getCommandManager(): CommandManager {
+        return self::$commandManager;
     }
 
-    public function getFormManager(): FormManager {
-        return $this->formManager;
+    public static function getFormManager(): FormManager {
+        return self::$formManager;
     }
 
-    public function getVariableHelper(): VariableHelper {
-        return $this->variableHelper;
+    public static function getVariableHelper(): VariableHelper {
+        return self::$variableHelper;
     }
 }

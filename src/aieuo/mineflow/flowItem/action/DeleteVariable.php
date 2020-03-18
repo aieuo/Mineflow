@@ -58,7 +58,7 @@ class DeleteVariable extends Action {
 
         $name = $origin->replaceVariables($this->getVariableName());
         if (!$this->isLocal) {
-            Main::getInstance()->getVariableHelper()->delete($name);
+            Main::getVariableHelper()->delete($name);
         } else {
             $origin->removeVariable($name);
         }

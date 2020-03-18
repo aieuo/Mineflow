@@ -79,7 +79,7 @@ abstract class TypePosition extends Action {
         } elseif (!isset($pos[2])) {
             $errors = [["@action.position.notEnough", 1]];
         }
-        if (!Main::getInstance()->getVariableHelper()->containsVariable($data[2]) and Server::getInstance()->getLevelByName($data[2]) === null) {
+        if (!Main::getVariableHelper()->containsVariable($data[2]) and Server::getInstance()->getLevelByName($data[2]) === null) {
             $errors = [["@action.position.level.notFound", 2]];
         }
         return ["status" => empty($errors), "contents" => [$pos[0], $pos[1], $pos[2], $data[2]], "cancel" => $data[3], "errors" => $errors];

@@ -85,7 +85,7 @@ abstract class TypeItem extends Condition {
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
         }
-        $helper = Main::getInstance()->getVariableHelper();
+        $helper = Main::getVariableHelper();
         if (!$helper->containsVariable($data[1])) {
             try {
                 ItemFactory::fromString($data[1]);

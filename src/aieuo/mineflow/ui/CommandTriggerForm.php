@@ -33,7 +33,7 @@ class CommandTriggerForm {
                         $this->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
-                        $manager = Main::getInstance()->getCommandManager();
+                        $manager = Main::getCommandManager();
                         $command = $manager->getCommand($manager->getOriginCommand($trigger->getKey()));
                         (new CommandForm)->sendCommandMenu($player, $command);
                         break;
@@ -53,7 +53,7 @@ class CommandTriggerForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getCommandManager();
+                $manager = Main::getCommandManager();
                 $original = $manager->getOriginCommand($data[0]);
                 if (!$manager->existsCommand($original)) {
                     $this->sendConfirmCreate($player, $original, function (bool $result) use ($player, $recipe, $data) {
@@ -98,7 +98,7 @@ class CommandTriggerForm {
 
                 if ($data) {
                     $recipe->removeTrigger($trigger);
-                    $manager = Main::getInstance()->getCommandManager();
+                    $manager = Main::getCommandManager();
                     $manager->removeRecipe($manager->getOriginCommand($trigger->getKey()), $recipe);
                     (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
                 } else {

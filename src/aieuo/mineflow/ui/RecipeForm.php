@@ -47,7 +47,7 @@ class RecipeForm {
     }
 
     public function sendAddRecipe(Player $player, string $default = "", string $error = null) {
-        $manager = Main::getInstance()->getRecipeManager();
+        $manager = Main::getRecipeManager();
         $name = $manager->getNotDuplicatedName("Recipe");
 
         $form = new CustomForm("@form.recipe.addRecipe.title");
@@ -61,13 +61,13 @@ class RecipeForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getRecipeManager();
+                $manager = Main::getRecipeManager();
                 $name = $data[0] === "" ? $defaultName : $data[0];
                 if ($manager->exists($name)) {
                     $newName = $manager->getNotDuplicatedName($name);
                     (new HomeForm)->sendConfirmRename($player, $name, $newName, function (bool $result, string $name, string $newName) use ($player) {
                         if ($result) {
-                            $manager = Main::getInstance()->getRecipeManager();
+                            $manager = Main::getRecipeManager();
                             $recipe = new Recipe($newName);
                             $manager->add($recipe);
                             Session::getSession($player)->set("recipe_menu_prev", [$this, "sendMenu"]);
@@ -106,7 +106,7 @@ class RecipeForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getRecipeManager();
+                $manager = Main::getRecipeManager();
                 $name = $data[0];
                 if (!$manager->exists($name)) {
                     $this->sendSelectRecipe($player, $name, "@form.recipe.select.notfound");
@@ -122,7 +122,7 @@ class RecipeForm {
     }
 
     public function sendRecipeList(Player $player) {
-        $manager = Main::getInstance()->getRecipeManager();
+        $manager = Main::getRecipeManager();
         $recipes = $manager->getAll();
         $buttons = [new Button("@form.back")];
         foreach ($recipes as $recipe) {
@@ -210,7 +210,7 @@ class RecipeForm {
                             })->addArgs($recipe)->show($player);
                         break;
                     case 6:
-                        $recipe->save(Main::getInstance()->getRecipeManager()->getSaveDir());
+                        $recipe->save(Main::getRecipeManager()->getSaveDir());
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
                     case 7:
@@ -239,7 +239,7 @@ class RecipeForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getRecipeManager();
+                $manager = Main::getRecipeManager();
                 if ($manager->exists($data[1])) {
                     $newName = $manager->getNotDuplicatedName($data[1]);
                     (new HomeForm)->sendConfirmRename($player, $data[1], $newName, function (bool $result, string $name, string $newName) use ($player, $recipe, $manager) {
@@ -350,7 +350,7 @@ class RecipeForm {
                 if ($data === null) return;
 
                 if ($data) {
-                    $manager = Main::getInstance()->getRecipeManager();
+                    $manager = Main::getRecipeManager();
                     $recipe->removeTriggerAll();
                     $manager->remove($recipe->getName());
                     $this->sendMenu($player, ["@form.delete.success"]);

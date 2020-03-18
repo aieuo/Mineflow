@@ -87,12 +87,12 @@ class CustomFormForm {
                         return;
                 }
 
-                $manager = Main::getInstance()->getFormManager();
+                $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
                     (new HomeForm)->sendConfirmRename($player, $data[0], $newName, function (bool $result, string $name, string $newName) use ($player, $form, $data) {
                         if ($result) {
-                            $manager = Main::getInstance()->getFormManager();
+                            $manager = Main::getFormManager();
                             $form->setTitle($newName);
                             $manager->addForm($newName, $form);
                             Session::getSession($player)->set("form_menu_prev", [$this, "sendMenu"]);
@@ -127,7 +127,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getFormManager();
+                $manager = Main::getFormManager();
                 $name = $data[0];
                 if (!$manager->existsForm($name)) {
                     $this->sendSelectForm($player, $data, [["@form.form.notFound", 0]]);
@@ -141,7 +141,7 @@ class CustomFormForm {
     }
 
     public function sendFormList(Player $player) {
-        $manager = Main::getInstance()->getFormManager();
+        $manager = Main::getFormManager();
         $forms = $manager->getAllFormData();
         $buttons = [new Button("@form.back")];
         foreach ($forms as $form) {
@@ -228,7 +228,7 @@ class CustomFormForm {
                                 }
 
                                 $form->setButton1($data[1]);
-                                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                                Main::getFormManager()->addForm($form->getName(), $form);
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
                         break;
@@ -249,7 +249,7 @@ class CustomFormForm {
                                 }
 
                                 $form->setButton2($data[1]);
-                                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                                Main::getFormManager()->addForm($form->getName(), $form);
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
                         break;
@@ -339,7 +339,7 @@ class CustomFormForm {
                         }
                         $buttons = array_values($buttons);
                         $form->setButtons($buttons);
-                        Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                        Main::getFormManager()->addForm($form->getName(), $form);
                         $this->sendFormMenu($player, $form, ["@form.changed"]);
                     })->addArgs($form, $data, $buttons)->show($player);
             })->addArgs($form, $form->getButtons())->addMessages($messages)->show($player);
@@ -417,7 +417,7 @@ class CustomFormForm {
                 }
 
                 $form->setTitle($data[0]);
-                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendFormMenu($player, $form, ["@form.changed"]);
             })->addArgs($form)->show($player);
     }
@@ -438,7 +438,7 @@ class CustomFormForm {
                 }
 
                 $form->setContent($data[0]);
-                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendFormMenu($player, $form, ["@form.changed"]);
             })->addArgs($form)->show($player);
     }
@@ -461,7 +461,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $manager = Main::getInstance()->getFormManager();
+                $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
                     (new HomeForm)->sendConfirmRename($player, $data[0], $newName, function (bool $result, string $name, string $newName) use ($player, $form, $data, $manager) {
@@ -497,7 +497,7 @@ class CustomFormForm {
                 }
 
                 $form->addButton(new Button($data[0]));
-                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendListFormMenu($player, $form, ["@form.added"]);
             })->addArgs($form)->addErrors($errors)->show($player);
     }
@@ -546,7 +546,7 @@ class CustomFormForm {
                         return;
                 }
                 $form->addContent($element);
-                Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendCustomFormElementMenu($player, $form, $element, ["@form.added"]);
             })->addArgs($form)->show($player);
     }
@@ -635,12 +635,12 @@ class CustomFormForm {
                     unset($elements[$index]);
                     $elements = array_values($elements);
                     $form->setContents($elements);
-                    Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                    Main::getFormManager()->addForm($form->getName(), $form);
                     $this->sendCustomFormMenu($player, $form, ["@form.delete.success"]);
                 } else {
                     $elements[$index] = $element;
                     $form->setContents($elements);
-                    Main::getInstance()->getFormManager()->addForm($form->getName(), $form);
+                    Main::getFormManager()->addForm($form->getName(), $form);
                     $this->sendCustomFormMenu($player, $form, ["@form.changed"]);
                 }
             })->addArgs($form, $element)->addMessages($messages)->show($player);
@@ -656,7 +656,7 @@ class CustomFormForm {
                 if ($data === null) return;
 
                 if ($data) {
-                    $manager = Main::getInstance()->getFormManager();
+                    $manager = Main::getFormManager();
                     $manager->removeForm($form->getName());
                     $this->sendMenu($player, ["@form.delete.success"]);
                 } else {

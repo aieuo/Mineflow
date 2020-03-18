@@ -73,7 +73,7 @@ class SetYaw extends Action {
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $helper = Main::getInstance()->getVariableHelper();
+        $helper = Main::getVariableHelper();
 
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
