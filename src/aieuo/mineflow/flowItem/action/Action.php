@@ -2,20 +2,19 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
-use pocketmine\Player;
 
 abstract class Action extends FlowItem implements ActionIds {
 
     /** @var string */
-    protected $type = Recipe::CONTENT_TYPE_PROCESS;
+    protected $type = Recipe::CONTENT_TYPE_ACTION;
 
     public function getEditForm(array $default = [], array $errors = []): Form {
         return (new CustomForm($this->getName()))

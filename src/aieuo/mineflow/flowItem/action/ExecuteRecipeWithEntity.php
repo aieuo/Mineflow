@@ -7,7 +7,6 @@ use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
-use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;

@@ -51,10 +51,9 @@ class Main extends PluginBase {
 
         $serverLanguage = $this->getServer()->getLanguage()->getLang();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
-            "language" => $serverLanguage,
+            "language" => in_array($serverLanguage, Language::getAvailableLanguages()) ? $serverLanguage : "eng",
         ]);
         $this->config->save();
-        $this->favorites = new Config($this->getDataFolder()."favorites.yml", Config::YAML);
 
         Language::setLanguage($this->config->get("language", "eng"));
         if (!Language::loadMessage()) {
@@ -64,6 +63,8 @@ class Main extends PluginBase {
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
         }
+
+        $this->favorites = new Config($this->getDataFolder()."favorites.yml", Config::YAML);
 
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
@@ -83,6 +84,7 @@ class Main extends PluginBase {
         self::$variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
 
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
+        self::$recipeManager->loadRecipes();
 
         $this->loaded = true;
         (new ServerStartEvent($this))->call();

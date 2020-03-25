@@ -5,7 +5,6 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\entity\Entity;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -14,7 +13,6 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
-use pocketmine\Player;
 
 class AddDamage extends Action {
 

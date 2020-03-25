@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\ActionContainerTrait;
 use aieuo\mineflow\flowItem\action\EventCancel;
@@ -20,7 +21,7 @@ use aieuo\mineflow\Main;
 class Recipe implements \JsonSerializable, ActionContainer {
     use ActionContainerTrait;
 
-    const CONTENT_TYPE_PROCESS = "action";
+    const CONTENT_TYPE_ACTION = "action";
     const CONTENT_TYPE_CONDITION = "condition";
 
     const TARGET_DEFAULT = 0;
@@ -186,6 +187,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 $this->addVariable($arg);
             }
         }
+
         $actions = $this->getActions();
         $count = count($actions);
         for ($i=$start; $i<$count; $i++) {
@@ -203,6 +205,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 return true;
             }
         }
+
         if ($this->sourceRecipe instanceof Recipe) {
             foreach ($this->getReturnValues() as $i => $value) {
                 $variable = $this->getVariable($value);

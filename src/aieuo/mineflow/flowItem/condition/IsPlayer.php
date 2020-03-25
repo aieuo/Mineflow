@@ -4,7 +4,6 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use pocketmine\entity\Entity;
 use pocketmine\Player;
-use pocketmine\Server;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;

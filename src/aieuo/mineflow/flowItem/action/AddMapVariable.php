@@ -3,11 +3,9 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -135,8 +133,8 @@ class AddMapVariable extends Action {
         return ["status" => empty($errors), "contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[3])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->setVariableValue($content[2]);

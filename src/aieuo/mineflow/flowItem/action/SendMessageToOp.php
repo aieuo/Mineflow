@@ -4,8 +4,6 @@ namespace aieuo\mineflow\flowItem\action;
 
 use pocketmine\entity\Entity;
 use pocketmine\Server;
-use aieuo\mineflow\utils\Logger;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 
 class SendMessageToOp extends TypeMessage {

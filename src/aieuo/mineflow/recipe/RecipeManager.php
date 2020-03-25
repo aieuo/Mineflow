@@ -2,9 +2,10 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
 
 class RecipeManager {
 
@@ -17,7 +18,6 @@ class RecipeManager {
     public function __construct(string $saveDir) {
         $this->saveDir = $saveDir;
         if (!file_exists($this->saveDir)) @mkdir($this->saveDir, 0666, true);
-        $this->loadRecipes();
     }
 
     public function getSaveDir(): string {

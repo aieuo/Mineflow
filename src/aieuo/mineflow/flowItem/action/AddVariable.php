@@ -7,7 +7,6 @@ use pocketmine\entity\Entity;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
