@@ -129,8 +129,8 @@ class AddVariable extends Action {
         return ["status" => empty($errors), "contents" => [$name, $value, $type, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[3])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->variableType = $content[2];

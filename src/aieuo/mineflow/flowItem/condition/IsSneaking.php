@@ -28,7 +28,7 @@ class IsSneaking extends Condition {
         return true;
     }
 
-    public function loadSaveData(array $content): ?Condition {
+    public function loadSaveData(array $content): Condition {
         return $this;
     }
 

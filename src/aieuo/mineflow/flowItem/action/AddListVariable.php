@@ -113,8 +113,8 @@ class AddListVariable extends Action {
         return ["status" => empty($errors), "contents" => [$name, $value, !$data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[2])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->isLocal = $content[2];

@@ -29,11 +29,17 @@ abstract class Action extends FlowItem implements ActionIds {
         return ["status" => true, "contents" => [], "cancel" => $data[1], "errors" => []];
     }
 
-    public static function loadSaveDataStatic(array $content): ?self {
+    /**
+     * @param array $content
+     * @return self
+     * @throws FlowItemLoadException
+     * @throws \OutOfBoundsException
+     * @throws \InvalidArgumentException
+     */
+    public static function loadSaveDataStatic(array $content): self {
         $process = ActionFactory::get($content["id"]);
         if ($process === null) {
-            Logger::warning(Language::get("action.not.found", [$content["id"]]));
-            return null;
+            throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));
         }
 
         return $process->loadSaveData($content["contents"]);
@@ -41,7 +47,9 @@ abstract class Action extends FlowItem implements ActionIds {
 
     /**
      * @param array $content
-     * @return Action|null
+     * @return Action
+     * @throws FlowItemLoadException
+     * @throws \OutOfBoundsException
      */
-    abstract public function loadSaveData(array $content): ?Action;
+    abstract public function loadSaveData(array $content): Action;
 }

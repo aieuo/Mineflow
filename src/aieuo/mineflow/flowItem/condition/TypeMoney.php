@@ -64,8 +64,8 @@ abstract class TypeMoney extends Condition {
         return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Condition {
-        if (!isset($content[0])) return null;
+    public function loadSaveData(array $content): Condition {
+        if (!isset($content[0])) throw new \OutOfBoundsException();
 
         $this->setAmount($content[0]);
         return $this;

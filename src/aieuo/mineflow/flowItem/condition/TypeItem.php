@@ -104,8 +104,8 @@ abstract class TypeItem extends Condition {
         return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Condition {
-        if (!isset($content[1])) return null;
+    public function loadSaveData(array $content): Condition {
+        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setItem($content[0], $content[1], $content[2] ?? "");
         return $this;
     }

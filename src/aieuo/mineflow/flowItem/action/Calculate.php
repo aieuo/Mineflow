@@ -165,8 +165,8 @@ class Calculate extends Action {
         return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[2])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setValue($content[0]);
         $this->setOperator($content[1]);
         $this->setResultName($content[2]);

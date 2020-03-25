@@ -84,8 +84,8 @@ class DeleteVariable extends Action {
         return ["status" => empty($errors), "contents" => [$name, !$data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[1])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->isLocal = $content[1];
         return $this;

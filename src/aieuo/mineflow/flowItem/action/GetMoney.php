@@ -87,8 +87,8 @@ class GetMoney extends Action {
         return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[0])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setResultName($content[0]);
         return $this;
     }

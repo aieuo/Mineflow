@@ -28,12 +28,27 @@ class RecipeManager {
         $files = glob($this->getSaveDir()."/*.json");
         foreach ($files as $file) {
             $data = json_decode(file_get_contents($file), true);
-            if ($data === null) continue;
-            if (!isset($data["name"]) or !isset($data["actions"])) continue;
+            if ($data === null) {
+                Logger::warning(Language::get("recipe.json.decode.failed", [$file, json_last_error_msg()]));
+                continue;
+            }
 
-            $recipe = (new Recipe($data["name"]))->loadSaveData($data["actions"]);
-            if ($recipe === null) {
-                Logger::warning(Language::get("recipe.load.failed", [$data["name"]]));
+            if (!isset($data["name"]) or !isset($data["actions"])) {
+                Logger::warning(Language::get("recipe.json.decode.failed", [$file, ["recipe.json.key.missing"]]));
+                continue;
+            }
+
+            $recipe = new Recipe($data["name"]);
+            try {
+                $recipe->loadSaveData($data["actions"]);
+            } catch (\InvalidArgumentException $e) {
+                Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
+                continue;
+            } catch (FlowItemLoadException $e) {
+                Logger::warning(Language::get("recipe.load.failed", [$data["name"], ""]));
+                Logger::warning($e->getMessage());
+                Main::getInstance()->getLogger()->logException($e);
+                echo PHP_EOL;
                 continue;
             }
 

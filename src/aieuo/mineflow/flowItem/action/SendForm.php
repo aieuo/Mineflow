@@ -126,8 +126,8 @@ class SendForm extends Action {
         return ["status" => empty($errors), "contents" => [$name], "cancel" => $data[2], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[0])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setFormName($content[0]);
         return $this;
     }

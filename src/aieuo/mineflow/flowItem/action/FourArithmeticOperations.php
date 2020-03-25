@@ -153,8 +153,8 @@ class FourArithmeticOperations extends Action {
         return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[3])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setValues($content[0], $content[2]);
         $this->setOperator($content[1]);
         $this->setResultName($content[3]);

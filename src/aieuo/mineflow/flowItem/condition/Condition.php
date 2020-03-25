@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Logger;
@@ -28,24 +30,27 @@ abstract class Condition extends FlowItem implements ConditionIds {
         return ["status" => true, "contents" => [], "cancel" => $data[1], "errors" => []];
     }
 
+    /**
+     * @param array $content
+     * @return static|null
+     * @throws FlowItemLoadException
+     * @throws \OutOfBoundsException
+     * @throws \InvalidArgumentException
+     */
     public static function loadSaveDataStatic(array $content): ?self {
         $condition = ConditionFactory::get($content["id"]);
         if ($condition === null) {
-            Logger::warning(Language::get("condition.not.found", [$content["id"]]));
-            return null;
+            throw new FlowItemLoadException(Language::get("condition.not.found", [$content["id"]]));
         }
 
         return $condition->loadSaveData($content["contents"]);
     }
 
     /**
-     * @return boolean
-     */
-    abstract public function isDataValid(): bool;
-
-    /**
      * @param array $content
-     * @return Condition|null
+     * @return Condition
+     * @throws FlowItemLoadException
+     * @throws \OutOfBoundsException
      */
-    abstract public function loadSaveData(array $content): ?Condition;
+    abstract public function loadSaveData(array $content): Condition;
 }

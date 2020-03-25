@@ -107,19 +107,16 @@ class RepeatAction extends Action implements ActionContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function loadSaveData(array $contents): ?Action {
-        if (!isset($contents[1])) return null;
+    public function loadSaveData(array $contents): Action {
+        if (!isset($contents[1])) throw new \OutOfBoundsException();
         $this->setRepeatCount($contents[0]);
 
         foreach ($contents[1] as $content) {
-            switch ($content["type"]) {
-                case Recipe::CONTENT_TYPE_PROCESS:
-                    $action = Action::loadSaveDataStatic($content);
-                    break;
-                default:
-                    return null;
+            if ($content["type"] !== Recipe::CONTENT_TYPE_ACTION) {
+                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
             }
-            if ($action === null) return null;
+
+            $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);
         }
         return $this;

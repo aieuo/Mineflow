@@ -79,16 +79,13 @@ class AndScript extends Condition implements ConditionContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function loadSaveData(array $contents): ?Condition {
+    public function loadSaveData(array $contents): Condition {
         foreach ($contents as $content) {
-            switch ($content["type"]) {
-                case Recipe::CONTENT_TYPE_CONDITION:
-                    $condition = Condition::loadSaveDataStatic($content);
-                    break;
-                default:
-                    return null;
+            if ($content["type"] !== Recipe::CONTENT_TYPE_CONDITION) {
+                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
             }
-            if ($condition === null) return null;
+
+            $condition = Condition::loadSaveDataStatic($content);
             $this->addCondition($condition);
         }
         return $this;

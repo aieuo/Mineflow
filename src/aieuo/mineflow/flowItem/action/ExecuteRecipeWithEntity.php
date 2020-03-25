@@ -111,8 +111,8 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
         return ["status" => $status, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[1])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setRecipeName($content[0]);
         $this->setEntityId($content[1]);
         return $this;

@@ -102,8 +102,8 @@ class ExistsListVariableKey extends Condition {
         return ["status" => empty($errors), "contents" => [$name, $key, !$data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Condition {
-        if (!isset($content[2])) return null;
+    public function loadSaveData(array $content): Condition {
+        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->isLocal = $content[2];

@@ -109,11 +109,12 @@ class SendTitle extends Action {
         return ["status" => empty($errors), "contents" => [$data[1], $data[2], "-1", "-1", "-1"], "cancel" => $data[3], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[1])) return null;
-        $this->setTitle($content[0], $content[1]);
-        if (isset($content[4])) {
-            $this->setTime($content[2], $content[3], $content[4]);
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[2])) throw new \OutOfBoundsException();
+        $this->setPlayer($content[0]);
+        $this->setTitle($content[1], $content[2]);
+        if (isset($content[5])) {
+            $this->setTime($content[3], $content[4], $content[5]);
         }
         return $this;
     }

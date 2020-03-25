@@ -48,7 +48,7 @@ class EventCancel extends Action {
         return true;
     }
 
-    public function loadSaveData(array $content): ?Action {
+    public function loadSaveData(array $content): Action {
         return $this;
     }
 

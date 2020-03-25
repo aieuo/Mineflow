@@ -153,29 +153,23 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
             })->addMessages($messages)->show($player);
     }
 
-    public function loadSaveData(array $contents): ?Action {
+    public function loadSaveData(array $contents): Action {
         if (!isset($contents[1])) return null;
         foreach ($contents[0] as $content) {
-            switch ($content["type"]) {
-                case Recipe::CONTENT_TYPE_CONDITION:
-                    $condition = Condition::loadSaveDataStatic($content);
-                    break;
-                default:
-                    return null;
+            if ($content["type"] !== Recipe::CONTENT_TYPE_CONDITION) {
+                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
             }
-            if ($condition === null) return null;
+
+            $condition = Condition::loadSaveDataStatic($content);
             $this->addCondition($condition);
         }
 
         foreach ($contents[1] as $content) {
-            switch ($content["type"]) {
-                case Recipe::CONTENT_TYPE_PROCESS:
-                    $action = Action::loadSaveDataStatic($content);
-                    break;
-                default:
-                    return null;
+            if ($content["type"] !== Recipe::CONTENT_TYPE_ACTION) {
+                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
             }
-            if ($action === null) return null;
+
+            $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);
         }
 

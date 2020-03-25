@@ -287,18 +287,25 @@ class Recipe implements \JsonSerializable, ActionContainer {
         file_put_contents($dir.$this->getName().".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 
-    public function loadSaveData(array $contents): ?self {
+    /**
+     * @param array $contents
+     * @return self
+     * @throws FlowItemLoadException
+     * @throws \InvalidArgumentException
+     */
+    public function loadSaveData(array $contents): self {
         foreach ($contents as $i => $content) {
-            switch ($content["type"]) {
-                case self::CONTENT_TYPE_PROCESS:
-                    $action = Action::loadSaveDataStatic($content);
-                    break;
-                default:
-                    return null;
+            if ($content["type"] !== self::CONTENT_TYPE_ACTION) {
+                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
+            }
+
+            try {
+                $action = Action::loadSaveDataStatic($content);
+            } catch (\OutOfBoundsException $e) {
+                throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
             if ($action === null) {
-                Logger::warning(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?"]));
-                return null;
+                throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?"]));
             }
 
             $this->addAction($action);

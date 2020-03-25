@@ -85,8 +85,8 @@ abstract class TypePosition extends Action {
         return ["status" => empty($errors), "contents" => [$pos[0], $pos[1], $pos[2], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (empty($content[3])) return null;
+    public function loadSaveData(array $content): Action {
+        if (empty($content[3])) throw new \OutOfBoundsException();
 
         $this->setPosition(...$content);
         return $this;

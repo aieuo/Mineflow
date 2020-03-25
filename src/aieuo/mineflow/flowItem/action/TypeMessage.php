@@ -58,8 +58,8 @@ abstract class TypeMessage extends Action {
         return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (empty($content[0]) or !is_string($content[0])) return null;
+    public function loadSaveData(array $content): Action {
+        if (empty($content[0])) throw new \OutOfBoundsException();
 
         $this->setMessage($content[0]);
         return $this;

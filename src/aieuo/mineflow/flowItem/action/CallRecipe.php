@@ -87,8 +87,8 @@ class CallRecipe extends ExecuteRecipe {
         return ["status" => empty($errors), "contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): ?Action {
-        if (!isset($content[1])) return null;
+    public function loadSaveData(array $content): Action {
+        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1]);
         return $this;
