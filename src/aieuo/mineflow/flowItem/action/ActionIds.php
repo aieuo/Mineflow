@@ -22,15 +22,25 @@ interface ActionIds {
     const ADD_DAMAGE = "addDamage";
     const SET_IMMOBILE = "setImmobile";
     const UNSET_IMMOBILE = "unsetImmobile";
+    const SET_HEALTH = "setHealth";
+    const SET_MAX_HEALTH = "setMaxHealth";
+    const SET_FOOD = "setFood";
 
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";
     const KICK = "kick";
+    const CLEAR_INVENTORY = "clearInventory";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
     const TAKE_MONEY = "takeMoney";
     const GET_MONEY = "getMoney";
+
+    const ADD_ITEM = "addItem";
+    const REMOVE_ITEM = "removeItem";
+    const REMOVE_ITEM_ALL = "removeItemAll";
+    const SET_ITEM = "setItem";
+    const SET_ITEM_IN_HAND = "setItemInHand";
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";
@@ -55,4 +65,5 @@ interface ActionIds {
     const ACTION_REPEAT = "repeat";
     const ACTION_WHILE = "while";
     const ACTION_WAIT = "wait";
+    const SAVE_DATA = "save";
 }

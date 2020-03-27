@@ -25,12 +25,19 @@ class ActionFactory {
         self::register(new AddDamage);
         self::register(new SetImmobile);
         self::register(new UnsetImmobile);
+        self::register(new SetHealth);
+        self::register(new SetMaxHealth);
         /* player */
         self::register(new SetSleeping);
         self::register(new SetSitting);
         self::register(new Kick);
+        self::register(new ClearInventory);
         /* item */
         self::register(new CreateItemVariable);
+        self::register(new AddItem);
+        self::register(new SetItemInHand);
+        self::register(new RemoveItem);
+        self::register(new RemoveItemAll);
         /* money */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
@@ -48,6 +55,7 @@ class ActionFactory {
         self::register(new CallRecipe);
         self::register(new ExecuteRecipe);
         self::register(new ExecuteRecipeWithEntity);
+        self::register(new SaveData);
         /* calculation */
         self::register(new FourArithmeticOperations);
         self::register(new Calculate);
