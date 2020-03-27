@@ -18,6 +18,7 @@ class ActionFactory {
         self::register(new SendMessageToOp);
         self::register(new SendTitle);
         /* entity */
+        self::register(new SetNameTag);
         self::register(new GetEntity);
         self::register(new Teleport);
         self::register(new Motion);
@@ -32,6 +33,7 @@ class ActionFactory {
         self::register(new SetSitting);
         self::register(new Kick);
         self::register(new ClearInventory);
+        self::register(new SetFood);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
