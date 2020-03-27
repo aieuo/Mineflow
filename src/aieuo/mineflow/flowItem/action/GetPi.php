@@ -15,8 +15,8 @@ class GetPi extends TypeGetMathVariable {
 
     protected $resultName = "pi";
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());
         $origin->addVariable(new NumberVariable(M_PI, $resultName));

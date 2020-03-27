@@ -90,8 +90,8 @@ class Calculate extends Action {
         return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $value = $origin->replaceVariables($this->getValue());
         $resultName = $origin->replaceVariables($this->getResultName());

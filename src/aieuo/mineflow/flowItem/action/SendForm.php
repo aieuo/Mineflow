@@ -60,8 +60,8 @@ class SendForm extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getFormName());
         $manager = Main::getFormManager();

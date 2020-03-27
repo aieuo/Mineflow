@@ -18,7 +18,7 @@ class OverMoney extends TypeMoney {
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): bool {
+    public function execute(Recipe $origin): bool {
         $this->throwIfInvalidNumber($target);
 
         if (!Economy::isPluginLoaded()) {

@@ -21,7 +21,7 @@ class NandScript extends AndScript {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        return !parent::execute($target, $origin);
+    public function execute(Recipe $origin): bool {
+        return !parent::execute($origin);
     }
 }

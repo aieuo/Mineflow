@@ -51,8 +51,8 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
         return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityId()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
         $id = $origin->replaceVariables($this->getEntityId());

@@ -47,15 +47,15 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
+    public function execute(Recipe $origin): bool {
         $matched = true;
         foreach ($this->conditions as $condition) {
-            if (!$condition->execute($target, $origin)) $matched = false;
+            if (!$condition->execute($origin)) $matched = false;
         }
         if (!$matched) return false;
 
         foreach ($this->actions as $action) {
-            $action->execute($target, $origin);
+            $action->execute($origin);
         }
         return true;
     }

@@ -12,8 +12,8 @@ class SendMessage extends TypePlayerMessage {
     protected $name = "action.sendMessage.name";
     protected $detail = "action.sendMessage.detail";
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
 

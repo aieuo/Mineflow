@@ -39,13 +39,13 @@ class ElseAction extends Action implements ActionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
+    public function execute(Recipe $origin): bool {
         $lastResult = $origin->getLastActionResult();
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return false;
 
         foreach ($this->actions as $action) {
-            $action->execute($target, $origin);
+            $action->execute($origin);
         }
         return true;
     }

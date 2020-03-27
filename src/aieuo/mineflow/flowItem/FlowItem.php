@@ -96,14 +96,7 @@ abstract class FlowItem implements \JsonSerializable {
         return true;
     }
 
-    public function throwIfCannotExecute(?Entity $target) {
-//        if (!$this->isValidTarget($target)) {
-//            if ($alert) {
-//                $message = Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.".$this->targetRequired]]);
-//                Logger::warning($message, $target);
-//            }
-//            return false;
-//        }
+    public function throwIfCannotExecute() {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents", [$this->getName()]);
             throw new \UnexpectedValueException($message);
@@ -141,12 +134,10 @@ abstract class FlowItem implements \JsonSerializable {
     abstract public function serializeContents(): array;
 
     /**
-     * @param Entity|null $target
      * @param Recipe $origin
      * @return boolean
-     * @throws \UnexpectedValueException
      */
-    abstract public function execute(?Entity $target, Recipe $origin): bool;
+    abstract public function execute(Recipe $origin): bool;
 
     public function hasCustomMenu(): bool {
         return false;

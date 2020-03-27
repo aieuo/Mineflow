@@ -81,8 +81,8 @@ class ComparisonNumber extends Condition {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());
         $value2 = $origin->replaceVariables($this->getValue2());

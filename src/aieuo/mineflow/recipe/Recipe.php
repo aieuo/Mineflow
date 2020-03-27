@@ -194,7 +194,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $action = $actions[$i];
             if ($action instanceof EventCancel) $action->setEvent($event);
             try {
-                $this->lastResult = $action->execute($target, $this);
+                $this->lastResult = $action->execute($this);
             } catch (\UnexpectedValueException $e) {
                 if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $target);
                 $this->lastResult = null;

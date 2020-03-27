@@ -16,8 +16,8 @@ class GetE extends TypeGetMathVariable {
     /** @var string */
     protected $resultName = "e";
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());
         $origin->addVariable(new NumberVariable(M_E, $resultName));

@@ -14,8 +14,8 @@ class IsPlayer extends IsActiveEntity {
     protected $name = "condition.isPlayer.name";
     protected $detail = "condition.isPlayer.detail";
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);

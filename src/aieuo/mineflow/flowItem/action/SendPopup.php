@@ -12,8 +12,8 @@ class SendPopup extends TypePlayerMessage {
     protected $name = "action.sendPopup.name";
     protected $detail = "action.sendPopup.detail";
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
 

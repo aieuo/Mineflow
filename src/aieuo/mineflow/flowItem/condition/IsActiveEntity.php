@@ -52,8 +52,8 @@ class IsActiveEntity extends Condition {
         return Language::get($this->detail, [$this->getEntityId()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);

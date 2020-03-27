@@ -16,8 +16,8 @@ class BroadcastMessage extends TypeMessage {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
         Server::getInstance()->broadcastMessage($message);

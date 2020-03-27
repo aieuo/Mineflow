@@ -34,10 +34,10 @@ class AndScript extends Condition implements ConditionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
+    public function execute(Recipe $origin): bool {
         $matched = true;
         foreach ($this->conditions as $condition) {
-            $result = $condition->execute($target, $origin);
+            $result = $condition->execute($origin);
             if (!$result) $matched = false;
         }
         return $matched;

@@ -66,8 +66,8 @@ class AddDamage extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getDamage()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $damage = $origin->replaceVariables($this->getDamage());
         $cause = $this->getCause();

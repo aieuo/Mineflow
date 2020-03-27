@@ -33,8 +33,8 @@ class EventCancel extends Action {
         $this->event = $event;
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $event = $this->getEvent();
         if (!($event instanceof Cancellable)) {

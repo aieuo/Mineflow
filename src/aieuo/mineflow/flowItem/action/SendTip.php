@@ -12,8 +12,8 @@ class SendTip extends TypePlayerMessage {
     protected $name = "action.sendTip.name";
     protected $detail = "action.sendTip.detail";
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
 

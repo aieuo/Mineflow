@@ -57,11 +57,11 @@ class RepeatAction extends Action implements ActionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
+    public function execute(Recipe $origin): bool {
         for ($i=0; $i<$this->repeatCount; $i++) {
             $origin->addVariable(new NumberVariable($i, "i"));
             foreach ($this->actions as $action) {
-                $action->execute($target, $origin);
+                $action->execute($origin);
             }
         }
         return true;

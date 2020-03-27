@@ -82,8 +82,8 @@ class SendTitle extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getSubTitle()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $title = $origin->replaceVariables($this->getTitle());
         $subtitle = $origin->replaceVariables($this->getSubTitle());

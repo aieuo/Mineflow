@@ -74,8 +74,8 @@ class AddVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
         $value = $origin->replaceVariables($this->getVariableValue());

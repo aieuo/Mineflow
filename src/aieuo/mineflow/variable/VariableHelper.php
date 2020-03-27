@@ -142,7 +142,7 @@ class VariableHelper {
                             }
                             return $argument;
                         }, explode(",", $matches1[2])));
-                        $newAction->execute(null, $origin);
+                        $newAction->execute($origin);
                         $result = "";
                         if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE) {
                             $result = $newAction->getResultName();

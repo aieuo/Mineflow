@@ -55,8 +55,8 @@ class SetYaw extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getYaw()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $yaw = $origin->replaceVariables($this->getYaw());
         $this->throwIfInvalidNumber($yaw);

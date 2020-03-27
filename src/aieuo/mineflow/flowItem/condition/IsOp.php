@@ -37,8 +37,8 @@ class IsOp extends Condition implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): bool {
-        $this->throwIfCannotExecute($target);
+    public function execute(Recipe $origin): bool {
+        $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
