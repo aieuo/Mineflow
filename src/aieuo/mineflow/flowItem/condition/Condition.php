@@ -3,10 +3,8 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
@@ -32,7 +30,7 @@ abstract class Condition extends FlowItem implements ConditionIds {
 
     /**
      * @param array $content
-     * @return static|null
+     * @return self
      * @throws FlowItemLoadException
      * @throws \OutOfBoundsException
      * @throws \InvalidArgumentException

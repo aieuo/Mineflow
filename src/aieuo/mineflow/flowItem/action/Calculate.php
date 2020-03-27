@@ -20,7 +20,7 @@ class Calculate extends Action {
 
     protected $name = "action.calculate.name";
     protected $detail = "action.calculate.detail";
-    protected $detailDefaultReplace = ["value", "operator"];
+    protected $detailDefaultReplace = ["value", "operator", "result"];
 
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
@@ -87,7 +87,7 @@ class Calculate extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()]]);
+        return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
     public function execute(?Entity $target, Recipe $origin): bool {

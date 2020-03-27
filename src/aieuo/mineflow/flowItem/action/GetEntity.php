@@ -23,7 +23,7 @@ class GetEntity extends Action {
 
     protected $name = "action.getEntity.name";
     protected $detail = "action.getEntity.detail";
-    protected $detailDefaultReplace = ["id"];
+    protected $detailDefaultReplace = ["id", "result"];
 
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
@@ -64,7 +64,7 @@ class GetEntity extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getKey()]);
+        return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
     }
 
     public function execute(?Entity $target, Recipe $origin): bool {

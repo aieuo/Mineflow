@@ -8,6 +8,8 @@ use aieuo\mineflow\Main;
 class Economy {
     /** @var EconomyLoader|null */
     private static $economy = null;
+    /* @var Main */
+    private $owner;
 
     public function __construct(Main $owner) {
         $this->owner = $owner;

@@ -46,9 +46,7 @@ class RecipeManager {
                 continue;
             } catch (FlowItemLoadException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], ""]));
-                Logger::warning($e->getMessage());
-                Main::getInstance()->getLogger()->logException($e);
-                echo PHP_EOL;
+                Logger::warning($e->getMessage().PHP_EOL);
                 continue;
             }
 

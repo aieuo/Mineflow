@@ -72,7 +72,6 @@ class ExecuteRecipe extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.executeRecipe.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getRecipeName()),
-                new Input("@action.executeRecipe.form.args", Language::get("form.example", ["{target}, 1, aieuo"]), $default[1] ?? $this->getRecipeName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

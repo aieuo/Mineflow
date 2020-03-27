@@ -21,7 +21,7 @@ class FourArithmeticOperations extends Action {
 
     protected $name = "action.fourArithmeticOperations.name";
     protected $detail = "action.fourArithmeticOperations.detail";
-    protected $detailDefaultReplace = ["value1", "value2", "operator"];
+    protected $detailDefaultReplace = ["value1", "value2", "operator", "result"];
 
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
@@ -89,7 +89,7 @@ class FourArithmeticOperations extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2()]);
+        return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2(), $this->getResultName()]);
     }
 
     public function execute(?Entity $target, Recipe $origin): bool {

@@ -16,4 +16,12 @@ class Logger {
             Main::getInstance()->getLogger()->warning($message);
         }
     }
+
+    public static function info(string $message, ?Entity $player = null): void {
+        if ($player instanceof Player) {
+            $player->sendMessage(TextFormat::WHITE.$message);
+        } else {
+            Main::getInstance()->getLogger()->info($message);
+        }
+    }
 }

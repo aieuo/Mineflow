@@ -124,7 +124,7 @@ class AddVariable extends Action {
         if ($value === "") {
             $errors[] = ["@form.insufficient", 1];
         } elseif ($type === Variable::NUMBER and !$containsVariable and !is_numeric($value)) {
-            $errors[] = ["@mineflow.contents.notNumber", 1];
+            $errors[] = ["@flowItem.error.notNumber", 1];
         }
         return ["status" => empty($errors), "contents" => [$name, $value, $type, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
