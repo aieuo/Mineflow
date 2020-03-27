@@ -71,13 +71,11 @@ class IsActiveEntity extends Condition {
     }
 
     public function parseFromFormData(array $data): array {
-        $status = true;
         $errors = [];
         if ($data[1] === "") {
-            $status = false;
             $errors[] = ["@form.insufficient", 1];
         }
-        return ["status" => $status, "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Condition {

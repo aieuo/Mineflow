@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
@@ -19,13 +21,14 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\Player;
 
-class SendForm extends Action {
+class SendForm extends Action implements PlayerFlowItem {
+    use PlayerFlowItemTrait;
 
     protected $id = self::SEND_FORM;
 
     protected $name = "action.sendForm.name";
     protected $detail = "action.sendForm.detail";
-    protected $detailDefaultReplace = ["name"];
+    protected $detailDefaultReplace = ["player", "form"];
 
     protected $category = Categories::CATEGORY_ACTION_FORM;
 
@@ -35,8 +38,9 @@ class SendForm extends Action {
     /** @var string */
     private $formName;
 
-    public function __construct(string $name = "") {
-        $this->formName = $name;
+    public function __construct(string $playerName = "", string $formName = "") {
+        $this->playerVariableName = $playerName;
+        $this->formName = $formName;
     }
 
     public function setFormName(string $formName) {
@@ -53,7 +57,7 @@ class SendForm extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getFormName()]);
+        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
     public function execute(?Entity $target, Recipe $origin): bool {
@@ -65,9 +69,12 @@ class SendForm extends Action {
         if ($form === null) {
             throw new \UnexpectedValueException(Language::get("action.sendForm.notFound", [$this->getName()]));
         }
+
+        $player = $this->getPlayer($origin);
+        $this->throwIfInvalidPlayer($player);
+
         $form = clone $form;
-        /** @var Player $target */
-        $form->onReceive([$this, "onReceive"])->addArgs($form)->show($target);
+        $form->onReceive([$this, "onReceive"])->addArgs($form)->show($player);
         return true;
     }
 
@@ -112,27 +119,30 @@ class SendForm extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.sendForm.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getFormName()),
+                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
+                new Input("@action.sendForm.form.name", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getFormName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $name = $data[1];
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
+        if ($data[1] === "") $data[1] = "target";
+        if ($data[2] === "") {
+            $errors[] = ["@form.insufficient", 2];
         }
-        return ["status" => empty($errors), "contents" => [$name], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
-        $this->setFormName($content[0]);
+        if (!isset($content[1])) throw new \OutOfBoundsException();
+
+        $this->setPlayerVariableName($content[0]);
+        $this->setFormName($content[1]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getFormName()];
+        return [$this->getPlayerVariableName(), $this->getFormName()];
     }
 }

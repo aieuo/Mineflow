@@ -31,7 +31,7 @@ class TakeMoney extends TypeMoney {
         $this->throwIfInvalidNumber($amount, 1);
 
         $economy = Economy::getPlugin();
-        $economy->takeMoney($target->getName(), (int)$amount);
+        $economy->takeMoney($name, (int)$amount);
         return true;
     }
 }

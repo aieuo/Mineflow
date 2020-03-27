@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\base\EntityFlowItem;
+use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Language;
@@ -13,22 +15,25 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 
-class SetYaw extends Action {
+class SetYaw extends Action implements EntityFlowItem {
+    use EntityFlowItemTrait;
 
     protected $id = self::SET_YAW;
 
     protected $name = "action.setYaw.name";
     protected $detail = "action.setYaw.detail";
-    protected $detailDefaultReplace = ["yaw"];
+    protected $detailDefaultReplace = ["entity", "yaw"];
 
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $yaw;
 
-    public function __construct(string $pitch = "") {
+    public function __construct(string $name = "target", string $pitch = "") {
+        $this->entityVariableName = $name;
         $this->yaw = $pitch;
     }
 
@@ -42,12 +47,12 @@ class SetYaw extends Action {
     }
 
     public function isDataValid(): bool {
-        return $this->yaw !== "";
+        return $this->getEntityVariableName() !== "" and $this->yaw !== "";
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getYaw()]);
+        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getYaw()]);
     }
 
     public function execute(?Entity $target, Recipe $origin): bool {
@@ -56,6 +61,8 @@ class SetYaw extends Action {
         $yaw = $origin->replaceVariables($this->getYaw());
         $this->throwIfInvalidNumber($yaw);
 
+        $entity = $this->getEntity($origin);
+        $this->throwIfInvalidEntity($entity);
 
         $target->setRotation((float)$yaw, $target->getPitch());
         return true;
@@ -65,31 +72,32 @@ class SetYaw extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.setYaw.form.yaw", Language::get("form.example", ["180"]), $default[1] ?? $this->getYaw()),
+                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
+                new Input("@action.setYaw.form.yaw", Language::get("form.example", ["180"]), $default[2] ?? $this->getYaw()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $helper = Main::getVariableHelper();
-
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif (!$helper->containsVariable($data[1]) and !is_numeric($data[1])) {
-            $errors[] = ["@mineflow.contents.notNumber", 1];
+        if ($data[1] === "") $data[1] = "target";
+        if ($data[2] === "") {
+            $errors[] = ["@form.insufficient", 2];
+        } elseif (!Main::getVariableHelper()->containsVariable($data[2]) and !is_numeric($data[2])) {
+            $errors[] = ["@flowItem.error.notNumber", 2];
         }
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
+        if (!isset($content[1])) throw new \OutOfBoundsException();
 
-        $this->setYaw($content[0]);
+        $this->setEntityVariableName($content[0]);
+        $this->setYaw($content[1]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getYaw()];
+        return [$this->getEntityVariableName(), $this->getYaw()];
     }
 }

@@ -2,115 +2,63 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\flowItem\base\ItemFlowItem;
+use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
+use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\Item;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
 
-abstract class TypeItem extends Condition {
+abstract class TypeItem extends Condition implements PlayerFlowItem, ItemFlowItem {
+    use PlayerFlowItemTrait, ItemFlowItemTrait;
 
-    protected $detailDefaultReplace = ["id", "name", "count"];
+    protected $detailDefaultReplace = ["player", "item"];
 
     protected $category = Categories::CATEGORY_CONDITION_ITEM;
 
-    /** @var string */
-    private $itemId = "";
-    /** @var string */
-    private $itemCount = "";
-    /** @var string|null */
-    private $itemName = null;
-
-    public function __construct(Item $item = null) {
-        if ($item === null) return;
-        $this->itemId = $item->getId().":".$item->getDamage();
-        $this->itemCount = (string)$item->getCount();
-        $this->itemName = $item->hasCustomName() ? $item->getName() : null;
-    }
-
-    public function setItem(string $id, string $count, string $name = null): self {
-        $this->itemId = $id;
-        $this->itemCount = $count;
-        $this->itemName = $name;
-        return $this;
-    }
-
-    public function getItem(): array {
-        return [$this->itemId, $this->itemCount, $this->itemName];
+    public function __construct(string $name = "target", string $item = "item") {
+        $this->playerVariableName = $name;
+        $this->itemVariableName = $item;
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        $itemData = $this->getItem();
-        return Language::get($this->detail, [$itemData[0], $itemData[2], $itemData[1]]);
+        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName()]);
     }
 
     public function isDataValid(): bool {
-        return $this->itemId !== "" and $this->itemCount !== "";
+        return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "";
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
-        $item = $this->getItem();
-        $id = $item[0] ?? "";
-        $count = $item[1] ?? "";
-        $name = $item[2] ?? "";
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@condition.item.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $id),
-                new Input("@condition.item.form.count", Language::get("form.example", ["16"]), $default[2] ?? $count),
-                new Input("@condition.item.form.name", Language::get("form.example", ["aieuo"]), $default[3] ?? $name),
+                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
+                new Input("@flowItem.form.target.item", Language::get("form.example", ["item"]), $default[2] ?? $this->getItemVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
-    public function parseItem(string $id, int $count, string $name = ""): ?Item {
-        try {
-            $item = ItemFactory::fromString($id);
-        } catch (\InvalidArgumentException $e) {
-            return null;
-        }
-        $item->setCount($count);
-        if (!empty($name)) $item->setCustomName($name);
-        return $item;
-    }
-
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        $helper = Main::getVariableHelper();
-        if (!$helper->containsVariable($data[1])) {
-            try {
-                ItemFactory::fromString($data[1]);
-            } catch (\InvalidArgumentException $e) {
-                $errors[] = ["@condition.item.notFound", 1];
-            }
-        }
-        $containsVariable = $helper->containsVariable($data[2]);
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        } elseif (!$containsVariable and (int)$data[2] <= 0) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 2];
-        }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        if ($data[1] === "") $data[1] = "target";
+        if ($data[2] === "") $data[2] = "item";
+        return ["status" => true, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Condition {
         if (!isset($content[1])) throw new \OutOfBoundsException();
-        $this->setItem($content[0], $content[1], $content[2] ?? "");
+        $this->setPlayerVariableName($content[0]);
+        $this->setItemVariableName($content[1]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return $this->getItem();
+        return [$this->getPlayerVariableName(), $this->getItemVariableName()];
     }
 }

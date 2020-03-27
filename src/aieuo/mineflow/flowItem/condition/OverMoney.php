@@ -25,11 +25,12 @@ class OverMoney extends TypeMoney {
             throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
+        $name = $origin->replaceVariables($this->getPlayerName());
         $amount = $origin->replaceVariables($this->getAmount());
 
         $this->throwIfInvalidNumber($amount);
 
-        $myMoney = Economy::getPlugin()->getMoney($target->getName());
+        $myMoney = Economy::getPlugin()->getMoney($name);
         return $myMoney >= (int)$amount;
     }
 }

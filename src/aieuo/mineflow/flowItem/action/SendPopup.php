@@ -5,20 +5,22 @@ namespace aieuo\mineflow\flowItem\action;
 use pocketmine\entity\Entity;
 use aieuo\mineflow\recipe\Recipe;
 
-class SendPopup extends TypeMessage {
+class SendPopup extends TypePlayerMessage {
 
     protected $id = self::SEND_POPUP;
 
     protected $name = "action.sendPopup.name";
     protected $detail = "action.sendPopup.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(?Entity $target, Recipe $origin): bool {
         $this->throwIfCannotExecute($target);
 
         $message = $origin->replaceVariables($this->getMessage());
-        $target->sendPopup($message);
+
+        $player = $this->getPlayer($origin);
+        $this->throwIfInvalidPlayer($player);
+
+        $player->sendPopup($message);
         return true;
     }
 }

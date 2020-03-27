@@ -15,7 +15,6 @@ class AddMoney extends TypeMoney {
 
     protected $name = "action.addMoney.name";
     protected $detail = "action.addMoney.detail";
-    protected $detailDefaultReplace = ["money"];
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_NONE;
@@ -27,12 +26,13 @@ class AddMoney extends TypeMoney {
             throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
+        $name = $origin->replaceVariables($this->getPlayerName());
         $amount = $origin->replaceVariables($this->getAmount());
 
         $this->throwIfInvalidNumber($amount, 1);
 
         $economy = Economy::getPlugin();
-        $economy->addMoney($target->getName(), (int)$amount);
+        $economy->addMoney($name, (int)$amount);
         return true;
     }
 }

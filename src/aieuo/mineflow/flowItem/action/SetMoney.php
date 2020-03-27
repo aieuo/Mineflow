@@ -26,12 +26,13 @@ class SetMoney extends TypeMoney {
             throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
+        $name = $origin->replaceVariables($this->getPlayerName());
         $amount = $origin->replaceVariables($this->getAmount());
 
         $this->throwIfInvalidNumber($amount, 0);
 
         $economy = Economy::getPlugin();
-        $economy->setMoney($target->getName(), (int)$amount);
+        $economy->setMoney($name, (int)$amount);
         return true;
     }
 }

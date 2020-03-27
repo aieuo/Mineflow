@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\base\EntityFlowItem;
+use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\entity\Entity;
@@ -14,24 +16,27 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 
-class AddDamage extends Action {
+class AddDamage extends Action implements EntityFlowItem {
+    use EntityFlowItemTrait;
 
     protected $id = self::ADD_DAMAGE;
 
     protected $name = "action.addDamage.name";
     protected $detail = "action.addDamage.detail";
-    protected $detailDefaultReplace = ["damage"];
+    protected $detailDefaultReplace = ["entity", "damage"];
 
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $damage;
     /** @var int */
     private $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK;
 
-    public function __construct(string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
+    public function __construct(string $name = "", string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
+        $this->entityVariableName = $name;
         $this->damage = $damage;
         $this->cause = $cause;
     }
@@ -58,7 +63,7 @@ class AddDamage extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getDamage()]);
+        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getDamage()]);
     }
 
     public function execute(?Entity $target, Recipe $origin): bool {
@@ -69,8 +74,11 @@ class AddDamage extends Action {
 
         $this->throwIfInvalidNumber($damage, 1, null);
 
-        $event = new EntityDamageEvent($target, $cause, (float)$damage);
-        $target->attack($event);
+        $entity = $this->getEntity($origin);
+        $this->throwIfInvalidEntity($entity);
+
+        $event = new EntityDamageEvent($entity, $cause, (float)$damage);
+        $entity->attack($event);
         return true;
     }
 
@@ -78,31 +86,34 @@ class AddDamage extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.addDamage.form.damage", Language::get("form.example", ["10"]), $default[1] ?? $this->getDamage()),
+                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
+                new Input("@action.addDamage.form.damage", Language::get("form.example", ["10"]), $default[2] ?? $this->getDamage()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif (!$containsVariable and !is_numeric($data[1])) {
-            $errors[] = ["@flowItem.error.notNumber", 1];
-        } elseif (!$containsVariable and (float)$data[1] < 1) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 1];
+        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
+        if ($data[2] === "") {
+            $errors[] = ["@form.insufficient", 2];
+        } elseif (!$containsVariable and !is_numeric($data[2])) {
+            $errors[] = ["@flowItem.error.notNumber", 2];
+        } elseif (!$containsVariable and (float)$data[2] < 1) {
+            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 2];
         }
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
-        $this->setDamage($content[0]);
+        if (!isset($content[1])) throw new \OutOfBoundsException();
+        $this->setEntityVariableName($content[0]);
+        $this->setDamage($content[1]);
+        if (isset($content[2])) $this->setCause((int)$content[2]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getDamage()];
+        return [$this->getEntityVariableName(), $this->getDamage()];
     }
 }

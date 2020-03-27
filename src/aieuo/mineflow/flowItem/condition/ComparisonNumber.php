@@ -136,13 +136,13 @@ class ComparisonNumber extends Condition {
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
         } elseif (!$containsVariable and !is_numeric($data[1])) {
-            $errors[] = ["@mineflow.contents.notNumber", 1];
+            $errors[] = ["@flowItem.error.notNumber", 1];
         }
         $containsVariable = Main::getVariableHelper()->containsVariable($data[3]);
         if ($data[3] === "") {
             $errors[] = ["@form.insufficient", 3];
         } elseif (!$containsVariable and !is_numeric($data[3])) {
-            $errors[] = ["@mineflow.contents.notNumber", 3];
+            $errors[] = ["@flowItem.error.notNumber", 3];
         }
         return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }

@@ -3,8 +3,6 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use pocketmine\entity\Entity;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 
 class InHand extends TypeItem {
@@ -20,28 +18,19 @@ class InHand extends TypeItem {
     public function execute(?Entity $target, Recipe $origin): bool {
         $this->throwIfCannotExecute($target);
 
-        $item = $this->getItem();
-        $id = $origin->replaceVariables($item[0]);
-        $count = $origin->replaceVariables($item[1]);
-        $name = $origin->replaceVariables($item[2]);
+        $item = $this->getItem($origin);
+        $this->throwIfInvalidItem($item);
 
-        if (!$this->checkValidNumberDataAndAlert($count, 1, null, $target)) return null;
+        $player = $this->getPlayer($origin);
+        $this->throwIfInvalidPlayer($player);
 
-        $item = $this->parseItem($id, (int)$count, $name);
-        if ($item === null) {
-            $target->sendMessage(Language::get("flowItem.error", [$this->getName(), Language::get("condition.item.notFound")]));
-            return null;
-        }
-
-        /** @var Player $target */
-        $hand = $target->getInventory()->getItemInHand();
+        $hand = $player->getInventory()->getItemInHand();
         return ($hand->getId() === $item->getId()
             and $hand->getDamage() === $item->getDamage()
             and $hand->getCount() >= $item->getCount()
-            and (
-                !$item->hasCustomName()
-                or $hand->getName() === $item->getName()
-            )
+            and (!$item->hasCustomName() or $hand->getName() === $item->getName())
+            and (empty($item->getLore()) or $item->getLore() === $hand->getLore())
+            and (empty($item->getEnchantments()) or $item->getEnchantments() === $hand->getEnchantments())
         );
     }
 }

@@ -25,14 +25,15 @@ class TakeMoney extends TypeMoney {
             throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
+        $name = $origin->replaceVariables($this->getPlayerName());
         $amount = $origin->replaceVariables($this->getAmount());
 
-        if (!$this->checkValidNumberDataAndAlert($amount, 1, null, $target)) return null;
+        $this->throwIfInvalidNumber($amount, 1);
 
         $economy = Economy::getPlugin();
-        $myMoney = $economy->getMoney($target->getName());
+        $myMoney = $economy->getMoney($name);
         if ($myMoney >= $this->getAmount()) {
-            $economy->takeMoney($target->getName(), (int)$amount);
+            $economy->takeMoney($name, (int)$amount);
             return true;
         }
         return false;

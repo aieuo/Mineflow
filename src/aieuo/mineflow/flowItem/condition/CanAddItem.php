@@ -20,20 +20,12 @@ class CanAddItem extends TypeItem {
     public function execute(?Entity $target, Recipe $origin): bool {
         $this->throwIfCannotExecute($target);
 
-        $item = $this->getItem();
-        $id = $origin->replaceVariables($item[0]);
-        $count = $origin->replaceVariables($item[1]);
-        $name = $origin->replaceVariables($item[2]);
+        $item = $this->getItem($origin);
+        $this->throwIfInvalidItem($item);
 
-        if (!$this->checkValidNumberDataAndAlert($count, 1, null, $target)) return null;
+        $player = $this->getPlayer($origin);
+        $this->throwIfInvalidPlayer($player);
 
-        $item = $this->parseItem($id, (int)$count, $name);
-        if ($item === null) {
-            $target->sendMessage(Language::get("flowItem.error", [$this->getName(), Language::get("condition.item.notFound")]));
-            return null;
-        }
-
-        /** @var Player $target */
-        return $target->getInventory()->canAddItem($item);
+        return $player->getInventory()->canAddItem($item);
     }
 }
