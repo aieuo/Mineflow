@@ -33,7 +33,7 @@ trait PositionFlowItemTrait {
 
     public function throwIfInvalidPosition(?Position $player) {
         if (!($player instanceof Position)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.player"]]));
+            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.position"]]));
         }
     }
 }
