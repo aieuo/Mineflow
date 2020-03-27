@@ -28,6 +28,7 @@ class ActionFactory {
         /* player */
         self::register(new SetSleeping);
         self::register(new SetSitting);
+        self::register(new Kick);
         /* item */
         self::register(new CreateItemVariable);
         /* money */
@@ -43,6 +44,7 @@ class ActionFactory {
         self::register(new ElseAction);
         self::register(new RepeatAction);
         self::register(new WhileAction);
+        self::register(new Wait);
         self::register(new CallRecipe);
         self::register(new ExecuteRecipe);
         self::register(new ExecuteRecipeWithEntity);
@@ -51,6 +53,7 @@ class ActionFactory {
         self::register(new Calculate);
         self::register(new GetPi);
         self::register(new GetE);
+        self::register(new GenerateRandomNumber);
         /* variable */
         self::register(new AddVariable);
         self::register(new DeleteVariable);

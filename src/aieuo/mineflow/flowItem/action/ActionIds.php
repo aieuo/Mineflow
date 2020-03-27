@@ -25,6 +25,7 @@ interface ActionIds {
 
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";
+    const KICK = "kick";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
@@ -39,6 +40,7 @@ interface ActionIds {
     const CALCULATE = "calculate";
     const GET_PI = "getPi";
     const GET_E = "getE";
+    const GENERATE_RANDOM_NUMBER = "random";
 
     const ADD_VARIABLE = "addVariable";
     const DELETE_VARIABLE = "deleteVariable";
@@ -52,4 +54,5 @@ interface ActionIds {
     const ACTION_ELSE = "else";
     const ACTION_REPEAT = "repeat";
     const ACTION_WHILE = "while";
+    const ACTION_WAIT = "wait";
 }
