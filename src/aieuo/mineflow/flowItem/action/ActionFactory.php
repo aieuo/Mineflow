@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\economy\Economy;
+
 class ActionFactory {
     private static $list = [];
 
@@ -27,10 +29,12 @@ class ActionFactory {
         self::register(new SetSleeping);
         self::register(new SetSitting);
         /* money */
-        self::register(new AddMoney);
-        self::register(new TakeMoney);
-        self::register(new SetMoney);
-        self::register(new GetMoney);
+        if (Economy::isPluginLoaded()) {
+            self::register(new AddMoney);
+            self::register(new TakeMoney);
+            self::register(new SetMoney);
+            self::register(new GetMoney);
+        }
         /* script */
         self::register(new IFAction);
         self::register(new ElseifAction);
