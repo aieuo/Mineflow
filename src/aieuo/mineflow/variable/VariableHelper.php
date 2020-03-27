@@ -2,6 +2,10 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\flowItem\action\Action;
+use aieuo\mineflow\flowItem\action\ActionFactory;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\recipe\Recipe;
 use pocketmine\utils\Config;
 use aieuo\mineflow\Main;
 use pocketmine\Player;
@@ -110,6 +114,44 @@ class VariableHelper {
                     $name = $this->replaceVariables($name, $variables, $global);
                 }
                 $string = $this->replace($string, $name, $variables, $global);
+            }
+            if (--$limit < 0) break;
+        }
+        return $string;
+    }
+
+    public function replaceVariablesAndFunctions(string $string, array $variables, Recipe $origin, bool $global = true) {
+        $limit = 10;
+        while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
+            foreach ($matches[0] as $name) {
+                $name = substr($name, 1, -1);
+                if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
+                    $name = $this->replaceVariablesAndFunctions($name, $variables, $origin, $global);
+                }
+                if (preg_match("/([^()]+)\(([^()]*)\)$/", $name, $matches1)) {
+                    $action = ActionFactory::get($matches1[1]);
+                    if ($action === null) {
+                        $string = str_replace("{".$matches1[0]."}", "§cUnknown action name", $string);
+                    } else {
+                        $class = get_class($action);
+                        /** @var Action $newAction */
+                        $newAction = new $class(...array_map(function (string $argument) use ($variables, $origin, $global) {
+                            $argument = trim($argument);
+                            if (strpos($argument, "{") !== false and strpos($argument, "}") !== false) {
+                                $argument = $this->replaceVariablesAndFunctions($argument, $variables, $origin, $global);
+                            }
+                            return $argument;
+                        }, explode(",", $matches1[2])));
+                        $newAction->execute(null, $origin);
+                        $result = "";
+                        if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE) {
+                            $result = $newAction->getResultName();
+                        }
+                        $string = str_replace("{".$matches1[0]."}", $result, $string);
+                    }
+                } else {
+                    $string = $this->replace($string, $name, $variables, $global);
+                }
             }
             if (--$limit < 0) break;
         }

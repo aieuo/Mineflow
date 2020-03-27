@@ -262,7 +262,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function replaceVariables(string $text) {
-        return Main::getVariableHelper()->replaceVariables($text, $this->variables);
+        return Main::getVariableHelper()->replaceVariablesAndFunctions($text, $this->variables, $this);
     }
 
     public function setSourceRecipe(?Recipe $recipe) {
