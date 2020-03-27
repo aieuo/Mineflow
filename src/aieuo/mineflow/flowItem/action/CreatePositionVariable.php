@@ -54,7 +54,7 @@ class CreatePositionVariable extends Action {
         $this->variableName = $variableName;
     }
 
-    public function getVariableName(): string {
+    public function getResultName(): string {
         return $this->variableName;
     }
 
@@ -96,13 +96,13 @@ class CreatePositionVariable extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()]);
+        return Language::get($this->detail, [$this->getResultName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()]);
     }
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
+        $name = $origin->replaceVariables($this->getResultName());
         $x = $origin->replaceVariables($this->getX());
         $y = $origin->replaceVariables($this->getY());
         $z = $origin->replaceVariables($this->getZ());
@@ -131,7 +131,7 @@ class CreatePositionVariable extends Action {
                 new Input("@action.createPositionVariable.form.y", Language::get("form.example", ["100"]), $default[2] ?? $this->getY()),
                 new Input("@action.createPositionVariable.form.z", Language::get("form.example", ["16"]), $default[3] ?? $this->getZ()),
                 new Input("@action.createPositionVariable.form.level", Language::get("form.example", ["world"]), $default[4] ?? $this->getLevel()),
-                new Input("@action.createPositionVariable.form.result", Language::get("form.example", ["pos"]), $default[5] ?? $this->getVariableName()),
+                new Input("@action.createPositionVariable.form.result", Language::get("form.example", ["pos"]), $default[5] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -162,6 +162,6 @@ class CreatePositionVariable extends Action {
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()];
+        return [$this->getResultName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()];
     }
 }

@@ -45,7 +45,7 @@ class CreateItemVariable extends Action {
         $this->variableName = $variableName;
     }
 
-    public function getVariableName(): string {
+    public function getResultName(): string {
         return $this->variableName;
     }
 
@@ -71,13 +71,13 @@ class CreateItemVariable extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getItemId(), $this->getItemCount()]);
+        return Language::get($this->detail, [$this->getResultName(), $this->getItemId(), $this->getItemCount()]);
     }
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
+        $name = $origin->replaceVariables($this->getResultName());
         $id = $origin->replaceVariables($this->getItemId());
         $count = $origin->replaceVariables($this->getItemCount());
         try {
@@ -88,6 +88,8 @@ class CreateItemVariable extends Action {
         if (!empty($count)) {
             $this->throwIfInvalidNumber($count, 0);
             $item->setCount((int)$count);
+        } else {
+            $item->setCount($item->getMaxStackSize());
         }
 
         $variable = new ItemObjectVariable($item, $name);
@@ -101,7 +103,7 @@ class CreateItemVariable extends Action {
                 new Label($this->getDescription()),
                 new Input("@action.createItemVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getItemId()),
                 new Input("@action.createItemVariable.form.count", Language::get("form.example", ["64"]), $default[2] ?? $this->getItemCount()),
-                new Input("@action.createItemVariable.form.result", Language::get("form.example", ["item"]), $default[3] ?? $this->getVariableName()),
+                new Input("@action.createItemVariable.form.result", Language::get("form.example", ["item"]), $default[3] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -117,7 +119,7 @@ class CreateItemVariable extends Action {
             $errors[] = ["@flowItem.error.notNumber", 2];
         }
         if ($data[3] === "") $data[3] = "item";
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[3], $data[1], $data[2]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
@@ -129,6 +131,6 @@ class CreateItemVariable extends Action {
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getItemId(), $this->getItemCount()];
+        return [$this->getResultName(), $this->getItemId(), $this->getItemCount()];
     }
 }
