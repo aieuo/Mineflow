@@ -48,7 +48,7 @@ class FormManager {
     public function getForm(string $name): ?Form {
         $data = $this->config->get($name);
         if ($data["form"] instanceof Form) return $data["form"];
-        if ($data === false) return null;;
+        if ($data === false) return null;
         return Form::createFromArray($data["form"], $data["name"]);
     }
 
