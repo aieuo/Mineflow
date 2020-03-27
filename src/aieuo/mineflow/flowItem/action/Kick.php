@@ -33,7 +33,7 @@ class Kick extends Action implements PlayerFlowItem {
     /** @var bool */
     private $isAdmin = false;
 
-    public function __construct(string $name = "", string $reason = "", bool $isAdmin = false) {
+    public function __construct(string $name = "target", string $reason = "", bool $isAdmin = false) {
         $this->playerVariableName = $name;
         $this->reason = $reason;
         $this->isAdmin = $isAdmin;
