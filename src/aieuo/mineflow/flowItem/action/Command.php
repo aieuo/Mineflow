@@ -11,59 +11,57 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
+use pocketmine\Server;
 
-class SetFood extends Action implements PlayerFlowItem {
+class Command extends Action implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SET_FOOD;
+    protected $id = self::COMMAND;
 
-    protected $name = "action.setFood.name";
-    protected $detail = "action.setFood.detail";
-    protected $detailDefaultReplace = ["player", "food"];
+    protected $name = "action.command.name";
+    protected $detail = "action.command.detail";
+    protected $detailDefaultReplace = ["player", "command"];
 
-    protected $category = Categories::CATEGORY_ACTION_PLAYER;
+    protected $category = Categories::CATEGORY_ACTION_COMMAND;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
-    private $food;
+    private $command;
 
-    public function __construct(string $name = "target", string $health = "") {
+    public function __construct(string $name = "target", string $command = "") {
         $this->playerVariableName = $name;
-        $this->food = $health;
+        $this->command = $command;
     }
 
-    public function setFood(string $health) {
-        $this->food = $health;
+    public function setCommand(string $health) {
+        $this->command = $health;
     }
 
-    public function getFood(): string {
-        return $this->food;
+    public function getCommand(): string {
+        return $this->command;
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->food !== "";
+        return $this->getPlayerVariableName() !== "" and $this->command !== "";
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFood()]);
+        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getCommand()]);
     }
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
-        $health = $origin->replaceVariables($this->getFood());
+        $command = $origin->replaceVariables($this->getCommand());
 
-        $this->throwIfInvalidNumber($health, 0, 20);
+        $player = $this->getPlayer($origin);
+        $this->throwIfInvalidPlayer($player);
 
-        $entity = $this->getPlayer($origin);
-        $this->throwIfInvalidPlayer($entity);
-
-        $entity->setFood((float)$health);
+        Server::getInstance()->dispatchCommand($player, $command);
         return true;
     }
 
@@ -72,34 +70,26 @@ class SetFood extends Action implements PlayerFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.setFood.form.food", Language::get("form.example", ["20"]), $default[2] ?? $this->getFood()),
+                new Input("@action.command.form.command", Language::get("form.example", ["command"]), $default[2] ?? $this->getCommand()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        } elseif (!$containsVariable and (float)$data[2] < 1) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 2];
-        } elseif (!$containsVariable and (float)$data[2] > 20) {
-            $errors[] = [Language::get("flowItem.error.overValue", [20]), 2];
-        }
+        if ($data[1] === "") $data[1] = "target";
+        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
         if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
-        $this->setFood($content[1]);
+        $this->setCommand($content[1]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getFood()];
+        return [$this->getPlayerVariableName(), $this->getCommand()];
     }
 }

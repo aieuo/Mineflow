@@ -28,6 +28,7 @@ class ActionFactory {
         self::register(new UnsetImmobile);
         self::register(new SetHealth);
         self::register(new SetMaxHealth);
+        self::register(new SetScale);
         /* player */
         self::register(new SetSleeping);
         self::register(new SetSitting);
@@ -72,6 +73,9 @@ class ActionFactory {
         self::register(new CreatePositionVariable);
         /* form */
         self::register(new SendForm);
+        /* command */
+        self::register(new Command);
+        self::register(new CommandConsole);
     }
 
     /**

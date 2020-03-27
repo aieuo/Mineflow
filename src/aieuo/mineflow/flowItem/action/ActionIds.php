@@ -25,6 +25,7 @@ interface ActionIds {
     const SET_HEALTH = "setHealth";
     const SET_MAX_HEALTH = "setMaxHealth";
     const SET_NAME = "setName";
+    const SET_SCALE = "setScale";
 
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";
@@ -42,6 +43,9 @@ interface ActionIds {
     const REMOVE_ITEM_ALL = "removeItemAll";
     const SET_ITEM = "setItem";
     const SET_ITEM_IN_HAND = "setItemInHand";
+
+    const COMMAND = "command";
+    const COMMAND_CONSOLE = "commandConsole";
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";

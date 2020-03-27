@@ -14,6 +14,7 @@ class Categories {
     const CATEGORY_ACTION_VARIABLE = 7;
     const CATEGORY_ACTION_FORM = 8;
     const CATEGORY_ACTION_ITEM = 9;
+    const CATEGORY_ACTION_COMMAND = 10;
 
     const CATEGORY_CONDITION_COMMON = 1000;
     const CATEGORY_CONDITION_SCRIPT = 1001;
@@ -29,11 +30,12 @@ class Categories {
             self::CATEGORY_ACTION_ENTITY => "entity",
             self::CATEGORY_ACTION_PLAYER => "player",
             self::CATEGORY_ACTION_ITEM => "item",
+            self::CATEGORY_ACTION_COMMAND => "command",
             self::CATEGORY_ACTION_SCRIPT => "script",
-            self::CATEGORY_ACTION_MONEY => "money",
             self::CATEGORY_ACTION_CALCULATION => "calculation",
             self::CATEGORY_ACTION_VARIABLE => "variable",
             self::CATEGORY_ACTION_FORM => "form",
+            self::CATEGORY_ACTION_MONEY => "money",
         ];
     }
 
