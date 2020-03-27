@@ -6,7 +6,7 @@ use aieuo\mineflow\recipe\Recipe;
 
 class RemoveItemAll extends TypeItem {
 
-    protected $id = self::REMOVE_ITEM;
+    protected $id = self::REMOVE_ITEM_ALL;
 
     protected $name = "action.removeItemAll.name";
     protected $detail = "action.removeItemAll.detail";
