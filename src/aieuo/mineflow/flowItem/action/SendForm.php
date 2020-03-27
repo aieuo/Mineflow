@@ -30,6 +30,7 @@ class SendForm extends Action {
     protected $category = Categories::CATEGORY_ACTION_FORM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $formName;
@@ -55,15 +56,14 @@ class SendForm extends Action {
         return Language::get($this->detail, [$this->getFormName()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $name = $origin->replaceVariables($this->getFormName());
         $manager = Main::getFormManager();
         $form = $manager->getForm($name);
         if ($form === null) {
-            Logger::warning(Language::get("action.sendForm.notFound", [$this->getName()]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("action.sendForm.notFound", [$this->getName()]));
         }
         $form = clone $form;
         /** @var Player $target */

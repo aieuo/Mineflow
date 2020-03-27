@@ -25,6 +25,7 @@ class IsActiveEntity extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $entityId = "";
@@ -51,14 +52,11 @@ class IsActiveEntity extends Condition {
         return Language::get($this->detail, [$this->getEntityId()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $id = $origin->replaceVariables($this->getEntityId());
-        if (!is_numeric($id)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]), $target);
-            return null;
-        }
+        $this->throwIfInvalidNumber($id);
 
         return EntityHolder::isActive((int)$id);
     }

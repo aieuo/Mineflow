@@ -28,6 +28,7 @@ class GetEntity extends Action {
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_VARIABLE_ENTITY;
 
     /** @var string */
     private $entityId = "";
@@ -66,13 +67,13 @@ class GetEntity extends Action {
         return Language::get($this->detail, [$this->getKey()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $id = $origin->replaceVariables($this->getKey());
         $resultName = $origin->replaceVariables($this->getResultName());
 
-        if (!$this->checkValidNumberDataAndAlert($id, 0, null, $target)) return null;
+        $this->throwIfInvalidNumber($id, 0);
 
         $entity = EntityHolder::findEntity((int)$id);
         if ($entity instanceof Player) {
@@ -86,7 +87,7 @@ class GetEntity extends Action {
             return true;
         }
         $origin->addVariable(new MapVariable([], $resultName)); // TODO: .
-        return true;
+        return false;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

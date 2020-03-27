@@ -26,6 +26,7 @@ class FourArithmeticOperations extends Action {
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_VARIABLE_NUMBER;
 
     const ADDITION = 0;
     const SUBTRACTION = 1;
@@ -91,8 +92,8 @@ class FourArithmeticOperations extends Action {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $value1 = $origin->replaceVariables($this->getValue1());
         $value2 = $origin->replaceVariables($this->getValue2());
@@ -100,8 +101,7 @@ class FourArithmeticOperations extends Action {
         $operator = $this->getOperator();
 
         if (!is_numeric($value1) or !is_numeric($value2)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
 
         switch ($operator) {
@@ -122,7 +122,7 @@ class FourArithmeticOperations extends Action {
                 $result = (float)$value1 / (float)$value2;
                 break;
             default:
-                return false;
+                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
         }
 
         $origin->addVariable(new NumberVariable($result, $resultName));

@@ -14,9 +14,10 @@ class SendMessageToOp extends TypeMessage {
     protected $detail = "action.sendMessageToOp.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $message = $origin->replaceVariables($this->getMessage());
         $players = Server::getInstance()->getOnlinePlayers();

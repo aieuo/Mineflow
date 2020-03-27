@@ -5,8 +5,6 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Logger;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -49,19 +47,15 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         $matched = true;
         foreach ($this->conditions as $condition) {
-            $result = $condition->execute($target, $origin);
-
-            if ($result === null) return null;
-            if (!$result) $matched = false;
+            if (!$condition->execute($target, $origin)) $matched = false;
         }
         if (!$matched) return false;
 
         foreach ($this->actions as $action) {
-            $result = $action->execute($target, $origin);
-            if ($result === null) return null;
+            $action->execute($target, $origin);
         }
         return true;
     }

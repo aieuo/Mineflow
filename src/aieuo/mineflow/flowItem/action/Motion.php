@@ -62,16 +62,15 @@ class Motion extends Action {
         return Language::get($this->detail, $this->getPosition());
     }
 
-    public function execute(?Entity $target, ?Recipe $origin = null): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, ?Recipe $origin = null): bool {
+        $this->throwIfCannotExecute($target);
 
         $positions = array_map(function ($value) use ($origin) {
             return $origin->replaceVariables($value);
         }, $this->getPosition());
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]));
         }
 
         $position = new Vector3((float)$positions[0], (float)$positions[1], (float)$positions[2]);

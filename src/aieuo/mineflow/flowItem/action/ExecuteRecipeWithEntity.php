@@ -51,27 +51,24 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
         return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityId()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $name = $origin->replaceVariables($this->getRecipeName());
         $id = $origin->replaceVariables($this->getEntityId());
 
         $recipe = Main::getRecipeManager()->get($name);
         if ($recipe === null) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.executeRecipe.notFound"]]));
         }
 
         if (!is_numeric($id)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
 
         $entity = EntityHolder::findEntity((int)$id);
         if (!($entity instanceof Entity)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipeWithEntity.notFound")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.executeRecipeWithEntity.notFound"]]));
         }
 
         $recipe = clone $recipe;

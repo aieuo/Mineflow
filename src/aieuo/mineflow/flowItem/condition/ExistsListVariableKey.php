@@ -64,8 +64,8 @@ class ExistsListVariableKey extends Condition {
         return Language::get($this->detail, [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $helper = Main::getVariableHelper();
         $name = $origin->replaceVariables($this->getVariableName());

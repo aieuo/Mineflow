@@ -25,22 +25,20 @@ class ElseifAction extends IFAction {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         $lastResult = $origin->getLastActionResult();
-        if ($lastResult === null) return null;
+        if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return false;
 
         $matched = true;
         foreach ($this->getConditions() as $condition) {
             $result = $condition->execute($target, $origin);
-            if ($result === null) return null;
             if (!$result) $matched = false;
         }
         if (!$matched) return false;
 
         foreach ($this->getActions() as $action) {
-            $result = $action->execute($target, $origin);
-            if ($result === null) return null;
+            $action->execute($target, $origin);
         }
         return true;
     }

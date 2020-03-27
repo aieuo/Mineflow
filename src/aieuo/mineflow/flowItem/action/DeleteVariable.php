@@ -24,6 +24,7 @@ class DeleteVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $variableName;
@@ -52,8 +53,8 @@ class DeleteVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $name = $origin->replaceVariables($this->getVariableName());
         if (!$this->isLocal) {

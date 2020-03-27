@@ -25,6 +25,7 @@ class Calculate extends Action {
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_VARIABLE_NUMBER;
 
     const SQUARE = 0;
     const SQUARE_ROOT = 1;
@@ -89,14 +90,14 @@ class Calculate extends Action {
         return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()]]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $value = $origin->replaceVariables($this->getValue());
         $resultName = $origin->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        if (!$this->checkValidNumberDataAndAlert($value, null, null, $target)) return null;
+        $this->throwIfInvalidNumber($value);
 
         $value = (float)$value;
         switch ($operator) {
@@ -137,7 +138,7 @@ class Calculate extends Action {
                 $result = atan($value);
                 break;
             default:
-                return false;
+                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
         }
 
         $origin->addVariable(new NumberVariable($result, $resultName));

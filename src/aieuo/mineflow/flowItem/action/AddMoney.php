@@ -18,18 +18,18 @@ class AddMoney extends TypeMoney {
     protected $detailDefaultReplace = ["money"];
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target, true)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         if (!Economy::isPluginLoaded()) {
-            $target->sendMessage(TextFormat::RED.Language::get("economy.notfound"));
-            return null;
+            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $amount = $origin->replaceVariables($this->getAmount());
 
-        if (!$this->checkValidNumberDataAndAlert($amount, 1, null, $target)) return null;
+        $this->throwIfInvalidNumber($amount, 1);
 
         $economy = Economy::getPlugin();
         $economy->addMoney($target->getName(), (int)$amount);

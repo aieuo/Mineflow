@@ -26,6 +26,7 @@ class AddListVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $variableName;
@@ -65,14 +66,14 @@ class AddListVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getVariableValue()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $helper = Main::getVariableHelper();
         $name = $origin->replaceVariables($this->getVariableName());
         $value = $origin->replaceVariables($this->getVariableValue());
 
-        if ($value === "" ) {
+        if ($value === "") {
             if ($this->isLocal) $origin->addVariable(new ListVariable([], $name));
             else $helper->add(new ListVariable([], $name));
             return true;
@@ -82,10 +83,12 @@ class AddListVariable extends Action {
         $addVariable = Variable::create($helper->currentType($value), "", $type);
         if ($this->isLocal) {
             $variable = $origin->getVariables()[$name] ?? new ListVariable([], $name);
+            if (!($variable instanceof ListVariable)) return false;
             $variable->addValue($addVariable);
             $origin->addVariable($variable);
         } else {
             $variable = $helper->get($name) ?? new ListVariable([], $name);
+            if (!($variable instanceof ListVariable)) return false;
             $variable->addValue($addVariable);
             $helper->add($variable);
         }

@@ -20,6 +20,7 @@ class EventCancel extends Action {
     protected $category = Categories::CATEGORY_ACTION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var Event */
     private $event;
@@ -32,13 +33,12 @@ class EventCancel extends Action {
         $this->event = $event;
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $event = $this->getEvent();
         if (!($event instanceof Cancellable)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), ["action.eventCancel.notCancelable"]]), $target);
-            return false;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.eventCancel.notCancelable"]]));
         }
         $event->setCancelled();
         return true;

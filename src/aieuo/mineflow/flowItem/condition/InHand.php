@@ -15,9 +15,10 @@ class InHand extends TypeItem {
     protected $detail = "condition.inHand.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $item = $this->getItem();
         $id = $origin->replaceVariables($item[0]);

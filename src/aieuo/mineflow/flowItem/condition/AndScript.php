@@ -23,6 +23,7 @@ class AndScript extends Condition implements ConditionContainer {
     protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     public function getDetail(): string {
         $details = ["----------and-----------"];
@@ -33,11 +34,10 @@ class AndScript extends Condition implements ConditionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         $matched = true;
         foreach ($this->conditions as $condition) {
             $result = $condition->execute($target, $origin);
-            if ($result === null) return null;
             if (!$result) $matched = false;
         }
         return $matched;

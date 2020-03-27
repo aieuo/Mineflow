@@ -21,11 +21,10 @@ class ORScript extends AndScript {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         $matched = false;
         foreach ($this->getConditions() as $condition) {
             $result = $condition->execute($target, $origin);
-            if ($result === null) return null;
             if ($result) $matched = true;
         }
         return $matched;

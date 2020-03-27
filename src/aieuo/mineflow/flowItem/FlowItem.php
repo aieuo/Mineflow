@@ -32,6 +32,8 @@ abstract class FlowItem implements \JsonSerializable {
 
     /** @var string */
     protected $targetRequired;
+    /** @var string */
+    protected $returnValueType;
 
     public function getId(): string {
         return $this->id;
@@ -66,6 +68,10 @@ abstract class FlowItem implements \JsonSerializable {
         return $this->targetRequired;
     }
 
+    public function getReturnValueType(): string {
+        return $this->returnValueType;
+    }
+
     public function jsonSerialize(): array {
         $data = [
             "type" => $this->type,
@@ -90,39 +96,31 @@ abstract class FlowItem implements \JsonSerializable {
         return true;
     }
 
-    public function canExecute(?Entity $target, bool $alert = false): bool {
-        if (!$this->isValidTarget($target)) {
-            if ($alert) {
-                $message = Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.".$this->targetRequired]]);
-                Logger::warning($message, $target);
-            }
-            return false;
-        }
+    public function throwIfCannotExecute(?Entity $target) {
+//        if (!$this->isValidTarget($target)) {
+//            if ($alert) {
+//                $message = Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.".$this->targetRequired]]);
+//                Logger::warning($message, $target);
+//            }
+//            return false;
+//        }
         if (!$this->isDataValid()) {
-            if ($alert) {
-                $message = Language::get("invalid.contents", [$this->getName()]);
-                Logger::warning($message, $target);
-            }
-            return false;
+            $message = Language::get("invalid.contents", [$this->getName()]);
+            throw new \UnexpectedValueException($message);
         }
-        return true;
     }
 
-    public function checkValidNumberDataAndAlert(string $number, ?float $min = null, ?float $max = null, ?Entity $target = null): bool {
+    public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null) {
         if (!is_numeric($number)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]), $target);
-            return false;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
         $number = (float)$number;
         if ($min !== null and $number < $min) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.lessValue", [$min]]]), $target);
-            return false;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.lessValue", [$min]]]));
         }
         if ($max !== null and $number > $max) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.overValue", [$max]]]), $target);
-            return false;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.overValue", [$max]]]));
         }
-        return true;
     }
 
     /**
@@ -145,9 +143,10 @@ abstract class FlowItem implements \JsonSerializable {
     /**
      * @param Entity|null $target
      * @param Recipe $origin
-     * @return boolean|null
+     * @return boolean
+     * @throws \UnexpectedValueException
      */
-    abstract public function execute(?Entity $target, Recipe $origin): ?bool;
+    abstract public function execute(?Entity $target, Recipe $origin): bool;
 
     public function hasCustomMenu(): bool {
         return false;
@@ -155,4 +154,12 @@ abstract class FlowItem implements \JsonSerializable {
 
     public function sendCustomMenu(Player $player, array $messages = []): void {
     }
+
+
+
+    const RETURN_NONE = "none";
+    const RETURN_VARIABLE_NUMBER = "numberVariable";
+    const RETURN_VARIABLE_ENTITY = "entityVariable";
+    const RETURN_VARIABLE_ITEM = "itemVariable";
+    const RETURN_VARIABLE_POSITION = "positionVariable";
 }

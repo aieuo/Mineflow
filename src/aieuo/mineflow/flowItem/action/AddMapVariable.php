@@ -26,6 +26,7 @@ class AddMapVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $variableName;
@@ -76,15 +77,15 @@ class AddMapVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey(), $this->getVariableValue()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $helper = Main::getVariableHelper();
         $name = $origin->replaceVariables($this->getVariableName());
         $key = $origin->replaceVariables($this->getKey());
         $value = $origin->replaceVariables($this->getVariableValue());
 
-        if ($key === "" and $value === "" and $this->isLocal) {
+        if ($key === "" and $value === "") {
             if ($this->isLocal) $origin->addVariable(new MapVariable([], $name));
             else $helper->add(new MapVariable([], $name));
             return true;
@@ -94,10 +95,12 @@ class AddMapVariable extends Action {
         $addVariable = Variable::create($helper->currentType($value), "", $type);
         if ($this->isLocal) {
             $variable = $origin->getVariables()[$name] ?? new MapVariable([], $name);
+            if (!($variable instanceof MapVariable)) return false;
             $variable->addValue($addVariable);
             $origin->addVariable($variable);
         } else {
             $variable = $helper->get($name) ?? new MapVariable([], $name);
+            if (!($variable instanceof MapVariable)) return false;
             $variable->addValue($addVariable);
             $helper->add($variable);
         }

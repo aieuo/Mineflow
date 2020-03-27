@@ -4,7 +4,6 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\entity\Entity;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -26,6 +25,7 @@ class ComparisonNumber extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     const EQUAL = 0;
     const NOT_EQUAL = 1;
@@ -81,20 +81,15 @@ class ComparisonNumber extends Condition {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $value1 = $origin->replaceVariables($this->getValue1());
         $value2 = $origin->replaceVariables($this->getValue2());
         $operator = $origin->replaceVariables($this->getOperator());
 
-        if (!is_numeric($value1)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]), $target);
-            return null;
-        }
-        if (!is_numeric($value2)) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]), $target);
-            return null;
+        if (!is_numeric($value1) or !is_numeric($value2)) {
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
 
         $value1 = (float)$value1;
@@ -119,7 +114,7 @@ class ComparisonNumber extends Condition {
                 $result = $value1 <= $value2;
                 break;
             default:
-                return null;
+                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
         }
         return $result;
     }

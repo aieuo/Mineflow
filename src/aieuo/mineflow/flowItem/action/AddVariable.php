@@ -28,6 +28,7 @@ class AddVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $variableName;
@@ -73,8 +74,8 @@ class AddVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $name = $origin->replaceVariables($this->getVariableName());
         $value = $origin->replaceVariables($this->getVariableValue());
@@ -84,7 +85,7 @@ class AddVariable extends Action {
                 $variable = new StringVariable($value, $name);
                 break;
             case Variable::NUMBER:
-                if (!$this->checkValidNumberDataAndAlert($value, null, null, $target)) return null;
+                $this->throwIfInvalidNumber($value);
                 $variable = new NumberVariable((float)$value, $name);
                 break;
             default:

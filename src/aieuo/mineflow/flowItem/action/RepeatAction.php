@@ -25,6 +25,7 @@ class RepeatAction extends Action implements ActionContainer {
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var int */
     private $repeatCount = 1;
@@ -56,12 +57,11 @@ class RepeatAction extends Action implements ActionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         for ($i=0; $i<$this->repeatCount; $i++) {
             $origin->addVariable(new NumberVariable($i, "i"));
             foreach ($this->actions as $action) {
-                $result = $action->execute($target, $origin);
-                if ($result === null) return null;
+                $action->execute($target, $origin);
             }
         }
         return true;

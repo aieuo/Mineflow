@@ -4,7 +4,6 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\entity\Entity;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
@@ -20,7 +19,7 @@ class CallRecipe extends ExecuteRecipe {
     protected $name = "action.callRecipe.name";
     protected $detail = "action.callRecipe.detail";
 
-    /** @var array */
+    /** @var string[] */
     private $args = [];
 
     public function __construct(string $name = "", $args = []) {
@@ -36,17 +35,13 @@ class CallRecipe extends ExecuteRecipe {
         return $this->args;
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->isDataValid()) {
-            Logger::warning(Language::get("invalid.contents", [$this->getName()]), $target);
-            return null;
-        }
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $name = $origin->replaceVariables($this->getRecipeName());
         $recipe = Main::getRecipeManager()->get($name);
         if ($recipe === null) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
         }
 
         $recipe = clone $recipe;

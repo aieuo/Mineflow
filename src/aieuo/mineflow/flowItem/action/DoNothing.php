@@ -16,8 +16,9 @@ class DoNothing extends Action {
     protected $category = Categories::CATEGORY_ACTION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         return true;
     }
 

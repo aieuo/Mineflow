@@ -10,15 +10,15 @@ class CheckNothing extends Condition {
 
     protected $id = self::CHECK_NOTHING;
 
-    protected $name = "@condition.noCheck.name";
-    protected $description = "@condition.noCheck.description";
-    protected $detail = "@condition.noCheck.detail";
+    protected $name = "condition.noCheck.name";
+    protected $detail = "condition.noCheck.detail";
 
     protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         return true;
     }
 

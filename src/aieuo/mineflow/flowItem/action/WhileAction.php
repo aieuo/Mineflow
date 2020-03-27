@@ -82,7 +82,7 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         $script = clone $this;
         $origin->wait();
         $handler = Main::getInstance()->getScheduler()->scheduleRepeatingTask(new WhileActionTask($script, $target, $origin), $this->interval);
@@ -103,8 +103,7 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
         }
 
         foreach ($this->actions as $action) {
-            $result = $action->execute($target, $origin);
-            if ($result === null) return null;
+            $action->execute($target, $origin);
         }
         $this->loopCount ++;
     }

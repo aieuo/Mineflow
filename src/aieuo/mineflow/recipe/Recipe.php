@@ -173,7 +173,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return true;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, array $args = [], int $start = 0): ?bool {
+    public function execute(?Entity $target, ?Event $event = null, array $args = [], int $start = 0): bool {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {
@@ -193,7 +193,12 @@ class Recipe implements \JsonSerializable, ActionContainer {
         for ($i=$start; $i<$count; $i++) {
             $action = $actions[$i];
             if ($action instanceof EventCancel) $action->setEvent($event);
-            $this->lastResult = $action->execute($target, $this);
+            try {
+                $this->lastResult = $action->execute($target, $this);
+            } catch (\UnexpectedValueException $e) {
+                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $target);
+                $this->lastResult = null;
+            }
 
             if ($this->lastResult === null) {
                 Logger::warning(Language::get("recipe.execute.failed", [$this->getName(), $action->getName()]), $target);

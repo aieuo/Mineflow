@@ -61,13 +61,13 @@ class AddDamage extends Action {
         return Language::get($this->detail, [$this->getDamage()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target, true)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $damage = $origin->replaceVariables($this->getDamage());
         $cause = $this->getCause();
 
-        if (!$this->checkValidNumberDataAndAlert($damage, 1, null, $target)) return null;
+        $this->throwIfInvalidNumber($damage, 1, null);
 
         $event = new EntityDamageEvent($target, $cause, (float)$damage);
         $target->attack($event);

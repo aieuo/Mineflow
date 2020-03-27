@@ -16,18 +16,18 @@ class OverMoney extends TypeMoney {
     protected $detail = "condition.overMoney.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->checkValidNumberDataAndAlert($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfInvalidNumber($target);
 
         if (!Economy::isPluginLoaded()) {
-            $target->sendMessage(TextFormat::RED.Language::get("economy.notfound"));
-            return null;
+            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $amount = $origin->replaceVariables($this->getAmount());
 
-        if (!$this->checkValidNumberDataAndAlert($amount, null, null, $target)) return null;
+        $this->throwIfInvalidNumber($amount);
 
         $myMoney = Economy::getPlugin()->getMoney($target->getName());
         return $myMoney >= (int)$amount;

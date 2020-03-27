@@ -4,7 +4,6 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\entity\Entity;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -25,6 +24,7 @@ class ExecuteRecipe extends Action {
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $recipeName;
@@ -51,15 +51,14 @@ class ExecuteRecipe extends Action {
         return Language::get($this->detail, [$this->getRecipeName()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $name = $origin->replaceVariables($this->getRecipeName());
 
         $recipe = Main::getRecipeManager()->get($name);
         if ($recipe === null) {
-            Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]), $target);
-            return null;
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
         }
 
         $recipe = clone $recipe;

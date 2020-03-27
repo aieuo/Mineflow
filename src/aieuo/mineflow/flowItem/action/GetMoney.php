@@ -54,12 +54,11 @@ class GetMoney extends Action {
         return Language::get($this->detail, [$this->getResultName()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         if (!Economy::isPluginLoaded()) {
-            Logger::warning(TextFormat::RED.Language::get("economy.notfound"), $target);
-            return null;
+            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $resultName = $origin->replaceVariables($this->getResultName());

@@ -78,8 +78,8 @@ class SendTitle extends Action {
         return Language::get($this->detail, [$this->getTitle(), $this->getSubTitle()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $title = $origin->replaceVariables($this->getTitle());
         $subtitle = $origin->replaceVariables($this->getSubTitle());

@@ -50,12 +50,12 @@ class SetYaw extends Action {
         return Language::get($this->detail, [$this->getYaw()]);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $yaw = $origin->replaceVariables($this->getYaw());
+        $this->throwIfInvalidNumber($yaw);
 
-        if (!$this->checkValidNumberDataAndAlert($yaw, null, null, $target)) return null;
 
         $target->setRotation((float)$yaw, $target->getPitch());
         return true;

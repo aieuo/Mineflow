@@ -17,18 +17,18 @@ class SetMoney extends TypeMoney {
     protected $detail = "action.setMoney.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $returnValueType = self::RETURN_NONE;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         if (!Economy::isPluginLoaded()) {
-            $target->sendMessage(TextFormat::RED.Language::get("economy.notfound"));
-            return null;
+            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $amount = $origin->replaceVariables($this->getAmount());
 
-        if (!$this->checkValidNumberDataAndAlert($amount, 0, null, $target)) return null;
+        $this->throwIfInvalidNumber($amount, 0);
 
         $economy = Economy::getPlugin();
         $economy->setMoney($target->getName(), (int)$amount);

@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -25,6 +23,7 @@ class ElseAction extends Action implements ActionContainer {
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
+    protected $returnValueType = self::RETURN_NONE;
 
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setActions($actions);
@@ -40,14 +39,13 @@ class ElseAction extends Action implements ActionContainer {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
+    public function execute(?Entity $target, Recipe $origin): bool {
         $lastResult = $origin->getLastActionResult();
-        if ($lastResult === null) return null;
+        if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return false;
 
         foreach ($this->actions as $action) {
-            $result = $action->execute($target, $origin);
-            if ($result === null) return null;
+            $action->execute($target, $origin);
         }
         return true;
     }

@@ -14,8 +14,8 @@ class SendPopup extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        if (!$this->canExecute($target)) return null;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        $this->throwIfCannotExecute($target);
 
         $message = $origin->replaceVariables($this->getMessage());
         $target->sendPopup($message);

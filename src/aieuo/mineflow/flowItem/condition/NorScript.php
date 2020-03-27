@@ -21,9 +21,7 @@ class NorScript extends ORScript {
         return implode("\n", $details);
     }
 
-    public function execute(?Entity $target, Recipe $origin): ?bool {
-        $result = parent::execute($target, $origin);
-        if ($result === null) return null;
-        return !$result;
+    public function execute(?Entity $target, Recipe $origin): bool {
+        return !parent::execute($target, $origin);
     }
 }
