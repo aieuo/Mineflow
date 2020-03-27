@@ -10,8 +10,7 @@ use pocketmine\level\Position;
 
 class PositionObjectVariable extends ObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
-        /** @var Position $position */
-        $position = $this->getValue();
+        $position = $this->getPosition();
         switch ($index) {
             case "x":
                 $variable = new NumberVariable($position->x, "x");
@@ -32,5 +31,11 @@ class PositionObjectVariable extends ObjectVariable {
                 return null;
         }
         return $variable;
+    }
+
+    public function getPosition(): Position {
+        /** @var Position $value */
+        $value = $this->getValue();
+        return $value;
     }
 }

@@ -10,8 +10,7 @@ use pocketmine\item\Item;
 
 class ItemObjectVariable extends ObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
-        /** @var Item $item */
-        $item = $this->getValue();
+        $item = $this->getItem();
         switch ($index) {
             case "name":
                 $variable = new StringVariable($item->getName(), "name");
@@ -29,5 +28,11 @@ class ItemObjectVariable extends ObjectVariable {
                 return null;
         }
         return $variable;
+    }
+
+    public function getItem(): Item {
+        /** @var Item $value */
+        $value = $this->getValue();
+        return $value;
     }
 }

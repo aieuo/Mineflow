@@ -12,8 +12,7 @@ class BlockObjectVariable extends PositionObjectVariable {
         $variable = parent::getValueFromIndex($index);
         if ($variable !== null) return $variable;
 
-        /** @var Block $block */
-        $block = $this->getValue();
+        $block = $this->getBlock();
         switch ($index) {
             case "name":
                 $variable = new StringVariable($block->getName(), "name");
@@ -28,5 +27,11 @@ class BlockObjectVariable extends PositionObjectVariable {
                 return null;
         }
         return $variable;
+    }
+
+    public function getBlock(): Block {
+        /** @var Block $value */
+        $value = $this->getValue();
+        return $value;
     }
 }

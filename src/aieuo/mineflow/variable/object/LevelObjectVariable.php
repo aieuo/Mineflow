@@ -10,8 +10,7 @@ use pocketmine\level\Level;
 
 class LevelObjectVariable extends ObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
-        /** @var Level $level */
-        $level = $this->getValue();
+        $level = $this->getLevel();
         switch ($index) {
             case "name":
                 $variable = new StringVariable($level->getName(), "name");
@@ -26,5 +25,11 @@ class LevelObjectVariable extends ObjectVariable {
                 return null;
         }
         return $variable;
+    }
+
+    public function getLevel(): Level {
+        /** @var Level $value */
+        $value = $this->getValue();
+        return $value;
     }
 }

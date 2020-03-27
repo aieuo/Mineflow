@@ -12,8 +12,7 @@ class PlayerObjectVariable extends EntityObjectVariable {
         $variable = parent::getValueFromIndex($index);
         if ($variable !== null) return $variable;
 
-        /** @var Player $player */
-        $player = $this->getValue();
+        $player = $this->getPlayer();
         switch ($index) {
             case "name":
                 $variable = new StringVariable($player->getName(), "name");
@@ -25,5 +24,11 @@ class PlayerObjectVariable extends EntityObjectVariable {
                 return null;
         }
         return $variable;
+    }
+
+    public function getPlayer(): Player {
+        /** @var Player $value */
+        $value = $this->getValue();
+        return $value;
     }
 }

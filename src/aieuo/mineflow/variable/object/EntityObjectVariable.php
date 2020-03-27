@@ -12,8 +12,7 @@ class EntityObjectVariable extends PositionObjectVariable {
         $variable = parent::getValueFromIndex($index);
         if ($variable !== null) return $variable;
 
-        /** @var Entity $entity */
-        $entity = $this->getValue();
+        $entity = $this->getEntity();
         switch ($index) {
             case "id":
                 $variable = new NumberVariable($entity->getId(), "id");
@@ -25,5 +24,11 @@ class EntityObjectVariable extends PositionObjectVariable {
                 return null;
         }
         return $variable;
+    }
+
+    public function getEntity(): Entity {
+        /** @var Entity $value */
+        $value = $this->getValue();
+        return $value;
     }
 }
