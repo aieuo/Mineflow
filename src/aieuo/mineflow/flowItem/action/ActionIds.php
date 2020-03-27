@@ -44,6 +44,8 @@ interface ActionIds {
     const DELETE_VARIABLE = "deleteVariable";
     const ADD_LIST_VARIABLE = "addListVariable";
     const ADD_MAP_VARIABLE = "addMapVariable";
+    const CREATE_ITEM_VARIABLE = "createItem";
+    const CREATE_POSITION_VARIABLE = "createPosition";
 
     const ACTION_IF = "if";
     const ACTION_ELSEIF = "elseif";

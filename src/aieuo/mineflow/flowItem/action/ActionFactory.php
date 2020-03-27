@@ -28,6 +28,8 @@ class ActionFactory {
         /* player */
         self::register(new SetSleeping);
         self::register(new SetSitting);
+        /* item */
+        self::register(new CreateItemVariable);
         /* money */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
@@ -54,6 +56,7 @@ class ActionFactory {
         self::register(new DeleteVariable);
         self::register(new AddListVariable);
         self::register(new AddMapVariable);
+        self::register(new CreatePositionVariable);
         /* form */
         self::register(new SendForm);
     }
