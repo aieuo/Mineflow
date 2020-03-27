@@ -24,12 +24,13 @@ interface ActionIds {
     const UNSET_IMMOBILE = "unsetImmobile";
     const SET_HEALTH = "setHealth";
     const SET_MAX_HEALTH = "setMaxHealth";
-    const SET_FOOD = "setFood";
+    const SET_NAME = "setName";
 
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";
     const KICK = "kick";
     const CLEAR_INVENTORY = "clearInventory";
+    const SET_FOOD = "setFood";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
