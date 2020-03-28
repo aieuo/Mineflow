@@ -15,7 +15,7 @@ trait EntityFlowItemTrait {
     /* @var string */
     private $entityVariableName = "target";
 
-    public function getEntityVariableName(): String {
+    public function getEntityVariableName(): string {
         return $this->entityVariableName;
     }
 

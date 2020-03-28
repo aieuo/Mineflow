@@ -9,7 +9,7 @@ use pocketmine\Player;
 
 interface PlayerFlowItem {
 
-    public function getPlayerVariableName(): String;
+    public function getPlayerVariableName(): string;
 
     public function setPlayerVariableName(string $name);
 

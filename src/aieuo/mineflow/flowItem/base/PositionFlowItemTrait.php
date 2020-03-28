@@ -14,7 +14,7 @@ trait PositionFlowItemTrait {
     /* @var string */
     private $positionVariableName = "pos";
 
-    public function getPositionVariableName(): String {
+    public function getPositionVariableName(): string {
         return $this->positionVariableName;
     }
 
@@ -31,8 +31,8 @@ trait PositionFlowItemTrait {
         return $variable->getPosition();
     }
 
-    public function throwIfInvalidPosition(?Position $player) {
-        if (!($player instanceof Position)) {
+    public function throwIfInvalidPosition(?Position $position) {
+        if (!($position instanceof Position)) {
             throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.position"]]));
         }
     }

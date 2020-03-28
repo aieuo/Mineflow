@@ -14,7 +14,7 @@ trait ItemFlowItemTrait {
     /* @var string */
     private $itemVariableName = "item";
 
-    public function getItemVariableName(): String {
+    public function getItemVariableName(): string {
         return $this->itemVariableName;
     }
 
@@ -31,8 +31,8 @@ trait ItemFlowItemTrait {
         return $variable->getItem();
     }
 
-    public function throwIfInvalidItem(?Item $player) {
-        if (!($player instanceof Item)) {
+    public function throwIfInvalidItem(?Item $item) {
+        if (!($item instanceof Item)) {
             throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.item"]]));
         }
     }

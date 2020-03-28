@@ -9,11 +9,11 @@ use pocketmine\item\Item;
 
 interface ItemFlowItem {
 
-    public function getItemVariableName(): String;
+    public function getItemVariableName(): string;
 
     public function setItemVariableName(string $name);
 
     public function getItem(Recipe $origin): ?Item;
 
-    public function throwIfInvalidItem(?Item $player);
+    public function throwIfInvalidItem(?Item $item);
 }

@@ -9,7 +9,7 @@ use pocketmine\entity\Entity;
 
 interface EntityFlowItem {
 
-    public function getEntityVariableName(): String;
+    public function getEntityVariableName(): string;
 
     public function setEntityVariableName(string $name);
 
