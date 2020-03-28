@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\utils;
 
 class Categories {
-    // TODO 言語
+    // TODO 割り当て直す
     const CATEGORY_ACTION_COMMON = 0;
     const CATEGORY_ACTION_SCRIPT = 1;
     const CATEGORY_ACTION_MESSAGE = 2;
@@ -16,6 +16,7 @@ class Categories {
     const CATEGORY_ACTION_ITEM = 9;
     const CATEGORY_ACTION_COMMAND = 10;
     const CATEGORY_ACTION_BLOCK = 11;
+    const CATEGORY_ACTION_LEVEL = 12;
 
     const CATEGORY_CONDITION_COMMON = 1000;
     const CATEGORY_CONDITION_SCRIPT = 1001;
@@ -33,6 +34,7 @@ class Categories {
             self::CATEGORY_ACTION_ITEM => "item",
             self::CATEGORY_ACTION_COMMAND => "command",
             self::CATEGORY_ACTION_BLOCK => "block",
+            self::CATEGORY_ACTION_LEVEL => "level",
             self::CATEGORY_ACTION_SCRIPT => "script",
             self::CATEGORY_ACTION_CALCULATION => "calculation",
             self::CATEGORY_ACTION_VARIABLE => "variable",

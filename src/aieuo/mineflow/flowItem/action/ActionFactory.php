@@ -39,6 +39,8 @@ class ActionFactory {
         self::register(new SetGamemode);
         self::register(new ShowBossbar);
         self::register(new RemoveBossbar);
+        self::register(new PlaySound);
+        self::register(new PlaySoundAt);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
@@ -46,6 +48,8 @@ class ActionFactory {
         self::register(new RemoveItem);
         self::register(new RemoveItemAll);
         self::register(new AddEnchantment);
+        self::register(new EquipArmor);
+        self::register(new SetItem);
         /* money */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
@@ -84,6 +88,8 @@ class ActionFactory {
         /* block */
         self::register(new CreateBlockVariable);
         self::register(new SetBlock);
+        /* level */
+        self::register(new AddParticle);
     }
 
     /**

@@ -36,6 +36,8 @@ interface ActionIds {
     const SET_GAMEMODE = "setGamemode";
     const SHOW_BOSSBAR = "showBossbar";
     const REMOVE_BOSSBAR = "removeBossbar";
+    const PLAY_SOUND = "playSound";
+    const PLAY_SOUND_AT = "playSoundAt";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
@@ -48,11 +50,13 @@ interface ActionIds {
     const SET_ITEM = "setItem";
     const SET_ITEM_IN_HAND = "setItemInHand";
     const ADD_ENCHANTMENT = "addEnchant";
+    const EQUIP_ARMOR = "equipArmor";
 
     const COMMAND = "command";
     const COMMAND_CONSOLE = "commandConsole";
 
     const SET_BLOCK = "setBlock";
+    const ADD_PARTICLE = "addParticle";
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";

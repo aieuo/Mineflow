@@ -8,6 +8,7 @@ interface ConditionIds {
     const IS_OP = "isOp";
     const IS_SNEAKING = "isSneaking";
     const IS_FLYING = "isFlying";
+    const IN_AREA = "inArea";
 
     const OVER_MONEY = "overMoney";
     const LESS_MONEY = "lessMoney";
@@ -16,6 +17,7 @@ interface ConditionIds {
     const CAN_ADD_ITEM = "canAddItem";
     const EXISTS_ITEM = "existsItem";
     const IN_HAND = "isHandItem";
+    const REMOVE_ITEM = "removeItem";
 
     const COMPARISON_NUMBER = "comparisonNumber";
 
@@ -23,6 +25,7 @@ interface ConditionIds {
     const IS_PLAYER = "isPlayer";
     const IS_CREATURE = "isCreature";
 
+    const EXISTS_VARIABLE = "existsVariable";
     const EXISTS_LIST_VARIABLE_KEY = "existsListVariableKey";
 
     const CONDITION_AND = "and";
