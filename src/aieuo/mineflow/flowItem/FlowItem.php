@@ -153,4 +153,5 @@ abstract class FlowItem implements \JsonSerializable {
     const RETURN_VARIABLE_ENTITY = "entityVariable";
     const RETURN_VARIABLE_ITEM = "itemVariable";
     const RETURN_VARIABLE_POSITION = "positionVariable";
+    const RETURN_VARIABLE_BLOCK = "blockVariable";
 }

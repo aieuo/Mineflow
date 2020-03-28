@@ -29,6 +29,7 @@ class ActionFactory {
         self::register(new SetHealth);
         self::register(new SetMaxHealth);
         self::register(new SetScale);
+        self::register(new AddEffect);
         /* player */
         self::register(new SetSleeping);
         self::register(new SetSitting);
@@ -36,6 +37,8 @@ class ActionFactory {
         self::register(new ClearInventory);
         self::register(new SetFood);
         self::register(new SetGamemode);
+        self::register(new ShowBossbar);
+        self::register(new RemoveBossbar);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
@@ -78,6 +81,9 @@ class ActionFactory {
         /* command */
         self::register(new Command);
         self::register(new CommandConsole);
+        /* block */
+        self::register(new CreateBlockVariable);
+        self::register(new SetBlock);
     }
 
     /**

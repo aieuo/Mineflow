@@ -26,6 +26,7 @@ interface ActionIds {
     const SET_MAX_HEALTH = "setMaxHealth";
     const SET_NAME = "setName";
     const SET_SCALE = "setScale";
+    const ADD_EFFECT = "addEffect";
 
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";
@@ -33,6 +34,8 @@ interface ActionIds {
     const CLEAR_INVENTORY = "clearInventory";
     const SET_FOOD = "setFood";
     const SET_GAMEMODE = "setGamemode";
+    const SHOW_BOSSBAR = "showBossbar";
+    const REMOVE_BOSSBAR = "removeBossbar";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
@@ -48,6 +51,8 @@ interface ActionIds {
 
     const COMMAND = "command";
     const COMMAND_CONSOLE = "commandConsole";
+
+    const SET_BLOCK = "setBlock";
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";
@@ -65,6 +70,7 @@ interface ActionIds {
     const ADD_MAP_VARIABLE = "addMapVariable";
     const CREATE_ITEM_VARIABLE = "createItem";
     const CREATE_POSITION_VARIABLE = "createPosition";
+    const CREATE_BLOCK_VARIABLE = "createBlock";
 
     const ACTION_IF = "if";
     const ACTION_ELSEIF = "elseif";
