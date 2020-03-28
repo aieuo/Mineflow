@@ -32,6 +32,7 @@ class Categories {
             self::CATEGORY_ACTION_PLAYER => "player",
             self::CATEGORY_ACTION_ITEM => "item",
             self::CATEGORY_ACTION_COMMAND => "command",
+            self::CATEGORY_ACTION_BLOCK => "block",
             self::CATEGORY_ACTION_SCRIPT => "script",
             self::CATEGORY_ACTION_CALCULATION => "calculation",
             self::CATEGORY_ACTION_VARIABLE => "variable",
