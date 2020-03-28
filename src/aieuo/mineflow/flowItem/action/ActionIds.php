@@ -32,6 +32,7 @@ interface ActionIds {
     const KICK = "kick";
     const CLEAR_INVENTORY = "clearInventory";
     const SET_FOOD = "setFood";
+    const SET_GAMEMODE = "setGamemode";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
@@ -43,6 +44,7 @@ interface ActionIds {
     const REMOVE_ITEM_ALL = "removeItemAll";
     const SET_ITEM = "setItem";
     const SET_ITEM_IN_HAND = "setItemInHand";
+    const ADD_ENCHANTMENT = "addEnchant";
 
     const COMMAND = "command";
     const COMMAND_CONSOLE = "commandConsole";

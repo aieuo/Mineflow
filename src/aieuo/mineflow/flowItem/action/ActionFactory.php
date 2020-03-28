@@ -35,12 +35,14 @@ class ActionFactory {
         self::register(new Kick);
         self::register(new ClearInventory);
         self::register(new SetFood);
+        self::register(new SetGamemode);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
         self::register(new SetItemInHand);
         self::register(new RemoveItem);
         self::register(new RemoveItemAll);
+        self::register(new AddEnchantment);
         /* money */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
