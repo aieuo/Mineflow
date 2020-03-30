@@ -72,7 +72,7 @@ class SetNameTag extends Action implements EntityFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@action.setName.form.name", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getNewName()),
+                new Input("@action.setNameTag.form.name", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getNewName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
