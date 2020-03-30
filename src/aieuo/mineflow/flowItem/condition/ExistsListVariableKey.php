@@ -3,8 +3,7 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\formAPI\Form;
-use pocketmine\entity\Entity;
-use aieuo\mineflow\variable\Variable;
+use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -72,7 +71,7 @@ class ExistsListVariableKey extends Condition {
         $key = $origin->replaceVariables($this->getKey());
 
         $variable = $this->isLocal ? $origin->getVariable($name) : $helper->get($name);
-        if (!($variable instanceof Variable)) return false;
+        if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
         return isset($value[$key]);
     }

@@ -64,7 +64,7 @@ class SetYaw extends Action implements EntityFlowItem {
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
-        $target->setRotation((float)$yaw, $target->getPitch());
+        $entity->setRotation((float)$yaw, $entity->getPitch());
         return true;
     }
 

@@ -44,8 +44,8 @@ class SetGamemode extends Action implements PlayerFlowItem {
         $this->gamemode = $gamemode;
     }
 
-    public function setGamemode(int $gamemode) {
-        $this->gamemode = (string)$gamemode;
+    public function setGamemode(string $gamemode) {
+        $this->gamemode = $gamemode;
     }
 
     public function getGamemode(): string {
@@ -89,7 +89,7 @@ class SetGamemode extends Action implements PlayerFlowItem {
     public function parseFromFormData(array $data): array {
         $errors = [];
         if ($data[1] === "") $data[1] = "target";
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], (string)$data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
