@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use pocketmine\utils\TextFormat;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\economy\Economy;
@@ -19,7 +18,7 @@ class OverMoney extends TypeMoney {
     protected $returnValueType = self::RETURN_NONE;
 
     public function execute(Recipe $origin): bool {
-        $this->throwIfInvalidNumber($target);
+        $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
             throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));

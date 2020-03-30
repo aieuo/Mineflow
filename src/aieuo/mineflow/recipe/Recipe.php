@@ -42,6 +42,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
     private $targetType = self::TARGET_DEFAULT;
     /** @var array */
     private $targetOptions = [];
+    /** @var Entity|null */
+    private $target = null;
 
     /** @var Trigger[] */
     private $triggers = [];
@@ -84,7 +86,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return implode("\n", $details);
     }
 
-    public function setTarget(int $type, array $options): void {
+    public function setTargetSetting(int $type, array $options): void {
         $this->targetType = $type;
         $this->targetOptions = $options;
     }
@@ -127,6 +129,14 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $targets;
     }
 
+    public function getTarget(): ?Entity {
+        return $this->target;
+    }
+
+    public function setTarget(?Entity $target): void {
+        $this->target = $target;
+    }
+
     public function addTrigger(Trigger $trigger): void {
         TriggerHolder::getInstance()->addRecipe($trigger, $this);
         $this->triggers[] = $trigger;
@@ -163,12 +173,13 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->triggers;
     }
 
-    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null): ?bool {
+    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
         $targets = $this->getTargets($player);
         foreach ($targets as $target) {
             $recipe = clone $this;
+            $recipe->setTarget($target);
             $recipe->addVariables($variables);
-            $recipe->execute($target, $event);
+            $recipe->execute($target, $event, $args);
         }
         return true;
     }

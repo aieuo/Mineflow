@@ -85,12 +85,12 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
     public function execute(Recipe $origin): bool {
         $script = clone $this;
         $origin->wait();
-        $handler = Main::getInstance()->getScheduler()->scheduleRepeatingTask(new WhileActionTask($script, $target, $origin), $this->interval);
+        $handler = Main::getInstance()->getScheduler()->scheduleRepeatingTask(new WhileActionTask($script, $origin), $this->interval);
         $script->setTaskId($handler->getTaskId());
         return true;
     }
 
-    public function check(?Entity $target, Recipe $origin) {
+    public function check(Recipe $origin) {
         $origin->addVariable(new NumberVariable($this->loopCount, "i"));
         foreach ($this->conditions as $condition) {
             $result = $condition->execute($origin);

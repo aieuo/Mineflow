@@ -62,7 +62,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
+        return $this->itemVariableName !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
     }
 
     public function getDetail(): string {

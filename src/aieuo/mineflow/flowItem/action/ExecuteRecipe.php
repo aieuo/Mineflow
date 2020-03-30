@@ -63,7 +63,7 @@ class ExecuteRecipe extends Action {
 
         $recipe = clone $recipe;
         $recipe->addVariables($origin->getVariables());
-        $recipe->execute($target);
+        $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables());
         return true;
     }
 

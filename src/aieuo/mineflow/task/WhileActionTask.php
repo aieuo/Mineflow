@@ -11,21 +11,18 @@ class WhileActionTask extends Task {
 
     /** @var WhileAction */
     private $script;
-    /** @var Entity|null */
-    private $entity;
     /** @var Recipe|null */
     private $recipe;
     /** @var int */
     private $count = 0;
 
-    public function __construct(WhileAction $script, ?Entity $entity, ?Recipe $recipe) {
+    public function __construct(WhileAction $script, ?Recipe $recipe) {
         $this->script = $script;
-        $this->entity = $entity;
         $this->recipe = $recipe;
     }
 
     public function onRun(int $currentTick) {
         $this->count ++;
-        $this->script->check($this->entity, $this->recipe);
+        $this->script->check($this->recipe);
     }
 }

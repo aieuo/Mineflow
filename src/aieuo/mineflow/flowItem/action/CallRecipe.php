@@ -57,7 +57,7 @@ class CallRecipe extends ExecuteRecipe {
         }
         $origin->wait();
         $recipe->setSourceRecipe($origin);
-        $recipe->execute($target, null, $args);
+        $recipe->executeAllTargets($origin->getTarget(), [], null, $args);
         return true;
     }
 

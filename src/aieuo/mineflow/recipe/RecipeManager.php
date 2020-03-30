@@ -50,7 +50,7 @@ class RecipeManager {
                 continue;
             }
 
-            $recipe->setTarget(
+            $recipe->setTargetSetting(
                 $data["targetType"] ?? Recipe::TARGET_DEFAULT,
                 $data["targetOptions"] ?? []
             );

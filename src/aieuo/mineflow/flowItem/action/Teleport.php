@@ -53,7 +53,7 @@ class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
         $position = $this->getPosition($origin);
         $this->throwIfInvalidPosition($position);
 
-        $target->teleport($position);
+        $entity->teleport($position);
         return true;
     }
 

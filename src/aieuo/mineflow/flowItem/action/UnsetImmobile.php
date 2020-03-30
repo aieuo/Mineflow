@@ -42,7 +42,7 @@ class UnsetImmobile extends Action implements EntityFlowItem {
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
-        $target->setImmobile(false);
+        $entity->setImmobile(false);
         return true;
     }
 
