@@ -32,6 +32,11 @@ class SetImmobile extends Action implements EntityFlowItem {
         $this->entityVariableName = $name;
     }
 
+    public function getDetail(): string {
+        if (!$this->isDataValid()) return $this->getName();
+        return Language::get($this->detail, [$this->getEntityVariableName()]);
+    }
+
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "";
     }
