@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\LevelObjectVariable;
@@ -195,7 +194,7 @@ class DefaultVariables {
                     $variables = array_merge($variables, $add);
                 }
                 break;
-            case $event instanceof EntityAttackEvent:
+            case $event instanceof EntityDamageByEntityEvent:
                 $target = $event->getDamager();
                 if ($target === null) break;
                 $variables = $target instanceof Player ? self::getPlayerVariables($target) : self::getEntityVariables($target);

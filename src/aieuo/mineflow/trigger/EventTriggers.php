@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\trigger;
 
-use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\event\ServerStartEvent;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
@@ -44,7 +43,7 @@ class EventTriggers {
         "ServerStartEvent" => [ServerStartEvent::class, "trigger.event.ServerStartEvent"],
         "SignChangeEvent" => [SignChangeEvent::class, "trigger.event.SignChangeEvent"],
         "EntityDamageEvent" => [EntityDamageEvent::class, "trigger.event.EntityDamageEvent"],
-        "EntityAttackEvent" => [EntityAttackEvent::class, "trigger.event.EntityAttackEvent"],
+        "EntityAttackEvent" => [EntityDamageByEntityEvent::class, "trigger.event.EntityAttackEvent"],
         "PlayerToggleFlightEvent" => [PlayerToggleFlightEvent::class, "trigger.event.PlayerToggleFlightEvent"],
         "PlayerDeathEvent" => [PlayerDeathEvent::class, "trigger.event.PlayerDeathEvent"],
         "EntityLevelChangeEvent" => [EntityLevelChangeEvent::class, "trigger.event.EntityLevelChangeEvent"],

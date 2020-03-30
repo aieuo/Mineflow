@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow;
 
-use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\flowItem\action\SetSitting;
 use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
@@ -274,11 +273,8 @@ class EventListener implements Listener {
     }
     public function onEntityDamage(EntityDamageEvent $event) {
         $this->onEvent($event, "EntityDamageEvent");
-        if ($event instanceof EntityDamageByEntityEvent) {
-            (new EntityAttackEvent($event->getEntity(), $event->getDamager(), $event->getCause(), $event->getBaseDamage()))->call();
-        }
     }
-    public function onEntityAttack(EntityAttackEvent $event) {
+    public function onEntityAttack(EntityDamageByEntityEvent $event) {
         $this->onEvent($event, "EntityAttackEvent");
     }
     public function onToggleFlight(PlayerToggleFlightEvent $event) {
