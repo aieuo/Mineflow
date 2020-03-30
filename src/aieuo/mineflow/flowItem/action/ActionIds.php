@@ -19,6 +19,7 @@ interface ActionIds {
     const TELEPORT = "teleport";
     const MOTION = "motion";
     const SET_YAW = "setYaw";
+    const SET_PITCH = "setPitch";
     const ADD_DAMAGE = "addDamage";
     const SET_IMMOBILE = "setImmobile";
     const UNSET_IMMOBILE = "unsetImmobile";

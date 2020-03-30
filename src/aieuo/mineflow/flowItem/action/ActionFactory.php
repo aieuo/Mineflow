@@ -23,6 +23,7 @@ class ActionFactory {
         self::register(new Teleport);
         self::register(new Motion);
         self::register(new SetYaw);
+        self::register(new SetPitch);
         self::register(new AddDamage);
         self::register(new SetImmobile);
         self::register(new UnsetImmobile);
