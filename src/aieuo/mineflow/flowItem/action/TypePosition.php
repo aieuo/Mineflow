@@ -48,7 +48,7 @@ abstract class TypePosition extends Action {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->x) and !empty($this->y) and !empty($this->z);
+        return $this->x !== "" and $this->y !== "" and $this->z !== "";
     }
 
     public function getDetail(): string {

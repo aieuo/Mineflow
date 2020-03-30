@@ -42,7 +42,7 @@ class ExistsVariable extends Condition {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->variableName);
+        return $this->variableName !== "";
     }
 
     public function getDetail(): string {

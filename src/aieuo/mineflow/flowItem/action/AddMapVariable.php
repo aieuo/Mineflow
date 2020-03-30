@@ -69,7 +69,7 @@ class AddMapVariable extends Action {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->variableName) and ((!empty($this->variableKey) and !empty($this->variableValue)) or (empty($this->variableKey) and empty($this->variableValue)));
+        return $this->variableName !== "" and (($this->variableKey !== "" and $this->variableValue !== "") or ($this->variableKey === "" and $this->variableValue === ""));
     }
 
     public function getDetail(): string {

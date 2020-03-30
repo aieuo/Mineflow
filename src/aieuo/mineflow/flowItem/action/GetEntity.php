@@ -59,7 +59,7 @@ class GetEntity extends Action {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->getKey()) and !empty($this->getResultName());
+        return $this->getKey() !== "" and !empty($this->getResultName());
     }
 
     public function getDetail(): string {

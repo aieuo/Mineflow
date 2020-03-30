@@ -55,7 +55,7 @@ class ExistsListVariableKey extends Condition {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->variableName) and !empty($this->variableKey);
+        return $this->variableName !== "" and $this->variableKey !== "";
     }
 
     public function getDetail(): string {

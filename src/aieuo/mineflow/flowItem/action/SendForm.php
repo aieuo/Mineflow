@@ -52,7 +52,7 @@ class SendForm extends Action implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->formName);
+        return $this->formName !== "";
     }
 
     public function getDetail(): string {

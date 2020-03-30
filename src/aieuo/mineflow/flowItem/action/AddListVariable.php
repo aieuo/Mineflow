@@ -58,7 +58,7 @@ class AddListVariable extends Action {
     }
 
     public function isDataValid(): bool {
-        return !empty($this->variableName);
+        return $this->variableName !== "";
     }
 
     public function getDetail(): string {
