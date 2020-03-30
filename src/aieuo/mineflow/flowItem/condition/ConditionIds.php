@@ -9,6 +9,7 @@ interface ConditionIds {
     const IS_SNEAKING = "isSneaking";
     const IS_FLYING = "isFlying";
     const IN_AREA = "inArea";
+    const GAMEMODE = "gamemode";
 
     const OVER_MONEY = "overMoney";
     const LESS_MONEY = "lessMoney";
@@ -33,4 +34,6 @@ interface ConditionIds {
     const CONDITION_NAND = "nand";
     const CONDITION_NOR = "nor";
     const CONDITION_NOT = "not";
+
+    const RANDOM_NUMBER = "randomNumber";
 }

@@ -13,6 +13,7 @@ class ConditionFactory {
         self::register(new IsOp);
         self::register(new IsSneaking);
         self::register(new IsFlying);
+        self::register(new RandomNumber);
         /* money */
         self::register(new OverMoney);
         self::register(new LessMoney);
@@ -34,6 +35,8 @@ class ConditionFactory {
         self::register(new IsPlayer);
         self::register(new IsCreature);
         self::register(new InArea);
+        /* player */
+        self::register(new Gamemode);
         /* variable */
         self::register(new ExistsVariable);
         self::register(new ExistsListVariableKey);

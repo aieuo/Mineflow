@@ -24,6 +24,7 @@ class Categories {
     const CATEGORY_CONDITION_ITEM = 1003;
     const CATEGORY_CONDITION_ENTITY = 1004;
     const CATEGORY_CONDITION_VARIABLE = 1005;
+    const CATEGORY_CONDITION_PLAYER = 1006;
 
     public static function getActionCategories(): array {
         return [
@@ -50,6 +51,7 @@ class Categories {
             self::CATEGORY_CONDITION_MONEY => "money",
             self::CATEGORY_CONDITION_ITEM => "item",
             self::CATEGORY_CONDITION_ENTITY => "entity",
+            self::CATEGORY_CONDITION_PLAYER => "player",
             self::CATEGORY_CONDITION_VARIABLE => "variable",
         ];
     }
