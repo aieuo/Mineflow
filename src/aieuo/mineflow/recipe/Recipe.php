@@ -174,6 +174,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
+        // TODO: 整理する
         $targets = $this->getTargets($player);
         foreach ($targets as $target) {
             $recipe = clone $this;

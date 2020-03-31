@@ -116,8 +116,7 @@ class FourArithmeticOperations extends Action {
                 break;
             case self::DIVISION:
                 if ((float)$value2 == 0) {
-                    Logger::warning(Language::get("flowItem.error", [$this->getName(), Language::get("variable.number.div.0")]), $target);
-                    return null;
+                    throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("variable.number.div.0")]));
                 }
                 $result = (float)$value1 / (float)$value2;
                 break;

@@ -110,7 +110,7 @@ class ShowBossbar extends Action implements PlayerFlowItem {
                 new Input("@action.showBossbar.form.title", Language::get("form.example", ["20"]), $default[2] ?? $this->getTitle()),
                 new Input("@action.showBossbar.form.max", Language::get("form.example", ["20"]), $default[3] ?? $this->getMax()),
                 new Input("@action.showBossbar.form.value", Language::get("form.example", ["20"]), $default[4] ?? $this->getValue()),
-                new Input("@action.showBossbar.form.id", Language::get("form.example", ["20"]), $default[5] ?? $this->getId()),
+                new Input("@action.showBossbar.form.id", Language::get("form.example", ["20"]), $default[5] ?? $this->getBarId()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
