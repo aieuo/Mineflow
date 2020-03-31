@@ -36,7 +36,7 @@ class Motion extends Action implements EntityFlowItem {
     /** @var string */
     private $z = "0";
 
-    public function __construct(string $entity = "target", string $x = "", string $y = "", string $z = "") {
+    public function __construct(string $entity = "target", string $x = "0", string $y = "0", string $z = "0") {
         $this->entityVariableName = $entity;
         $this->setPosition($x, $y, $z);
     }
@@ -98,7 +98,7 @@ class Motion extends Action implements EntityFlowItem {
         $helper = Main::getVariableHelper();
         for ($i=2; $i<=4; $i++) {
             if ($data[$i] === "") {
-                $errors[] = ["@form.insufficient", $i];
+                $data[$i] = "0";
             } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {
                 $errors[] = ["@flowItem.error.notNumber", $i];
             }
