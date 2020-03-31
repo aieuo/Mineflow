@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
 use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
@@ -13,6 +14,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
+use pocketmine\scheduler\ClosureTask;
 
 class Kick extends Action implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -64,7 +66,9 @@ class Kick extends Action implements PlayerFlowItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
-        $player->kick($reason, $this->isAdmin);
+        Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($player, $reason): void {
+            $player->kick($reason, $this->isAdmin);
+        }), 1);
         return true;
     }
 
