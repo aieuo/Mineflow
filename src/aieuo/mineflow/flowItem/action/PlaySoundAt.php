@@ -76,7 +76,7 @@ class PlaySoundAt extends Action implements PositionFlowItem {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getSound()]);
+        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
     public function execute(Recipe $origin): bool {

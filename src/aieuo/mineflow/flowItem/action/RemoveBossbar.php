@@ -71,7 +71,7 @@ class RemoveBossbar extends Action implements PlayerFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.showBossbar.form.id", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getId()),
+                new Input("@action.showBossbar.form.id", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getBarId()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

@@ -113,7 +113,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
+        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setItemVariableName($content[0]);
         $this->setEnchantId($content[1]);
         $this->setEnchantLevel($content[2]);
