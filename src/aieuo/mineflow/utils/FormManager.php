@@ -74,7 +74,7 @@ class FormManager {
         $form = $this->getForm($name);
         $form->removeRecipe($recipe->getName(), $button);
         $this->addForm($name, $form);
-        return count($form["recipes"]);
+        return count($form->getRecipes());
     }
 
     public function getNotDuplicatedName(string $name): string {

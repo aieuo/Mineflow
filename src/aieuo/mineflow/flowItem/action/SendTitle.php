@@ -39,7 +39,7 @@ class SendTitle extends Action implements PlayerFlowItem {
     /** @var string */
     private $fadeOut = "-1";
 
-    public function __construct(string $name = "target", string $title = "", string $subtitle = "", int $fadeIn = -1, int $stay = -1, int $fadeOut = -1) {
+    public function __construct(string $name = "target", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
         $this->playerVariableName = $name;
         $this->title = $title;
         $this->subtitle = $subtitle;
@@ -62,10 +62,10 @@ class SendTitle extends Action implements PlayerFlowItem {
         return $this->subtitle;
     }
 
-    public function setTime(int $fadeIn = -1, int $stay = -1, int $fadeOut = -1): self {
-        $this->fadeIn = (string)$fadeIn;
-        $this->stay = (string)$stay;
-        $this->fadeOut = (string)$fadeOut;
+    public function setTime(string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1"): self {
+        $this->fadeIn = $fadeIn;
+        $this->stay = $stay;
+        $this->fadeOut = $fadeOut;
         return $this;
     }
 
@@ -88,7 +88,9 @@ class SendTitle extends Action implements PlayerFlowItem {
         $title = $origin->replaceVariables($this->getTitle());
         $subtitle = $origin->replaceVariables($this->getSubTitle());
         $times = array_map(function ($time) use ($origin) {
-            return $origin->replaceVariables($time);
+            $time = $origin->replaceVariables($time);
+            $this->throwIfInvalidNumber($time);
+            return (int)$time;
         }, $this->getTime());
 
         $player = $this->getPlayer($origin);

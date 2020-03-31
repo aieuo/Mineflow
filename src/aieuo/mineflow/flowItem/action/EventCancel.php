@@ -3,10 +3,8 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Logger;
 use pocketmine\event\Event;
 use pocketmine\event\Cancellable;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
 

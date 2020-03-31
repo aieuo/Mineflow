@@ -20,16 +20,13 @@ class MoneySystemLoader implements EconomyLoader {
 
     public function addMoney(string $name, int $money) {
         $this->getPlugin()->getAPI()->increase($name, $money);
-        return true;
     }
 
     public function takeMoney(string $name, int $money) {
         $this->getPlugin()->getAPI()->reduce($name, $money);
-        return true;
     }
 
     public function setMoney(string $name, int $money) {
         $this->getPlugin()->getAPI()->set($name, $money);
-        return true;
     }
 }

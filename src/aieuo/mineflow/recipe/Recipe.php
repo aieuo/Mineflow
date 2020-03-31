@@ -324,9 +324,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
             } catch (\OutOfBoundsException $e) {
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
-            if ($action === null) {
-                throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?"]));
-            }
 
             $this->addAction($action);
         }

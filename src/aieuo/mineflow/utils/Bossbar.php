@@ -23,7 +23,7 @@ class Bossbar {
     /** @var int */
     private $entityId;
 
-    public function __construct(string $title, float $max = 1, float $per = 1) {
+    public function __construct(string $title, float $max = 1.0, float $per = 1.0) {
         $this->title = $title;
         $this->max = $max;
         $this->per = $per;

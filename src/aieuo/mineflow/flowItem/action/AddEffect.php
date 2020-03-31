@@ -98,7 +98,7 @@ class AddEffect extends Action implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         if ($entity instanceof Living) {
-            $entity->addEffect(new EffectInstance($effect, (float)$time * 20, (int)$power - 1, false));
+            $entity->addEffect(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, false));
         }
         return true;
     }

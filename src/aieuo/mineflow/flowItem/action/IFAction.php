@@ -5,7 +5,6 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
-use pocketmine\entity\Entity;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Categories;
@@ -104,7 +103,7 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     }
 
     public function loadSaveData(array $contents): Action {
-        if (!isset($contents[1])) return null;
+        if (!isset($contents[1])) throw new \OutOfBoundsException();
         foreach ($contents[0] as $i => $content) {
             if ($content["type"] !== Recipe::CONTENT_TYPE_CONDITION) {
                 throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");

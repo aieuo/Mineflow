@@ -21,7 +21,7 @@ class SetMaxHealth extends SetHealth {
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
-        $entity->setMaxHealth((float)$health);
+        $entity->setMaxHealth((int)$health);
         return true;
     }
 }

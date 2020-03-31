@@ -40,9 +40,9 @@ class Gamemode extends Condition implements PlayerFlowItem {
     /** @var int */
     private $gamemode = Player::SURVIVAL;
 
-    public function __construct(string $name = "", string $mode = Player::SURVIVAL) {
+    public function __construct(string $name = "", int $mode = Player::SURVIVAL) {
         $this->playerVariableName = $name;
-        $this->gamemode = (int)$mode;
+        $this->gamemode = $mode;
     }
 
     public function setGamemode(int $gamemode): void {

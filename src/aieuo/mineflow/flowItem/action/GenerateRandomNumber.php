@@ -8,7 +8,6 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\recipe\Recipe;
 
@@ -71,7 +70,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
 
-        $origin->addVariable(new NumberVariable(mt_rand((float)$min, (float)$max), $resultName));
+        $origin->addVariable(new NumberVariable(mt_rand((int)$min, (int)$max), $resultName));
         return true;
     }
 

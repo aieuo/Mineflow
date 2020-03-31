@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\LevelObjectVariable;
@@ -68,24 +69,7 @@ class DefaultVariables {
     }
 
     public static function getBlockVariables(Block $block, string $name = "block"): array {
-        $variables = [
-            $name => new MapVariable([
-                "name" => $block->getName(),
-                "id" => $block->getId(),
-                "damage" => $block->getDamage(),
-                "x" => $block->x,
-                "y" => $block->y,
-                "z" => $block->z,
-                "level" => $block->level->getFolderName(),
-            ], $name, $block->__toString()),
-        ];
-        $tile = $block->level->getTile($block);
-        if ($tile instanceof Tile) {
-            if ($tile instanceof Sign) {
-                $variables["sign_lines"] = new ListVariable(array_map(function (string $text) { return new StringVariable($text); }, $tile->getText()), "sign_lines");
-            }
-        }
-        return $variables;
+        return [$name => new BlockObjectVariable($block, $name, $block->getId().":".$block->getDamage())];
     }
 
     public static function getCommandVariables(string $command): array {
@@ -96,7 +80,7 @@ class DefaultVariables {
         ];
     }
 
-    public static function getEventVariables(Event $event): array {
+    public static function getEventVariables(Event $event, string $eventName): array {
         $variables = [];
         switch ($event) {
             case $event instanceof PlayerMoveEvent:
@@ -183,26 +167,22 @@ class DefaultVariables {
                 break;
             case $event instanceof EntityDamageEvent:
                 $target = $event->getEntity();
-                $variables = $target instanceof Player ? self::getPlayerVariables($target) : self::getEntityVariables($target);
+                $name = $eventName === "EntityAttackEvent" ? "damaged" : "target";
+                $variables = $target instanceof Player ? self::getPlayerVariables($target, $name) : self::getEntityVariables($target, $name);
                 $variables["damage"] = new NumberVariable($event->getBaseDamage(), "damage");
                 $variables["cause"] = new NumberVariable($event->getCause(), "cause");
                 if ($event instanceof EntityDamageByEntityEvent) {
                     $damager = $event->getDamager();
-                    if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "damager");
-                    elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "damager");
-                    else $add = [];
+                    $add = [];
+                    if ($eventName === "EntityDamageEvent") {
+                        if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "damager");
+                        elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "damager");
+                    } elseif ($eventName === "EntityAttackEvent") {
+                        if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "target");
+                        elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "target");
+                    }
                     $variables = array_merge($variables, $add);
                 }
-                break;
-            case $event instanceof EntityDamageByEntityEvent:
-                $target = $event->getDamager();
-                if ($target === null) break;
-                $variables = $target instanceof Player ? self::getPlayerVariables($target) : self::getEntityVariables($target);
-                $variables["damage"] = new NumberVariable($event->getBaseDamage(), "damage");
-                $variables["cause"] = new NumberVariable($event->getCause(), "cause");
-                $damaged = $event->getEntity();
-                $add = $damaged instanceof Player ? self::getPlayerVariables($damaged, "damaged") : self::getEntityVariables($damaged, "damaged");
-                $variables = array_merge($variables, $add);
                 break;
             case $event instanceof LevelLoadEvent:
                 $variables = ["level" => new LevelObjectVariable($event->getLevel())];
@@ -213,9 +193,9 @@ class DefaultVariables {
                 $variables["amount"] = $event->getAmount();
                 $variables["cause"] = $event->getCause();
                 break;
-            case $event instanceof ProjectileHitEntityEvent:
+            case $event instanceof ProjectileHitEntityEvent: // TODO: player?
                 $target = $event->getEntity();
-                $variables = $target instanceof Player ? self::getPlayerVariables($target) : self::getEntityVariables($target);
+                $variables = self::getEntityVariables($target);
                 $entityHit = $event->getEntityHit();
                 $add = $entityHit instanceof Player ? self::getPlayerVariables($entityHit) : self::getEntityVariables($entityHit);
                 $variables = array_merge($variables, $add);

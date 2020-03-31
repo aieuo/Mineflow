@@ -206,7 +206,7 @@ class ActionForm {
      * @uses \aieuo\mineflow\flowItem\action\ActionContainerTrait::removeAction()
      */
     public function sendConfirmDelete(Player $player, Action $action, ActionContainer $container) {
-        (new ModalForm(Language::get("form.items.delete.title", [$container->getName(), $action->getName()])))
+        (new ModalForm(Language::get("form.items.delete.title", [""/*TODO*/, $action->getName()])))
             ->setContent(Language::get("form.delete.confirm", [trim($action->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")

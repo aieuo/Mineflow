@@ -148,7 +148,7 @@ class CommandManager {
     public function hasSubCommand(string $subcommand) {
         $commands = explode(" ", $subcommand);
         $origin = array_shift($commands);
-        if (!$this->existsCommand($origin)) false;
+        if (!$this->existsCommand($origin)) return false;
 
         $subcommands = $this->getCommand($origin)["subcommands"];
         foreach ($commands as $cmd) {

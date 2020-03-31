@@ -72,6 +72,10 @@ abstract class Variable {
         return true;
     }
 
+    public function __toString() {
+        return (string)$this->getValue();
+    }
+
     abstract public function toStringVariable(): StringVariable;
 
     abstract public static function fromArray(array $data): ?Variable;

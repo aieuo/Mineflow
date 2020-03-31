@@ -153,7 +153,7 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
     }
 
     public function loadSaveData(array $contents): Action {
-        if (!isset($contents[1])) return null;
+        if (!isset($contents[1])) throw new \OutOfBoundsException();
         foreach ($contents[0] as $content) {
             if ($content["type"] !== Recipe::CONTENT_TYPE_CONDITION) {
                 throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");

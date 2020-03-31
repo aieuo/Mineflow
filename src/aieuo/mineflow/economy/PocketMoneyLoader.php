@@ -21,17 +21,14 @@ class PocketMoneyLoader implements EconomyLoader {
     public function addMoney(string $name, int $money) {
         $mymoney = $this->getMoney($name);
         $this->getPlugin()->setMoney($name, $mymoney + $money);
-        return true;
     }
 
     public function takeMoney(string $name, int $money) {
         $mymoney = $this->getMoney($name);
         $this->getPlugin()->setMoney($name, $mymoney - $money);
-        return true;
     }
 
     public function setMoney(string $name, int $money) {
         $this->getPlugin()->setMoney($name, $money);
-        return true;
     }
 }

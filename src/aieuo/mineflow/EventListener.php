@@ -69,7 +69,6 @@ class EventListener implements Listener {
         "ServerStartEvent" => "onServerStart",
         "SignChangeEvent" => "onSignChange",
         "EntityDamageEvent" => "onEntityDamage",
-        "EntityAttackEvent" => "onEntityAttack",
         "PlayerToggleFlightEvent" => "onToggleFlight",
         "CraftItemEvent" => "onCraftItem",
         "PlayerDropItemEvent" => "onDropItem",
@@ -221,7 +220,7 @@ class EventListener implements Listener {
             } elseif ($event instanceof EntityEvent) {
                 $target = $event->getEntity();
             }
-            $variables = DefaultVariables::getEventVariables($event);
+            $variables = DefaultVariables::getEventVariables($event, $eventName);
             $recipes->executeAll($target, $variables, $event);
         }
     }
@@ -273,9 +272,7 @@ class EventListener implements Listener {
     }
     public function onEntityDamage(EntityDamageEvent $event) {
         $this->onEvent($event, "EntityDamageEvent");
-    }
-    public function onEntityAttack(EntityDamageByEntityEvent $event) {
-        $this->onEvent($event, "EntityAttackEvent");
+        if ($event instanceof EntityDamageByEntityEvent) $this->onEvent($event, "EntityAttackEvent");
     }
     public function onToggleFlight(PlayerToggleFlightEvent $event) {
         $this->onEvent($event, "PlayerToggleFlightEvent");

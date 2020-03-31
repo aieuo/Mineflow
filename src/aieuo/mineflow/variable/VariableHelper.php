@@ -144,8 +144,8 @@ class VariableHelper {
                         }, explode(",", $matches1[2])));
                         $newAction->execute($origin);
                         $result = "";
-                        if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE) {
-                            $result = $newAction->getResultName();
+                        if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE and method_exists($newAction, "getResultName")) {
+                            $result = $newAction->getResultName(); // TODO: 作りなおす
                         }
                         $string = str_replace("{".$matches1[0]."}", $result, $string);
                     }
@@ -185,7 +185,7 @@ class VariableHelper {
 
         $tmp = $name;
         foreach ($names as $name) {
-            if (!($variable instanceof Variable) or $variable instanceof StringVariable or $variable instanceof NumberVariable) {
+            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) {
                 return str_replace("{".$replace."}", "§cUndefined index: ".$tmp.".§l".$name."§r", $string);
             }
 

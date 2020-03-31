@@ -86,7 +86,7 @@ class ComparisonNumber extends Condition {
 
         $value1 = $origin->replaceVariables($this->getValue1());
         $value2 = $origin->replaceVariables($this->getValue2());
-        $operator = $origin->replaceVariables($this->getOperator());
+        $operator = $this->getOperator();
 
         if (!is_numeric($value1) or !is_numeric($value2)) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));

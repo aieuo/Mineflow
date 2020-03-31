@@ -11,7 +11,7 @@ class EntityHolder {
     /** @var self */
     private static $instance;
 
-    /** @var Entity[] */
+    /** @var Entity[]|null[] */
     private static $entities = [];
 
     public static function getPlayerByName(string $name): ?Player {

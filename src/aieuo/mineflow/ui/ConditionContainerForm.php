@@ -23,7 +23,7 @@ class ConditionContainerForm {
             $buttons[] = new Button(trim($condition->getDetail()));
         }
 
-        (new ListForm(Language::get("form.conditionContainer.conditionList.title", [$container->getName()])))
+        (new ListForm(Language::get("form.conditionContainer.conditionList.title", [/*TODO*/])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
@@ -64,7 +64,7 @@ class ConditionContainerForm {
         $buttons[] = new Button("");
 
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.conditionContainer.moveCondition.title", [$container->getName(), $selectedCondition->getName()])))
+        (new ListForm(Language::get("form.conditionContainer.moveCondition.title", [""/*TODO*/, $selectedCondition->getName()])))
             ->setContent("@form.conditionContainer.moveCondition.content")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, int $selected, array $conditions, int $count = 0) {

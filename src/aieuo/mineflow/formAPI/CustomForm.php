@@ -42,10 +42,6 @@ class CustomForm extends Form {
         return $this->contents[$index] ?? null;
     }
 
-    /**
-     * @param Element[] $contents
-     * @return self
-     */
     public function addContents(Element ...$contents): self {
         $this->contents = array_merge($this->contents, $contents);
         return $this;
