@@ -19,7 +19,7 @@ abstract class TypeItem extends Action implements PlayerFlowItem, ItemFlowItem {
 
     protected $detailDefaultReplace = ["player", "item"];
 
-    protected $category = Categories::CATEGORY_CONDITION_ITEM;
+    protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     public function __construct(string $name = "target", string $item = "item") {
         $this->playerVariableName = $name;

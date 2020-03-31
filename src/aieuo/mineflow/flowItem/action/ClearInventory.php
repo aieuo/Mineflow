@@ -22,7 +22,7 @@ class ClearInventory extends Action implements PlayerFlowItem {
     protected $detail = "action.clearInventory.detail";
     protected $detailDefaultReplace = ["player"];
 
-    protected $category = Categories::CATEGORY_ACTION_PLAYER;
+    protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_NONE;

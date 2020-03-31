@@ -35,7 +35,6 @@ class ActionFactory {
         self::register(new SetSleeping);
         self::register(new SetSitting);
         self::register(new Kick);
-        self::register(new ClearInventory);
         self::register(new SetFood);
         self::register(new SetGamemode);
         self::register(new ShowBossbar);
@@ -51,6 +50,7 @@ class ActionFactory {
         self::register(new AddEnchantment);
         self::register(new EquipArmor);
         self::register(new SetItem);
+        self::register(new ClearInventory);
         /* money */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
