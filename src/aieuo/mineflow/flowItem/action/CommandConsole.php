@@ -17,7 +17,7 @@ use pocketmine\Server;
 
 class CommandConsole extends Action {
 
-    protected $id = self::COMMAND;
+    protected $id = self::COMMAND_CONSOLE;
 
     protected $name = "action.commandConsole.name";
     protected $detail = "action.commandConsole.detail";
