@@ -30,7 +30,7 @@ class ScriptForm {
                 }
 
                 if ((int)$data[0] <= 0) {
-                    $this->sendSetRepeatCount($player, $script, $data, [["@action.repeat.repeatCount.zero", 0]]);
+                    $this->sendSetRepeatCount($player, $script, $data, [[Language::get("flowItem.error.lessValue", [1]), 0]]);
                     return;
                 }
 

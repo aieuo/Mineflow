@@ -18,7 +18,7 @@ class Wait extends Action {
     protected $id = self::ACTION_WAIT;
 
     protected $name = "action.wait.name";
-    protected $detail = "action.wait.description";
+    protected $detail = "action.wait.detail";
     protected $detailDefaultReplace = ["time"];
 
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;

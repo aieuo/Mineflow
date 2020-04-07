@@ -11,7 +11,7 @@ class SaveData extends Action {
     protected $id = self::SAVE_DATA;
 
     protected $name = "action.saveData.name";
-    protected $detail = "action.saveData.description";
+    protected $detail = "action.saveData.detail";
 
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
