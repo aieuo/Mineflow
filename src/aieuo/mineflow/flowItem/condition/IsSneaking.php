@@ -23,7 +23,7 @@ class IsSneaking extends Condition implements EntityFlowItem {
     protected $detail = "condition.isSneaking.detail";
     protected $detailDefaultReplace = ["target"];
 
-    protected $category = Categories::CATEGORY_CONDITION_COMMON;
+    protected $category = Categories::CATEGORY_CONDITION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
     protected $returnValueType = self::RETURN_NONE;

@@ -26,7 +26,7 @@ class CreatePositionVariable extends Action {
     protected $detail = "action.createPositionVariable.detail";
     protected $detailDefaultReplace = ["position", "x", "y", "z", "level"];
 
-    protected $category = Categories::CATEGORY_ACTION_VARIABLE;
+    protected $category = Categories::CATEGORY_ACTION_LEVEL;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_POSITION;

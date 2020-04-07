@@ -23,7 +23,7 @@ class IsFlying extends Condition implements PlayerFlowItem {
     protected $detail = "condition.isFlying.detail";
     protected $detailDefaultReplace = ["player"];
 
-    protected $category = Categories::CATEGORY_CONDITION_COMMON;
+    protected $category = Categories::CATEGORY_CONDITION_PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_NONE;
