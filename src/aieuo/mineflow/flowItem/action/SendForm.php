@@ -38,7 +38,7 @@ class SendForm extends Action implements PlayerFlowItem {
     /** @var string */
     private $formName;
 
-    public function __construct(string $playerName = "", string $formName = "") {
+    public function __construct(string $playerName = "target", string $formName = "") {
         $this->playerVariableName = $playerName;
         $this->formName = $formName;
     }

@@ -23,8 +23,8 @@ abstract class TypeGetMathVariable extends Action {
     /** @var string */
     protected $resultName = "result";
 
-    public function __construct(?string $result = null) {
-        $this->resultName = $result ?? $this->resultName;
+    public function __construct(?string $result = "") {
+        $this->resultName = empty($result) ? $this->resultName : $result;
     }
 
     public function setResultName(string $name): self {
