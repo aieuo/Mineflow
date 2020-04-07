@@ -23,7 +23,7 @@ class AddParticle extends Action implements PositionFlowItem {
 
     protected $name = "action.addParticle.name";
     protected $detail = "action.addParticle.detail";
-    protected $detailDefaultReplace = ["position", "particle", "amount"];
+    protected $detailDefaultReplace = ["position", "particle", "amount", ""];
 
     protected $category = Categories::CATEGORY_ACTION_LEVEL;
 
@@ -63,7 +63,7 @@ class AddParticle extends Action implements PositionFlowItem {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle()]);
+        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() == 1 ? "" : "s"]);
     }
 
     public function execute(Recipe $origin): bool {

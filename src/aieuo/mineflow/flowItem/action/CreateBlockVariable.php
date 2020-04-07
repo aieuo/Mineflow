@@ -24,7 +24,7 @@ class CreateBlockVariable extends Action {
 
     protected $name = "action.createBlockVariable.name";
     protected $detail = "action.createBlockVariable.detail";
-    protected $detailDefaultReplace = ["item", "id", "count"];
+    protected $detailDefaultReplace = ["block", "id"];
 
     protected $category = Categories::CATEGORY_ACTION_BLOCK;
 
