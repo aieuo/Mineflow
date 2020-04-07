@@ -90,7 +90,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[3] === "") $data[3] = "random";
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
