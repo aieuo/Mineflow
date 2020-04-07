@@ -10,7 +10,7 @@ class ORScript extends AndScript {
     protected $id = self::CONDITION_OR;
 
     protected $name = "condition.or.name";
-    protected $description = "condition.or.description";
+    protected $detail = "condition.or.detail";
 
     public function getDetail(): string {
         $details = ["-----------or-----------"];

@@ -18,7 +18,7 @@ class AndScript extends Condition implements ConditionContainer {
     protected $id = self::CONDITION_AND;
 
     protected $name = "condition.and.name";
-    protected $detail = "condition.and.description";
+    protected $detail = "condition.and.detail";
 
     protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
 

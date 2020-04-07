@@ -10,7 +10,7 @@ class NandScript extends AndScript {
     protected $id = self::CONDITION_NAND;
 
     protected $name = "condition.nand.name";
-    protected $detail = "condition.nand.description";
+    protected $detail = "condition.nand.detail";
 
     public function getDetail(): string {
         $details = ["-----------nand-----------"];

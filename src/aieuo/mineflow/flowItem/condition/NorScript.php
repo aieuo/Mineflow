@@ -10,7 +10,7 @@ class NorScript extends ORScript {
     protected $id = self::CONDITION_NOR;
 
     protected $name = "condition.nor.name";
-    protected $detail = "condition.nor.description";
+    protected $detail = "condition.nor.detail";
 
     public function getDetail(): string {
         $details = ["-----------nor-----------"];
