@@ -87,7 +87,7 @@ class RandomNumber extends Condition {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
 
-        return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === $value;
+        return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -110,7 +110,7 @@ class RandomNumber extends Condition {
                 $errors[] = ["@flowItem.error.notNumber", 3];
             }
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Condition {
