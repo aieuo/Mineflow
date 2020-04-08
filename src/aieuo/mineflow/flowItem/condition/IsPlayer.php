@@ -20,7 +20,6 @@ class IsPlayer extends IsActiveEntity {
         $id = $origin->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
-        $entity = EntityHolder::findEntity((int)$id);
-        return $entity instanceof Player;
+        return EntityHolder::isPlayer((int)$id);
     }
 }
