@@ -59,7 +59,7 @@ class Gamemode extends Condition implements PlayerFlowItem {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName()]);
+        return Language::get($this->detail, [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])]);
     }
 
     public function execute(Recipe $origin): bool {

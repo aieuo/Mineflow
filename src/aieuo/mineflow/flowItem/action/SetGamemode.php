@@ -57,7 +57,7 @@ class SetGamemode extends Action implements PlayerFlowItem {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getGamemode()]);
+        return Language::get($this->detail, [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])]);
     }
 
     public function execute(Recipe $origin): bool {
