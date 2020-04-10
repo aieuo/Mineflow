@@ -17,7 +17,7 @@ class RecipeManager {
 
     public function __construct(string $saveDir) {
         $this->saveDir = $saveDir;
-        if (!file_exists($this->saveDir)) @mkdir($this->saveDir, 0666, true);
+        if (!file_exists($this->saveDir)) @mkdir($this->saveDir, 0777, true);
     }
 
     public function getSaveDir(): string {
