@@ -18,7 +18,6 @@ class EventCancel extends Action {
     protected $category = Categories::CATEGORY_ACTION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var Event */
     private $event;

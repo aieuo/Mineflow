@@ -25,7 +25,6 @@ class IsSneaking extends Condition implements EntityFlowItem {
     protected $category = Categories::CATEGORY_CONDITION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "";

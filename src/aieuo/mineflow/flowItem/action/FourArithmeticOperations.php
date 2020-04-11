@@ -24,7 +24,7 @@ class FourArithmeticOperations extends Action {
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_NUMBER;
+    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     const ADDITION = 0;
     const SUBTRACTION = 1;
@@ -41,6 +41,9 @@ class FourArithmeticOperations extends Action {
     private $resultName = "result";
 
     private $operatorSymbols = ["+", "-", "*", "/"];
+
+    /* @var string */
+    private $lastResult;
 
     public function __construct(string $value1 = "", int $operator = self::ADDITION, string $value2 = "", string $resultName = "result") {
         $this->value1 = $value1;
@@ -122,6 +125,7 @@ class FourArithmeticOperations extends Action {
                 throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
         }
 
+        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
         return true;
     }
@@ -160,5 +164,9 @@ class FourArithmeticOperations extends Action {
 
     public function serializeContents(): array {
         return [$this->getValue1(), $this->getOperator(), $this->getValue2(), $this->getResultName()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->lastResult;
     }
 }

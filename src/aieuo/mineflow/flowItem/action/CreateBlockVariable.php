@@ -24,7 +24,7 @@ class CreateBlockVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_BLOCK;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_BLOCK;
+    protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
     private $variableName = "block";
@@ -40,7 +40,7 @@ class CreateBlockVariable extends Action {
         $this->variableName = $variableName;
     }
 
-    public function getResultName(): string {
+    public function getVariableName(): string {
         return $this->variableName;
     }
 
@@ -58,13 +58,13 @@ class CreateBlockVariable extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getResultName(), $this->getBlockId()]);
+        return Language::get($this->detail, [$this->getVariableName(), $this->getBlockId()]);
     }
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getResultName());
+        $name = $origin->replaceVariables($this->getVariableName());
         $id = $origin->replaceVariables($this->getBlockId());
         try {
             $item = ItemFactory::fromString($id);
@@ -87,7 +87,7 @@ class CreateBlockVariable extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.createBlockVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getBlockId()),
-                new Input("@action.createBlockVariable.form.result", Language::get("form.example", ["block"]), $default[2] ?? $this->getResultName()),
+                new Input("@action.createBlockVariable.form.result", Language::get("form.example", ["block"]), $default[2] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -109,6 +109,10 @@ class CreateBlockVariable extends Action {
     }
 
     public function serializeContents(): array {
-        return [$this->getResultName(), $this->getBlockId()];
+        return [$this->getVariableName(), $this->getBlockId()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->getVariableName();
     }
 }

@@ -12,7 +12,6 @@ class InHand extends TypeItem {
     protected $detail = "condition.inHand.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();

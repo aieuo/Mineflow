@@ -28,7 +28,7 @@ class GetEntity extends Action {
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_ENTITY;
+    protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
     private $entityId = "";
@@ -120,5 +120,9 @@ class GetEntity extends Action {
 
     public function serializeContents(): array {
         return [$this->getKey(), $this->getResultName()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->getResultName();
     }
 }

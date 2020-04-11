@@ -23,7 +23,6 @@ class ExistsVariable extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $variableName;

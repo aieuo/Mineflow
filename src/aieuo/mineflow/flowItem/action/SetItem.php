@@ -28,7 +28,6 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
     protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $index;

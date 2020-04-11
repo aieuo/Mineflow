@@ -23,7 +23,6 @@ class IsActiveEntity extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $entityId = "";

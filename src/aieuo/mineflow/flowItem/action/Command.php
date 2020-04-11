@@ -26,7 +26,6 @@ class Command extends Action implements PlayerFlowItem {
     protected $category = Categories::CATEGORY_ACTION_COMMAND;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $command;

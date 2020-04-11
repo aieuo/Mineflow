@@ -13,7 +13,6 @@ class SendMessageToOp extends TypeMessage {
     protected $detail = "action.sendMessageToOp.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();

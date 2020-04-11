@@ -25,12 +25,14 @@ class GetMoney extends Action {
     protected $category = Categories::CATEGORY_ACTION_MONEY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
+    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */
     private $playerName = "{target.name}";
     /** @var string */
     private $resultName = "money";
+    /* @var string */
+    private $lastResult;
 
     public function __construct(string $name = "{target.name}", string $result = "money") {
         $this->playerName = $name;
@@ -75,6 +77,7 @@ class GetMoney extends Action {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         $money = Economy::getPlugin()->getMoney($targetName);
+        $this->lastResult = (string)$money;
         $origin->addVariable(new NumberVariable($money, $resultName));
         return true;
     }
@@ -107,5 +110,9 @@ class GetMoney extends Action {
 
     public function serializeContents(): array {
         return [$this->getPlayerName(), $this->getResultName()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->lastResult;
     }
 }

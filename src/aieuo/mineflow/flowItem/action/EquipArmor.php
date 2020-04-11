@@ -29,7 +29,6 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
     protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $index;

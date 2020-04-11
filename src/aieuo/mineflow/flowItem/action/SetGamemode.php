@@ -26,7 +26,6 @@ class SetGamemode extends Action implements PlayerFlowItem {
     protected $category = Categories::CATEGORY_ACTION_PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     private $gamemodes = [
         "action.gamemode.survival",

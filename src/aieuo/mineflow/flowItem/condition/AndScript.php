@@ -22,7 +22,6 @@ class AndScript extends Condition implements ConditionContainer {
     protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function getDetail(): string {
         $details = ["----------and-----------"];

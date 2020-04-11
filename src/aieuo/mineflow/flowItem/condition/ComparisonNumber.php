@@ -24,7 +24,6 @@ class ComparisonNumber extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     const EQUAL = 0;
     const NOT_EQUAL = 1;

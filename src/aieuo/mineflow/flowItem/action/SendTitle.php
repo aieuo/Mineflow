@@ -25,7 +25,6 @@ class SendTitle extends Action implements PlayerFlowItem {
     protected $category = Categories::CATEGORY_ACTION_MESSAGE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $title;

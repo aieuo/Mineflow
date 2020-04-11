@@ -26,7 +26,6 @@ class SetPitch extends Action implements EntityFlowItem {
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $pitch;

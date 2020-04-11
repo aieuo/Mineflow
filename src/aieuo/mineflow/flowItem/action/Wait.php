@@ -24,7 +24,6 @@ class Wait extends Action {
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $time;

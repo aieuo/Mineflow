@@ -157,10 +157,7 @@ class VariableHelper {
             /** @var Action $newAction */
             $newAction = new $class(...array_map("trim", explode(",", $parameters)));
             $newAction->execute($origin);
-            $result = "";
-            if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE and method_exists($newAction, "getResultName")) {
-                $result = $newAction->getResultName(); // TODO: 作りなおす
-            }
+            $result = $newAction->getReturnValue();
             $string = str_replace("{".$replace."}", $result, $string);
         }
         return $string;

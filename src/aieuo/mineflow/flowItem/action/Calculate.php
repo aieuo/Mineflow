@@ -24,7 +24,7 @@ class Calculate extends Action {
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_NUMBER;
+    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     const SQUARE = 0;
     const SQUARE_ROOT = 1;
@@ -46,6 +46,9 @@ class Calculate extends Action {
     private $resultName = "result";
 
     private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)"];
+
+    /* @var string */
+    private $lastResult;
 
     public function __construct(string $value = "", int $operator = self::SQUARE, string $resultName = "result") {
         $this->value = $value;
@@ -140,6 +143,7 @@ class Calculate extends Action {
                 throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
         }
 
+        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
         return true;
     }
@@ -174,5 +178,9 @@ class Calculate extends Action {
 
     public function serializeContents(): array {
         return [$this->getValue(), $this->getOperator(), $this->getResultName()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->lastResult;
     }
 }

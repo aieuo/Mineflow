@@ -18,10 +18,10 @@ abstract class TypeGetMathVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_CALCULATION;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_NUMBER;
 
     /** @var string */
     protected $resultName = "result";
+    protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(?string $result = "") {
         $this->resultName = empty($result) ? $this->resultName : $result;
@@ -69,5 +69,9 @@ abstract class TypeGetMathVariable extends Action {
 
     public function serializeContents(): array {
         return [$this->getResultName()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->getResultName();
     }
 }

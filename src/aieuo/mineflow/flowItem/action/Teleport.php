@@ -27,7 +27,6 @@ class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
     protected $category = Categories::CATEGORY_ACTION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function __construct(string $name = "target", string $position = "pos") {
         $this->entityVariableName = $name;

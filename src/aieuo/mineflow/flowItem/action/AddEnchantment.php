@@ -28,7 +28,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_ITEM;
+    protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
     private $enchantId;
@@ -39,10 +39,6 @@ class AddEnchantment extends Action implements ItemFlowItem {
         $this->itemVariableName = $name;
         $this->enchantId = $id;
         $this->enchantLevel = $level;
-    }
-
-    public function getResultName(): string {
-        return $this->itemVariableName;
     }
 
     public function setEnchantId(string $enchantId) {
@@ -122,5 +118,9 @@ class AddEnchantment extends Action implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->getItemVariableName();
     }
 }

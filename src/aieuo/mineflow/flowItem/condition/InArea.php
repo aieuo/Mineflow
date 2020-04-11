@@ -29,7 +29,6 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
     protected $category = Categories::CATEGORY_CONDITION_ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-    protected $returnValueType = self::RETURN_NONE;
 
     /* @var string */
     private $pos1 = "pos1";

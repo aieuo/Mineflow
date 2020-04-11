@@ -23,7 +23,6 @@ class RandomNumber extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $min;

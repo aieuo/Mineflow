@@ -12,7 +12,6 @@ class SetItemInHand extends TypeItem {
     protected $detail = "action.setItemInHand.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();

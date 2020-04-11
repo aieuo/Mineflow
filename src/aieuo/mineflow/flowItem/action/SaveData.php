@@ -16,7 +16,6 @@ class SaveData extends Action {
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function isDataValid(): bool {
         return true;

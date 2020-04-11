@@ -25,7 +25,6 @@ class ClearInventory extends Action implements PlayerFlowItem {
     protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function __construct(string $name = "target") {
         $this->playerVariableName = $name;

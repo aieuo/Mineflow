@@ -25,7 +25,7 @@ class CreateItemVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_VARIABLE_ITEM;
+    protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
     private $variableName = "item";
@@ -44,7 +44,7 @@ class CreateItemVariable extends Action {
         $this->variableName = $variableName;
     }
 
-    public function getResultName(): string {
+    public function getVariableName(): string {
         return $this->variableName;
     }
 
@@ -70,13 +70,13 @@ class CreateItemVariable extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getResultName(), $this->getItemId(), $this->getItemCount()]);
+        return Language::get($this->detail, [$this->getVariableName(), $this->getItemId(), $this->getItemCount()]);
     }
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getResultName());
+        $name = $origin->replaceVariables($this->getVariableName());
         $id = $origin->replaceVariables($this->getItemId());
         $count = $origin->replaceVariables($this->getItemCount());
         try {
@@ -102,7 +102,7 @@ class CreateItemVariable extends Action {
                 new Label($this->getDescription()),
                 new Input("@action.createItemVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getItemId()),
                 new Input("@action.createItemVariable.form.count", Language::get("form.example", ["64"]), $default[2] ?? $this->getItemCount()),
-                new Input("@action.createItemVariable.form.result", Language::get("form.example", ["item"]), $default[3] ?? $this->getResultName()),
+                new Input("@action.createItemVariable.form.result", Language::get("form.example", ["item"]), $default[3] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -130,6 +130,10 @@ class CreateItemVariable extends Action {
     }
 
     public function serializeContents(): array {
-        return [$this->getResultName(), $this->getItemId(), $this->getItemCount()];
+        return [$this->getVariableName(), $this->getItemId(), $this->getItemCount()];
+    }
+
+    public function getReturnValue(): string {
+        return $this->getVariableName();
     }
 }

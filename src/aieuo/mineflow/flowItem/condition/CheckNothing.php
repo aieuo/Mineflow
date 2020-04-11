@@ -15,7 +15,6 @@ class CheckNothing extends Condition {
     protected $category = Categories::CATEGORY_CONDITION_COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function execute(Recipe $origin): bool {
         return true;

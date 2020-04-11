@@ -32,7 +32,7 @@ abstract class FlowItem implements \JsonSerializable {
     /** @var string */
     protected $targetRequired;
     /** @var string */
-    protected $returnValueType;
+    protected $returnValueType = self::RETURN_NONE;
 
     public function getId(): string {
         return $this->id;
@@ -145,12 +145,11 @@ abstract class FlowItem implements \JsonSerializable {
     public function sendCustomMenu(Player $player, array $messages = []): void {
     }
 
-
+    public function getReturnValue(): string {
+        return "";
+    }
 
     const RETURN_NONE = "none";
-    const RETURN_VARIABLE_NUMBER = "numberVariable";
-    const RETURN_VARIABLE_ENTITY = "entityVariable";
-    const RETURN_VARIABLE_ITEM = "itemVariable";
-    const RETURN_VARIABLE_POSITION = "positionVariable";
-    const RETURN_VARIABLE_BLOCK = "blockVariable";
+    const RETURN_VARIABLE_NAME = "variableName";
+    const RETURN_VARIABLE_VALUE = "variableValue";
 }

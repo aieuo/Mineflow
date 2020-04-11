@@ -15,7 +15,6 @@ class LessMoney extends TypeMoney {
     protected $detail = "condition.lessMoney.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-    protected $returnValueType = self::RETURN_NONE;
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();

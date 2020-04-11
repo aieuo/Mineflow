@@ -27,7 +27,6 @@ class AddVariable extends Action {
     protected $category = Categories::CATEGORY_ACTION_VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-    protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $variableName;
