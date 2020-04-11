@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\base\EntityFlowItem;
+use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
@@ -17,7 +19,8 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 
-class ExecuteRecipeWithEntity extends ExecuteRecipe {
+class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
+    use EntityFlowItemTrait;
 
     protected $id = self::EXECUTE_RECIPE_WITH_ENTITY;
 
@@ -25,51 +28,32 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
     protected $detail = "action.executeRecipeWithEntity.detail";
     protected $detailDefaultReplace = ["name", "target"];
 
-    /** @var string */
-    private $entityId;
-
-    public function __construct(string $name = "", string $id = "") {
+    public function __construct(string $name = "", string $target = "") {
         parent::__construct($name);
-        $this->entityId = $id;
-    }
-
-    public function setEntityId(string $id): self {
-        $this->entityId = $id;
-        return $this;
-    }
-
-    public function getEntityId(): string {
-        return $this->entityId;
+        $this->entityVariableName = $target;
     }
 
     public function isDataValid(): bool {
-        return $this->getRecipeName() !== "" and $this->getEntityId() !== "";
+        return $this->getRecipeName() !== "" and $this->getEntityVariableName() !== "";
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityId()]);
+        return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityVariableName()]);
     }
 
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
-        $id = $origin->replaceVariables($this->getEntityId());
 
         $recipe = Main::getRecipeManager()->get($name);
         if ($recipe === null) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.executeRecipe.notFound"]]));
         }
 
-        if (!is_numeric($id)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
-        }
-
-        $entity = EntityHolder::findEntity((int)$id);
-        if (!($entity instanceof Entity)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.executeRecipeWithEntity.notFound"]]));
-        }
+        $entity = $this->getEntity($origin);
+        $this->throwIfInvalidEntity($entity);
 
         $recipe = clone $recipe;
         $variables = $origin->getVariables();
@@ -84,37 +68,33 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.executeRecipe.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getRecipeName()),
-                new Input("@action.executeRecipeWithEntity.form.target", Language::get("form.example", ["1"]), $default[2] ?? $this->getEntityId()),
+                new Input("@flowItem.form.target.entity", Language::get("form.example", ["entity"]), $default[2] ?? $this->getEntityVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $status = true;
         $errors = [];
         if ($data[1] === "") {
-            $status = false;
             $errors = [["@form.insufficient", 1]];
         }
         if (!Main::getVariableHelper()->containsVariable($data[1]) and !Main::getRecipeManager()->exists($data[1])) {
-            $status = false;
             $errors = [["@action.executeRecipe.notFound", 1]];
         }
         if ($data[2] === "") {
-            $status = false;
             $errors = [["@form.insufficient", 2]];
         }
-        return ["status" => $status, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
         if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setRecipeName($content[0]);
-        $this->setEntityId($content[1]);
+        $this->setEntityVariableName($content[1]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getRecipeName(), $this->getEntityId()];
+        return [$this->getRecipeName(), $this->getEntityVariableName()];
     }
 }

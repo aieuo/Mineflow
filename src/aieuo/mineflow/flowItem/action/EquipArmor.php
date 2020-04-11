@@ -2,10 +2,10 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\base\EntityFlowItem;
+use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
@@ -14,35 +14,35 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
+use pocketmine\entity\Living;
 
-class EquipArmor extends Action implements PlayerFlowItem, ItemFlowItem {
-    use PlayerFlowItemTrait, ItemFlowItemTrait;
+class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
+    use EntityFlowItemTrait, ItemFlowItemTrait;
 
-    protected $id = self::SET_ITEM;
+    protected $id = self::EQUIP_ARMOR;
 
     protected $name = "action.equipArmor.name";
     protected $detail = "action.equipArmor.detail";
-    protected $detailDefaultReplace = ["player", "item", "index"];
+    protected $detailDefaultReplace = ["entity", "item", "index"];
 
     protected $category = Categories::CATEGORY_ACTION_ITEM;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
     protected $returnValueType = self::RETURN_NONE;
 
     /** @var string */
     private $index;
 
     private $places = [
-        "process.equipArmor.helmet",
-        "process.equipArmor.chestplate",
-        "process.equipArmor.leggings",
-        "process.equipArmor.boots",
+        "action.equipArmor.helmet",
+        "action.equipArmor.chestplate",
+        "action.equipArmor.leggings",
+        "action.equipArmor.boots",
     ];
 
     public function __construct(string $name = "target", string $item = "item", string $index = "") {
-        $this->playerVariableName = $name;
+        $this->entityVariableName = $name;
         $this->itemVariableName = $item;
         $this->index = $index;
     }
@@ -56,12 +56,12 @@ class EquipArmor extends Action implements PlayerFlowItem, ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
+        return $this->getEntityVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()]);
+        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->places[$this->getIndex()])]);
     }
 
     public function execute(Recipe $origin): bool {
@@ -71,13 +71,15 @@ class EquipArmor extends Action implements PlayerFlowItem, ItemFlowItem {
 
         $this->throwIfInvalidNumber($index, 0, 3);
 
-        $player = $this->getPlayer($origin);
-        $this->throwIfInvalidPlayer($player);
+        $entity = $this->getEntity($origin);
+        $this->throwIfInvalidEntity($entity);
 
         $item = $this->getItem($origin);
         $this->throwIfInvalidItem($item);
 
-        $player->getArmorInventory()->setItem($index, $item);
+        if ($entity instanceof Living) {
+            $entity->getArmorInventory()->setItem($index, $item);
+        }
         return true;
     }
 
@@ -85,7 +87,7 @@ class EquipArmor extends Action implements PlayerFlowItem, ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
+                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
                 new Input("@flowItem.form.target.item", Language::get("form.example", ["item"]), $default[2] ?? $this->getItemVariableName()),
                 new Dropdown("@action.equipArmor.form.index", array_map(function (string $text) {
                     return Language::get($text);
@@ -103,13 +105,13 @@ class EquipArmor extends Action implements PlayerFlowItem, ItemFlowItem {
 
     public function loadSaveData(array $content): Action {
         if (!isset($content[2])) throw new \OutOfBoundsException();
-        $this->setPlayerVariableName($content[0]);
+        $this->setEntityVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex((string)$content[2]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()];
+        return [$this->getEntityVariableName(), $this->getItemVariableName(), $this->getIndex()];
     }
 }
