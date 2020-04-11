@@ -63,7 +63,7 @@ class ActionFactory {
         self::register(new ElseifAction);
         self::register(new ElseAction);
         self::register(new RepeatAction);
-        self::register(new WhileAction);
+        self::register(new WhileTaskAction);
         self::register(new Wait);
         self::register(new CallRecipe);
         self::register(new ExecuteRecipe);

@@ -84,4 +84,5 @@ interface ActionIds {
     const ACTION_WHILE = "while";
     const ACTION_WAIT = "wait";
     const SAVE_DATA = "save";
+    const ACTION_WHILE_TASK = "whileTask";
 }

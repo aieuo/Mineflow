@@ -6,7 +6,7 @@ use pocketmine\Player;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\flowItem\action\RepeatAction;
-use aieuo\mineflow\flowItem\action\WhileAction;
+use aieuo\mineflow\flowItem\action\WhileTaskAction;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 
@@ -39,12 +39,12 @@ class ScriptForm {
             })->addArgs($script)->addErrors($errors)->show($player);
     }
 
-    public function sendSetWhileInterval(Player $player, WhileAction $script, array $default = [], array $errors = []) {
+    public function sendSetWhileInterval(Player $player, WhileTaskAction $script, array $default = [], array $errors = []) {
         (new CustomForm("@action.repeat.editCount"))
             ->setContents([
-                new Input("@action.while.interval", Language::get("form.example", ["20"]), $default[0] ?? $script->getInterval()),
+                new Input("@action.whileTask.interval", Language::get("form.example", ["20"]), $default[0] ?? $script->getInterval()),
                 new Toggle("@form.cancelAndBack")
-            ])->onReceive(function (Player $player, ?array $data, WhileAction $script) {
+            ])->onReceive(function (Player $player, ?array $data, WhileTaskAction $script) {
                 if ($data === null) return;
 
                 if ($data[1]) {

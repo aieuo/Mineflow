@@ -20,13 +20,13 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\task\WhileActionTask;
 
-class WhileAction extends Action implements ActionContainer, ConditionContainer {
+class WhileTaskAction extends Action implements ActionContainer, ConditionContainer {
     use ActionContainerTrait, ConditionContainerTrait;
 
     protected $id = self::ACTION_WHILE;
 
-    protected $name = "action.while.name";
-    protected $detail = "action.while.description";
+    protected $name = "action.whileTask.name";
+    protected $detail = "action.whileTask.description";
 
     protected $category = Categories::CATEGORY_ACTION_SCRIPT;
 
@@ -70,7 +70,7 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
     }
 
     public function getDetail(): string {
-        $details = ["", "=============while============="];
+        $details = ["", "=========whileTask(".$this->getInterval().")========="];
         foreach ($this->conditions as $condition) {
             $details[] = $condition->getDetail();
         }
@@ -120,7 +120,7 @@ class WhileAction extends Action implements ActionContainer, ConditionContainer 
                 new Button("@form.back"),
                 new Button("@condition.edit"),
                 new Button("@action.edit"),
-                new Button("@action.while.editInterval"),
+                new Button("@action.whileTask.editInterval"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, ?int $data) {
                 $session = Session::getSession($player);
