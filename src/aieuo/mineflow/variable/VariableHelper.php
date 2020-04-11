@@ -109,7 +109,9 @@ class VariableHelper {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
-                    $name = $this->replaceVariables($name, $variables, $global);
+                    $replaced = $this->replaceVariables($name, $variables, $global);
+                    $string = str_replace($name, $replaced, $string);
+                    $name = $replaced;
                 }
                 $string = $this->replace($string, $name, $variables, $global);
             }
@@ -124,7 +126,9 @@ class VariableHelper {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
-                    $name = $this->replaceVariablesAndFunctions($name, $variables, $origin, $global);
+                    $replaced = $this->replaceVariablesAndFunctions($name, $variables, $origin, $global);
+                    $string = str_replace($name, $replaced, $string);
+                    $name = $replaced;
                 }
                 if (preg_match("/([^()]+)\(([^()]*)\)$/", $name, $matches1)) {
                     $action = ActionFactory::get($matches1[1]);
