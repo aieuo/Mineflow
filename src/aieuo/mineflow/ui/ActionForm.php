@@ -150,7 +150,7 @@ class ActionForm {
         $config = Main::getInstance()->getFavorites();
         $favorites = $config->getNested($player->getName().".action", []);
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.action.menu.title", [$container->getName(), $action->getName()])))
+        (new ListForm(Language::get("form.action.menu.title", [$container->getName(), $action->getId()])))
             ->setContent($action->getDescription()."\n"./*TODO: いる...?*/Language::get("flowItem.target.require", [["flowItem.target.require.".$action->getRequiredTarget()]]))
             ->addButtons([
                 new Button("@form.back"),

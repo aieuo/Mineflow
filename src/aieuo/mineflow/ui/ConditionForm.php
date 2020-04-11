@@ -150,7 +150,7 @@ class ConditionForm {
         $config = Main::getInstance()->getFavorites();
         $favorites = $config->getNested($player->getName().".condition", []);
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getName()])))
+        (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getId()])))
             ->setContent($condition->getDescription())
             ->addButtons([
                 new Button("@form.back"),
