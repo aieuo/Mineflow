@@ -108,8 +108,8 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@condition.inArea.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPos1()),
-                new Input("@condition.inArea.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPos2()),
+                new Input("@condition.form.inArea.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPos1()),
+                new Input("@condition.form.inArea.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPos2()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
