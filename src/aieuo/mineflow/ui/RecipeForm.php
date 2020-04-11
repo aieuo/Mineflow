@@ -315,7 +315,7 @@ class RecipeForm {
                 }
                 $recipe->setArguments($arguments);
                 $this->sendSetArgs($player, $recipe, ["@form.changed"]);
-            })->addArgs($recipe)->show($player);
+            })->addMessages($messages)->addArgs($recipe)->show($player);
     }
 
     public function sendSetReturns(Player $player, Recipe $recipe, array $messages = []) {
@@ -338,7 +338,7 @@ class RecipeForm {
                 }
                 $recipe->setReturnValues($returnValues);
                 $this->sendSetReturns($player, $recipe, ["@form.changed"]);
-            })->addArgs($recipe)->show($player);
+            })->addMessages($messages)->addArgs($recipe)->show($player);
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe) {

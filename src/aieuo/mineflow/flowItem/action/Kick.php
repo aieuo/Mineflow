@@ -6,7 +6,6 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
@@ -58,6 +57,7 @@ class Kick extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getReason()]);
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 

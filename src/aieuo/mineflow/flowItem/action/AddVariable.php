@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\NumberVariable;

@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use pocketmine\entity\Entity;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Categories;

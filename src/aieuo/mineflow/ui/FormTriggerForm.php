@@ -185,6 +185,7 @@ class FormTriggerForm {
         }
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function sendConfirmCreate(Player $player, string $name, callable $callback) {
         (new ModalForm("@trigger.command.confirmCreate.title"))
             ->setContent(Language::get("trigger.command.confirmCreate.content", [$name]))

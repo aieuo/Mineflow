@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 

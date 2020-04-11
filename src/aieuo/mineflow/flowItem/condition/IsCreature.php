@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use pocketmine\entity\Entity;
 use pocketmine\entity\Creature;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\recipe\Recipe;

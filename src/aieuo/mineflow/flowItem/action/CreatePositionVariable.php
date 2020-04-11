@@ -11,10 +11,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use pocketmine\entity\Entity;
-use pocketmine\item\ItemFactory;
 use pocketmine\level\Position;
 use pocketmine\Server;
 

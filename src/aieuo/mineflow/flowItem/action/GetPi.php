@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use pocketmine\entity\Entity;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\recipe\Recipe;
 

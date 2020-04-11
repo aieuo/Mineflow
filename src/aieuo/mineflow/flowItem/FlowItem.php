@@ -5,7 +5,6 @@ namespace aieuo\mineflow\flowItem;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Logger;
 use pocketmine\entity\Creature;
 use pocketmine\entity\Entity;
 use pocketmine\Player;

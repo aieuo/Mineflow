@@ -25,7 +25,7 @@ class CommandManager {
     }
 
 
-    public function isRegisterd(string $command): bool {
+    public function isRegistered(string $command): bool {
         return $this->owner->getServer()->getPluginCommand($command) !== null;
     }
 
@@ -34,7 +34,7 @@ class CommandManager {
 
         foreach ($commands as $command) {
             if (empty($command["command"])) continue;
-            if ($this->isRegisterd($command["command"])) continue;
+            if ($this->isRegistered($command["command"])) continue;
 
             $this->registerCommand(
                 $command["command"],
@@ -47,7 +47,7 @@ class CommandManager {
     public function registerCommand(string $commandStr, string $permission, string $description = ""): bool {
         if ($this->isSubcommand($commandStr)) $commandStr = $this->getOriginCommand($commandStr);
 
-        if (!$this->isRegisterd($commandStr)) {
+        if (!$this->isRegistered($commandStr)) {
             $command = new PluginCommand($commandStr, $this->owner);
             $command->setDescription($description);
             $command->setPermission($permission);
@@ -84,7 +84,7 @@ class CommandManager {
         $this->config->set($origin, $command);
         $this->config->save();
 
-        if (!$this->isRegisterd($origin)) $this->registerCommand($origin, $permission, $description);
+        if (!$this->isRegistered($origin)) $this->registerCommand($origin, $permission, $description);
     }
 
     public function getCommand(string $commandStr): ?array {

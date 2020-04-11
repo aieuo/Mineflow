@@ -8,8 +8,6 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\utils\Config;
 use aieuo\mineflow\Main;
-use pocketmine\Player;
-use pocketmine\utils\UUID;
 
 class VariableHelper {
 

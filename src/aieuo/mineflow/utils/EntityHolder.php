@@ -8,9 +8,6 @@ use pocketmine\Player;
 
 class EntityHolder {
 
-    /** @var self */
-    private static $instance;
-
     /** @var Entity[]|null[] */
     private static $entities = [];
 

@@ -3,8 +3,6 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use pocketmine\utils\TextFormat;
-use pocketmine\entity\Entity;
-use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\economy\Economy;

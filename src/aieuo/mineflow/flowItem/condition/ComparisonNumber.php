@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\formAPI\Form;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;

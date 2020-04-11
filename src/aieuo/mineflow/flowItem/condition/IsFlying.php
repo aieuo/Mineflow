@@ -11,7 +11,6 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\utils\Language;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\recipe\Recipe;
 
 class IsFlying extends Condition implements PlayerFlowItem {

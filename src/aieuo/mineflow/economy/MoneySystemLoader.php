@@ -15,18 +15,22 @@ class MoneySystemLoader implements EconomyLoader {
     }
 
     public function getMoney(string $name) {
+        /** @noinspection PhpUndefinedMethodInspection */
         return (int)$this->getPlugin()->getAPI()->get($name);
     }
 
     public function addMoney(string $name, int $money) {
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->getPlugin()->getAPI()->increase($name, $money);
     }
 
     public function takeMoney(string $name, int $money) {
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->getPlugin()->getAPI()->reduce($name, $money);
     }
 
     public function setMoney(string $name, int $money) {
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->getPlugin()->getAPI()->set($name, $money);
     }
 }

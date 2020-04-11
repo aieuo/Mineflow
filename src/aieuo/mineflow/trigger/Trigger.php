@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\trigger;
 
-use pocketmine\entity\Entity;
-
 class Trigger implements \JsonSerializable {
 
     const TYPE_BLOCK = "block";

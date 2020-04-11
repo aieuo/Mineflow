@@ -26,6 +26,7 @@ class ObjectVariable extends Variable {
         return parent::getValue();
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function getValueFromIndex(string $index): ?Variable {
         return null;
     }

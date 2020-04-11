@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use pocketmine\entity\Entity;
 use pocketmine\Server;
 use aieuo\mineflow\recipe\Recipe;
 

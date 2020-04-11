@@ -51,6 +51,7 @@ class Wait extends Action {
         return Language::get($this->detail, [$this->getTime()]);
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 

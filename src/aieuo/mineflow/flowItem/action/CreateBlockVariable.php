@@ -7,16 +7,11 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use pocketmine\block\Block;
-use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
 
 class CreateBlockVariable extends Action {
 

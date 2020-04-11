@@ -37,6 +37,7 @@ class HomeForm {
             })->show($player);
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function sendConfirmRename(Player $player, string $name, string $newName, callable $callback) {
         (new ModalForm("@form.home.rename.title"))
             ->setContent(Language::get("form.home.rename.content", [$name, $newName]))

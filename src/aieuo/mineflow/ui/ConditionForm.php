@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionFactory;
@@ -80,7 +81,13 @@ class ConditionForm {
                 ->show($player);
             return;
         }
-        $condition->loadSaveData($data["contents"]);
+        try {
+            $condition->loadSaveData($data["contents"]);
+        } catch (FlowItemLoadException|\OutOfBoundsException $e) {
+            $player->sendMessage(Language::get("action.error.recipe"));
+            Main::getInstance()->getLogger()->logException($e);
+            return;
+        }
         call_user_func_array($callback, [true]);
     }
 

@@ -31,7 +31,6 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
-use pocketmine\tile\Sign;
 use pocketmine\item\Item;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Event;
@@ -39,7 +38,6 @@ use pocketmine\entity\Entity;
 use pocketmine\block\Block;
 use pocketmine\Server;
 use pocketmine\Player;
-use pocketmine\tile\Tile;
 
 class DefaultVariables {
 

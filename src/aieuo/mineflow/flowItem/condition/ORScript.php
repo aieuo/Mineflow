@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use pocketmine\entity\Entity;
 use aieuo\mineflow\recipe\Recipe;
 
 class ORScript extends AndScript {

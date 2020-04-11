@@ -12,7 +12,6 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
-use pocketmine\entity\Entity;
 use pocketmine\item\ItemFactory;
 
 class CreateItemVariable extends Action {

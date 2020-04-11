@@ -4,7 +4,6 @@ namespace aieuo\mineflow\task;
 
 use aieuo\mineflow\flowItem\action\WhileTaskAction;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\entity\Entity;
 use pocketmine\scheduler\Task;
 
 class WhileActionTask extends Task {

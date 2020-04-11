@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\flowItem\action\ActionFactory;
@@ -80,7 +81,13 @@ class ActionForm {
                 ->show($player);
             return;
         }
-        $action->loadSaveData($data["contents"]);
+        try {
+            $action->loadSaveData($data["contents"]);
+        } catch (FlowItemLoadException|\OutOfBoundsException $e) {
+            $player->sendMessage(Language::get("action.error.recipe"));
+            Main::getInstance()->getLogger()->logException($e);
+            return;
+        }
         call_user_func_array($callback, [true]);
     }
 

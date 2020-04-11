@@ -2,9 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use pocketmine\entity\Entity;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 
 class RemoveItem extends TypeItem {

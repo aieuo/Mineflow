@@ -10,7 +10,6 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use pocketmine\entity\Entity;
 use aieuo\mineflow\utils\Categories;
 use aieuo\mineflow\recipe\Recipe;
 

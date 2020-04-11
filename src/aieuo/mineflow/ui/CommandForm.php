@@ -67,7 +67,7 @@ class CommandForm {
                     $this->sendAddCommand($player, $data, [["@form.command.alreadyExists", 0]]);
                     return;
                 }
-                if ($manager->isRegisterd($original)) {
+                if ($manager->isRegistered($original)) {
                     $this->sendAddCommand($player, $data, [["@form.command.alreadyUsed", 0]]);
                     return;
                 }
