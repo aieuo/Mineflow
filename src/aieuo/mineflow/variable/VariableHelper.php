@@ -113,49 +113,55 @@ class VariableHelper {
                     $string = str_replace($name, $replaced, $string);
                     $name = $replaced;
                 }
-                $string = $this->replace($string, $name, $variables, $global);
+                $string = $this->replaceVariable($string, $name, $variables, $global);
             }
             if (--$limit < 0) break;
         }
         return $string;
     }
 
-    public function replaceVariablesAndFunctions(string $string, array $variables, Recipe $origin, bool $global = true) {
+    public function replaceVariablesAndFunctions(string $string, Recipe $origin, bool $global = true) {
         $limit = 10;
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
-                    $replaced = $this->replaceVariablesAndFunctions($name, $variables, $origin, $global);
+                    $replaced = $this->replaceVariablesAndFunctions($name, $origin, $global);
                     $string = str_replace($name, $replaced, $string);
                     $name = $replaced;
                 }
-                if (preg_match("/([^()]+)\(([^()]*)\)$/", $name, $matches1)) {
-                    $action = ActionFactory::get($matches1[1]);
-                    if ($action === null) {
-                        $string = str_replace("{".$matches1[0]."}", "§cUnknown action name", $string);
-                    } else {
-                        $class = get_class($action);
-                        /** @var Action $newAction */
-                        $newAction = new $class(...array_map(function (string $argument) use ($variables, $origin, $global) {
-                            $argument = trim($argument);
-                            if (strpos($argument, "{") !== false and strpos($argument, "}") !== false) {
-                                $argument = $this->replaceVariablesAndFunctions($argument, $variables, $origin, $global);
-                            }
-                            return $argument;
-                        }, explode(",", $matches1[2])));
-                        $newAction->execute($origin);
-                        $result = "";
-                        if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE and method_exists($newAction, "getResultName")) {
-                            $result = $newAction->getResultName(); // TODO: 作りなおす
-                        }
-                        $string = str_replace("{".$matches1[0]."}", $result, $string);
-                    }
+                if (strpos($name, "(") !== false and strpos($name, ")") !== false) {
+                    $string = $this->replaceFunction($string, $name, $origin);
                 } else {
-                    $string = $this->replace($string, $name, $variables, $global);
+                    $string = $this->replaceVariable($string, $name, $origin->getVariables(), $global);
                 }
             }
             if (--$limit < 0) break;
+        }
+        return $string;
+    }
+
+    public function replaceFunction(string $string, string $replace, Recipe $origin) {
+        if (strpos($string, "{".$replace."}") === false) return $string;
+
+        if (preg_match("/^([a-zA-Z0-9]+)\((.*)\)$/", $replace, $matches)) {
+            $name = $matches[1];
+            $parameters = $matches[2];
+
+            $action = ActionFactory::get($name);
+            if ($action === null) {
+                return str_replace("{".$replace."}", "§cUnknown action id", $string);
+            }
+
+            $class = get_class($action);
+            /** @var Action $newAction */
+            $newAction = new $class(...array_map("trim", explode(",", $parameters)));
+            $newAction->execute($origin);
+            $result = "";
+            if ($newAction->getReturnValueType() != FlowItem::RETURN_NONE and method_exists($newAction, "getResultName")) {
+                $result = $newAction->getResultName(); // TODO: 作りなおす
+            }
+            $string = str_replace("{".$replace."}", $result, $string);
         }
         return $string;
     }
@@ -168,7 +174,7 @@ class VariableHelper {
      * @param bool $global
      * @return string
      */
-    public function replace(string $string, string $replace, array $variables = [], bool $global = true) {
+    public function replaceVariable(string $string, string $replace, array $variables = [], bool $global = true) {
         if (strpos($string, "{".$replace."}") === false) return $string;
 
         $names = explode(".", preg_replace("/\[([^\[\]]+)]/", '.${1}', $replace));
