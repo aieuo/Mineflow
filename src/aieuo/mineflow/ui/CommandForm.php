@@ -139,7 +139,7 @@ class CommandForm {
     public function sendCommandMenu(Player $player, array $command, array $messages = []) {
         $permission = str_replace("mineflow.customcommand", "@form.command.addCommand.permission", $command["permission"]);
         (new ListForm("/".$command["command"]))
-            ->setContent("/".$command["command"]."\n".Language::get("form.command.description").": ".$permission."\n".Language::get("form.command.permission").": ".$command["description"])
+            ->setContent("/".$command["command"]."\n".Language::get("form.command.permission").": ".$permission."\n".Language::get("form.command.description").": ".$command["description"])
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.command.commandMenu.editDescription"),
