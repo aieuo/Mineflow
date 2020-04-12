@@ -117,26 +117,28 @@ class ConditionForm {
 
                         $conditions[] = $condition;
                     }
-                    $this->sendSelectCondition($player, $container, $conditions, Language::get("form.items.category.favorite"));
+                    Session::getSession($player)->set("flowItem_category", Language::get("form.items.category.favorite"));
+                    $this->sendSelectCondition($player, $container, $conditions);
                     return;
                 }
                 $data -= 2;
 
                 $category = $categories[$data];
-                $conditions = ConditionFactory::getByCategory($category);
+                $conditions = ConditionFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getNested($player->getName().".permission", 0));
 
+                Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
                 $this->sendSelectCondition($player, $container, $conditions);
             })->addArgs($container, $categories)->show($player);
     }
 
-    public function sendSelectCondition(Player $player, ConditionContainer $container, array $conditions, string $category = "") {
+    public function sendSelectCondition(Player $player, ConditionContainer $container, array $conditions) {
         $buttons = [new Button("@form.back")];
         foreach ($conditions as $condition) {
             $buttons[] = new Button($condition->getName());
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.condition.select.title", [$container->getName(), $category])))
-            ->setContent("@form.selectButton")
+        (new ListForm(Language::get("form.condition.select.title", [$container->getName(), Session::getSession($player)->get("flowItem_category", "")])))
+            ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
                 if ($data === null) return;

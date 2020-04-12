@@ -106,13 +106,16 @@ class ActionFactory {
     }
 
     /**
-     * @param int $category
+     * @param string $category
+     * @param int $permission
      * @return Action[]
      */
-    public static function getByCategory(int $category): array {
+    public static function getByFilter(string $category = null, int $permission = null): array {
         $processes = [];
         foreach (self::$list as $process) {
-            if ($process->getCategory() === $category) $processes[] = $process;
+            if ($category !== null and $process->getCategory() !== $category) continue;
+            if ($permission !== null and $process->getPermission() > $permission) continue;
+            $processes[] = $process;
         }
         return $processes;
     }

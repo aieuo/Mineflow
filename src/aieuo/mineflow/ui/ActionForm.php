@@ -117,26 +117,28 @@ class ActionForm {
 
                         $actions[] = $action;
                     }
-                    $this->sendSelectAction($player, $container, $actions, Language::get("form.items.category.favorite"));
+                    Session::getSession($player)->set("flowItem_category", Language::get("form.items.category.favorite"));
+                    $this->sendSelectAction($player, $container, $actions);
                     return;
                 }
                 $data -= 2;
 
                 $category = $categories[$data];
-                $actions = ActionFactory::getByCategory($category);
+                $actions = ActionFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getNested($player->getName().".permission", 0));
 
+                Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
                 $this->sendSelectAction($player, $container, $actions);
             })->addArgs($container, $categories)->show($player);
     }
 
-    public function sendSelectAction(Player $player, ActionContainer $container, array $actions, string $category = "") {
+    public function sendSelectAction(Player $player, ActionContainer $container, array $actions) {
         $buttons = [new Button("@form.back")];
         foreach ($actions as $action) {
             $buttons[] = new Button($action->getName());
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.action.select.title", [$container->getName(), $category])))
-            ->setContent("@form.selectButton")
+        (new ListForm(Language::get("form.action.select.title", [$container->getName(), Session::getSession($player)->get("flowItem_category", "")])))
+            ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
                 if ($data === null) return;

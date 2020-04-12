@@ -31,6 +31,8 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
+    protected $permission = self::PERMISSION_LEVEL_1;
+
     /** @var int */
     private $interval = 20;
     /** @var int */

@@ -39,6 +39,12 @@ abstract class FlowItem implements \JsonSerializable {
     /** @var string */
     protected $returnValueType = self::RETURN_NONE;
 
+    const PERMISSION_LEVEL_0 = 0;
+    const PERMISSION_LEVEL_1 = 1;
+    const PERMISSION_LEVEL_2 = 2;
+    /** @var int */
+    protected $permission = self::PERMISSION_LEVEL_0;
+
     public function getId(): string {
         return $this->id;
     }
@@ -66,6 +72,10 @@ abstract class FlowItem implements \JsonSerializable {
 
     public function getCategory(): string {
         return $this->category;
+    }
+
+    public function getPermission(): int {
+        return $this->permission;
     }
 
     public function getRequiredTarget(): string {

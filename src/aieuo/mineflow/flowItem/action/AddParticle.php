@@ -29,6 +29,8 @@ class AddParticle extends Action implements PositionFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
+    protected $permission = self::PERMISSION_LEVEL_1;
+
     /** @var string */
     private $particle;
     /** @var string */

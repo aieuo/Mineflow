@@ -54,13 +54,16 @@ class ConditionFactory {
     }
 
     /**
-     * @param int $category
+     * @param string $category
+     * @param int|null $permission
      * @return Condition[]
      */
-    public static function getByCategory(int $category): array {
+    public static function getByFilter(string $category = null, int $permission = null): array {
         $conditions = [];
         foreach (self::$list as $condition) {
-            if ($condition->getCategory() === $category) $conditions[] = $condition;
+            if ($category !== null and $condition->getCategory() !== $category) continue;
+            if ($permission !== null and $condition->getPermission() > $permission) continue;
+            $conditions[] = $condition;
         }
         return $conditions;
     }

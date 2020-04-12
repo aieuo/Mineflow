@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\command;
 
+use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\CustomFormForm;
 use aieuo\mineflow\ui\SettingForm;
 use pocketmine\command\CommandSender;
@@ -62,6 +63,21 @@ class MineflowCommand extends Command {
                     return;
                 }
                 (new SettingForm)->sendMenu($sender);
+                break;
+            case "permission":
+                if (!isset($args[1])) {
+                    $sender->sendMessage(Language::get("command.permission.usage"));
+                    return;
+                }
+                $config = Main::getInstance()->getPlayerSettings();
+                $permission = $sender instanceof Player ? $config->getNested($sender->getName().".permission", 0) : 2;
+                if ($permission < (int)$args[1]) {
+                    $sender->sendMessage(Language::get("command.permission.permission.notEnough"));
+                    return;
+                }
+                $config->setNested($args[0].".permission", (int)$args[1]);
+                $config->save();
+                $sender->sendMessage(Language::get("form.changed"));
                 break;
             default:
                 if (!($sender instanceof Player)) {
