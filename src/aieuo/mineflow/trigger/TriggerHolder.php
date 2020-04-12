@@ -7,7 +7,7 @@ use aieuo\mineflow\recipe\RecipeContainer;
 
 class TriggerHolder {
 
-    /** @var RecipeContainer[][] */
+    /** @var RecipeContainer[][][] */
     private $recipes = [];
 
     /** @var TriggerHolder */
@@ -19,17 +19,17 @@ class TriggerHolder {
     }
 
     public function addTrigger(Trigger $trigger) {
-        if (!isset($this->recipes[$trigger->getType()][$trigger->getKey()]))  {
-            $this->recipes[$trigger->getType()][$trigger->getKey()] = new RecipeContainer();
+        if (!isset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()]))  {
+            $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()] = new RecipeContainer();
         }
     }
 
-    public function existsRecipeByTrigger(Trigger $trigger): bool {
-        return isset($this->recipes[$trigger->getType()][$trigger->getKey()]);
+    public function existsRecipe(Trigger $trigger): bool {
+        return isset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()]);
     }
 
-    public function existsRecipe(string $type, string $key): bool {
-        return isset($this->recipes[$type][$key]);
+    public function existsRecipeByString(string $type, string $key, string $subKey = ""): bool {
+        return isset($this->recipes[$type][$key][$subKey]);
     }
 
     public function addRecipe(Trigger $trigger, Recipe $recipe): void {
@@ -39,14 +39,14 @@ class TriggerHolder {
     }
 
     public function removeRecipe(Trigger $trigger, Recipe $recipe): void {
-        $container = $this->recipes[$trigger->getType()][$trigger->getKey()];
+        $container = $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()];
         $container->removeRecipe($recipe->getName());
         if ($container->getRecipeCount() === 0) {
-            unset($this->recipes[$trigger->getType()][$trigger->getKey()]);
+            unset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()]);
         }
     }
 
     public function getRecipes(Trigger $trigger): ?RecipeContainer {
-        return $this->recipes[$trigger->getType()][$trigger->getKey()] ?? null;
+        return $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()] ?? null;
     }
 }

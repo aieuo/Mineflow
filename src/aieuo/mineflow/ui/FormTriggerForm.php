@@ -96,7 +96,7 @@ class FormTriggerForm {
                                 $this->sendSelectForm($player, $recipe);
                                 return;
                             case 2:
-                                $trigger->setKey($form->getName().";close");
+                                $trigger->setSubKey("close");
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {
@@ -126,10 +126,10 @@ class FormTriggerForm {
                                 $this->sendSelectForm($player, $recipe);
                                 return;
                             case 2:
-                                $trigger->setKey($form->getName().";1");
+                                $trigger->setSubKey("1");
                                 break;
                             case 3:
-                                $trigger->setKey($form->getName().";2");
+                                $trigger->setSubKey("2");
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {
@@ -165,11 +165,11 @@ class FormTriggerForm {
                             case 1:
                                 break;
                             case 2:
-                                $trigger->setKey($form->getName().";close");
+                                $trigger->setSubKey("close");
                                 break;
                             default:
                                 $button = $form->getButton($data - 3);
-                                $trigger->setKey($form->getName().";".$button->getUUId());
+                                $trigger->setSubKey($button->getUUId());
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {

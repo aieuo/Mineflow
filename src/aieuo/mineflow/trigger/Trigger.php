@@ -15,9 +15,13 @@ class Trigger implements \JsonSerializable {
     /** @var string */
     private $key;
 
-    public function __construct(string $type, string $key) {
+    /** @var string */
+    private $subKey = "";
+
+    public function __construct(string $type, string $key, string $subKey = "") {
         $this->type = $type;
         $this->key = $key;
+        $this->subKey = $subKey;
     }
 
     public function getType(): string {
@@ -32,10 +36,19 @@ class Trigger implements \JsonSerializable {
         $this->key = $key;
     }
 
+    public function getSubKey(): string {
+        return $this->subKey;
+    }
+
+    public function setSubKey(string $subKey): void {
+        $this->subKey = $subKey;
+    }
+
     public function jsonSerialize() {
         return [
             "type" => $this->getType(),
             "key" => $this->getKey(),
+            "subKey" => $this->getSubKey(),
         ];
     }
 }

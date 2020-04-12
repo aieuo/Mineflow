@@ -161,7 +161,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function setTriggersFromArray(array $triggers) {
         $this->removeTriggerAll();
         foreach ($triggers as $trigger) {
-            $this->addTrigger(new Trigger($trigger["type"], $trigger["key"]));
+            $this->addTrigger(new Trigger($trigger["type"], $trigger["key"], $trigger["subKey"] ?? ""));
         }
     }
 

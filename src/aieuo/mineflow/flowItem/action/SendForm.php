@@ -79,23 +79,23 @@ class SendForm extends Action implements PlayerFlowItem {
         $holder = TriggerHolder::getInstance();
         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
         if ($data === null) {
-            $trigger->setKey($form->getName().";close");
-            if ($holder->existsRecipeByTrigger($trigger)) {
+            $trigger->setSubKey("close");
+            if ($holder->existsRecipe($trigger)) {
                 $recipes = $holder->getRecipes($trigger);
                 $recipes->executeAll($player);
             }
             return;
         }
         $variables = Main::getFormManager()->getFormDataVariable($form, $data);
-        if ($holder->existsRecipeByTrigger($trigger)) {
+        if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player, $variables);
         }
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */
-                $trigger->setKey($form->getName().";".($data ? "1" : "2"));
-                if ($holder->existsRecipeByTrigger($trigger)) {
+                $trigger->setSubKey($data ? "1" : "2");
+                if ($holder->existsRecipe($trigger)) {
                     $recipes = $holder->getRecipes($trigger);
                     $recipes->executeAll($player, $variables);
                 }
@@ -103,8 +103,8 @@ class SendForm extends Action implements PlayerFlowItem {
             case $form instanceof ListForm:
                 /** @var int $data */
                 $button = $form->getButton($data);
-                $trigger->setKey($form->getName().";".$button->getUUId());
-                if ($holder->existsRecipeByTrigger($trigger)) {
+                $trigger->setSubKey($button->getUUId());
+                if ($holder->existsRecipe($trigger)) {
                     $recipes = $holder->getRecipes($trigger);
                     $recipes->executeAll($player, $variables);
                 }
