@@ -63,6 +63,10 @@ class RecipeForm {
 
                 $manager = Main::getRecipeManager();
                 $name = $data[0] === "" ? $defaultName : $data[0];
+                if (preg_match("#[¥/:?<>|*\"]#", preg_quote($name))) {
+                    $this->sendAddRecipe($player, $name, Language::get("form.recipe.invalidName", [$name]));
+                    return;
+                }
                 if ($manager->exists($name)) {
                     $newName = $manager->getNotDuplicatedName($name);
                     (new HomeForm)->sendConfirmRename($player, $name, $newName, function (bool $result, string $name, string $newName) use ($player) {
