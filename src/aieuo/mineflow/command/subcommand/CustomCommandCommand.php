@@ -17,10 +17,10 @@ class CustomCommandCommand extends MineflowSubcommand {
 
         switch ($args[0]) {
             case "add":
-                (new CommandForm)->sendAddCommand($sender);
+                (new CommandForm)->sendAddCommand($sender, [$args[1] ?? "", $args[2] ?? "", $args[3] ?? 0]);
                 break;
             case "edit":
-                (new CommandForm)->sendSelectCommand($sender);
+                (new CommandForm)->sendSelectCommand($sender, [$args[1] ?? ""]);
                 break;
             case "list":
                 (new CommandForm)->sendCommandList($sender);

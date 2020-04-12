@@ -17,10 +17,10 @@ class RecipeCommand extends MineflowSubcommand {
 
         switch ($args[0]) {
             case "add":
-                (new RecipeForm)->sendAddRecipe($sender);
+                (new RecipeForm)->sendAddRecipe($sender, $args[1] ?? "");
                 break;
             case "edit":
-                (new RecipeForm)->sendSelectRecipe($sender);
+                (new RecipeForm)->sendSelectRecipe($sender, $args[1] ?? "");
                 break;
             case "list":
                 (new RecipeForm)->sendRecipeList($sender);

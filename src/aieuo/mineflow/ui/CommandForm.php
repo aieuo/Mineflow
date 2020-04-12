@@ -52,7 +52,7 @@ class CommandForm {
                 new Dropdown("@form.command.permission", [
                     Language::get("form.command.addCommand.permission.op"),
                     Language::get("form.command.addCommand.permission.true"),
-                ]),
+                ], $defaults[2] ?? 0),
                 new Toggle("@form.cancelAndBack"),
             ])->onReceive(function (Player $player, ?array $data) {
                 if ($data === null) return;
