@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
@@ -45,8 +46,14 @@ class CommandTriggerForm {
         (new CustomForm(Language::get("trigger.command.select.title", [$recipe->getName()])))
             ->setContents([
                 new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? ""),
+                new Toggle("@form.back"),
             ])->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
                 if ($data === null) return;
+
+                if ($data[1]) {
+                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    return;
+                }
 
                 if (empty($data[0])) {
                     $this->sendSelectCommand($player, $recipe, $data, [["@form.insufficient", 0]]);
