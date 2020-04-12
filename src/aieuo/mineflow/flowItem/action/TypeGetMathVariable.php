@@ -8,14 +8,14 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 abstract class TypeGetMathVariable extends Action {
 
     protected $detailDefaultReplace = ["result"];
 
-    protected $category = Categories::CATEGORY_ACTION_CALCULATION;
+    protected $category = Category::MATH;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\math\Vector3;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -24,7 +24,7 @@ class Motion extends Action implements EntityFlowItem {
     protected $detail = "action.motion.detail";
     protected $detailDefaultReplace = ["entity", "x", "y", "z"];
 
-    protected $category = Categories::CATEGORY_ACTION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 

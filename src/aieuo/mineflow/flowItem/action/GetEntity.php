@@ -10,7 +10,7 @@ use pocketmine\Player;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -25,7 +25,7 @@ class GetEntity extends Action {
     protected $detail = "action.getEntity.detail";
     protected $detailDefaultReplace = ["id", "result"];
 
-    protected $category = Categories::CATEGORY_ACTION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;

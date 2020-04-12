@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -25,7 +25,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     protected $detail = "action.addEnchant.detail";
     protected $detailDefaultReplace = ["item", "id", "level"];
 
-    protected $category = Categories::CATEGORY_ACTION_ITEM;
+    protected $category = Category::ITEM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;

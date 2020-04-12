@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
@@ -24,7 +24,7 @@ class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
     protected $detail = "action.teleport.detail";
     protected $detailDefaultReplace = ["entity", "position"];
 
-    protected $category = Categories::CATEGORY_ACTION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 

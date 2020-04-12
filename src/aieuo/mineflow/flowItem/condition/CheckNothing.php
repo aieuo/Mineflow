@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class CheckNothing extends Condition {
@@ -12,7 +12,7 @@ class CheckNothing extends Condition {
     protected $name = "condition.noCheck.name";
     protected $detail = "condition.noCheck.detail";
 
-    protected $category = Categories::CATEGORY_CONDITION_COMMON;
+    protected $category = Category::COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

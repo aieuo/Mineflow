@@ -7,7 +7,7 @@ use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -24,7 +24,7 @@ class AddVariable extends Action {
     protected $detail = "action.addVariable.detail";
     protected $detailDefaultReplace = ["name", "value", "type", "scope"];
 
-    protected $category = Categories::CATEGORY_ACTION_VARIABLE;
+    protected $category = Category::VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

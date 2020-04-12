@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -23,7 +23,7 @@ class Command extends Action implements PlayerFlowItem {
     protected $detail = "action.command.detail";
     protected $detailDefaultReplace = ["player", "command"];
 
-    protected $category = Categories::CATEGORY_ACTION_COMMAND;
+    protected $category = Category::COMMAND;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

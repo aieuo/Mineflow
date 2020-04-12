@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -25,7 +25,7 @@ class PlaySoundAt extends Action implements PositionFlowItem {
     protected $detail = "action.playSoundAt.detail";
     protected $detailDefaultReplace = ["position", "sound", "volume", "pitch"];
 
-    protected $category = Categories::CATEGORY_ACTION_PLAYER;
+    protected $category = Category::LEVEL;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -25,7 +25,7 @@ class AddParticle extends Action implements PositionFlowItem {
     protected $detail = "action.addParticle.detail";
     protected $detailDefaultReplace = ["position", "particle", "amount", ""];
 
-    protected $category = Categories::CATEGORY_ACTION_LEVEL;
+    protected $category = Category::LEVEL;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\ui\ActionForm;
 use aieuo\mineflow\ui\ActionContainerForm;
 use aieuo\mineflow\recipe\Recipe;
@@ -19,7 +19,7 @@ class ElseAction extends Action implements ActionContainer {
     protected $name = "action.else.name";
     protected $detail = "action.else.description";
 
-    protected $category = Categories::CATEGORY_ACTION_SCRIPT;
+    protected $category = Category::SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

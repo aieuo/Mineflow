@@ -10,7 +10,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class SetImmobile extends Action implements EntityFlowItem {
@@ -22,7 +22,7 @@ class SetImmobile extends Action implements EntityFlowItem {
     protected $detail = "action.setImmobile.detail";
     protected $detailDefaultReplace = ["entity"];
 
-    protected $category = Categories::CATEGORY_ACTION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 

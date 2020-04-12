@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -22,7 +22,7 @@ class AddListVariable extends Action {
     protected $detail = "action.addListVariable.detail";
     protected $detailDefaultReplace = ["name", "scope", "value"];
 
-    protected $category = Categories::CATEGORY_ACTION_VARIABLE;
+    protected $category = Category::VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

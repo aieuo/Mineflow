@@ -10,7 +10,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class IsOp extends Condition implements PlayerFlowItem {
@@ -22,7 +22,7 @@ class IsOp extends Condition implements PlayerFlowItem {
     protected $detail = "condition.isOp.detail";
     protected $detailDefaultReplace = ["player"];
 
-    protected $category = Categories::CATEGORY_CONDITION_PLAYER;
+    protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

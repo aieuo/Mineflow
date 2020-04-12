@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -26,7 +26,7 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
     protected $detail = "action.equipArmor.detail";
     protected $detailDefaultReplace = ["entity", "item", "index"];
 
-    protected $category = Categories::CATEGORY_ACTION_ITEM;
+    protected $category = Category::INVENTORY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 

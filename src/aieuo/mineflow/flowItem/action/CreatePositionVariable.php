@@ -9,7 +9,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
@@ -23,7 +23,7 @@ class CreatePositionVariable extends Action {
     protected $detail = "action.createPositionVariable.detail";
     protected $detailDefaultReplace = ["position", "x", "y", "z", "level"];
 
-    protected $category = Categories::CATEGORY_ACTION_LEVEL;
+    protected $category = Category::LEVEL;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;

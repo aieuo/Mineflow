@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\ui\ScriptForm;
 use aieuo\mineflow\ui\ConditionContainerForm;
 use aieuo\mineflow\ui\ActionForm;
@@ -27,7 +27,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
     protected $name = "action.whileTask.name";
     protected $detail = "action.whileTask.description";
 
-    protected $category = Categories::CATEGORY_ACTION_SCRIPT;
+    protected $category = Category::SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

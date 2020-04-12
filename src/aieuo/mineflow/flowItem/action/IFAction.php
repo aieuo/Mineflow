@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\ui\ConditionContainerForm;
 use aieuo\mineflow\ui\ActionForm;
 use aieuo\mineflow\ui\ActionContainerForm;
@@ -23,7 +23,7 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     protected $name = "@action.if.name";
     protected $detail = "@action.if.description";
 
-    protected $category = Categories::CATEGORY_ACTION_SCRIPT;
+    protected $category = Category::SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

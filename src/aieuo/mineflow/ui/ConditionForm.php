@@ -11,7 +11,7 @@ use aieuo\mineflow\recipe\Recipe;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
@@ -93,7 +93,7 @@ class ConditionForm {
 
     public function selectConditionCategory(Player $player, ConditionContainer $container) {
         $buttons = [new Button("@form.back"), new Button("@form.items.category.favorite")];
-        $categories = Categories::getConditionCategories();
+        $categories = Category::getCategories();
         foreach ($categories as $category) {
             $buttons[] = new Button("@category.".$category);
         }
@@ -125,8 +125,8 @@ class ConditionForm {
                 $category = $categories[$data];
                 $conditions = ConditionFactory::getByCategory($category);
 
-                $this->sendSelectCondition($player, $container, $conditions, Categories::getConditionCategories()[$category]);
-            })->addArgs($container, array_keys($categories))->show($player);
+                $this->sendSelectCondition($player, $container, $conditions);
+            })->addArgs($container, $categories)->show($player);
     }
 
     public function sendSelectCondition(Player $player, ConditionContainer $container, array $conditions, string $category = "") {

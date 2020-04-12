@@ -11,7 +11,7 @@ use aieuo\mineflow\recipe\Recipe;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
@@ -93,7 +93,7 @@ class ActionForm {
 
     public function selectActionCategory(Player $player, ActionContainer $container) {
         $buttons = [new Button("@form.back"), new Button("@form.items.category.favorite")];
-        $categories = Categories::getActionCategories();
+        $categories = Category::getCategories();
         foreach ($categories as $category) {
             $buttons[] = new Button("@category.".$category);
         }
@@ -125,8 +125,8 @@ class ActionForm {
                 $category = $categories[$data];
                 $actions = ActionFactory::getByCategory($category);
 
-                $this->sendSelectAction($player, $container, $actions, Categories::getActionCategories()[$category]);
-            })->addArgs($container, array_keys($categories))->show($player);
+                $this->sendSelectAction($player, $container, $actions);
+            })->addArgs($container, $categories)->show($player);
     }
 
     public function sendSelectAction(Player $player, ActionContainer $container, array $actions, string $category = "") {

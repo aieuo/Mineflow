@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -20,7 +20,7 @@ class DeleteVariable extends Action {
     protected $detail = "action.deleteVariable.detail";
     protected $detailDefaultReplace = ["name", "scope"];
 
-    protected $category = Categories::CATEGORY_ACTION_VARIABLE;
+    protected $category = Category::VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

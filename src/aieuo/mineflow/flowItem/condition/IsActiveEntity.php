@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -20,7 +20,7 @@ class IsActiveEntity extends Condition {
     protected $detail = "condition.isActiveEntity.detail";
     protected $detailDefaultReplace = ["id"];
 
-    protected $category = Categories::CATEGORY_CONDITION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

@@ -8,7 +8,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use pocketmine\item\ItemFactory;
@@ -21,7 +21,7 @@ class CreateBlockVariable extends Action {
     protected $detail = "action.createBlockVariable.detail";
     protected $detailDefaultReplace = ["block", "id"];
 
-    protected $category = Categories::CATEGORY_ACTION_BLOCK;
+    protected $category = Category::BLOCK;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;

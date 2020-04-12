@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -21,7 +21,7 @@ class CommandConsole extends Action {
     protected $detail = "action.commandConsole.detail";
     protected $detailDefaultReplace = ["command"];
 
-    protected $category = Categories::CATEGORY_ACTION_COMMAND;
+    protected $category = Category::COMMAND;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

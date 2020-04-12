@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -24,7 +24,7 @@ class PlaySound extends Action implements PlayerFlowItem {
     protected $detail = "action.playSound.detail";
     protected $detailDefaultReplace = ["player", "sound", "volume", "pitch"];
 
-    protected $category = Categories::CATEGORY_ACTION_PLAYER;
+    protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

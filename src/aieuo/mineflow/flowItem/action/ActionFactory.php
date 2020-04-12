@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\economy\Economy;
 
 class ActionFactory {
+    /** @var Action[] */
     private static $list = [];
 
     public static function init(): void {
@@ -40,7 +41,6 @@ class ActionFactory {
         self::register(new ShowBossbar);
         self::register(new RemoveBossbar);
         self::register(new PlaySound);
-        self::register(new PlaySoundAt);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
@@ -91,6 +91,7 @@ class ActionFactory {
         self::register(new SetBlock);
         /* level */
         self::register(new AddParticle);
+        self::register(new PlaySoundAt);
     }
 
     /**

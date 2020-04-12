@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -25,7 +25,7 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
     protected $detail = "action.setItem.detail";
     protected $detailDefaultReplace = ["player", "item", "index"];
 
-    protected $category = Categories::CATEGORY_ACTION_ITEM;
+    protected $category = Category::INVENTORY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -26,7 +26,7 @@ class AddEffect extends Action implements EntityFlowItem {
     protected $detail = "action.addEffect.detail";
     protected $detailDefaultReplace = ["entity", "id", "power", "time"];
 
-    protected $category = Categories::CATEGORY_ACTION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 

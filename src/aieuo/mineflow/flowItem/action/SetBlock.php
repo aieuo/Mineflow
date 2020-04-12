@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
@@ -24,7 +24,7 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
     protected $detail = "action.setBlock.detail";
     protected $detailDefaultReplace = ["position", "block"];
 
-    protected $category = Categories::CATEGORY_ACTION_BLOCK;
+    protected $category = Category::LEVEL;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -21,7 +21,7 @@ class ExistsListVariableKey extends Condition {
     protected $detail = "condition.existsListVariableKey.detail";
     protected $detailDefaultReplace = ["scope", "name", "key"];
 
-    protected $category = Categories::CATEGORY_CONDITION_VARIABLE;
+    protected $category = Category::VARIABLE;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

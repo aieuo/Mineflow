@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\ui\ConditionForm;
 use aieuo\mineflow\ui\ConditionContainerForm;
 use aieuo\mineflow\recipe\Recipe;
@@ -19,7 +19,7 @@ class AndScript extends Condition implements ConditionContainer {
     protected $name = "condition.and.name";
     protected $detail = "condition.and.detail";
 
-    protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
+    protected $category = Category::SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

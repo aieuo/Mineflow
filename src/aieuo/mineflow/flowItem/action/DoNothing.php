@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class DoNothing extends Action {
@@ -12,7 +12,7 @@ class DoNothing extends Action {
     protected $name = "action.doNothing.name";
     protected $detail = "action.doNothing.detail";
 
-    protected $category = Categories::CATEGORY_ACTION_COMMON;
+    protected $category = Category::COMMON;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

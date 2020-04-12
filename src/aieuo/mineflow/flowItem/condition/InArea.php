@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\level\Position;
 
@@ -26,7 +26,7 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
     protected $detail = "condition.inArea.detail";
     protected $detailDefaultReplace = ["target", "pos1", "pos2"];
 
-    protected $category = Categories::CATEGORY_CONDITION_ENTITY;
+    protected $category = Category::ENTITY;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 

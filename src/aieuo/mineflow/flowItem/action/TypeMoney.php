@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -14,7 +14,7 @@ abstract class TypeMoney extends Action {
 
     protected $detailDefaultReplace = ["target", "amount"];
 
-    protected $category = Categories::CATEGORY_ACTION_MONEY;
+    protected $category = Category::PLUGIN;
 
     /** @var string */
     private $playerName = "{target.name}";

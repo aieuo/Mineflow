@@ -10,7 +10,7 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -28,7 +28,7 @@ class SendForm extends Action implements PlayerFlowItem {
     protected $detail = "action.sendForm.detail";
     protected $detailDefaultReplace = ["player", "form"];
 
-    protected $category = Categories::CATEGORY_ACTION_FORM;
+    protected $category = Category::FORM;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

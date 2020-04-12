@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Event;
 use pocketmine\event\Cancellable;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class EventCancel extends Action {
@@ -15,7 +15,7 @@ class EventCancel extends Action {
     protected $name = "action.eventCancel.name";
     protected $detail = "action.eventCancel.detail";
 
-    protected $category = Categories::CATEGORY_ACTION_COMMON;
+    protected $category = Category::EVENT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

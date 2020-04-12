@@ -17,7 +17,7 @@ use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
 class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
@@ -29,7 +29,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
     protected $detail = "action.setSitting.detail";
     protected $detailDefaultReplace = ["player", "position"];
 
-    protected $category = Categories::CATEGORY_ACTION_PLAYER;
+    protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

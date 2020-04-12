@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 
 class SetSleeping extends Action implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
@@ -24,7 +24,7 @@ class SetSleeping extends Action implements PlayerFlowItem, PositionFlowItem {
     protected $detail = "action.setSleeping.detail";
     protected $detailDefaultReplace = ["player", "position"];
 
-    protected $category = Categories::CATEGORY_ACTION_PLAYER;
+    protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

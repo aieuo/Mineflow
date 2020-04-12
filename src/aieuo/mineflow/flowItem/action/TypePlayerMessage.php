@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -18,7 +18,7 @@ abstract class TypePlayerMessage extends Action implements PlayerFlowItem {
 
     protected $detailDefaultReplace = ["player", "message"];
     
-    protected $category = Categories::CATEGORY_ACTION_MESSAGE;
+    protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

@@ -6,7 +6,7 @@ use aieuo\mineflow\formAPI\Form;
 use pocketmine\utils\TextFormat;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -22,7 +22,7 @@ class GetMoney extends Action {
     protected $detail = "action.getMoney.detail";
     protected $detailDefaultReplace = ["target", "result"];
 
-    protected $category = Categories::CATEGORY_ACTION_MONEY;
+    protected $category = Category::PLUGIN;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;

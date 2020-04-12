@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -22,7 +22,7 @@ class SendTitle extends Action implements PlayerFlowItem {
     protected $detail = "action.sendTitle.detail";
     protected $detailDefaultReplace = ["player", "title", "subtitle"];
 
-    protected $category = Categories::CATEGORY_ACTION_MESSAGE;
+    protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 

@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
@@ -21,7 +21,7 @@ class ComparisonNumber extends Condition {
     protected $detail = "condition.comparisonNumber.detail";
     protected $detailDefaultReplace = ["value1", "operator", "value2"];
 
-    protected $category = Categories::CATEGORY_CONDITION_SCRIPT;
+    protected $category = Category::SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

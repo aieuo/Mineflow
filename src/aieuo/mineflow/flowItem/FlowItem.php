@@ -23,7 +23,7 @@ abstract class FlowItem implements \JsonSerializable {
     /** @var array  */
     protected $detailDefaultReplace = [];
 
-    /** @var int */
+    /** @var string */
     protected $category;
 
     /** @var string */
@@ -64,7 +64,7 @@ abstract class FlowItem implements \JsonSerializable {
         return $this->customName;
     }
 
-    public function getCategory(): int {
+    public function getCategory(): string {
         return $this->category;
     }
 

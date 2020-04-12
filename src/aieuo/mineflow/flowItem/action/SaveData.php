@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\utils\Categories;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\Main;
 
@@ -13,7 +13,7 @@ class SaveData extends Action {
     protected $name = "action.saveData.name";
     protected $detail = "action.saveData.detail";
 
-    protected $category = Categories::CATEGORY_ACTION_SCRIPT;
+    protected $category = Category::SCRIPT;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
