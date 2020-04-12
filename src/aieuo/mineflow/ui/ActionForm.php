@@ -109,7 +109,7 @@ class ActionForm {
                     return;
                 }
                 if ($data === 1) {
-                    $favorites = Main::getInstance()->getFavorites()->getNested($player->getName().".action", []);
+                    $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), "action");
                     $actions = [];
                     foreach ($favorites as $favorite) {
                         $action = ActionFactory::get($favorite);
@@ -154,8 +154,7 @@ class ActionForm {
     }
 
     public function sendActionMenu(Player $player, ActionContainer $container, Action $action, array $messages = []) {
-        $config = Main::getInstance()->getFavorites();
-        $favorites = $config->getNested($player->getName().".action", []);
+        $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), "action");
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.action.menu.title", [$container->getName(), $action->getId()])))
             ->setContent($action->getDescription()."\n"./*TODO: いる...?*/Language::get("flowItem.target.require", [["flowItem.target.require.".$action->getRequiredTarget()]]))
@@ -190,15 +189,8 @@ class ActionForm {
                             })->onReceive([$this, "onUpdateAction"])->show($player);
                         break;
                     case 2:
-                        $config = Main::getInstance()->getFavorites();
-                        $favorites = $config->getNested($player->getName().".action", []);
-                        if (in_array($action->getId(), $favorites)) {
-                            $favorites = array_diff($favorites, [$action->getId()]);
-                            $favorites = array_values($favorites);
-                        } else {
-                            $favorites[] = $action->getId();
-                        }
-                        $config->setNested($player->getName().".action", $favorites);
+                        $config = Main::getInstance()->getPlayerSettings();
+                        $config->toggleFavorite($player->getName(), "action", $action->getId());
                         $config->save();
                         $this->sendActionMenu($player, $container, $action, ["@form.changed"]);
                         break;

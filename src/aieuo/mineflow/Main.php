@@ -5,6 +5,7 @@ namespace aieuo\mineflow;
 use aieuo\mineflow\flowItem\action\ActionFactory;
 use aieuo\mineflow\flowItem\condition\ConditionFactory;
 use aieuo\mineflow\utils\FormManager;
+use aieuo\mineflow\utils\PlayerConfig;
 use pocketmine\utils\Config;
 use pocketmine\plugin\PluginBase;
 use aieuo\mineflow\variable\VariableHelper;
@@ -23,9 +24,9 @@ class Main extends PluginBase {
     /** @var Config */
     private $config;
     /** @var Config */
-    private $favorites;
-    /** @var Config */
     private $events;
+    /** @var PlayerConfig */
+    private $playerSettings;
 
     /** @var bool */
     private $loaded = false;
@@ -64,7 +65,7 @@ class Main extends PluginBase {
             return;
         }
 
-        $this->favorites = new Config($this->getDataFolder()."favorites.yml", Config::YAML);
+        $this->playerSettings = new PlayerConfig($this->getDataFolder()."player.yml", Config::YAML);
 
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
@@ -101,8 +102,8 @@ class Main extends PluginBase {
         return $this->config;
     }
 
-    public function getFavorites(): Config {
-        return $this->favorites;
+    public function getPlayerSettings(): PlayerConfig {
+        return $this->playerSettings;
     }
 
     public function getEvents(): Config {

@@ -109,7 +109,7 @@ class ConditionForm {
                     return;
                 }
                 if ($data === 1) {
-                    $favorites = Main::getInstance()->getFavorites()->getNested($player->getName().".condition", []);
+                    $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), "condition");
                     $conditions = [];
                     foreach ($favorites as $favorite) {
                         $condition = ConditionFactory::get($favorite);
@@ -154,8 +154,7 @@ class ConditionForm {
     }
 
     public function sendConditionMenu(Player $player, ConditionContainer $container, Condition $condition, array $messages = []) {
-        $config = Main::getInstance()->getFavorites();
-        $favorites = $config->getNested($player->getName().".condition", []);
+        $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), "condition");
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getId()])))
             ->setContent($condition->getDescription())
@@ -190,15 +189,8 @@ class ConditionForm {
                             })->onReceive([$this, "onUpdateCondition"])->show($player);
                         break;
                     case 2:
-                        $config = Main::getInstance()->getFavorites();
-                        $favorites = $config->getNested($player->getName().".condition", []);
-                        if (in_array($condition->getId(), $favorites)) {
-                            $favorites = array_diff($favorites, [$condition->getId()]);
-                            $favorites = array_values($favorites);
-                        } else {
-                            $favorites[] = $condition->getId();
-                        }
-                        $config->setNested($player->getName().".condition", $favorites);
+                        $config = Main::getInstance()->getPlayerSettings();
+                        $config->toggleFavorite($player->getName(), "condition", $condition->getId());
                         $config->save();
                         $this->sendConditionMenu($player, $container, $condition, ["@form.changed"]);
                         break;
