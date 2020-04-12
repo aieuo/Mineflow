@@ -141,30 +141,30 @@ class CommandForm {
         (new ListForm("/".$command["command"]))
             ->setContent("/".$command["command"]."\n".Language::get("form.command.description").": ".$permission."\n".Language::get("form.command.permission").": ".$command["description"])
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.command.commandMenu.editDescription"),
                 new Button("@form.command.commandMenu.editPermission"),
                 new Button("@form.command.recipes"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onReceive(function (Player $player, ?int $data, array $command) {
                 if ($data === null) return;
                 switch ($data) {
                     case 0:
-                        $this->changeDescription($player, $command);
-                        break;
-                    case 1:
-                        $this->changePermission($player, $command);
-                        break;
-                    case 2:
-                        $this->sendRecipeList($player, $command);
-                        break;
-                    case 3:
-                        $this->sendConfirmDelete($player, $command);
-                        break;
-                    default:
                         $prev = Session::getSession($player)->get("command_menu_prev");
                         if (is_callable($prev)) call_user_func_array($prev, [$player]);
                         else $this->sendMenu($player);
+                        break;
+                    case 1:
+                        $this->changeDescription($player, $command);
+                        break;
+                    case 2:
+                        $this->changePermission($player, $command);
+                        break;
+                    case 3:
+                        $this->sendRecipeList($player, $command);
+                        break;
+                    case 4:
+                        $this->sendConfirmDelete($player, $command);
                         break;
                 }
             })->addArgs($command)->addMessages($messages)->show($player);
