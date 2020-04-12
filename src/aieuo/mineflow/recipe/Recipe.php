@@ -37,6 +37,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var string */
     private $name;
+    /* @var string */
+    private $author;
 
     /** @var int */
     private $targetType = self::TARGET_DEFAULT;
@@ -66,8 +68,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /* @var array */
     private $returnValues = [];
 
-    public function __construct(string $name) {
+    public function __construct(string $name, string $author = "") {
         $this->name = $name;
+        $this->author = $author;
     }
 
     public function setName(string $name): void {
@@ -294,6 +297,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function jsonSerialize(): array {
         return [
             "name" => $this->name,
+            "author" => $this->author,
             "actions" => $this->actions,
             "triggers" => $this->triggers,
             "targetType" => $this->targetType,

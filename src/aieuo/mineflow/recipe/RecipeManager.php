@@ -37,7 +37,7 @@ class RecipeManager {
                 continue;
             }
 
-            $recipe = new Recipe($data["name"]);
+            $recipe = new Recipe($data["name"], $data["author"] ?? "");
             try {
                 $recipe->loadSaveData($data["actions"]);
             } catch (\InvalidArgumentException $e) {

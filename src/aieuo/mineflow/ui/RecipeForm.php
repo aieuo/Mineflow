@@ -68,7 +68,7 @@ class RecipeForm {
                     (new HomeForm)->sendConfirmRename($player, $name, $newName, function (bool $result, string $name, string $newName) use ($player) {
                         if ($result) {
                             $manager = Main::getRecipeManager();
-                            $recipe = new Recipe($newName);
+                            $recipe = new Recipe($newName, $player->getName());
                             $manager->add($recipe);
                             Session::getSession($player)->set("recipe_menu_prev", [$this, "sendMenu"]);
                             $this->sendRecipeMenu($player, $recipe);
@@ -79,7 +79,7 @@ class RecipeForm {
                     return;
                 }
 
-                $recipe = new Recipe($name);
+                $recipe = new Recipe($name, $player->getName());
                 $manager->add($recipe);
                 Session::getSession($player)->set("recipe_menu_prev", [$this, "sendSelectRecipe"]);
                 $this->sendRecipeMenu($player, $recipe);
