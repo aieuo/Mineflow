@@ -130,4 +130,8 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
             $this->actions
         ];
     }
+
+    public function allowDirectCall(): bool {
+        return false;
+    }
 }

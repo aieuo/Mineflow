@@ -130,4 +130,8 @@ class RepeatAction extends Action implements ActionContainer {
     public function isDataValid(): bool {
         return true;
     }
+
+    public function allowDirectCall(): bool {
+        return false;
+    }
 }

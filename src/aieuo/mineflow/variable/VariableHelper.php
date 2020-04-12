@@ -152,6 +152,9 @@ class VariableHelper {
             if ($action === null) {
                 return str_replace("{".$replace."}", "§cUnknown action id", $string);
             }
+            if (!$action->allowDirectCall()) {
+                return str_replace("{".$replace."}", "§cCannot call direct $name", $string);
+            }
 
             $class = get_class($action);
             /** @var Action $newAction */

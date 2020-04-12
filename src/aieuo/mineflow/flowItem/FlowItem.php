@@ -31,6 +31,11 @@ abstract class FlowItem implements \JsonSerializable {
 
     /** @var string */
     protected $targetRequired;
+
+    const RETURN_NONE = "none";
+    const RETURN_VARIABLE_NAME = "variableName";
+    const RETURN_VARIABLE_VALUE = "variableValue";
+
     /** @var string */
     protected $returnValueType = self::RETURN_NONE;
 
@@ -149,7 +154,7 @@ abstract class FlowItem implements \JsonSerializable {
         return "";
     }
 
-    const RETURN_NONE = "none";
-    const RETURN_VARIABLE_NAME = "variableName";
-    const RETURN_VARIABLE_VALUE = "variableValue";
+    public function allowDirectCall(): bool {
+        return true;
+    }
 }

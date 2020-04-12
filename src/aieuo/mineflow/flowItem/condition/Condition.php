@@ -51,4 +51,8 @@ abstract class Condition extends FlowItem implements ConditionIds {
      * @throws \OutOfBoundsException
      */
     abstract public function loadSaveData(array $content): Condition;
+
+    public function allowDirectCall(): bool {
+        return false;
+    }
 }

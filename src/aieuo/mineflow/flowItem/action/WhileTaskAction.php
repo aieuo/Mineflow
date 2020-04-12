@@ -188,4 +188,8 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
     public function isDataValid(): bool {
         return true;
     }
+
+    public function allowDirectCall(): bool {
+        return false;
+    }
 }
