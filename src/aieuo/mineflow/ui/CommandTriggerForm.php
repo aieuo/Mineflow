@@ -29,7 +29,7 @@ class CommandTriggerForm {
                         (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
-                        $this->sendConfirmDelete($player, $recipe, $trigger);
+                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
                         $manager = Main::getCommandManager();
@@ -88,22 +88,5 @@ class CommandTriggerForm {
             ->onReceive(function (Player $player, ?bool $data, callable $callback) {
                 call_user_func_array($callback, [$data]);
             })->addArgs($callback)->show($player);
-    }
-
-    public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger) {
-        (new ModalForm(Language::get("form.items.delete.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent(Language::get("form.delete.confirm", [$trigger->getType().": ".$trigger->getKey()]))
-            ->setButton1("@form.yes")
-            ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, Trigger $trigger) {
-                if ($data === null) return;
-
-                if ($data) {
-                    $recipe->removeTrigger($trigger);
-                    (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
-                } else {
-                    $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@form.cancelled"]);
-                }
-            })->addArgs($recipe, $trigger)->show($player);
     }
 }

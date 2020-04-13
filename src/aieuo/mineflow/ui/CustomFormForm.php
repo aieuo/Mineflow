@@ -88,17 +88,17 @@ class CustomFormForm {
                 $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
-                    (new HomeForm)->sendConfirmRename($player, $data[0], $newName, function (bool $result, string $name, string $newName) use ($player, $form, $data) {
-                        if ($result) {
+                    (new MineflowForm)->confirmRename($player, $data[0], $newName,
+                        function (Player $player, string $name) use ($form) {
                             $manager = Main::getFormManager();
-                            $form->setTitle($newName);
-                            $manager->addForm($newName, $form);
+                            $form->setTitle($name);
+                            $manager->addForm($name, $form);
                             Session::getSession($player)->set("form_menu_prev", [$this, "sendMenu"]);
                             $this->sendFormMenu($player, $form);
-                        } else {
+                        },
+                        function (Player $player, string $name) use ($data) {
                             $this->sendAddForm($player, $data, [[Language::get("form.form.exists", [$name]), 0]]);
-                        }
-                    });
+                        });
                     return;
                 }
                 $manager->addForm($data[0], $form);
@@ -189,6 +189,7 @@ class CustomFormForm {
                 new Button("@form.form.formMenu.modal.button1"),
                 new Button("@form.form.formMenu.modal.button2"),
                 new Button("@form.form.formMenu.changeName"),
+                new Button("@form.form.recipes"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data, ModalForm $form) {
                 switch ($data) {
@@ -251,6 +252,9 @@ class CustomFormForm {
                         break;
                     case 7:
                         $this->sendConfirmDelete($player, $form);
+                        break;
+                    case 8:
+                        // TODO: レシピ一覧
                         break;
                 }
             })->addArgs($form)->addMessages($messages)->show($player);
@@ -441,16 +445,17 @@ class CustomFormForm {
                 $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
-                    (new HomeForm)->sendConfirmRename($player, $data[0], $newName, function (bool $result, string $name, string $newName) use ($player, $form, $data, $manager) {
-                        if ($result) {
-                            $form->setName($newName);
+                    (new MineflowForm)->confirmRename($player, $data[0], $newName,
+                        function (Player $player, string $name) use ($form) {
+                            $form->setName($name);
+                            $manager = Main::getFormManager();
                             $manager->removeForm($name);
-                            $manager->addForm($newName, $form);
+                            $manager->addForm($name, $form);
                             $this->sendFormMenu($player, $form, ["@form.changed"]);
-                        } else {
+                        },
+                        function (Player $player, string $name) use ($form, $data) {
                             $this->sendChangeFormName($player, $form, $data, [[Language::get("customForm.exists", [$name]), 0]]);
-                        }
-                    });
+                        });
                     return;
                 }
 

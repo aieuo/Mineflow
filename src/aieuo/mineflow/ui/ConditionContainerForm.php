@@ -26,9 +26,7 @@ class ConditionContainerForm {
         (new ListForm(Language::get("form.conditionContainer.conditionList.title", [$container->getContainerName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, ConditionContainer $container, array $conditions) {
                 if ($data === 0) {
                     if ($container instanceof Recipe) {
                         (new RecipeForm)->sendRecipeMenu($player, $container);
@@ -67,9 +65,7 @@ class ConditionContainerForm {
         (new ListForm(Language::get("form.conditionContainer.moveCondition.title", [$container->getContainerName(), $selectedCondition->getName()])))
             ->setContent("@form.conditionContainer.moveCondition.content")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, int $selected, array $conditions, int $count = 0) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, ConditionContainer $container, int $selected, array $conditions, int $count = 0) {
                 $move = $conditions[$selected];
                 if ($data === 0) {
                     (new ConditionForm)->sendAddedConditionMenu($player, $container, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);

@@ -199,26 +199,23 @@ class ActionForm {
      * @uses \aieuo\mineflow\flowItem\action\ActionContainerTrait::removeAction()
      */
     public function sendConfirmDelete(Player $player, Action $action, ActionContainer $container) {
-        (new ModalForm(Language::get("form.items.delete.title", [$container->getContainerName(), $action->getName()])))
-            ->setContent(Language::get("form.delete.confirm", [trim($action->getDetail())]))
-            ->setButton1("@form.yes")
-            ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, Action $action, ActionContainer $container) {
-                if ($data === null) return;
-
-                if ($data) {
-                    $index = array_search($action, $container->getActions(), true);
-                    $container->removeAction($index);
-                    $session = Session::getSession($player);
-                    $parents = $session->get("parents");
-                    array_pop($parents);
-                    $session->set("parents", $parents);
-                    (new ActionContainerForm)->sendActionList($player, $container, ["@form.delete.success"]);
-                } elseif ($container instanceof FlowItem and $container->hasCustomMenu()) {
+        (new MineflowForm)->confirmDelete($player,
+            Language::get("form.items.delete.title", [$container->getContainerName(), $action->getName()]), trim($action->getDetail()),
+            function (Player $player) use ($action, $container) {
+                $index = array_search($action, $container->getActions(), true);
+                $container->removeAction($index);
+                $session = Session::getSession($player);
+                $parents = $session->get("parents");
+                array_pop($parents);
+                $session->set("parents", $parents);
+                (new ActionContainerForm)->sendActionList($player, $container, ["@form.delete.success"]);
+            },
+            function (Player $player) use ($action, $container) {
+                if ($container instanceof FlowItem and $container->hasCustomMenu()) {
                     $container->sendCustomMenu($player, ["@form.cancelled"]);
                 } else {
                     $this->sendAddedActionMenu($player, $container, $action, ["@form.cancelled"]);
                 }
-            })->addArgs($action, $container)->show($player);
+            });
     }
 }

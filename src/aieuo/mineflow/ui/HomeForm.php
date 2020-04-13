@@ -35,16 +35,4 @@ class HomeForm {
                 }
             })->show($player);
     }
-
-    /** @noinspection PhpUnusedParameterInspection */
-    public function sendConfirmRename(Player $player, string $name, string $newName, callable $callback) {
-        (new ModalForm("@form.home.rename.title"))
-            ->setContent(Language::get("form.home.rename.content", [$name, $newName]))
-            ->setButton1("@form.yes")
-            ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, string $name, string $newName, callable $callback) {
-                if ($data === null) return;
-                call_user_func_array($callback, [$data, $name, $newName]);
-            })->addArgs($name, $newName, $callback)->show($player);
-    }
 }

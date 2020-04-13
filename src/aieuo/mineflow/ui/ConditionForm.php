@@ -199,26 +199,23 @@ class ConditionForm {
      * @uses \aieuo\mineflow\flowItem\condition\ConditionContainerTrait::removeCondition()
      */
     public function sendConfirmDelete(Player $player, Condition $condition, ConditionContainer $container) {
-        (new ModalForm(Language::get("form.items.delete.title", [$condition->getName()])))
-            ->setContent(Language::get("form.delete.confirm", [trim($condition->getDetail())]))
-            ->setButton1("@form.yes")
-            ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, Condition $condition, ConditionContainer $container) {
-                if ($data === null) return;
-
-                if ($data) {
-                    $index = array_search($condition, $container->getConditions(), true);
-                    $container->removeCondition($index);
-                    $session = Session::getSession($player);
-                    $parents = $session->get("parents");
-                    array_pop($parents);
-                    $session->set("parents", $parents);
-                    (new ConditionContainerForm)->sendConditionList($player, $container, ["@form.delete.success"]);
-                } elseif ($container instanceof FlowItem and $container->hasCustomMenu()) {
+        (new MineflowForm)->confirmDelete($player,
+            Language::get("form.items.delete.title", [$container->getContainerName(), $condition->getName()]), trim($condition->getDetail()),
+            function (Player $player) use ($condition, $container) {
+                $index = array_search($condition, $container->getConditions(), true);
+                $container->removeCondition($index);
+                $session = Session::getSession($player);
+                $parents = $session->get("parents");
+                array_pop($parents);
+                $session->set("parents", $parents);
+                (new ConditionContainerForm)->sendConditionList($player, $container, ["@form.delete.success"]);
+            },
+            function (Player $player) use ($condition, $container) {
+                if ($container instanceof FlowItem and $container->hasCustomMenu()) {
                     $container->sendCustomMenu($player, ["@form.cancelled"]);
                 } else {
                     $this->sendAddedConditionMenu($player, $container, $condition, ["@form.cancelled"]);
                 }
-            })->addArgs($condition, $container)->show($player);
+            });
     }
 }
