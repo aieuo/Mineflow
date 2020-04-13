@@ -31,8 +31,7 @@ class CustomFormForm {
                 new Button("@form.add"),
                 new Button("@form.edit"),
                 new Button("@form.form.menu.formList"),
-            ])->onReceive(function (Player $player, ?int $data) {
-                if ($data === null) return;
+            ])->onReceive(function (Player $player, int $data) {
                 switch ($data) {
                     case 0:
                         (new HomeForm)->sendMenu($player);
@@ -60,8 +59,7 @@ class CustomFormForm {
                     Language::get("customForm.custom_form"),
                 ]),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data) {
-                if ($data === null) return;
+            ])->onReceive(function (Player $player, array $data) {
                 if ($data[2]) {
                     $this->sendMenu($player);
                     return;
@@ -114,9 +112,7 @@ class CustomFormForm {
             ->setContents([
                 new Input("@customForm.name", "", $default[0] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {
                     $this->sendMenu($player);
                     return;
@@ -151,9 +147,7 @@ class CustomFormForm {
         (new ListForm("@form.form.menu.formList"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, array $forms) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, array $forms) {
                 if ($data === 0) {
                     $this->sendMenu($player);
                     return;
@@ -196,9 +190,7 @@ class CustomFormForm {
                 new Button("@form.form.formMenu.modal.button2"),
                 new Button("@form.form.formMenu.changeName"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, ModalForm $form) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, ModalForm $form) {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("form_menu_prev");
@@ -224,9 +216,7 @@ class CustomFormForm {
                                     Language::get("customForm.receive.modal.button.text", ["1", $form->getButton1()])),
                                 new Input("@customForm.text", "", $form->getButton1()),
                                 new Toggle("@form.cancelAndBack"),
-                            ])->onReceive(function (Player $player, ?array $data, ModalForm $form) {
-                                if ($data === null) return;
-
+                            ])->onReceive(function (Player $player, array $data, ModalForm $form) {
                                 if ($data[2]) {
                                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
                                     return;
@@ -245,9 +235,7 @@ class CustomFormForm {
                                     Language::get("customForm.receive.modal.button.text", ["2", $form->getButton2()])),
                                 new Input("@customForm.text", "", $form->getButton2()),
                                 new Toggle("@form.cancelAndBack"),
-                            ])->onReceive(function (Player $player, ?array $data, ModalForm $form) {
-                                if ($data === null) return;
-
+                            ])->onReceive(function (Player $player, array $data, ModalForm $form) {
                                 if ($data[0]) {
                                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
                                     return;
@@ -285,9 +273,7 @@ class CustomFormForm {
         (new ListForm(Language::get("form.form.formMenu.changeTitle", [$form->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, ListForm $form, array $buttons) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, ListForm $form, array $buttons) {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("form_menu_prev");
@@ -327,9 +313,7 @@ class CustomFormForm {
                         new Label(Language::get("customForm.receive", [$data])."\n".
                             Language::get("customForm.receive.list.button", [$button->getText()])),
                         new Input("@customForm.list.editButton", "", $button->getText()),
-                    ])->onReceive(function (Player $player, ?array $data, ListForm $form, int $selected, array $buttons) {
-                        if ($data === null) return;
-
+                    ])->onReceive(function (Player $player, array $data, ListForm $form, int $selected, array $buttons) {
                         /** @var Button $button */
                         $button = $buttons[$selected];
                         if ($data[1] === "") {
@@ -362,9 +346,7 @@ class CustomFormForm {
         (new ListForm(Language::get("form.form.formMenu.changeTitle", [$form->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, CustomForm $form, array $elements) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, CustomForm $form, array $elements) {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("form_menu_prev");
@@ -408,9 +390,7 @@ class CustomFormForm {
             ->setContents([
                 new Input("@customForm.title", "", $form->getTitle()),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, Form $form) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, Form $form) {
                 if ($data[1]) {
                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
                     return;
@@ -428,8 +408,7 @@ class CustomFormForm {
             ->setContents([
                 new Input("@customForm.content", "", $form->getContent()),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, Form $form) {
-                if ($data === null) return;
+            ])->onReceive(function (Player $player, array $data, Form $form) {
                 if (!($form instanceof ModalForm) and !($form instanceof ListForm)) return;
 
                 if ($data[1]) {
@@ -448,9 +427,7 @@ class CustomFormForm {
             ->setContents([
                 new Input("@customForm.name", "", $default[0] ?? $form->getName()),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, Form $form) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, Form $form) {
                 if ($data[1]) {
                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
                     return;
@@ -488,9 +465,7 @@ class CustomFormForm {
         (new CustomForm("@customForm.list.addButton"))
             ->setContents([
                 new Input("@customForm.text"),
-            ])->onReceive(function (Player $player, ?array $data, ListForm $form) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, ListForm $form) {
                 if ($data[0] === "") {
                     $this->sendAddListButton($player, $form, [["@form.insufficient", 0]]);
                     return;
@@ -515,9 +490,7 @@ class CustomFormForm {
                 ]),
                 new Input("@customForm.text"),
                 new Toggle("@form.cancelAndBack")
-            ])->onReceive(function (Player $player, ?array $data, CustomForm $form) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, CustomForm $form) {
                 if ($data[2]) {
                     $this->sendFormMenu($player, $form);
                     return;
@@ -592,9 +565,7 @@ class CustomFormForm {
         $contents[] = new Toggle("@form.delete");
         (new CustomForm("@customForm.custom.element.edit"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, ?array $data, CustomForm $form, Element $element) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, array $data, CustomForm $form, Element $element) {
                 $elements = $form->getContents();
                 $index = array_search($element, $elements, true);
 
@@ -653,8 +624,6 @@ class CustomFormForm {
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, Form $form) {
-                if ($data === null) return;
-
                 if ($data) {
                     $manager = Main::getFormManager();
                     $manager->removeForm($form->getName());

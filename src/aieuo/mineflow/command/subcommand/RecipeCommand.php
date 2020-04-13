@@ -20,7 +20,7 @@ class RecipeCommand extends MineflowSubcommand {
                 (new RecipeForm)->sendAddRecipe($sender, [$args[1] ?? "", $args[2] ?? ""]);
                 break;
             case "edit":
-                (new RecipeForm)->sendSelectRecipe($sender, $args[1] ?? "");
+                (new RecipeForm)->sendSelectRecipe($sender, [$args[1] ?? ""]);
                 break;
             case "list":
                 (new RecipeForm)->sendRecipeGroupList($sender);

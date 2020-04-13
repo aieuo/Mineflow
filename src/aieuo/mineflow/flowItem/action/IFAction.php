@@ -79,7 +79,7 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
                 new Button("@condition.edit"),
                 new Button("@action.edit"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
                 if ($data === null) {
                     $session->removeAll();

@@ -26,7 +26,7 @@ class CommandForm {
                 new Button("@form.add"),
                 new Button("@form.edit"),
                 new Button("@form.command.menu.commandList"),
-            ])->onReceive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, int $data) {
                 switch ($data) {
                     case 0:
                         (new HomeForm)->sendMenu($player);
@@ -54,7 +54,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                 ], $defaults[2] ?? 0),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data) {
+            ])->onReceive(function (Player $player, array $data) {
                 if ($data[3]) {
                     $this->sendMenu($player);
                     return;
@@ -84,7 +84,7 @@ class CommandForm {
             ->setContents([
                 new Input("@form.command.name", "", $defaults[0] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data) {
+            ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {
                     $this->sendMenu($player);
                     return;
@@ -120,7 +120,7 @@ class CommandForm {
         (new ListForm("@form.command.commandList.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, array $commands) {
+            ->onReceive(function (Player $player, int $data, array $commands) {
                 if ($data === 0) {
                     $this->sendMenu($player);
                     return;
@@ -145,7 +145,7 @@ class CommandForm {
                 new Button("@form.command.commandMenu.editPermission"),
                 new Button("@form.command.recipes"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, array $command) {
+            ])->onReceive(function (Player $player, int $data, array $command) {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("command_menu_prev");
@@ -173,7 +173,7 @@ class CommandForm {
             ->setContents([
                 new Input("@form.command.description", "", $command["description"] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, array $command) {
+            ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->sendCommandMenu($player, $command);
                     return;
@@ -195,7 +195,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                 ], $permissions[$command["permission"]]),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, array $command) {
+            ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->sendCommandMenu($player, $command);
                     return;
@@ -247,7 +247,7 @@ class CommandForm {
         (new ListForm(Language::get("form.command.recipes.title", ["/".$command["command"]])))
             ->setContent("@form.selectButton")
             ->setButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, array $command, array $recipes) {
+            ->onReceive(function (Player $player, int $data, array $command, array $recipes) {
                 switch ($data) {
                     case 0:
                         $this->sendCommandMenu($player, $command);
@@ -267,7 +267,7 @@ class CommandForm {
             ->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, array $command) {
+            ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->sendRecipeList($player, $command);
                     return;
@@ -307,7 +307,7 @@ class CommandForm {
             ->setButtons([
                 new Button("@form.back"),
                 new Button("@form.edit")
-            ])->onReceive(function (Player $player, ?int $data, array $command, int $index, array $recipes) {
+            ])->onReceive(function (Player $player, int $data, array $command, int $index, array $recipes) {
                 if ($data === 0) {
                     $this->sendRecipeList($player, $command);
                 } elseif ($data === 1) {

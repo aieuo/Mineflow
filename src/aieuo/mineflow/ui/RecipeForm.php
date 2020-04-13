@@ -103,9 +103,7 @@ class RecipeForm {
         $form->setContents([
                 new Input("@form.recipe.recipeName", "", $default),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {
                     $this->sendMenu($player);
                     return;

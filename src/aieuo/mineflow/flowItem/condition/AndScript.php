@@ -57,7 +57,7 @@ class AndScript extends Condition implements ConditionContainer {
                 new Button("@form.back"),
                 new Button("@condition.edit"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
                 $parents = $session->get("parents");
                 $parent = end($parents);

@@ -84,7 +84,7 @@ class RepeatAction extends Action implements ActionContainer {
                 new Button("@action.edit"),
                 new Button("@action.repeat.editCount"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
                 $parents = $session->get("parents");
                 $parent = end($parents);

@@ -127,7 +127,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
                 new Button("@action.edit"),
                 new Button("@action.whileTask.editInterval"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data) {
+            ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
                 $parents = $session->get("parents");
                 $parent = end($parents);
