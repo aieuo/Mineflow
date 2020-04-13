@@ -25,7 +25,7 @@ class ActionForm {
             return;
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.action.addedActionMenu.title", [$container->getName(), $action->getName()])))
+        (new ListForm(Language::get("form.action.addedActionMenu.title", [$container->getContainerName(), $action->getName()])))
             ->setContent(trim($action->getDetail()))
             ->addButtons([
                 new Button("@form.back"),
@@ -98,7 +98,7 @@ class ActionForm {
             $buttons[] = new Button("@category.".$category);
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.action.category.title", [$container->getName()])))
+        (new ListForm(Language::get("form.action.category.title", [$container->getContainerName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $categories) {
@@ -137,7 +137,7 @@ class ActionForm {
             $buttons[] = new Button($action->getName());
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.action.select.title", [$container->getName(), Session::getSession($player)->get("flowItem_category", "")])))
+        (new ListForm(Language::get("form.action.select.title", [$container->getContainerName(), Session::getSession($player)->get("flowItem_category", "")])))
             ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
@@ -158,7 +158,7 @@ class ActionForm {
     public function sendActionMenu(Player $player, ActionContainer $container, Action $action, array $messages = []) {
         $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), "action");
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.action.menu.title", [$container->getName(), $action->getId()])))
+        (new ListForm(Language::get("form.action.menu.title", [$container->getContainerName(), $action->getId()])))
             ->setContent($action->getDescription()."\n"./*TODO: いる...?*/Language::get("flowItem.target.require", [["flowItem.target.require.".$action->getRequiredTarget()]]))
             ->addButtons([
                 new Button("@form.back"),
@@ -207,7 +207,7 @@ class ActionForm {
      * @uses \aieuo\mineflow\flowItem\action\ActionContainerTrait::removeAction()
      */
     public function sendConfirmDelete(Player $player, Action $action, ActionContainer $container) {
-        (new ModalForm(Language::get("form.items.delete.title", [""/*TODO*/, $action->getName()])))
+        (new ModalForm(Language::get("form.items.delete.title", [$container->getContainerName(), $action->getName()])))
             ->setContent(Language::get("form.delete.confirm", [trim($action->getDetail())]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")

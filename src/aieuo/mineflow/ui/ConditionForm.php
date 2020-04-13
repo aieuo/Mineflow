@@ -25,7 +25,7 @@ class ConditionForm {
             return;
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.condition.addedConditionMenu.title", [$container->getName(), $condition->getName()])))
+        (new ListForm(Language::get("form.condition.addedConditionMenu.title", [$container->getContainerName(), $condition->getName()])))
             ->setContent(trim($condition->getDetail()))
             ->addButtons([
                 new Button("@form.back"),
@@ -98,7 +98,7 @@ class ConditionForm {
             $buttons[] = new Button("@category.".$category);
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.condition.category.title", [$container->getName()])))
+        (new ListForm(Language::get("form.condition.category.title", [$container->getContainerName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $categories) {
@@ -137,7 +137,7 @@ class ConditionForm {
             $buttons[] = new Button($condition->getName());
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.condition.select.title", [$container->getName(), Session::getSession($player)->get("flowItem_category", "")])))
+        (new ListForm(Language::get("form.condition.select.title", [$container->getContainerName(), Session::getSession($player)->get("flowItem_category", "")])))
             ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ConditionContainer $container, array $conditions) {
@@ -158,7 +158,7 @@ class ConditionForm {
     public function sendConditionMenu(Player $player, ConditionContainer $container, Condition $condition, array $messages = []) {
         $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), "condition");
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.condition.menu.title", [$container->getName(), $condition->getId()])))
+        (new ListForm(Language::get("form.condition.menu.title", [$container->getContainerName(), $condition->getId()])))
             ->setContent($condition->getDescription())
             ->addButtons([
                 new Button("@form.back"),

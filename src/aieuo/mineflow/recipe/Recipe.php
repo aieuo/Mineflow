@@ -81,6 +81,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->name;
     }
 
+    public function getContainerName(): string {
+        return $this->getName();
+    }
     public function getDetail(): string {
         $details = [];
         foreach ($this->getActions() as $action) {

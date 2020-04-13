@@ -83,6 +83,10 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
         return implode("\n", $details);
     }
 
+    public function getContainerName(): string {
+        return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
+    }
+
     public function execute(Recipe $origin): bool {
         $script = clone $this;
         $origin->wait();

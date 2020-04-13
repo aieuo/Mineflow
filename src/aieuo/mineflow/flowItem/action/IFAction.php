@@ -46,6 +46,10 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
         return implode("\n", $details);
     }
 
+    public function getContainerName(): string {
+        return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
+    }
+
     public function execute(Recipe $origin): bool {
         $matched = true;
         foreach ($this->conditions as $condition) {

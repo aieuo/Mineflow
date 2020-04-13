@@ -57,6 +57,10 @@ class RepeatAction extends Action implements ActionContainer {
         return implode("\n", $details);
     }
 
+    public function getContainerName(): string {
+        return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
+    }
+
     public function execute(Recipe $origin): bool {
         for ($i=0; $i<$this->repeatCount; $i++) {
             $origin->addVariable(new NumberVariable($i, "i"));

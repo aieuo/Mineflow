@@ -37,6 +37,10 @@ class ElseAction extends Action implements ActionContainer {
         return implode("\n", $details);
     }
 
+    public function getContainerName(): string {
+        return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
+    }
+
     public function execute(Recipe $origin): bool {
         $lastResult = $origin->getLastActionResult();
         if ($lastResult === null) throw new \UnexpectedValueException();
