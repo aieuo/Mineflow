@@ -250,8 +250,8 @@ class CommandForm {
             })->addArgs($command)->show($player);
     }
 
-    public function sendRecipeList(Player $player, array $command) {
-        $buttons = [new Button("@form.back")];
+    public function sendRecipeList(Player $player, array $command, array $messages = []) {
+        $buttons = [new Button("@form.back"), new Button("@form.add")];
 
         $recipes = Main::getCommandManager()->getAssignedRecipes($command["command"]);
         foreach ($recipes as $name => $commands) {
@@ -263,14 +263,54 @@ class CommandForm {
             ->onReceive(function (Player $player, ?int $data, array $command, array $recipes) {
                 if ($data === null) return;
 
-                if ($data === 0) {
-                    $this->sendCommandMenu($player, $command);
-                    return;
+                switch ($data) {
+                    case 0:
+                        $this->sendCommandMenu($player, $command);
+                        return;
+                    case 1:
+                        $this->sendSelectRecipe($player, $command);
+                        return;
                 }
-                $data --;
+                $data -= 2;
 
                 $this->sendRecipeMenu($player, $command, $data, $recipes);
-            })->addArgs($command, $recipes)->show($player);
+            })->addMessages($messages)->addArgs($command, $recipes)->show($player);
+    }
+
+    public function sendSelectRecipe(Player $player, array $command, array $default = [], array $errors = []) {
+        (new CustomForm(Language::get("form.command.recipes.add", [$command["command"]])))
+            ->setContents([
+                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
+                new Toggle("@form.cancelAndBack"),
+            ])->onReceive(function (Player $player, ?array $data, array $command) {
+                if ($data === null) return;
+
+                if ($data[1]) {
+                    $this->sendRecipeList($player, $command);
+                    return;
+                }
+
+                if ($data[0] === "") {
+                    $this->sendSelectRecipe($player, $data, $command, [["@form.insufficient", 0]]);
+                    return;
+                }
+
+                $manager = Main::getRecipeManager();
+                [$name, $group] = $manager->parseName($data[0]);
+                $recipe = $manager->get($name, $group);
+                if ($recipe === null) {
+                    $this->sendSelectRecipe($player, $data, $command, [["@form.recipe.select.notfound", 0]]);
+                    return;
+                }
+
+                $trigger = new Trigger(Trigger::TYPE_COMMAND, $command["command"], $command["command"]);
+                if ($recipe->existsTrigger($trigger)) {
+                    $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
+                    return;
+                }
+                $recipe->addTrigger($trigger);
+                $this->sendRecipeList($player, $command, ["@form.added"]);
+            })->addArgs($command)->addErrors($errors)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, array $command, int $index, array $recipes) {
