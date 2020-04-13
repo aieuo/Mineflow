@@ -73,7 +73,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function __construct(string $name, string $group = "", string $author = "") {
         $this->name = $name;
         $this->author = $author;
-        $this->group = $group;
+        $this->group = preg_replace("#/+#", "/", $group);
     }
 
     public function setName(string $name): void {
