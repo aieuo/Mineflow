@@ -196,10 +196,11 @@ class EventListener implements Listener {
         $commands = explode(" ", $cmd);
 
         $count = count($commands);
+        $origin = $commands[0];
         for ($i=0; $i<$count; $i++) {
             $command = implode(" ", $commands);
-            if ($holder->existsRecipeByString(Trigger::TYPE_COMMAND, $command)) {
-                $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_COMMAND, $command));
+            if ($holder->existsRecipeByString(Trigger::TYPE_COMMAND, $origin, $command)) {
+                $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_COMMAND, $origin, $command));
                 $variables = array_merge(DefaultVariables::getCommandVariables($event->getCommand()), DefaultVariables::getPlayerVariables($sender));
                 $recipes->executeAll($sender, $variables, $event);
                 break;

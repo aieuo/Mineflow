@@ -49,4 +49,12 @@ class TriggerHolder {
     public function getRecipes(Trigger $trigger): ?RecipeContainer {
         return $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()] ?? null;
     }
+
+    /**
+     * @param Trigger $trigger
+     * @return RecipeContainer[]
+     */
+    public function getRecipesWithoutSubKey(Trigger $trigger): array {
+        return $this->recipes[$trigger->getType()][$trigger->getKey()] ?? [];
+    }
 }

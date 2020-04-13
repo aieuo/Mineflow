@@ -2,10 +2,11 @@
 
 namespace aieuo\mineflow\command;
 
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\utils\Config;
 use pocketmine\command\PluginCommand;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
 
 class CommandManager {
 
@@ -79,7 +80,6 @@ class CommandManager {
             "permission" => $permission,
             "description" => $description,
             "subcommands" => $subCommands,
-            "recipes" => [],
         ];
         $this->config->set($origin, $command);
         $this->config->save();
@@ -114,34 +114,17 @@ class CommandManager {
         $this->config->save();
     }
 
-
-    public function addRecipe(string $commandStr, Recipe $recipe) {
-        $original = $this->getOriginCommand($commandStr);
-        if (!$this->existsCommand($original)) return;
-
-        $command = $this->getCommand($original);
-        $keys = $command["recipes"][$recipe->getName()] ?? [];
-        $keys[] = $commandStr;
-        $command["recipes"][$recipe->getName()] = $keys;
-        $this->config->set($original, $command);
-        $this->config->save();
-    }
-
-    public function removeRecipe(string $commandStr, Recipe $recipe): ?int {
-        $original = $this->getOriginCommand($commandStr);
-        if (!$this->existsCommand($original)) return null;
-
-        $command = $this->getCommand($original);
-        $keys = $command["recipes"][$recipe->getName()] ?? [];
-        if (in_array($commandStr, $keys)) {
-            $keys = array_diff($keys, [$commandStr]);
-            $keys = array_values($keys);
-            $command["recipes"][$recipe->getName()] = $keys;
-            if (empty($keys)) unset($command["recipes"][$recipe->getName()]);
-            $this->config->set($commandStr, $command);
-            $this->config->save();
+    public function getAssignedRecipes(string $command): array {
+        $command = $this->getOriginCommand($command);
+        $recipes = [];
+        $containers = TriggerHolder::getInstance()->getRecipesWithoutSubKey(new Trigger(Trigger::TYPE_COMMAND, $command));
+        foreach ($containers as $name => $container) {
+            foreach ($container->getAllRecipe() as $recipe) {
+                if (!isset($recipes[$recipe->getName()])) $recipes[$recipe->getName()] =[];
+                $recipes[$recipe->getName()][] = $name;
+            }
         }
-        return count($command["recipes"]);
+        return $recipes;
     }
 
 

@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
@@ -230,14 +231,15 @@ class CommandForm {
                     $commandManager = Main::getCommandManager();
                     $recipeManager = Main::getRecipeManager();
 
-                    foreach ($command["recipes"] as $recipe => $commands) {
+                    $recipes = Main::getCommandManager()->getAssignedRecipes($command["command"]);
+                    foreach ($recipes as $recipe => $commands) {
                         [$name, $group] = $recipeManager->parseName($recipe);
 
                         $recipe = $recipeManager->get($name, $group);
                         if ($recipe === null) continue;
 
                         foreach ($commands as $cmd) {
-                            $recipe->removeTrigger(new Trigger(Trigger::TYPE_COMMAND,  $cmd));
+                            $recipe->removeTrigger(new Trigger(Trigger::TYPE_COMMAND, explode(" ", $cmd)[0], $cmd));
                         }
                     }
                     $commandManager->removeCommand($command["command"]);
@@ -250,13 +252,15 @@ class CommandForm {
 
     public function sendRecipeList(Player $player, array $command) {
         $buttons = [new Button("@form.back")];
-        foreach ($command["recipes"] as $name => $commands) {
+
+        $recipes = Main::getCommandManager()->getAssignedRecipes($command["command"]);
+        foreach ($recipes as $name => $commands) {
             $buttons[] = new Button($name." | ".count($commands));
         }
         (new ListForm(Language::get("form.command.recipes.title", ["/".$command["command"]])))
             ->setContent("@form.selectButton")
             ->setButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, array $command) {
+            ->onReceive(function (Player $player, ?int $data, array $command, array $recipes) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -265,13 +269,13 @@ class CommandForm {
                 }
                 $data --;
 
-                $this->sendRecipeMenu($player, $command, $data);
-            })->addArgs($command)->show($player);
+                $this->sendRecipeMenu($player, $command, $data, $recipes);
+            })->addArgs($command, $recipes)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, array $command, int $index) {
+    public function sendRecipeMenu(Player $player, array $command, int $index, array $recipes) {
         $command = Main::getCommandManager()->getCommand($command["command"]);
-        $triggers = array_values($command["recipes"])[$index];
+        $triggers = array_values($recipes)[$index];
         $content = implode("\n", array_map(function (String $cmd) {
             return "/".$cmd;
         }, $triggers));
@@ -280,7 +284,7 @@ class CommandForm {
             ->setButtons([
                 new Button("@form.back"),
                 new Button("@form.edit")
-            ])->onReceive(function (Player $player, ?int $data, array $command, int $index) {
+            ])->onReceive(function (Player $player, ?int $data, array $command, int $index, array $recipes) {
                 if ($data === null) return;
 
                 if ($data === 0) {
@@ -288,11 +292,11 @@ class CommandForm {
                 } elseif ($data === 1) {
                     Session::getSession($player)
                         ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
-                        ->set("recipe_menu_prev_data", [$command, $index]);
-                    $recipeName = array_keys($command["recipes"])[$index];
+                        ->set("recipe_menu_prev_data", [$command, $index, $recipes]);
+                    $recipeName = array_keys($recipes)[$index];
                     $recipe = Main::getRecipeManager()->get($recipeName);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
-            })->addArgs($command, $index)->show($player);
+            })->addArgs($command, $index, $recipes)->show($player);
     }
 }
