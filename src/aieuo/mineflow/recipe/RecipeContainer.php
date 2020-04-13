@@ -10,11 +10,15 @@ class RecipeContainer {
     /** @var Recipe[] */
     private $recipes = [];
 
+    /** @var string */
+    private $name;
+
     /** @var boolean */
     protected $changed = false;
 
-    public function __construct(array $recipes = []) {
+    public function __construct(array $recipes = [], string $name = "") {
         $this->recipes = $recipes;
+        $this->name = $name;
     }
 
     public function addRecipe(Recipe $recipe): void {

@@ -227,7 +227,9 @@ class CommandForm {
                     $recipeManager = Main::getRecipeManager();
 
                     foreach ($command["recipes"] as $recipe => $commands) {
-                        $recipe = $recipeManager->get($recipe);
+                        [$name, $group] = $recipeManager->parseName($recipe);
+
+                        $recipe = $recipeManager->get($name, $group);
                         if ($recipe === null) continue;
 
                         foreach ($commands as $cmd) {

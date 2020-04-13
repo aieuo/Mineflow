@@ -40,56 +40,62 @@ class RecipeForm {
                         $this->sendSelectRecipe($player);
                         break;
                     case 3:
-                        $this->sendRecipeList($player);
+                        $this->sendRecipeGroupList($player);
                         break;
                 }
             })->addMessages($messages)->show($player);
     }
 
-    public function sendAddRecipe(Player $player, string $default = "", string $error = null) {
+    public function sendAddRecipe(Player $player, array $default = [], array $errors = []) {
         $manager = Main::getRecipeManager();
-        $name = $manager->getNotDuplicatedName("Recipe");
+        $name = $manager->getNotDuplicatedName("recipe");
 
-        $form = new CustomForm("@form.recipe.addRecipe.title");
-        $form->setContents([
-                new Input("@form.recipe.recipeName", $name, $default),
+        (new CustomForm("@form.recipe.addRecipe.title"))->setContents([
+                new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
+                new Input("@form.recipe.groupName", "", $default[1] ?? ""),
                 new Toggle("@form.cancelAndBack"),
             ])->onReceive(function (Player $player, ?array $data, string $defaultName) {
                 if ($data === null) return;
-                if ($data[1]) {
+                if ($data[2]) {
                     $this->sendMenu($player);
                     return;
                 }
 
                 $manager = Main::getRecipeManager();
                 $name = $data[0] === "" ? $defaultName : $data[0];
-                if (preg_match("#[¥/:?<>|*\"]#", preg_quote($name))) {
-                    $this->sendAddRecipe($player, $name, Language::get("form.recipe.invalidName", [$name]));
+                $group = $data[1];
+
+                $errors = [];
+                if (preg_match("#[¥/:?<>|*\"]#", preg_quote($name))) $errors = ["@form.recipe.invalidName", 0];
+                if (preg_match("#[¥/:?<>|*\"]#", preg_quote($group))) $errors = ["@form.recipe.invalidName", 1];
+                if (!empty($errors)) {
+                    $this->sendAddRecipe($player, $data, $errors);
                     return;
                 }
-                if ($manager->exists($name)) {
-                    $newName = $manager->getNotDuplicatedName($name);
-                    (new HomeForm)->sendConfirmRename($player, $name, $newName, function (bool $result, string $name, string $newName) use ($player) {
+
+                if ($manager->exists($name, $group)) {
+                    $newName = $manager->getNotDuplicatedName($name, $group);
+                    (new HomeForm)->sendConfirmRename($player, $name, $newName, function (bool $result, string $name, string $newName) use ($player, $data) {
                         if ($result) {
                             $manager = Main::getRecipeManager();
-                            $recipe = new Recipe($newName, $player->getName());
+                            $recipe = new Recipe($newName, $data[1], $player->getName());
                             $manager->add($recipe);
-                            Session::getSession($player)->set("recipe_menu_prev", [$this, "sendMenu"]);
+                            Session::getSession($player)
+                                ->set("recipe_menu_prev", [$this, "sendMenu"])
+                                ->set("recipe_menu_prev_data", []);
                             $this->sendRecipeMenu($player, $recipe);
                         } else {
-                            $this->sendAddRecipe($player, $name, Language::get("form.recipe.exists", [$name]));
+                            $this->sendAddRecipe($player, $data, [[Language::get("form.recipe.exists", [$name]), 0]]);
                         }
                     });
                     return;
                 }
 
-                $recipe = new Recipe($name, $player->getName());
+                $recipe = new Recipe($name, $group, $player->getName());
                 $manager->add($recipe);
                 Session::getSession($player)->set("recipe_menu_prev", [$this, "sendSelectRecipe"]);
                 $this->sendRecipeMenu($player, $recipe);
-            })->addArgs($name);
-        if ($error) $form->addError($error, 0);
-        $form->show($player);
+            })->addErrors($errors)->addArgs($name)->show($player);
     }
 
     public function sendSelectRecipe(Player $player, string $default = "", string $error = null) {
@@ -111,9 +117,9 @@ class RecipeForm {
                 }
 
                 $manager = Main::getRecipeManager();
-                $name = $data[0];
-                if (!$manager->exists($name)) {
-                    $this->sendSelectRecipe($player, $name, "@form.recipe.select.notfound");
+                [$name, $group] = $manager->parseName($data[0]);
+                if (!$manager->exists($name, $group)) {
+                    $this->sendSelectRecipe($player, $data[0], "@form.recipe.select.notfound");
                     return;
                 }
 
@@ -125,13 +131,19 @@ class RecipeForm {
         $form->show($player);
     }
 
-    public function sendRecipeList(Player $player) {
+    public function sendRecipeGroupList(Player $player) {
         $manager = Main::getRecipeManager();
-        $recipes = $manager->getAll();
+        $recipeGroups = $manager->getAll();
         $buttons = [new Button("@form.back")];
+        $recipes = $recipeGroups[""] ?? [];
         foreach ($recipes as $recipe) {
             $buttons[] = new Button($recipe->getName());
         }
+        unset($recipeGroups[""]);
+        foreach ($recipeGroups as $group => $value) {
+            $buttons[] = new Button($group);
+        }
+        $recipeGroups = array_merge($recipes, $recipeGroups);
 
         (new ListForm("@form.recipe.recipeList.title"))
             ->setContent("@form.selectButton")
@@ -146,7 +158,40 @@ class RecipeForm {
                 $data --;
 
                 $recipe = $recipes[$data];
-                Session::getSession($player)->set("recipe_menu_prev", [$this, "sendRecipeList"]);
+                if ($recipe instanceof Recipe) {
+                    Session::getSession($player)
+                        ->set("recipe_menu_prev", [$this, "sendRecipeGroupList"])
+                        ->set("recipe_menu_prev_data", []);
+                    $this->sendRecipeMenu($player, $recipe);
+                    return;
+                }
+                $this->sendRecipeList($player, $recipe);
+            })->addArgs(array_values($recipeGroups))->show($player);
+    }
+
+    public function sendRecipeList(Player $player, array $recipes) {
+        /** @var Recipe[] $recipes */
+        $buttons = [new Button("@form.back")];
+        foreach ($recipes as $recipe) {
+            $buttons[] = new Button($recipe->getName());
+        }
+
+        (new ListForm("@form.recipe.recipeList.title"))
+            ->setContent("@form.selectButton")
+            ->addButtons($buttons)
+            ->onReceive(function (Player $player, ?int $data, array $recipes) {
+                if ($data === null) return;
+
+                if ($data === 0) {
+                    $this->sendRecipeGroupList($player);
+                    return;
+                }
+                $data --;
+
+                $recipe = $recipes[$data];
+                Session::getSession($player)
+                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                    ->set("recipe_menu_prev_data", [$recipes]);;
                 $this->sendRecipeMenu($player, $recipe);
             })->addArgs(array_values($recipes))->show($player);
     }
@@ -244,11 +289,11 @@ class RecipeForm {
                 }
 
                 $manager = Main::getRecipeManager();
-                if ($manager->exists($data[1])) {
-                    $newName = $manager->getNotDuplicatedName($data[1]);
+                if ($manager->exists($data[1], $recipe->getGroup())) {
+                    $newName = $manager->getNotDuplicatedName($data[1], $recipe->getGroup());
                     (new HomeForm)->sendConfirmRename($player, $data[1], $newName, function (bool $result, string $name, string $newName) use ($player, $recipe, $manager) {
                         if ($result) {
-                            $manager->rename($recipe->getName(), $newName);
+                            $manager->rename($recipe->getName(), $newName, $recipe->getGroup());
                             $this->sendRecipeMenu($player, $recipe);
                         } else {
                             $this->sendChangeName($player, $recipe, $name, "@form.recipe.exists");
@@ -256,7 +301,7 @@ class RecipeForm {
                     });
                     return;
                 }
-                $manager->rename($recipe->getName(), $data[1]);
+                $manager->rename($recipe->getName(), $data[1], $recipe->getGroup());
                 $this->sendRecipeMenu($player, $recipe, ["@form.recipe.changeName.success"]);
             })->addArgs($recipe);
         if ($error) $form->addError($error, 1);
@@ -356,7 +401,7 @@ class RecipeForm {
                 if ($data) {
                     $manager = Main::getRecipeManager();
                     $recipe->removeTriggerAll();
-                    $manager->remove($recipe->getName());
+                    $manager->remove($recipe->getName(), $recipe->getGroup());
                     $this->sendMenu($player, ["@form.delete.success"]);
                 } else {
                     $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);

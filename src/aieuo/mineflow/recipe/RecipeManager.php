@@ -8,7 +8,7 @@ use aieuo\mineflow\utils\Language;
 
 class RecipeManager {
 
-    /** @var Recipe[]*/
+    /** @var Recipe[][]*/
     protected $recipes = [];
 
     /** @var string */
@@ -24,20 +24,29 @@ class RecipeManager {
     }
 
     public function loadRecipes(): void {
-        $files = glob($this->getSaveDir()."/*.json");
-        foreach ($files as $file) {
-            $data = json_decode(file_get_contents($file), true);
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $this->getSaveDir(),
+                \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+            )
+        );
+        $files = new \RegexIterator($files, '/\.json$/', \RecursiveRegexIterator::MATCH);
+
+        foreach($files as $file) {
+            /** @var \SplFileInfo $file */
+            $pathname = $file->getPathname();
+            $data = json_decode(file_get_contents($pathname), true);
             if ($data === null) {
-                Logger::warning(Language::get("recipe.json.decode.failed", [$file, json_last_error_msg()]));
+                Logger::warning(Language::get("recipe.json.decode.failed", [$pathname, json_last_error_msg()]));
                 continue;
             }
 
             if (!isset($data["name"]) or !isset($data["actions"])) {
-                Logger::warning(Language::get("recipe.json.decode.failed", [$file, ["recipe.json.key.missing"]]));
+                Logger::warning(Language::get("recipe.json.decode.failed", [$pathname, ["recipe.json.key.missing"]]));
                 continue;
             }
 
-            $recipe = new Recipe($data["name"], $data["author"] ?? "");
+            $recipe = new Recipe($data["name"], $data["group"] ?? "", $data["author"] ?? "");
             try {
                 $recipe->loadSaveData($data["actions"]);
             } catch (\InvalidArgumentException $e) {
@@ -50,8 +59,8 @@ class RecipeManager {
             }
 
             $recipe->setTargetSetting(
-                $data["targetType"] ?? Recipe::TARGET_DEFAULT,
-                $data["targetOptions"] ?? []
+                $data["target"]["type"] ?? Recipe::TARGET_DEFAULT,
+                $data["target"]["options"] ?? []
             );
             $recipe->setTriggersFromArray($data["triggers"] ?? []);
             $recipe->setArguments($data["arguments"] ?? []);
@@ -61,56 +70,64 @@ class RecipeManager {
         }
     }
 
-    public function exists(string $name): bool {
-        return isset($this->recipes[$name]);
+    public function exists(string $name, string $group = ""): bool {
+        return isset($this->recipes[$group][$name]);
     }
 
     public function add(Recipe $recipe, bool $createFile = true): void {
-        $this->recipes[$recipe->getName()] = $recipe;
-        if ($createFile and !file_exists($this->getSaveDir().$recipe->getName().".json")) {
+        $this->recipes[$recipe->getGroup()][$recipe->getName()] = $recipe;
+        if ($createFile and !file_exists($recipe->getFileName($this->getSaveDir()))) {
             $recipe->save($this->getSaveDir());
         }
     }
 
-    public function get(string $name): ?Recipe {
-        return $this->recipes[$name] ?? null;
+    public function get(string $name, string $group = ""): ?Recipe {
+        return $this->recipes[$group][$name] ?? null;
     }
 
     /**
-     * @return Recipe[]
+     * @return Recipe[][]
      */
     public function getAll(): array {
         return $this->recipes;
     }
 
-    public function remove(string $name): void {
-        if (!$this->exists($name)) return;
-        unlink($this->getSaveDir().$this->get($name)->getName().".json");
-        unset($this->recipes[$name]);
+    public function remove(string $name, string $group = ""): void {
+        if (!$this->exists($name, $group)) return;
+        unlink($this->get($name, $group)->getFileName($this->getSaveDir()));
+        unset($this->recipes[$group][$name]);
     }
 
     public function saveAll(): void {
-        foreach ($this->getAll() as $recipe) {
-            $recipe->save($this->getSaveDir());
+        foreach ($this->getAll() as $group) {
+            foreach ($group as $recipe) {
+                $recipe->save($this->getSaveDir());
+            }
         }
     }
 
-    public function getNotDuplicatedName(string $name): string {
-        if (!$this->exists($name)) return $name;
+    public function getNotDuplicatedName(string $name, string $group = ""): string {
+        if (!$this->exists($name, $group)) return $name;
         $count = 2;
-        while ($this->exists($name." (".$count.")")) {
+        while ($this->exists($name." (".$count.")", $group)) {
             $count ++;
         }
         $name = $name." (".$count.")";
         return $name;
     }
 
-    public function rename(string $recipeName, string $newName): void {
-        if (!$this->exists($recipeName)) return;
-        $recipe = $this->get($recipeName);
+    public function rename(string $recipeName, string $newName, string $group = ""): void {
+        if (!$this->exists($recipeName, $group)) return;
+        $recipe = $this->get($recipeName, $group);
+        $oldPath = $recipe->getFileName($this->getSaveDir());
         $recipe->setName($newName);
-        unset($this->recipes[$recipeName]);
-        $this->recipes[$newName] = $recipe;
-        rename($this->getSaveDir().$recipeName.".json", $this->saveDir.$newName.".json");
+        unset($this->recipes[$group][$recipeName]);
+        $this->recipes[$group][$newName] = $recipe;
+        rename($oldPath, $recipe->getFileName($this->getSaveDir()));
+    }
+
+    public function parseName(string $name): array {
+        $names = explode("/", $name);
+        return [array_pop($names), implode("/", $names)];
     }
 }

@@ -44,9 +44,16 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
 
         $name = $origin->replaceVariables($this->getRecipeName());
 
-        $recipe = Main::getRecipeManager()->get($name);
+        $recipeManager = Main::getRecipeManager();
+        [$recipeName, $group] = $recipeManager->parseName($name);
+        if (empty($group)) $group = $origin->getGroup();
+
+        $recipe = $recipeManager->get($recipeName, $group);
         if ($recipe === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.executeRecipe.notFound"]]));
+            $recipe = $recipeManager->get($recipeName, "");
+            if ($recipe === null) {
+                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            }
         }
 
         $entity = $this->getEntity($origin);
@@ -74,9 +81,6 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         $errors = [];
         if ($data[1] === "") {
             $errors = [["@form.insufficient", 1]];
-        }
-        if (!Main::getVariableHelper()->containsVariable($data[1]) and !Main::getRecipeManager()->exists($data[1])) {
-            $errors = [["@action.executeRecipe.notFound", 1]];
         }
         if ($data[2] === "") {
             $errors = [["@form.insufficient", 2]];

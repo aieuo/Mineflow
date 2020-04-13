@@ -38,9 +38,17 @@ class CallRecipe extends ExecuteRecipe {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
-        $recipe = Main::getRecipeManager()->get($name);
+
+        $recipeManager = Main::getRecipeManager();
+        [$recipeName, $group] = $recipeManager->parseName($name);
+        if (empty($group)) $group = $origin->getGroup();
+
+        $recipe = $recipeManager->get($recipeName, $group);
         if ($recipe === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            $recipe = $recipeManager->get($recipeName, "");
+            if ($recipe === null) {
+                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            }
         }
 
         $recipe = clone $recipe;
@@ -74,9 +82,6 @@ class CallRecipe extends ExecuteRecipe {
         $errors = [];
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
-        }
-        if (!Main::getVariableHelper()->containsVariable($data[1]) and !Main::getRecipeManager()->exists($data[1])) {
-            $errors[] = ["@action.executeRecipe.notFound", 1];
         }
         return ["status" => empty($errors), "contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
     }

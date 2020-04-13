@@ -39,6 +39,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
     private $name;
     /* @var string */
     private $author;
+    /* @var string */
+    private $group;
 
     /** @var int */
     private $targetType = self::TARGET_DEFAULT;
@@ -68,9 +70,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /* @var array */
     private $returnValues = [];
 
-    public function __construct(string $name, string $author = "") {
+    public function __construct(string $name, string $group = "", string $author = "") {
         $this->name = $name;
         $this->author = $author;
+        $this->group = $group;
     }
 
     public function setName(string $name): void {
@@ -84,6 +87,11 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function getContainerName(): string {
         return $this->getName();
     }
+
+    public function getGroup(): string {
+        return $this->group;
+    }
+
     public function getDetail(): string {
         $details = [];
         foreach ($this->getActions() as $action) {
@@ -143,22 +151,13 @@ class Recipe implements \JsonSerializable, ActionContainer {
         $this->target = $target;
     }
 
+    public function getTriggers(): array {
+        return $this->triggers;
+    }
+
     public function addTrigger(Trigger $trigger): void {
         TriggerHolder::getInstance()->addRecipe($trigger, $this);
         $this->triggers[] = $trigger;
-    }
-
-    public function removeTrigger(Trigger $trigger): void {
-        TriggerHolder::getInstance()->removeRecipe($trigger, $this);
-        $index = array_search($trigger, $this->triggers, true);
-        unset($this->triggers[$index]);
-        $this->triggers = array_values($this->triggers);
-    }
-
-    public function removeTriggerAll() {
-        foreach ($this->getTriggers() as $trigger) {
-            $this->removeTrigger($trigger);
-        }
     }
 
     public function setTriggersFromArray(array $triggers) {
@@ -172,11 +171,17 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return in_array($trigger, $this->getTriggers());
     }
 
-    /**
-     * @return Trigger[]
-     */
-    public function getTriggers(): array {
-        return $this->triggers;
+    public function removeTrigger(Trigger $trigger): void {
+        TriggerHolder::getInstance()->removeRecipe($trigger, $this);
+        $index = array_search($trigger, $this->triggers, true);
+        unset($this->triggers[$index]);
+        $this->triggers = array_values($this->triggers);
+    }
+
+    public function removeTriggerAll() {
+        foreach ($this->getTriggers() as $trigger) {
+            $this->removeTrigger($trigger);
+        }
     }
 
     public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
@@ -297,23 +302,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
         $this->execute(...$this->last);
     }
 
-    public function jsonSerialize(): array {
-        return [
-            "name" => $this->name,
-            "author" => $this->author,
-            "actions" => $this->actions,
-            "triggers" => $this->triggers,
-            "targetType" => $this->targetType,
-            "targetOptions" => $this->targetOptions,
-            "arguments" => $this->getArguments(),
-            "returnValues" => $this->getReturnValues(),
-        ];
-    }
-
-    public function save(string $dir): void {
-        file_put_contents($dir.$this->getName().".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
-    }
-
     /**
      * @param array $contents
      * @return self
@@ -335,5 +323,32 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $this->addAction($action);
         }
         return $this;
+    }
+
+    public function jsonSerialize(): array {
+        return [
+            "name" => $this->name,
+            "group" => $this->group,
+            "author" => $this->author,
+            "actions" => $this->actions,
+            "triggers" => $this->triggers,
+            "target" => [
+                "type" => $this->targetType,
+                "options" => $this->targetOptions,
+            ],
+            "arguments" => $this->getArguments(),
+            "returnValues" => $this->getReturnValues(),
+        ];
+    }
+
+    public function getFileName(string $baseDir): string {
+        if (!empty($this->group)) $baseDir .= $this->group."/";
+        return $baseDir.$this->getName().".json";
+    }
+
+    public function save(string $dir): void {
+        $path = $this->getFileName($dir);
+        if (!file_exists(dirname($path))) @mkdir(dirname($path), 0777, true);
+        file_put_contents($path, json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 }
