@@ -19,7 +19,7 @@ class FormTriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent("type: ".$trigger->getType()."\n".$trigger->getKey())
+            ->setContent("type: ".$trigger->getType()."\n".$trigger->getKey()."\n".$trigger->getSubKey())
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),

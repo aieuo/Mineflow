@@ -18,7 +18,7 @@ class CommandTriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent("type: ".$trigger->getType()."\n/".$trigger->getKey())
+            ->setContent("type: ".$trigger->getType()."\n/".$trigger->getKey()."\n/".$trigger->getSubKey())
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
@@ -73,13 +73,12 @@ class CommandTriggerForm {
                     return;
                 }
 
-                $trigger = new Trigger(Trigger::TYPE_COMMAND, $data[0]);
+                $trigger = new Trigger(Trigger::TYPE_COMMAND, explode(" ", $data[0])[0], $data[0]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;
                 }
                 $recipe->addTrigger($trigger);
-                $manager->addRecipe($data[0], $recipe);
                 $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
             })->addArgs($recipe)->addErrors($errors)->show($player);
     }
@@ -106,8 +105,6 @@ class CommandTriggerForm {
 
                 if ($data) {
                     $recipe->removeTrigger($trigger);
-                    $manager = Main::getCommandManager();
-                    $manager->removeRecipe($manager->getOriginCommand($trigger->getKey()), $recipe);
                     (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
                 } else {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@form.cancelled"]);
