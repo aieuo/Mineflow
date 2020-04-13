@@ -188,6 +188,7 @@ class CustomFormForm {
         (new ListForm(Language::get($form->getName())))
             ->setContent("@form.selectButton")
             ->addButtons([
+                new Button("@form.back"),
                 new Button("@form.form.formMenu.preview"),
                 new Button("@form.form.formMenu.changeTitle"),
                 new Button("@form.form.formMenu.content"),
@@ -195,23 +196,27 @@ class CustomFormForm {
                 new Button("@form.form.formMenu.modal.button2"),
                 new Button("@form.form.formMenu.changeName"),
                 new Button("@form.delete"),
-                new Button("@form.back"),
             ])->onReceive(function (Player $player, ?int $data, ModalForm $form) {
                 if ($data === null) return;
 
                 switch ($data) {
                     case 0:
+                        $prev = Session::getSession($player)->get("form_menu_prev");
+                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        else $this->sendMenu($player);
+                        break;
+                    case 1:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendModalFormMenu($player, $form);
                         })->show($player);
                         break;
-                    case 1:
+                    case 2:
                         $this->sendChangeFormTitle($player, $form);
                         break;
-                    case 2:
+                    case 3:
                         $this->sendChangeFormContent($player, $form);
                         break;
-                    case 3:
+                    case 4:
                         (new CustomForm("@form.form.formMenu.modal.button1"))
                             ->setContents([
                                 new Label(Language::get("customForm.receive", ["true"])."\n".
@@ -232,7 +237,7 @@ class CustomFormForm {
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
                         break;
-                    case 4:
+                    case 5:
                         (new CustomForm("@form.form.formMenu.modal.button2"))
                             ->setContents([
                                 new Label(Language::get("customForm.receive", ["false"])."\n".
@@ -253,16 +258,11 @@ class CustomFormForm {
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
                         break;
-                    case 5:
+                    case 6:
                         $this->sendChangeFormName($player, $form);
                         break;
-                    case 6:
+                    case 7:
                         $this->sendConfirmDelete($player, $form);
-                        break;
-                    default:
-                        $prev = Session::getSession($player)->get("form_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
-                        else $this->sendMenu($player);
                         break;
                 }
             })->addArgs($form)->addMessages($messages)->show($player);
@@ -270,6 +270,7 @@ class CustomFormForm {
 
     public function sendListFormMenu(Player $player, ListForm $form, array $messages = []) {
         $buttons = [
+            new Button("@form.back"),
             new Button("@form.form.formMenu.preview"),
             new Button("@form.form.formMenu.changeTitle"),
             new Button("@form.form.formMenu.content"),
@@ -281,7 +282,6 @@ class CustomFormForm {
         $buttons[] = new Button("@customForm.list.addButton");
         $buttons[] = new Button("@form.form.formMenu.changeName");
         $buttons[] = new Button("@form.delete");
-        $buttons[] = new Button("@form.back");
         (new ListForm(Language::get("form.form.formMenu.changeTitle", [$form->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
@@ -290,18 +290,23 @@ class CustomFormForm {
 
                 switch ($data) {
                     case 0:
+                        $prev = Session::getSession($player)->get("form_menu_prev");
+                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        else $this->sendMenu($player);
+                        return;
+                    case 1:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendListFormMenu($player, $form);
                         })->show($player);
                         return;
-                    case 1:
+                    case 2:
                         $this->sendChangeFormTitle($player, $form);
                         return;
-                    case 2:
+                    case 3:
                         $this->sendChangeFormContent($player, $form);
                         return;
                 }
-                $data -= 3;
+                $data -= 4;
 
                 switch ($data - count($buttons)) {
                     case 0:
@@ -312,11 +317,6 @@ class CustomFormForm {
                         return;
                     case 2:
                         $this->sendConfirmDelete($player, $form);
-                        return;
-                    case 3:
-                        $prev = Session::getSession($player)->get("form_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
-                        else $this->sendMenu($player);
                         return;
                 }
 
@@ -347,6 +347,7 @@ class CustomFormForm {
 
     public function sendCustomFormMenu(Player $player, CustomForm $form, array $messages = []) {
         $buttons = [
+            new Button("@form.back"),
             new Button("@form.form.formMenu.preview"),
             new Button("@form.form.formMenu.changeTitle"),
             new Button("@form.form.formMenu.content"),
@@ -358,7 +359,6 @@ class CustomFormForm {
         $buttons[] = new Button("@customForm.custom.element.add");
         $buttons[] = new Button("@form.form.formMenu.changeName");
         $buttons[] = new Button("@form.delete");
-        $buttons[] = new Button("@form.back");
         (new ListForm(Language::get("form.form.formMenu.changeTitle", [$form->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
@@ -367,18 +367,23 @@ class CustomFormForm {
 
                 switch ($data) {
                     case 0:
+                        $prev = Session::getSession($player)->get("form_menu_prev");
+                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        else $this->sendMenu($player);
+                        return;
+                    case 1:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendCustomFormMenu($player, $form);
                         })->show($player);
                         return;
-                    case 1:
+                    case 2:
                         $this->sendChangeFormTitle($player, $form);
                         return;
-                    case 2:
+                    case 3:
                         $this->sendChangeFormContent($player, $form);
                         return;
                 }
-                $data -= 3;
+                $data -= 4;
 
                 switch ($data - count($elements)) {
                     case 0:
@@ -389,11 +394,6 @@ class CustomFormForm {
                         return;
                     case 2:
                         $this->sendConfirmDelete($player, $form);
-                        return;
-                    case 3:
-                        $prev = Session::getSession($player)->get("form_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
-                        else $this->sendMenu($player);
                         return;
                 }
 
