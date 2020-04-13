@@ -145,7 +145,7 @@ class RecipeForm {
         }
         unset($recipeGroups[""]);
         foreach ($recipeGroups as $group => $value) {
-            $buttons[] = new Button($group);
+            $buttons[] = new Button("[$group]");
         }
         $recipeGroups = array_merge($recipes, $recipeGroups);
 
