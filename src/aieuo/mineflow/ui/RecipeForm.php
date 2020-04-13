@@ -93,7 +93,9 @@ class RecipeForm {
 
                 $recipe = new Recipe($name, $group, $player->getName());
                 $manager->add($recipe);
-                Session::getSession($player)->set("recipe_menu_prev", [$this, "sendSelectRecipe"]);
+                Session::getSession($player)
+                    ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
+                    ->set("recipe_menu_prev_data", []);
                 $this->sendRecipeMenu($player, $recipe);
             })->addErrors($errors)->addArgs($name)->show($player);
     }
@@ -123,8 +125,10 @@ class RecipeForm {
                     return;
                 }
 
-                $recipe = $manager->get($name);
-                Session::getSession($player)->set("recipe_menu_prev", [$this, "sendSelectRecipe"]);
+                $recipe = $manager->get($name, $group);
+                Session::getSession($player)
+                    ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
+                    ->set("recipe_menu_prev_data", []);
                 $this->sendRecipeMenu($player, $recipe);
             });
         if ($error) $form->addError($error, 0);

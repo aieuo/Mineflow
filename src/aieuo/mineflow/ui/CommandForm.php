@@ -105,7 +105,9 @@ class CommandForm {
                 }
 
                 $command = $manager->getCommand($manager->getOriginCommand($data[0]));
-                Session::getSession($player)->set("command_menu_prev", [$this, "sendSelectCommand"]);
+                Session::getSession($player)
+                    ->set("command_menu_prev", [$this, "sendSelectCommand"])
+                    ->set("command_menu_prev_data", []);
                 $this->sendCommandMenu($player, $command);
             })->addErrors($errors)->show($player);
     }
@@ -131,7 +133,9 @@ class CommandForm {
                 $data --;
 
                 $command = $commands[$data];
-                Session::getSession($player)->set("command_menu_prev", [$this, "sendCommandList"]);
+                Session::getSession($player)
+                    ->set("command_menu_prev", [$this, "sendCommandList"])
+                    ->set("command_menu_prev_data", []);
                 $this->sendCommandMenu($player, $command);
             })->addArgs(array_values($commands))->show($player);
     }
