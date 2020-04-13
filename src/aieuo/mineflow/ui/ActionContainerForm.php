@@ -27,8 +27,6 @@ class ActionContainerForm {
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
-                if ($data === null) return;
-
                 if ($data === 0) {
                     if ($container instanceof Recipe) {
                         (new RecipeForm)->sendRecipeMenu($player, $container);
@@ -67,8 +65,6 @@ class ActionContainerForm {
             ->setContent("@form.actionContainer.moveAction.content")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, ?int $data, ActionContainer $container, int $selected, array $actions, int $count = 0) {
-                if ($data === null) return;
-
                 $move = $actions[$selected];
                 if ($data === 0) {
                     (new ActionForm)->sendAddedActionMenu($player, $container, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);

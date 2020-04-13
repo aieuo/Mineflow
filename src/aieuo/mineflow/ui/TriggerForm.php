@@ -32,9 +32,7 @@ class TriggerForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Trigger $trigger) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -55,9 +53,7 @@ class TriggerForm {
                 new Button("@trigger.type.event"),
                 new Button("@trigger.type.command"),
                 new Button("@trigger.type.form"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -84,8 +80,6 @@ class TriggerForm {
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, Trigger $trigger) {
-                if ($data === null) return;
-
                 if ($data) {
                     $recipe->removeTrigger($trigger);
                     (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);

@@ -27,8 +27,7 @@ class RecipeForm {
                 new Button("@form.add"),
                 new Button("@form.edit"),
                 new Button("@form.recipe.menu.recipeList"),
-            ])->onReceive(function (Player $player, ?int $data) {
-                if ($data === null) return;
+            ])->onReceive(function (Player $player, int $data) {
                 switch ($data) {
                     case 0:
                         (new HomeForm)->sendMenu($player);
@@ -54,8 +53,7 @@ class RecipeForm {
                 new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, string $defaultName) {
-                if ($data === null) return;
+            ])->onReceive(function (Player $player, array $data, string $defaultName) {
                 if ($data[2]) {
                     $this->sendMenu($player);
                     return;
@@ -152,9 +150,7 @@ class RecipeForm {
         (new ListForm("@form.recipe.recipeList.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, array $recipes) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, array $recipes) {
                 if ($data === 0) {
                     $this->sendMenu($player);
                     return;
@@ -183,9 +179,7 @@ class RecipeForm {
         (new ListForm("@form.recipe.recipeList.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, array $recipes) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, array $recipes) {
                 if ($data === 0) {
                     $this->sendRecipeGroupList($player);
                     return;
@@ -213,9 +207,7 @@ class RecipeForm {
                 new Button("@form.recipe.args.return.set"),
                 new Button("@form.recipe.recipeMenu.save"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("recipe_menu_prev");
@@ -246,9 +238,7 @@ class RecipeForm {
                                 new Button("@form.back"),
                                 new Button("@form.recipe.args.set"),
                                 new Button("@form.recipe.returnValue.set"),
-                            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe) {
-                                if ($data === null) return;
-
+                            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
                                 switch ($data) {
                                     case 0:
                                         $this->sendRecipeMenu($player, $recipe);
@@ -279,9 +269,7 @@ class RecipeForm {
                 new Label("@form.recipe.changeName.content0"),
                 new Input("@form.recipe.changeName.content1", "", $default ?? $recipe->getName()),
                 new Toggle("@form.cancelAndBack")
-            ])->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[2]) {
                     $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
                     return;
@@ -330,9 +318,7 @@ class RecipeForm {
         (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $triggers) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, Recipe $recipe, array $triggers) {
                 if ($data === 0) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;
@@ -356,7 +342,7 @@ class RecipeForm {
         $contents[] = new Input("@form.recipe.args.add");
         (new CustomForm("@form.recipe.args.set"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
+            ->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data === null or $data[0]) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;
@@ -379,7 +365,7 @@ class RecipeForm {
         $contents[] = new Input("@form.recipe.returnValue.add");
         (new CustomForm("@form.recipe.returnValue.set"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
+            ->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data === null or $data[0]) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;

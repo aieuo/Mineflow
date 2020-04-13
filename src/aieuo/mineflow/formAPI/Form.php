@@ -30,7 +30,9 @@ abstract class Form implements PMForm {
     private $name;
 
     /** @var callable|null */
-    private $callable = null;
+    private $onReceive = null;
+    /* @var callable|null */
+    private $onClose = null;
     /** @var array */
     private $args = [];
     /** @var array */
@@ -88,7 +90,16 @@ abstract class Form implements PMForm {
      * @return self
      */
     public function onReceive(callable $callable): self {
-        $this->callable = $callable;
+        $this->onReceive = $callable;
+        return $this;
+    }
+
+    /**
+     * @param callable $callable
+     * @return self
+     */
+    public function onClose(callable $callable): self {
+        $this->onClose = $callable;
         return $this;
     }
 
@@ -177,9 +188,13 @@ abstract class Form implements PMForm {
     abstract public function reflectErrors(array $form): array;
 
     public function handleResponse(Player $player, $data): void {
-        if (!is_callable($this->callable)) return;
-
-        call_user_func_array($this->callable, array_merge([$player, $data], $this->args));
+        if ($data === null) {
+            if (!is_callable($this->onClose)) return;
+            call_user_func_array($this->onClose, array_merge([$player], $this->args));
+        } else {
+            if (!is_callable($this->onReceive)) return;
+            call_user_func_array($this->onReceive, array_merge([$player, $data], $this->args));
+        }
     }
 
     public static function createFromArray(array $data, string $name = ""): ?self {

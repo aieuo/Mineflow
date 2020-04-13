@@ -23,9 +23,7 @@ class CommandTriggerForm {
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.command.edit.title"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Trigger $trigger) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -47,9 +45,7 @@ class CommandTriggerForm {
             ->setContents([
                 new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? ""),
                 new Toggle("@form.back"),
-            ])->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[1]) {
                     (new TriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
@@ -90,7 +86,6 @@ class CommandTriggerForm {
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, callable $callback) {
-                if ($data === null) return;
                 call_user_func_array($callback, [$data]);
             })->addArgs($callback)->show($player);
     }

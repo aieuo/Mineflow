@@ -59,10 +59,6 @@ class AndScript extends Condition implements ConditionContainer {
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, ?int $data) {
                 $session = Session::getSession($player);
-                if ($data === null) {
-                    $session->removeAll();
-                    return;
-                }
                 $parents = $session->get("parents");
                 $parent = end($parents);
                 switch ($data) {
@@ -78,6 +74,8 @@ class AndScript extends Condition implements ConditionContainer {
                         (new ConditionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
+            })->onClose(function (Player $player) {
+                Session::getSession($player)->removeAll();
             })->addMessages($messages)->show($player);
     }
 

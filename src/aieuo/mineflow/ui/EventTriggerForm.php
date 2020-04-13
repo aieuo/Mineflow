@@ -19,9 +19,7 @@ class EventTriggerForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Trigger $trigger) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -44,9 +42,7 @@ class EventTriggerForm {
         (new ListForm(Language::get("trigger.event.list.title", [$recipe->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, Recipe $recipe, array $events) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, Recipe $recipe, array $events) {
                 if ($data === 0) {
                     (new TriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
@@ -65,9 +61,7 @@ class EventTriggerForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, string $eventName) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe, string $eventName) {
                 if ($data === 0) {
                     $this->sendEventTriggerList($player, $recipe);
                     return;

@@ -32,9 +32,7 @@ class ActionForm {
                 new Button("@form.edit"),
                 new Button("@form.move"),
                 new Button("@form.delete"),
-            ])->onReceive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, ActionContainer $container, Action $action) {
                 switch ($data) {
                     case 0:
                         $session = Session::getSession($player);
@@ -101,9 +99,7 @@ class ActionForm {
         (new ListForm(Language::get("form.action.category.title", [$container->getContainerName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $categories) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, ActionContainer $container, array $categories) {
                 if ($data === 0) {
                     (new ActionContainerForm)->sendActionList($player, $container);
                     return;
@@ -140,9 +136,7 @@ class ActionForm {
         (new ListForm(Language::get("form.action.select.title", [$container->getContainerName(), Session::getSession($player)->get("flowItem_category", "")])))
             ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, ?int $data, ActionContainer $container, array $actions) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, int $data, ActionContainer $container, array $actions) {
                 if ($data === 0) {
                     $this->selectActionCategory($player, $container);
                     return;
@@ -164,9 +158,7 @@ class ActionForm {
                 new Button("@form.back"),
                 new Button("@form.add"),
                 new Button(in_array($action->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
-            ])->onReceive(function (Player $player, ?int $data, ActionContainer $container, Action $action) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, ActionContainer $container, Action $action) {
                 switch ($data) {
                     case 0:
                         $actions = Session::getSession($player)->get("actions");

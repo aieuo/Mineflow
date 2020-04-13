@@ -21,9 +21,7 @@ class SettingForm {
                 new Button("@form.back"),
                 new Button("@setting.language"),
                 new Button("@setting.event"),
-            ])->onReceive(function (Player $player, ?int $data) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data) {
                 switch ($data) {
                     case 0:
                         (new HomeForm)->sendMenu($player);
@@ -43,9 +41,7 @@ class SettingForm {
         (new CustomForm("@setting.language"))
             ->setContents([
                 new Dropdown("@setting.language", $languages, array_search(Language::getLanguage(), $languages)),
-            ])->onReceive(function (Player $player, ?array $data) use ($languages) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data) use ($languages) {
                 $language = $languages[$data[0]];
                 Server::getInstance()->dispatchCommand($player, "mineflow language ".$language);
             })->show($player);
@@ -60,9 +56,7 @@ class SettingForm {
         }
         (new CustomForm("@setting.event"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, ?array $data) use ($events, $enables) {
-                if ($data === null) return;
-
+            ->onReceive(function (Player $player, array $data) use ($events, $enables) {
                 $count = 0;
                 foreach ($events as $name => $event) {
                     if ($data[$count] and !isset($enables[$name])) {

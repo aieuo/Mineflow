@@ -71,21 +71,13 @@ class SendForm extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $form = clone $form;
-        $form->onReceive([$this, "onReceive"])->addArgs($form)->show($player);
+        $form->onReceive([$this, "onReceive"])->onClose([$this, "onClose"])->addArgs($form)->show($player);
         return true;
     }
 
     public function onReceive(Player $player, $data, Form $form) {
         $holder = TriggerHolder::getInstance();
         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
-        if ($data === null) {
-            $trigger->setSubKey("close");
-            if ($holder->existsRecipe($trigger)) {
-                $recipes = $holder->getRecipes($trigger);
-                $recipes->executeAll($player);
-            }
-            return;
-        }
         $variables = Main::getFormManager()->getFormDataVariable($form, $data);
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
@@ -109,6 +101,15 @@ class SendForm extends Action implements PlayerFlowItem {
                     $recipes->executeAll($player, $variables);
                 }
                 break;
+        }
+    }
+
+    public function onClose(Player $player, Form $form) {
+        $holder = TriggerHolder::getInstance();
+        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName(), "close");
+        if ($holder->existsRecipe($trigger)) {
+            $recipes = $holder->getRecipes($trigger);
+            $recipes->executeAll($player);
         }
     }
 

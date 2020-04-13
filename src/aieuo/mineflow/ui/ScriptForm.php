@@ -16,9 +16,7 @@ class ScriptForm {
             ->setContents([
                 new Input("@action.repeat.repeatCount", Language::get("form.example", ["10"]), $default[0] ?? $script->getRepeatCount()),
                 new Toggle("@form.cancelAndBack")
-            ])->onReceive(function (Player $player, ?array $data, RepeatAction $script) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, RepeatAction $script) {
                 if ($data[1]) {
                     $script->sendCustomMenu($player, ["@form.cancelled"]);
                     return;
@@ -44,9 +42,7 @@ class ScriptForm {
             ->setContents([
                 new Input("@action.whileTask.interval", Language::get("form.example", ["20"]), $default[0] ?? $script->getInterval()),
                 new Toggle("@form.cancelAndBack")
-            ])->onReceive(function (Player $player, ?array $data, WhileTaskAction $script) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, WhileTaskAction $script) {
                 if ($data[1]) {
                     $script->sendCustomMenu($player, ["@form.cancelled"]);
                     return;

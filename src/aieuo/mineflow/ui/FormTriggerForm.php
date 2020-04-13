@@ -24,9 +24,7 @@ class FormTriggerForm {
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.form.edit.title"),
-            ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Trigger $trigger) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -48,9 +46,7 @@ class FormTriggerForm {
             ->setContents([
                 new Input("@trigger.form.select.input", "", $default[0] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, ?array $data, Recipe $recipe) {
-                if ($data === null) return;
-
+            ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[1]) {
                     (new TriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
@@ -87,9 +83,7 @@ class FormTriggerForm {
                         new Button("@form.cancelAndBack"),
                         new Button("@trigger.form.receive"),
                         new Button("@trigger.form.close"),
-                    ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Form $form) {
-                        if ($data === null) return;
-
+                    ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
                         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
                         switch ($data) {
                             case 0:
@@ -117,9 +111,7 @@ class FormTriggerForm {
                         new Button("@trigger.form.receive"),
                         new Button(Language::get("trigger.form.button", [$form->getButton1()])),
                         new Button(Language::get("trigger.form.button", [$form->getButton2()])),
-                    ])->onReceive(function (Player $player, ?int $data, Recipe $recipe, Form $form) {
-                        if ($data === null) return;
-
+                    ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
                         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
                         switch ($data) {
                             case 0:
@@ -154,9 +146,7 @@ class FormTriggerForm {
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
                     ->setContent("@form.selectButton")
                     ->addButtons($buttons)
-                    ->onReceive(function (Player $player, ?int $data, Recipe $recipe, ListForm $form) {
-                        if ($data === null) return;
-
+                    ->onReceive(function (Player $player, int $data, Recipe $recipe, ListForm $form) {
                         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
                         switch ($data) {
                             case 0:
@@ -192,7 +182,6 @@ class FormTriggerForm {
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, callable $callback) {
-                if ($data === null) return;
                 call_user_func_array($callback, [$data]);
             })->addArgs($callback)->show($player);
     }

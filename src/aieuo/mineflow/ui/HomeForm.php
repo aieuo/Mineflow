@@ -19,8 +19,7 @@ class HomeForm {
                 new Button("@mineflow.form"),
                 new Button("@mineflow.settings"),
                 new Button("@form.exit"),
-            ])->onReceive(function (Player $player, ?int $data) {
-                if ($data === null) return;
+            ])->onReceive(function (Player $player, int $data) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendMenu($player);
