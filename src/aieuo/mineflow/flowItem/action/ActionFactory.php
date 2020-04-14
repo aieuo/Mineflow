@@ -69,6 +69,9 @@ class ActionFactory {
         self::register(new ExecuteRecipe);
         self::register(new ExecuteRecipeWithEntity);
         self::register(new SaveData);
+        self::register(new CreateConfigVariable);
+        self::register(new SetConfigData);
+        self::register(new SaveConfigFile);
         /* calculation */
         self::register(new FourArithmeticOperations);
         self::register(new Calculate);

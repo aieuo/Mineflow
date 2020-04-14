@@ -85,4 +85,7 @@ interface ActionIds {
     const ACTION_WAIT = "wait";
     const SAVE_DATA = "save";
     const ACTION_WHILE_TASK = "whileTask";
+    const CREATE_CONFIG_VARIABLE = "createConfig";
+    const SET_CONFIG_DATA = "setConfig";
+    const SAVE_CONFIG_FILE = "saveConfig";
 }
