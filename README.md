@@ -5,12 +5,17 @@
 
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
-https://github.com/aieuo/if_plugin
+rewrite of https://github.com/aieuo/if_plugin  
+
+
+### [English](#English),  [日本語](#日本語)
+
+# English
 
 You can combine actions and create something like a plugin without any coding knowledge.
 
 
-# Command
+## Command
 Change language: `/mineflow language <eng | jpn>`  
 Manage recipes: `/mineflow recipe [add | edit | list]`  
 Manage command triggers: `/mineflow command [add | edit | list]`  
@@ -19,16 +24,17 @@ Change player's permission level: `/mineflow permission <name> <level>`
 Setting: `/mineflow setting`  
 
 
-# ActionPermission
+## ActionPermission
 |  level  |  description  |
 | ---- | ---- |
 |  0  |  Normal action.  |
 |  1  |  Depending on how you use it, the server may be overloaded.  |
-|  2  |  Depending on how you use it, the server machine may be overloaded.  |
-To change the permission, run /mineflow permission <name> <level>. The level you give can only be used below your level. You can give a maximum level from the console.
+|  2  |  Depending on how you use it, the server machine may be overloaded.  |  
+
+To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console.
 
 
-# Variable
+## Variable
 Characters enclosed by "{" and "}" are recognized as variables and will be replaced.  
 In the case of List and Map variables, you can specify the index by separating the variable names with a period like {aiueo.oo}.  
 more examples:  {list.0}, {target.name}, {target.item.id}
@@ -69,16 +75,16 @@ This can use all the keys of the position variable.
 #### player
 A variable containing player data.  
 Available Keys (Let the name of the variable be "player".)  
-This can use all the keys of the position and entity variable.
+This can use all the keys of the position variable and entity variable.
 - {player.name} -> name of player (string)
 - {player.hand} -> player's hand item (item)
 #### block
 A variable containing block data.  
 Available Keys (Let the name of the variable be "block".)  
 This can use all the keys of the position variable.
-- {block.name} -> name of block
-- {block.id} -> id of block
-- {block.damage} -> damage value of block
+- {block.name} -> name of block (string)
+- {block.id} -> id of block (number)
+- {block.damage} -> damage value of block (number)
 
 
 List of default variables.
@@ -121,13 +127,147 @@ List of default variables.
     - {target_level} -> The name of the target world (level)
         
         
-# Tutorial
-## Create a recipe
+## Tutorial
+### Create a recipe
 Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
 Add a variety of actions to the recipe.
-## Execute a recipe
+### Execute a recipe
 Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed.
-## Change the executor
+### Change the executor
 By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
-## arguments and return values
+### arguments and return values
 You can set the value to be inherited from the original action and the value to be returned when executing in the "Callback the other recipe" action.
+
+
+
+
+
+# 日本語
+
+アクションを組み合わせてプラグインのようなものを作れます。
+
+
+## コマンド
+言語を変更する: `/mineflow language <eng | jpn>`  
+レシピを管理する: `/mineflow recipe [add | edit | list]`  
+コマンドトリガーを管理する: `/mineflow command [add | edit | list]`  
+フォームトリガーを管理する: `/mineflow form`  
+権限レベルを変更する: `/mineflow permission <name> <level>`  
+設定: `/mineflow setting`  
+
+
+## アクション権限
+|  レベル  |  説明  |
+| ---- | ---- |
+|  0  |  普通のアクション  |
+|  1  |  使い方によってはサーバーに影響を与える可能性があります  |
+|  2  |  使い方によってはサーバー機に影響を与える可能性があります  |  
+
+`/mineflow permission <name> <level>` で権限を変更できます。  
+与えることができる権限レベルは自分のレベル以下だけです。  
+コンソールからは最大レベルを与えることができます。
+
+
+## 変数
+`{` と `}`で囲った文字は変数と認識されて置き換えられます。  
+List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切ってインデックスを指定することができます。  
+もっと例:  {list.0}, {target.name}, {target.item.id}
+ 
+### 変数のタイプ
+#### string
+#### number
+#### list
+#### map
+#### item
+アイテムの情報を持っている変数  
+使用できるキー (変数名を「item」とします)  
+- {item.name} -> アイテムの名前 (string)
+- {item.id} -> アイテムのID (number)
+- {item.damage} ->　アイテムのダメージ値 (number)
+- {item.count} -> アイテムの個数 (number)
+#### level
+ワールドの情報を持っている変数  
+使用できるキー (変数名を「level」とします)  
+- {level.name} -> ワールド名
+- {level.folderName} -> ワールドのフォルダー名
+- {level.id} -> ワールドのID
+#### position
+座標の情報を持っている変数  
+使用できるキー (変数名を「pos」とします)  
+- {pos.x} -> x座標の値 (number)
+- {pos.y} -> y座標の値 (number)
+- {pos.z} -> z座標の値 (number)
+- {pos.xyz} -> x座標とy座標とz座標の値 (string)
+- {pos.level} -> 座標のワールド (level)
+- {pos.position} -> 座標 (position)
+#### entity
+エンティティの情報を持っている変数  
+使用できるキー (変数名を「entity」とします)  
+これはposition変数の全てのキーを使用することができます
+- {entity.id} -> エンティティのID (number) 
+- {entity.nameTag} -> エンティティの頭の上に浮いている名前 (string)
+#### player
+プレイヤーの情報を持っている変数  
+使用できるキー (変数名を「player」とします)  
+これはposition変数とentity変数の全てのキーを使用することができます
+- {player.name} -> プレイヤーの名前 (string)
+- {player.hand} -> プレイヤーの手にあるアイテム (item)
+#### block
+ブロックの情報を持っている変数  
+使用できるキー (変数名を「block」とします)  
+これはposition変数の全てのキーを使用することができます
+- {block.name} -> ブロックの名前 (string)
+- {block.id} -> ブロックのID (number)
+- {block.damage} -> ブロックのダメージ値 (number)
+
+
+デフォルト変数の一覧
+- いつでも使える
+    - {server_name} -> サーバーの名前 (string)
+    - {microtime} -> 現在のマイクロ秒 (number)
+    - {time} -> 現在の時刻 (string)
+    - {date} -> 現在の日付 (string)
+    - {default_level} -> デフォルトのワールド名 (string)
+    - {onlines} -> オンラインのプレイヤー名 (array)
+    - {ops} -> opの名前 (array)
+- プレイヤーが実行したときに使用できる変数
+    - {target} -> 実行したプレイヤー (player)
+- エンティティが実行したときに使用できる変数
+    - {target} -> 実行したエンティティ (entity)
+- コマンドトリガーとコマンドイベントで使用できる変数
+    - {cmd} -> コマンドを空白で区切った最初の部分 (string)
+    - {args} -> マンドを空白で区切った2つ目以降 (array) (`/warp aieuo` を実行した時、 `{args[0]}` にはaieuoが入ります)
+- ブロックトリガーとブロックイベントで使用できる変数
+    - {block} -> 触った、壊した、置いたブロック (block)
+- 看板が変わったときのイベントで使用できる変数
+    - {sign_lines} -> 看板の文字 (array)
+- コマンドイベントとチャットイベントで使用できる変数
+    - {message} -> コマンドかチャット (string)
+- スニーク、飛行、ダッシュを切り替えた時
+    - {state} -> 現在の状態 trueかfalse (string)
+- エンティティがダメージを受けたときに使用できる変数
+    - {damage} -> ダメージ量 (number)
+    - {cause} -> ダメージを受けた原因 (number)
+    - {damager} -> 攻撃したエンティティ (entity or player)
+- プレイヤーが攻撃したときに使用できる変数
+    - {damage} -> ダメージ量 (number)
+    - {cause} -> ダメージを受けた原因 (number)
+    - {damaged} -> ダメージを受けたエンティティ (entity or player)
+- プレイヤーがクラフトしたとき
+    - {inputs} -> 入れたアイテムたち (array, item[])
+    - {outputs} -> 出てきたアイテムたち (array, item[])
+- プレイヤーがワールドを移動したときに使用できる変数
+    - {origin_level} -> 移動元のワールド (level)
+    - {target_level} -> 移動先のワールド (level)
+        
+        
+## チュートリアル
+### レシピを作成する
+`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。  
+レシピにいろいろなアクションを追加します
+### レシピを実行する
+フォームの「トリガーを編集する」からトリガーを追加するとそのトリガーが起きた時レシピが実行されます。
+### 実行者を変更する
+デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
+### 引数と戻り値
+アクションの「レシピを呼び出す」で呼び出されたときに元のレシピから受け入れる値と元のレシピに戻す値を設定できます。
