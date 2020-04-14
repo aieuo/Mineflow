@@ -22,7 +22,7 @@ use aieuo\mineflow\task\WhileActionTask;
 class WhileTaskAction extends Action implements ActionContainer, ConditionContainer {
     use ActionContainerTrait, ConditionContainerTrait;
 
-    protected $id = self::ACTION_WHILE;
+    protected $id = self::ACTION_WHILE_TASK;
 
     protected $name = "action.whileTask.name";
     protected $detail = "action.whileTask.description";

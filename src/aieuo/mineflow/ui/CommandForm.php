@@ -244,7 +244,7 @@ class CommandForm {
         foreach ($recipes as $name => $commands) {
             $buttons[] = new Button($name." | ".count($commands));
         }
-        (new ListForm(Language::get("form.command.recipes.title", ["/".$command["command"]])))
+        (new ListForm(Language::get("form.recipes.title", ["/".$command["command"]])))
             ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $command, array $recipes) {
@@ -263,7 +263,7 @@ class CommandForm {
     }
 
     public function sendSelectRecipe(Player $player, array $command, array $default = [], array $errors = []) {
-        (new CustomForm(Language::get("form.command.recipes.add", [$command["command"]])))
+        (new CustomForm(Language::get("form.recipes.add", [$command["command"]])))
             ->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
                 new Toggle("@form.cancelAndBack"),
@@ -302,7 +302,7 @@ class CommandForm {
         $content = implode("\n", array_map(function (String $cmd) {
             return "/".$cmd;
         }, $triggers));
-        (new ListForm(Language::get("form.command.recipes.title", ["/".$command["command"]])))
+        (new ListForm(Language::get("form.recipes.title", ["/".$command["command"]])))
             ->setContent($content)
             ->setButtons([
                 new Button("@form.back"),

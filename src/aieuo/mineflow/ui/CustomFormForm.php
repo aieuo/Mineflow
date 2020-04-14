@@ -624,7 +624,7 @@ class CustomFormForm {
     }
 
     public function sendConfirmDelete(Player $player, Form $form) {
-        (new ModalForm(Language::get("form.form.delete.title", [$form->getName()])))
+        (new ModalForm(Language::get("form.recipe.delete.title", [$form->getName()])))
             ->setContent(Language::get("form.delete.confirm", [$form->getName()]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")

@@ -117,7 +117,7 @@ class CommandManager {
     public function getAssignedRecipes(string $command): array {
         $command = $this->getOriginCommand($command);
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithoutSubKey(new Trigger(Trigger::TYPE_COMMAND, $command));
+        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(Trigger::TYPE_COMMAND, $command));
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
                 if (!isset($recipes[$recipe->getName()])) $recipes[$recipe->getName()] =[];
