@@ -33,6 +33,7 @@ class ActionFactory {
         self::register(new SetScale);
         self::register(new AddEffect);
         /* player */
+        self::register(new GetPlayerByName);
         self::register(new SetSleeping);
         self::register(new SetSitting);
         self::register(new Kick);

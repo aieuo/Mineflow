@@ -29,6 +29,7 @@ interface ActionIds {
     const SET_SCALE = "setScale";
     const ADD_EFFECT = "addEffect";
 
+    const GET_PLAYER = "getPlayer";
     const SET_SLEEPING = "setSleeping";
     const SET_SITTING = "setSitting";
     const KICK = "kick";
