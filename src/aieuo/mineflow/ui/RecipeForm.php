@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -201,6 +202,7 @@ class RecipeForm {
                 new Button("@form.recipe.recipeMenu.execute"),
                 new Button("@form.recipe.recipeMenu.setTrigger"),
                 new Button("@form.recipe.args.return.set"),
+                new Button("@form.recipe.changeTarget"),
                 new Button("@form.recipe.recipeMenu.save"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
@@ -221,8 +223,7 @@ class RecipeForm {
                         $this->sendChangeName($player, $recipe);
                         break;
                     case 3:
-                        $variables = array_merge(DefaultVariables::getServerVariables(), DefaultVariables::getPlayerVariables($player));
-                        $recipe->executeAllTargets($player, $variables);
+                        $recipe->executeAllTargets($player);
                         break;
                     case 4:
                         $this->sendTriggerList($player, $recipe);
@@ -249,10 +250,13 @@ class RecipeForm {
                             })->addArgs($recipe)->show($player);
                         break;
                     case 6:
+                        $this->sendChangeTarget($player, $recipe);
+                        break;
+                    case 7:
                         $recipe->save(Main::getRecipeManager()->getSaveDir());
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
-                    case 7:
+                    case 8:
                         (new MineflowForm)->confirmDelete($player,
                             Language::get("form.recipe.delete.title", [$recipe->getName()]), $recipe->getName(),
                             function (Player $player) use ($recipe) {
@@ -389,5 +393,49 @@ class RecipeForm {
             })->onClose(function (Player $player, Recipe $recipe) {
                 $this->sendRecipeMenu($player, $recipe);
             })->addMessages($messages)->addArgs($recipe)->show($player);
+    }
+
+    public function sendChangeTarget(Player $player, Recipe $recipe, array $default = [], array $errors = []) {
+        $default1 = $default[1] ?? ($recipe->getTargetType() === Recipe::TARGET_SPECIFIED ? implode(",", $recipe->getTargetOptions()["specified"]) : "");
+        $default2 = $default[2] ?? ($recipe->getTargetType() === Recipe::TARGET_RANDOM ? (string)$recipe->getTargetOptions()["random"] : "");
+        (new CustomForm(Language::get("form.recipe.changeTarget.title", [$recipe->getName()])))->setContents([
+            new Dropdown("@form.recipe.changeTarget.type", [
+                Language::get("form.recipe.target.default"),
+                Language::get("form.recipe.target.specified"),
+                Language::get("form.recipe.target.all"),
+                Language::get("form.recipe.target.random"),
+                Language::get("form.recipe.target.none"),
+            ], $default[0] ?? $recipe->getTargetType()),
+            new Input("@form.recipe.changeTarget.name", "@form.recipe.changeTarget.name.placeholder", $default1),
+            new Input("@form.recipe.changeTarget.random", "@form.recipe.changeTarget.random.placeholder", $default2),
+            new Toggle("@form.cancelAndBack")
+        ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
+            if ($data[3]) {
+                $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
+                return;
+            }
+
+            if ($data[0] === 1 and $data[1] === "") {
+                $this->sendChangeTarget($player, $recipe, $data, [["@form.insufficient", 1]]);
+                return;
+            }
+            if ($data[0] === 3 and $data[2] === "") {
+                $this->sendChangeTarget($player, $recipe, $data, [["@form.insufficient", 2]]);
+                return;
+            }
+
+            switch ($data[0]) {
+                case 1:
+                    $recipe->setTargetSetting((int)$data[0], ["specified" => explode(",", $data[1])]);
+                    break;
+                case 3:
+                    $recipe->setTargetSetting((int)$data[0], ["random" => empty($data[2]) ? 1 : (int)$data[2]]);
+                    break;
+                default:
+                    $recipe->setTargetSetting((int)$data[0]);
+                    break;
+            }
+            $this->sendRecipeMenu($player, $recipe, ["@form.changed"]);
+        })->addArgs($recipe)->addErrors($errors)->show($player);
     }
 }

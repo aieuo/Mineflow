@@ -20,7 +20,7 @@ class ActionContainerForm {
 
         $buttons = [new Button("@form.back"), new Button("@action.add")];
         foreach ($actions as $action) {
-            $buttons[] = new Button(trim($action->getDetail()));
+            $buttons[] = new Button(empty($action->getCustomName()) ? trim($action->getDetail()) : $action->getCustomName());
         }
 
         (new ListForm(Language::get("form.actionContainer.actionList.title", [$container->getContainerName()])))

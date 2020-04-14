@@ -767,7 +767,6 @@ class CustomFormForm {
         $holder = TriggerHolder::getInstance();
         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
         $variables = Main::getFormManager()->getFormDataVariable($form, $data);
-        $variables = array_merge($variables, DefaultVariables::getPlayerVariables($player));
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player, $variables);
@@ -796,10 +795,9 @@ class CustomFormForm {
     public function onClose(Player $player, Form $form) {
         $holder = TriggerHolder::getInstance();
         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName(), "close");
-        $variables = DefaultVariables::getPlayerVariables($player);
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
-            $recipes->executeAll($player, $variables);
+            $recipes->executeAll($player);
         }
     }
 }

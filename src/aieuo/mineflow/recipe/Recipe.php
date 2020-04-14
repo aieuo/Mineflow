@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\action\EventCancel;
 use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\variable\DefaultVariables;
 use pocketmine\event\Event;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
@@ -100,9 +101,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return implode("\n", $details);
     }
 
-    public function setTargetSetting(int $type, array $options): void {
+    public function setTargetSetting(int $type, array $options = []): void {
         $this->targetType = $type;
-        $this->targetOptions = $options;
+        $this->targetOptions = array_merge($this->targetOptions, $options);
     }
 
     public function getTargetType(): int {
@@ -132,7 +133,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 break;
             case self::TARGET_RANDOM:
                 $onlines = Server::getInstance()->getOnlinePlayers();
-                foreach (array_rand($onlines, $this->targetOptions["random"]) as $key) {
+                $count = (int)($this->targetOptions["random"] ?? 1);
+                if ($count > count($onlines)) $count = count($onlines);
+                $keys = $count <= 1 ? [array_rand($onlines)] : array_rand($onlines, $count);
+                foreach ($keys as $key) {
                     $targets[] = $onlines[$key];
                 }
                 break;
@@ -187,7 +191,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
         // TODO: 整理する
         $targets = $this->getTargets($player);
+        $variables = array_merge($variables, DefaultVariables::getServerVariables());
         foreach ($targets as $target) {
+            if ($target instanceof Entity) $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
             $recipe = clone $this;
             $recipe->setTarget($target);
             $recipe->addVariables($variables);

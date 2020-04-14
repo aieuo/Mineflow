@@ -20,7 +20,7 @@ class ConditionContainerForm {
 
         $buttons = [new Button("@form.back"), new Button("@condition.add")];
         foreach ($conditions as $condition) {
-            $buttons[] = new Button(trim($condition->getDetail()));
+            $buttons[] = new Button(empty($condition->getCustomName()) ? trim($condition->getDetail()) : $condition->getCustomName());
         }
 
         (new ListForm(Language::get("form.conditionContainer.conditionList.title", [$container->getContainerName()])))

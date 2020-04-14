@@ -179,7 +179,7 @@ class EventListener implements Listener {
         }
         if ($holder->existsRecipeByString(Trigger::TYPE_BLOCK, $position)) {
             $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_BLOCK, $position));
-            $variables = array_merge(DefaultVariables::getBlockVariables($block), DefaultVariables::getPlayerVariables($player));
+            $variables = DefaultVariables::getBlockVariables($block);
             $recipes->executeAll($player, $variables, $event);
         }
 
@@ -201,7 +201,7 @@ class EventListener implements Listener {
             $command = implode(" ", $commands);
             if ($holder->existsRecipeByString(Trigger::TYPE_COMMAND, $origin, $command)) {
                 $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_COMMAND, $origin, $command));
-                $variables = array_merge(DefaultVariables::getCommandVariables($event->getCommand()), DefaultVariables::getPlayerVariables($sender));
+                $variables = DefaultVariables::getCommandVariables($event->getCommand());
                 $recipes->executeAll($sender, $variables, $event);
                 break;
             }
