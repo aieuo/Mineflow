@@ -114,9 +114,7 @@ class FormTriggerForm {
                             $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                             return;
                         }
-                        $manager = Main::getFormManager();
                         $recipe->addTrigger($trigger);
-                        $manager->addRecipe($form->getName(), $recipe);
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
                     })->addArgs($recipe, $form)->show($player);
                 break;
@@ -145,9 +143,7 @@ class FormTriggerForm {
                             $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                             return;
                         }
-                        $manager = Main::getFormManager();
                         $recipe->addTrigger($trigger);
-                        $manager->addRecipe($form->getName(), $recipe);
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
                     })->addArgs($recipe, $form)->show($player);
                 break;
@@ -183,9 +179,7 @@ class FormTriggerForm {
                             $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                             return;
                         }
-                        $manager = Main::getFormManager();
                         $recipe->addTrigger($trigger);
-                        $manager->addRecipe($form->getName(), $recipe);
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
                     })->addArgs($recipe, $form)->show($player);
                 break;

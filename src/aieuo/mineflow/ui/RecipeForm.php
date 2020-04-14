@@ -350,7 +350,7 @@ class RecipeForm {
         (new CustomForm("@form.recipe.args.set"))
             ->setContents($contents)
             ->onReceive(function (Player $player, array $data, Recipe $recipe) {
-                if ($data === null or $data[0]) {
+                if ($data[0]) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;
                 }
@@ -361,6 +361,8 @@ class RecipeForm {
                 }
                 $recipe->setArguments($arguments);
                 $this->sendSetArgs($player, $recipe, ["@form.changed"]);
+            })->onClose(function (Player $player, Recipe $recipe) {
+                $this->sendRecipeMenu($player, $recipe);
             })->addMessages($messages)->addArgs($recipe)->show($player);
     }
 
@@ -373,7 +375,7 @@ class RecipeForm {
         (new CustomForm("@form.recipe.returnValue.set"))
             ->setContents($contents)
             ->onReceive(function (Player $player, array $data, Recipe $recipe) {
-                if ($data === null or $data[0]) {
+                if ($data[0]) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;
                 }
@@ -384,6 +386,8 @@ class RecipeForm {
                 }
                 $recipe->setReturnValues($returnValues);
                 $this->sendSetReturns($player, $recipe, ["@form.changed"]);
+            })->onClose(function (Player $player, Recipe $recipe) {
+                $this->sendRecipeMenu($player, $recipe);
             })->addMessages($messages)->addArgs($recipe)->show($player);
     }
 }

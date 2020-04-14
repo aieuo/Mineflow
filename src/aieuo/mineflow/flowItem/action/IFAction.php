@@ -81,10 +81,6 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
-                if ($data === null) {
-                    $session->removeAll();
-                    return;
-                }
                 $parents = $session->get("parents");
                 $parent = end($parents);
                 switch ($data) {
@@ -103,6 +99,9 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
+            })->onClose(function (Player $player) {
+                $session = Session::getSession($player);
+                $session->removeAll();
             })->addMessages($messages)->show($player);
     }
 
