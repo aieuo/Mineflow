@@ -323,7 +323,7 @@ class CustomFormForm {
                         return;
                     case 2:
                         $this->sendRecipeList($player, $form);
-                        break;
+                        return;
                     case 3:
                         $this->sendConfirmDelete($player, $form);
                         return;
@@ -406,7 +406,7 @@ class CustomFormForm {
                         return;
                     case 2:
                         $this->sendRecipeList($player, $form);
-                        break;
+                        return;
                     case 3:
                         $this->sendConfirmDelete($player, $form);
                         return;
