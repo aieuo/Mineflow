@@ -10,6 +10,8 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -38,7 +40,6 @@ class FormManager {
             "name" => $name,
             "type" => $form->getType(),
             "form" => $form,
-            "recipes" => $form->getRecipes(),
         ];
         $this->config->set($name, $data);
         $this->config->save();
@@ -59,23 +60,6 @@ class FormManager {
         $this->config->remove($name);
     }
 
-    public function addRecipe(string $name, Recipe $recipe, string $button = "") {
-        if (!$this->existsForm($name)) return;
-
-        $form = $this->getForm($name);
-        $form->addRecipe($recipe->getName(), $button);
-        $this->addForm($name, $form);
-    }
-
-    public function removeRecipe(string $name, Recipe $recipe, string $button = ""): ?int {
-        if (!$this->existsForm($name)) return null;
-
-        $form = $this->getForm($name);
-        $form->removeRecipe($recipe->getName(), $button);
-        $this->addForm($name, $form);
-        return count($form->getRecipes());
-    }
-
     public function getNotDuplicatedName(string $name): string {
         if (!$this->existsForm($name)) return $name;
         $count = 2;
@@ -84,6 +68,18 @@ class FormManager {
         }
         $name = $name." (".$count.")";
         return $name;
+    }
+
+    public function getAssignedRecipes(string $name): array {
+        $recipes = [];
+        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(Trigger::TYPE_FORM, $name));
+        foreach ($containers as $name => $container) {
+            foreach ($container->getAllRecipe() as $recipe) {
+                if (!isset($recipes[$recipe->getName()])) $recipes[$recipe->getName()] =[];
+                $recipes[$recipe->getName()][] = $name;
+            }
+        }
+        return $recipes;
     }
 
     public function getFormDataVariable(Form $form, $data): array {

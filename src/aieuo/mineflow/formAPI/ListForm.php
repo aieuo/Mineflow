@@ -67,6 +67,13 @@ class ListForm extends Form {
         return $this->buttons[$index] ?? null;
     }
 
+    public function getButtonById(string $id): ?Button {
+        foreach ($this->getButtons() as $button) {
+            if ($button->getUUId() === $id) return $button;
+        }
+        return null;
+    }
+
     public function jsonSerialize(): array {
         $form = [
             "type" => "form",
@@ -74,7 +81,6 @@ class ListForm extends Form {
             "content" => $this->checkTranslate($this->content),
             "buttons" => $this->buttons
         ];
-        if (!empty($this->getRecipes())) $form["recipes"] = $this->getRecipes();
         $form = $this->reflectErrors($form);
         return $form;
     }

@@ -53,7 +53,6 @@ class CustomForm extends Form {
             "title" => $this->checkTranslate($this->title),
             "content" => $this->contents
         ];
-        if (!empty($this->getRecipes())) $form["recipes"] = $this->getRecipes();
         $form = $this->reflectErrors($form);
         return $form;
     }

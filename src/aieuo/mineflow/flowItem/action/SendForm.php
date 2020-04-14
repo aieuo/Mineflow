@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\ui\CustomFormForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
@@ -71,46 +72,8 @@ class SendForm extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $form = clone $form;
-        $form->onReceive([$this, "onReceive"])->onClose([$this, "onClose"])->addArgs($form)->show($player);
+        $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
         return true;
-    }
-
-    public function onReceive(Player $player, $data, Form $form) {
-        $holder = TriggerHolder::getInstance();
-        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
-        $variables = Main::getFormManager()->getFormDataVariable($form, $data);
-        if ($holder->existsRecipe($trigger)) {
-            $recipes = $holder->getRecipes($trigger);
-            $recipes->executeAll($player, $variables);
-        }
-        switch ($form) {
-            case $form instanceof ModalForm:
-                /** @var bool $data */
-                $trigger->setSubKey($data ? "1" : "2");
-                if ($holder->existsRecipe($trigger)) {
-                    $recipes = $holder->getRecipes($trigger);
-                    $recipes->executeAll($player, $variables);
-                }
-                break;
-            case $form instanceof ListForm:
-                /** @var int $data */
-                $button = $form->getButton($data);
-                $trigger->setSubKey($button->getUUId());
-                if ($holder->existsRecipe($trigger)) {
-                    $recipes = $holder->getRecipes($trigger);
-                    $recipes->executeAll($player, $variables);
-                }
-                break;
-        }
-    }
-
-    public function onClose(Player $player, Form $form) {
-        $holder = TriggerHolder::getInstance();
-        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName(), "close");
-        if ($holder->existsRecipe($trigger)) {
-            $recipes = $holder->getRecipes($trigger);
-            $recipes->executeAll($player);
-        }
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

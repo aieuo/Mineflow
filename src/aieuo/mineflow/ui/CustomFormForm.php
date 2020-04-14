@@ -17,8 +17,11 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DefaultVariables;
 use pocketmine\Player;
 
 class CustomFormForm {
@@ -184,6 +187,7 @@ class CustomFormForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.form.formMenu.preview"),
+                new Button("@form.recipe.recipeMenu.execute"),
                 new Button("@form.form.formMenu.changeTitle"),
                 new Button("@form.form.formMenu.content"),
                 new Button("@form.form.formMenu.modal.button1"),
@@ -204,12 +208,17 @@ class CustomFormForm {
                         })->show($player);
                         break;
                     case 2:
-                        $this->sendChangeFormTitle($player, $form);
+                        $form->onReceive([new CustomFormForm(), "onReceive"])
+                            ->onClose([new CustomFormForm(), "onClose"])
+                            ->addArgs($form)->show($player);
                         break;
                     case 3:
-                        $this->sendChangeFormContent($player, $form);
+                        $this->sendChangeFormTitle($player, $form);
                         break;
                     case 4:
+                        $this->sendChangeFormContent($player, $form);
+                        break;
+                    case 5:
                         (new CustomForm("@form.form.formMenu.modal.button1"))
                             ->setContents([
                                 new Label(Language::get("customForm.receive", ["true"])."\n".
@@ -228,7 +237,7 @@ class CustomFormForm {
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
                         break;
-                    case 5:
+                    case 6:
                         (new CustomForm("@form.form.formMenu.modal.button2"))
                             ->setContents([
                                 new Label(Language::get("customForm.receive", ["false"])."\n".
@@ -247,14 +256,14 @@ class CustomFormForm {
                                 $this->sendFormMenu($player, $form, ["@form.changed"]);
                             })->addArgs($form)->show($player);
                         break;
-                    case 6:
+                    case 7:
                         $this->sendChangeFormName($player, $form);
                         break;
-                    case 7:
-                        $this->sendConfirmDelete($player, $form);
-                        break;
                     case 8:
-                        // TODO: レシピ一覧
+                        $this->sendRecipeList($player, $form);
+                        break;
+                    case 9:
+                        $this->sendConfirmDelete($player, $form);
                         break;
                 }
             })->addArgs($form)->addMessages($messages)->show($player);
@@ -264,6 +273,7 @@ class CustomFormForm {
         $buttons = [
             new Button("@form.back"),
             new Button("@form.form.formMenu.preview"),
+            new Button("@form.recipe.recipeMenu.execute"),
             new Button("@form.form.formMenu.changeTitle"),
             new Button("@form.form.formMenu.content"),
         ];
@@ -273,6 +283,7 @@ class CustomFormForm {
         }
         $buttons[] = new Button("@customForm.list.addButton");
         $buttons[] = new Button("@form.form.formMenu.changeName");
+        $buttons[] = new Button("@form.form.recipes");
         $buttons[] = new Button("@form.delete");
         (new ListForm(Language::get("form.form.formMenu.changeTitle", [$form->getName()])))
             ->setContent("@form.selectButton")
@@ -290,13 +301,18 @@ class CustomFormForm {
                         })->show($player);
                         return;
                     case 2:
-                        $this->sendChangeFormTitle($player, $form);
+                        $form->onReceive([new CustomFormForm(), "onReceive"])
+                            ->onClose([new CustomFormForm(), "onClose"])
+                            ->addArgs($form)->show($player);
                         return;
                     case 3:
+                        $this->sendChangeFormTitle($player, $form);
+                        return;
+                    case 4:
                         $this->sendChangeFormContent($player, $form);
                         return;
                 }
-                $data -= 4;
+                $data -= 5;
 
                 switch ($data - count($buttons)) {
                     case 0:
@@ -306,6 +322,9 @@ class CustomFormForm {
                         $this->sendChangeFormName($player, $form);
                         return;
                     case 2:
+                        $this->sendRecipeList($player, $form);
+                        break;
+                    case 3:
                         $this->sendConfirmDelete($player, $form);
                         return;
                 }
@@ -337,6 +356,7 @@ class CustomFormForm {
         $buttons = [
             new Button("@form.back"),
             new Button("@form.form.formMenu.preview"),
+            new Button("@form.recipe.recipeMenu.execute"),
             new Button("@form.form.formMenu.changeTitle"),
             new Button("@form.form.formMenu.content"),
         ];
@@ -346,6 +366,7 @@ class CustomFormForm {
         }
         $buttons[] = new Button("@customForm.custom.element.add");
         $buttons[] = new Button("@form.form.formMenu.changeName");
+        $buttons[] = new Button("@form.form.recipes");
         $buttons[] = new Button("@form.delete");
         (new ListForm(Language::get("form.form.formMenu.changeTitle", [$form->getName()])))
             ->setContent("@form.selectButton")
@@ -363,13 +384,18 @@ class CustomFormForm {
                         })->show($player);
                         return;
                     case 2:
-                        $this->sendChangeFormTitle($player, $form);
+                        $form->onReceive([new CustomFormForm(), "onReceive"])
+                            ->onClose([new CustomFormForm(), "onClose"])
+                            ->addArgs($form)->show($player);
                         return;
                     case 3:
+                        $this->sendChangeFormTitle($player, $form);
+                        return;
+                    case 4:
                         $this->sendChangeFormContent($player, $form);
                         return;
                 }
-                $data -= 4;
+                $data -= 5;
 
                 switch ($data - count($elements)) {
                     case 0:
@@ -379,6 +405,9 @@ class CustomFormForm {
                         $this->sendChangeFormName($player, $form);
                         return;
                     case 2:
+                        $this->sendRecipeList($player, $form);
+                        break;
+                    case 3:
                         $this->sendConfirmDelete($player, $form);
                         return;
                 }
@@ -623,6 +652,101 @@ class CustomFormForm {
 
     }
 
+    public function sendRecipeList(Player $player, Form $form, array $messages = []) {
+        $buttons = [new Button("@form.back"), new Button("@form.add")];
+
+        $recipes = Main::getFormManager()->getAssignedRecipes($form->getName());
+        foreach ($recipes as $name => $keys) {
+            $buttons[] = new Button($name." | ".count($keys));
+        }
+        (new ListForm(Language::get("form.recipes.title", [$form->getName()])))
+            ->setContent("@form.selectButton")
+            ->setButtons($buttons)
+            ->onReceive(function (Player $player, int $data, Form $form, array $recipes) {
+                switch ($data) {
+                    case 0:
+                        $this->sendFormMenu($player, $form);
+                        return;
+                    case 1:
+                        $this->sendSelectRecipe($player, $form);
+                        return;
+                }
+                $data -= 2;
+
+                $this->sendRecipeMenu($player, $form, $data, $recipes);
+            })->addMessages($messages)->addArgs($form, $recipes)->show($player);
+    }
+
+    public function sendSelectRecipe(Player $player, Form $form, array $default = [], array $errors = []) {
+        (new CustomForm(Language::get("form.recipes.add", [$form->getName()])))
+            ->setContents([
+                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
+                new Toggle("@form.cancelAndBack"),
+            ])->onReceive(function (Player $player, array $data, Form $form) {
+                if ($data[1]) {
+                    $this->sendRecipeList($player, $form);
+                    return;
+                }
+
+                if ($data[0] === "") {
+                    $this->sendSelectRecipe($player, $form, $data, [["@form.insufficient", 0]]);
+                    return;
+                }
+
+                $manager = Main::getRecipeManager();
+                [$name, $group] = $manager->parseName($data[0]);
+                $recipe = $manager->get($name, $group);
+                if ($recipe === null) {
+                    $this->sendSelectRecipe($player, $form, $data, [["@form.recipe.select.notfound", 0]]);
+                    return;
+                }
+
+                $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
+                if ($recipe->existsTrigger($trigger)) {
+                    $this->sendRecipeList($player, $form, ["@trigger.alreadyExists"]);
+                    return;
+                }
+                $recipe->addTrigger($trigger);
+                $this->sendRecipeList($player, $form, ["@form.added"]);
+            })->addArgs($form)->addErrors($errors)->show($player);
+    }
+
+    public function sendRecipeMenu(Player $player, Form $form, int $index, array $recipes) {
+        $triggers = array_values($recipes)[$index];
+        $content = implode("\n", array_map(function (string $key) use ($form) {
+            switch ($key) {
+                case "":
+                    return Language::get("trigger.form.receive");
+                case "close":
+                    return Language::get("trigger.form.close");
+                default:
+                    if ($form instanceof ListForm) {
+                        $button = $form->getButtonById($key);
+                        return Language::get("trigger.form.button", [$button instanceof Button ? $button->getType() : ""]);
+                    } else {
+                        return "";
+                    }
+            }
+        }, $triggers));
+        (new ListForm(Language::get("form.recipes.title", [$form->getName()])))
+            ->setContent($content)
+            ->setButtons([
+                new Button("@form.back"),
+                new Button("@form.edit")
+            ])->onReceive(function (Player $player, int $data, Form $form, int $index, array $recipes) {
+                if ($data === 0) {
+                    $this->sendRecipeList($player, $form);
+                } elseif ($data === 1) {
+                    Session::getSession($player)
+                        ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
+                        ->set("recipe_menu_prev_data", [$form, $index, $recipes]);
+                    $recipeName = array_keys($recipes)[$index];
+                    $recipe = Main::getRecipeManager()->get($recipeName);
+                    (new RecipeForm())->sendTriggerList($player, $recipe);
+                }
+            })->addArgs($form, $index, $recipes)->show($player);
+    }
+
     public function sendConfirmDelete(Player $player, Form $form) {
         (new ModalForm(Language::get("form.recipe.delete.title", [$form->getName()])))
             ->setContent(Language::get("form.delete.confirm", [$form->getName()]))
@@ -639,4 +763,43 @@ class CustomFormForm {
             })->addArgs($form)->show($player);
     }
 
+    public function onReceive(Player $player, $data, Form $form) {
+        $holder = TriggerHolder::getInstance();
+        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
+        $variables = Main::getFormManager()->getFormDataVariable($form, $data);
+        $variables = array_merge($variables, DefaultVariables::getPlayerVariables($player));
+        if ($holder->existsRecipe($trigger)) {
+            $recipes = $holder->getRecipes($trigger);
+            $recipes->executeAll($player, $variables);
+        }
+        switch ($form) {
+            case $form instanceof ModalForm:
+                /** @var bool $data */
+                $trigger->setSubKey($data ? "1" : "2");
+                if ($holder->existsRecipe($trigger)) {
+                    $recipes = $holder->getRecipes($trigger);
+                    $recipes->executeAll($player, $variables);
+                }
+                break;
+            case $form instanceof ListForm:
+                /** @var int $data */
+                $button = $form->getButton($data);
+                $trigger->setSubKey($button->getUUId());
+                if ($holder->existsRecipe($trigger)) {
+                    $recipes = $holder->getRecipes($trigger);
+                    $recipes->executeAll($player, $variables);
+                }
+                break;
+        }
+    }
+
+    public function onClose(Player $player, Form $form) {
+        $holder = TriggerHolder::getInstance();
+        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName(), "close");
+        $variables = DefaultVariables::getPlayerVariables($player);
+        if ($holder->existsRecipe($trigger)) {
+            $recipes = $holder->getRecipes($trigger);
+            $recipes->executeAll($player, $variables);
+        }
+    }
 }

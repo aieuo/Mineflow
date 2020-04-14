@@ -274,7 +274,7 @@ class CommandForm {
                 }
 
                 if ($data[0] === "") {
-                    $this->sendSelectRecipe($player, $data, $command, [["@form.insufficient", 0]]);
+                    $this->sendSelectRecipe($player, $command, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 
@@ -282,7 +282,7 @@ class CommandForm {
                 [$name, $group] = $manager->parseName($data[0]);
                 $recipe = $manager->get($name, $group);
                 if ($recipe === null) {
-                    $this->sendSelectRecipe($player, $data, $command, [["@form.recipe.select.notfound", 0]]);
+                    $this->sendSelectRecipe($player, $command, $data, [["@form.recipe.select.notfound", 0]]);
                     return;
                 }
 
