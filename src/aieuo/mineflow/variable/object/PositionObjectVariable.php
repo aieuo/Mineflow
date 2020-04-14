@@ -24,6 +24,9 @@ class PositionObjectVariable extends ObjectVariable {
             case "xyz":
                 $variable = new StringVariable($position->x.",".$position->y.",".$position->z, "xyz");
                 break;
+            case "position":
+                $variable = new PositionObjectVariable($position, "position");
+                break;
             case "level":
                 $variable = new LevelObjectVariable($position->level, "level", $position->level->getFolderName());
                 break;
