@@ -6,6 +6,8 @@ use aieuo\mineflow\flowItem\action\SetSitting;
 use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use pocketmine\command\Command;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\network\mcpe\protocol\InteractPacket;
@@ -197,6 +199,9 @@ class EventListener implements Listener {
 
         $count = count($commands);
         $origin = $commands[0];
+        $command = Server::getInstance()->getCommandMap()->getCommand($origin);
+        if (!($command instanceof Command) or !$command->testPermissionSilent($sender)) return;
+
         for ($i=0; $i<$count; $i++) {
             $command = implode(" ", $commands);
             if ($holder->existsRecipeByString(Trigger::TYPE_COMMAND, $origin, $command)) {
