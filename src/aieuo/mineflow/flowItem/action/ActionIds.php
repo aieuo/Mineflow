@@ -40,6 +40,8 @@ interface ActionIds {
     const REMOVE_BOSSBAR = "removeBossbar";
     const PLAY_SOUND = "playSound";
     const PLAY_SOUND_AT = "playSoundAt";
+    const ADD_PERMISSION = "addPermission";
+    const REMOVE_PERMISSION = "removePermission";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";

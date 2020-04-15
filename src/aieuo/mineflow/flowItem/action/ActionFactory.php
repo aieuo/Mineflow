@@ -42,6 +42,8 @@ class ActionFactory {
         self::register(new ShowBossbar);
         self::register(new RemoveBossbar);
         self::register(new PlaySound);
+        self::register(new AddPermission);
+        self::register(new RemovePermission);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
