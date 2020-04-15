@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\variable\DefaultVariables;
+use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\ObjectVariable;
 use pocketmine\event\Event;
 use pocketmine\entity\Entity;
 use pocketmine\Server;
@@ -279,7 +281,16 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function getVariable(string $name): ?Variable {
-        return $this->variables[$name] ?? null;
+        $names = explode(".", $name);
+        $name = array_shift($names);
+        if (!isset($this->variables[$name])) return null;
+
+        $variable = $this->variables[$name];
+        foreach ($names as $name) {
+            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
+            $variable = $variable->getValueFromIndex($name);
+        }
+        return $variable;
     }
 
     public function getVariables(): array {

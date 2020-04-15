@@ -49,6 +49,24 @@ class VariableHelper {
     }
 
     /**
+     * @param string $name
+     * @param bool $save
+     * @return Variable|null
+     */
+    public function getNested(string $name, bool $save = false): ?Variable {
+        $names = explode(".", $name);
+        $name = array_shift($names);
+        if (!$this->exists($name, $save)) return null;
+
+        $variable = $this->get($name, $save);
+        foreach ($names as $name) {
+            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
+            $variable = $variable->getValueFromIndex($name);
+        }
+        return $variable;
+    }
+
+    /**
      * @param Variable $variable
      * @param bool $save
      */
