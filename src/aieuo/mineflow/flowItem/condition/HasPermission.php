@@ -5,7 +5,6 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -13,7 +12,6 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\Player;
 
 class HasPermission extends Condition implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -29,7 +27,7 @@ class HasPermission extends Condition implements PlayerFlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
     /** @var string */
-    private $playerPermission = Player::SURVIVAL;
+    private $playerPermission;
 
     public function __construct(string $name = "target", string $permission = "") {
         $this->playerVariableName = $name;

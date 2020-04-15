@@ -33,7 +33,7 @@ class GetEntity extends Action {
     /** @var string */
     private $entityId = "";
     /** @var string */
-    private $resultName = "id";
+    private $resultName = "entity";
 
     public function __construct(string $name = "", string $result = "entity") {
         $this->entityId = $name;
