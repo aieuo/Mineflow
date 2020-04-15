@@ -79,6 +79,7 @@ interface ActionIds {
     const CREATE_ITEM_VARIABLE = "createItem";
     const CREATE_POSITION_VARIABLE = "createPosition";
     const CREATE_BLOCK_VARIABLE = "createBlock";
+    const GET_VARIABLE_NESTED = "getVariable";
 
     const ACTION_IF = "if";
     const ACTION_ELSEIF = "elseif";

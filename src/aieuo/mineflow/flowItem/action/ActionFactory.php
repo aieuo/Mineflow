@@ -87,6 +87,7 @@ class ActionFactory {
         self::register(new AddListVariable);
         self::register(new AddMapVariable);
         self::register(new CreatePositionVariable);
+        self::register(new GetVariableNested);
         /* form */
         self::register(new SendForm);
         /* command */
