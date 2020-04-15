@@ -37,6 +37,7 @@ class ConditionFactory {
         self::register(new InArea);
         /* player */
         self::register(new Gamemode);
+        self::register(new HasPermission);
         /* variable */
         self::register(new ExistsVariable);
         self::register(new ExistsListVariableKey);

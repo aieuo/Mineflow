@@ -10,6 +10,7 @@ interface ConditionIds {
     const IS_FLYING = "isFlying";
     const IN_AREA = "inArea";
     const GAMEMODE = "gamemode";
+    const HAS_PERMISSION = "hasPermission";
 
     const OVER_MONEY = "overMoney";
     const LESS_MONEY = "lessMoney";
