@@ -138,6 +138,28 @@ By default, the player who fired the trigger goes into the {target} variable of 
 ### arguments and return values
 You can set the value to be inherited from the original action and the value to be returned when executing in the "Callback the other recipe" action.
 
+## Examples
+### CheckId command
+Send the ID of the item in player's hand to the chat field when execute `/id`.
+
+##### steps
+1. Execute `/mineflow command add` and add the /id command.  
+![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
+2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.  
+![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
+3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
+4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.  
+![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true)
+(`{target.hand}` contains information about the item in the player's hand.)  
+5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.
+![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+
+##### To send more information of item
+{target.hand} is [item variable](#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.   
+
+##### To be able to use it non-OP
+Set the permissions of the command to `anyone can execute` on the form to add the command or in the command menu.  
+
 
 
 
@@ -271,3 +293,28 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
 ### 引数と戻り値
 アクションの「レシピを呼び出す」で呼び出されたときに元のレシピから受け入れる値と元のレシピに戻す値を設定できます。
+
+## 例
+### CheckIdコマンド
+/id を実行したときに手に持っているアイテムのIDを表示する  
+
+##### 手順
+1. `/mineflow command add` を実行してidコマンドを追加します。  
+![コマンド追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_1.png?raw=true)
+2. `/mineflow recipe add` を実行して好きな名前のレシピを追加します。  
+![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_2.png?raw=true)
+3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
+4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。  
+![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true)
+(`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。)  
+5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。
+![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_4.png?raw=true)
+6. 完成!
+
+##### 表示する情報を増やすには
+{target.hand}は[item変数](#item)です。`{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。  
+
+##### op以外も使用できるようにするには
+コマンドを追加するときかコマンドメニューからコマンドの権限を`誰でも実行できる`にします。  
+
+
