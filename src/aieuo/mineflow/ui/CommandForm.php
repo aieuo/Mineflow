@@ -52,6 +52,7 @@ class CommandForm {
                 new Dropdown("@form.command.permission", [
                     Language::get("form.command.addCommand.permission.op"),
                     Language::get("form.command.addCommand.permission.true"),
+                    Language::get("form.command.addCommand.permission.custom"),
                 ], $defaults[2] ?? 0),
                 new Toggle("@form.cancelAndBack"),
             ])->onReceive(function (Player $player, array $data) {
@@ -70,11 +71,17 @@ class CommandForm {
                     $this->sendAddCommand($player, $data, [["@form.command.alreadyUsed", 0]]);
                     return;
                 }
-                $permission = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[2]];
+
+                $permission = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[2]] ?? "";
 
                 $manager->addCommand($data[0], $permission, $data[1]);
                 $command = $manager->getCommand($original);
                 Session::getSession($player)->set("command_menu_prev", [$this, "sendMenu"]);
+
+                if ($data[2] === 2) {
+                    $this->sendSelectPermissionName($player, $command);
+                    return;
+                }
                 $this->sendCommandMenu($player, $command);
             })->addErrors($errors)->show($player);
     }
@@ -136,7 +143,11 @@ class CommandForm {
     }
 
     public function sendCommandMenu(Player $player, array $command, array $messages = []) {
-        $permission = str_replace("mineflow.customcommand", "@form.command.addCommand.permission", $command["permission"]);
+        $permissions = [
+            "mineflow.customcommand.op" => "@form.command.addCommand.permission.op",
+            "mineflow.customcommand.true" => "@form.command.addCommand.permission.true"
+        ];
+        $permission = $permissions[$command["permission"]] ?? $command["permission"];
         (new ListForm("/".$command["command"]))
             ->setContent("/".$command["command"]."\n".Language::get("form.command.permission").": ".$permission."\n".Language::get("form.command.description").": ".$command["description"])
             ->addButtons([
@@ -193,11 +204,17 @@ class CommandForm {
                 new Dropdown("@form.command.permission", [
                     Language::get("form.command.addCommand.permission.op"),
                     Language::get("form.command.addCommand.permission.true"),
-                ], $permissions[$command["permission"]]),
+                    Language::get("form.command.addCommand.permission.custom"),
+                ], $permissions[$command["permission"]] ?? 2),
                 new Toggle("@form.cancelAndBack"),
             ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->sendCommandMenu($player, $command);
+                    return;
+                }
+
+                if ($data[0] === 2) {
+                    $this->sendSelectPermissionName($player, $command);
                     return;
                 }
 
@@ -206,6 +223,28 @@ class CommandForm {
                 $manager->updateCommand($command);
                 $this->sendCommandMenu($player, $command);
             })->addArgs($command)->show($player);
+    }
+
+    public function sendSelectPermissionName(Player $player, array $command, array $default = [], array $errors = []) {
+        (new CustomForm(Language::get("form.command.changePermission.title", ["/".$command["command"]])))
+            ->setContents([
+                new Input("@form.command.addCommand.permission.custom.input", "", $default[0] ?? $command["permission"]),
+                new Toggle("@form.cancelAndBack"),
+            ])->onReceive(function (Player $player, array $data, array $command) {
+                if ($data[1]) {
+                    $this->changePermission($player, $command);
+                    return;
+                }
+                if ($data[0] === "") {
+                    $this->sendSelectPermissionName($player, $command, $data, [["@form.insufficient", 0]]);
+                    return;
+                }
+
+                $manager = Main::getCommandManager();
+                $command["permission"] = $data[0];
+                $manager->updateCommand($command);
+                $this->sendCommandMenu($player, $command);
+            })->addErrors($errors)->addArgs($command)->show($player);
     }
 
     public function sendConfirmDelete(Player $player, array $command) {
