@@ -18,6 +18,7 @@ class ConfigObjectVariable extends ObjectVariable {
         if (is_string($data)) return new StringVariable($data, $index);
         if (is_numeric($data)) return new NumberVariable($data, $index);
         if (!is_array($data)) return null;
+
         if (array_values($data) === $data) {
             $variable = new ListVariable($this->toVariableArray($data), $index);
         } else {
@@ -36,7 +37,11 @@ class ConfigObjectVariable extends ObjectVariable {
         $result = [];
         foreach ($data as $key => $value) {
             if (is_array($value)) {
-                $result[$key] = $this->toVariableArray($value);
+                if (array_values($value) === $value) {
+                    $result[$key] = new ListVariable($this->toVariableArray($value));
+                } else {
+                    $result[$key] = new MapVariable($this->toVariableArray($value), $key);
+                }
             } elseif (is_numeric($value)) {
                 $result[$key] = new NumberVariable((float)$value);
             } else {
