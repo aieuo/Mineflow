@@ -145,13 +145,13 @@ class EventListener implements Listener {
     public function onJoin(PlayerJoinEvent $event) {
         Session::createSession($event->getPlayer());
 
-        if (isset($this->enabledEvents["PlayerJoinEvent"])) $this->onEvent($event, "PlayerJoinEvent");
+        if (isset(self::$enabledEvents["PlayerJoinEvent"])) $this->onEvent($event, "PlayerJoinEvent");
     }
 
     public function onQuit(PlayerQuitEvent $event) {
         Session::destroySession($event->getPlayer());
 
-        if (isset($this->enabledEvents["PlayerQuitEvent"])) $this->onEvent($event, "PlayerQuitEvent");
+        if (isset(self::$enabledEvents["PlayerQuitEvent"])) $this->onEvent($event, "PlayerQuitEvent");
     }
 
     public function onInteract(PlayerInteractEvent $event) {
@@ -185,7 +185,7 @@ class EventListener implements Listener {
             $recipes->executeAll($player, $variables, $event);
         }
 
-        if (isset($this->enabledEvents["PlayerInteractEvent"])) $this->onEvent($event, "PlayerInteractEvent");
+        if (isset(self::$enabledEvents["PlayerInteractEvent"])) $this->onEvent($event, "PlayerInteractEvent");
     }
 
     public function command(CommandEvent $event) {
@@ -232,13 +232,13 @@ class EventListener implements Listener {
     }
 
     public function onDeath(PlayerDeathEvent $event) {
-        if (isset($this->enabledEvents["PlayerDeathEvent"])) $this->onEvent($event, "PlayerDeathEvent");
+        if (isset(self::$enabledEvents["PlayerDeathEvent"])) $this->onEvent($event, "PlayerDeathEvent");
         $player = $event->getPlayer();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
     public function onLevelChange(EntityLevelChangeEvent $event) {
-        if (isset($this->enabledEvents["EntityLevelChangeEvent"])) $this->onEvent($event, "EntityLevelChangeEvent");
+        if (isset(self::$enabledEvents["EntityLevelChangeEvent"])) $this->onEvent($event, "EntityLevelChangeEvent");
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
     }
