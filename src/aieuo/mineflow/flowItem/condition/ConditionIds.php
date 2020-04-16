@@ -35,6 +35,8 @@ interface ConditionIds {
     const CONDITION_NAND = "nand";
     const CONDITION_NOR = "nor";
     const CONDITION_NOT = "not";
+    const EXISTS_CONFIG_FILE = "existsConfigFile";
+    const EXISTS_CONFIG_DATA = "existsConfig";
 
     const RANDOM_NUMBER = "randomNumber";
 }

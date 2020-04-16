@@ -30,6 +30,8 @@ class ConditionFactory {
         self::register(new NotScript);
         self::register(new NorScript);
         self::register(new NandScript);
+        self::register(new ExistsConfigFile);
+        self::register(new ExistsConfigData);
         /* entity */
         self::register(new IsActiveEntity);
         self::register(new IsPlayer);
