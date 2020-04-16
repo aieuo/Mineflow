@@ -16,6 +16,18 @@ abstract class Action extends FlowItem implements ActionIds {
     /** @var string */
     protected $type = Recipe::CONTENT_TYPE_ACTION;
 
+    /* @var ActionContainer */
+    private $parent;
+
+    public function parent(ActionContainer $container): self {
+        $this->parent = $container;
+        return $this;
+    }
+
+    public function getParent(): ActionContainer {
+        return $this->parent;
+    }
+
     public function getEditForm(array $default = [], array $errors = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([

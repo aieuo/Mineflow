@@ -27,6 +27,9 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
+    /** @var bool */
+    protected $lastResult;
+
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         $this->setConditions($conditions);
         $this->setActions($actions);
@@ -58,10 +61,15 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
         if (!$matched) return false;
 
         foreach ($this->actions as $action) {
-            $action->execute($origin);
+            $this->lastResult = $action->parent($this)->execute($origin);
         }
         return true;
     }
+
+    public function getLastActionResult(): ?bool {
+        return $this->lastResult;
+    }
+
     public function isDataValid(): bool {
         return true;
     }

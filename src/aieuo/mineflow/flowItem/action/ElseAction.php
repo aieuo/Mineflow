@@ -23,6 +23,9 @@ class ElseAction extends Action implements ActionContainer {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
+    /* @var bool */
+    private $lastResult;
+
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setActions($actions);
         $this->setCustomName($customName);
@@ -42,14 +45,18 @@ class ElseAction extends Action implements ActionContainer {
     }
 
     public function execute(Recipe $origin): bool {
-        $lastResult = $origin->getLastActionResult();
+        $lastResult = $this->getParent()->getLastActionResult();
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return false;
 
         foreach ($this->actions as $action) {
-            $action->execute($origin);
+            $this->lastResult = $action->parent($this)->execute($origin);
         }
         return true;
+    }
+
+    public function getLastActionResult(): ?bool {
+        return $this->lastResult;
     }
 
     public function hasCustomMenu(): bool {

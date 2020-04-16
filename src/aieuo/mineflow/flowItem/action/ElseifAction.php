@@ -25,7 +25,7 @@ class ElseifAction extends IFAction {
     }
 
     public function execute(Recipe $origin): bool {
-        $lastResult = $origin->getLastActionResult();
+        $lastResult = $this->getParent()->getLastActionResult();
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return true;
 
@@ -37,7 +37,7 @@ class ElseifAction extends IFAction {
         if (!$matched) return false;
 
         foreach ($this->getActions() as $action) {
-            $action->execute($origin);
+            $this->lastResult = $action->parent($this)->execute($origin);
         }
         return true;
     }

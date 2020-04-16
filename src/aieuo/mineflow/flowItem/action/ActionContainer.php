@@ -31,4 +31,9 @@ interface ActionContainer extends FlowItemContainer {
      * @return Action[]
      */
     public function getActions(): array;
+
+    /**
+     * @return bool|null
+     */
+    public function getLastActionResult(): ?bool;
 }

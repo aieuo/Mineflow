@@ -30,6 +30,9 @@ class RepeatAction extends Action implements ActionContainer {
     /** @var string */
     private $repeatCount = "1";
 
+    /* @var bool */
+    private $lastResult;
+
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
         $this->setActions($actions);
         $this->repeatCount = (string)$count;
@@ -68,10 +71,14 @@ class RepeatAction extends Action implements ActionContainer {
         for ($i=0; $i<(int)$count; $i++) {
             $origin->addVariable(new NumberVariable($i, "i"));
             foreach ($this->actions as $action) {
-                $action->execute($origin);
+                $this->lastResult = $action->parent($this)->execute($origin);
             }
         }
         return true;
+    }
+
+    public function getLastActionResult(): ?bool {
+        return $this->lastResult;
     }
 
     public function hasCustomMenu(): bool {

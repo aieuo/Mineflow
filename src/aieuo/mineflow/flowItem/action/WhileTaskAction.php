@@ -43,6 +43,9 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
     /** @var int */
     private $loopCount = 0;
 
+    /* @var bool */
+    private $lastResult;
+
     public function __construct(array $conditions = [], array $actions = [], int $interval = 20, ?string $customName = null) {
         $this->setConditions($conditions);
         $this->setActions($actions);
@@ -108,9 +111,13 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
         }
 
         foreach ($this->actions as $action) {
-            $action->execute($origin);
+            $this->lastResult = $action->parent($this)->execute($origin);
         }
         $this->loopCount ++;
+    }
+
+    public function getLastActionResult(): ?bool {
+        return $this->lastResult;
     }
 
     public function hasCustomMenu(): bool {
