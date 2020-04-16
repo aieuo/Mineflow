@@ -80,4 +80,13 @@ class ListVariable extends Variable implements \JsonSerializable {
         }
         return new self($values, $data["name"] ?? "");
     }
+
+    public function toArray(): array {
+        $result = [];
+        foreach ($this->getValue() as $i => $value) {
+            if ($value instanceof ListVariable) $result[$i] = $value->toArray();
+            else $result[$i] = (string)$value;
+        }
+        return $result;
+    }
 }

@@ -67,7 +67,7 @@ class AddMapVariable extends Action {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and (($this->variableKey !== "" and $this->variableValue !== "") or ($this->variableKey === "" and $this->variableValue === ""));
+        return $this->variableName !== "" and $this->variableKey !== "";
     }
 
     public function getDetail(): string {
@@ -83,10 +83,6 @@ class AddMapVariable extends Action {
         $key = $origin->replaceVariables($this->getKey());
         $value = $origin->replaceVariables($this->getVariableValue());
 
-        if ($key === "" and $value === "") {
-            if ($this->isLocal) $origin->addVariable(new MapVariable([], $name));
-            else $helper->add(new MapVariable([], $name));
-            return true;
         $type = $helper->getType($value);
 
         $value = $this->getVariableValue();
@@ -137,11 +133,8 @@ class AddMapVariable extends Action {
         if ($name === "") {
             $errors[] = ["@form.insufficient", 1];
         }
-        if ($key === "" and $value !== "") {
+        if ($key === "") {
             $errors[] = ["@form.insufficient", 2];
-        }
-        if ($key !== "" and $value === "") {
-            $errors[] = ["@form.insufficient", 3];
         }
         return ["status" => empty($errors), "contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
