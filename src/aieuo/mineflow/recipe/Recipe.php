@@ -313,9 +313,11 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function resume() {
-        $this->wait = false;
         if ($this->last === null) return;
         $this->execute(...$this->last);
+
+        $this->wait = false;
+        $this->last = null;
     }
 
     /**
