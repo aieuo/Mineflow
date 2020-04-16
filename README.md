@@ -141,6 +141,7 @@ You can set the value to be inherited from the original action and the value to 
 ## Examples
 ### CheckId command
 Send the ID of the item in player's hand to the chat field when execute `/id`.
+[Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)  
 
 ##### steps
 1. Execute `/mineflow command add` and add the /id command.  
@@ -296,7 +297,8 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 
 ## 例
 ### CheckIdコマンド
-/id を実行したときに手に持っているアイテムのIDを表示する  
+/id を実行したときに手に持っているアイテムのIDを表示する
+[ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)  
 
 ##### 手順
 1. `/mineflow command add` を実行してidコマンドを追加します。  
@@ -307,12 +309,12 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。  
 ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true)
 (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。)  
-5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。
+5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。  
 ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_4.png?raw=true)
 6. 完成!
 
 ##### 表示する情報を増やすには
-{target.hand}は[item変数](#item)です。`{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。  
+{target.hand}は[item変数](#item-1)です。`{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。  
 
 ##### op以外も使用できるようにするには
 コマンドを追加するときかコマンドメニューからコマンドの権限を`誰でも実行できる`にします。  
