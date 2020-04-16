@@ -16,7 +16,7 @@ class MapVariable extends ListVariable {
         foreach ($this->getValue() as $key => $value) {
             $values[$key] = $value->__toString();
         }
-        return str_replace(["{", "}"] ,["<", ">"], json_encode($values));
+        return str_replace(["{", "}", "\""] ,["<", ">", ""], json_encode($values));
     }
 
     public static function fromArray(array $data): ?Variable {
