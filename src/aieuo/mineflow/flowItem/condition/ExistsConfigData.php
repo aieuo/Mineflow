@@ -59,7 +59,7 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
 
         $key = $this->getKey();
 
-        return $config->exists($key);
+        return $config->getNested($key) !== null;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
