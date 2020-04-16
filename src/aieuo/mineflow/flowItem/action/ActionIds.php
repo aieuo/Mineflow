@@ -75,11 +75,14 @@ interface ActionIds {
     const ADD_VARIABLE = "addVariable";
     const DELETE_VARIABLE = "deleteVariable";
     const ADD_LIST_VARIABLE = "addListVariable";
+    const CREATE_LIST_VARIABLE = "createList";
     const ADD_MAP_VARIABLE = "addMapVariable";
+    const CREATE_MAP_VARIABLE = "createMap";
     const CREATE_ITEM_VARIABLE = "createItem";
     const CREATE_POSITION_VARIABLE = "createPosition";
     const CREATE_BLOCK_VARIABLE = "createBlock";
     const GET_VARIABLE_NESTED = "getVariable";
+    const COUNT_LIST_VARIABLE = "count";
 
     const ACTION_IF = "if";
     const ACTION_ELSEIF = "elseif";

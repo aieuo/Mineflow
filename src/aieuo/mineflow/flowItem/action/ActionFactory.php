@@ -84,10 +84,13 @@ class ActionFactory {
         /* variable */
         self::register(new AddVariable);
         self::register(new DeleteVariable);
+        self::register(new CreateListVariable);
         self::register(new AddListVariable);
+        self::register(new CreateMapVariable);
         self::register(new AddMapVariable);
         self::register(new CreatePositionVariable);
         self::register(new GetVariableNested);
+        self::register(new CountListVariable);
         /* form */
         self::register(new SendForm);
         /* command */
