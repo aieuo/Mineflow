@@ -4,7 +4,7 @@ namespace aieuo\mineflow\variable;
 
 class ObjectVariable extends Variable {
 
-    public $type = Variable::NUMBER;
+    public $type = Variable::OBJECT;
 
     /* @var string|null */
     private $showString;
