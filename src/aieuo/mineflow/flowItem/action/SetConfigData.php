@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
@@ -12,6 +13,9 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\ObjectVariable;
 
 class SetConfigData extends Action implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
@@ -24,7 +28,7 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
+    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
     protected $permission = self::PERMISSION_LEVEL_2;
 
@@ -68,13 +72,28 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         $this->throwIfCannotExecute();
 
         $key = $origin->replaceVariables($this->getKey());
-        $value = $origin->replaceVariables($this->getValue());
-        if (is_numeric($value)) $value = (float)$value;
+
+        $value = $this->getValue();
+
+        $helper = Main::getVariableHelper();
+        if (!$helper->isVariableString($value)) {
+            $value = $helper->replaceVariables($value, $origin->getVariables());
+            if (is_numeric($value)) $value = (float)$value;
+        } else {
+            $variable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
+            if ($variable instanceof ListVariable) {
+                $value = $variable->toArray();
+            } else if ($variable instanceof NumberVariable) {
+                $value = $variable->getValue();
+            } else {
+                $value = (string)$variable;
+            }
+        }
 
         $config = $this->getConfig($origin);
         $this->throwIfInvalidConfig($config);
 
-        $config->set($key, $value);
+        $config->setNested($key, $value);
         return true;
     }
 

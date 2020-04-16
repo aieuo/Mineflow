@@ -87,10 +87,22 @@ class AddMapVariable extends Action {
             if ($this->isLocal) $origin->addVariable(new MapVariable([], $name));
             else $helper->add(new MapVariable([], $name));
             return true;
+        $type = $helper->getType($value);
+
+        $value = $this->getVariableValue();
+        if (!$helper->isVariableString($value)) {
+            $value = $helper->replaceVariables($value, $origin->getVariables());
+            $addVariable = Variable::create($helper->currentType($value), $key, $type);
+        } else {
+            $addVariable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
+            if ($addVariable === null) {
+                $value = $helper->replaceVariables($value, $origin->getVariables());
+                $addVariable = Variable::create($helper->currentType($value), $key, $type);
+            } else {
+                $addVariable->setName($key);
+            }
         }
 
-        $type = $helper->getType($value);
-        $addVariable = Variable::create($helper->currentType($value), $key, $type);
         if ($this->isLocal) {
             $variable = $origin->getVariable($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) return false;
