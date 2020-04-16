@@ -157,6 +157,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
         $this->target = $target;
     }
 
+    /**
+     * @return Trigger[]
+     */
     public function getTriggers(): array {
         return $this->triggers;
     }

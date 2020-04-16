@@ -3,6 +3,9 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\flowItem\action\ActionContainer;
+use aieuo\mineflow\flowItem\action\ExecuteRecipe;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 
@@ -129,5 +132,35 @@ class RecipeManager {
     public function parseName(string $name): array {
         $names = explode("/", $name);
         return [array_pop($names), implode("/", $names)];
+    }
+
+    public function getWithLinkedRecipes(ActionContainer $recipe, Recipe $origin, bool $base = true): array {
+        $recipeManager = Main::getRecipeManager();
+
+        $recipes = [];
+        if ($base) $recipes[] = $origin;
+        foreach ($recipe->getActions() as $action) {
+            if ($action instanceof ActionContainer) {
+                $links = $this->getWithLinkedRecipes($action, $origin, false);
+                if (empty($links)) continue;
+                $recipes = array_merge($recipes, $links);
+                break;
+            }
+
+            if ($action instanceof ExecuteRecipe) {
+                $name = $origin->replaceVariables($action->getRecipeName());
+
+                [$recipeName, $group] = $recipeManager->parseName($name);
+                if (empty($group)) $group = $origin->getGroup();
+
+                $recipe = $recipeManager->get($recipeName, $group);
+                if ($recipe === null) $recipe = $recipeManager->get($recipeName, "");
+                if ($recipe === null) continue;
+
+                $recipes = array_merge($recipes, $this->getWithLinkedRecipes($recipe, $recipe));
+                break;
+            }
+        }
+        return $recipes;
     }
 }

@@ -2,7 +2,11 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ModalForm;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -34,5 +38,37 @@ class MineflowForm {
                     call_user_func_array($onFalse, [$player]);
                 }
             })->addArgs($onAccept, $onRefuse)->show($player);
+    }
+
+    public function selectRecipe(Player $player, string $title, callable $callback, array $default = [], array $errors = []) {
+        (new CustomForm($title))
+            ->setContents([
+                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
+                new Input("@form.recipe.groupName", "", $default[1] ?? ""),
+                new Toggle("@form.cancelAndBack"),
+            ])->onReceive(function (Player $player, array $data, callable $callback) {
+                if ($data[2]) {
+                    (new HomeForm)->sendMenu($player);
+                    return;
+                }
+
+                if ($data[0] === "") {
+                    $this->selectRecipe($player, $callback, $data, [["@form.insufficient", 0]]);
+                    return;
+                }
+
+                $manager = Main::getRecipeManager();
+
+                $name = $data[0];
+                $group = $data[1];
+                if ($group === "") [$name, $group] = $manager->parseName($data[0]);
+                if (!$manager->exists($name, $group)) {
+                    $this->selectRecipe($player, $callback, $data, [["@form.recipe.select.notfound", 0]]);
+                    return;
+                }
+
+                $recipe = $manager->get($name, $group);
+                call_user_func_array($callback, [$player, $recipe]);
+            })->addArgs($callback)->addErrors($errors)->show($player);
     }
 }

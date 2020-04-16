@@ -204,6 +204,7 @@ class RecipeForm {
                 new Button("@form.recipe.args.return.set"),
                 new Button("@form.recipe.changeTarget"),
                 new Button("@form.recipe.recipeMenu.save"),
+                new Button("@mineflow.export"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
                 switch ($data) {
@@ -257,6 +258,9 @@ class RecipeForm {
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
                     case 8:
+                        (new ExportForm)->sendRecipeListByRecipe($player, $recipe);
+                        break;
+                    case 9:
                         (new MineflowForm)->confirmDelete($player,
                             Language::get("form.recipe.delete.title", [$recipe->getName()]), $recipe->getName(),
                             function (Player $player) use ($recipe) {
