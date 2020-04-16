@@ -27,20 +27,20 @@ class RepeatAction extends Action implements ActionContainer {
 
     protected $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var int */
-    private $repeatCount = 1;
+    /** @var string */
+    private $repeatCount = "1";
 
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
         $this->setActions($actions);
-        $this->repeatCount = $count;
+        $this->repeatCount = (string)$count;
         $this->setCustomName($customName);
     }
 
-    public function setRepeatCount(int $count): void {
+    public function setRepeatCount(string $count): void {
         $this->repeatCount = $count;
     }
 
-    public function getRepeatCount(): int {
+    public function getRepeatCount(): string {
         return $this->repeatCount;
     }
 
@@ -62,7 +62,10 @@ class RepeatAction extends Action implements ActionContainer {
     }
 
     public function execute(Recipe $origin): bool {
-        for ($i=0; $i<$this->repeatCount; $i++) {
+        $count = $origin->replaceVariables($this->repeatCount);
+        $this->throwIfInvalidNumber($count, 1);
+
+        for ($i=0; $i<(int)$count; $i++) {
             $origin->addVariable(new NumberVariable($i, "i"));
             foreach ($this->actions as $action) {
                 $action->execute($origin);
@@ -111,7 +114,7 @@ class RepeatAction extends Action implements ActionContainer {
 
     public function loadSaveData(array $contents): Action {
         if (!isset($contents[1])) throw new \OutOfBoundsException();
-        $this->setRepeatCount($contents[0]);
+        $this->setRepeatCount((string)$contents[0]);
 
         foreach ($contents[1] as $content) {
             if ($content["type"] !== Recipe::CONTENT_TYPE_ACTION) {

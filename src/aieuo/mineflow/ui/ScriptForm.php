@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\Main;
 use pocketmine\Player;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -27,12 +28,12 @@ class ScriptForm {
                     return;
                 }
 
-                if ((int)$data[0] <= 0) {
+                if (!Main::getVariableHelper()->containsVariable($data[0]) and (int)$data[0] <= 0) {
                     $this->sendSetRepeatCount($player, $script, $data, [[Language::get("flowItem.error.lessValue", [1]), 0]]);
                     return;
                 }
 
-                $script->setRepeatCount((int)$data[0]);
+                $script->setRepeatCount($data[0]);
                 $script->sendCustomMenu($player, ["@form.changed"]);
             })->addArgs($script)->addErrors($errors)->show($player);
     }
