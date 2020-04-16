@@ -20,8 +20,8 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
 
     protected $id = self::ACTION_IF;
 
-    protected $name = "@action.if.name";
-    protected $detail = "@action.if.description";
+    protected $name = "action.if.name";
+    protected $detail = "action.if.description";
 
     protected $category = Category::SCRIPT;
 

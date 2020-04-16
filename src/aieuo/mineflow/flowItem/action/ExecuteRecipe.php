@@ -60,12 +60,9 @@ class ExecuteRecipe extends Action {
         [$recipeName, $group] = $recipeManager->parseName($name);
         if (empty($group)) $group = $origin->getGroup();
 
-        $recipe = $recipeManager->get($recipeName, $group);
+        $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
-            $recipe = $recipeManager->get($recipeName, "");
-            if ($recipe === null) {
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
-            }
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
         }
 
         $recipe = clone $recipe;
