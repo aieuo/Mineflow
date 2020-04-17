@@ -138,13 +138,12 @@ class RecipeManager {
         $recipeManager = Main::getRecipeManager();
 
         $recipes = [];
-        if ($base) $recipes[] = $origin;
+        if ($base) $recipes[$origin->getGroup()."/".$origin->getName()] = $origin;
         foreach ($recipe->getActions() as $action) {
             if ($action instanceof ActionContainer) {
                 $links = $this->getWithLinkedRecipes($action, $origin, false);
-                if (empty($links)) continue;
                 $recipes = array_merge($recipes, $links);
-                break;
+                continue;
             }
 
             if ($action instanceof ExecuteRecipe) {
@@ -158,7 +157,6 @@ class RecipeManager {
                 if ($recipe === null) continue;
 
                 $recipes = array_merge($recipes, $this->getWithLinkedRecipes($recipe, $recipe));
-                break;
             }
         }
         return $recipes;
