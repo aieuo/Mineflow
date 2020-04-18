@@ -53,7 +53,7 @@ class CommandManager {
             $command->setDescription($description);
             $command->setPermission($permission);
             $this->commandList[$commandStr] = $command;
-            $this->owner->getServer()->getCommandMap()->register($this->owner->getName(), $command);
+            $this->owner->getServer()->getCommandMap()->register("mineflow", $command);
             return true;
         }
         return false;
