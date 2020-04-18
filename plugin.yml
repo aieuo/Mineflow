@@ -1,8 +1,11 @@
 ---
 name: Mineflow
 main: aieuo\mineflow\Main
-version: 0.0.1
+version: 0.1.0
 api: 3.0.0
+mcpe-protocol:
+  - 389
+  - 390
 load: POSTWORLD
 author: aieuo
 permissions:
