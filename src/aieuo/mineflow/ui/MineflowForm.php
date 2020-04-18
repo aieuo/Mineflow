@@ -40,20 +40,24 @@ class MineflowForm {
             })->addArgs($onAccept, $onRefuse)->show($player);
     }
 
-    public function selectRecipe(Player $player, string $title, callable $callback, array $default = [], array $errors = []) {
+    public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = [], array $errors = []) {
         (new CustomForm($title))
             ->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
                 new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, array $data, callable $callback) {
+            ])->onReceive(function (Player $player, array $data, callable $callback, ?callable $onCancel) {
                 if ($data[2]) {
+                    if (is_callable($onCancel)) {
+                        call_user_func($onCancel, $player);
+                        return;
+                    }
                     (new HomeForm)->sendMenu($player);
                     return;
                 }
 
                 if ($data[0] === "") {
-                    $this->selectRecipe($player, $callback, $data, [["@form.insufficient", 0]]);
+                    $this->selectRecipe($player, $callback, $onCancel, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 
@@ -63,12 +67,17 @@ class MineflowForm {
                 $group = $data[1];
                 if ($group === "") [$name, $group] = $manager->parseName($data[0]);
                 if (!$manager->exists($name, $group)) {
-                    $this->selectRecipe($player, $callback, $data, [["@form.recipe.select.notfound", 0]]);
+                    $this->selectRecipe($player, $callback, $onCancel, $data, [["@form.recipe.select.notfound", 0]]);
                     return;
                 }
 
                 $recipe = $manager->get($name, $group);
+                if ($recipe === null) {
+                    $this->selectRecipe($player, $callback, $onCancel, $data, [["@form.recipe.select.notfound", 0]]);
+                    return;
+                }
+
                 call_user_func_array($callback, [$player, $recipe]);
-            })->addArgs($callback)->addErrors($errors)->show($player);
+            })->addArgs($callback, $onCancel)->addErrors($errors)->show($player);
     }
 }

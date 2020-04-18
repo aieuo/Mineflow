@@ -34,10 +34,15 @@ class ExportForm {
                     return;
                 }
                 if ($data === 1) {
-                    (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title", function (Player $player, Recipe $recipe) use ($recipes) {
-                        $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
-                        $this->sendRecipeList($player, $recipes, ["@form.added"]);
-                    });
+                    (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
+                        function (Player $player, Recipe $recipe) use ($recipes) {
+                            $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
+                            $this->sendRecipeList($player, $recipes, ["@form.added"]);
+                        },
+                        function (Player $player) use ($recipes) {
+                            $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
+                        }
+                    );
                     return;
                 }
                 $data -= 2;

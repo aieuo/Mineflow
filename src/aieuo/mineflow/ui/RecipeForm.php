@@ -92,6 +92,11 @@ class RecipeForm {
                 }
 
                 $recipe = new Recipe($name, $group, $player->getName());
+                if (file_exists($recipe->getFileName($manager->getSaveDir()))) {
+                    $this->sendAddRecipe($player, $data, [[Language::get("form.recipe.exists", [$name]), 0]]);
+                    return;
+                }
+
                 $manager->add($recipe);
                 Session::getSession($player)
                     ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
@@ -101,34 +106,16 @@ class RecipeForm {
     }
 
     public function sendSelectRecipe(Player $player, array $default = [], array $errors = []) {
-        (new CustomForm("@form.recipe.select.title"))
-            ->setContents([
-                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
-                new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, array $data) {
-                if ($data[1]) {
-                    $this->sendMenu($player);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendSelectRecipe($player, $data, [["@form.insufficient", 0]]);
-                    return;
-                }
-
-                $manager = Main::getRecipeManager();
-                [$name, $group] = $manager->parseName($data[0]);
-                if (!$manager->exists($name, $group)) {
-                    $this->sendSelectRecipe($player, $data, [["@form.recipe.select.notfound", 0]]);
-                    return;
-                }
-
-                $recipe = $manager->get($name, $group);
+        (new MineflowForm)->selectRecipe($player, "@form.recipe.select.title",
+            function (Player $player, Recipe $recipe) {
                 Session::getSession($player)
                     ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
                     ->set("recipe_menu_prev_data", []);
                 $this->sendRecipeMenu($player, $recipe);
-            })->addErrors($errors)->show($player);
+            },
+            function (Player $player) {
+                $this->sendMenu($player);
+            }, $default, $errors);
     }
 
     public function sendRecipeList(Player $player, string $path = "") {

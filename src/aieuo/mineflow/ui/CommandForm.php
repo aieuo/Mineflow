@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\Player;
@@ -292,47 +293,26 @@ class CommandForm {
                         $this->sendCommandMenu($player, $command);
                         return;
                     case 1:
-                        $this->sendSelectRecipe($player, $command);
+                        (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [$command["command"]]),
+                            function (Player $player, Recipe $recipe) use ($command) {
+                                $trigger = new Trigger(Trigger::TYPE_COMMAND, $command["command"], $command["command"]);
+                                if ($recipe->existsTrigger($trigger)) {
+                                    $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
+                                    return;
+                                }
+                                $recipe->addTrigger($trigger);
+                                $this->sendRecipeList($player, $command, ["@form.added"]);
+                            },
+                            function (Player $player) use ($command) {
+                                $this->sendRecipeList($player, $command);
+                            }
+                        );
                         return;
                 }
                 $data -= 2;
 
                 $this->sendRecipeMenu($player, $command, $data, $recipes);
             })->addMessages($messages)->addArgs($command, $recipes)->show($player);
-    }
-
-    public function sendSelectRecipe(Player $player, array $command, array $default = [], array $errors = []) {
-        (new CustomForm(Language::get("form.recipes.add", [$command["command"]])))
-            ->setContents([
-                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
-                new Toggle("@form.cancelAndBack"),
-            ])->onReceive(function (Player $player, array $data, array $command) {
-                if ($data[1]) {
-                    $this->sendRecipeList($player, $command);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendSelectRecipe($player, $command, $data, [["@form.insufficient", 0]]);
-                    return;
-                }
-
-                $manager = Main::getRecipeManager();
-                [$name, $group] = $manager->parseName($data[0]);
-                $recipe = $manager->get($name, $group);
-                if ($recipe === null) {
-                    $this->sendSelectRecipe($player, $command, $data, [["@form.recipe.select.notfound", 0]]);
-                    return;
-                }
-
-                $trigger = new Trigger(Trigger::TYPE_COMMAND, $command["command"], $command["command"]);
-                if ($recipe->existsTrigger($trigger)) {
-                    $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
-                    return;
-                }
-                $recipe->addTrigger($trigger);
-                $this->sendRecipeList($player, $command, ["@form.added"]);
-            })->addArgs($command)->addErrors($errors)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, array $command, int $index, array $recipes) {
