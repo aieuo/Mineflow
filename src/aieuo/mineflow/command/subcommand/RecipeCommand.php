@@ -23,7 +23,7 @@ class RecipeCommand extends MineflowSubcommand {
                 (new RecipeForm)->sendSelectRecipe($sender, [$args[1] ?? ""]);
                 break;
             case "list":
-                (new RecipeForm)->sendRecipeGroupList($sender);
+                (new RecipeForm)->sendRecipeList($sender);
                 break;
             default:
                 $sender->sendMessage(Language::get("command.recipe.usage"));

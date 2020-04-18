@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -40,7 +41,7 @@ class RecipeForm {
                         $this->sendSelectRecipe($player);
                         break;
                     case 3:
-                        $this->sendRecipeGroupList($player);
+                        $this->sendRecipeList($player);
                         break;
                 }
             })->addMessages($messages)->show($player);
@@ -130,65 +131,57 @@ class RecipeForm {
             })->addErrors($errors)->show($player);
     }
 
-    public function sendRecipeGroupList(Player $player) {
+    public function sendRecipeList(Player $player, string $path = "") {
         $manager = Main::getRecipeManager();
-        $recipeGroups = $manager->getAll();
+        $recipeGroups = $manager->getByPath($path);
         $buttons = [new Button("@form.back")];
-        $recipes = $recipeGroups[""] ?? [];
+        $recipes = $recipeGroups[$path] ?? [];
         foreach ($recipes as $recipe) {
             $buttons[] = new Button($recipe->getName());
         }
-        unset($recipeGroups[""]);
+        unset($recipeGroups[$path]);
+
+        $groups = [];
         foreach ($recipeGroups as $group => $value) {
-            $buttons[] = new Button("[$group]");
+            if ($path !== "") {
+                $name = explode("/", str_replace($path."/", "", $group))[0];
+            } else {
+                $name = explode("/", $group)[0];
+            }
+
+            if (!isset($groups[$name])) {
+                $buttons[] = new Button("[$name]");
+                $groups[$name] = $path !== "" ? $path."/".$name : $name;
+            }
         }
-        $recipeGroups = array_merge($recipes, $recipeGroups);
+        $recipeGroups = array_merge($recipes, array_values($groups));
 
         (new ListForm("@form.recipe.recipeList.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, array $recipes) {
+            ->onReceive(function (Player $player, int $data, string $path, array $recipes) {
                 if ($data === 0) {
-                    $this->sendMenu($player);
+                    if ($path === "") {
+                        $this->sendMenu($player);
+                        return;
+                    }
+                    $paths = explode("/", $path);
+                    array_pop($paths);
+                    $this->sendRecipeList($player, implode("/", $paths));
                     return;
                 }
                 $data --;
 
-                $recipe = $recipes[$data];
+                $recipe = array_values($recipes)[$data];
                 if ($recipe instanceof Recipe) {
                     Session::getSession($player)
-                        ->set("recipe_menu_prev", [$this, "sendRecipeGroupList"])
-                        ->set("recipe_menu_prev_data", []);
+                        ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                        ->set("recipe_menu_prev_data", [$path]);
                     $this->sendRecipeMenu($player, $recipe);
                     return;
                 }
                 $this->sendRecipeList($player, $recipe);
-            })->addArgs(array_values($recipeGroups))->show($player);
-    }
-
-    public function sendRecipeList(Player $player, array $recipes) {
-        /** @var Recipe[] $recipes */
-        $buttons = [new Button("@form.back")];
-        foreach ($recipes as $recipe) {
-            $buttons[] = new Button($recipe->getName());
-        }
-
-        (new ListForm("@form.recipe.recipeList.title"))
-            ->setContent("@form.selectButton")
-            ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, array $recipes) {
-                if ($data === 0) {
-                    $this->sendRecipeGroupList($player);
-                    return;
-                }
-                $data --;
-
-                $recipe = $recipes[$data];
-                Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
-                    ->set("recipe_menu_prev_data", [$recipes]);;
-                $this->sendRecipeMenu($player, $recipe);
-            })->addArgs(array_values($recipes))->show($player);
+            })->addArgs($path, $recipeGroups)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []) {

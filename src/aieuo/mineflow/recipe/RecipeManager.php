@@ -88,6 +88,16 @@ class RecipeManager {
         return $this->recipes[$group][$name] ?? null;
     }
 
+    public function getByPath(string $name): array {
+        if (empty($name)) return $this->getAll();
+
+        $result = [];
+        foreach ($this->getAll() as $group => $item) {
+            if (strpos($group."/", $name."/") === 0) $result[$group] = $item;
+        }
+        return $result;
+    }
+
     /**
      * @return Recipe[][]
      */

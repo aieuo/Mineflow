@@ -63,8 +63,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var bool */
     private $wait = false;
-    /** @var array */
-    private $last;
+    /** @var array|null */
+    private $last = null;
 
     /** @var Recipe|null */
     private $sourceRecipe;
