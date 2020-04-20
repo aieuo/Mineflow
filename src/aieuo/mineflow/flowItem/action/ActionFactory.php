@@ -75,6 +75,7 @@ class ActionFactory {
         self::register(new CreateConfigVariable);
         self::register(new SetConfigData);
         self::register(new SaveConfigFile);
+        self::register(new ExitRecipe);
         /* calculation */
         self::register(new FourArithmeticOperations);
         self::register(new Calculate);
