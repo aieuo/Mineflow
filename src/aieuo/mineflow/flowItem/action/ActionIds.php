@@ -95,4 +95,5 @@ interface ActionIds {
     const CREATE_CONFIG_VARIABLE = "createConfig";
     const SET_CONFIG_DATA = "setConfig";
     const SAVE_CONFIG_FILE = "saveConfig";
+    const EXIT_RECIPE = "exit";
 }

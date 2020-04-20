@@ -65,6 +65,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
     private $wait = false;
     /** @var array|null */
     private $last = null;
+    /** @var bool */
+    private $exit = false;
 
     /** @var Recipe|null */
     private $sourceRecipe;
@@ -225,6 +227,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
         $actions = $this->getActions();
         $count = count($actions);
         for ($i=$start; $i<$count; $i++) {
+            if ($this->exit) break;
+
             $action = $actions[$i];
             if ($action instanceof EventCancel) $action->setEvent($event);
             try {
@@ -318,6 +322,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
         $this->wait = false;
         $this->last = null;
+    }
+
+    public function exit() {
+        $this->exit = true;
     }
 
     /**
