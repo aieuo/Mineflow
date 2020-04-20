@@ -358,7 +358,6 @@ class CustomFormForm {
             new Button("@form.form.formMenu.preview"),
             new Button("@form.recipe.recipeMenu.execute"),
             new Button("@form.form.formMenu.changeTitle"),
-            new Button("@form.form.formMenu.content"),
         ];
         $elements = $form->getContents();
         foreach ($elements as $element) {
@@ -391,11 +390,8 @@ class CustomFormForm {
                     case 3:
                         $this->sendChangeFormTitle($player, $form);
                         return;
-                    case 4:
-                        $this->sendChangeFormContent($player, $form);
-                        return;
                 }
-                $data -= 5;
+                $data -= 4;
 
                 switch ($data - count($elements)) {
                     case 0:
