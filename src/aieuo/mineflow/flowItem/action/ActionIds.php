@@ -96,4 +96,9 @@ interface ActionIds {
     const SET_CONFIG_DATA = "setConfig";
     const SAVE_CONFIG_FILE = "saveConfig";
     const EXIT_RECIPE = "exit";
+    const EXIT_CONTAINER = "break";
+
+    const SEND_INPUT = "input";
+    const SEND_MENU = "select";
+    const SEND_SLIDER = "slider";
 }

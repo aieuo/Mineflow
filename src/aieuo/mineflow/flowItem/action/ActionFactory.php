@@ -94,6 +94,8 @@ class ActionFactory {
         self::register(new CountListVariable);
         /* form */
         self::register(new SendForm);
+        self::register(new SendInputForm);
+        self::register(new SendMenuForm);
         /* command */
         self::register(new Command);
         self::register(new CommandConsole);
