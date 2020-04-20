@@ -25,6 +25,7 @@ class ConditionFactory {
         self::register(new RemoveItem);
         /* script */
         self::register(new ComparisonNumber);
+        self::register(new ComparisonString);
         self::register(new AndScript);
         self::register(new ORScript);
         self::register(new NotScript);

@@ -22,6 +22,7 @@ interface ConditionIds {
     const REMOVE_ITEM = "removeItem";
 
     const COMPARISON_NUMBER = "comparisonNumber";
+    const COMPARISON_STRING = "comparisonString";
 
     const IS_ACTIVE_ENTITY = "isActiveEntity";
     const IS_PLAYER = "isPlayer";
