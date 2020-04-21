@@ -100,8 +100,7 @@ class RepeatAction extends Action implements ActionContainer {
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
-                        array_pop($parents);
-                        $session->set("parents", $parents);
+                        $session->pop("parents");
                         (new ActionContainerForm)->sendActionList($player, $parent);
                         break;
                     case 1:

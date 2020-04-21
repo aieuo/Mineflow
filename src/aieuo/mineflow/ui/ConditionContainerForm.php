@@ -44,8 +44,7 @@ class ConditionContainerForm {
 
                 /** @var Condition $condition */
                 $condition = $conditions[$data];
-                $session = Session::getSession($player);
-                $session->set("parents", array_merge($session->get("parents"), [$container]));
+                Session::getSession($player)->push("parents", $container);
 
                 (new ConditionForm)->sendAddedConditionMenu($player, $container, $condition);
             })->addArgs($container, $conditions)->addMessages($messages)->show($player);

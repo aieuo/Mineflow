@@ -35,19 +35,10 @@ class ActionForm {
             ])->onReceive(function (Player $player, int $data, ActionContainer $container, Action $action) {
                 switch ($data) {
                     case 0:
-                        $session = Session::getSession($player);
-                        $parents = $session->get("parents");
-                        array_pop($parents);
-                        $session->set("parents", $parents);
+                        Session::getSession($player)->pop("parents");
                         (new ActionContainerForm)->sendActionList($player, $container);
                         break;
                     case 1:
-                        if ($action->hasCustomMenu()) {
-                            $session = Session::getSession($player);
-                            $session->set("parents", array_merge($session->get("parents"), [$container]));
-                            $action->sendCustomMenu($player);
-                            return;
-                        }
                         $action->getEditForm()
                             ->addArgs($container, $action, function ($result) use ($player, $container, $action) {
                                 $this->sendAddedActionMenu($player, $container, $action, [$result ? "@form.changed" : "@form.cancelled"]);
@@ -165,9 +156,8 @@ class ActionForm {
                         $this->sendSelectAction($player, $container, $actions);
                         break;
                     case 1:
-                        $session = Session::getSession($player);
-                        $session->set("parents", array_merge($session->get("parents"), [$container]));
                         if ($action->hasCustomMenu()) {
+                            Session::getSession($player)->push("parents", $container);
                             $container->addAction($action);
                             $action->sendCustomMenu($player);
                             return;
@@ -204,10 +194,7 @@ class ActionForm {
             function (Player $player) use ($action, $container) {
                 $index = array_search($action, $container->getActions(), true);
                 $container->removeAction($index);
-                $session = Session::getSession($player);
-                $parents = $session->get("parents");
-                array_pop($parents);
-                $session->set("parents", $parents);
+                Session::getSession($player)->pop("parents");
                 (new ActionContainerForm)->sendActionList($player, $container, ["@form.delete.success"]);
             },
             function (Player $player) use ($action, $container) {

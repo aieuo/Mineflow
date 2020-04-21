@@ -68,6 +68,34 @@ class Session {
 
     /**
      * @param string $key
+     * @param $value
+     * @return bool
+     */
+    public function push(string $key, $value): bool {
+        $data = $this->get($key);
+        if ($data === null) $data = [];
+        if (!is_array($data)) return false;
+
+        $data[] = $value;
+        $this->set($key, $data);
+        return true;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function pop(string $key) {
+        $data = $this->get($key);
+        if (!is_array($data)) return null;
+
+        $value = array_pop($data);
+        $this->set($key, $data);
+        return $value;
+    }
+
+    /**
+     * @param string $key
      * @return self
      */
     public function remove(string $key): self {

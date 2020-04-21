@@ -63,8 +63,7 @@ class AndScript extends Condition implements ConditionContainer {
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
-                        array_pop($parents);
-                        $session->set("parents", $parents);
+                        $session->pop("parents");
                         (new ConditionContainerForm)->sendConditionList($player, $parent);
                         break;
                     case 1:

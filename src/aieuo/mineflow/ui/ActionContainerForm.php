@@ -44,8 +44,7 @@ class ActionContainerForm {
 
                 /** @var Action $action */
                 $action = $actions[$data];
-                $session = Session::getSession($player);
-                $session->set("parents", array_merge($session->get("parents"), [$container]));
+                Session::getSession($player)->push("parents", $container);
 
                 (new ActionForm)->sendAddedActionMenu($player, $container, $action);
             })->addArgs($container, $actions)->addMessages($messages)->show($player);

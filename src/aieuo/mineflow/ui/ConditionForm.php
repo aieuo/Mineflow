@@ -35,19 +35,10 @@ class ConditionForm {
             ])->onReceive(function (Player $player, int $data, ConditionContainer $container, Condition $condition) {
                 switch ($data) {
                     case 0:
-                        $session = Session::getSession($player);
-                        $parents = $session->get("parents");
-                        array_pop($parents);
-                        $session->set("parents", $parents);
+                        Session::getSession($player)->pop("parents");
                         (new ConditionContainerForm)->sendConditionList($player, $container);
                         break;
                     case 1:
-                        if ($condition->hasCustomMenu()) {
-                            $session = Session::getSession($player);
-                            $session->set("parents", array_merge($session->get("parents"), [$container]));
-                            $condition->sendCustomMenu($player);
-                            return;
-                        }
                         $condition->getEditForm()
                             ->addArgs($container, $condition, function ($result) use ($player, $container, $condition) {
                                 $this->sendAddedConditionMenu($player, $container, $condition, [$result ? "@form.changed" : "@form.cancelled"]);
@@ -165,9 +156,8 @@ class ConditionForm {
                         $this->sendSelectCondition($player, $container, $conditions);
                         break;
                     case 1:
-                        $session = Session::getSession($player);
-                        $session->set("parents", array_merge($session->get("parents"), [$container]));
                         if ($condition->hasCustomMenu()) {
+                            Session::getSession($player)->push("parents", $container);
                             $container->addCondition($condition);
                             $condition->sendCustomMenu($player);
                             return;
@@ -204,10 +194,7 @@ class ConditionForm {
             function (Player $player) use ($condition, $container) {
                 $index = array_search($condition, $container->getConditions(), true);
                 $container->removeCondition($index);
-                $session = Session::getSession($player);
-                $parents = $session->get("parents");
-                array_pop($parents);
-                $session->set("parents", $parents);
+                Session::getSession($player)->pop("parents");
                 (new ConditionContainerForm)->sendConditionList($player, $container, ["@form.delete.success"]);
             },
             function (Player $player) use ($condition, $container) {
