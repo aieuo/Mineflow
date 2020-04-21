@@ -43,9 +43,9 @@ class ComparisonString extends Condition {
     private $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
     public function __construct(string $value1 = null, string $operator = null, string $value2 = null) {
-        $this->value1 = (string)$value1;
-        $this->operator = $operator ?? (string)self::EQUALS;
-        $this->value2 = (string)$value2;
+        $this->value1 = $value1;
+        $this->operator = (int)($operator ?? self::EQUALS);
+        $this->value2 = $value2;
     }
 
     public function setValues(string $value1, string $value2): self {

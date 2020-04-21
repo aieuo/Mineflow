@@ -71,7 +71,7 @@ class ComparisonNumber extends Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->value1 !== null and $this->value2;
+        return $this->value1 !== "" and $this->value2 !== "";
     }
 
     public function getDetail(): string {

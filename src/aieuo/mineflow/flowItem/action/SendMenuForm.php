@@ -48,7 +48,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
     public function __construct(string $target = "target", string $text = "", string $options = "", string $resultName = "menu") {
         $this->playerVariableName = $target;
         $this->formText = $text;
-        $this->options = array_filter(array_map("trim", explode(";", $options)), "strlen");
+        $this->options = array_filter(array_map("trim", explode(";", $options)), function (string $o) { return $o !== ""; });
         $this->resultName = $resultName;
     }
 
@@ -107,7 +107,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
 
         (new ListForm($text))
             ->setContent($text)
-            ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($origin, $text, $resultName) {
+            ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($origin, $resultName) {
                 $this->lastResult = (string)$data;
 
                 $variable = new MapVariable([
@@ -147,13 +147,13 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         $text = array_shift($data);
         $cancel = array_pop($data);
         $resendOnClose = array_pop($data);
-        $add = array_filter(array_map("trim", explode(";", array_pop($data))), "strlen");
+        $add = array_filter(array_map("trim", explode(";", array_pop($data))), function (string $o) { return $o !== ""; });
 
         if ($target === "") $errors[] = ["@form.insufficient", 1];
         if ($resultName === "") $errors[] = ["@form.insufficient", 2];
         if ($text === "") $errors[] = ["@form.insufficient", 3];
 
-        $options = array_filter($data, "strlen");
+        $options = array_filter($data, function (string $o) { return $o !== ""; });
         $options = array_merge($options, $add);
         return ["status" => empty($errors), "contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel, "errors" => $errors];
     }
