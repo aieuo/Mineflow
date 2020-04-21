@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
+use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
@@ -86,6 +87,7 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
                 new Button("@form.back"),
                 new Button("@condition.edit"),
                 new Button("@action.edit"),
+                new Button("@form.home.rename.title"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -103,6 +105,9 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
                         (new ActionContainerForm)->sendActionList($player, $this);
                         break;
                     case 3:
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        break;
+                    case 4:
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }

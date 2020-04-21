@@ -41,6 +41,7 @@ abstract class Condition extends FlowItem implements ConditionIds {
             throw new FlowItemLoadException(Language::get("condition.not.found", [$content["id"]]));
         }
 
+        $condition->setCustomName($content["customName"] ?? "");
         return $condition->loadSaveData($content["contents"]);
     }
 

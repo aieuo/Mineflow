@@ -48,12 +48,13 @@ abstract class Action extends FlowItem implements ActionIds {
      * @throws \InvalidArgumentException
      */
     public static function loadSaveDataStatic(array $content): self {
-        $process = ActionFactory::get($content["id"]);
-        if ($process === null) {
+        $action = ActionFactory::get($content["id"]);
+        if ($action === null) {
             throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));
         }
 
-        return $process->loadSaveData($content["contents"]);
+        $action->setCustomName($content["customName"] ?? "");
+        return $action->loadSaveData($content["contents"]);
     }
 
     /**

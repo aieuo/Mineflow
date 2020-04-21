@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
@@ -70,6 +71,7 @@ class ElseAction extends Action implements ActionContainer {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@action.edit"),
+                new Button("@form.home.rename.title"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -84,6 +86,9 @@ class ElseAction extends Action implements ActionContainer {
                         (new ActionContainerForm)->sendActionList($player, $this);
                         break;
                     case 2:
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        break;
+                    case 3:
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }

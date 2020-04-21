@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
@@ -93,6 +94,7 @@ class RepeatAction extends Action implements ActionContainer {
                 new Button("@form.back"),
                 new Button("@action.edit"),
                 new Button("@action.repeat.editCount"),
+                new Button("@form.home.rename.title"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -110,6 +112,9 @@ class RepeatAction extends Action implements ActionContainer {
                         (new ScriptForm)->sendSetRepeatCount($player, $this);
                         break;
                     case 3:
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        break;
+                    case 4:
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }

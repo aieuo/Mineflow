@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
@@ -56,6 +57,7 @@ class AndScript extends Condition implements ConditionContainer {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@condition.edit"),
+                new Button("@form.home.rename.title"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -70,6 +72,9 @@ class AndScript extends Condition implements ConditionContainer {
                         (new ConditionContainerForm)->sendConditionList($player, $this);
                         break;
                     case 2:
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        break;
+                    case 3:
                         (new ConditionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }

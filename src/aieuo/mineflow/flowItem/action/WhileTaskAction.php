@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
+use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -133,6 +134,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
                 new Button("@condition.edit"),
                 new Button("@action.edit"),
                 new Button("@action.whileTask.editInterval"),
+                new Button("@form.home.rename.title"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -153,6 +155,9 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
                         (new ScriptForm)->sendSetWhileInterval($player, $this);
                         break;
                     case 4:
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        break;
+                    case 5:
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
