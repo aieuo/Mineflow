@@ -135,6 +135,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
                 new Button("@action.edit"),
                 new Button("@action.whileTask.editInterval"),
                 new Button("@form.home.rename.title"),
+                new Button("@form.move"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -158,6 +159,9 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
                         (new FlowItemForm)->sendChangeName($player, $this, $parent);
                         break;
                     case 5:
+                        (new ActionContainerForm)->sendMoveAction($player, $parent, array_search($this, $parent->getActions(), true));
+                        break;
+                    case 6:
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }

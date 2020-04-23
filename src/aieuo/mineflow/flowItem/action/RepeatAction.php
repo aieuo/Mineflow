@@ -95,6 +95,7 @@ class RepeatAction extends Action implements ActionContainer {
                 new Button("@action.edit"),
                 new Button("@action.repeat.editCount"),
                 new Button("@form.home.rename.title"),
+                new Button("@form.move"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
@@ -115,6 +116,9 @@ class RepeatAction extends Action implements ActionContainer {
                         (new FlowItemForm)->sendChangeName($player, $this, $parent);
                         break;
                     case 4:
+                        (new ActionContainerForm)->sendMoveAction($player, $parent, array_search($this, $parent->getActions(), true));
+                        break;
+                    case 5:
                         (new ActionForm)->sendConfirmDelete($player, $this, $parent);
                         break;
                 }
