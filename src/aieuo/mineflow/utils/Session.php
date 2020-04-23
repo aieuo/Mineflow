@@ -68,7 +68,7 @@ class Session {
 
     /**
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @return bool
      */
     public function push(string $key, $value): bool {

@@ -127,7 +127,6 @@ class CommandManager {
         return $recipes;
     }
 
-
     public function hasSubCommand(string $subcommand) {
         $commands = explode(" ", $subcommand);
         $origin = array_shift($commands);

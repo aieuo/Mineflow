@@ -16,7 +16,7 @@ class VariableHelper {
 
     /** @var Config */
     private $file;
-    /* @var Main */
+    /** @var Main */
     private $owner;
 
     public function __construct(Main $owner, Config $file) {
@@ -70,7 +70,7 @@ class VariableHelper {
      * @param Variable $variable
      * @param bool $save
      */
-    public function add(Variable $variable, bool $save = false) {
+    public function add(Variable $variable, bool $save = false): void {
         if (!$save) {
             $this->variables[$variable->getName()] = $variable;
             return;
@@ -85,13 +85,13 @@ class VariableHelper {
      * @param String $name
      * @return void
      */
-    public function delete(String $name) {
+    public function delete(String $name): void {
         unset($this->variables[$name]);
 
         $this->file->remove($name);
     }
 
-    public function saveAll() {
+    public function saveAll(): void {
         foreach ($this->variables as $variable) {
             $this->add($variable, true);
         }
@@ -121,7 +121,7 @@ class VariableHelper {
      * @param bool $global
      * @return string
      */
-    public function replaceVariables(string $string, array $variables = [], bool $global = true) {
+    public function replaceVariables(string $string, array $variables = [], bool $global = true): string {
         $limit = 10;
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
             foreach ($matches[0] as $name) {
@@ -138,7 +138,7 @@ class VariableHelper {
         return $string;
     }
 
-    public function replaceVariablesAndFunctions(string $string, Recipe $origin, bool $global = true) {
+    public function replaceVariablesAndFunctions(string $string, Recipe $origin, bool $global = true): string {
         $limit = 10;
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
             foreach ($matches[0] as $name) {
@@ -159,7 +159,7 @@ class VariableHelper {
         return $string;
     }
 
-    public function replaceFunction(string $string, string $replace, Recipe $origin) {
+    public function replaceFunction(string $string, string $replace, Recipe $origin): string {
         if (strpos($string, "{".$replace."}") === false) return $string;
 
         if (preg_match("/^([a-zA-Z0-9]+)\((.*)\)$/", $replace, $matches)) {
@@ -192,7 +192,7 @@ class VariableHelper {
      * @param bool $global
      * @return string
      */
-    public function replaceVariable(string $string, string $replace, array $variables = [], bool $global = true) {
+    public function replaceVariable(string $string, string $replace, array $variables = [], bool $global = true): string {
         if (strpos($string, "{".$replace."}") === false) return $string;
 
         $names = explode(".", preg_replace("/\[([^\[\]]+)]/", '.${1}', $replace));
@@ -232,7 +232,7 @@ class VariableHelper {
      * @param  string  $variable
      * @return boolean
      */
-    public function isVariableString(string $variable) {
+    public function isVariableString(string $variable): bool {
         return preg_match("/^{[^{}\[\].]+}$/", $variable);
     }
 
@@ -241,7 +241,7 @@ class VariableHelper {
      * @param  string  $variable
      * @return boolean
      */
-    public function containsVariable(string $variable) {
+    public function containsVariable(string $variable): bool {
         return preg_match("/.*{.+}.*/", $variable);
     }
 
@@ -250,7 +250,7 @@ class VariableHelper {
      * @param  string $string
      * @return int
      */
-    public function getType(string $string) {
+    public function getType(string $string): int {
         if (substr($string, 0, 5) === "(str)") {
             $type = Variable::STRING;
         } elseif (substr($string, 0, 5) === "(num)") {

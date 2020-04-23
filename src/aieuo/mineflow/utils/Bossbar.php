@@ -30,7 +30,7 @@ class Bossbar {
         $this->entityId = Entity::$entityCount++;
     }
 
-    public function setTitle(string $title) {
+    public function setTitle(string $title): void {
         $this->title = $title;
     }
 
@@ -38,7 +38,7 @@ class Bossbar {
         return $this->title;
     }
 
-    public function setMax(float $max) {
+    public function setMax(float $max): void {
         $this->max = $max;
     }
 
@@ -46,7 +46,7 @@ class Bossbar {
         return $this->max;
     }
 
-    public function setPercentage(float $per) {
+    public function setPercentage(float $per): void {
         if ($per > $this->max) $per = $this->max;
         $this->per = $per;
     }
@@ -59,7 +59,7 @@ class Bossbar {
         return $this->entityId;
     }
 
-    public static function add(Player $player, string $id, string $title, float $max, float $per) {
+    public static function add(Player $player, string $id, string $title, float $max, float $per): void {
         if (isset(self::$bars[$player->getName()][$id])) self::remove($player, $id);
         $bar = new Bossbar($title, $max, $per);
         self::$bars[$player->getName()][$id] = $bar;
@@ -82,8 +82,8 @@ class Bossbar {
         $player->sendDataPacket($pk2);
     }
 
-    public static function remove(Player $player, string $id) {
-        if (!isset(self::$bars[$player->getName()][$id])) return;
+    public static function remove(Player $player, string $id): bool {
+        if (!isset(self::$bars[$player->getName()][$id])) return false;
         $bar = self::$bars[$player->getName()][$id];
         $pk = new BossEventPacket();
         $pk->bossEid = $bar->getEntityId();
@@ -95,5 +95,6 @@ class Bossbar {
         $player->sendDataPacket($pk2);
 
         unset(self::$bars[$player->getName()][$id]);
+        return true;
     }
 }

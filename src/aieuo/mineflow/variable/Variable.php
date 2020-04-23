@@ -19,6 +19,12 @@ abstract class Variable {
     /** @var array 型の一覧 */
     public $typeNames = ["string", "number", "list", "map", "object"];
 
+    /**
+     * @param mixed $value
+     * @param string $name
+     * @param int $type
+     * @return self|null
+     */
     public static function create($value, string $name = "", int $type = self::STRING): ?self {
         $variable = null;
         switch ($type) {
@@ -40,6 +46,10 @@ abstract class Variable {
         return $variable;
     }
 
+    /**
+     * @param mixed $value
+     * @param string $name
+     */
     public function __construct($value, string $name = "") {
         $this->value = $value;
         $this->name = $name;
@@ -53,6 +63,9 @@ abstract class Variable {
         return $this->name;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setValue($value): void {
         $this->value = $value;
     }
