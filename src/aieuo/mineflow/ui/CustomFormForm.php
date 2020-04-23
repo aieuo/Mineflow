@@ -737,7 +737,8 @@ class CustomFormForm {
                         ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
                         ->set("recipe_menu_prev_data", [$form, $index, $recipes]);
                     $recipeName = array_keys($recipes)[$index];
-                    $recipe = Main::getRecipeManager()->get($recipeName);
+                    [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
+                    $recipe = Main::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
             })->addArgs($form, $index, $recipes)->show($player);

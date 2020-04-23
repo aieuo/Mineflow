@@ -334,7 +334,8 @@ class CommandForm {
                         ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
                         ->set("recipe_menu_prev_data", [$command, $index, $recipes]);
                     $recipeName = array_keys($recipes)[$index];
-                    $recipe = Main::getRecipeManager()->get($recipeName);
+                    [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
+                    $recipe = Main::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
             })->addArgs($command, $index, $recipes)->show($player);

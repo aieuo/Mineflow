@@ -120,8 +120,9 @@ class CommandManager {
         $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(Trigger::TYPE_COMMAND, $command));
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
-                if (!isset($recipes[$recipe->getName()])) $recipes[$recipe->getName()] =[];
-                $recipes[$recipe->getName()][] = $name;
+                $path = $recipe->getGroup()."/".$recipe->getName();
+                if (!isset($recipes[$path])) $recipes[$path] = [];
+                $recipes[$path][] = $name;
             }
         }
         return $recipes;
