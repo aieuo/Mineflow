@@ -4,6 +4,7 @@ namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\utils\Session;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
@@ -32,7 +33,7 @@ class EventTriggerForm {
     }
 
     public function sendEventTriggerList(Player $player, Recipe $recipe) {
-        $events = array_filter(Main::getInstance()->getEvents()->getAll(), function ($value) {
+        $events = array_filter(Main::getEventManager()->getEventConfig()->getAll(), function ($value) {
             return $value;
         });
         $buttons = [new Button("@form.back")];
@@ -55,9 +56,8 @@ class EventTriggerForm {
     }
 
     public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName) {
-        $event = EventTriggers::getEvents()[$eventName];
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
-            ->setContent($eventName."\n@".$event[1])
+            ->setContent($eventName."\n@trigger.event.".$eventName)
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),

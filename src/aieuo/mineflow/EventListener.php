@@ -57,12 +57,6 @@ class EventListener implements Listener {
     private $owner;
 
     /** @var array */
-    private static $enabledEvents = [];
-
-    /** @var Config */
-    private static $config;
-
-    /** @var array */
     private $eventMethods = [
         "PlayerChatEvent" => "onChat",
         "PlayerCommandPreprocessEvent" => "onCommandPreprocess",
@@ -86,39 +80,12 @@ class EventListener implements Listener {
         "ProjectileHitEntityEvent" => "onProjectileHit",
     ];
 
-    public static function getEnabledEvents(): array {
-        return self::$enabledEvents;
-    }
-
-    public static function setEventEnabled(string $event, bool $enable) {
-        self::$config->set($event, $enable);
-        self::$config->save();
-        if ($enable) {
-            self::$enabledEvents[$event] = true;
-        } else {
-            unset(self::$enabledEvents[$event]);
-        }
-    }
-
-    public function __construct(Main $owner, Config $eventSettings) {
+    public function __construct(Main $owner) {
         $this->owner = $owner;
-        self::$config = $eventSettings;
-        $this->checkEventSettings($eventSettings);
     }
 
     private function getOwner(): Main {
         return $this->owner;
-    }
-
-    public function checkEventSettings(Config $eventSettings) {
-        $defaults = EventTriggers::getDefaultEventSettings();
-
-        $eventSettings->setDefaults($defaults);
-        $eventSettings->save();
-
-        foreach ($eventSettings->getAll() as $event => $value) {
-            if ($value) self::$enabledEvents[$event] = true;
-        }
     }
 
     public function registerEvents() {
@@ -130,9 +97,9 @@ class EventListener implements Listener {
         $this->registerEvent(DataPacketReceiveEvent::class, "receive");
         $this->registerEvent(EntityTeleportEvent::class, "teleport");
 
-        foreach (self::$enabledEvents as $event => $value) {
+        foreach (Main::getEventManager()->getEnabledEvents() as $event => $value) {
             if (!isset($this->eventMethods[$event])) continue;
-            $this->registerEvent(EventTriggers::getEventPath($event), $this->eventMethods[$event]);
+            $this->registerEvent(Main::getEventManager()->getEventPath($event), $this->eventMethods[$event]);
         }
     }
 
@@ -145,13 +112,13 @@ class EventListener implements Listener {
     public function onJoin(PlayerJoinEvent $event) {
         Session::createSession($event->getPlayer());
 
-        if (isset(self::$enabledEvents["PlayerJoinEvent"])) $this->onEvent($event, "PlayerJoinEvent");
+        if (Main::getEventManager()->isEnabledEvent("PlayerJoinEvent")) $this->onEvent($event, "PlayerJoinEvent");
     }
 
     public function onQuit(PlayerQuitEvent $event) {
         Session::destroySession($event->getPlayer());
 
-        if (isset(self::$enabledEvents["PlayerQuitEvent"])) $this->onEvent($event, "PlayerQuitEvent");
+        if (Main::getEventManager()->isEnabledEvent("PlayerQuitEvent")) $this->onEvent($event, "PlayerQuitEvent");
     }
 
     public function onInteract(PlayerInteractEvent $event) {
@@ -185,7 +152,7 @@ class EventListener implements Listener {
             $recipes->executeAll($player, $variables, $event);
         }
 
-        if (isset(self::$enabledEvents["PlayerInteractEvent"])) $this->onEvent($event, "PlayerInteractEvent");
+        if (Main::getEventManager()->isEnabledEvent("PlayerInteractEvent")) $this->onEvent($event, "PlayerInteractEvent");
     }
 
     public function command(CommandEvent $event) {
@@ -232,13 +199,13 @@ class EventListener implements Listener {
     }
 
     public function onDeath(PlayerDeathEvent $event) {
-        if (isset(self::$enabledEvents["PlayerDeathEvent"])) $this->onEvent($event, "PlayerDeathEvent");
+        if (Main::getEventManager()->isEnabledEvent("PlayerDeathEvent")) $this->onEvent($event, "PlayerDeathEvent");
         $player = $event->getPlayer();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
     public function onLevelChange(EntityLevelChangeEvent $event) {
-        if (isset(self::$enabledEvents["EntityLevelChangeEvent"])) $this->onEvent($event, "EntityLevelChangeEvent");
+        if (Main::getEventManager()->isEnabledEvent("EntityLevelChangeEvent")) $this->onEvent($event, "EntityLevelChangeEvent");
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
     }

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\event\EventManager;
 use aieuo\mineflow\flowItem\action\ActionFactory;
 use aieuo\mineflow\flowItem\condition\ConditionFactory;
 use aieuo\mineflow\utils\FormManager;
@@ -23,8 +24,6 @@ class Main extends PluginBase {
 
     /** @var Config */
     private $config;
-    /** @var Config */
-    private $events;
     /** @var PlayerConfig */
     private $playerSettings;
 
@@ -77,10 +76,8 @@ class Main extends PluginBase {
         ActionFactory::init();
         ConditionFactory::init();
 
-        $this->events = new Config($this->getDataFolder()."events.yml", Config::YAML);
 
-        $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
-        self::$commandManager = new CommandManager($this, $commands);
+        self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));
 
         self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
 
@@ -92,7 +89,7 @@ class Main extends PluginBase {
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();
 
-        (new EventListener($this, $events))->registerEvents();
+        (new EventListener($this))->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
 
@@ -113,10 +110,6 @@ class Main extends PluginBase {
 
     public function getPlayerSettings(): PlayerConfig {
         return $this->playerSettings;
-    }
-
-    public function getEvents(): Config {
-        return $this->events;
     }
 
     public static function getRecipeManager(): RecipeManager {

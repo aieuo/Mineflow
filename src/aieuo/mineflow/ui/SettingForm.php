@@ -8,6 +8,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
@@ -48,11 +49,11 @@ class SettingForm {
     }
 
     public function sendEventListForm(Player $player) {
-        $events = EventTriggers::getEvents();
-        $enables = EventListener::getEnabledEvents();
+        $events = Main::getEventManager()->getEvents();
+        $enables = Main::getEventManager()->getEnabledEvents();
         $contents = [];
-        foreach ($events as $name => $event) {
-            $contents[] = new Toggle("@".$event[1], isset($enables[$name]));
+        foreach ($events as $name => $path) {
+            $contents[] = new Toggle("@trigger.event.".$name, isset($enables[$name]));
         }
         (new CustomForm("@setting.event"))
             ->setContents($contents)
@@ -60,9 +61,9 @@ class SettingForm {
                 $count = 0;
                 foreach ($events as $name => $event) {
                     if ($data[$count] and !isset($enables[$name])) {
-                        EventListener::setEventEnabled($name, true);
+                        Main::getEventManager()->setEventEnabled($name, true);
                     } elseif (!$data[$count] and isset($enables[$name])) {
-                        EventListener::setEventEnabled($name, false);
+                        Main::getEventManager()->setEventEnabled($name, false);
                     }
                     $count ++;
                 }

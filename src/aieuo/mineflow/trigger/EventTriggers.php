@@ -92,8 +92,4 @@ class EventTriggers {
         }
         return $settings;
     }
-
-    public static function getEventPath(string $event): ?string {
-        return self::getEvents()[$event][0] ?? null;
-    }
 }
