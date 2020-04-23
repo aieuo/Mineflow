@@ -155,7 +155,7 @@ class EventListener implements Listener {
     }
 
     public function onInteract(PlayerInteractEvent $event) {
-        if ($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK) return;
+        if ($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK and $event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_AIR) return;
 
         $player = $event->getPlayer();
         $block = $event->getBlock();
