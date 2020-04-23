@@ -16,6 +16,7 @@ class HomeForm {
             ->addButtons([
                 new Button("@mineflow.recipe"),
                 new Button("@mineflow.command"),
+                new Button("@mineflow.event"),
                 new Button("@mineflow.form"),
                 new Button("@mineflow.export"),
                 new Button("@mineflow.import"),
@@ -30,15 +31,18 @@ class HomeForm {
                         (new CommandForm)->sendMenu($player);
                         break;
                     case 2:
-                        (new CustomFormForm)->sendMenu($player);
+                        (new EventTriggerForm)->sendSelectEvent($player);
                         break;
                     case 3:
-                        (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title", [new ExportForm, "sendRecipeListByRecipe"]);
+                        (new CustomFormForm)->sendMenu($player);
                         break;
                     case 4:
-                        (new ImportForm)->sendSelectImportFile($player);
+                        (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title", [new ExportForm, "sendRecipeListByRecipe"]);
                         break;
                     case 5:
+                        (new ImportForm)->sendSelectImportFile($player);
+                        break;
+                    case 6:
                         (new SettingForm)->sendMenu($player);
                 }
             })->show($player);

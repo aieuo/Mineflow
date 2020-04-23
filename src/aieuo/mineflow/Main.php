@@ -43,6 +43,9 @@ class Main extends PluginBase {
     /** @var FormManager */
     private static $formManager;
 
+    /** @var EventManager */
+    private static $eventManager;
+
     public static function getInstance(): ?self {
         return self::$instance;
     }
@@ -75,17 +78,21 @@ class Main extends PluginBase {
         ConditionFactory::init();
 
         $this->events = new Config($this->getDataFolder()."events.yml", Config::YAML);
-        (new EventListener($this, $this->events))->registerEvents();
 
         $commands = new Config($this->getDataFolder()."commands.yml", Config::YAML);
         self::$commandManager = new CommandManager($this, $commands);
 
         self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
 
+        $events = new Config($this->getDataFolder()."events.yml", Config::YAML);
+        self::$eventManager = new EventManager($events);
+
         self::$variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
 
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();
+
+        (new EventListener($this, $events))->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
 
@@ -122,6 +129,10 @@ class Main extends PluginBase {
 
     public static function getFormManager(): FormManager {
         return self::$formManager;
+    }
+
+    public static function getEventManager(): EventManager {
+        return self::$eventManager;
     }
 
     public static function getVariableHelper(): VariableHelper {

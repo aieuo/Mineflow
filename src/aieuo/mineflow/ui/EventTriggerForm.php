@@ -77,4 +77,84 @@ class EventTriggerForm {
             })->addArgs($recipe, $eventName)->show($player);
     }
 
+    public function sendSelectEvent(Player $player) {
+        $events = array_filter(Main::getEventManager()->getEventConfig()->getAll(), function ($value) {
+            return $value;
+        });
+        $buttons = [new Button("@form.back")];
+        foreach ($events as $event => $value) {
+            $buttons[] = new Button("@trigger.event.".$event);
+        }
+        (new ListForm("@form.event.list.title"))
+            ->setContent("@form.selectButton")
+            ->addButtons($buttons)
+            ->onReceive(function (Player $player, int $data, array $events) {
+                if ($data === 0) {
+                    (new HomeForm)->sendMenu($player);
+                    return;
+                }
+                $data --;
+
+                $event = $events[$data];
+                $this->sendRecipeList($player, $event);
+            })->addArgs(array_keys($events))->show($player);
+    }
+
+    public function sendRecipeList(Player $player, string $event, array $messages = []) {
+        $buttons = [new Button("@form.back"), new Button("@form.add")];
+
+        $recipes = Main::getEventManager()->getAssignedRecipes($event);
+        foreach ($recipes as $name => $events) {
+            $buttons[] = new Button($name);
+        }
+        (new ListForm(Language::get("form.recipes.title", [Language::get("trigger.event.".$event)])))
+            ->setContent("@form.selectButton")
+            ->setButtons($buttons)
+            ->onReceive(function (Player $player, int $data, string $event, array $recipes) {
+                switch ($data) {
+                    case 0:
+                        $this->sendSelectEvent($player);
+                        return;
+                    case 1:
+                        (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [Language::get("trigger.event.".$event)]),
+                            function (Player $player, Recipe $recipe) use ($event) {
+                                $trigger = new Trigger(Trigger::TYPE_EVENT, $event);
+                                if ($recipe->existsTrigger($trigger)) {
+                                    $this->sendRecipeList($player, $event, ["@trigger.alreadyExists"]);
+                                    return;
+                                }
+                                $recipe->addTrigger($trigger);
+                                $this->sendRecipeList($player, $event, ["@form.added"]);
+                            },
+                            function (Player $player) use ($event) {
+                                $this->sendRecipeList($player, $event);
+                            }
+                        );
+                        return;
+                }
+                $data -= 2;
+
+                $this->sendRecipeMenu($player, $event, array_keys($recipes)[$data]);
+            })->addMessages($messages)->addArgs($event, $recipes)->show($player);
+    }
+
+    public function sendRecipeMenu(Player $player, string $event, string $recipeName) {
+        (new ListForm(Language::get("form.recipes.title", [Language::get("trigger.event.".$event)])))
+            ->setContent(Language::get("trigger.event.".$event))
+            ->setButtons([
+                new Button("@form.back"),
+                new Button("@form.edit")
+            ])->onReceive(function (Player $player, int $data, string $event, string $recipeName) {
+                if ($data === 0) {
+                    $this->sendRecipeList($player, $event);
+                } elseif ($data === 1) {
+                    Session::getSession($player)
+                        ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
+                        ->set("recipe_menu_prev_data", [$event, $recipeName]);
+                    [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
+                    $recipe = Main::getRecipeManager()->get($name, $group);
+                    (new RecipeForm())->sendTriggerList($player, $recipe);
+                }
+            })->addArgs($event, $recipeName)->show($player);
+    }
 }
