@@ -56,6 +56,7 @@ interface ActionIds {
     const ADD_ENCHANTMENT = "addEnchant";
     const SET_ITEM_LORE = "setLore";
     const EQUIP_ARMOR = "equipArmor";
+    const GET_INVENTORY_CONTENTS = "getInventory";
 
     const COMMAND = "command";
     const COMMAND_CONSOLE = "commandConsole";

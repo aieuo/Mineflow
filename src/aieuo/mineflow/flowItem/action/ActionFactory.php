@@ -55,6 +55,7 @@ class ActionFactory {
         self::register(new EquipArmor);
         self::register(new SetItem);
         self::register(new ClearInventory);
+        self::register(new GetInventoryContents);
         /* money */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
