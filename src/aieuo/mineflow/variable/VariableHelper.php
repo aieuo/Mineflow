@@ -22,6 +22,7 @@ class VariableHelper {
     public function __construct(Main $owner, Config $file) {
         $this->owner = $owner;
         $this->file = $file;
+        $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
     }
 
     /**

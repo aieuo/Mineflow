@@ -11,6 +11,7 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use pocketmine\event\Event;
 use pocketmine\entity\Entity;
@@ -151,14 +152,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $targets;
     }
 
-    public function getTarget(): ?Entity {
-        return $this->target;
-    }
-
-    public function setTarget(?Entity $target): void {
-        $this->target = $target;
-    }
-
     /**
      * @return Trigger[]
      */
@@ -199,11 +192,11 @@ class Recipe implements \JsonSerializable, ActionContainer {
         // TODO: 整理する
         $targets = $this->getTargets($player);
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
+        if ($event instanceof Event) array_merge($variables, [new EventObjectVariable($event, "event")]);
         foreach ($targets as $target) {
             if ($target instanceof Entity) $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
             $recipe = clone $this;
-            $recipe->setTarget($target);
-            $recipe->addVariables($variables);
+            $recipe->setTarget($target)->addVariables($variables);
             $recipe->execute($target, $event, $args);
         }
         return true;
@@ -253,6 +246,15 @@ class Recipe implements \JsonSerializable, ActionContainer {
             $this->sourceRecipe->resume();
         }
         return true;
+    }
+
+    public function getTarget(): ?Entity {
+        return $this->target;
+    }
+
+    public function setTarget(?Entity $target): self {
+        $this->target = $target;
+        return $this;
     }
 
     public function getLastActionResult(): ?bool {

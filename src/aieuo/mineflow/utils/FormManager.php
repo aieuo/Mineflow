@@ -25,6 +25,7 @@ class FormManager {
 
     public function __construct(Config $forms) {
         $this->config = $forms;
+        $this->config->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
     }
 
     public function saveAll() {
@@ -133,11 +134,9 @@ class FormManager {
                     }
                 }
                 $variable = new MapVariable([
-                    "data" => new ListVariable($dataVariables),
+                    "data" => new ListVariable($dataVariables, "data"),
+                    "selected" => new ListVariable($dropdownVariables, "selected"),
                 ], "form");
-                if (!empty($dropdownVariables)) {
-                    $variable->addValue(new ListVariable($dropdownVariables, "selected"));
-                }
                 break;
             default:
                 return [];

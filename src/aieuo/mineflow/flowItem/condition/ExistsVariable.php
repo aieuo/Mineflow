@@ -54,7 +54,7 @@ class ExistsVariable extends Condition {
         $helper = Main::getVariableHelper();
         $name = $origin->replaceVariables($this->getVariableName());
 
-        return $origin->getVariable($name) !== null or $helper->get($name) !== null;
+        return $origin->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

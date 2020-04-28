@@ -32,4 +32,9 @@ class LevelObjectVariable extends ObjectVariable {
         $value = $this->getValue();
         return $value;
     }
+
+    public function __toString() {
+        if (!empty($this->getShowString())) return $this->getShowString();
+        return $this->getLevel()->getFolderName();
+    }
 }
