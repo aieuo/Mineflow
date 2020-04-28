@@ -31,6 +31,11 @@ class RepeatAction extends Action implements ActionContainer {
     /** @var string */
     private $repeatCount = "1";
 
+    /** @var int  */
+    private $startIndex = 0;
+    /** @var string */
+    private $counterName = "i";
+
     /* @var bool */
     private $lastResult;
 
@@ -46,6 +51,24 @@ class RepeatAction extends Action implements ActionContainer {
 
     public function getRepeatCount(): string {
         return $this->repeatCount;
+    }
+
+    public function setStartIndex(int $startIndex): self {
+        $this->startIndex = $startIndex;
+        return $this;
+    }
+
+    public function getStartIndex(): int {
+        return $this->startIndex;
+    }
+
+    public function setCounterName(string $counterName): self {
+        $this->counterName = $counterName;
+        return $this;
+    }
+
+    public function getCounterName(): string {
+        return $this->counterName;
     }
 
     public function getDetail(): string {
@@ -69,8 +92,9 @@ class RepeatAction extends Action implements ActionContainer {
         $count = $origin->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 
+        $name = $this->counterName;
         for ($i=0; $i<(int)$count; $i++) {
-            $origin->addVariable(new NumberVariable($i, "i"));
+            $origin->addVariable(new NumberVariable($i + $this->startIndex, $name));
             foreach ($this->actions as $action) {
                 $this->lastResult = $action->parent($this)->execute($origin);
             }
@@ -139,13 +163,18 @@ class RepeatAction extends Action implements ActionContainer {
             $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);
         }
+
+        if (isset($contents[2])) $this->startIndex = $contents[2];
+        if (isset($contents[3])) $this->counterName = $contents[3];
         return $this;
     }
 
     public function serializeContents(): array {
         return  [
             $this->repeatCount,
-            $this->actions
+            $this->actions,
+            $this->startIndex,
+            $this->counterName
         ];
     }
 
