@@ -4,6 +4,9 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
@@ -18,6 +21,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\variable\ListVariable;
 use pocketmine\Player;
 
 class SendForm extends Action implements PlayerFlowItem {
@@ -63,6 +67,7 @@ class SendForm extends Action implements PlayerFlowItem {
 
         $name = $origin->replaceVariables($this->getFormName());
         $manager = Main::getFormManager();
+        $helper = Main::getVariableHelper();
         $form = $manager->getForm($name);
         if ($form === null) {
             throw new \UnexpectedValueException(Language::get("action.sendForm.notFound", [$this->getName()]));
@@ -72,6 +77,53 @@ class SendForm extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $form = clone $form;
+        $form->setTitle($origin->replaceVariables($form->getTitle()));
+        if ($form instanceof ModalForm) {
+            $form->setButton1($origin->replaceVariables($form->getButton1()));
+            $form->setButton2($origin->replaceVariables($form->getButton2()));
+        } elseif ($form instanceof ListForm) {
+            $form->setContent($origin->replaceVariables($form->getContent()));
+            $buttons = [];
+            foreach ($form->getButtons() as $button) {
+                if ($helper->isVariableString($button->getText())) {
+                    $variableName = substr($button->getText(), 1, -1);
+                    $variable = $origin->getVariable($variableName) ?? $helper->getNested($variableName);
+                    if ($variable instanceof ListVariable) {
+                        foreach ($variable->getValue() as $value) {
+                            $buttons[] = new Button((string)$value);
+                        }
+                    }
+                } else {
+                    $buttons[] = $button->setText($origin->replaceVariables($button->getText()));
+                }
+            }
+            $form->setButtons($buttons);
+        } elseif ($form instanceof CustomForm) {
+            $contents = $form->getContents();
+            foreach ($contents as $content) {
+                $content->setText($origin->replaceVariables($content->getText()));
+                if ($content instanceof Input) {
+                    $content->setPlaceholder($origin->replaceVariables($content->getPlaceholder()));
+                    $content->setDefault($origin->replaceVariables($content->getDefault()));
+                } elseif ($content instanceof Dropdown) {
+                    $options = [];
+                    foreach ($content->getOptions() as $option) {
+                        if ($helper->isVariableString($option)) {
+                            $variableName = substr($option, 1, -1);
+                            $variable = $origin->getVariable($variableName) ?? $helper->getNested($variableName);
+                            if ($variable instanceof ListVariable) {
+                                foreach ($variable->getValue() as $value) {
+                                    $options[] = $origin->replaceVariables($value);
+                                }
+                            }
+                        } else {
+                            $options[] = $origin->replaceVariables($option);
+                        }
+                    }
+                    $content->setOptions($options);
+                }
+            }
+        }
         $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
         return true;
     }
