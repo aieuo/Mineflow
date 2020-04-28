@@ -18,20 +18,8 @@ class CallRecipe extends ExecuteRecipe {
     protected $name = "action.callRecipe.name";
     protected $detail = "action.callRecipe.detail";
 
-    /** @var string[] */
-    private $args = [];
-
-    public function __construct(string $name = "", $args = []) {
-        parent::__construct($name);
-        $this->args = $args;
-    }
-
-    public function setArgs(array $args): void {
-        $this->args = $args;
-    }
-
-    public function getArgs(): array {
-        return $this->args;
+    public function __construct(string $name = "", string $args = "") {
+        parent::__construct($name, $args);
     }
 
     public function execute(Recipe $origin): bool {

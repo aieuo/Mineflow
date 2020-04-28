@@ -29,8 +29,12 @@ class ExecuteRecipe extends Action {
     /** @var string */
     private $recipeName;
 
-    public function __construct(string $name = "") {
+    /** @var string[] */
+    private $args = [];
+
+    public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;
+        $this->args = array_filter(array_map("trim", explode(",", $args)), function (string $t) { return $t !== ""; });
     }
 
     public function setRecipeName(string $name): self {
@@ -40,6 +44,14 @@ class ExecuteRecipe extends Action {
 
     public function getRecipeName(): string {
         return $this->recipeName;
+    }
+
+    public function setArgs(array $args): void {
+        $this->args = $args;
+    }
+
+    public function getArgs(): array {
+        return $this->args;
     }
 
     public function isDataValid(): bool {
@@ -66,8 +78,20 @@ class ExecuteRecipe extends Action {
         }
 
         $recipe = clone $recipe;
+
+        $helper = Main::getVariableHelper();
+        $args = [];
+        foreach ($this->getArgs() as $arg) {
+            if (!$helper->isVariableString($arg)) {
+                $args[] = $helper->replaceVariables($arg, $origin->getVariables());
+                continue;
+            }
+            $arg = $origin->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
+            $args[] = $arg;
+        }
+
         $recipe->addVariables($origin->getVariables());
-        $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables());
+        $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables(), null, $args);
         return true;
     }
 
@@ -76,6 +100,7 @@ class ExecuteRecipe extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.executeRecipe.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getRecipeName()),
+                new Input("@action.callRecipe.form.args", Language::get("form.example", ["{target}, 1, aieuo"]), $default[1] ?? implode(", ", $this->getArgs())),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -85,16 +110,17 @@ class ExecuteRecipe extends Action {
         if ($data[1] === "") {
             $errors = [["@form.insufficient", 1]];
         }
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
         if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setRecipeName($content[0]);
+        $this->setArgs($content[1] ?? "");
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getRecipeName()];
+        return [$this->getRecipeName(), $this->getArgs()];
     }
 }
