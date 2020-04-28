@@ -177,7 +177,7 @@ class VariableHelper {
 
             $class = get_class($action);
             /** @var Action $newAction */
-            $newAction = new $class(...array_map("trim", explode(",", $parameters)));
+            $newAction = new $class(...array_filter(array_map("trim", explode(",", $parameters)), function ($t) { return $t !== ""; }));
             $newAction->parent($origin)->execute($origin);
             $result = $newAction->getReturnValue();
             $string = str_replace("{".$replace."}", $result, $string);
