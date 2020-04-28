@@ -205,6 +205,8 @@ class CustomFormForm {
                     case 1:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendModalFormMenu($player, $form);
+                        })->onClose(function (Player $player) use ($form) {
+                            $this->sendModalFormMenu($player, $form);
                         })->show($player);
                         break;
                     case 2:
