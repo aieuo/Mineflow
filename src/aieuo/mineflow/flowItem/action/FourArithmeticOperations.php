@@ -30,6 +30,7 @@ class FourArithmeticOperations extends Action {
     const SUBTRACTION = 1;
     const MULTIPLICATION = 2;
     const DIVISION = 3;
+    const MODULO = 4;
 
     /** @var string */
     private $value1;
@@ -40,7 +41,7 @@ class FourArithmeticOperations extends Action {
     /** @var string */
     private $resultName = "result";
 
-    private $operatorSymbols = ["+", "-", "*", "/"];
+    private $operatorSymbols = ["+", "-", "*", "/", "％"];
 
     /* @var string */
     private $lastResult;
@@ -120,6 +121,12 @@ class FourArithmeticOperations extends Action {
                     throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("variable.number.div.0")]));
                 }
                 $result = (float)$value1 / (float)$value2;
+                break;
+            case self::MODULO:
+                if ((float)$value2 == 0) {
+                    throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("variable.number.div.0")]));
+                }
+                $result = (float)$value1 % (float)$value2;
                 break;
             default:
                 throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
