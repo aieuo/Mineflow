@@ -38,6 +38,7 @@ use pocketmine\entity\Entity;
 use pocketmine\block\Block;
 use pocketmine\Server;
 use pocketmine\Player;
+use pocketmine\tile\Sign;
 
 class DefaultVariables {
 
@@ -67,7 +68,14 @@ class DefaultVariables {
     }
 
     public static function getBlockVariables(Block $block, string $name = "block"): array {
-        return [$name => new BlockObjectVariable($block, $name, $block->getId().":".$block->getDamage())];
+        $variables = [$name => new BlockObjectVariable($block, $name, $block->getId().":".$block->getDamage())];
+        $tile = $block->level->getTile($block);
+        if ($tile instanceof Sign) {
+            $variables["sign_lines"] = new ListVariable(array_map(function (string $text) {
+                return new StringVariable($text);
+            }, $tile->getText()), "sign_lines");
+        }
+        return $variables;
     }
 
     public static function getCommandVariables(string $command): array {
