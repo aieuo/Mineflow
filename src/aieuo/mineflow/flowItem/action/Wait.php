@@ -63,7 +63,7 @@ class Wait extends Action {
             function (int $currentTick) use ($origin): void {
                 $origin->resume();
             }
-        ), floatval($time) * 20);
+        ), intval(floatval($time) * 20));
         return true;
     }
 
