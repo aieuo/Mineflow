@@ -19,21 +19,10 @@ class EventCancel extends Action {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    /** @var Event */
-    private $event;
-
-    public function getEvent(): ?Event {
-        return $this->event;
-    }
-
-    public function setEvent(?Event $event) {
-        $this->event = $event;
-    }
-
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
-        $event = $this->getEvent();
+        $event = $origin->getEvent();
         if (!($event instanceof Cancellable)) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.eventCancel.notCancelable"]]));
         }

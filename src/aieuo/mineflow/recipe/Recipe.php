@@ -76,6 +76,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /* @var array */
     private $returnValues = [];
 
+    /** @var null|Event */
+    private $event = null;
+
     public function __construct(string $name, string $group = "", string $author = "") {
         $this->name = $name;
         $this->author = $author;
@@ -188,6 +191,15 @@ class Recipe implements \JsonSerializable, ActionContainer {
         }
     }
 
+    public function setEvent(?Event $event): self {
+        $this->event = $event;
+        return $this;
+    }
+
+    public function getEvent(): ?Event {
+        return $this->event;
+    }
+
     public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
         // TODO: 整理する
         $targets = $this->getTargets($player);
@@ -196,13 +208,13 @@ class Recipe implements \JsonSerializable, ActionContainer {
         foreach ($targets as $target) {
             if ($target instanceof Entity) $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
             $recipe = clone $this;
-            $recipe->setTarget($target)->addVariables($variables);
-            $recipe->execute($target, $event, $args);
+            $recipe->setTarget($target)->setEvent($event)->addVariables($variables);
+            $recipe->execute($target, $args);
         }
         return true;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, array $args = [], int $start = 0): bool {
+    public function execute(?Entity $target, array $args = [], int $start = 0): bool {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {
@@ -223,7 +235,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
             if ($this->exit) break;
 
             $action = $actions[$i];
-            if ($action instanceof EventCancel) $action->setEvent($event);
             try {
                 $this->lastResult = $action->parent($this)->execute($this);
             } catch (\UnexpectedValueException $e) {
@@ -233,7 +244,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
             }
 
             if ($this->wait) {
-                $this->last = [$target, $event, $args, $i + 1];
+                $this->last = [$target, $args, $i + 1];
                 return true;
             }
         }
@@ -245,6 +256,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
             }
             $this->sourceRecipe->resume();
         }
+
+        $this->event = null;
         return true;
     }
 
