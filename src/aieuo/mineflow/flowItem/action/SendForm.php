@@ -94,7 +94,7 @@ class SendForm extends Action implements PlayerFlowItem {
                         }
                     }
                 } else {
-                    $buttons[] = $button->setText($origin->replaceVariables($button->getText()));
+                    $buttons[] = new Button($origin->replaceVariables($button->getText()));
                 }
             }
             $form->setButtons($buttons);

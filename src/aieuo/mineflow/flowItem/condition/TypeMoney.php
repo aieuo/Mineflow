@@ -22,7 +22,7 @@ abstract class TypeMoney extends Condition {
     /** @var string */
     private $amount;
 
-    public function __construct(string $name = "{target.name}", int $amount = null) {
+    public function __construct(string $name = "{target.name}", string $amount = null) {
         $this->playerName = $name;
         $this->amount = (string)$amount;
     }

@@ -41,4 +41,10 @@ class PositionObjectVariable extends ObjectVariable {
         $value = $this->getValue();
         return $value;
     }
+
+    public function __toString() {
+        if (!empty($this->getShowString())) return $this->getShowString();
+        $position = $this->getPosition();
+        return $position->x.",".$position->y.",".$position->z.",".$position->level->getFolderName();
+    }
 }

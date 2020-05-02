@@ -46,7 +46,7 @@ class VariableHelper {
         if (!$this->exists($name)) return null;
 
         $data = $this->file->get($name);
-        return Variable::create($data["value"], $data["name"], $data["type"]);
+        return $data instanceof Variable ? $data : Variable::create($data["value"], $data["name"], $data["type"]);
     }
 
     /**

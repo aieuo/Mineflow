@@ -26,6 +26,10 @@ class IsFlying extends Condition implements PlayerFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
+    public function __construct(string $target = "target") {
+        $this->playerVariableName = $target;
+    }
+
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "";
     }
