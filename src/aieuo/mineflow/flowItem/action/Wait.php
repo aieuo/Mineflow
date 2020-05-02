@@ -55,7 +55,7 @@ class Wait extends Action {
         $this->throwIfCannotExecute();
 
         $time = $origin->replaceVariables($this->getTime());
-        $this->throwIfInvalidNumber($time, 1);
+        $this->throwIfInvalidNumber($time, 1/20);
 
         $origin->wait();
 
@@ -63,7 +63,7 @@ class Wait extends Action {
             function (int $currentTick) use ($origin): void {
                 $origin->resume();
             }
-        ), intval($time) * 20);
+        ), floatval($time) * 20);
         return true;
     }
 
