@@ -31,8 +31,8 @@ class RepeatAction extends Action implements ActionContainer {
     /** @var string */
     private $repeatCount = "1";
 
-    /** @var int  */
-    private $startIndex = 0;
+    /** @var string  */
+    private $startIndex = "0";
     /** @var string */
     private $counterName = "i";
 
@@ -53,12 +53,12 @@ class RepeatAction extends Action implements ActionContainer {
         return $this->repeatCount;
     }
 
-    public function setStartIndex(int $startIndex): self {
+    public function setStartIndex(string $startIndex): self {
         $this->startIndex = $startIndex;
         return $this;
     }
 
-    public function getStartIndex(): int {
+    public function getStartIndex(): string {
         return $this->startIndex;
     }
 
@@ -92,9 +92,12 @@ class RepeatAction extends Action implements ActionContainer {
         $count = $origin->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 
+        $start = $origin->replaceVariables($this->startIndex);
+        $this->throwIfInvalidNumber($start);
+
         $name = $this->counterName;
         for ($i=0; $i<(int)$count; $i++) {
-            $origin->addVariable(new NumberVariable($i + $this->startIndex, $name));
+            $origin->addVariable(new NumberVariable($i + $start, $name));
             foreach ($this->actions as $action) {
                 $this->lastResult = $action->parent($this)->execute($origin);
             }
@@ -164,7 +167,7 @@ class RepeatAction extends Action implements ActionContainer {
             $this->addAction($action);
         }
 
-        if (isset($contents[2])) $this->startIndex = $contents[2];
+        if (isset($contents[2])) $this->startIndex = (string)$contents[2];
         if (isset($contents[3])) $this->counterName = $contents[3];
         return $this;
     }
