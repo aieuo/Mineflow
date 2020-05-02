@@ -20,6 +20,9 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "nameTag":
                 $variable = new StringVariable($entity->getNameTag(), "nameTag");
                 break;
+            case "health":
+                $variable = new NumberVariable($entity->getHealth(), "health");
+                break;
             default:
                 return null;
         }
