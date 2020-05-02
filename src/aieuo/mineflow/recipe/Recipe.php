@@ -386,7 +386,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function getFileName(string $baseDir): string {
         if (!empty($this->group)) $baseDir .= $this->group."/";
-        return $baseDir.$this->getName().".json";
+        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", $this->getName());
+        return $baseDir.$name.".json";
     }
 
     public function save(string $dir): void {
