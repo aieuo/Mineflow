@@ -51,6 +51,8 @@ class ActionFactory {
         self::register(new RemoveItem);
         self::register(new RemoveItemAll);
         self::register(new SetItemDamage);
+        self::register(new SetItemCount);
+        self::register(new SetItemName);
         self::register(new SetItemLore);
         self::register(new AddEnchantment);
         self::register(new EquipArmor);
