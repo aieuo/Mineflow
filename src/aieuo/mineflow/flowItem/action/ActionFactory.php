@@ -50,7 +50,8 @@ class ActionFactory {
         self::register(new SetItemInHand);
         self::register(new RemoveItem);
         self::register(new RemoveItemAll);
-        self::register(new SetItemLore());
+        self::register(new SetItemDamage);
+        self::register(new SetItemLore);
         self::register(new AddEnchantment);
         self::register(new EquipArmor);
         self::register(new SetItem);
