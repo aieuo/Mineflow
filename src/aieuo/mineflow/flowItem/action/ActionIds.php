@@ -70,6 +70,7 @@ interface ActionIds {
 
     const FOUR_ARITHMETIC_OPERATIONS = "fourArithmeticOperations";
     const CALCULATE = "calculate";
+    const EDIT_STRING = "editString";
     const GET_PI = "getPi";
     const GET_E = "getE";
     const GENERATE_RANDOM_NUMBER = "random";
