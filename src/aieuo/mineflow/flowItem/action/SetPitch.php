@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
+use pocketmine\Player;
 
 class SetPitch extends Action implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -63,6 +64,7 @@ class SetPitch extends Action implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setRotation($entity->getYaw(), (float)$pitch);
+        if ($entity instanceof Player) $entity->teleport($entity, $entity->getYaw(), (float)$pitch);
         return true;
     }
 
