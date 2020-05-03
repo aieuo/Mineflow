@@ -42,7 +42,7 @@ class ComparisonString extends Condition {
     /** @var array */
     private $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
-    public function __construct(string $value1 = null, string $operator = null, string $value2 = null) {
+    public function __construct(string $value1 = "", string $operator = null, string $value2 = "") {
         $this->value1 = $value1;
         $this->operator = (int)($operator ?? self::EQUALS);
         $this->value2 = $value2;
@@ -54,11 +54,11 @@ class ComparisonString extends Condition {
         return $this;
     }
 
-    public function getValue1(): ?string {
+    public function getValue1(): string {
         return $this->value1;
     }
 
-    public function getValue2(): ?string {
+    public function getValue2(): string {
         return $this->value2;
     }
 
@@ -113,7 +113,14 @@ class ComparisonString extends Condition {
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
-        return (new CustomForm($this->getName()))->setContents([new Label($this->getDescription()), new Input("@condition.comparisonNumber.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()), new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()), new Input("@condition.comparisonNumber.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()), new Toggle("@form.cancelAndBack")])->addErrors($errors);
+        return (new CustomForm($this->getName()))
+            ->setContents([
+                new Label($this->getDescription()),
+                new Input("@condition.comparisonNumber.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
+                new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
+                new Input("@condition.comparisonNumber.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
+                new Toggle("@form.cancelAndBack")
+            ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
