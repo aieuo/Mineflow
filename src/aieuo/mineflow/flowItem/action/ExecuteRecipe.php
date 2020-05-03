@@ -116,7 +116,7 @@ class ExecuteRecipe extends Action {
     public function loadSaveData(array $content): Action {
         if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setRecipeName($content[0]);
-        $this->setArgs($content[1] ?? "");
+        $this->setArgs($content[1] ?? []);
         return $this;
     }
 
