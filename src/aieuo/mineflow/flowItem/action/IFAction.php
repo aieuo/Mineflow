@@ -55,11 +55,9 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     }
 
     public function execute(Recipe $origin): bool {
-        $matched = true;
         foreach ($this->conditions as $condition) {
-            if (!$condition->execute($origin)) $matched = false;
+            if (!$condition->execute($origin)) return false;
         }
-        if (!$matched) return false;
 
         foreach ($this->actions as $action) {
             $this->lastResult = $action->parent($this)->execute($origin);

@@ -38,12 +38,10 @@ class AndScript extends Condition implements ConditionContainer {
     }
 
     public function execute(Recipe $origin): bool {
-        $matched = true;
         foreach ($this->conditions as $condition) {
-            $result = $condition->execute($origin);
-            if (!$result) $matched = false;
+            if (!$condition->execute($origin)) return false;
         }
-        return $matched;
+        return true;
     }
 
     public function hasCustomMenu(): bool {

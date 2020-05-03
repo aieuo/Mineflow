@@ -21,11 +21,9 @@ class ORScript extends AndScript {
     }
 
     public function execute(Recipe $origin): bool {
-        $matched = false;
         foreach ($this->getConditions() as $condition) {
-            $result = $condition->execute($origin);
-            if ($result) $matched = true;
+            if ($condition->execute($origin)) return true;
         }
-        return $matched;
+        return false;
     }
 }

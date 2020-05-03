@@ -29,12 +29,9 @@ class ElseifAction extends IFAction {
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return true;
 
-        $matched = true;
         foreach ($this->getConditions() as $condition) {
-            $result = $condition->execute($origin);
-            if (!$result) $matched = false;
+            if (!$condition->execute($origin)) return false;
         }
-        if (!$matched) return false;
 
         foreach ($this->getActions() as $action) {
             $this->lastResult = $action->parent($this)->execute($origin);
