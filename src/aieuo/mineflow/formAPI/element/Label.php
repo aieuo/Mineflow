@@ -10,7 +10,7 @@ class Label extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->reflectHighlight($this->checkTranslate($this->text)),
+            "text" => str_replace("\\n", "\n", $this->reflectHighlight($this->checkTranslate($this->text))),
         ];
     }
 }

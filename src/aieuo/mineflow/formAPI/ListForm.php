@@ -78,7 +78,7 @@ class ListForm extends Form {
         $form = [
             "type" => "form",
             "title" => $this->checkTranslate($this->title),
-            "content" => $this->checkTranslate($this->content),
+            "content" => str_replace("\\n", "\n", $this->checkTranslate($this->content)),
             "buttons" => $this->buttons
         ];
         $form = $this->reflectErrors($form);

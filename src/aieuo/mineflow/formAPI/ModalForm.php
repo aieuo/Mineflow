@@ -65,9 +65,9 @@ class ModalForm extends Form {
         $form = [
             "type" => self::MODAL_FORM,
             "title" => $this->checkTranslate($this->title),
-            "content" => $this->checkTranslate($this->content),
-            "button1" => $this->checkTranslate($this->button1),
-            "button2" => $this->checkTranslate($this->button2)
+            "content" => str_replace("\\n", "\n", $this->checkTranslate($this->content)),
+            "button1" => str_replace("\\n", "\n", $this->checkTranslate($this->button1)),
+            "button2" => str_replace("\\n", "\n", $this->checkTranslate($this->button2))
         ];
         $form = $this->reflectErrors($form);
         return $form;
