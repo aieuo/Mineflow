@@ -300,6 +300,8 @@ class CustomFormForm {
                     case 1:
                         $form->onReceive(function (Player $player) use ($form) {
                             $this->sendListFormMenu($player, $form);
+                        })->onClose(function (Player $player) use ($form) {
+                            $this->sendListFormMenu($player, $form);
                         })->show($player);
                         return;
                     case 2:
@@ -381,6 +383,8 @@ class CustomFormForm {
                         return;
                     case 1:
                         $form->onReceive(function (Player $player) use ($form) {
+                            $this->sendCustomFormMenu($player, $form);
+                        })->onClose(function (Player $player) use ($form) {
                             $this->sendCustomFormMenu($player, $form);
                         })->show($player);
                         return;
