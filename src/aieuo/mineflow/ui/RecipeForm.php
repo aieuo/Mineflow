@@ -173,7 +173,7 @@ class RecipeForm {
 
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []) {
         $detail = trim($recipe->getDetail());
-        (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getName()])))
+        (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getPathname()])))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
                 new Button("@form.back"),

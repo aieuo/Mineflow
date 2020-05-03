@@ -40,7 +40,7 @@ class TriggerHolder {
 
     public function removeRecipe(Trigger $trigger, Recipe $recipe): void {
         $container = $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()];
-        $container->removeRecipe($recipe->getName());
+        $container->removeRecipe($recipe->getPathname());
         if ($container->getRecipeCount() === 0) {
             unset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()]);
         }

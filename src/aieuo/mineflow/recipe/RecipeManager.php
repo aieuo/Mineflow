@@ -38,6 +38,13 @@ class RecipeManager {
         foreach($files as $file) {
             /** @var \SplFileInfo $file */
             $pathname = $file->getPathname();
+            $group = str_replace(
+                str_replace("\\", "/", substr($this->getSaveDir(), 0, -1)),
+                "",
+                str_replace("\\", "/", $file->getPath())
+            );
+            if ($group !== "") $group = substr($group, 1);
+
             $data = json_decode(file_get_contents($pathname), true);
             if ($data === null) {
                 Logger::warning(Language::get("recipe.json.decode.failed", [$pathname, json_last_error_msg()]));
@@ -49,7 +56,7 @@ class RecipeManager {
                 continue;
             }
 
-            $recipe = new Recipe($data["name"], $data["group"] ?? "", $data["author"] ?? "");
+            $recipe = new Recipe($data["name"], $group, $data["author"] ?? "");
             try {
                 $recipe->loadSaveData($data["actions"]);
             } catch (\InvalidArgumentException $e) {

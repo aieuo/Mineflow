@@ -22,7 +22,7 @@ class RecipeContainer {
     }
 
     public function addRecipe(Recipe $recipe): void {
-        $this->recipes[$recipe->getName()] = $recipe;
+        $this->recipes[$recipe->getPathname()] = $recipe;
         $this->changed = true;
     }
 

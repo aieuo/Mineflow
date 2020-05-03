@@ -93,6 +93,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->name;
     }
 
+    public function getPathname() {
+        return empty($this->getGroup()) ? $this->getName() : ($this->getGroup()."/".$this->getName());
+    }
+
     public function getContainerName(): string {
         return $this->getName();
     }
@@ -239,7 +243,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 $this->lastResult = $action->parent($this)->execute($this);
             } catch (\UnexpectedValueException $e) {
                 if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $target);
-                Logger::warning(Language::get("recipe.execute.failed", [$this->getName(), $action->getName()]), $target);
+                Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $action->getName()]), $target);
                 return false;
             }
 
@@ -385,8 +389,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
     }
 
     public function getFileName(string $baseDir): string {
-        if (!empty($this->group)) $baseDir .= $this->group."/";
+        $group = preg_replace("#[.¥:?<>|*\"]#u", "", $this->getGroup());
         $name = preg_replace("#[.¥/:?<>|*\"]#u", "", $this->getName());
+        if (!empty($group)) $baseDir .= $group."/";
         return $baseDir.$name.".json";
     }
 
