@@ -68,6 +68,7 @@ interface ActionIds {
     const ADD_PARTICLE = "addParticle";
 
     const EXECUTE_RECIPE = "executeRecipe";
+    const EXECUTE_IF_CHAIN = "executeIFChain";
     const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";
     const CALL_RECIPE = "callRecipe";
 
@@ -107,4 +108,6 @@ interface ActionIds {
     const SEND_INPUT = "input";
     const SEND_MENU = "select";
     const SEND_SLIDER = "slider";
+
+    const REPLENISH_RESOURCE = "replenishResource";
 }

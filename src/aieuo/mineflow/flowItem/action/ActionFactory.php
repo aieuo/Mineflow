@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\economy\Economy;
+use pocketmine\Server;
 
 class ActionFactory {
     /** @var Action[] */
@@ -59,13 +60,6 @@ class ActionFactory {
         self::register(new SetItem);
         self::register(new ClearInventory);
         self::register(new GetInventoryContents);
-        /* money */
-        if (Economy::isPluginLoaded()) {
-            self::register(new AddMoney);
-            self::register(new TakeMoney);
-            self::register(new SetMoney);
-            self::register(new GetMoney);
-        }
         /* script */
         self::register(new IFAction);
         self::register(new ElseifAction);
@@ -111,6 +105,19 @@ class ActionFactory {
         /* level */
         self::register(new AddParticle);
         self::register(new PlaySoundAt);
+        /* other plugins */
+        if (Economy::isPluginLoaded()) {
+            self::register(new AddMoney);
+            self::register(new TakeMoney);
+            self::register(new SetMoney);
+            self::register(new GetMoney);
+        }
+        if (Server::getInstance()->getPluginManager()->getPlugin("if") !== null) {
+            self::register(new ExecuteIFChain);
+        }
+        if (Server::getInstance()->getPluginManager()->getPlugin("ReplenishResources") !== null) {
+            self::register(new ReplenishResource);
+        }
     }
 
     /**
