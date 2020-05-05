@@ -29,7 +29,7 @@ class FormTriggerForm {
                 $form = Main::getFormManager()->getForm($trigger->getKey());
                 if ($form instanceof ListForm) {
                     $button = $form->getButtonById($trigger->getSubKey());
-                    $content =  Language::get("trigger.form.button", [$button instanceof Button ? $button->getType() : ""]);
+                    $content =  Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
                 } else {
                     $content =  "";
                 }

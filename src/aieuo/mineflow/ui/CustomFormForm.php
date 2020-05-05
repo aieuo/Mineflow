@@ -21,7 +21,6 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\variable\DefaultVariables;
 use pocketmine\Player;
 
 class CustomFormForm {
@@ -724,7 +723,7 @@ class CustomFormForm {
                 default:
                     if ($form instanceof ListForm) {
                         $button = $form->getButtonById($key);
-                        return Language::get("trigger.form.button", [$button instanceof Button ? $button->getType() : ""]);
+                        return Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
                     } else {
                         return "";
                     }
