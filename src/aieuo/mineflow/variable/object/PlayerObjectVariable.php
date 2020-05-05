@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\Player;
@@ -18,6 +19,9 @@ class PlayerObjectVariable extends EntityObjectVariable {
                 break;
             case "hand":
                 $variable = new ItemObjectVariable($player->getInventory()->getItemInHand(), "hand");
+                break;
+            case "food":
+                $variable = new NumberVariable($player->getFood(), "food");
                 break;
             default:
                 return null;

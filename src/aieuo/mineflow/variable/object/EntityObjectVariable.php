@@ -23,6 +23,15 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "health":
                 $variable = new NumberVariable($entity->getHealth(), "health");
                 break;
+            case "maxHealth":
+                $variable = new NumberVariable($entity->getMaxHealth(), "maxHealth");
+                break;
+            case "yaw":
+                $variable = new NumberVariable($entity->getYaw(), "yaw");
+                break;
+            case "pitch":
+                $variable = new NumberVariable($entity->getPitch(), "pitch");
+                break;
             default:
                 return null;
         }

@@ -51,6 +51,7 @@ Available Keys (Let the name of the variable be "item".)
 - {item.id} -> id of item (number)
 - {item.damage} -> damage value of item (number)
 - {item.count} -> number of items (number)
+- {item.lore} -> lore of item (list)
 #### level
 A variable containing world data.  
 Available Keys (Let the name of the variable be "level".)  
@@ -72,12 +73,17 @@ Available Keys (Let the name of the variable be "entity".)
 This can use all the keys of the position variable.
 - {entity.id} -> entity id (number) 
 - {entity.nameTag} -> The name floating above the entity (string)
+- {entity.health} -> entity's current health (number)
+- {entity.maxHealth} -> entity's max health (number)
+- {entity.yaw} -> entity's yaw (number)
+- {entity.yaw} -> entity's pitch (number)
 #### player
 A variable containing player data.  
 Available Keys (Let the name of the variable be "player".)  
 This can use all the keys of the position variable and entity variable.
 - {player.name} -> name of player (string)
 - {player.hand} -> player's hand item (item)
+- {player.food} -> player's food level (number)
 #### block
 A variable containing block data.  
 Available Keys (Let the name of the variable be "block".)  
@@ -208,6 +214,7 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {item.id} -> アイテムのID (number)
 - {item.damage} ->　アイテムのダメージ値 (number)
 - {item.count} -> アイテムの個数 (number)
+- {item.lore} -> アイテムの説明 (list)
 #### level
 ワールドの情報を持っている変数  
 使用できるキー (変数名を「level」とします)  
@@ -229,12 +236,17 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 これはposition変数の全てのキーを使用することができます
 - {entity.id} -> エンティティのID (number) 
 - {entity.nameTag} -> エンティティの頭の上に浮いている名前 (string)
+- {entity.health} -> エンティティの体力 (number)
+- {entity.maxHealth} -> エンティティの最大体力 (number)
+- {entity.yaw} -> エンティティの体の向き (number)
+- {entity.yaw} -> エンティティの頭の向き (number)
 #### player
 プレイヤーの情報を持っている変数  
 使用できるキー (変数名を「player」とします)  
 これはposition変数とentity変数の全てのキーを使用することができます
 - {player.name} -> プレイヤーの名前 (string)
 - {player.hand} -> プレイヤーの手にあるアイテム (item)
+- {player.food} -> プレイヤーの空腹度 (number)
 #### block
 ブロックの情報を持っている変数  
 使用できるキー (変数名を「block」とします)  

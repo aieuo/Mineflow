@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -23,6 +24,11 @@ class ItemObjectVariable extends ObjectVariable {
                 break;
             case "count":
                 $variable = new NumberVariable($item->getCount(), "count");
+                break;
+            case "lore":
+                $variable = new ListVariable(array_map(function (string $lore) {
+                    return new StringVariable($lore);
+                }, $item->getLore()), "lore");
                 break;
             default:
                 return null;
