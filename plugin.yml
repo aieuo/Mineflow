@@ -7,6 +7,12 @@ mcpe-protocol:
   - 389
   - 390
 load: POSTWORLD
+softdepend:
+  - EconomyAPI
+  - MoneySystem
+  - PocketMoney
+  - if
+  - ReplenishResources
 author: aieuo
 permissions:
   mineflow.command.mineflow:
