@@ -2,6 +2,11 @@
 
 
 [![GitHub license](https://img.shields.io/badge/license-UIUC/NCSA-blue.svg)](https://github.com/aieuo/Mineflow/blob/master/LICENSE)
+[![](https://poggit.pmmp.io/shield.state/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
+[![](https://poggit.pmmp.io/shield.api/Mineflow)](https://poggit.pmmp.io/p/Mineflow)  
+
+[![](https://poggit.pmmp.io/shield.dl/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
+[![](https://poggit.pmmp.io/shield.dl.total/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
 
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
@@ -76,7 +81,7 @@ This can use all the keys of the position variable.
 - {entity.health} -> entity's current health (number)
 - {entity.maxHealth} -> entity's max health (number)
 - {entity.yaw} -> entity's yaw (number)
-- {entity.yaw} -> entity's pitch (number)
+- {entity.pitch} -> entity's pitch (number)
 #### player
 A variable containing player data.  
 Available Keys (Let the name of the variable be "player".)  
@@ -239,7 +244,7 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {entity.health} -> エンティティの体力 (number)
 - {entity.maxHealth} -> エンティティの最大体力 (number)
 - {entity.yaw} -> エンティティの体の向き (number)
-- {entity.yaw} -> エンティティの頭の向き (number)
+- {entity.pitch} -> エンティティの頭の向き (number)
 #### player
 プレイヤーの情報を持っている変数  
 使用できるキー (変数名を「player」とします)  
