@@ -63,7 +63,8 @@ abstract class Element implements \JsonSerializable {
      * @return String
      */
     public function getUUId(): string {
-        return !empty($this->uuid) ? $this->uuid : UUID::fromRandom()->toString();
+        if (empty($this->uuid)) $this->uuid = UUID::fromRandom()->toString();
+        return $this->uuid;
     }
 
     /**
