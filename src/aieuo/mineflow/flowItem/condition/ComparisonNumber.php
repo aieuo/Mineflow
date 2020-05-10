@@ -42,7 +42,7 @@ class ComparisonNumber extends Condition {
     /** @var array */
     private $operatorSymbols = ["==", "!=", ">", "<", ">=", "<="];
 
-    public function __construct(string $value1 = null, int $operator = self::EQUAL, string $value2 = null) {
+    public function __construct(string $value1 = "", int $operator = self::EQUAL, string $value2 = "") {
         $this->value1 = $value1;
         $this->operator = $operator;
         $this->value2 = $value2;
