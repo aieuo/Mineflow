@@ -36,4 +36,12 @@ interface ActionContainer extends FlowItemContainer {
      * @return bool|null
      */
     public function getLastActionResult(): ?bool;
+
+    public function wait();
+
+    public function resume();
+
+    public function exitRecipe();
+
+    public function break();
 }

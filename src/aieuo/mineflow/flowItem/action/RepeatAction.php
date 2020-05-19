@@ -15,7 +15,9 @@ use aieuo\mineflow\ui\ScriptForm;
 use aieuo\mineflow\variable\NumberVariable;
 
 class RepeatAction extends Action implements ActionContainer {
-    use ActionContainerTrait;
+    use ActionContainerTrait {
+        resume as traitResume;
+    }
 
     protected $id = self::ACTION_REPEAT;
 
@@ -38,6 +40,8 @@ class RepeatAction extends Action implements ActionContainer {
 
     /* @var bool */
     private $lastResult;
+    /* @var int */
+    private $lastIndex;
 
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
         $this->setActions($actions);
@@ -88,7 +92,7 @@ class RepeatAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin, int $startIndex = 0): bool {
         $count = $origin->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 
@@ -96,17 +100,28 @@ class RepeatAction extends Action implements ActionContainer {
         $this->throwIfInvalidNumber($start);
 
         $name = $this->counterName;
-        for ($i=0; $i<(int)$count; $i++) {
-            $origin->addVariable(new NumberVariable($i + $start, $name));
-            foreach ($this->actions as $action) {
-                $this->lastResult = $action->parent($this)->execute($origin);
-            }
+        $start = (int)$start + $startIndex;
+        $end = $start + (int)$count - $startIndex;
+
+        for ($i=$start; $i<$end; $i++) {
+            $this->lastIndex = $i;
+            $origin->addVariable(new NumberVariable($i, $name));
+            if (!$this->executeActions($origin, $this->getParent())) return false;
+            if ($this->isWaiting()) return true;
         }
+        $this->getParent()->resume();
         return true;
     }
 
-    public function getLastActionResult(): ?bool {
-        return $this->lastResult;
+    public function resume() {
+        $last = $this->last;
+        if ($last === null) return;
+
+        $this->wait = false;
+        $this->last = null;
+
+        $this->executeActions(...$last);
+        $this->execute($last[0], $this->lastIndex + 1);
     }
 
     public function hasCustomMenu(): bool {

@@ -62,13 +62,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /** @var array */
     private $variables = [];
 
-    /** @var bool */
-    private $wait = false;
-    /** @var array|null */
-    private $last = null;
-    /** @var bool */
-    private $exit = false;
-
     /** @var Recipe|null */
     private $sourceRecipe;
     /* @var array */
@@ -233,25 +226,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
             }
         }
 
-        $actions = $this->getActions();
-        $count = count($actions);
-        for ($i=$start; $i<$count; $i++) {
-            if ($this->exit) break;
-
-            $action = $actions[$i];
-            try {
-                $this->lastResult = $action->parent($this)->execute($this);
-            } catch (\UnexpectedValueException $e) {
-                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $target);
-                Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $action->getName()]), $target);
-                return false;
-            }
-
-            if ($this->wait) {
-                $this->last = [$target, $args, $i + 1];
-                return true;
-            }
-        }
+        $this->executeActions($this);
 
         if ($this->sourceRecipe instanceof Recipe) {
             foreach ($this->getReturnValues() as $value) {
@@ -329,24 +304,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function setSourceRecipe(?Recipe $recipe) {
         $this->sourceRecipe = $recipe;
-    }
-
-    public function wait() {
-        $this->wait = true;
-    }
-
-    public function resume() {
-        $last = $this->last;
-        if ($last === null) return;
-
-        $this->wait = false;
-        $this->last = null;
-
-        $this->execute(...$last);
-    }
-
-    public function exit() {
-        $this->exit = true;
     }
 
     /**

@@ -50,9 +50,7 @@ class ElseAction extends Action implements ActionContainer {
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return false;
 
-        foreach ($this->actions as $action) {
-            $this->lastResult = $action->parent($this)->execute($origin);
-        }
+        $this->executeActions($origin, $this->getParent());
         return true;
     }
 

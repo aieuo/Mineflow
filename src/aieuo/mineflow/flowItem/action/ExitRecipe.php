@@ -17,7 +17,7 @@ class ExitRecipe extends Action {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
     public function execute(Recipe $origin): bool {
-        $origin->exit();
+        $origin->exitRecipe();
         return true;
     }
 

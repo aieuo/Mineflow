@@ -21,7 +21,12 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\task\WhileActionTask;
 
 class WhileTaskAction extends Action implements ActionContainer, ConditionContainer {
-    use ActionContainerTrait, ConditionContainerTrait;
+    use ActionContainerTrait {
+        resume as traitResume;
+        wait as traitWait;
+        exitRecipe as traitExit;
+    }
+    use ConditionContainerTrait;
 
     protected $id = self::ACTION_WHILE_TASK;
 
@@ -43,9 +48,6 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
 
     /** @var int */
     private $loopCount = 0;
-
-    /* @var bool */
-    private $lastResult;
 
     public function __construct(array $conditions = [], array $actions = [], int $interval = 20, ?string $customName = null) {
         $this->setConditions($conditions);
@@ -111,14 +113,31 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
             }
         }
 
-        foreach ($this->actions as $action) {
-            $this->lastResult = $action->parent($this)->execute($origin);
+        if (!$this->executeActions($origin, $this->getParent())) {
+            Main::getInstance()->getScheduler()->cancelTask($this->taskId);
+            return;
         }
         $this->loopCount ++;
     }
 
-    public function getLastActionResult(): ?bool {
-        return $this->lastResult;
+    public function wait() {
+        Main::getInstance()->getScheduler()->cancelTask($this->taskId);
+        $this->traitWait();
+    }
+
+    public function resume() {
+        $last = $this->last;
+        if ($last === null) return;
+
+        $this->wait = false;
+        $this->last = null;
+
+        $this->execute($last[0]);
+    }
+
+    public function exitRecipe() {
+        Main::getInstance()->getScheduler()->cancelTask($this->taskId);
+        $this->traitExit();
     }
 
     public function hasCustomMenu(): bool {

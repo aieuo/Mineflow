@@ -57,11 +57,11 @@ class Wait extends Action {
         $time = $origin->replaceVariables($this->getTime());
         $this->throwIfInvalidNumber($time, 1/20);
 
-        $origin->wait();
+        $this->getParent()->wait();
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function (int $currentTick) use ($origin): void {
-                $origin->resume();
+            function (int $currentTick): void {
+                $this->getParent()->resume();
             }
         ), intval(floatval($time) * 20));
         return true;
