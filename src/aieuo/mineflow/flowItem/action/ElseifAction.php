@@ -33,9 +33,7 @@ class ElseifAction extends IFAction {
             if (!$condition->execute($origin)) return false;
         }
 
-        foreach ($this->getActions() as $action) {
-            $this->lastResult = $action->parent($this)->execute($origin);
-        }
+        $this->executeActions($origin, $this->getParent());
         return true;
     }
 }
