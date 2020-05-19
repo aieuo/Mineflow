@@ -312,10 +312,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
      */
     public function loadSaveData(array $contents): self {
         foreach ($contents as $i => $content) {
-            if ($content["type"] !== self::CONTENT_TYPE_ACTION) {
-                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
-            }
-
             try {
                 $action = Action::loadSaveDataStatic($content);
             } catch (\OutOfBoundsException $e) {

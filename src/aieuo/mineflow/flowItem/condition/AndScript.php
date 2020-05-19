@@ -87,10 +87,6 @@ class AndScript extends Condition implements ConditionContainer {
 
     public function loadSaveData(array $contents): Condition {
         foreach ($contents as $content) {
-            if ($content["type"] !== Recipe::CONTENT_TYPE_CONDITION) {
-                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
-            }
-
             $condition = Condition::loadSaveDataStatic($content);
             $this->addCondition($condition);
         }

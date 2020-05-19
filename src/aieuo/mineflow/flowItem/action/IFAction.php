@@ -113,19 +113,11 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     public function loadSaveData(array $contents): Action {
         if (!isset($contents[1])) throw new \OutOfBoundsException();
         foreach ($contents[0] as $i => $content) {
-            if ($content["type"] !== Recipe::CONTENT_TYPE_CONDITION) {
-                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
-            }
-
             $condition = Condition::loadSaveDataStatic($content);
             $this->addCondition($condition);
         }
 
         foreach ($contents[1] as $i => $content) {
-            if ($content["type"] !== Recipe::CONTENT_TYPE_ACTION) {
-                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
-            }
-
             $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);
         }

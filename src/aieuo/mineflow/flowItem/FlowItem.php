@@ -88,7 +88,6 @@ abstract class FlowItem implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         $data = [
-            "type" => $this->type,
             "id" => $this->getId(),
             "contents" => $this->serializeContents(),
         ];

@@ -101,10 +101,6 @@ class ElseAction extends Action implements ActionContainer {
 
     public function loadSaveData(array $contents): Action {
         foreach ($contents as $content) {
-            if ($content["type"] !== Recipe::CONTENT_TYPE_ACTION) {
-                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
-            }
-
             $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);
         }

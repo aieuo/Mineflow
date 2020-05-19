@@ -174,10 +174,6 @@ class RepeatAction extends Action implements ActionContainer {
         $this->setRepeatCount((string)$contents[0]);
 
         foreach ($contents[1] as $content) {
-            if ($content["type"] !== Recipe::CONTENT_TYPE_ACTION) {
-                throw new \InvalidArgumentException("invalid content type: \"{$content["type"]}\"");
-            }
-
             $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);
         }
