@@ -21,7 +21,10 @@ abstract class TypeGetMathVariable extends Action {
 
     /** @var string */
     protected $resultName = "result";
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+
+    /** @var float|int */
+    protected $lastResult;
 
     public function __construct(?string $result = "") {
         $this->resultName = empty($result) ? $this->resultName : $result;
@@ -72,6 +75,6 @@ abstract class TypeGetMathVariable extends Action {
     }
 
     public function getReturnValue(): string {
-        return $this->getResultName();
+        return (string)$this->lastResult;
     }
 }

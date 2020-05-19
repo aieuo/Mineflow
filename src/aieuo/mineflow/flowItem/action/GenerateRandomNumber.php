@@ -70,7 +70,9 @@ class GenerateRandomNumber extends TypeGetMathVariable {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
 
-        $origin->addVariable(new NumberVariable(mt_rand((int)$min, (int)$max), $resultName));
+        $rand = mt_rand((int)$min, (int)$max);
+        $origin->addVariable(new NumberVariable($rand, $resultName));
+        $this->lastResult = $rand;
         return true;
     }
 
