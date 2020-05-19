@@ -91,6 +91,7 @@ interface ActionIds {
     const CREATE_BLOCK_VARIABLE = "createBlock";
     const GET_VARIABLE_NESTED = "getVariable";
     const COUNT_LIST_VARIABLE = "count";
+    const DELETE_LIST_VARIABLE_CONTENT = "removeContent";
 
     const ACTION_IF = "if";
     const ACTION_ELSEIF = "elseif";
