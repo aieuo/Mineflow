@@ -88,7 +88,7 @@ class FormManager {
         switch ($form) {
             case $form instanceof ModalForm:
                 $variable = new MapVariable([
-                    "data" => new NumberVariable($data ? 0 : 1),
+                    "data" => new StringVariable($data ? "true" : "false"),
                     "button1" => new MapVariable([
                         "selected" => new StringVariable($data ? "true" : "false"),
                         "text" => new StringVariable($form->getButton1()),
