@@ -47,12 +47,12 @@ class ExportForm {
                 }
                 $data -= 2;
 
-                $this->sendRecipeMenu($player, $recipes, $data);
+                $this->sendRecipeMenu($player, array_values($recipes), $data);
             })->addMessages($messages)->addArgs($recipes)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, array $recipes, int $index) {
-        $recipe = $recipes[$index];
+        $recipe = $recipes[$index]; //FIXME ? Undefined offset: 0
         (new ListForm($recipe->getName()))
             ->setContent("@form.selectButton")
             ->setButtons([
