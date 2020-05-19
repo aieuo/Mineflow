@@ -80,7 +80,6 @@ trait ActionContainerTrait {
             }
 
             if ($this->wait) {
-                if ($parent instanceof ActionContainer) var_dump($parent->getContainerName());
                 $this->last = [$recipe, $parent, $i + 1];
                 if ($parent instanceof ActionContainer) $parent->wait();
                 return true;

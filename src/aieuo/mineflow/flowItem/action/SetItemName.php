@@ -5,7 +5,6 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
@@ -14,8 +13,6 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
-use pocketmine\item\enchantment\Enchantment;
-use pocketmine\item\enchantment\EnchantmentInstance;
 
 class SetItemName extends Action implements ItemFlowItem {
     use ItemFlowItemTrait;

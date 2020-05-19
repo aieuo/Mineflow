@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\utils\Language;
-use pocketmine\event\Event;
 use pocketmine\event\Cancellable;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;

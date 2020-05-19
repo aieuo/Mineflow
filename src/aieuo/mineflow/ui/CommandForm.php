@@ -4,7 +4,6 @@ namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;

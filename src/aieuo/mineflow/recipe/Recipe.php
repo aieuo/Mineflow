@@ -5,7 +5,6 @@ namespace aieuo\mineflow\recipe;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\ActionContainerTrait;
-use aieuo\mineflow\flowItem\action\EventCancel;
 use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -18,7 +17,6 @@ use pocketmine\entity\Entity;
 use pocketmine\Server;
 use pocketmine\Player;
 use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\Main;
 
@@ -206,12 +204,12 @@ class Recipe implements \JsonSerializable, ActionContainer {
             if ($target instanceof Entity) $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
             $recipe = clone $this;
             $recipe->setTarget($target)->setEvent($event)->addVariables($variables);
-            $recipe->execute($target, $args);
+            $recipe->execute($args);
         }
         return true;
     }
 
-    public function execute(?Entity $target, array $args = [], int $start = 0): bool {
+    public function execute(array $args = []): bool {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {

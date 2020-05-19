@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Session;
 use pocketmine\Player;

@@ -9,7 +9,6 @@ use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\variable\ListVariable;

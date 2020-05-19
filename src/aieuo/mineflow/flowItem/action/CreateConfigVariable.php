@@ -11,9 +11,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\ConfigObjectVariable;
-use pocketmine\item\ItemFactory;
 
 class CreateConfigVariable extends Action {
 

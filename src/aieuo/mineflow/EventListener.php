@@ -3,12 +3,10 @@
 namespace aieuo\mineflow;
 
 use aieuo\mineflow\flowItem\action\SetSitting;
-use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\command\Command;
 use pocketmine\Server;
-use pocketmine\utils\Config;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\network\mcpe\protocol\InteractPacket;
 use pocketmine\event\server\DataPacketReceiveEvent;

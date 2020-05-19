@@ -15,7 +15,6 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\ObjectVariable;
 
 class SetConfigData extends Action implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;

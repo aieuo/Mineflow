@@ -4,7 +4,6 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;

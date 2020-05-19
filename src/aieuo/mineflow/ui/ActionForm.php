@@ -12,7 +12,6 @@ use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Button;

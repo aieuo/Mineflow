@@ -6,12 +6,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\ui\CustomFormForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
@@ -22,7 +19,6 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\ListVariable;
-use pocketmine\Player;
 
 class SendForm extends Action implements PlayerFlowItem {
     use PlayerFlowItemTrait;

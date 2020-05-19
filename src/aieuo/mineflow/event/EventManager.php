@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\event;
 
-use aieuo\mineflow\trigger\EventTriggers;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\event\block\BlockBreakEvent;

@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
