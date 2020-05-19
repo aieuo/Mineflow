@@ -74,6 +74,7 @@ interface ActionIds {
 
     const FOUR_ARITHMETIC_OPERATIONS = "fourArithmeticOperations";
     const CALCULATE = "calculate";
+    const CALCULATE2 = "calculate2";
     const EDIT_STRING = "editString";
     const GET_PI = "getPi";
     const GET_E = "getE";

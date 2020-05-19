@@ -78,6 +78,7 @@ class ActionFactory {
         /* calculation */
         self::register(new FourArithmeticOperations);
         self::register(new Calculate);
+        self::register(new Calculate2);
         self::register(new StringCalc);
         self::register(new GetPi);
         self::register(new GetE);

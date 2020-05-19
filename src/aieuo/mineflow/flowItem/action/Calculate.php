@@ -37,6 +37,11 @@ class Calculate extends Action {
     const CALC_ASIN = 8;
     const CALC_ACOS = 9;
     const CALC_ATAN = 10;
+    const CALC_DEG2RAD = 11;
+    const CALC_RAD2DEG = 12;
+    const CALC_FLOOR = 13;
+    const CALC_ROUND = 14;
+    const CALC_CEIL = 15;
 
     /** @var string */
     private $value;
@@ -45,14 +50,14 @@ class Calculate extends Action {
     /** @var string */
     private $resultName = "result";
 
-    private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)"];
+    private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
     /* @var string */
     private $lastResult;
 
-    public function __construct(string $value = "", int $operator = self::SQUARE, string $resultName = "result") {
+    public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
         $this->value = $value;
-        $this->operator = $operator;
+        $this->operator = (int)($operator ?? self::SQUARE);
         $this->resultName = $resultName;
     }
 
@@ -136,8 +141,23 @@ class Calculate extends Action {
             case self::CALC_ACOS:
                 $result = acos($value);
                 break;
-            case self::CALC_ATAN :
+            case self::CALC_ATAN:
                 $result = atan($value);
+                break;
+            case self::CALC_DEG2RAD:
+                $result = deg2rad($value);
+                break;
+            case self::CALC_RAD2DEG:
+                $result = rad2deg($value);
+                break;
+            case self::CALC_FLOOR:
+                $result = floor($value);
+                break;
+            case self::CALC_ROUND:
+                $result = round($value);
+                break;
+            case self::CALC_CEIL:
+                $result = ceil($value);
                 break;
             default:
                 throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
