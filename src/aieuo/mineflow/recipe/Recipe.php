@@ -62,6 +62,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var Recipe|null */
     private $sourceRecipe;
+    /* @var ActionContainer|null */
+    private $sourceContainer;
     /* @var array */
     private $arguments = [];
     /* @var array */
@@ -209,7 +211,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return true;
     }
 
-    public function execute(array $args = []): bool {
+    public function execute(array $args = [], int $start = 0): bool {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {
@@ -224,14 +226,14 @@ class Recipe implements \JsonSerializable, ActionContainer {
             }
         }
 
-        $this->executeActions($this);
+        $result = $this->executeActions($this, null, $start);
 
-        if ($this->sourceRecipe instanceof Recipe) {
+        if ($result and $this->sourceRecipe instanceof Recipe) {
             foreach ($this->getReturnValues() as $value) {
                 $variable = $this->getVariable($value);
                 if ($variable instanceof Variable) $this->sourceRecipe->addVariable($variable);
             }
-            $this->sourceRecipe->resume();
+            $this->sourceContainer->resume();
         }
 
         $this->event = null;
@@ -300,8 +302,14 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return Main::getVariableHelper()->replaceVariablesAndFunctions($text, $this);
     }
 
-    public function setSourceRecipe(?Recipe $recipe) {
+    public function setSourceRecipe(?Recipe $recipe): self {
         $this->sourceRecipe = $recipe;
+        return $this;
+    }
+
+    public function setSourceContainer(?ActionContainer $container): self {
+        $this->sourceContainer = $container;
+        return $this;
     }
 
     /**

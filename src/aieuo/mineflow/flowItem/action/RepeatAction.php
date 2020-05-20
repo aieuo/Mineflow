@@ -107,18 +107,21 @@ class RepeatAction extends Action implements ActionContainer {
             $this->lastIndex = $i;
             $origin->addVariable(new NumberVariable($i, $name));
             if (!$this->executeActions($origin, $this->getParent())) return false;
-            if ($this->isWaiting()) return true;
+            if ($this->wait or $this->isWaiting()) return true;
         }
         $this->getParent()->resume();
         return true;
     }
 
     public function resume() {
-        $last = $this->last;
-        if ($last === null) return;
+        $last = $this->next;
 
         $this->wait = false;
-        $this->last = null;
+        $this->next = null;
+
+        if (!$this->isWaiting()) return;
+
+        $this->waiting = false;
 
         $this->executeActions(...$last);
         $this->execute($last[0], $this->lastIndex + 1);

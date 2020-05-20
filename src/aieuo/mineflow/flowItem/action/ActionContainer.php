@@ -9,7 +9,8 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
  * @package aieuo\mineflow\flowItem\action
  *
  * @property bool $wait
- * @property array|null $last
+ * @property bool $waiting
+ * @property array|null $next
  * @property bool $exit
  * @property bool $break
  *

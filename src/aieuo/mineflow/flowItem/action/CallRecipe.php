@@ -47,8 +47,8 @@ class CallRecipe extends ExecuteRecipe {
             $arg = $origin->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
             $args[] = $arg;
         }
-        $origin->wait();
-        $recipe->setSourceRecipe($origin);
+        $this->getParent()->wait();
+        $recipe->setSourceRecipe($origin)->setSourceContainer($this->getParent());
         $recipe->executeAllTargets($origin->getTarget(), [], null, $args);
         return true;
     }

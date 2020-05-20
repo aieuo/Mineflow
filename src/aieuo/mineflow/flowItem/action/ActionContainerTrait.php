@@ -13,8 +13,10 @@ trait ActionContainerTrait {
 
     /** @var bool */
     private $wait = false;
+    /** @var bool */
+    private $waiting = false;
     /** @var array|null */
-    private $last = null;
+    private $next = null;
     /** @var bool */
     private $exit = false;
     /** @var bool */
@@ -64,6 +66,8 @@ trait ActionContainerTrait {
         $actions = $this->getActions();
         $count = count($actions);
         for ($i=$start; $i<$count; $i++) {
+            $this->next = [$recipe, $parent, $i + 1];
+
             if ($this->exit) {
                 if ($parent instanceof ActionContainer) $parent->exitRecipe();
                 break;
@@ -80,9 +84,9 @@ trait ActionContainerTrait {
             }
 
             if ($this->wait) {
-                $this->last = [$recipe, $parent, $i + 1];
+                $this->waiting = true;
                 if ($parent instanceof ActionContainer) $parent->wait();
-                return true;
+                return false;
             }
         }
         return true;
@@ -93,19 +97,23 @@ trait ActionContainerTrait {
     }
 
     public function isWaiting(): bool {
-        return $this->wait;
+        return $this->waiting;
     }
 
     public function resume() {
-        $last = $this->last;
-        if ($last === null) return;
-
+        $next = $this->next;
         $this->wait = false;
-        $this->last = null;
+        $this->next = null;
+        if (!$this->isWaiting()) return;
 
-        $this->executeActions(...$last);
+        $this->waiting = false;
 
-        if ($last[1] instanceof ActionContainer) $last[1]->resume();
+        if ($this instanceof Recipe) {
+            $this->execute([], $next[2]);
+        } else {
+            $this->executeActions(...$next);
+            if ($next[1] instanceof ActionContainer) $next[1]->resume();
+        }
     }
 
     public function exitRecipe() {

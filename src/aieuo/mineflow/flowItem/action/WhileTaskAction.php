@@ -108,7 +108,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
 
             if ($result !== true) {
                 Main::getInstance()->getScheduler()->cancelTask($this->taskId);
-                if ($origin instanceof Recipe) $origin->resume();
+                $this->getParent()->resume();
                 return;
             }
         }
@@ -122,15 +122,19 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
 
     public function wait() {
         Main::getInstance()->getScheduler()->cancelTask($this->taskId);
+        $this->waiting = true;
         $this->traitWait();
     }
 
     public function resume() {
-        $last = $this->last;
-        if ($last === null) return;
+        $last = $this->next;
 
         $this->wait = false;
-        $this->last = null;
+        $this->next = null;
+
+        if (!$this->isWaiting()) return;
+
+        $this->waiting = false;
 
         $this->execute($last[0]);
     }
