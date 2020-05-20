@@ -76,7 +76,7 @@ class Scoreboard {
             $entry = new ScorePacketEntry();
             $entry->objectiveName = $this->id;
             $entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
-            $entry->customName = $name;
+            $entry->customName = (string)$name;
             $entry->score = $score;
             $entry->scoreboardId = $this->scoreIds[$name];
             $pk->entries[] = $entry;
