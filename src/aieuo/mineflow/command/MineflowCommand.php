@@ -7,18 +7,24 @@ use aieuo\mineflow\ui\CustomFormForm;
 use aieuo\mineflow\ui\SettingForm;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
+use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\ui\HomeForm;
 use aieuo\mineflow\command\subcommand\RecipeCommand;
 use aieuo\mineflow\command\subcommand\LanguageCommand;
 use aieuo\mineflow\command\subcommand\CustomCommandCommand;
+use pocketmine\plugin\Plugin;
 
-class MineflowCommand extends Command {
+class MineflowCommand extends Command implements PluginIdentifiableCommand {
 
     public function __construct() {
         parent::__construct("mineflow", Language::get("command.mineflow.description"), Language::get("command.mineflow.usage"), ["mf"]);
         $this->setPermission('mineflow.command.mineflow');
+    }
+
+    public function getPlugin(): Plugin {
+        return Main::getInstance();
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
