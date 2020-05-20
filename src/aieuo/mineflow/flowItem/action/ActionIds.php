@@ -38,6 +38,8 @@ interface ActionIds {
     const SET_GAMEMODE = "setGamemode";
     const SHOW_BOSSBAR = "showBossbar";
     const REMOVE_BOSSBAR = "removeBossbar";
+    const SHOW_SCOREBOARD = "showScoreboard";
+    const HIDE_SCOREBOARD = "hideScoreboard";
     const PLAY_SOUND = "playSound";
     const PLAY_SOUND_AT = "playSoundAt";
     const ADD_PERMISSION = "addPermission";
@@ -92,6 +94,7 @@ interface ActionIds {
     const GET_VARIABLE_NESTED = "getVariable";
     const COUNT_LIST_VARIABLE = "count";
     const DELETE_LIST_VARIABLE_CONTENT = "removeContent";
+    const CREATE_SCOREBOARD_VARIABLE = "createScoreboard";
 
     const ACTION_IF = "if";
     const ACTION_ELSEIF = "elseif";
@@ -112,4 +115,9 @@ interface ActionIds {
     const SEND_SLIDER = "slider";
 
     const REPLENISH_RESOURCE = "replenishResource";
+
+    const SET_SCOREBOARD_SCORE = "setScore";
+    const REMOVE_SCOREBOARD_SCORE = "addScore";
+    const INCREMENT_SCOREBOARD_SCORE = "incrementScore";
+    const DECREMENT_SCOREBOARD_SCORE = "decrementScore";
 }

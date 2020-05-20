@@ -18,6 +18,7 @@ class Category {
     const MATH = "math";
     const VARIABLE = "variable";
     const SCRIPT = "script";
+    const SCOREBOARD = "scoreboard";
 
 
     public static function getCategories(): array {
@@ -35,6 +36,7 @@ class Category {
             self::MATH,
             self::VARIABLE,
             self::FORM,
+            self::SCOREBOARD,
             self::PLUGIN,
         ];
     }

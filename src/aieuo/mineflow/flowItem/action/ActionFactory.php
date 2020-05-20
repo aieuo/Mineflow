@@ -42,6 +42,8 @@ class ActionFactory {
         self::register(new SetGamemode);
         self::register(new ShowBossbar);
         self::register(new RemoveBossbar);
+        self::register(new ShowScoreboard);
+        self::register(new HideScoreboard);
         self::register(new PlaySound);
         self::register(new AddPermission);
         self::register(new RemovePermission);
@@ -107,6 +109,12 @@ class ActionFactory {
         /* level */
         self::register(new AddParticle);
         self::register(new PlaySoundAt);
+        /* scoreboard */
+        self::register(new CreateScoreboardVariable);
+        self::register(new SetScoreboardScore);
+        self::register(new IncrementScoreboardScore);
+        self::register(new DecrementScoreboardScore);
+        self::register(new RemoveScoreboardScore);
         /* other plugins */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
