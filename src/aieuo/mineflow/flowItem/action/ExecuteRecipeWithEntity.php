@@ -60,7 +60,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         $variables = $origin->getVariables();
         $variables["target"] = $entity instanceof Player ? new PlayerObjectVariable($entity, "target", $entity->getName()) : new EntityObjectVariable($entity, "target", $entity->getNameTag());
         $recipe->addVariables($variables);
-        $recipe->execute($entity);
+        $recipe->setTarget($entity)->execute();
         return true;
     }
 
