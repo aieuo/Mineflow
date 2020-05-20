@@ -117,7 +117,7 @@ class VariableHelper {
     /**
      * 文字列の中にある変数を置き換える
      * @param string $string
-     * @param array $variables
+     * @param Variable[] $variables
      * @param bool $global
      * @return string
      */
@@ -188,7 +188,7 @@ class VariableHelper {
      * 変数を置き換える
      * @param string $string
      * @param string $replace
-     * @param array $variables
+     * @param Variable[] $variables
      * @param bool $global
      * @return string
      */

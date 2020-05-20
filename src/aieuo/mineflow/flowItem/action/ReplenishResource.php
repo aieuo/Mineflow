@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedClassInspection */
 
 namespace aieuo\mineflow\flowItem\action;
 
@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\ReplenishResourcesAPI;
 use pocketmine\Server;
+
 
 class ReplenishResource extends Action implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -51,6 +52,7 @@ class ReplenishResource extends Action implements PositionFlowItem {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.otherPlugin.notFound", ["ReplenishResources"])]));
         }
         $api = ReplenishResourcesAPI::getInstance();
+        /** @noinspection PhpUndefinedMethodInspection */
         $api->replenish($position);
         return true;
     }

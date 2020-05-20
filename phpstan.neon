@@ -1,0 +1,5 @@
+parameters:
+    checkMissingIterableValueType: false
+    excludes_analyse:
+    - %currentWorkingDirectory%/src/aieuo/mineflow/flowItem/action/ReplenishResource.php
+    - %currentWorkingDirectory%/src/aieuo/mineflow/flowItem/action/ExecuteIFChain.php

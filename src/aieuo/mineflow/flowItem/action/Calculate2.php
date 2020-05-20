@@ -133,7 +133,7 @@ class Calculate2 extends Action {
                 $result = atan2($value1, $value2);
                 break;
             case self::CALC_ROUND:
-                $result = round($value1, $value2);
+                $result = round($value1, (int)$value2);
                 break;
             default:
                 throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));

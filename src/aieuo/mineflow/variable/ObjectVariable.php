@@ -6,7 +6,7 @@ class ObjectVariable extends Variable {
 
     public $type = Variable::OBJECT;
 
-    /* @var string|null */
+    /* @var string|null $showString　*/
     private $showString;
 
     /**

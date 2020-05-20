@@ -12,12 +12,10 @@ abstract class Variable {
 
     /** @var string 変数の名前 */
     protected $name;
-    /** @var string|int|array|object 変数の値 */
+    /** @var string|int|Variable[]|object 変数の値 */
     protected $value;
     /** @var int 変数の型 */
     public $type;
-    /** @var array 型の一覧 */
-    public $typeNames = ["string", "number", "list", "map", "object"];
 
     /**
      * @param mixed $value
@@ -71,7 +69,7 @@ abstract class Variable {
     }
 
     /**
-     * @return string|int|array|object
+     * @return string|int|Variable[]|object
      */
     public function getValue() {
         return $this->value;

@@ -4,6 +4,17 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItemContainer;
 
+/**
+ * Interface ActionContainer
+ * @package aieuo\mineflow\flowItem\action
+ *
+ * @property bool $wait
+ * @property array|null $last
+ * @property bool $exit
+ * @property bool $break
+ *
+ * @property bool $lastResult
+ */
 interface ActionContainer extends FlowItemContainer {
 
     /**
