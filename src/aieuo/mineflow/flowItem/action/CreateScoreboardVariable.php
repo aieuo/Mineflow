@@ -24,7 +24,7 @@ class CreateScoreboardVariable extends Action {
 
     protected $name = "action.createScoreboardVariable.name";
     protected $detail = "action.createScoreboardVariable.detail";
-    protected $detailDefaultReplace = ["id", "displayName", "type"];
+    protected $detailDefaultReplace = ["result", "id", "displayName", "type"];
 
     protected $category = Category::SCOREBOARD;
 
