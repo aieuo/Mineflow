@@ -117,6 +117,7 @@ interface ActionIds {
     const REPLENISH_RESOURCE = "replenishResource";
 
     const SET_SCOREBOARD_SCORE = "setScore";
+    const SET_SCOREBOARD_SCORE_NAME = "setScoreName";
     const REMOVE_SCOREBOARD_SCORE = "addScore";
     const INCREMENT_SCOREBOARD_SCORE = "incrementScore";
     const DECREMENT_SCOREBOARD_SCORE = "decrementScore";

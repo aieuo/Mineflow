@@ -41,16 +41,31 @@ class Scoreboard {
         return $this->scores;
     }
 
-    public function setScore(string $name, int $value): self {
+    public function setScore(string $name, int $value, int $id = null): self {
         $this->scores[$name] = $value;
-        if (!isset($this->scoreIds[$name])) $this->scoreIds[$name] = $this->scoreId ++;
+        if (!isset($this->scoreIds[$name])) $this->scoreIds[$name] = $id ?? $this->scoreId ++;
 
-        $this->updateScoreToAllPlayer($name, $value);
+        $this->updateScoreToAllPlayer($name, $value, $this->scoreIds[$name]);
+        return $this;
+    }
+
+    public function setScoreName(string $name, int $score): self {
+        $oldNames = array_keys($this->scores, $score);
+        if (empty($oldNames)) {
+            $this->setScore($name, $score);
+            return $this;
+        }
+
+        foreach ($oldNames as $oldName) {
+            $id = $this->scoreIds[$oldName];
+            $this->removeScore($oldName);
+            $this->setScore($name, $score, $id);
+        }
         return $this;
     }
 
     public function getScore(string $name): ?int {
-        return $this->scores[$name];
+        return $this->scores[$name] ?? null;
     }
 
     public function removeScore(string $name): self {
@@ -114,21 +129,21 @@ class Scoreboard {
         $player->sendDataPacket($pk);
     }
 
-    public function updateScoreToAllPlayer(string $scoreName, int $score) {
+    public function updateScoreToAllPlayer(string $scoreName, int $score, int $id) {
         foreach ($this->show as $name => $value) {
             $player = Server::getInstance()->getPlayerExact($name);
             if (!($player instanceof Player)) continue;
-            $this->updateScoreToPlayer($player, $scoreName, $score);
+            $this->updateScoreToPlayer($player, $scoreName, $score, $id);
         }
     }
 
-    public function updateScoreToPlayer(Player $player, string $scoreName, int $value) {
+    public function updateScoreToPlayer(Player $player, string $scoreName, int $value, int $id) {
         $entry = new ScorePacketEntry();
         $entry->objectiveName = $this->id;
         $entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
         $entry->customName = $scoreName;
         $entry->score = $value;
-        $entry->scoreboardId = $this->scoreIds[$scoreName];
+        $entry->scoreboardId = $id;
 
         $pk = new SetScorePacket();
         $pk->type = $pk::TYPE_CHANGE;

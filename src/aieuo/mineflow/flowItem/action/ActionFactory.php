@@ -112,6 +112,7 @@ class ActionFactory {
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);
+        self::register(new SetScoreboardScoreName);
         self::register(new IncrementScoreboardScore);
         self::register(new DecrementScoreboardScore);
         self::register(new RemoveScoreboardScore);
