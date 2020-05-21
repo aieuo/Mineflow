@@ -31,11 +31,11 @@ trait PlayerFlowItemTrait {
         return $variable->getPlayer();
     }
 
-    public function throwIfInvalidPlayer(?Player $player) {
+    public function throwIfInvalidPlayer(?Player $player, bool $allowOffline = false) {
         if (!($player instanceof Player)) {
             throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.player"]]));
         }
-        if (!$player->isOnline()) {
+        if (!$allowOffline and !$player->isOnline()) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.player.offline"]]));
         }
     }
