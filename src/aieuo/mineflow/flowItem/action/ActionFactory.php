@@ -96,6 +96,7 @@ class ActionFactory {
         self::register(new CreatePositionVariable);
         self::register(new GetVariableNested);
         self::register(new CountListVariable);
+        self::register(new JoinListVariableToString);
         /* form */
         self::register(new SendForm);
         self::register(new SendInputForm);

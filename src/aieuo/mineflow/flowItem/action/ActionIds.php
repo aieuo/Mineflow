@@ -85,6 +85,7 @@ interface ActionIds {
     const ADD_VARIABLE = "addVariable";
     const DELETE_VARIABLE = "deleteVariable";
     const ADD_LIST_VARIABLE = "addListVariable";
+    const JOIN_LIST_VARIABLE_TO_STRING = "joinToString";
     const CREATE_LIST_VARIABLE = "createList";
     const ADD_MAP_VARIABLE = "addMapVariable";
     const CREATE_MAP_VARIABLE = "createMap";
