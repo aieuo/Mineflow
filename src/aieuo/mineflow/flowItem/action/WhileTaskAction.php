@@ -6,6 +6,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
 use aieuo\mineflow\ui\FlowItemForm;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -103,8 +105,15 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
 
     public function check(Recipe $origin) {
         $origin->addVariable(new NumberVariable($this->loopCount, "i"));
-        foreach ($this->conditions as $condition) {
-            $result = $condition->execute($origin);
+        foreach ($this->conditions as $i => $condition) {
+            try {
+                $result = $condition->execute($origin);
+            } catch (\UnexpectedValueException $e) {
+                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $origin->getTarget());
+                Logger::warning(Language::get("recipe.execute.failed", [$origin->getPathname(), $i, $origin->getName()]), $origin->getTarget());
+                Main::getInstance()->getScheduler()->cancelTask($this->taskId);
+                return;
+            }
 
             if ($result !== true) {
                 Main::getInstance()->getScheduler()->cancelTask($this->taskId);
