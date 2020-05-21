@@ -41,6 +41,8 @@ class ConditionFactory {
         /* player */
         self::register(new Gamemode);
         self::register(new HasPermission);
+        self::register(new IsPlayerOnline);
+        self::register(new IsPlayerOnlineByName);
         /* variable */
         self::register(new ExistsVariable);
         self::register(new ExistsListVariableKey);

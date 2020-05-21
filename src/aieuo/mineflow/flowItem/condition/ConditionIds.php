@@ -26,6 +26,8 @@ interface ConditionIds {
 
     const IS_ACTIVE_ENTITY = "isActiveEntity";
     const IS_PLAYER = "isPlayer";
+    const IS_PLAYER_ONLINE = "isPlayerOnline";
+    const IS_PLAYER_ONLINE_BY_NAME = "isPlayerOnlineByName";
     const IS_CREATURE = "isCreature";
 
     const EXISTS_VARIABLE = "existsVariable";
