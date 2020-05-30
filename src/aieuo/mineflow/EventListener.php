@@ -94,6 +94,7 @@ class EventListener implements Listener {
         $this->registerEvent(CommandEvent::class, "command");
         $this->registerEvent(DataPacketReceiveEvent::class, "receive");
         $this->registerEvent(EntityTeleportEvent::class, "teleport");
+        $this->registerEvent(EntityLevelChangeEvent::class, "onLevelChange");
 
         foreach (Main::getEventManager()->getEnabledEvents() as $event => $value) {
             if (!isset($this->eventMethods[$event])) continue;
