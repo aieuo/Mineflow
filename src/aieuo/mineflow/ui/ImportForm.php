@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipePack;
+use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -64,8 +65,10 @@ class ImportForm {
     public function importPack(Player $player, RecipePack $pack) {
         $this->importRecipes($player, $pack->getRecipes(), function () use ($player, $pack) {
             $this->importCommands($player, $pack->getCommands(), function () use ($player, $pack) {
-                $this->importForms($player, $pack->getForms(), function () use ($player) {
-                    $player->sendMessage(Language::get("form.import.success"));
+                $this->importForms($player, $pack->getForms(), function () use ($player, $pack) {
+                    $this->importConfigs($player, $pack->getConfigs(), function () use ($player) {
+                        $player->sendMessage(Language::get("form.import.success"));
+                    });
                 });
             });
         });
@@ -119,10 +122,9 @@ class ImportForm {
     public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0) {
         $manager = Main::getFormManager();
         $names = array_keys($forms);
-        $forms = array_values($forms);
         for ($i=$start; $i<count($forms); $i++) {
             $name = $names[$i];
-            $formData = $forms[$i];
+            $formData = $forms[$name];
             $form = Form::createFromArray($formData, $name);
 
             if ($manager->existsForm($name)) {
@@ -137,6 +139,28 @@ class ImportForm {
             }
 
             $manager->addForm($name, $form);
+        }
+        if (is_callable($onComplete)) call_user_func($onComplete);
+    }
+
+    public function importConfigs(Player $player, array $configs, callable $onComplete = null, int $start = 0) {
+        $names = array_keys($configs);
+        for ($i=$start; $i<count($configs); $i++) {
+            $name = $names[$i];
+            $configData = $configs[$name];
+
+            if (ConfigHolder::existsConfigFile($name)) {
+                $this->confirmOverwrite($player, $name.".yml",
+                    function (Player $player, bool $overwrite) use ($name, $configData, $configs, $onComplete, $i) {
+                        if ($overwrite) {
+                            ConfigHolder::setConfig($name, $configData, true);
+                        }
+                        $this->importConfigs($player, $configs, $onComplete, $i + 1);
+                    });
+                return;
+            }
+
+            ConfigHolder::setConfig($name, $configData, true);
         }
         if (is_callable($onComplete)) call_user_func($onComplete);
     }

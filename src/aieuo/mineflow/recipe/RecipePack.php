@@ -3,8 +3,11 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\flowItem\action\CreateConfigVariable;
+use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\utils\ConfigHolder;
 
 class RecipePack implements \JsonSerializable {
 
@@ -16,6 +19,8 @@ class RecipePack implements \JsonSerializable {
     private $detail;
     /* @var Recipe[] */
     private $recipes;
+    /* @var array */
+    private $configs;
 
     /* @var array */
     private $commands;
@@ -25,7 +30,7 @@ class RecipePack implements \JsonSerializable {
     /* @var string */
     private $version;
 
-    public function __construct(string $name, string $author, string $detail, array $recipes, array $commands = null, array $forms = null, string $version = null) {
+    public function __construct(string $name, string $author, string $detail, array $recipes, ?array $commands = null, ?array $forms = null, ?array $configs = null, string $version = null) {
         $this->name = $name;
         $this->author = $author;
         $this->detail = $detail;
@@ -33,6 +38,7 @@ class RecipePack implements \JsonSerializable {
 
         $this->commands = $commands ?? $this->getLinkedCommands();
         $this->forms = $forms ?? $this->getLinkedForms();
+        $this->configs = $configs ?? $this->getLinkedConfigFiles();
 
         $this->version = $version ?? Main::getInstance()->getDescription()->getVersion();
     }
@@ -47,6 +53,10 @@ class RecipePack implements \JsonSerializable {
 
     public function getForms(): array {
         return $this->forms;
+    }
+
+    public function getConfigs(): array {
+        return $this->configs;
     }
 
     private function getLinkedCommands(): array {
@@ -75,6 +85,19 @@ class RecipePack implements \JsonSerializable {
         return $forms;
     }
 
+    private function getLinkedConfigFiles(): array {
+        $configData = [];
+        foreach ($this->recipes as $recipe) {
+            foreach ($recipe->getActions() as $action) {
+                if ($action instanceof CreateConfigVariable) {
+                    $name = $action->getFileName();
+                    $configData[$name] = ConfigHolder::getConfig($name)->getAll();
+                }
+            }
+        }
+        return $configData;
+    }
+
     public function export(string $path) {
         if (!file_exists($path)) @mkdir($path, 0777, true);
         file_put_contents($path.$this->name.".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
@@ -89,6 +112,7 @@ class RecipePack implements \JsonSerializable {
             "recipes" => $this->recipes,
             "commands" => $this->commands,
             "forms" => $this->forms,
+            "configs" => $this->configs,
         ];
     }
 
@@ -124,9 +148,10 @@ class RecipePack implements \JsonSerializable {
 
         $commands = $packData["commands"] ?? [];
         $forms = $packData["forms"] ?? [];
+        $configs = $packData["configs"] ?? [];
 
         $version = $packData["plugin_version"];
 
-        return new RecipePack($name, $author, $detail, $recipes, $commands, $forms, $version);
+        return new RecipePack($name, $author, $detail, $recipes, $commands, $forms, $configs, $version);
     }
 }

@@ -73,6 +73,12 @@ class ExportForm {
             })->addArgs($recipes, $index)->show($player);
     }
 
+    /**
+     * @param Player $player
+     * @param Recipe[] $recipes
+     * @param array<string|int> $default
+     * @param array<array<string|int>> $errors
+     */
     public function sendExportMenu(Player $player, array $recipes, array $default = [], array $errors = []) {
         if (empty($recipes)) {
             $this->sendRecipeList($player, $recipes, ["@form.export.empty"]);
@@ -84,9 +90,10 @@ class ExportForm {
                 new Input("@form.export.name", "", $default[0] ?? ""),
                 new Input("@form.export.author", "", $default[1] ?? $player->getName()),
                 new Input("@form.export.detail", "", $default[2] ?? ""),
+                new Toggle("@form.export.includeConfig", true),
                 new Toggle("@form.cancelAndBack"),
             ])->onReceive(function (Player $player, array $data, array $recipes) {
-                if ($data[3]) {
+                if ($data[4]) {
                     $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
                     return;
                 }
@@ -105,10 +112,10 @@ class ExportForm {
                     return;
                 }
 
-                $pack = new RecipePack($name, $author, $detail, $recipes);
+                $pack = new RecipePack($name, $author, $detail, $recipes, $data[3] ? null : []);
                 $pack->export(Main::getInstance()->getDataFolder()."/exports/");
 
-                $player->sendMessage(Language::get("form.export.success"));
+                $player->sendMessage(Language::get("form.export.success", [$name.".json"]));
             })->addErrors($errors)->addArgs($recipes)->show($player);
     }
 
