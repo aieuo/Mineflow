@@ -97,9 +97,11 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
         $pos2 = $this->getPosition2($origin);
         $this->throwIfInvalidPosition($pos2);
 
-        return $entity->x >= min($pos1->x, $pos2->x) and $entity->x <= max($pos1->x, $pos2->x)
-            and $entity->y >= min($pos1->y, $pos2->y) and $entity->y <= max($pos1->y, $pos2->y)
-            and $entity->z >= min($pos1->z, $pos2->z) and $entity->z <= max($pos1->z, $pos2->z);
+        $pos = $entity->floor();
+
+        return $pos->x >= min($pos1->x, $pos2->x) and $pos->x <= max($pos1->x, $pos2->x)
+            and $pos->y >= min($pos1->y, $pos2->y) and $pos->y <= max($pos1->y, $pos2->y)
+            and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -107,8 +109,8 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@condition.form.inArea.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPos1()),
-                new Input("@condition.form.inArea.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPos2()),
+                new Input("@condition.inArea.form.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPos1()),
+                new Input("@condition.inArea.form.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPos2()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
