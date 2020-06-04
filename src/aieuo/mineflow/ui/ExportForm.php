@@ -77,7 +77,7 @@ class ExportForm {
      * @param Player $player
      * @param Recipe[] $recipes
      * @param array<string|int> $default
-     * @param array<array<string|int>> $errors
+     * @param array<string|int>[] $errors
      */
     public function sendExportMenu(Player $player, array $recipes, array $default = [], array $errors = []) {
         if (empty($recipes)) {
@@ -102,6 +102,7 @@ class ExportForm {
                 $author = $data[1];
                 $detail = $data[2];
 
+                /** @var array<string|int>[] $errors */
                 $errors = [];
                 if ($name === "") $errors[] = ["@form.insufficient", 0];
                 if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($name))) $errors = ["@form.recipe.invalidName", 0];

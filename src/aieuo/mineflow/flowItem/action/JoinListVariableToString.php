@@ -29,7 +29,7 @@ class JoinListVariableToString extends Action {
 
     /** @var string */
     private $separator;
-    /** @var string[] */
+    /** @var string */
     private $variableName;
     /* @var string */
     private $resultName;
