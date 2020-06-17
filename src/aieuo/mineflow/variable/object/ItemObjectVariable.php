@@ -10,6 +10,11 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\item\Item;
 
 class ItemObjectVariable extends ObjectVariable {
+
+    public function __construct(Item $value, string $name = "", ?string $str = null) {
+        parent::__construct($value, $name, $str ?? ($value->getId().":".$value->getDamage()." x".$value->getCount()));
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
         $item = $this->getItem();
         switch ($index) {

@@ -9,6 +9,11 @@ use aieuo\mineflow\variable\ObjectVariable;
 use pocketmine\level\Position;
 
 class PositionObjectVariable extends ObjectVariable {
+
+    public function __construct(Position $value, string $name = "", ?string $str = null) {
+        parent::__construct($value, $name, $str ?? ($value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName()));
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
         $position = $this->getPosition();
         switch ($index) {
@@ -40,11 +45,5 @@ class PositionObjectVariable extends ObjectVariable {
         /** @var Position $value */
         $value = $this->getValue();
         return $value;
-    }
-
-    public function __toString() {
-        if (!empty($this->getShowString())) return $this->getShowString();
-        $position = $this->getPosition();
-        return $position->x.",".$position->y.",".$position->z.",".$position->level->getFolderName();
     }
 }

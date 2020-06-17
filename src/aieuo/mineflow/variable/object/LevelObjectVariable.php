@@ -9,6 +9,11 @@ use aieuo\mineflow\variable\ObjectVariable;
 use pocketmine\level\Level;
 
 class LevelObjectVariable extends ObjectVariable {
+
+    public function __construct(Level $value, string $name = "", ?string $str = null) {
+        parent::__construct($value, $name, $str ?? $value->getFolderName());
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
         $level = $this->getLevel();
         switch ($index) {
@@ -31,10 +36,5 @@ class LevelObjectVariable extends ObjectVariable {
         /** @var Level $value */
         $value = $this->getValue();
         return $value;
-    }
-
-    public function __toString() {
-        if (!empty($this->getShowString())) return $this->getShowString();
-        return $this->getLevel()->getFolderName();
     }
 }

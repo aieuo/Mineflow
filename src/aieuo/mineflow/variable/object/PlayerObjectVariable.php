@@ -8,6 +8,11 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\Player;
 
 class PlayerObjectVariable extends EntityObjectVariable {
+
+    public function __construct(Player $value, string $name = "", ?string $str = null) {
+        parent::__construct($value, $name, $str ?? $value->getName());
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
         $variable = parent::getValueFromIndex($index);
         if ($variable !== null) return $variable;

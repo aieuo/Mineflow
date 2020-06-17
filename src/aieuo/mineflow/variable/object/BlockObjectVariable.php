@@ -8,6 +8,11 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\block\Block;
 
 class BlockObjectVariable extends PositionObjectVariable {
+
+    public function __construct(Block $value, string $name = "", ?string $str = null) {
+        parent::__construct($value, $name, $str ?? ($value->getId().":".$value->getDamage()));
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
         $variable = parent::getValueFromIndex($index);
         if ($variable !== null) return $variable;

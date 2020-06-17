@@ -11,6 +11,11 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\utils\Config;
 
 class ConfigObjectVariable extends ObjectVariable {
+
+    public function __construct(Config $value, string $name = "", ?string $str = null) {
+        parent::__construct($value, $name, $str ?? "Config({$name}.yml)");
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
         $config = $this->getConfig();
         $data = $config->get($index);
