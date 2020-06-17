@@ -62,7 +62,7 @@ class ActionForm {
             return;
         }
 
-        if ($data["status"] === false) {
+        if (!empty($data["errors"])) {
             $action->getEditForm($formData, $data["errors"])
                 ->addArgs($container, $action, $callback)
                 ->onReceive([$this, "onUpdateAction"])
