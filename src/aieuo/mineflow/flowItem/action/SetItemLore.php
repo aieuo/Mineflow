@@ -82,7 +82,7 @@ class SetItemLore extends Action implements ItemFlowItem {
         $errors = [];
         if ($data[1] === "") $data[1] = "item";
         $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) { return $t !== ""; });;
-        return ["status" => empty($errors), "contents" => [$data[1], $lore], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $lore], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -25,7 +25,7 @@ abstract class Condition extends FlowItem implements ConditionIds {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["status" => true, "contents" => [], "cancel" => $data[1], "errors" => []];
+        return ["contents" => [], "cancel" => $data[1], "errors" => []];
     }
 
     /**

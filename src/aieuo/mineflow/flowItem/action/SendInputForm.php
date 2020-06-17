@@ -120,7 +120,7 @@ class SendInputForm extends Action implements PlayerFlowItem {
         if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -79,7 +79,7 @@ class DeleteVariable extends Action {
         if ($name === "") {
             $errors[] = ["@form.insufficient", 1];
         }
-        return ["status" => empty($errors), "contents" => [$name, !$data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$name, !$data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -68,7 +68,7 @@ class SetSleeping extends Action implements PlayerFlowItem, PositionFlowItem {
     public function parseFromFormData(array $data): array {
         if ($data[1] === "") $data[1] = "target";
         if ($data[2] === "") $data[2] = "pos";
-        return ["status" => true, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

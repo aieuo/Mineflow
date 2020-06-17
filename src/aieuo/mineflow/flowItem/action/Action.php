@@ -37,7 +37,7 @@ abstract class Action extends FlowItem implements ActionIds {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["status" => true, "contents" => [], "cancel" => $data[1], "errors" => []];
+        return ["contents" => [], "cancel" => $data[1], "errors" => []];
     }
 
     /**

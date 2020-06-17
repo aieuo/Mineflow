@@ -61,7 +61,7 @@ class ClearInventory extends Action implements PlayerFlowItem {
     public function parseFromFormData(array $data): array {
         $errors = [];
         if ($data[1] === "") $data[1] = "target";
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

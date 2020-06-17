@@ -119,7 +119,7 @@ class ShowBossbar extends Action implements PlayerFlowItem {
         for ($i=2; $i<=5; $i++) {
             if ($data[$i] === "") $errors[] = ["@form.insufficient", $i];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

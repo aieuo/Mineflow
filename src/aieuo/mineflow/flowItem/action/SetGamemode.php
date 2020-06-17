@@ -87,7 +87,7 @@ class SetGamemode extends Action implements PlayerFlowItem {
     public function parseFromFormData(array $data): array {
         $errors = [];
         if ($data[1] === "") $data[1] = "target";
-        return ["status" => empty($errors), "contents" => [$data[1], (string)$data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], (string)$data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

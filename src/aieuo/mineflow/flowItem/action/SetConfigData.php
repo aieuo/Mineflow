@@ -112,7 +112,7 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

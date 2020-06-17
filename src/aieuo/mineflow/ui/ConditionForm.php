@@ -62,7 +62,7 @@ class ConditionForm {
             return;
         }
 
-        if ($data["status"] === false) {
+        if (!empty($data["errors"])) {
             $condition->getEditForm($formData, $data["errors"])
                 ->addArgs($container, $condition, $callback)
                 ->onReceive([$this, "onUpdateCondition"])

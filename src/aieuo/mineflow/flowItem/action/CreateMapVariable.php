@@ -133,7 +133,7 @@ class CreateMapVariable extends Action {
         if ($name === "") {
             $errors[] = ["@form.insufficient", 1];
         }
-        return ["status" => empty($errors), "contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -86,7 +86,7 @@ class SetYaw extends Action implements EntityFlowItem {
         } elseif (!Main::getVariableHelper()->containsVariable($data[2]) and !is_numeric($data[2])) {
             $errors[] = ["@flowItem.error.notNumber", 2];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

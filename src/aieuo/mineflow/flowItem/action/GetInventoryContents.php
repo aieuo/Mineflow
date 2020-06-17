@@ -85,7 +85,7 @@ class GetInventoryContents extends Action implements PlayerFlowItem {
         $errors = [];
         if ($data[1] === "") $data[1] = "target";
         if ($data[2] === "") $data[2] = "inventory";
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

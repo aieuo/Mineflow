@@ -101,7 +101,7 @@ class IncrementScoreboardScore extends Action implements ScoreboardFlowItem {
         if (!is_numeric($data[3]) and !Main::getVariableHelper()->containsVariable($data[3])) {
             $errors[] = ["@flowItem.error.notNumber", 3];
         }
-        return ["status" => true, "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -105,7 +105,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
         if ($data[1] === "") $data[1] = "item";
         if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[2] === "") $data[3] = "1";
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

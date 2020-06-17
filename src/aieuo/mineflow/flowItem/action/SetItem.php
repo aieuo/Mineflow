@@ -95,7 +95,7 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
         } elseif (!$containsVariable and (float)$data[3] < 0) {
             $errors[] = [Language::get("flowItem.error.lessValue", [0]), 3];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

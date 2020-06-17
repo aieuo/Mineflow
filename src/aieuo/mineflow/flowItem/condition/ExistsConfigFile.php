@@ -71,7 +71,7 @@ class ExistsConfigFile extends Condition {
         $errors = [];
         if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($data[1]))) $errors = ["@form.recipe.invalidName", 1];
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Condition {

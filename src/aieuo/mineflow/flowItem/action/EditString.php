@@ -159,7 +159,7 @@ class EditString extends Action {
             $errors[] = ["@form.insufficient", 3];
         }
         if ($data[4] === "") $data[4] = "result";
-        return ["status" => empty($errors), "contents" => [$data[1], $operator, $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $operator, $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

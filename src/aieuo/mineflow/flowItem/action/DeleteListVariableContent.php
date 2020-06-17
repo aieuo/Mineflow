@@ -103,7 +103,7 @@ class DeleteListVariableContent extends Action {
         if ($key === "") {
             $errors[] = ["@form.insufficient", 2];
         }
-        return ["status" => empty($errors), "contents" => [$name, $key, !$data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$name, $key, !$data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

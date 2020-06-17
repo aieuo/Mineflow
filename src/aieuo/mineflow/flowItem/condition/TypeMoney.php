@@ -75,7 +75,7 @@ abstract class TypeMoney extends Condition {
         } elseif (!$containsVariable and (int)$data[2] <= 0) {
             $errors = [["@condition.money.zero", 2]];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Condition {

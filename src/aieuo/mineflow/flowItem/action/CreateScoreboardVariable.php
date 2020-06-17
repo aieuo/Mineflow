@@ -121,7 +121,7 @@ class CreateScoreboardVariable extends Action {
         $errors = [];
         if ($data[0] === "") $errors[] = ["@form.insufficient", 0];
         if ($data[4] === "") $data[4] = "board";
-        return ["status" => empty($errors), "contents" => [$data[4], $data[1], $data[2], $this->displayTypes[$data[3]]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[4], $data[1], $data[2], $this->displayTypes[$data[3]]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

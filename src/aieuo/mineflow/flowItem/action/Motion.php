@@ -102,7 +102,7 @@ class Motion extends Action implements EntityFlowItem {
                 $errors[] = ["@flowItem.error.notNumber", $i];
             }
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -134,7 +134,7 @@ class CreateItemVariable extends Action {
             $errors[] = ["@flowItem.error.notNumber", 2];
         }
         if ($data[4] === "") $data[4] = "item";
-        return ["status" => empty($errors), "contents" => [$data[4], $data[1], $data[2], $data[3]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[4], $data[1], $data[2], $data[3]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

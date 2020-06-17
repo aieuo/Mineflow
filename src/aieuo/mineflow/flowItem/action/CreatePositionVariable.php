@@ -145,7 +145,7 @@ class CreatePositionVariable extends Action {
         }
         if ($data[4] === "") $data[4] = "{target.level.name}";
         if ($data[5] === "") $data[5] = "pos";
-        return ["status" => empty($errors), "contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -55,7 +55,7 @@ abstract class TypeMessage extends Action {
         if ($data[1] === "") {
             $errors = [["@form.insufficient", 1]];
         }
-        return ["status" => empty($errors), "contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

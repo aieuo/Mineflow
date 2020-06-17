@@ -68,7 +68,7 @@ class ReplenishResource extends Action implements PositionFlowItem {
 
     public function parseFromFormData(array $data): array {
         if ($data[1] === "") $data[1] = "pos";
-        return ["status" => true, "contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
+        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

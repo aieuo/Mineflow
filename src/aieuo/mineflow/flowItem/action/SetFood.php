@@ -88,7 +88,7 @@ class SetFood extends Action implements PlayerFlowItem {
         } elseif (!$containsVariable and (float)$data[2] > 20) {
             $errors[] = [Language::get("flowItem.error.overValue", [20]), 2];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -82,7 +82,7 @@ class RemoveScoreboardScore extends Action implements ScoreboardFlowItem {
         $errors = [];
         if ($data[1] === "") $data[1] = "board";
         if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        return ["status" => true, "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

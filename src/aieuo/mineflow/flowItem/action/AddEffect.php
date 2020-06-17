@@ -125,7 +125,7 @@ class AddEffect extends Action implements EntityFlowItem {
         if (!$containsVariable and !is_numeric($data[4])) {
             $errors[] = ["@flowItem.error.notNumber", 4];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

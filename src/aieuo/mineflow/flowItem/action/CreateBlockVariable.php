@@ -98,7 +98,7 @@ class CreateBlockVariable extends Action {
             $errors[] = ["@form.insufficient", 1];
         }
         if ($data[2] === "") $data[2] = "block";
-        return ["status" => empty($errors), "contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

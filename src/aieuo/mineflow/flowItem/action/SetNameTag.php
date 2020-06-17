@@ -80,7 +80,7 @@ class SetNameTag extends Action implements EntityFlowItem {
         if ($data[2] === "") {
             $errors[] = ["@form.insufficient", 2];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

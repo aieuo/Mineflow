@@ -107,7 +107,7 @@ class JoinListVariableToString extends Action {
         $errors = [];
         if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if ($data[3] === "") $data[3] = "result";
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

@@ -93,7 +93,7 @@ class CreateConfigVariable extends Action {
             $errors[] = ["@form.recipe.invalidName", 1];
         }
         if ($data[2] === "") $data[2] = "config";
-        return ["status" => empty($errors), "contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

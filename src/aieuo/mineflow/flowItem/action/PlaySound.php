@@ -125,7 +125,7 @@ class PlaySound extends Action implements PlayerFlowItem {
         } elseif (!Main::getVariableHelper()->containsVariable($data[4]) and !is_numeric($data[4])) {
             $errors[] = ["@flowItem.error.notNumber", 4];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

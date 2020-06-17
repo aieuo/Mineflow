@@ -110,7 +110,7 @@ class ExecuteRecipe extends Action {
         if ($data[1] === "") {
             $errors = [["@form.insufficient", 1]];
         }
-        return ["status" => empty($errors), "contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
