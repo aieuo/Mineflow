@@ -20,7 +20,7 @@ use pocketmine\level\Position;
 class GetBlock extends Action implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected $id = self::TELEPORT;
+    protected $id = self::GET_BLOCK;
 
     protected $name = "action.getBlock.name";
     protected $detail = "action.getBlock.detail";
