@@ -106,8 +106,9 @@ class ActionFactory {
         self::register(new CommandConsole);
         /* block */
         self::register(new CreateBlockVariable);
-        self::register(new SetBlock);
         /* level */
+        self::register(new SetBlock);
+        self::register(new GetBlock);
         self::register(new AddParticle);
         self::register(new PlaySoundAt);
         /* scoreboard */
