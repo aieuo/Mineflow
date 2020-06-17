@@ -14,12 +14,12 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\variable\StringVariable;
 
-class StringCalc extends Action {
+class EditString extends Action {
 
     protected $id = self::EDIT_STRING;
 
-    protected $name = "action.stringCalc.name";
-    protected $detail = "action.stringCalc.detail";
+    protected $name = "action.editString.name";
+    protected $detail = "action.editString.detail";
     protected $detailDefaultReplace = ["value1", "operator", "value2", "result"];
 
     protected $category = Category::MATH;
@@ -97,7 +97,7 @@ class StringCalc extends Action {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue1(), ["action.stringCalc.".$this->getOperator()], $this->getValue2(), $this->getResultName()]);
+        return Language::get($this->detail, [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()]);
     }
 
     public function execute(Recipe $origin): bool {
@@ -139,10 +139,10 @@ class StringCalc extends Action {
                 new Label($this->getDescription()),
                 new Input("@action.fourArithmeticOperations.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
-                    return Language::get("action.stringCalc.".$type);
+                    return Language::get("action.editString.".$type);
                 }, array_values($this->operators)), $default[2] ?? array_keys($this->operators, $this->getOperator())[0]),
                 new Input("@action.fourArithmeticOperations.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
-                new Input("@action.calculate.form.result", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -152,17 +152,18 @@ class StringCalc extends Action {
         if ($data[1] === "") {
             $errors[] = ["@form.insufficient", 1];
         }
+        $operator = $this->operators[$data[2]];
         if ($data[3] === "") {
             $errors[] = ["@form.insufficient", 3];
         }
         if ($data[4] === "") $data[4] = "result";
-        return ["status" => empty($errors), "contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["status" => empty($errors), "contents" => [$data[1], $operator, $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
         if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setValues($content[0], $content[2]);
-        $this->setOperator($content[1]);
+        $this->setOperator((string)$content[1]);
         $this->setResultName($content[3]);
         return $this;
     }
