@@ -98,7 +98,7 @@ class JoinListVariableToString extends Action {
                 new Label($this->getDescription()),
                 new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
                 new Input("@action.joinToString.form.separator", Language::get("form.example", [", "]), $default[2] ?? $this->getSeparator()),
-                new Input("@action.calculate.form.result", Language::get("form.example", ["string"]), $default[3] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["string"]), $default[3] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

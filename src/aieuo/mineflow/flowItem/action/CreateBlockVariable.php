@@ -87,7 +87,7 @@ class CreateBlockVariable extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.createBlockVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getBlockId()),
-                new Input("@action.createBlockVariable.form.result", Language::get("form.example", ["block"]), $default[2] ?? $this->getVariableName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["block"]), $default[2] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

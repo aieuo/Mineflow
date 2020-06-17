@@ -90,7 +90,7 @@ class CountListVariable extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.countList.form.name", Language::get("form.example", ["list"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.countList.form.result", Language::get("form.example", ["result"]), $default[2] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[2] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

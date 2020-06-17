@@ -81,7 +81,7 @@ class ActionFactory {
         self::register(new FourArithmeticOperations);
         self::register(new Calculate);
         self::register(new Calculate2);
-        self::register(new StringCalc);
+        self::register(new EditString);
         self::register(new GetPi);
         self::register(new GetE);
         self::register(new GenerateRandomNumber);

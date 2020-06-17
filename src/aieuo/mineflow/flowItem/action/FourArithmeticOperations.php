@@ -144,7 +144,7 @@ class FourArithmeticOperations extends Action {
                 new Input("@action.fourArithmeticOperations.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
                 new Input("@action.fourArithmeticOperations.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
-                new Input("@action.calculate.form.result", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

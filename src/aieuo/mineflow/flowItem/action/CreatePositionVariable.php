@@ -128,7 +128,7 @@ class CreatePositionVariable extends Action {
                 new Input("@action.createPositionVariable.form.y", Language::get("form.example", ["100"]), $default[2] ?? $this->getY()),
                 new Input("@action.createPositionVariable.form.z", Language::get("form.example", ["16"]), $default[3] ?? $this->getZ()),
                 new Input("@action.createPositionVariable.form.level", Language::get("form.example", ["world"]), $default[4] ?? $this->getLevel()),
-                new Input("@action.createPositionVariable.form.result", Language::get("form.example", ["pos"]), $default[5] ?? $this->getVariableName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["pos"]), $default[5] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

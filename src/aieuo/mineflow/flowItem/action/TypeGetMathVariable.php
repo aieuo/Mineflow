@@ -52,7 +52,7 @@ abstract class TypeGetMathVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.calculate.form.result", Language::get("form.example", ["result"]), $default[1] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[1] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

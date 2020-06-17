@@ -87,7 +87,7 @@ class GetVariableNested extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.getVariableNested.form.target", Language::get("form.example", ["target.hand"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.getVariableNested.form.result", Language::get("form.example", ["item"]), $default[2] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["item"]), $default[2] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

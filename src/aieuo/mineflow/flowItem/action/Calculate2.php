@@ -151,7 +151,7 @@ class Calculate2 extends Action {
                 new Input("@action.calculate2.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
                 new Input("@action.calculate2.form.value2", Language::get("form.example", ["20"]), $default[2] ?? $this->getValue2()),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $default[3] ?? $this->getOperator()),
-                new Input("@action.calculate.form.result", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

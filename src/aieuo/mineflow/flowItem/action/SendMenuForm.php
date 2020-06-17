@@ -125,7 +125,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         $contents = [
             new Label($this->getDescription()),
             new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-            new Input("@action.calculate.form.result", Language::get("form.example", ["input"]), $default[2] ?? $this->getResultName()),
+            new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["input"]), $default[2] ?? $this->getResultName()),
             new Input("@action.sendInput.form.text", Language::get("form.example", ["aieuo"]), $default[3] ?? $this->getFormText()),
         ];
         foreach ($this->getOptions() as $i => $option) {

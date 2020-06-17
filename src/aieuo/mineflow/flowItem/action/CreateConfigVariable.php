@@ -80,7 +80,7 @@ class CreateConfigVariable extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.createConfigVariable.form.name", Language::get("form.example", ["config"]), $default[1] ?? $this->getFileName()),
-                new Input("@action.createConfigVariable.form.result", Language::get("form.example", ["config"]), $default[2] ?? $this->getVariableName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["config"]), $default[2] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

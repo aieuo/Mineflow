@@ -95,7 +95,7 @@ class GetEntity extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.getEntity.form.target", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getKey()),
-                new Input("@action.getEntity.form.result", Language::get("form.example", ["money"]), $default[2] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["entity"]), $default[2] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

@@ -118,7 +118,7 @@ class CreateItemVariable extends Action {
                 new Input("@action.createItemVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getItemId()),
                 new Input("@action.createItemVariable.form.count", Language::get("form.example", ["64"]), $default[2] ?? $this->getItemCount()),
                 new Input("@action.createItemVariable.form.name", Language::get("form.example", ["aieuo"]), $default[3] ?? $this->getItemName()),
-                new Input("@action.createItemVariable.form.result", Language::get("form.example", ["item"]), $default[4] ?? $this->getVariableName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["item"]), $default[4] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

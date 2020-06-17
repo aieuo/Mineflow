@@ -112,7 +112,7 @@ class CreateScoreboardVariable extends Action {
                 new Input("@action.createScoreboardVariable.form.id", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getBoardId()),
                 new Input("@action.createScoreboardVariable.form.displayName", Language::get("form.example", ["auieo"]), $default[2] ?? $this->getDisplayName()),
                 new Dropdown("@action.createScoreboardVariable.form.type", $this->displayTypes, $default[3] ?? array_search($this->getDisplayType(), $this->displayTypes, true)),
-                new Input("@action.createScoreboardVariable.form.result", Language::get("form.example", ["board"]), $default[4] ?? $this->getVariableName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["board"]), $default[4] ?? $this->getVariableName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

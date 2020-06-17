@@ -87,7 +87,7 @@ class GetMoney extends Action {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@action.money.form.target", Language::get("form.example", ["{target.name}"]), $default[1] ?? $this->getPlayerName()),
-                new Input("@action.getMoney.form.result", Language::get("form.example", ["money"]), $default[2] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["money"]), $default[2] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

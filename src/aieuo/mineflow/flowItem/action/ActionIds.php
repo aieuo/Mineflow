@@ -67,6 +67,7 @@ interface ActionIds {
     const COMMAND_CONSOLE = "commandConsole";
 
     const SET_BLOCK = "setBlock";
+    const GET_BLOCK = "getBlock";
     const ADD_PARTICLE = "addParticle";
 
     const EXECUTE_RECIPE = "executeRecipe";

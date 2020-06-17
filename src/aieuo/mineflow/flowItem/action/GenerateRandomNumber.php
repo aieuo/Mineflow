@@ -82,7 +82,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
                 new Label($this->getDescription()),
                 new Input("@action.generateRandomNumber.form.min", Language::get("form.example", ["0"]), $default[1] ?? $this->getMin()),
                 new Input("@action.generateRandomNumber.form.max", Language::get("form.example", ["10"]), $default[2] ?? $this->getMax()),
-                new Input("@action.calculate.form.result", Language::get("form.example", ["random"]), $default[3] ?? $this->getResultName()),
+                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["random"]), $default[3] ?? $this->getResultName()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
