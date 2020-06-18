@@ -28,6 +28,8 @@ interface ActionIds {
     const SET_NAME = "setName";
     const SET_SCALE = "setScale";
     const ADD_EFFECT = "addEffect";
+    const ADD_XP_PROGRESS = "addXp";
+    const ADD_XP_LEVEL = "addXpLevel";
 
     const GET_PLAYER = "getPlayer";
     const SET_SLEEPING = "setSleeping";
@@ -78,10 +80,12 @@ interface ActionIds {
     const FOUR_ARITHMETIC_OPERATIONS = "fourArithmeticOperations";
     const CALCULATE = "calculate";
     const CALCULATE2 = "calculate2";
-    const EDIT_STRING = "editString";
     const GET_PI = "getPi";
     const GET_E = "getE";
     const GENERATE_RANDOM_NUMBER = "random";
+
+    const EDIT_STRING = "editString";
+    const STRING_LENGTH = "strlen";
 
     const ADD_VARIABLE = "addVariable";
     const DELETE_VARIABLE = "deleteVariable";

@@ -47,6 +47,8 @@ class ActionFactory {
         self::register(new PlaySound);
         self::register(new AddPermission);
         self::register(new RemovePermission);
+        self::register(new AddXpProgress);
+        self::register(new AddXpLevel);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
@@ -81,10 +83,12 @@ class ActionFactory {
         self::register(new FourArithmeticOperations);
         self::register(new Calculate);
         self::register(new Calculate2);
-        self::register(new EditString);
         self::register(new GetPi);
         self::register(new GetE);
         self::register(new GenerateRandomNumber);
+        /* string */
+        self::register(new EditString);
+        self::register(new StringLength);
         /* variable */
         self::register(new AddVariable);
         self::register(new DeleteVariable);
