@@ -16,6 +16,7 @@ class Category {
     const PLAYER = "player";
     const PLUGIN = "plugin";
     const MATH = "math";
+    const STRING = "string";
     const VARIABLE = "variable";
     const SCRIPT = "script";
     const SCOREBOARD = "scoreboard";
@@ -35,6 +36,7 @@ class Category {
             self::SCRIPT,
             self::MATH,
             self::VARIABLE,
+            self::STRING,
             self::FORM,
             self::SCOREBOARD,
             self::PLUGIN,
