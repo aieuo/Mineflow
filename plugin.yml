@@ -6,6 +6,7 @@ api: 3.0.0
 mcpe-protocol:
   - 389
   - 390
+  - 407
 load: POSTWORLD
 softdepend:
   - EconomyAPI
