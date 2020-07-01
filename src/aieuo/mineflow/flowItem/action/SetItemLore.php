@@ -81,7 +81,7 @@ class SetItemLore extends Action implements ItemFlowItem {
     public function parseFromFormData(array $data): array {
         $errors = [];
         if ($data[1] === "") $data[1] = "item";
-        $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) { return $t !== ""; });;
+        $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) { return $t !== ""; });
         return ["contents" => [$data[1], $lore], "cancel" => $data[3], "errors" => $errors];
     }
 

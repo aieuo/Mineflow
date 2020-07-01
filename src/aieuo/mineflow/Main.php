@@ -84,7 +84,7 @@ class Main extends PluginBase {
         $events = new Config($this->getDataFolder()."events.yml", Config::YAML);
         self::$eventManager = new EventManager($events);
 
-        self::$variableHelper = new VariableHelper($this, new Config($this->getDataFolder()."variables.json", Config::JSON));
+        self::$variableHelper = new VariableHelper(new Config($this->getDataFolder()."variables.json", Config::JSON));
 
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();
