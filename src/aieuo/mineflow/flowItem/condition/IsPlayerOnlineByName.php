@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;

@@ -15,11 +15,8 @@ class VariableHelper {
 
     /** @var Config */
     private $file;
-    /** @var Main */
-    private $owner;
 
-    public function __construct(Main $owner, Config $file) {
-        $this->owner = $owner;
+    public function __construct(Config $file) {
         $this->file = $file;
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
     }
@@ -103,11 +100,6 @@ class VariableHelper {
         if (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
-                if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
-                    $add = $this->findVariables($name);
-                    $variables = array_merge($variables, $add);
-                    continue;
-                }
                 $variables[] = $name;
             }
         }

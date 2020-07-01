@@ -4,7 +4,6 @@ namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\CreateConfigVariable;
-use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\ConfigHolder;
