@@ -34,7 +34,7 @@ trait EntityFlowItemTrait {
 
     public function throwIfInvalidEntity(?Entity $entity) {
         if (!($entity instanceof Entity)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.entity"]]));
+            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.entity"], $this->getEntityVariableName()]));
         }
         if ($entity instanceof Player and !$entity->isOnline()) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.player.offline"]]));

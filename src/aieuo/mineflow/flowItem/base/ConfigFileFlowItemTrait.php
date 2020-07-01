@@ -33,7 +33,7 @@ trait ConfigFileFlowItemTrait {
 
     public function throwIfInvalidConfig(?Config $config) {
         if (!($config instanceof Config)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.config"]]));
+            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.config"], $this->getConfigVariableName()]));
         }
     }
 }

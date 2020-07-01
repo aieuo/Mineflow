@@ -33,7 +33,7 @@ trait ScoreboardFlowItemTrait {
 
     public function throwIfInvalidScoreboard(?Scoreboard $board) {
         if (!($board instanceof Scoreboard)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.scoreboard"]]));
+            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.scoreboard"], $this->getScoreboardVariableName()]));
         }
     }
 }

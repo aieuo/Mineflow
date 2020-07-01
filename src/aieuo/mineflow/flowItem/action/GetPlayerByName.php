@@ -72,7 +72,7 @@ class GetPlayerByName extends Action {
 
         $player = Server::getInstance()->getPlayer($name);
         if (!($player instanceof Player)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.player"]]));
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.getPlayerByName.player.notFound"]]));
         }
 
         $result = new PlayerObjectVariable($player, $resultName, $player->getName());

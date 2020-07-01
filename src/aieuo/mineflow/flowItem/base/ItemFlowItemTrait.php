@@ -33,7 +33,7 @@ trait ItemFlowItemTrait {
 
     public function throwIfInvalidItem(?Item $item) {
         if (!($item instanceof Item)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.item"]]));
+            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.item"], $this->getItemVariableName()]));
         }
     }
 }
