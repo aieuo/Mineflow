@@ -95,7 +95,7 @@ class SendTitle extends Action implements PlayerFlowItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
-        $player->addTitle($title, $subtitle, ...$times);
+        $player->sendTitle($title, $subtitle, ...$times);
         return true;
     }
 

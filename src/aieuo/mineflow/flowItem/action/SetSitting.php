@@ -65,7 +65,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         $pk->entityRuntimeId = ++Entity::$entityCount;
         $pk->type = 84;
         $pk->position = $position;
-        $pk->links = [new EntityLink($pk->entityRuntimeId, $player->getId(), EntityLink::TYPE_RIDER)];
+        $pk->links = [new EntityLink($pk->entityRuntimeId, $player->getId(), EntityLink::TYPE_RIDER, false, true)];
         $pk->metadata = [
             Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_INVISIBLE]
         ];
