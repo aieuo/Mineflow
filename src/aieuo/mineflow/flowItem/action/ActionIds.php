@@ -46,6 +46,7 @@ interface ActionIds {
     const PLAY_SOUND_AT = "playSoundAt";
     const ADD_PERMISSION = "addPermission";
     const REMOVE_PERMISSION = "removePermission";
+    const ALLOW_FLIGHT = "allowFlight";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
@@ -94,6 +95,7 @@ interface ActionIds {
     const CREATE_LIST_VARIABLE = "createList";
     const ADD_MAP_VARIABLE = "addMapVariable";
     const CREATE_MAP_VARIABLE = "createMap";
+    const CREATE_MAP_VARIABLE_FROM_JSON = "createMapFromJson";
     const CREATE_ITEM_VARIABLE = "createItem";
     const CREATE_POSITION_VARIABLE = "createPosition";
     const CREATE_BLOCK_VARIABLE = "createBlock";
@@ -113,12 +115,14 @@ interface ActionIds {
     const CREATE_CONFIG_VARIABLE = "createConfig";
     const SET_CONFIG_DATA = "setConfig";
     const SAVE_CONFIG_FILE = "saveConfig";
+    const REMOVE_CONFIG_VALUE = "removeConfig";
     const EXIT_RECIPE = "exit";
     const EXIT_CONTAINER = "break";
 
     const SEND_INPUT = "input";
     const SEND_MENU = "select";
     const SEND_SLIDER = "slider";
+    const SEND_DROPDOWN = "dropdown";
 
     const REPLENISH_RESOURCE = "replenishResource";
 

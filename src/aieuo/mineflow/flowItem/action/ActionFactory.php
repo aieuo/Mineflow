@@ -49,6 +49,7 @@ class ActionFactory {
         self::register(new RemovePermission);
         self::register(new AddXpProgress);
         self::register(new AddXpLevel);
+        self::register(new AllowFlight);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
