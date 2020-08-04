@@ -28,9 +28,9 @@ class GetPlayerByName extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $playerName = "";
+    private $playerName;
     /** @var string */
-    private $resultName = "player";
+    private $resultName;
 
     public function __construct(string $name = "", string $result = "player") {
         $this->playerName = $name;

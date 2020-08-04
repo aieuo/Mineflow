@@ -23,7 +23,7 @@ class ExistsConfigFile extends Condition {
     protected $category = Category::SCRIPT;
 
     /** @var string */
-    private $fileName = "";
+    private $fileName;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 

@@ -28,7 +28,7 @@ class CreateScoreboardVariable extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $variableName = "board";
+    private $variableName;
     /** @var string */
     private $boardId;
     /** @var string */

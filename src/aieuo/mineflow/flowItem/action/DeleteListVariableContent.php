@@ -31,7 +31,7 @@ class DeleteListVariableContent extends Action {
     /** @var string */
     private $variableKey;
     /** @var bool */
-    private $isLocal = true;
+    private $isLocal;
 
     public function __construct(string $name = "", string $key = "", bool $local = true) {
         $this->variableName = $name;

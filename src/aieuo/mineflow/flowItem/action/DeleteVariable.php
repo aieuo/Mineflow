@@ -27,7 +27,7 @@ class DeleteVariable extends Action {
     /** @var string */
     private $variableName;
     /** @var bool */
-    private $isLocal = true;
+    private $isLocal;
 
     public function __construct(string $name = "", bool $local = true) {
         $this->variableName = $name;

@@ -22,9 +22,9 @@ class GenerateRandomNumber extends TypeGetMathVariable {
     /** @var string */
     protected $resultName = "random";
     /** @var string */
-    private $min = "";
+    private $min;
     /** @var string */
-    private $max = "";
+    private $max;
 
     public function __construct(string $min = "", string $max = "", string $result = null) {
         $this->min = $min;

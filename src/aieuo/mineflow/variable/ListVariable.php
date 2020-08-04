@@ -7,7 +7,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     public $type = Variable::LIST;
 
     /** @var string */
-    private $showString = "";
+    private $showString;
 
     /**
      * @return Variable[]

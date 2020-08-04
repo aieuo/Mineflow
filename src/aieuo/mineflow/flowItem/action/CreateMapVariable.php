@@ -33,7 +33,7 @@ class CreateMapVariable extends Action {
     /** @var array */
     private $variableValue;
     /** @var bool */
-    private $isLocal = true;
+    private $isLocal;
 
     public function __construct(string $name = "", string $key = "", string $value = "", bool $local = true) {
         $this->variableName = $name;

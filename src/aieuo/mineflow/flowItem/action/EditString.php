@@ -43,11 +43,11 @@ class EditString extends Action {
     /** @var string */
     private $value1;
     /** @var string */
-    private $operator = self::TYPE_JOIN;
+    private $operator;
     /** @var string */
     private $value2;
     /** @var string */
-    private $resultName = "result";
+    private $resultName;
 
     /* @var string */
     private $lastResult;

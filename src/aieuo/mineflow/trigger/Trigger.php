@@ -16,7 +16,7 @@ class Trigger implements \JsonSerializable {
     private $key;
 
     /** @var string */
-    private $subKey = "";
+    private $subKey;
 
     public function __construct(string $type, string $key, string $subKey = "") {
         $this->type = $type;

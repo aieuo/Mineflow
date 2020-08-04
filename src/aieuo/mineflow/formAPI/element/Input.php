@@ -8,9 +8,9 @@ class Input extends Element {
     protected $type = self::ELEMENT_INPUT;
 
     /** @var string */
-    private $placeholder = "";
+    private $placeholder;
     /** @var string */
-    private $default = "";
+    private $default;
 
     public function __construct(string $text, string $placeholder = "", string $default = "") {
         parent::__construct($text);

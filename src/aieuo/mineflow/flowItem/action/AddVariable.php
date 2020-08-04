@@ -33,9 +33,9 @@ class AddVariable extends Action {
     /** @var string */
     private $variableValue;
     /** @var int */
-    private $variableType = Variable::STRING;
+    private $variableType;
     /** @var bool */
-    private $isLocal = true;
+    private $isLocal;
 
     /** @var array */
     private $variableTypes = ["string", "number"];

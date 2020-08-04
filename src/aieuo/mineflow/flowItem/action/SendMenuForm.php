@@ -99,6 +99,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         return true;
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []) {
         $buttons = [];
         foreach ($this->options as $option) {

@@ -29,7 +29,7 @@ class CreatePositionVariable extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $variableName = "pos";
+    private $variableName;
     /** @var string */
     private $x;
     /** @var string */
@@ -37,7 +37,7 @@ class CreatePositionVariable extends Action {
     /* @var string */
     private $z;
     /* @var string */
-    private $level = "{target.level.name}";
+    private $level;
 
     public function __construct(string $x = "", string $y = "", string $z = "", string $level = "{target.level.name}", string $name = "pos") {
         $this->x = $x;

@@ -42,7 +42,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
     protected $permission = self::PERMISSION_LEVEL_1;
 
     /** @var int */
-    private $interval = 20;
+    private $interval;
     /** @var int */
     private $limit = -1;
     /** @var int */

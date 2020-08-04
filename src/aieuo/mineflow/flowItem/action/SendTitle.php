@@ -32,11 +32,11 @@ class SendTitle extends Action implements PlayerFlowItem {
     /** @var string */
     private $subtitle;
     /** @var string */
-    private $fadein = "-1";
+    private $fadein;
     /** @var string */
-    private $stay = "-1";
+    private $stay;
     /** @var string */
-    private $fadeout = "-1";
+    private $fadeout;
 
     public function __construct(string $player = "target", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
         $this->setPlayerVariableName($player);

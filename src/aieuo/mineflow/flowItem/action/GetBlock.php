@@ -29,7 +29,7 @@ class GetBlock extends Action implements PositionFlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private $resultName = "";
+    private $resultName;
 
     public function __construct(string $position = "pos", string $result = "block") {
         $this->setPositionVariableName($position);

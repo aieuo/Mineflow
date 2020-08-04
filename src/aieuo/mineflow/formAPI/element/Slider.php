@@ -8,13 +8,13 @@ class Slider extends Element {
     protected $type = self::ELEMENT_SLIDER;
 
     /** @var float */
-    private $min = 0;
+    private $min;
     /** @var float */
-    private $max = 0;
+    private $max;
     /** @var float */
-    private $step  = 1;
+    private $step;
     /** @var float */
-    private $default = 0.0;
+    private $default;
 
     public function __construct(string $text, float $min, float $max, float $step = 1.0, ?int $default = null) {
         parent::__construct($text);

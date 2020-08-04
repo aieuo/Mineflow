@@ -28,9 +28,9 @@ class CountListVariable extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */
-    private $variableName = "";
+    private $variableName;
     /** @var string */
-    private $resultName = "count";
+    private $resultName;
 
     /** @var int */
     private $lastResult;

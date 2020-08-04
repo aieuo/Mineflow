@@ -28,9 +28,9 @@ class GetMoney extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */
-    private $playerName = "{target.name}";
+    private $playerName;
     /** @var string */
-    private $resultName = "money";
+    private $resultName;
     /* @var string */
     private $lastResult;
 

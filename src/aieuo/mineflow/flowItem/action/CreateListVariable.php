@@ -31,7 +31,7 @@ class CreateListVariable extends Action {
     /** @var string[] */
     private $variableValue;
     /** @var bool */
-    private $isLocal = true;
+    private $isLocal;
 
     public function __construct(string $value = "", string $name = "", bool $local = true) {
         $this->variableName = $name;

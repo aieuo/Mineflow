@@ -25,7 +25,7 @@ class IsActiveEntity extends Condition {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
     /** @var string */
-    private $entityId = "";
+    private $entityId;
 
     public function __construct(string $id = "") {
         $this->entityId = $id;

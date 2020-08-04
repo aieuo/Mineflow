@@ -46,9 +46,9 @@ class Calculate extends Action {
     /** @var string */
     private $value;
     /** @var int */
-    private $operator = self::SQUARE;
+    private $operator;
     /** @var string */
-    private $resultName = "result";
+    private $resultName;
 
     private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 

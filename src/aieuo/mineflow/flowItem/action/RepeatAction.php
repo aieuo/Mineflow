@@ -31,7 +31,7 @@ class RepeatAction extends Action implements ActionContainer {
     protected $permission = self::PERMISSION_LEVEL_1;
 
     /** @var string */
-    private $repeatCount = "1";
+    private $repeatCount;
 
     /** @var string  */
     private $startIndex = "0";

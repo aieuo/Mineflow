@@ -33,7 +33,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     /** @var string */
     private $enchantId;
     /** @var string */
-    private $enchantLevel = "1";
+    private $enchantLevel;
 
     public function __construct(string $item = "item", string $id = "", string $level = "1") {
         $this->setItemVariableName($item);

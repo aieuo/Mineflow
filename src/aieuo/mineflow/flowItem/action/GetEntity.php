@@ -31,9 +31,9 @@ class GetEntity extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $entityId = "";
+    private $entityId;
     /** @var string */
-    private $resultName = "entity";
+    private $resultName;
 
     public function __construct(string $name = "", string $result = "entity") {
         $this->entityId = $name;

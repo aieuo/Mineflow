@@ -15,11 +15,11 @@ class Bossbar {
     public static $bars = [];
 
     /** @var float */
-    private $max = 1;
+    private $max;
     /** @var float */
-    private $per = 1;
+    private $per;
     /** @var string */
-    private $title = "";
+    private $title;
     /** @var int */
     private $entityId;
 

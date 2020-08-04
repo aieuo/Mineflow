@@ -28,7 +28,7 @@ class StringLength extends Action {
     /** @var string */
     private $value;
     /** @var string */
-    private $resultName = "length";
+    private $resultName;
 
     /* @var string */
     private $lastResult;

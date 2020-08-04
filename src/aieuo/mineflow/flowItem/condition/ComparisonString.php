@@ -34,7 +34,7 @@ class ComparisonString extends Condition {
     /** @var string */
     private $value1;
     /** @var int */
-    private $operator = self::EQUALS;
+    private $operator;
     /** @var string */
     private $value2;
 

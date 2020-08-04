@@ -35,11 +35,11 @@ class FourArithmeticOperations extends Action {
     /** @var string */
     private $value1;
     /** @var int */
-    private $operator = self::ADDITION;
+    private $operator;
     /** @var string */
     private $value2;
     /** @var string */
-    private $resultName = "result";
+    private $resultName;
 
     private $operatorSymbols = ["+", "-", "*", "/", "％"];
 

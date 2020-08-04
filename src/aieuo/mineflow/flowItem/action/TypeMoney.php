@@ -17,7 +17,7 @@ abstract class TypeMoney extends Action {
     protected $category = Category::PLUGIN;
 
     /** @var string */
-    private $playerName = "{target.name}";
+    private $playerName;
     /** @var string */
     private $amount;
 

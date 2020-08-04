@@ -39,9 +39,9 @@ class Calculate2 extends Action {
     /** @var string */
     private $value2;
     /** @var int */
-    private $operator = self::CALC_POW;
+    private $operator;
     /** @var string */
-    private $resultName = "result";
+    private $resultName;
 
     private $operatorSymbols = ["min(x, y)", "max(x, y)", "x^y", "log_y(x)", "√(x^2 + y^2)", "atan2(x, y)", "round(x, y)"];
 

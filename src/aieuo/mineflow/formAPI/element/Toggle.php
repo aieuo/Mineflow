@@ -8,7 +8,7 @@ class Toggle extends Element {
     protected $type = self::ELEMENT_TOGGLE;
 
     /** @var boolean */
-    private $default = false;
+    private $default;
 
     public function __construct(string $text, bool $default = false) {
         parent::__construct($text);

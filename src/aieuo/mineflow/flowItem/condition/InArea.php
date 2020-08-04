@@ -12,10 +12,8 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\level\Position;
 
 class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;

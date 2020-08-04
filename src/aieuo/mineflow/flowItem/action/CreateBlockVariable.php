@@ -27,7 +27,7 @@ class CreateBlockVariable extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $variableName = "block";
+    private $variableName;
     /** @var string */
     private $blockId;
 

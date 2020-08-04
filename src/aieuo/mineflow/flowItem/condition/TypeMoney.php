@@ -18,7 +18,7 @@ abstract class TypeMoney extends Condition {
     protected $category = Category::PLUGIN;
 
     /** @var string */
-    private $playerName = "{target.name}";
+    private $playerName;
     /** @var string */
     private $amount;
 

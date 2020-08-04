@@ -8,7 +8,7 @@ use pocketmine\event\Event;
 class RecipeContainer {
 
     /** @var Recipe[] */
-    private $recipes = [];
+    private $recipes;
 
     /** @var string */
     private $name;

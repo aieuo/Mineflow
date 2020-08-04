@@ -28,13 +28,13 @@ class CreateItemVariable extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $variableName = "item";
+    private $variableName;
     /** @var string */
     private $itemId;
     /** @var string */
     private $itemCount;
     /** @var string */
-    private $itemName = "";
+    private $itemName;
 
     public function __construct(string $id = "", string $count = "", string $itemName = "", string $variableName = "item") {
         $this->itemId = $id;

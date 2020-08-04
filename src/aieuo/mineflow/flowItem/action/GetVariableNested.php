@@ -27,9 +27,9 @@ class GetVariableNested extends Action {
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */
-    private $variableName = "";
+    private $variableName;
     /** @var string */
-    private $resultName = "var";
+    private $resultName;
 
     public function __construct(string $name = "", string $result = "var") {
         $this->variableName = $name;

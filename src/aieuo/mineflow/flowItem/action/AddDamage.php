@@ -31,7 +31,7 @@ class AddDamage extends Action implements EntityFlowItem {
     /** @var string */
     private $damage;
     /** @var int */
-    private $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK;
+    private $cause;
 
     public function __construct(string $entity = "target", string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
         $this->setEntityVariableName($entity);

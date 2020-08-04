@@ -6,7 +6,6 @@ use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\flowItem\action\ActionFactory;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\utils\Config;
-use aieuo\mineflow\Main;
 
 class VariableHelper {
 

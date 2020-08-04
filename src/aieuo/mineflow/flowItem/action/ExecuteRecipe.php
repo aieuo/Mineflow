@@ -30,7 +30,7 @@ class ExecuteRecipe extends Action {
     private $recipeName;
 
     /** @var string[] */
-    private $args = [];
+    private $args;
 
     public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;
