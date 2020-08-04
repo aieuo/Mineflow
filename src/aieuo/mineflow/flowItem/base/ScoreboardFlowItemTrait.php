@@ -23,7 +23,7 @@ trait ScoreboardFlowItemTrait {
         return $this;
     }
 
-    public function getScoreboard(Recipe $origin, string $name): ?Scoreboard {
+    public function getScoreboard(Recipe $origin, string $name = ""): ?Scoreboard {
         $scoreboard = $origin->replaceVariables($this->getScoreboardVariableName($name));
 
         $variable = $origin->getVariable($scoreboard);
