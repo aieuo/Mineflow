@@ -11,22 +11,22 @@ use pocketmine\Player;
 
 trait PlayerFlowItemTrait {
 
-    /* @var string */
-    private $playerVariableName = "target";
+    /* @var string[] */
+    private $playerVariableNames = [];
 
-    public function getPlayerVariableName(): string {
-        return $this->playerVariableName;
+    public function getPlayerVariableName(string $name = ""): string {
+        return $this->playerVariableNames[$name];
     }
 
-    public function setPlayerVariableName(string $name) {
-        $this->playerVariableName = $name;
+    public function setPlayerVariableName(string $player, string $name = "") {
+        $this->playerVariableNames[$name] = $player;
         return $this;
     }
 
-    public function getPlayer(Recipe $origin): ?Player {
-        $name = $origin->replaceVariables($this->getPlayerVariableName());
+    public function getPlayer(Recipe $origin, string $name = ""): ?Player {
+        $player = $origin->replaceVariables($this->getPlayerVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($player);
         if (!($variable instanceof PlayerObjectVariable)) return null;
         return $variable->getPlayer();
     }

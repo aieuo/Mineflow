@@ -30,8 +30,8 @@ class SetHealth extends Action implements EntityFlowItem {
     /** @var string */
     private $health;
 
-    public function __construct(string $name = "target", string $health = "") {
-        $this->entityVariableName = $name;
+    public function __construct(string $entity = "target", string $health = "") {
+        $this->setEntityVariableName($entity);
         $this->health = $health;
     }
 

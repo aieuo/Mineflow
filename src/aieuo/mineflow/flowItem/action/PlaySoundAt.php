@@ -36,8 +36,8 @@ class PlaySoundAt extends Action implements PositionFlowItem {
     /** @var string */
     private $pitch;
 
-    public function __construct(string $name = "pos", string $sound = "", string $volume = "1", string $pitch = "1") {
-        $this->positionVariableName = $name;
+    public function __construct(string $position = "pos", string $sound = "", string $volume = "1", string $pitch = "1") {
+        $this->setPositionVariableName($position);
         $this->sound = $sound;
         $this->volume = $volume;
         $this->pitch = $pitch;

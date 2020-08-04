@@ -9,11 +9,11 @@ use pocketmine\block\Block;
 
 interface BlockFlowItem {
 
-    public function getBlockVariableName(): string;
+    public function getBlockVariableName(string $name = ""): string;
 
-    public function setBlockVariableName(string $name);
+    public function setBlockVariableName(string $block, string $name = "");
 
-    public function getBlock(Recipe $origin): ?Block;
+    public function getBlock(Recipe $origin, string $name = ""): ?Block;
 
     public function throwIfInvalidBlock(?Block $block);
 }

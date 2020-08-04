@@ -9,11 +9,11 @@ use pocketmine\level\Position;
 
 interface PositionFlowItem {
 
-    public function getPositionVariableName(): string;
+    public function getPositionVariableName(string $name = ""): string;
 
-    public function setPositionVariableName(string $name);
+    public function setPositionVariableName(string $position, string $name = "");
 
-    public function getPosition(Recipe $origin): ?Position;
+    public function getPosition(Recipe $origin, string $name = ""): ?Position;
 
     public function throwIfInvalidPosition(?Position $position);
 }

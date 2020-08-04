@@ -32,8 +32,8 @@ class SetItemCount extends Action implements ItemFlowItem {
     /** @var string */
     private $count;
 
-    public function __construct(string $name = "item", string $count = "") {
-        $this->itemVariableName = $name;
+    public function __construct(string $item = "item", string $count = "") {
+        $this->setItemVariableName($item);
         $this->count = $count;
     }
 
@@ -46,7 +46,7 @@ class SetItemCount extends Action implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->itemVariableName !== "" and $this->count !== "";
+        return $this->getItemVariableName() !== "" and $this->count !== "";
     }
 
     public function getDetail(): string {

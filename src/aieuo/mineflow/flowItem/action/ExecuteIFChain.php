@@ -40,8 +40,8 @@ class ExecuteIFChain extends Action implements PlayerFlowItem {
     private $args = [];
 
     public function __construct(string $chain = "", string $player = "target") {
+        $this->setPlayerVariableName($player);
         $this->chainName = $chain;
-        $this->playerVariableName = $player;
     }
 
     public function setChainName(string $name): self {

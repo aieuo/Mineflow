@@ -36,9 +36,9 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
     /** @var array */
     private static $entityIds = [];
 
-    public function __construct(string $name = "target", string $position = "pos") {
-        $this->playerVariableName = $name;
-        $this->positionVariableName = $position;
+    public function __construct(string $player = "target", string $position = "pos") {
+        $this->setPlayerVariableName($player);
+        $this->setPositionVariableName($position);
     }
 
     public function getDetail(): string {

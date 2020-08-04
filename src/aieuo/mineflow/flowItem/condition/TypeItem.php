@@ -21,9 +21,9 @@ abstract class TypeItem extends Condition implements PlayerFlowItem, ItemFlowIte
 
     protected $category = Category::INVENTORY;
 
-    public function __construct(string $name = "target", string $item = "item") {
-        $this->playerVariableName = $name;
-        $this->itemVariableName = $item;
+    public function __construct(string $player = "target", string $item = "item") {
+        $this->setPlayerVariableName($player);
+        $this->setItemVariableName($item);
     }
 
     public function getDetail(): string {

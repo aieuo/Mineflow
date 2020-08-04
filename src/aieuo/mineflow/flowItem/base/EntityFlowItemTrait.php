@@ -12,22 +12,22 @@ use pocketmine\Player;
 
 trait EntityFlowItemTrait {
 
-    /* @var string */
-    private $entityVariableName = "target";
+    /* @var string[] */
+    private $entityVariableNames = [];
 
-    public function getEntityVariableName(): string {
-        return $this->entityVariableName;
+    public function getEntityVariableName(string $name = ""): string {
+        return $this->entityVariableNames[$name];
     }
 
-    public function setEntityVariableName(string $name) {
-        $this->entityVariableName = $name;
+    public function setEntityVariableName(string $entity, string $name = "") {
+        $this->entityVariableNames[$name] = $entity;
         return $this;
     }
 
-    public function getEntity(Recipe $origin): ?Entity {
-        $name = $origin->replaceVariables($this->getEntityVariableName());
+    public function getEntity(Recipe $origin, string $name = ""): ?Entity {
+        $entity = $origin->replaceVariables($this->getEntityVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($entity);
         if (!($variable instanceof EntityObjectVariable)) return null;
         return $variable->getEntity();
     }

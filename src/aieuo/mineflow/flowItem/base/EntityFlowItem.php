@@ -9,11 +9,11 @@ use pocketmine\entity\Entity;
 
 interface EntityFlowItem {
 
-    public function getEntityVariableName(): string;
+    public function getEntityVariableName(string $name = ""): string;
 
-    public function setEntityVariableName(string $name);
+    public function setEntityVariableName(string $entity, string $name = "");
 
-    public function getEntity(Recipe $origin): ?Entity;
+    public function getEntity(Recipe $origin, string $name = ""): ?Entity;
 
     public function throwIfInvalidEntity(?Entity $player);
 }

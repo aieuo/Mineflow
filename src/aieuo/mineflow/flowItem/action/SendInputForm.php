@@ -39,8 +39,8 @@ class SendInputForm extends Action implements PlayerFlowItem {
     /** @var string */
     private $lastResult;
 
-    public function __construct(string $target = "target", string $text = "", string $resultName = "input") {
-        $this->playerVariableName = $target;
+    public function __construct(string $player = "target", string $text = "", string $resultName = "input") {
+        $this->setPlayerVariableName($player);
         $this->formText = $text;
         $this->resultName = $resultName;
     }
@@ -62,7 +62,7 @@ class SendInputForm extends Action implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->playerVariableName !== "" and $this->formText !== "" and $this->resultName !== "";
+        return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
     public function getDetail(): string {

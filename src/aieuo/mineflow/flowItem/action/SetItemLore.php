@@ -31,8 +31,8 @@ class SetItemLore extends Action implements ItemFlowItem {
     /** @var array */
     private $lore;
 
-    public function __construct(string $name = "item", string $lore = "") {
-        $this->itemVariableName = $name;
+    public function __construct(string $item = "item", string $lore = "") {
+        $this->setItemVariableName($item);
         $this->lore = array_filter(array_map("trim", explode(";", $lore)), function (string $t) { return $t !== ""; });
     }
 
@@ -45,7 +45,7 @@ class SetItemLore extends Action implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->itemVariableName !== "";
+        return $this->getItemVariableName() !== "";
     }
 
     public function getDetail(): string {

@@ -28,8 +28,8 @@ class SaveConfigFile extends Action implements ConfigFileFlowItem {
 
     protected $permission = self::PERMISSION_LEVEL_2;
 
-    public function __construct(string $name = "config") {
-        $this->configVariableName = $name;
+    public function __construct(string $config = "config") {
+        $this->setConfigVariableName($config);
     }
 
     public function isDataValid(): bool {

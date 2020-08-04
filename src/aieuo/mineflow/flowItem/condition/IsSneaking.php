@@ -26,8 +26,8 @@ class IsSneaking extends Condition implements EntityFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 
-    public function __construct(string $name = "target") {
-        $this->entityVariableName = $name;
+    public function __construct(string $entity = "target") {
+        $this->setEntityVariableName($entity);
     }
 
     public function isDataValid(): bool {

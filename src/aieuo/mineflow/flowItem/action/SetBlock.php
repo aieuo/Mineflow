@@ -29,8 +29,8 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
     public function __construct(string $position = "pos", string $block = "block") {
-        $this->positionVariableName = $position;
-        $this->blockVariableName = $block;
+        $this->setPositionVariableName($position);
+        $this->setBlockVariableName($block);
     }
 
     public function getDetail(): string {

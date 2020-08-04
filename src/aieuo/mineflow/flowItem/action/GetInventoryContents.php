@@ -33,8 +33,8 @@ class GetInventoryContents extends Action implements PlayerFlowItem {
     /** @var string */
     private $resultName;
 
-    public function __construct(string $name = "target", string $resultName = "inventory") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $resultName = "inventory") {
+        $this->setPlayerVariableName($player);
         $this->resultName = $resultName;
     }
 

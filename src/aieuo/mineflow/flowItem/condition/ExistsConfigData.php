@@ -29,8 +29,8 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
     /** @var string */
     private $key;
 
-    public function __construct(string $name = "config", string $permission = "") {
-        $this->configVariableName = $name;
+    public function __construct(string $config = "config", string $permission = "") {
+        $this->setConfigVariableName($config);
         $this->key = $permission;
     }
 

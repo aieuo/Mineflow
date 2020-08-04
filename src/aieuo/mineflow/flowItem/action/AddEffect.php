@@ -40,8 +40,8 @@ class AddEffect extends Action implements EntityFlowItem {
     /** @var bool */
     private $visible = false;
 
-    public function __construct(string $name = "target", string $id = "", string $time = "", string $power = "1") {
-        $this->entityVariableName = $name;
+    public function __construct(string $entity = "target", string $id = "", string $time = "", string $power = "1") {
+        $this->setEntityVariableName($entity);
         $this->effectId = $id;
         $this->time = $time;
         $this->power = $power;

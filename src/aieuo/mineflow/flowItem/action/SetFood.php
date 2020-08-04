@@ -30,8 +30,8 @@ class SetFood extends Action implements PlayerFlowItem {
     /** @var string */
     private $food;
 
-    public function __construct(string $name = "target", string $health = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $health = "") {
+        $this->setPlayerVariableName($player);
         $this->food = $health;
     }
 

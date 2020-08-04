@@ -32,8 +32,8 @@ class SetItemDamage extends Action implements ItemFlowItem {
     /** @var string */
     private $damage;
 
-    public function __construct(string $name = "item", string $damage = "") {
-        $this->itemVariableName = $name;
+    public function __construct(string $item = "item", string $damage = "") {
+        $this->setItemVariableName($item);
         $this->damage = $damage;
     }
 
@@ -46,7 +46,7 @@ class SetItemDamage extends Action implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->itemVariableName !== "" and $this->damage !== "";
+        return $this->getItemVariableName() !== "" and $this->damage !== "";
     }
 
     public function getDetail(): string {

@@ -36,8 +36,8 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
     /* @var string */
     private $value;
 
-    public function __construct(string $name = "config", string $key = "", string $value = "") {
-        $this->configVariableName = $name;
+    public function __construct(string $config = "config", string $key = "", string $value = "") {
+        $this->setConfigVariableName($config);
         $this->key = $key;
         $this->value = $value;
     }

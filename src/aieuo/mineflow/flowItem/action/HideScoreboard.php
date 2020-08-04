@@ -28,9 +28,9 @@ class HideScoreboard extends Action implements PlayerFlowItem, ScoreboardFlowIte
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function __construct(string $name = "target", string $position = "board") {
-        $this->playerVariableName = $name;
-        $this->scoreboardVariableName = $position;
+    public function __construct(string $player = "target", string $scoreboard = "board") {
+        $this->setPlayerVariableName($player);
+        $this->setScoreboardVariableName($scoreboard);
     }
 
     public function getDetail(): string {

@@ -45,8 +45,8 @@ class SendMenuForm extends Action implements PlayerFlowItem {
     /** @var string */
     private $lastResult;
 
-    public function __construct(string $target = "target", string $text = "", string $options = "", string $resultName = "menu") {
-        $this->playerVariableName = $target;
+    public function __construct(string $player = "target", string $text = "", string $options = "", string $resultName = "menu") {
+        $this->setPlayerVariableName($player);
         $this->formText = $text;
         $this->options = array_filter(array_map("trim", explode(";", $options)), function (string $o) { return $o !== ""; });
         $this->resultName = $resultName;
@@ -77,7 +77,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->playerVariableName !== "" and $this->formText !== "" and $this->resultName !== "";
+        return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
     public function getDetail(): string {

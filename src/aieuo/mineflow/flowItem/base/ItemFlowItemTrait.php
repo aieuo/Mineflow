@@ -11,22 +11,22 @@ use pocketmine\item\Item;
 
 trait ItemFlowItemTrait {
 
-    /* @var string */
-    private $itemVariableName = "item";
+    /* @var string[] */
+    private $itemVariableNames = [];
 
-    public function getItemVariableName(): string {
-        return $this->itemVariableName;
+    public function getItemVariableName(string $name = ""): string {
+        return $this->itemVariableNames[$name];
     }
 
-    public function setItemVariableName(string $name) {
-        $this->itemVariableName = $name;
+    public function setItemVariableName(string $item, string $name = "") {
+        $this->itemVariableNames[$name] = $item;
         return $this;
     }
 
-    public function getItem(Recipe $origin): ?Item {
-        $name = $origin->replaceVariables($this->getItemVariableName());
+    public function getItem(Recipe $origin, string $name = ""): ?Item {
+        $item = $origin->replaceVariables($this->getItemVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($item);
         if (!($variable instanceof ItemObjectVariable)) return null;
         return $variable->getItem();
     }

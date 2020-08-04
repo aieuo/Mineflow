@@ -32,7 +32,7 @@ class GetBlock extends Action implements PositionFlowItem {
     private $resultName = "";
 
     public function __construct(string $position = "pos", string $result = "block") {
-        $this->positionVariableName = $position;
+        $this->setPositionVariableName($position);
         $this->resultName = $result;
     }
 

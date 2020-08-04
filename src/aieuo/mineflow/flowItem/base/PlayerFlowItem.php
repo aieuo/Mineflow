@@ -9,11 +9,11 @@ use pocketmine\Player;
 
 interface PlayerFlowItem {
 
-    public function getPlayerVariableName(): string;
+    public function getPlayerVariableName(string $name = ""): string;
 
-    public function setPlayerVariableName(string $name);
+    public function setPlayerVariableName(string $player, string $name = "");
 
-    public function getPlayer(Recipe $origin): ?Player;
+    public function getPlayer(Recipe $origin, string $name): ?Player;
 
     public function throwIfInvalidPlayer(?Player $player);
 }

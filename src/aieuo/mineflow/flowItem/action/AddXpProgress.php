@@ -30,8 +30,8 @@ class AddXpProgress extends Action implements PlayerFlowItem {
     /** @var string */
     private $xp;
 
-    public function __construct(string $name = "target", string $damage = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $damage = "") {
+        $this->setPlayerVariableName($player);
         $this->xp = $damage;
     }
 

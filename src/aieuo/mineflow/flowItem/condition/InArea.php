@@ -30,59 +30,19 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 
-    /* @var string */
-    private $pos1 = "pos1";
-    /* @var string */
-    private $pos2 = "pos2";
-
     public function __construct(string $entity = "target", string $pos1 = "pos1", string $pos2 = "pos2") {
-        $this->entityVariableName = $entity;
-        $this->pos1 = $pos1;
-        $this->pos2 = $pos2;
+        $this->setEntityVariableName($entity);
+        $this->setPositionVariableName($pos1, "pos1");
+        $this->setPositionVariableName($pos2, "pos2");
     }
-
-    public function getPos1(): string {
-        return $this->pos1;
-    }
-
-    public function setPos1(string $name) {
-        $this->pos1 = $name;
-        return $this;
-    }
-
-    public function getPosition1(Recipe $origin): ?Position {
-        $name = $origin->replaceVariables($this->getPos1());
-
-        $variable = $origin->getVariable($name);
-        if (!($variable instanceof PositionObjectVariable)) return null;
-        return $variable->getPosition();
-    }
-
-    public function getPos2(): string {
-        return $this->pos2;
-    }
-
-    public function setPos2(string $name) {
-        $this->pos2 = $name;
-        return $this;
-    }
-
-    public function getPosition2(Recipe $origin): ?Position {
-        $name = $origin->replaceVariables($this->getPos2());
-
-        $variable = $origin->getVariable($name);
-        if (!($variable instanceof PositionObjectVariable)) return null;
-        return $variable->getPosition();
-    }
-
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->getPos1() !== "" and $this->getPos2() !== "";
+        return $this->getEntityVariableName() !== "" and $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "";
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPos1(), $this->getPos2()]);
+        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")]);
     }
 
     public function execute(Recipe $origin): bool {
@@ -91,10 +51,10 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
-        $pos1 = $this->getPosition1($origin);
+        $pos1 = $this->getPosition($origin, "pos1");
         $this->throwIfInvalidPosition($pos1);
 
-        $pos2 = $this->getPosition2($origin);
+        $pos2 = $this->getPosition($origin, "pos2");
         $this->throwIfInvalidPosition($pos2);
 
         $pos = $entity->floor();
@@ -109,8 +69,8 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@condition.inArea.form.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPos1()),
-                new Input("@condition.inArea.form.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPos2()),
+                new Input("@condition.inArea.form.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPositionVariableName("pos1")),
+                new Input("@condition.inArea.form.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPositionVariableName("pos2")),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -126,12 +86,12 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
     public function loadSaveData(array $content): Condition {
         if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
-        $this->setPos1($content[1]);
-        $this->setPos2($content[2]);
+        $this->setPositionVariableName($content[1], "pos1");
+        $this->setPositionVariableName($content[2], "pos2");
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getPos1(), $this->getPos2()];
+        return [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")];
     }
 }

@@ -30,8 +30,8 @@ class RemoveBossbar extends Action implements PlayerFlowItem {
     /** @var string */
     private $barId;
 
-    public function __construct(string $name = "target", string $barId = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $barId = "") {
+        $this->setPlayerVariableName($player);
         $this->barId = $barId;
     }
 

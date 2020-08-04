@@ -25,9 +25,9 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
     protected $detail = "action.executeRecipeWithEntity.detail";
     protected $detailDefaultReplace = ["name", "target"];
 
-    public function __construct(string $name = "", string $target = "") {
+    public function __construct(string $name = "", string $entity = "") {
         parent::__construct($name);
-        $this->entityVariableName = $target;
+        $this->setEntityVariableName($entity);
     }
 
     public function isDataValid(): bool {

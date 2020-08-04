@@ -36,8 +36,8 @@ class AddParticle extends Action implements PositionFlowItem {
     /** @var string */
     private $amount;
 
-    public function __construct(string $name = "pos", string $particle = "", string $amount = "1") {
-        $this->positionVariableName = $name;
+    public function __construct(string $position = "pos", string $particle = "", string $amount = "1") {
+        $this->setPositionVariableName($position);
         $this->particle = $particle;
         $this->amount = $amount;
     }

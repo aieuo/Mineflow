@@ -26,8 +26,8 @@ class ClearInventory extends Action implements PlayerFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function __construct(string $name = "target") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target") {
+        $this->setPlayerVariableName($player);
     }
 
     public function isDataValid(): bool {

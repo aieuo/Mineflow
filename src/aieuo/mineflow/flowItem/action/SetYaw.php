@@ -31,8 +31,8 @@ class SetYaw extends Action implements EntityFlowItem {
     /** @var string */
     private $yaw;
 
-    public function __construct(string $name = "target", string $pitch = "") {
-        $this->entityVariableName = $name;
+    public function __construct(string $entity = "target", string $pitch = "") {
+        $this->setEntityVariableName($entity);
         $this->yaw = $pitch;
     }
 

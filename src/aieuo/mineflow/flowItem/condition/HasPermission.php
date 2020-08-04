@@ -29,8 +29,8 @@ class HasPermission extends Condition implements PlayerFlowItem {
     /** @var string */
     private $playerPermission;
 
-    public function __construct(string $name = "target", string $permission = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $permission = "") {
+        $this->setPlayerVariableName($player);
         $this->playerPermission = $permission;
     }
 

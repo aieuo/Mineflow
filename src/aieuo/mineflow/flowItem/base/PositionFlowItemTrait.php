@@ -11,22 +11,22 @@ use pocketmine\level\Position;
 
 trait PositionFlowItemTrait {
 
-    /* @var string */
-    private $positionVariableName = "pos";
+    /* @var string[] */
+    private $positionVariableNames = [];
 
-    public function getPositionVariableName(): string {
-        return $this->positionVariableName;
+    public function getPositionVariableName(string $name = ""): string {
+        return $this->positionVariableNames[$name];
     }
 
-    public function setPositionVariableName(string $name) {
-        $this->positionVariableName = $name;
+    public function setPositionVariableName(string $position, string $name = "") {
+        $this->positionVariableNames[$name] = $position;
         return $this;
     }
 
-    public function getPosition(Recipe $origin): ?Position {
-        $name = $origin->replaceVariables($this->getPositionVariableName());
+    public function getPosition(Recipe $origin, string $name = ""): ?Position {
+        $position = $origin->replaceVariables($this->getPositionVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($position);
         if (!($variable instanceof PositionObjectVariable)) return null;
         return $variable->getPosition();
     }

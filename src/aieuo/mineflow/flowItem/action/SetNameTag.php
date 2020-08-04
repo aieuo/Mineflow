@@ -30,8 +30,8 @@ class SetNameTag extends Action implements EntityFlowItem {
     /** @var string */
     private $newName;
 
-    public function __construct(string $targetName = "target", string $newName = "") {
-        $this->entityVariableName = $targetName;
+    public function __construct(string $entity = "target", string $newName = "") {
+        $this->setEntityVariableName($entity);
         $this->newName = $newName;
     }
 

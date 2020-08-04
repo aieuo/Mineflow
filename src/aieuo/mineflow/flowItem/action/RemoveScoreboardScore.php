@@ -29,8 +29,8 @@ class RemoveScoreboardScore extends Action implements ScoreboardFlowItem {
     /* @var string */
     private $scoreName;
 
-    public function __construct(string $position = "board", string $name = "") {
-        $this->scoreboardVariableName = $position;
+    public function __construct(string $scoreboard = "board", string $name = "") {
+        $this->setScoreboardVariableName($scoreboard);
         $this->scoreName = $name;
     }
 

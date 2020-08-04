@@ -37,8 +37,8 @@ class SetGamemode extends Action implements PlayerFlowItem {
     /** @var string */
     private $gamemode;
 
-    public function __construct(string $name = "target", string $gamemode = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $gamemode = "") {
+        $this->setPlayerVariableName($player);
         $this->gamemode = $gamemode;
     }
 

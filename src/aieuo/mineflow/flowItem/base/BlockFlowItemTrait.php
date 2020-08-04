@@ -11,22 +11,22 @@ use pocketmine\block\Block;
 
 trait BlockFlowItemTrait {
 
-    /* @var string */
-    private $blockVariableName = "block";
+    /* @var string[] */
+    private $blockVariableNames = [];
 
-    public function getBlockVariableName(): string {
-        return $this->blockVariableName;
+    public function getBlockVariableName(string $name = ""): string {
+        return $this->blockVariableNames[$name];
     }
 
-    public function setBlockVariableName(string $name) {
-        $this->blockVariableName = $name;
+    public function setBlockVariableName(string $block, string $name = "") {
+        $this->blockVariableNames[$name] = $block;
         return $this;
     }
 
-    public function getBlock(Recipe $origin): ?Block {
-        $name = $origin->replaceVariables($this->getBlockVariableName());
+    public function getBlock(Recipe $origin, string $name = ""): ?Block {
+        $block = $origin->replaceVariables($this->getBlockVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($block);
         if (!($variable instanceof BlockObjectVariable)) return null;
         return $variable->getBlock();
     }

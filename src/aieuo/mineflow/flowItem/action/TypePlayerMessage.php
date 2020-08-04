@@ -25,8 +25,8 @@ abstract class TypePlayerMessage extends Action implements PlayerFlowItem {
     /** @var string */
     private $message;
 
-    public function __construct(string $name = "target", string $message = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $message = "") {
+        $this->setPlayerVariableName($player);
         $this->message = $message;
     }
 

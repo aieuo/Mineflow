@@ -32,9 +32,9 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
     /** @var string */
     private $index;
 
-    public function __construct(string $name = "target", string $item = "item", string $index = "") {
-        $this->playerVariableName = $name;
-        $this->itemVariableName = $item;
+    public function __construct(string $player = "target", string $item = "item", string $index = "") {
+        $this->setPlayerVariableName($player);
+        $this->setItemVariableName($item);
         $this->index = $index;
     }
 

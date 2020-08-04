@@ -35,8 +35,8 @@ class AddEnchantment extends Action implements ItemFlowItem {
     /** @var string */
     private $enchantLevel = "1";
 
-    public function __construct(string $name = "item", string $id = "", string $level = "1") {
-        $this->itemVariableName = $name;
+    public function __construct(string $item = "item", string $id = "", string $level = "1") {
+        $this->setItemVariableName($item);
         $this->enchantId = $id;
         $this->enchantLevel = $level;
     }
@@ -58,7 +58,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->itemVariableName !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
+        return $this->getItemVariableName() !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
     }
 
     public function getDetail(): string {

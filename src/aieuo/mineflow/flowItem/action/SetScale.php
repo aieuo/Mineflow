@@ -30,8 +30,8 @@ class SetScale extends Action implements EntityFlowItem {
     /** @var string */
     private $scale;
 
-    public function __construct(string $name = "target", string $scale = "") {
-        $this->entityVariableName = $name;
+    public function __construct(string $entity = "target", string $scale = "") {
+        $this->setEntityVariableName($entity);
         $this->scale = $scale;
     }
 

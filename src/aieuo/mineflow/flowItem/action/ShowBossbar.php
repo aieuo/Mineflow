@@ -33,8 +33,8 @@ class ShowBossbar extends Action implements PlayerFlowItem {
     private $value;
     private $barId;
 
-    public function __construct(string $name = "target", string $title = "", string $max = "", string $value = "", string $barId = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $title = "", string $max = "", string $value = "", string $barId = "") {
+        $this->setPlayerVariableName($player);
         $this->title = $title;
         $this->max = $max;
         $this->value = $value;

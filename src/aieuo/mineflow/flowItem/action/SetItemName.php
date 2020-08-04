@@ -31,8 +31,8 @@ class SetItemName extends Action implements ItemFlowItem {
     /** @var string */
     private $itemName;
 
-    public function __construct(string $name = "item", string $itemName = "") {
-        $this->itemVariableName = $name;
+    public function __construct(string $item = "item", string $itemName = "") {
+        $this->setItemVariableName($item);
         $this->itemName = $itemName;
     }
 
@@ -45,7 +45,7 @@ class SetItemName extends Action implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->itemVariableName !== "";
+        return $this->getItemVariableName() !== "";
     }
 
     public function getDetail(): string {

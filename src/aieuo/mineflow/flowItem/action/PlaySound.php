@@ -35,8 +35,8 @@ class PlaySound extends Action implements PlayerFlowItem {
     /** @var string */
     private $pitch;
 
-    public function __construct(string $name = "target", string $sound = "", string $volume = "1", string $pitch = "1") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $sound = "", string $volume = "1", string $pitch = "1") {
+        $this->setPlayerVariableName($player);
         $this->sound = $sound;
         $this->volume = $volume;
         $this->pitch = $pitch;

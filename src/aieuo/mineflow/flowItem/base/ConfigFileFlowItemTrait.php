@@ -11,22 +11,22 @@ use pocketmine\utils\Config;
 
 trait ConfigFileFlowItemTrait {
 
-    /* @var string */
-    private $configVariableName = "config";
+    /* @var string[] */
+    private $configVariableNames = [];
 
-    public function getConfigVariableName(): string {
-        return $this->configVariableName;
+    public function getConfigVariableName(string $name = ""): string {
+        return $this->configVariableNames[$name];
     }
 
-    public function setConfigVariableName(string $name) {
-        $this->configVariableName = $name;
+    public function setConfigVariableName(string $config, string $name = "") {
+        $this->configVariableNames[$name] = $config;
         return $this;
     }
 
-    public function getConfig(Recipe $origin): ?Config {
-        $name = $origin->replaceVariables($this->getConfigVariableName());
+    public function getConfig(Recipe $origin, string $name = ""): ?Config {
+        $config = $origin->replaceVariables($this->getConfigVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($config);
         if (!($variable instanceof ConfigObjectVariable)) return null;
         return $variable->getConfig();
     }

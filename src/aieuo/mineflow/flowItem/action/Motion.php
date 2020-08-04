@@ -36,7 +36,7 @@ class Motion extends Action implements EntityFlowItem {
     private $z = "0";
 
     public function __construct(string $entity = "target", string $x = "0", string $y = "0", string $z = "0") {
-        $this->entityVariableName = $entity;
+        $this->setEntityVariableName($entity);
         $this->setPosition($x, $y, $z);
     }
 
@@ -52,7 +52,7 @@ class Motion extends Action implements EntityFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entityVariableName !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
+        return $this->getEntityVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
     }
 
     public function getDetail(): string {

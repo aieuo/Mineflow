@@ -30,8 +30,8 @@ class Command extends Action implements PlayerFlowItem {
     /** @var string */
     private $command;
 
-    public function __construct(string $name = "target", string $command = "") {
-        $this->playerVariableName = $name;
+    public function __construct(string $player = "target", string $command = "") {
+        $this->setPlayerVariableName($player);
         $this->command = $command;
     }
 

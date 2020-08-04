@@ -11,22 +11,22 @@ use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
 
 trait ScoreboardFlowItemTrait {
 
-    /* @var string */
-    private $scoreboardVariableName = "board";
+    /* @var string[] */
+    private $scoreboardVariableNames = [];
 
-    public function getScoreboardVariableName(): string {
-        return $this->scoreboardVariableName;
+    public function getScoreboardVariableName(string $name = ""): string {
+        return $this->scoreboardVariableNames[$name];
     }
 
-    public function setScoreboardVariableName(string $name) {
-        $this->scoreboardVariableName = $name;
+    public function setScoreboardVariableName(string $scoreboard, string $name = "") {
+        $this->scoreboardVariableNames[$name] = $scoreboard;
         return $this;
     }
 
-    public function getScoreboard(Recipe $origin): ?Scoreboard {
-        $name = $origin->replaceVariables($this->getScoreboardVariableName());
+    public function getScoreboard(Recipe $origin, string $name): ?Scoreboard {
+        $scoreboard = $origin->replaceVariables($this->getScoreboardVariableName($name));
 
-        $variable = $origin->getVariable($name);
+        $variable = $origin->getVariable($scoreboard);
         if (!($variable instanceof ScoreboardObjectVariable)) return null;
         return $variable->getScoreboard();
     }

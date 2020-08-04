@@ -29,8 +29,8 @@ class ReplenishResource extends Action implements PositionFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function __construct(string $name = "pos") {
-        $this->positionVariableName = $name;
+    public function __construct(string $position = "pos") {
+        $this->setPositionVariableName($position);
     }
 
     public function isDataValid(): bool {

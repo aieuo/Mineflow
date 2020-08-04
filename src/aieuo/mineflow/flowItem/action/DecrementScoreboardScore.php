@@ -32,8 +32,8 @@ class DecrementScoreboardScore extends Action implements ScoreboardFlowItem {
     /* @var string */
     private $score;
 
-    public function __construct(string $position = "board", string $name = "", string $score = "") {
-        $this->scoreboardVariableName = $position;
+    public function __construct(string $scoreboard = "board", string $name = "", string $score = "") {
+        $this->setScoreboardVariableName($scoreboard);
         $this->scoreName = $name;
         $this->score = $score;
     }

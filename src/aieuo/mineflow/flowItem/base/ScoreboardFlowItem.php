@@ -9,11 +9,11 @@ use aieuo\mineflow\utils\Scoreboard;
 
 interface ScoreboardFlowItem {
 
-    public function getScoreboardVariableName(): string;
+    public function getScoreboardVariableName(string $name = ""): string;
 
-    public function setScoreboardVariableName(string $name);
+    public function setScoreboardVariableName(string $scoreboard, string $name = "");
 
-    public function getScoreboard(Recipe $origin): ?Scoreboard;
+    public function getScoreboard(Recipe $origin, string $name = ""): ?Scoreboard;
 
     public function throwIfInvalidScoreboard(?Scoreboard $board);
 }

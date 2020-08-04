@@ -9,11 +9,11 @@ use pocketmine\utils\Config;
 
 interface ConfigFileFlowItem {
 
-    public function getConfigVariableName(): string;
+    public function getConfigVariableName(string $name = ""): string;
 
-    public function setConfigVariableName(string $name);
+    public function setConfigVariableName(string $config, string $name = "");
 
-    public function getConfig(Recipe $origin): ?Config;
+    public function getConfig(Recipe $origin, string $name = ""): ?Config;
 
     public function throwIfInvalidConfig(?Config $block);
 }

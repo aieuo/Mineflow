@@ -40,9 +40,9 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         "action.equipArmor.boots",
     ];
 
-    public function __construct(string $name = "target", string $item = "item", string $index = "") {
-        $this->entityVariableName = $name;
-        $this->itemVariableName = $item;
+    public function __construct(string $entity = "target", string $item = "item", string $index = "") {
+        $this->setEntityVariableName($entity);
+        $this->setItemVariableName($item);
         $this->index = $index;
     }
 
