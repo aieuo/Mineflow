@@ -58,6 +58,10 @@ class RecipePack implements \JsonSerializable {
         return $this->configs;
     }
 
+    public function getVersion(): string {
+        return $this->version;
+    }
+
     private function getLinkedCommands(): array {
         $commandManager = Main::getCommandManager();
         $commands = [];

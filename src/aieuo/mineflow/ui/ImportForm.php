@@ -57,6 +57,10 @@ class ImportForm {
                 }
 
                 $pack = RecipePack::import($path);
+                if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
+                    $player->sendMessage(Language::get("import.plugin.outdated"));
+                    return;
+                }
                 $this->importPack($player, $pack);
             })->addArgs($path)->show($player);
 
