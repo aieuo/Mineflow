@@ -12,7 +12,6 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
  * @property bool $waiting
  * @property array|null $next
  * @property bool $exit
- * @property bool $break
  *
  * @property bool $lastResult
  */
@@ -54,6 +53,4 @@ interface ActionContainer extends FlowItemContainer {
     public function resume();
 
     public function exitRecipe();
-
-    public function break();
 }

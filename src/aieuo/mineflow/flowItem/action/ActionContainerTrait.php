@@ -19,8 +19,6 @@ trait ActionContainerTrait {
     private $next = null;
     /** @var bool */
     private $exit = false;
-    /** @var bool */
-    private $break = false;
 
     /** @var bool */
     private $lastResult;
@@ -118,10 +116,6 @@ trait ActionContainerTrait {
 
     public function exitRecipe() {
         $this->exit = true;
-    }
-
-    public function break() {
-        $this->break = true;
     }
 
     public function getLastActionResult(): ?bool {

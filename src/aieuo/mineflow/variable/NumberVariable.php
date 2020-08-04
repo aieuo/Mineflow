@@ -7,7 +7,7 @@ class NumberVariable extends Variable implements \JsonSerializable {
     public $type = Variable::NUMBER;
 
     /**
-     * @param int|float|double $value
+     * @param int|float $value
      * @param string $name
      */
     public function __construct($value, string $name = "") {
