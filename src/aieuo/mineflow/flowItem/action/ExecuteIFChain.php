@@ -62,7 +62,6 @@ class ExecuteIFChain extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getChainName(), $this->getPlayerVariableName()]);
     }
 
-    /** @noinspection PhpUndefinedMethodInspection */
     public function execute(Recipe $origin): bool {
         $this->throwIfCannotExecute();
 
