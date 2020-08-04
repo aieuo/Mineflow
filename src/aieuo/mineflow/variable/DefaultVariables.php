@@ -196,8 +196,8 @@ class DefaultVariables {
             case $event instanceof PlayerExhaustEvent:
                 $target = $event->getPlayer();
                 $variables = self::getEntityVariables($target);
-                $variables["amount"] = $event->getAmount();
-                $variables["cause"] = $event->getCause();
+                $variables["amount"] = new NumberVariable($event->getAmount(), "amount");
+                $variables["cause"] = new NumberVariable($event->getCause(), "cause");
                 break;
             case $event instanceof ProjectileHitEntityEvent: // TODO: player?
                 $target = $event->getEntity();
