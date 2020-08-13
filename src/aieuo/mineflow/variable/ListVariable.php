@@ -56,7 +56,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         foreach ($this->getValue() as $value) {
             $values[] = $value->__toString();
         }
-        return str_replace("\"", "", json_encode($values));
+        return str_replace("\"", "", json_encode($values, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     public function getShowString(): string {
