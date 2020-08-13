@@ -50,8 +50,9 @@ class ActionFactory {
         self::register(new RemovePermission);
         self::register(new AddXpProgress);
         self::register(new AddXpLevel);
-        self::register(new AllowFlight);
         self::register(new GetTargetBlock);
+        self::register(new AllowFlight);
+        self::register(new AllowClimbWalls);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
@@ -72,6 +73,7 @@ class ActionFactory {
         self::register(new ElseifAction);
         self::register(new ElseAction);
         self::register(new RepeatAction);
+        self::register(new ForAction);
         self::register(new WhileTaskAction);
         self::register(new Wait);
         self::register(new CallRecipe);
@@ -80,6 +82,7 @@ class ActionFactory {
         self::register(new SaveData);
         self::register(new CreateConfigVariable);
         self::register(new SetConfigData);
+        self::register(new RemoveConfigData);
         self::register(new SaveConfigFile);
         self::register(new ExitRecipe);
         /* calculation */

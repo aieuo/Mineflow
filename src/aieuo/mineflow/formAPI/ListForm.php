@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\formAPI\element\Button;
+use pocketmine\Player;
 
 class ListForm extends Form {
 
@@ -56,6 +57,13 @@ class ListForm extends Form {
         return $this;
     }
 
+	public function forEach(array $inputs, callable $func): self {
+		foreach ($inputs as $input) {
+			$func($this, $input);
+		}
+		return $this;
+    }
+
     /**
      * @return Button[]
      */
@@ -91,4 +99,19 @@ class ListForm extends Form {
         }
         return $form;
     }
+
+	public function handleResponse(Player $player, $data): void {
+		if ($data === null) {
+			parent::handleResponse($player, $data);
+			return;
+		}
+
+    	$button = $this->getButton($data);
+    	if ($button === null or $button->getOnClick() === null) {
+			parent::handleResponse($player, $data);
+    		return;
+		}
+
+    	call_user_func($button->getOnClick(), $player);
+	}
 }

@@ -49,6 +49,7 @@ interface ActionIds {
     const ADD_PERMISSION = "addPermission";
     const REMOVE_PERMISSION = "removePermission";
     const ALLOW_FLIGHT = "allowFlight";
+    const ALLOW_CLIMB_WALLS = "allowClimbWalls";
 
     const ADD_MONEY = "addMoney";
     const SET_MONEY = "setMoney";
@@ -74,6 +75,7 @@ interface ActionIds {
     const SET_BLOCK = "setBlock";
     const GET_BLOCK = "getBlock";
     const ADD_PARTICLE = "addParticle";
+    const SET_WEATHER = "setWeather";
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_IF_CHAIN = "executeIFChain";
@@ -112,10 +114,12 @@ interface ActionIds {
     const ACTION_REPEAT = "repeat";
     const ACTION_WHILE = "while";
     const ACTION_WAIT = "wait";
+    const ACTION_FOR = "for";
+    const ACTION_FOREACH = "foreach";
     const SAVE_DATA = "save";
     const ACTION_WHILE_TASK = "whileTask";
     const CREATE_CONFIG_VARIABLE = "createConfig";
-    const SET_CONFIG_DATA = "setConfig";
+    const SET_CONFIG_VALUE = "setConfig";
     const SAVE_CONFIG_FILE = "saveConfig";
     const REMOVE_CONFIG_VALUE = "removeConfig";
     const EXIT_RECIPE = "exit";

@@ -211,7 +211,7 @@ abstract class Form implements PMForm {
                 $form->setContent($data["content"]);
                 foreach ($data["buttons"] as $button) {
                     if (!isset($button["text"])) return null;
-                    $form->addButton(new Button($button["text"], $button["id"] ?? null));
+                    $form->addButton(new Button($button["text"], null, $button["id"] ?? null));
                 }
                 break;
             case self::CUSTOM_FORM:

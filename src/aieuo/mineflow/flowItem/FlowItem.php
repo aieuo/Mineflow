@@ -116,7 +116,7 @@ abstract class FlowItem implements \JsonSerializable {
         }
     }
 
-    public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null) {
+    public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null, array $exclude = []) {
         if (!is_numeric($number)) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
         }
@@ -126,6 +126,9 @@ abstract class FlowItem implements \JsonSerializable {
         }
         if ($max !== null and $number > $max) {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.overValue", [$max]]]));
+        }
+        if (!empty($exclude) and in_array($number, $exclude)) {
+            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.excludedNumber", [implode(",", $exclude)]]]));
         }
     }
 

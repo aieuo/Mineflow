@@ -16,14 +16,14 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
-class SetConfigData extends Action implements ConfigFileFlowItem {
+class RemoveConfigData extends Action implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
     protected $id = self::SET_CONFIG_VALUE;
 
-    protected $name = "action.setConfigData.name";
-    protected $detail = "action.setConfigData.detail";
-    protected $detailDefaultReplace = ["config", "key", "value"];
+    protected $name = "action.removeConfigData.name";
+    protected $detail = "action.removeConfigData.detail";
+    protected $detailDefaultReplace = ["config", "key"];
 
     protected $category = Category::SCRIPT;
 
@@ -33,13 +33,10 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
 
     /** @var string */
     private $key;
-    /* @var string */
-    private $value;
 
-    public function __construct(string $config = "config", string $key = "", string $value = "") {
+    public function __construct(string $config = "config", string $key = "") {
         $this->setConfigVariableName($config);
         $this->key = $key;
-        $this->value = $value;
     }
 
     public function setKey(string $health): void {
@@ -50,21 +47,13 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         return $this->key;
     }
 
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
-        return $this->value;
-    }
-
     public function isDataValid(): bool {
-        return $this->getConfigVariableName() !== "" and $this->key !== "" and $this->value !== "";
+        return $this->getConfigVariableName() !== "" and $this->key !== "";
     }
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey(), $this->getValue()]);
+        return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
     public function execute(Recipe $origin): bool {
@@ -72,27 +61,10 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
 
         $key = $origin->replaceVariables($this->getKey());
 
-        $value = $this->getValue();
-
-        $helper = Main::getVariableHelper();
-        if (!$helper->isVariableString($value)) {
-            $value = $helper->replaceVariables($value, $origin->getVariables());
-            if (is_numeric($value)) $value = (float)$value;
-        } else {
-            $variable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
-            if ($variable instanceof ListVariable) {
-                $value = $variable->toArray();
-            } else if ($variable instanceof NumberVariable) {
-                $value = $variable->getValue();
-            } else {
-                $value = (string)$variable;
-            }
-        }
-
         $config = $this->getConfig($origin);
         $this->throwIfInvalidConfig($config);
 
-        $config->setNested($key, $value);
+        $config->removeNested($key);
         return true;
     }
 
@@ -102,7 +74,6 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
                 new Label($this->getDescription()),
                 new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getConfigVariableName()),
                 new Input("@action.setConfigData.form.key", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getKey()),
-                new Input("@action.setConfigData.form.value", Language::get("form.example", ["100"]), $default[3] ?? $this->getValue()),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
@@ -111,19 +82,17 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         $errors = [];
         if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setConfigVariableName($content[0]);
         $this->setKey($content[1]);
-        $this->setValue($content[2]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getConfigVariableName(), $this->getKey(), $this->getValue()];
+        return [$this->getConfigVariableName(), $this->getKey()];
     }
 }
