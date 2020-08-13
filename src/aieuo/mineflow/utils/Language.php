@@ -43,6 +43,10 @@ class Language {
         return !empty($messages);
     }
 
+    public static function add(array $messages) {
+        self::$messages = array_merge(self::$messages, $messages);
+    }
+
     public static function get(string $key, array $replaces = []): string {
         if (isset(self::$messages[$key])) {
             $message = self::$messages[$key];

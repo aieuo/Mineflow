@@ -94,6 +94,10 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return $this->getName();
     }
 
+    public function setGroup(string $group) {
+        $this->group = preg_replace("#/+#", "/", $group);
+    }
+
     public function getGroup(): string {
         return $this->group;
     }
