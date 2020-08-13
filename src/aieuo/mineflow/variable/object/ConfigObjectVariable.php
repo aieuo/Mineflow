@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -25,9 +26,9 @@ class ConfigObjectVariable extends ObjectVariable {
         if (!is_array($data)) return null;
 
         if (array_values($data) === $data) {
-            $variable = new ListVariable($this->toVariableArray($data), $index);
+            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($data), $index);
         } else {
-            $variable = new MapVariable($this->toVariableArray($data), $index);
+            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($data), $index);
         }
         return $variable;
     }
@@ -36,23 +37,5 @@ class ConfigObjectVariable extends ObjectVariable {
         /** @var Config $value */
         $value = $this->getValue();
         return $value;
-    }
-
-    private function toVariableArray(array $data): array {
-        $result = [];
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                if (array_values($value) === $value) {
-                    $result[$key] = new ListVariable($this->toVariableArray($value));
-                } else {
-                    $result[$key] = new MapVariable($this->toVariableArray($value), $key);
-                }
-            } elseif (is_numeric($value)) {
-                $result[$key] = new NumberVariable((float)$value);
-            } else {
-                $result[$key] = new StringVariable($value);
-            }
-        }
-        return $result;
     }
 }

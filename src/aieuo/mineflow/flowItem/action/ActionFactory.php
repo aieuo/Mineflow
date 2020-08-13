@@ -33,6 +33,7 @@ class ActionFactory {
         self::register(new SetMaxHealth);
         self::register(new SetScale);
         self::register(new AddEffect);
+        self::register(new CreateHumanEntity);
         /* player */
         self::register(new GetPlayerByName);
         self::register(new SetSleeping);
@@ -50,6 +51,7 @@ class ActionFactory {
         self::register(new AddXpProgress);
         self::register(new AddXpLevel);
         self::register(new AllowFlight);
+        self::register(new GetTargetBlock);
         /* item */
         self::register(new CreateItemVariable);
         self::register(new AddItem);
@@ -97,6 +99,7 @@ class ActionFactory {
         self::register(new AddListVariable);
         self::register(new CreateMapVariable);
         self::register(new AddMapVariable);
+        self::register(new CreateMapVariableFromJson);
         self::register(new DeleteListVariableContent);
         self::register(new CreatePositionVariable);
         self::register(new GetVariableNested);

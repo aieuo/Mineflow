@@ -270,4 +270,22 @@ class VariableHelper {
         }
         return $value;
     }
+
+    public function toVariableArray(array $data): array {
+        $result = [];
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                if (array_values($value) === $value) {
+                    $result[$key] = new ListVariable($this->toVariableArray($value));
+                } else {
+                    $result[$key] = new MapVariable($this->toVariableArray($value), $key);
+                }
+            } elseif (is_numeric($value)) {
+                $result[$key] = new NumberVariable((float)$value);
+            } else {
+                $result[$key] = new StringVariable($value);
+            }
+        }
+        return $result;
+    }
 }

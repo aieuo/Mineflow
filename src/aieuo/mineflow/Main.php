@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\EventManager;
 use aieuo\mineflow\flowItem\action\ActionFactory;
 use aieuo\mineflow\flowItem\condition\ConditionFactory;
@@ -72,6 +73,8 @@ class Main extends PluginBase {
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
         (new Economy($this))->loadPlugin();
+
+        EntityManager::init();
 
         ActionFactory::init();
         ConditionFactory::init();

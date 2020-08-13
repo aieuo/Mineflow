@@ -30,6 +30,8 @@ interface ActionIds {
     const ADD_EFFECT = "addEffect";
     const ADD_XP_PROGRESS = "addXp";
     const ADD_XP_LEVEL = "addXpLevel";
+    const GET_TARGET_BLOCK = "getTargetBlock";
+    const CREATE_HUMAN_ENTITY = "createHuman";
 
     const GET_PLAYER = "getPlayer";
     const SET_SLEEPING = "setSleeping";

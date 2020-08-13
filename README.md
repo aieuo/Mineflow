@@ -82,13 +82,17 @@ This can use all the keys of the position variable.
 - {entity.maxHealth} -> entity's max health (number)
 - {entity.yaw} -> entity's yaw (number)
 - {entity.pitch} -> entity's pitch (number)
+#### human
+A variable containing human data.  
+Available Keys (Let the name of the variable be "human".)  
+This can use all the keys of the position variable and entity variable.
+- {human.hand} -> player's hand item (item)
+- {human.food} -> player's food level (number)
 #### player
 A variable containing player data.  
 Available Keys (Let the name of the variable be "player".)  
-This can use all the keys of the position variable and entity variable.
+This can use all the keys of the position variable, entity variable and human variable.
 - {player.name} -> name of player (string)
-- {player.hand} -> player's hand item (item)
-- {player.food} -> player's food level (number)
 #### block
 A variable containing block data.  
 Available Keys (Let the name of the variable be "block".)  
@@ -147,11 +151,11 @@ Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, th
 ### Change the executor
 By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 ### arguments and return values
-You can set the value to be inherited from the original action and the value to be returned when executing in the "Callback the other recipe" action.
+You can set the value to be inherited from the original action, and the value to be returned when executing in the "Callback the other recipe" action.
 
 ## Examples
 ### CheckId command
-Send the ID of the item in player's hand to the chat field when execute `/id`.
+Send the ID of the item in the player's hand to the chat field when execute `/id`.
 [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)  
 
 ##### steps
@@ -245,13 +249,17 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {entity.maxHealth} -> エンティティの最大体力 (number)
 - {entity.yaw} -> エンティティの体の向き (number)
 - {entity.pitch} -> エンティティの頭の向き (number)
+#### human
+人間の情報を持っている変数  
+使用できるキー (変数名を「human」とします)  
+これはposition変数とentity変数の全てのキーを使用することができます
+- {human.hand} -> プレイヤーの手にあるアイテム (item)
+- {human.food} -> プレイヤーの空腹度 (number)
 #### player
 プレイヤーの情報を持っている変数  
 使用できるキー (変数名を「player」とします)  
-これはposition変数とentity変数の全てのキーを使用することができます
+これはposition変数とentity変数とhuman変数の全てのキーを使用することができます
 - {player.name} -> プレイヤーの名前 (string)
-- {player.hand} -> プレイヤーの手にあるアイテム (item)
-- {player.food} -> プレイヤーの空腹度 (number)
 #### block
 ブロックの情報を持っている変数  
 使用できるキー (変数名を「block」とします)  

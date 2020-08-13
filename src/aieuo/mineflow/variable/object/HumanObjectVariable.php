@@ -5,11 +5,12 @@ namespace aieuo\mineflow\variable\object;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
+use pocketmine\entity\Human;
 use pocketmine\Player;
 
-class PlayerObjectVariable extends HumanObjectVariable {
+class HumanObjectVariable extends EntityObjectVariable {
 
-    public function __construct(Player $value, string $name = "", ?string $str = null) {
+    public function __construct(Human $value, string $name = "", ?string $str = null) {
         parent::__construct($value, $name, $str ?? $value->getName());
     }
 
@@ -17,10 +18,13 @@ class PlayerObjectVariable extends HumanObjectVariable {
         $variable = parent::getValueFromIndex($index);
         if ($variable !== null) return $variable;
 
-        $player = $this->getPlayer();
+        $human = $this->getHuman();
         switch ($index) {
-            case "name":
-                $variable = new StringVariable($player->getName(), "name");
+            case "hand":
+                $variable = new ItemObjectVariable($human->getInventory()->getItemInHand(), "hand");
+                break;
+            case "food":
+                $variable = new NumberVariable($human->getFood(), "food");
                 break;
             default:
                 return null;
@@ -28,8 +32,8 @@ class PlayerObjectVariable extends HumanObjectVariable {
         return $variable;
     }
 
-    public function getPlayer(): Player {
-        /** @var Player $value */
+    public function getHuman(): Human {
+        /** @var Human $value */
         $value = $this->getValue();
         return $value;
     }
