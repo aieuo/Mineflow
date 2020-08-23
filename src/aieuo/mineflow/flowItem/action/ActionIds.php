@@ -76,6 +76,7 @@ interface ActionIds {
     const GET_BLOCK = "getBlock";
     const ADD_PARTICLE = "addParticle";
     const SET_WEATHER = "setWeather";
+    const GET_DISTANCE = "getDistance";
 
     const EXECUTE_RECIPE = "executeRecipe";
     const EXECUTE_IF_CHAIN = "executeIFChain";

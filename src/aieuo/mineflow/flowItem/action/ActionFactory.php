@@ -74,6 +74,7 @@ class ActionFactory {
         self::register(new ElseAction);
         self::register(new RepeatAction);
         self::register(new ForAction);
+        self::register(new ForeachAction);
         self::register(new WhileTaskAction);
         self::register(new Wait);
         self::register(new CallRecipe);
@@ -122,6 +123,7 @@ class ActionFactory {
         self::register(new GetBlock);
         self::register(new AddParticle);
         self::register(new PlaySoundAt);
+        self::register(new GetDistance);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);
