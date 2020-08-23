@@ -6,7 +6,9 @@ use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\LevelObjectVariable;
+use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
+use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
@@ -89,12 +91,12 @@ class DefaultVariables {
     public static function getEventVariables(Event $event, string $eventName): array {
         $variables = [];
         switch ($event) {
+            /** @noinspection PhpMissingBreakStatementInspection */
             case $event instanceof PlayerMoveEvent:
+                $variables["move_from"] = new LocationObjectVariable($event->getFrom(), "move_from");
+                $variables["move_to"] = new LocationObjectVariable($event->getTo(), "move_to");
             case $event instanceof PlayerDeathEvent:
             case $event instanceof PlayerChangeSkinEvent:
-                $target = $event->getPlayer();
-                $variables = self::getPlayerVariables($target);
-                break;
             case $event instanceof PlayerJoinEvent:
             case $event instanceof PlayerQuitEvent:
                 $target = $event->getPlayer();
@@ -133,17 +135,17 @@ class DefaultVariables {
             case $event instanceof PlayerToggleSneakEvent:
                 $target = $event->getPlayer();
                 $variables = self::getPlayerVariables($target);
-                $variables["state"] = new StringVariable($event->isSneaking(), "state");
+                $variables["state"] = new StringVariable($event->isSneaking() ? "true" : "false", "state");
                 break;
             case $event instanceof PlayerToggleSprintEvent:
                 $target = $event->getPlayer();
                 $variables = self::getPlayerVariables($target);
-                $variables["state"] = new StringVariable($event->isSprinting(), "state");
+                $variables["state"] = new StringVariable($event->isSprinting() ? "true" : "false", "state");
                 break;
             case $event instanceof PlayerToggleFlightEvent:
                 $target = $event->getPlayer();
                 $variables = self::getPlayerVariables($target);
-                $variables["state"] = new StringVariable($event->isFlying(), "state");
+                $variables["state"] = new StringVariable($event->isFlying() ? "true" : "false", "state");
                 break;
             case $event instanceof EntityLevelChangeEvent:
                 $target = $event->getEntity();
