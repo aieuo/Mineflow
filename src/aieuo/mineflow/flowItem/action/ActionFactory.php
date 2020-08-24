@@ -93,6 +93,7 @@ class ActionFactory {
         self::register(new GetPi);
         self::register(new GetE);
         self::register(new GenerateRandomNumber);
+        self::register(new CalculateReversePolishNotation);
         /* string */
         self::register(new EditString);
         self::register(new StringLength);

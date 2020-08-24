@@ -89,6 +89,7 @@ interface ActionIds {
     const GET_PI = "getPi";
     const GET_E = "getE";
     const GENERATE_RANDOM_NUMBER = "random";
+    CONST REVERSE_POLISH_NOTATION = "calculateRPN";
 
     const EDIT_STRING = "editString";
     const STRING_LENGTH = "strlen";
