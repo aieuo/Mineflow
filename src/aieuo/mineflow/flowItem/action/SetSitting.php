@@ -62,7 +62,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         self::leave($player);
 
         $pk = new AddActorPacket();
-        $pk->entityRuntimeId = ++Entity::$entityCount;
+        $pk->entityRuntimeId = Entity::$entityCount++;
         $pk->type = 84;
         $pk->position = $position;
         $pk->links = [new EntityLink($pk->entityRuntimeId, $player->getId(), EntityLink::TYPE_RIDER, false, true)];
