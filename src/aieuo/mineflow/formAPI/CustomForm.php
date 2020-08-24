@@ -3,6 +3,8 @@
 namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\formAPI\element\Element;
+use aieuo\mineflow\formAPI\element\Input;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class CustomForm extends Form {
@@ -67,5 +69,15 @@ class CustomForm extends Form {
             $form["content"][0]->setText(implode("\n", array_keys($this->messages))."\n".$form["content"][0]->getText());
         }
         return $form;
+    }
+
+    public function handleResponse(Player $player, $data): void {
+        foreach ($this->getContents() as $i => $content) {
+            if ($content instanceof Input) {
+                $data[$i] = str_replace("\\n", "\n", $data[$i]);
+            }
+        }
+
+        parent::handleResponse($player, $data);
     }
 }
