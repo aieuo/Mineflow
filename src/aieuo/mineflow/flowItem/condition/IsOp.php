@@ -26,6 +26,10 @@ class IsOp extends Condition implements PlayerFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
+    public function __construct(string $player = "target") {
+        $this->setPlayerVariableName($player);
+    }
+
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "";
     }
