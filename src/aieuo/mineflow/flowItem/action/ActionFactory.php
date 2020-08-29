@@ -12,6 +12,7 @@ class ActionFactory {
     public static function init(): void {
         self::register(new DoNothing);
         self::register(new EventCancel);
+        self::register(new GetDate);
         /* message */
         self::register(new SendMessage);
         self::register(new SendTip);

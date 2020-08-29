@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 interface ActionIds {
 
     const DO_NOTHING = "doNothing";
+    const GET_DATE = "getDate";
     const EVENT_CANCEL = "eventCancel";
     const SEND_FORM = "sendForm";
 
