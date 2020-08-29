@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
@@ -12,7 +13,6 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Button;
 
@@ -54,7 +54,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                     Language::get("form.command.addCommand.permission.custom"),
                 ], $defaults[2] ?? 0),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[3]) {
                     $this->sendMenu($player);
@@ -89,16 +89,11 @@ class CommandForm {
     public function sendSelectCommand(Player $player, array $defaults = [], array $errors = []) {
         (new CustomForm("@form.command.select.title"))
             ->setContents([
-                new Input("@form.command.name", "", $defaults[0] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new Input("@form.command.name", "", $defaults[0] ?? "", true),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {
                     $this->sendMenu($player);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendSelectCommand($player, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 
@@ -183,7 +178,7 @@ class CommandForm {
         (new CustomForm(Language::get("form.command.changeDescription.title", ["/".$command["command"]])))
             ->setContents([
                 new Input("@form.command.description", "", $command["description"] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->sendCommandMenu($player, $command);
@@ -206,7 +201,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                     Language::get("form.command.addCommand.permission.custom"),
                 ], $permissions[$command["permission"]] ?? 2),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->sendCommandMenu($player, $command);
@@ -228,15 +223,11 @@ class CommandForm {
     public function sendSelectPermissionName(Player $player, array $command, array $default = [], array $errors = []) {
         (new CustomForm(Language::get("form.command.changePermission.title", ["/".$command["command"]])))
             ->setContents([
-                new Input("@form.command.addCommand.permission.custom.input", "", $default[0] ?? $command["permission"]),
-                new Toggle("@form.cancelAndBack"),
+                new Input("@form.command.addCommand.permission.custom.input", "", $default[0] ?? $command["permission"], true),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, array $command) {
                 if ($data[1]) {
                     $this->changePermission($player, $command);
-                    return;
-                }
-                if ($data[0] === "") {
-                    $this->sendSelectPermissionName($player, $command, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 

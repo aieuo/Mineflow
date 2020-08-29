@@ -2,12 +2,13 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -67,19 +68,14 @@ class DeleteVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
+                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
                 new Toggle("@action.variable.form.global", !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $name = $data[1];
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$name, !$data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], !$data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

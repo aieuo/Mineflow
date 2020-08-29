@@ -7,9 +7,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
@@ -59,9 +59,9 @@ class SetSleeping extends Action implements PlayerFlowItem, PositionFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[2] ?? $this->getPositionVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName()),
+                new ExampleInput("@flowItem.form.target.position", "pos", $default[2] ?? $this->getPositionVariableName()),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 

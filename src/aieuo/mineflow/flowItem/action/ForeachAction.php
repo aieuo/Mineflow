@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
@@ -205,17 +205,10 @@ class ForeachAction extends Action implements ActionContainer {
     public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new Input("@action.foreach.listVariableName",Language::get("form.example", ["list"]), $default[0] ?? $this->getListVariableName()),
-                new Input("@action.foreach.keyVariableName", Language::get("form.example", ["key"]), $default[1] ?? $this->getKeyVariableName()),
-                new Input("@action.foreach.valueVariableName", Language::get("form.example", ["value"]), $default[2] ?? $this->getValueVariableName()),
+                new ExampleInput("@action.foreach.listVariableName","list", $default[0] ?? $this->getListVariableName(), true),
+                new ExampleInput("@action.foreach.keyVariableName", "key", $default[1] ?? $this->getKeyVariableName(), true),
+                new ExampleInput("@action.foreach.valueVariableName", "value", $default[2] ?? $this->getValueVariableName(), true),
             ])->onReceive(function (Player $player, array $data) {
-                for ($i = 0; $i < 3; $i++) {
-                    if ($data[$i] === "") {
-                        $this->sendSettingCounter($player, $data, [["@form.insufficient", $i]]);
-                        return;
-                    }
-                }
-
                 $this->setListVariableName($data[0]);
                 $this->setKeyVariableName($data[1]);
                 $this->setValueVariableName($data[2]);

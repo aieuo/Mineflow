@@ -4,6 +4,7 @@ namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
@@ -68,7 +69,6 @@ class ExportForm {
 
                         $recipes = array_values($recipes);
                         $this->sendRecipeList($player, $recipes, ["@form.delete.success"]);
-                        return;
                 }
             })->addArgs($recipes, $index)->show($player);
     }
@@ -87,11 +87,11 @@ class ExportForm {
 
         (new CustomForm("@mineflow.export"))
             ->setContents([
-                new Input("@form.export.name", "", $default[0] ?? ""),
-                new Input("@form.export.author", "", $default[1] ?? $player->getName()),
+                new Input("@form.export.name", "", $default[0] ?? "", true),
+                new Input("@form.export.author", "", $default[1] ?? $player->getName(), true),
                 new Input("@form.export.detail", "", $default[2] ?? ""),
                 new Toggle("@form.export.includeConfig", true),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, array $recipes) {
                 if ($data[4]) {
                     $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
@@ -104,9 +104,7 @@ class ExportForm {
 
                 /** @var array<string|int>[] $errors */
                 $errors = [];
-                if ($name === "") $errors[] = ["@form.insufficient", 0];
                 if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($name))) $errors = ["@form.recipe.invalidName", 0];
-                if ($author === "") $errors[] = ["@form.insufficient", 1];
 
                 if (!empty($errors)) {
                     $this->sendExportMenu($player, $recipes, $data, $errors);

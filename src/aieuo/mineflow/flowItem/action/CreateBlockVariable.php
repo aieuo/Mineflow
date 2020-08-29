@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -86,19 +86,14 @@ class CreateBlockVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createBlockVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getBlockId()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["block"]), $default[2] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.createBlockVariable.form.id", "1:0", $default[1] ?? $this->getBlockId(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "block", $default[2] ?? $this->getVariableName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        if ($data[2] === "") $data[2] = "block";
-        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" =>[]];
     }
 
     public function loadSaveData(array $content): Action {

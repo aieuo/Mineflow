@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\trigger\Trigger;
 use pocketmine\Player;
@@ -51,7 +52,7 @@ class RecipeForm {
         (new CustomForm("@form.recipe.addRecipe.title"))->setContents([
                 new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, string $defaultName) {
                 if ($data[2]) {
                     $this->sendMenu($player);
@@ -258,16 +259,11 @@ class RecipeForm {
         $form = new CustomForm(Language::get("form.recipe.changeName.title", [$recipe->getName()]));
         $form->setContents([
                 new Label("@form.recipe.changeName.content0"),
-                new Input("@form.recipe.changeName.content1", "", $default ?? $recipe->getName()),
-                new Toggle("@form.cancelAndBack")
+                new Input("@form.recipe.changeName.content1", "", $default ?? $recipe->getName(), true),
+                new CancelToggle()
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[2]) {
                     $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
-                    return;
-                }
-
-                if ($data[1] === "") {
-                    $this->sendChangeName($player, $recipe, $data[1], "@form.insufficient");
                     return;
                 }
 
@@ -389,7 +385,7 @@ class RecipeForm {
             ], $default[0] ?? $recipe->getTargetType()),
             new Input("@form.recipe.changeTarget.name", "@form.recipe.changeTarget.name.placeholder", $default1),
             new Input("@form.recipe.changeTarget.random", "@form.recipe.changeTarget.random.placeholder", $default2),
-            new Toggle("@form.cancelAndBack")
+            new CancelToggle()
         ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
             if ($data[3]) {
                 $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);

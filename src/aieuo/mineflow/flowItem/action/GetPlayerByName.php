@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\Player;
@@ -9,9 +11,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\Server;
 
 class GetPlayerByName extends Action {
@@ -84,21 +84,14 @@ class GetPlayerByName extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.getPlayerByName.form.target", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getPlayerName()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["player"]), $default[2] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.getPlayerByName.form.target", "aieuo", $default[1] ?? $this->getPlayerName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "player", $default[2] ?? $this->getResultName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -2,16 +2,15 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\element\Dropdown;
 
 class CalculateReversePolishNotation extends Action {
 
@@ -113,17 +112,14 @@ class CalculateReversePolishNotation extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.calculateRPN.form.value", Language::get("form.example", ["1 2 + 3 -"]), $default[1] ?? $this->getFormula()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[2] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.calculateRPN.form.value", "1 2 + 3 -", $default[1] ?? $this->getFormula(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[2] ?? $this->getResultName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -4,16 +4,16 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use pocketmine\math\Vector3;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 
 class Motion extends Action implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -83,11 +83,11 @@ class Motion extends Action implements EntityFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@action.motion.form.x", Language::get("form.example", ["2"]), $default[2] ?? $this->x),
-                new Input("@action.motion.form.y", Language::get("form.example", ["3"]), $default[3] ?? $this->y),
-                new Input("@action.motion.form.z", Language::get("form.example", ["4"]), $default[4] ?? $this->z),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName()),
+                new ExampleInput("@action.motion.form.x", "2", $default[2] ?? $this->x),
+                new ExampleInput("@action.motion.form.y", "3", $default[3] ?? $this->y),
+                new ExampleInput("@action.motion.form.z", "4", $default[4] ?? $this->z),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 

@@ -3,10 +3,10 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -105,19 +105,16 @@ class CreateScoreboardVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createScoreboardVariable.form.id", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getBoardId()),
-                new Input("@action.createScoreboardVariable.form.displayName", Language::get("form.example", ["auieo"]), $default[2] ?? $this->getDisplayName()),
+                new ExampleInput("@action.createScoreboardVariable.form.id", "aieuo", $default[1] ?? $this->getBoardId(), true),
+                new ExampleInput("@action.createScoreboardVariable.form.displayName", "auieo", $default[2] ?? $this->getDisplayName(), true),
                 new Dropdown("@action.createScoreboardVariable.form.type", $this->displayTypes, $default[3] ?? array_search($this->getDisplayType(), $this->displayTypes, true)),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["board"]), $default[4] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.resultVariableName", "board", $default[4] ?? $this->getVariableName()),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[0] === "") $errors[] = ["@form.insufficient", 0];
-        if ($data[4] === "") $data[4] = "board";
-        return ["contents" => [$data[4], $data[1], $data[2], $this->displayTypes[$data[3]]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[4], $data[1], $data[2], $this->displayTypes[$data[3]]], "cancel" => $data[5], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -2,6 +2,9 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -11,7 +14,6 @@ use aieuo\mineflow\ui\ActionContainerForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\ui\ScriptForm;
 use aieuo\mineflow\variable\NumberVariable;
 
 class RepeatAction extends Action implements ActionContainer {
@@ -155,7 +157,7 @@ class RepeatAction extends Action implements ActionContainer {
                         (new ActionContainerForm)->sendActionList($player, $this);
                         break;
                     case 2:
-                        (new ScriptForm)->sendSetRepeatCount($player, $this);
+                        $this->sendSetRepeatCountForm($player);
                         break;
                     case 3:
                         (new FlowItemForm)->sendChangeName($player, $this, $parent);
@@ -170,6 +172,22 @@ class RepeatAction extends Action implements ActionContainer {
             })->onClose(function (Player $player) {
                 Session::getSession($player)->removeAll();
             })->addMessages($messages)->show($player);
+    }
+
+    public function sendSetRepeatCountForm(Player $player, array $default = [], array $errors = []) {
+        (new CustomForm("@action.repeat.editCount"))
+            ->setContents([
+                new ExampleNumberInput("@action.repeat.repeatCount", "10", $default[0] ?? $this->getRepeatCount(), true, 1),
+                new CancelToggle()
+            ])->onReceive(function (Player $player, array $data) {
+                if ($data[1]) {
+                    $this->sendCustomMenu($player, ["@form.cancelled"]);
+                    return;
+                }
+
+                $this->setRepeatCount($data[0]);
+                $this->sendCustomMenu($player, ["@form.changed"]);
+            })->addErrors($errors)->show($player);
     }
 
     public function loadSaveData(array $contents): Action {

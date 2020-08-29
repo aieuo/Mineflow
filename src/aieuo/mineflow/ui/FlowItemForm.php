@@ -9,8 +9,8 @@ use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -20,7 +20,7 @@ class FlowItemForm {
         (new CustomForm(Language::get("form.recipe.changeName.title", [$item->getName()])))
             ->setContents([
                 new Input("@form.recipe.changeName.content1", "", $item->getCustomName()),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->onReceive(function (Player $player, array $data, FlowItem $item, FlowItemContainer $container) {
                 if ($data[1]) {
                     if ($container instanceof FlowItem and $container->hasCustomMenu()) {

@@ -4,14 +4,13 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\ReplenishResourcesAPI;
 use pocketmine\Server;
 
@@ -60,8 +59,8 @@ class ReplenishResource extends Action implements PositionFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.position", "pos", $default[1] ?? $this->getPositionVariableName()),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 

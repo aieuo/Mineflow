@@ -2,13 +2,14 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -101,19 +102,15 @@ class CreateListVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.variable.form.value", Language::get("form.example", ["aiueo"]), $default[2] ?? implode(",", $this->getVariableValue())),
+                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.value", "aiueo", $default[2] ?? implode(",", $this->getVariableValue()), true),
                 new Toggle("@action.variable.form.global", $default[3] ?? !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $name = $data[1];
-        $value = $data[2];
-        if ($name === "") $errors[] = ["@form.insufficient", 1];
-        return ["contents" => [$name, array_map("trim", explode(",", $value)), !$data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2])), !$data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

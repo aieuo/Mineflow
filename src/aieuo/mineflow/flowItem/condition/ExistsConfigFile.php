@@ -2,14 +2,14 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 
 class ExistsConfigFile extends Condition {
@@ -62,14 +62,13 @@ class ExistsConfigFile extends Condition {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createConfigVariable.form.name", Language::get("form.example", ["config"]), $default[1] ?? $this->getFileName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.createConfigVariable.form.name", "config", $default[1] ?? $this->getFileName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
         if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($data[1]))) $errors = ["@form.recipe.invalidName", 1];
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }

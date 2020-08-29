@@ -2,15 +2,16 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 
 class FourArithmeticOperations extends Action {
@@ -102,9 +103,8 @@ class FourArithmeticOperations extends Action {
         $resultName = $origin->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        if (!is_numeric($value1) or !is_numeric($value2)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
-        }
+        $this->throwIfInvalidNumber($value1);
+        $this->throwIfInvalidNumber($value2);
 
         switch ($operator) {
             case self::ADDITION:
@@ -141,24 +141,16 @@ class FourArithmeticOperations extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.fourArithmeticOperations.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
+                new ExampleNumberInput("@action.fourArithmeticOperations.form.value1", "10", $default[1] ?? $this->getValue1(), true),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
-                new Input("@action.fourArithmeticOperations.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleNumberInput("@action.fourArithmeticOperations.form.value2", "50", $default[3] ?? $this->getValue2(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[4] ?? $this->getResultName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        }
-        if ($data[4] === "") $data[4] = "result";
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -4,15 +4,15 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 
 class SetItemLore extends Action implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -72,17 +72,15 @@ class SetItemLore extends Action implements ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.target.require.item", Language::get("form.example", ["item"]), $default[1] ?? $this->getItemVariableName()),
-                new Input("@action.setLore.form.lore", Language::get("form.example", ["1;aiueo;abc"]), $default[2] ?? implode(";", $this->getLore())),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.target.require.item", "item", $default[1] ?? $this->getItemVariableName(), true),
+                new ExampleInput("@action.setLore.form.lore", "1;aiueo;abc", $default[2] ?? implode(";", $this->getLore()), false),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "item";
         $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) { return $t !== ""; });
-        return ["contents" => [$data[1], $lore], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $lore], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

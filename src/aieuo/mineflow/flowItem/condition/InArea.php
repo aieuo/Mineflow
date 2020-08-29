@@ -7,9 +7,9 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
@@ -66,19 +66,15 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@condition.inArea.form.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPositionVariableName("pos1")),
-                new Input("@condition.inArea.form.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPositionVariableName("pos2")),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
+                new ExampleInput("@condition.inArea.form.pos1", "pos1", $default[2] ?? $this->getPositionVariableName("pos1"), true),
+                new ExampleInput("@condition.inArea.form.pos2", "pos2", $default[3] ?? $this->getPositionVariableName("pos2"), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Condition {

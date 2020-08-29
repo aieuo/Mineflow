@@ -4,14 +4,15 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
@@ -106,26 +107,19 @@ class AddEffect extends Action implements EntityFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@action.addEffect.form.effect", Language::get("form.example", ["1"]), $default[2] ?? $this->getEffectId()),
-                new Input("@action.addEffect.form.time", Language::get("form.example", ["300"]), $default[3] ?? $this->getTime()),
-                new Input("@action.addEffect.form.power", Language::get("form.example", ["1"]), $default[4] ?? $this->getPower()),
+                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
+                new ExampleInput("@action.addEffect.form.effect", "1", $default[2] ?? $this->getEffectId(), true),
+                new ExampleNumberInput("@action.addEffect.form.time", "300", $default[3] ?? $this->getTime(), false, 1),
+                new ExampleNumberInput("@action.addEffect.form.power", "1", $default[4] ?? $this->getPower(), false),
                 new Toggle("@action.addEffect.form.visible", $default[5] ?? $this->visible),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[3] === "") $data[3] = "300";
         if ($data[4] === "") $data[4] = "1";
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[4]);
-        if (!$containsVariable and !is_numeric($data[4])) {
-            $errors[] = ["@flowItem.error.notNumber", 4];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

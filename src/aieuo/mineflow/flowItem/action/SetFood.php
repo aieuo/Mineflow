@@ -4,15 +4,15 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 
 class SetFood extends Action implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -70,25 +70,14 @@ class SetFood extends Action implements PlayerFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.setFood.form.food", Language::get("form.example", ["20"]), $default[2] ?? $this->getFood()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
+                new ExampleNumberInput("@action.setFood.form.food", "20", $default[2] ?? $this->getFood(), true, 0, 20),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        } elseif (!$containsVariable and (float)$data[2] < 1) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 2];
-        } elseif (!$containsVariable and (float)$data[2] > 20) {
-            $errors[] = [Language::get("flowItem.error.overValue", [20]), 2];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

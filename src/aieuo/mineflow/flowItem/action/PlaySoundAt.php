@@ -4,15 +4,15 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\Server;
 
@@ -104,29 +104,16 @@ class PlaySoundAt extends Action implements PositionFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Input("@action.playSound.form.sound", Language::get("form.example", ["random.levelup"]), $default[2] ?? $this->getSound()),
-                new Input("@action.playSound.form.volume", Language::get("form.example", ["1"]), $default[3] ?? $this->getVolume()),
-                new Input("@action.playSound.form.pitch", Language::get("form.example", ["1"]), $default[4] ?? $this->getPitch()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.position", "pos", $default[1] ?? $this->getPositionVariableName()), true,
+                new ExampleInput("@action.playSound.form.sound", "random.levelup", $default[2] ?? $this->getSound(), true),
+                new ExampleNumberInput("@action.playSound.form.volume", "1", $default[3] ?? $this->getVolume(), true),
+                new ExampleNumberInput("@action.playSound.form.pitch", "1", $default[4] ?? $this->getPitch(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "pos";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!Main::getVariableHelper()->containsVariable($data[3]) and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        }
-        if ($data[4] === "") {
-            $errors[] = ["@form.insufficient", 4];
-        } elseif (!Main::getVariableHelper()->containsVariable($data[4]) and !is_numeric($data[4])) {
-            $errors[] = ["@flowItem.error.notNumber", 4];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

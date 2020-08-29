@@ -4,15 +4,15 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
 
@@ -91,25 +91,15 @@ class AddParticle extends Action implements PositionFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Input("@action.addParticle.form.particle", Language::get("form.example", ["minecraft:explosion_particle"]), $default[2] ?? $this->getParticle()),
-                new Input("@action.addParticle.form.amount", Language::get("form.example", ["1"]), $default[3] ?? $this->getAmount()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.position", "pos", $default[1] ?? $this->getPositionVariableName(), true),
+                new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $default[2] ?? $this->getParticle(), true),
+                new ExampleNumberInput("@action.addParticle.form.amount", "1", $default[3] ?? $this->getAmount(), true, 1),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "pos";
-        $containsVariable = !Main::getVariableHelper()->containsVariable($data[3]);
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!$containsVariable and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        } elseif (!$containsVariable and (int)$data[3] < 1) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 3];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

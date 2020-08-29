@@ -4,15 +4,16 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Bossbar;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 
 class ShowBossbar extends Action implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -104,22 +105,17 @@ class ShowBossbar extends Action implements PlayerFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.showBossbar.form.title", Language::get("form.example", ["20"]), $default[2] ?? $this->getTitle()),
-                new Input("@action.showBossbar.form.max", Language::get("form.example", ["20"]), $default[3] ?? $this->getMax()),
-                new Input("@action.showBossbar.form.value", Language::get("form.example", ["20"]), $default[4] ?? $this->getValue()),
-                new Input("@action.showBossbar.form.id", Language::get("form.example", ["20"]), $default[5] ?? $this->getBarId()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
+                new ExampleInput("@action.showBossbar.form.title", "20", $default[2] ?? $this->getTitle(), true),
+                new ExampleNumberInput("@action.showBossbar.form.max", "20", $default[3] ?? $this->getMax(), true),
+                new ExampleNumberInput("@action.showBossbar.form.value", "20", $default[4] ?? $this->getValue(), true),
+                new ExampleInput("@action.showBossbar.form.id", "20", $default[5] ?? $this->getBarId(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        for ($i=2; $i<=5; $i++) {
-            if ($data[$i] === "") $errors[] = ["@form.insufficient", $i];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
@@ -80,19 +80,15 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.generateRandomNumber.form.min", Language::get("form.example", ["0"]), $default[1] ?? $this->getMin()),
-                new Input("@action.generateRandomNumber.form.max", Language::get("form.example", ["10"]), $default[2] ?? $this->getMax()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["random"]), $default[3] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.generateRandomNumber.form.min", "0", $default[1] ?? $this->getMin(), true),
+                new ExampleInput("@action.generateRandomNumber.form.max", "10", $default[2] ?? $this->getMax(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "random", $default[3] ?? $this->getResultName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $data[3] = "random";
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

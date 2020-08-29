@@ -2,15 +2,15 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 
 class IsActiveEntity extends Condition {
 
@@ -62,17 +62,13 @@ class IsActiveEntity extends Condition {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@condition.isActiveEntity.form.entityId", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getEntityId()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@condition.isActiveEntity.form.entityId", "aieuo", $default[1] ?? $this->getEntityId(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
     public function loadSaveData(array $content): Condition {

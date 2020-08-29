@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\MapVariable;
@@ -9,7 +11,6 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -117,11 +118,11 @@ class CreateMapVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.variable.form.key", Language::get("form.example", ["auieo"]), $default[2] ?? implode(",", $this->getKey())),
-                new Input("@action.variable.form.value", Language::get("form.example", ["aeiuo"]), $default[3] ?? implode(",", $this->getVariableValue())),
+                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.key", "auieo", $default[2] ?? implode(",", $this->getKey()), false),
+                new ExampleInput("@action.variable.form.value", "aeiuo", $default[3] ?? implode(",", $this->getVariableValue()), false),
                 new Toggle("@action.variable.form.global", $default[4] ?? !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
@@ -130,9 +131,6 @@ class CreateMapVariable extends Action {
         $name = $data[1];
         $key = array_map("trim", explode(",", $data[2]));
         $value = array_map("trim", explode(",", $data[3]));
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
         return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 

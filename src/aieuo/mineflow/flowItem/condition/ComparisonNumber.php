@@ -2,15 +2,14 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 
 class ComparisonNumber extends Condition {
@@ -121,28 +120,15 @@ class ComparisonNumber extends Condition {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@condition.comparisonNumber.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
+                new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $default[1] ?? $this->getValue1(), true),
                 new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
-                new Input("@condition.comparisonNumber.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $default[3] ?? $this->getValue2(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif (!$containsVariable and !is_numeric($data[1])) {
-            $errors[] = ["@flowItem.error.notNumber", 1];
-        }
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[3]);
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!$containsVariable and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Condition {

@@ -7,14 +7,14 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\ip\IFPlugin;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\event\Event;
 use pocketmine\Server;
 
@@ -97,17 +97,14 @@ class ExecuteIFChain extends Action implements PlayerFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.executeIFChain.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getChainName()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[2] ?? $this->getPlayerVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.executeIFChain.form.name", "aieuo", $default[1] ?? $this->getChainName(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $default[2] ?? $this->getPlayerVariableName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors = [["@form.insufficient", 1]];
-        if ($data[2] === "") $data[2] = "target";
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\variable\MapVariable;
@@ -125,14 +126,14 @@ class SendMenuForm extends Action implements PlayerFlowItem {
     public function getEditForm(array $default = [], array $errors = []): Form {
         $contents = [
             new Label($this->getDescription()),
-            new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-            new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["input"]), $default[2] ?? $this->getResultName()),
-            new Input("@action.sendInput.form.text", Language::get("form.example", ["aieuo"]), $default[3] ?? $this->getFormText()),
+            new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
+            new ExampleInput("@flowItem.form.resultVariableName", "input", $default[2] ?? $this->getResultName(), true),
+            new ExampleInput("@action.sendInput.form.text", "aieuo", $default[3] ?? $this->getFormText(), true),
         ];
         foreach ($this->getOptions() as $i => $option) {
             $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), Language::get("form.example", ["aieuo"]), $option);
         }
-        $contents[] = new Input("@customForm.dropdown.option.add", Language::get("form.example", ["aeiuo"]));
+        $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
         $contents[] = new Toggle("@action.sendInput.form.resendOnClose", $default[4] ?? $this->resendOnClose);
         $contents[] = new Toggle("@form.cancelAndBack");
 
@@ -149,10 +150,6 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         $cancel = array_pop($data);
         $resendOnClose = array_pop($data);
         $add = array_filter(array_map("trim", explode(";", array_pop($data))), function (string $o) { return $o !== ""; });
-
-        if ($target === "") $errors[] = ["@form.insufficient", 1];
-        if ($resultName === "") $errors[] = ["@form.insufficient", 2];
-        if ($text === "") $errors[] = ["@form.insufficient", 3];
 
         $options = array_filter($data, function (string $o) { return $o !== ""; });
         $options = array_merge($options, $add);

@@ -4,15 +4,16 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 
@@ -93,19 +94,16 @@ class AddEnchantment extends Action implements ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.target.require.item", Language::get("form.example", ["item"]), $default[1] ?? $this->getItemVariableName()),
-                new Input("@action.addEnchant.form.id", Language::get("form.example", ["1"]), $default[2] ?? $this->getEnchantId()),
-                new Input("@action.addEnchant.form.level", Language::get("form.example", ["1"]), $default[3] ?? $this->getEnchantLevel()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.target.require.item", "item", $default[1] ?? $this->getItemVariableName(), true),
+                new ExampleInput("@action.addEnchant.form.id", "1", $default[2] ?? $this->getEnchantId(), true),
+                new ExampleNumberInput("@action.addEnchant.form.level", "1", $default[3] ?? $this->getEnchantLevel(), false),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "item";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[2] === "") $data[3] = "1";
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

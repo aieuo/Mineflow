@@ -5,9 +5,9 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
@@ -66,17 +66,14 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.config", Language::get("form.example", ["target"]), $default[1] ?? $this->getConfigVariableName()),
-                new Input("@condition.existsConfigData.form.key", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getKey()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@flowItem.form.target.config", "target", $default[1] ?? $this->getConfigVariableName(), true),
+                new ExampleInput("@condition.existsConfigData.form.key", "aieuo", $default[2] ?? $this->getKey(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): Condition {

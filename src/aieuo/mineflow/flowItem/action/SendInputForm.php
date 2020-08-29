@@ -4,6 +4,8 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\utils\Language;
@@ -87,13 +89,8 @@ class SendInputForm extends Action implements PlayerFlowItem {
     private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []) {
         (new CustomForm($text))
             ->setContents([
-                new Input($text),
+                new Input($text, "", "", true),
             ])->onReceive(function (Player $player, array $data) use ($origin, $text, $resultName) {
-                if ($data[0] === "") {
-                    $this->sendForm($origin, $player, $text, $resultName, [["@form.insufficient", 0]]);
-                    return;
-                }
-
                 $this->lastResult = $data[0];
                 $variable = new StringVariable($data[0], $resultName);
                 $origin->addVariable($variable);
@@ -107,20 +104,16 @@ class SendInputForm extends Action implements PlayerFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["input"]), $default[2] ?? $this->getResultName()),
-                new Input("@action.sendInput.form.text", Language::get("form.example", ["aieuo"]), $default[3] ?? $this->getFormText()),
+                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "input", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.sendInput.form.text", "aieuo", $default[3] ?? $this->getFormText(), true), // TODO: placeholder, default
                 new Toggle("@action.sendInput.form.resendOnClose", $default[4] ?? $this->resendOnClose),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

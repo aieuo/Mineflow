@@ -3,11 +3,11 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -124,28 +124,17 @@ class CreatePositionVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createPositionVariable.form.x", Language::get("form.example", ["0"]), $default[1] ?? $this->getX()),
-                new Input("@action.createPositionVariable.form.y", Language::get("form.example", ["100"]), $default[2] ?? $this->getY()),
-                new Input("@action.createPositionVariable.form.z", Language::get("form.example", ["16"]), $default[3] ?? $this->getZ()),
-                new Input("@action.createPositionVariable.form.level", Language::get("form.example", ["world"]), $default[4] ?? $this->getLevel()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["pos"]), $default[5] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $default[1] ?? $this->getX(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $default[2] ?? $this->getY(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $default[3] ?? $this->getZ(), true),
+                new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $default[4] ?? $this->getLevel(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "pos", $default[5] ?? $this->getVariableName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $helper = Main::getVariableHelper();
-        for ($i=1; $i<=3; $i++) {
-            if ($data[$i] === "") {
-                $errors[] = ["@form.insufficient", $i];
-            } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {
-                $errors[] = ["@flowItem.error.notNumber", $i];
-            }
-        }
-        if ($data[4] === "") $data[4] = "{target.level.name}";
-        if ($data[5] === "") $data[5] = "pos";
-        return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6], "errors" => []];
     }
 
     public function loadSaveData(array $content): Action {

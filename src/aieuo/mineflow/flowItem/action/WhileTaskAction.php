@@ -5,6 +5,9 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\ConditionContainer;
 use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
@@ -12,7 +15,6 @@ use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\ui\ScriptForm;
 use aieuo\mineflow\ui\ConditionContainerForm;
 use aieuo\mineflow\ui\ActionForm;
 use aieuo\mineflow\ui\ActionContainerForm;
@@ -185,7 +187,7 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
                         (new ActionContainerForm)->sendActionList($player, $this);
                         break;
                     case 3:
-                        (new ScriptForm)->sendSetWhileInterval($player, $this);
+                        $this->sendSetWhileIntervalForm($player);
                         break;
                     case 4:
                         (new FlowItemForm)->sendChangeName($player, $this, $parent);
@@ -200,6 +202,22 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
             })->onClose(function (Player $player) {
                 Session::getSession($player)->removeAll();
             })->addMessages($messages)->show($player);
+    }
+
+    public function sendSetWhileIntervalForm(Player $player, array $default = [], array $errors = []) {
+        (new CustomForm("@action.repeat.editCount"))
+            ->setContents([
+                new ExampleNumberInput("@action.whileTask.interval", "20", $default[0] ?? $this->getInterval(), true, 1),
+                new CancelToggle()
+            ])->onReceive(function (Player $player, array $data) {
+                if ($data[1]) {
+                    $this->sendCustomMenu($player, ["@form.cancelled"]);
+                    return;
+                }
+
+                $this->setInterval((int)$data[0]);
+                $this->sendCustomMenu($player, ["@form.changed"]);
+            })->addErrors($errors)->show($player);
     }
 
     public function loadSaveData(array $contents): Action {

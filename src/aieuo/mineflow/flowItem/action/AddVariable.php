@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\StringVariable;
@@ -10,7 +12,6 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -102,29 +103,21 @@ class AddVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.variable.form.value", Language::get("form.example", ["aeiuo"]), $default[2] ?? $this->getVariableValue()),
+                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.value", "aeiuo", $default[2] ?? $this->getVariableValue(), true),
                 new Dropdown("@action.variable.form.type", $this->variableTypes, $default[3] ?? $this->variableType),
                 new Toggle("@action.variable.form.global", $default[4] ?? !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $name = $data[1];
-        $value = $data[2];
-        $type = $data[3];
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        $containsVariable = Main::getVariableHelper()->containsVariable($value);
-        if ($value === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif ($type === Variable::NUMBER and !$containsVariable and !is_numeric($value)) {
+        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
+        if ($data[3] === Variable::NUMBER and !$containsVariable and !is_numeric($data[2])) {
             $errors[] = ["@flowItem.error.notNumber", 1];
         }
-        return ["contents" => [$name, $value, $type, !$data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): Action {

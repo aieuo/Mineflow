@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -79,21 +79,14 @@ class CreateConfigVariable extends Action {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createConfigVariable.form.name", Language::get("form.example", ["config"]), $default[1] ?? $this->getFileName()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["config"]), $default[2] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
+                new ExampleInput("@action.createConfigVariable.form.name", "config", $default[1] ?? $this->getFileName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "config", $default[2] ?? $this->getVariableName(), true),
+                new CancelToggle()
             ])->addErrors($errors);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif (preg_match("#[.¥/:?<>|*\"]#", preg_quote($data[1]))) {
-            $errors[] = ["@form.recipe.invalidName", 1];
-        }
-        if ($data[2] === "") $data[2] = "config";
-        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" =>[]];
     }
 
     public function loadSaveData(array $content): Action {

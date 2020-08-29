@@ -3,8 +3,9 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
@@ -204,28 +205,11 @@ class ForAction extends Action implements ActionContainer {
     public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new Input("@action.for.counterName", Language::get("form.example", ["i"]), $default[0] ?? $this->getCounterName()),
-                new Input("@action.for.start", Language::get("form.example", ["0"]), $default[1] ?? $this->getStartIndex()),
-                new Input("@action.for.end", Language::get("form.example", ["9"]), $default[2] ?? $this->getEndIndex()),
+                new ExampleInput("@action.for.counterName", "i", $default[0] ?? $this->getCounterName(), true),
+                new ExampleNumberInput("@action.for.start", "0", $default[1] ?? $this->getStartIndex(), true),
+                new ExampleNumberInput("@action.for.end", "9", $default[2] ?? $this->getEndIndex(), true, null, null, [0]),
                 new Input("@action.for.fluctuation", Language::get("form.example", ["1"]), $default[3] ?? $this->getFluctuation())
             ])->onReceive(function (Player $player, array $data) {
-                $variableHelper = Main::getVariableHelper();
-                for ($i=0; $i<4; $i++) {
-                    if ($data[$i] === "") {
-                        $this->sendSettingCounter($player, $data, [["@form.insufficient", $i]]);
-                        return;
-                    }
-                    $contains = $variableHelper->containsVariable($data[$i]);
-                    if ($i !== 0 and !$contains and !is_numeric($data[$i])) {
-                        $this->sendSettingCounter($player, $data, [["@flowItem.error.notNumber", $i]]);
-                        return;
-                    }
-                    if ($i === 3 and $data[$i] == 0) {
-                        $this->sendSettingCounter($player, $data, [["@flowItem.error.excludedNumber", "0"]]);
-                        return;
-                    }
-                }
-
                 $this->setCounterName($data[0]);
                 $this->setStartIndex($data[1]);
                 $this->setEndIndex($data[2]);
