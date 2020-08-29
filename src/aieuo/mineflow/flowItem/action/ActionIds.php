@@ -137,6 +137,7 @@ interface ActionIds {
     const SET_SCOREBOARD_SCORE = "setScore";
     const SET_SCOREBOARD_SCORE_NAME = "setScoreName";
     const REMOVE_SCOREBOARD_SCORE = "addScore";
+    const REMOVE_SCOREBOARD_SCORE_NAME = "removeScoreName";
     const INCREMENT_SCOREBOARD_SCORE = "incrementScore";
     const DECREMENT_SCOREBOARD_SCORE = "decrementScore";
 }

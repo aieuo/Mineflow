@@ -37,6 +37,10 @@ class Scoreboard {
         $this->displayName = $displayName;
     }
 
+    public function existsScore(string $name): bool {
+        return isset($this->scores[$name]);
+    }
+
     public function getScores(): array {
         return $this->scores;
     }
@@ -64,6 +68,23 @@ class Scoreboard {
         return $this;
     }
 
+	public function removeScoreName(int $score): self {
+		$oldNames = array_keys($this->scores, $score);
+		if (empty($oldNames)) return $this;
+
+		foreach ($oldNames as $oldName) {
+			$this->removeScore($oldName);
+		}
+		return $this;
+	}
+
+	public function removeScoreNames(int ...$scores): self {
+		foreach ($scores as $score) {
+			$this->removeScoreName($score);
+		}
+		return $this;
+	}
+
     public function getScore(string $name): ?int {
         return $this->scores[$name] ?? null;
     }
@@ -88,6 +109,8 @@ class Scoreboard {
         $pk->type = SetScorePacket::TYPE_CHANGE;
 
         foreach ($this->scores as $name => $score) {
+            if (!isset($this->scoreIds[$name])) continue;
+
             $entry = new ScorePacketEntry();
             $entry->objectiveName = $this->id;
             $entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
@@ -119,9 +142,12 @@ class Scoreboard {
     }
 
     public function removeScoreFromPlayer(Player $player, string $scoreName) {
+        if (!isset($this->scoreIds[$scoreName])) return;
+
         $entry = new ScorePacketEntry();
         $entry->objectiveName = $this->id;
         $entry->scoreboardId = $this->scoreIds[$scoreName];
+		$entry->score = 0;
 
         $pk = new SetScorePacket();
         $pk->type = $pk::TYPE_REMOVE;

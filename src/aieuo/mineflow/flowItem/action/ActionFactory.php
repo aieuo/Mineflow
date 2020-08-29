@@ -132,6 +132,7 @@ class ActionFactory {
         self::register(new IncrementScoreboardScore);
         self::register(new DecrementScoreboardScore);
         self::register(new RemoveScoreboardScore);
+        self::register(new RemoveScoreboardScoreName);
         /* other plugins */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
