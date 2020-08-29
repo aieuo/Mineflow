@@ -161,8 +161,8 @@ class ActionFactory {
     }
 
     /**
-     * @param string $category
-     * @param int $permission
+     * @param string|null $category
+     * @param int|null $permission
      * @return Action[]
      */
     public static function getByFilter(string $category = null, int $permission = null): array {

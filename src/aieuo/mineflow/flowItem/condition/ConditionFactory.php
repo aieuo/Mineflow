@@ -60,7 +60,7 @@ class ConditionFactory {
     }
 
     /**
-     * @param string $category
+     * @param string|null $category
      * @param int|null $permission
      * @return Condition[]
      */

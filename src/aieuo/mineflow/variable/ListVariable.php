@@ -19,7 +19,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     /**
      * @param Variable[] $value
      * @param string $name
-     * @param string $str
+     * @param string|null $str
      */
     public function __construct(array $value, string $name = "", ?string $str = "") {
         parent::__construct($value, $name);

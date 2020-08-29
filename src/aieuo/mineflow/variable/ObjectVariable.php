@@ -12,7 +12,7 @@ class ObjectVariable extends Variable {
     /**
      * @param object $value
      * @param string $name
-     * @param string $str
+     * @param string|null $str
      */
     public function __construct(object $value, string $name = "", ?string $str = null) {
         parent::__construct($value, $name);
