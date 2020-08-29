@@ -17,12 +17,12 @@ class ConditionFactory {
         /* money */
         self::register(new OverMoney);
         self::register(new LessMoney);
-        self::register(new TakeMoney);
+        self::register(new TakeMoneyCondition);
         /* item */
         self::register(new InHand);
         self::register(new ExistsItem);
         self::register(new CanAddItem);
-        self::register(new RemoveItem);
+        self::register(new RemoveItemCondition);
         /* script */
         self::register(new ComparisonNumber);
         self::register(new ComparisonString);

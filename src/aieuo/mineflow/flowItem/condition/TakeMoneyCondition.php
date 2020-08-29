@@ -7,9 +7,9 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\economy\Economy;
 
-class TakeMoney extends TypeMoney {
+class TakeMoneyCondition extends TypeMoney {
 
-    protected $id = self::TAKE_MONEY;
+    protected $id = self::TAKE_MONEY_CONDITION;
 
     protected $name = "condition.takeMoney.name";
     protected $detail = "condition.takeMoney.detail";

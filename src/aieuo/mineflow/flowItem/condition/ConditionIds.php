@@ -14,12 +14,12 @@ interface ConditionIds {
 
     const OVER_MONEY = "overMoney";
     const LESS_MONEY = "lessMoney";
-    const TAKE_MONEY = "takeMoney";
+    const TAKE_MONEY_CONDITION = "takeMoney";
 
     const CAN_ADD_ITEM = "canAddItem";
     const EXISTS_ITEM = "existsItem";
     const IN_HAND = "isHandItem";
-    const REMOVE_ITEM = "removeItem";
+    const REMOVE_ITEM_CONDITION = "removeItem";
 
     const COMPARISON_NUMBER = "comparisonNumber";
     const COMPARISON_STRING = "comparisonString";
