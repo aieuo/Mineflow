@@ -8,7 +8,6 @@ use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\LevelObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;

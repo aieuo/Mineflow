@@ -2,11 +2,12 @@
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\entity\Creature;
-use pocketmine\entity\Entity;
 use pocketmine\Player;
 
 abstract class FlowItem implements \JsonSerializable {
@@ -97,18 +98,6 @@ abstract class FlowItem implements \JsonSerializable {
         return $data;
     }
 
-    public function isValidTarget(?Entity $target): bool {
-        switch ($this->targetRequired) {
-            case Recipe::TARGET_REQUIRED_ENTITY:
-                return $target instanceof Entity;
-            case Recipe::TARGET_REQUIRED_CREATURE:
-                return $target instanceof Creature;
-            case Recipe::TARGET_REQUIRED_PLAYER:
-                return $target instanceof Player;
-        }
-        return true;
-    }
-
     public function throwIfCannotExecute() {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents", [$this->getName()]);
@@ -132,12 +121,17 @@ abstract class FlowItem implements \JsonSerializable {
         }
     }
 
-    /**
-     * @param array $default
-     * @param array $errors
-     * @return Form
-     */
-    abstract public function getEditForm(array $default = [], array $errors = []): Form;
+    public function getEditForm(array $default = [], array $errors = []): Form {
+        return (new CustomForm($this->getName()))
+            ->setContents([
+                new Label($this->getDescription()),
+                new CancelToggle()
+            ])->addErrors($errors);
+    }
+
+    public function parseFromFormData(array $data): array {
+        return ["contents" => [], "cancel" => $data[1], "errors" => []];
+    }
 
     /**
      * @return boolean

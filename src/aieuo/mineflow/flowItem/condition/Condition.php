@@ -4,29 +4,13 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 
 abstract class Condition extends FlowItem implements ConditionIds {
 
     /** @var string */
     protected $type = Recipe::CONTENT_TYPE_CONDITION;
-
-    public function getEditForm(array $default = [], array $errors = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [], "cancel" => $data[1], "errors" => []];
-    }
 
     /**
      * @param array $content
@@ -49,8 +33,4 @@ abstract class Condition extends FlowItem implements ConditionIds {
      * @throws FlowItemLoadException|\ErrorException
      */
     abstract public function loadSaveData(array $content): Condition;
-
-    public function allowDirectCall(): bool {
-        return false;
-    }
 }
