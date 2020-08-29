@@ -72,9 +72,11 @@ class CustomForm extends Form {
     }
 
     public function handleResponse(Player $player, $data): void {
-        foreach ($this->getContents() as $i => $content) {
-            if ($content instanceof Input) {
-                $data[$i] = str_replace("\\n", "\n", $data[$i]);
+        if ($data!== null) {
+            foreach ($this->getContents() as $i => $content) {
+                if ($content instanceof Input) {
+                    $data[$i] = str_replace("\\n", "\n", $data[$i]);
+                }
             }
         }
 
