@@ -100,6 +100,10 @@ This can use all the keys of the position variable.
 - {block.name} -> name of block (string)
 - {block.id} -> id of block (number)
 - {block.damage} -> damage value of block (number)
+#### event
+A variable containing event data.
+Available Keys (Let the name of the variable be "event".)  
+- {event.name} -> name of event (string)
 
 
 List of default variables.
@@ -111,6 +115,7 @@ List of default variables.
     - {default_level} -> default world name (string)
     - {onlines} ->  names of online players (array)
     - {ops} -> name of operators (array)
+    - {event} -> event when the recipe executes (event)
 - Variables that can be used when the player executes
     - {target} -> player who executed (player)
 - Variables that can be used when the entity executes
@@ -267,6 +272,10 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {block.name} -> ブロックの名前 (string)
 - {block.id} -> ブロックのID (number)
 - {block.damage} -> ブロックのダメージ値 (number)
+#### event
+イベントの情報を持っている変数  
+使用できるキー (変数名を「event」とします)  
+- {event.name} -> イベントの名前 (string)
 
 
 デフォルト変数の一覧
@@ -278,6 +287,7 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
     - {default_level} -> デフォルトのワールド名 (string)
     - {onlines} -> オンラインのプレイヤー名 (array)
     - {ops} -> opの名前 (array)
+    - {event} -> レシピを実行したときのイベント (event)
 - プレイヤーが実行したときに使用できる変数
     - {target} -> 実行したプレイヤー (player)
 - エンティティが実行したときに使用できる変数

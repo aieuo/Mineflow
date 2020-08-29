@@ -10,14 +10,16 @@ use pocketmine\event\Event;
 class EventObjectVariable extends ObjectVariable {
 
     public function __construct(Event $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? $value->getEventName());
+        $names = explode("\\", $value->getEventName());
+        parent::__construct($value, $name, $str ?? end($names));
     }
 
     public function getValueFromIndex(string $index): ?Variable {
         $event = $this->getEvent();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($event->getEventName(), "name");
+                $names = explode("\\", $event->getEventName());
+                $variable = new StringVariable(end($names), "name");
                 break;
             case "isCanceled":
                 $variable = new StringVariable($event->isCancelled() ? "true" : "false", "isCanceled");

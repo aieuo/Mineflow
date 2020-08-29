@@ -91,7 +91,7 @@ class ExecuteRecipe extends Action {
         }
 
         $recipe->addVariables($origin->getVariables());
-        $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables(), null, $args);
+        $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables(), $origin->getEvent(), $args);
         return true;
     }
 

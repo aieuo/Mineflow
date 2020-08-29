@@ -49,7 +49,7 @@ class CallRecipe extends ExecuteRecipe {
         }
         $this->getParent()->wait();
         $recipe->setSourceRecipe($origin)->setSourceContainer($this->getParent());
-        $recipe->executeAllTargets($origin->getTarget(), [], null, $args);
+        $recipe->executeAllTargets($origin->getTarget(), [], $origin->getEvent(), $args);
         return true;
     }
 

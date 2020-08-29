@@ -205,7 +205,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
         // TODO: 整理する
         $targets = $this->getTargets($player);
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
-        if ($event instanceof Event) $variables = array_merge($variables, [new EventObjectVariable($event, "event")]);
+        if ($event instanceof Event) $variables = array_merge($variables, ["event" => new EventObjectVariable($event, "event")]);
         foreach ($targets as $target) {
             if ($target instanceof Entity) $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
             $recipe = clone $this;
