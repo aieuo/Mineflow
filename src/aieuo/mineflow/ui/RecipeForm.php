@@ -23,26 +23,13 @@ class RecipeForm {
         (new ListForm("@mineflow.recipe"))
             ->setContent("@form.selectButton")
             ->addButtons([
-                new Button("@form.back"),
-                new Button("@form.add"),
-                new Button("@form.edit"),
-                new Button("@form.recipe.menu.recipeList"),
-            ])->onReceive(function (Player $player, int $data) {
-                switch ($data) {
-                    case 0:
-                        (new HomeForm)->sendMenu($player);
-                        break;
-                    case 1:
-                        $this->sendAddRecipe($player);
-                        break;
-                    case 2:
-                        $this->sendSelectRecipe($player);
-                        break;
-                    case 3:
-                        $this->sendRecipeList($player);
-                        break;
-                }
-            })->addMessages($messages)->show($player);
+                new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
+                new Button("@form.add", function () use($player) { $this->sendAddRecipe($player); }),
+                new Button("@form.edit", function () use($player) { $this->sendSelectRecipe($player); }),
+                new Button("@form.recipe.menu.recipeList", function () use($player) { $this->sendRecipeList($player); }),
+                new Button("@mineflow.export", function () use($player) { (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title", [new ExportForm, "sendRecipeListByRecipe"]); }),
+                new Button("@mineflow.import", function () use($player) { (new ImportForm)->sendSelectImportFile($player); }),
+            ])->addMessages($messages)->show($player);
     }
 
     public function sendAddRecipe(Player $player, array $default = [], array $errors = []) {

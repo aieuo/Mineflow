@@ -22,38 +22,36 @@ class ExportForm {
     }
 
     public function sendRecipeList(Player $player, array $recipes, array $messages = []) {
-        $buttons = [new Button("@form.export.execution"), new Button("@form.add")];
-        foreach ($recipes as $recipe) {
-            $buttons[] = new Button($recipe->getGroup()."/".$recipe->getName());
+        $recipes = array_values($recipes);
+
+        $buttons = [
+            new Button("@form.export.execution", function () use($player, $recipes) { $this->sendExportMenu($player, $recipes); }),
+            new Button("@form.add")
+        ];
+        foreach ($recipes as $i => $recipe) {
+            $buttons[] = new Button($recipe->getGroup()."/".$recipe->getName(), function () use($player, $recipes, $i) {
+                $this->sendRecipeMenu($player, array_values($recipes), $i);
+            });
         }
+
         (new ListForm("@form.export.recipeList.title"))
             ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $recipes) {
-                if ($data === 0) {
-                    $this->sendExportMenu($player, $recipes);
-                    return;
-                }
-                if ($data === 1) {
-                    (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
-                        function (Player $player, Recipe $recipe) use ($recipes) {
-                            $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
-                            $this->sendRecipeList($player, $recipes, ["@form.added"]);
-                        },
-                        function (Player $player) use ($recipes) {
-                            $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
-                        }
-                    );
-                    return;
-                }
-                $data -= 2;
-
-                $this->sendRecipeMenu($player, array_values($recipes), $data);
+                (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
+                    function (Player $player, Recipe $recipe) use ($recipes) {
+                        $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
+                        $this->sendRecipeList($player, $recipes, ["@form.added"]);
+                    },
+                    function (Player $player) use ($recipes) {
+                        $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
+                    }
+                );
             })->addMessages($messages)->addArgs($recipes)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, array $recipes, int $index) {
-        $recipe = $recipes[$index]; //FIXME ? Undefined offset: 0
+        $recipe = $recipes[$index];
         (new ListForm($recipe->getName()))
             ->setContent("@form.selectButton")
             ->setButtons([
@@ -67,7 +65,6 @@ class ExportForm {
                     default:
                         unset($recipes[$index]);
 
-                        $recipes = array_values($recipes);
                         $this->sendRecipeList($player, $recipes, ["@form.delete.success"]);
                 }
             })->addArgs($recipes, $index)->show($player);
