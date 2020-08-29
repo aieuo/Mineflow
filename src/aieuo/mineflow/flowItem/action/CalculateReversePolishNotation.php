@@ -28,7 +28,7 @@ class CalculateReversePolishNotation extends Action {
 
     /** @var string */
     private $formula;
-    /** @var int */
+    /** @var string */
     private $resultName;
 
     /* @var string */

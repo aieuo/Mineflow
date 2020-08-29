@@ -27,7 +27,7 @@ class CreateMapVariableFromJson extends Action {
 
     /** @var string */
     private $variableName;
-    /** @var array */
+    /** @var string */
     private $json;
     /** @var bool */
     private $isLocal;

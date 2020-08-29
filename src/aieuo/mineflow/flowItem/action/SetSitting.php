@@ -63,7 +63,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
 
         $pk = new AddActorPacket();
         $pk->entityRuntimeId = Entity::$entityCount++;
-        $pk->type = 84;
+        $pk->type = "minecraft:minecart";
         $pk->position = $position;
         $pk->links = [new EntityLink($pk->entityRuntimeId, $player->getId(), EntityLink::TYPE_RIDER, false, true)];
         $pk->metadata = [
