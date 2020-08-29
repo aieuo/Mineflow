@@ -52,7 +52,7 @@ class DefaultVariables {
         return [
             "server_name" => new StringVariable($server->getName(), "server_name"),
             "microtime" => new NumberVariable(microtime(true), "microtime"),
-            "time" => new StringVariable(date("h:i:s"), "time"),
+            "time" => new StringVariable(date("H:i:s"), "time"),
             "date" => new StringVariable(date("m/d"), "date"),
             "default_level" => new StringVariable($server->getDefaultLevel()->getFolderName(), "default_level"),
             "onlines" => new ListVariable($onlines, "onlines"),
