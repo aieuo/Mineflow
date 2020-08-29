@@ -12,10 +12,15 @@ class Input extends Element {
     /** @var string */
     private $default;
 
-    public function __construct(string $text, string $placeholder = "", string $default = "") {
+    /** @var bool */
+    private $required;
+
+    public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false) {
         parent::__construct($text);
         $this->placeholder = $placeholder;
         $this->default = $default;
+
+        $this->required = $required;
     }
 
     /**
@@ -48,6 +53,10 @@ class Input extends Element {
      */
     public function getDefault(): string {
         return $this->default;
+    }
+
+    public function isRequired(): bool {
+        return $this->required;
     }
 
     public function jsonSerialize(): array {
