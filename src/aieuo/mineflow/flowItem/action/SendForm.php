@@ -75,6 +75,7 @@ class SendForm extends Action implements PlayerFlowItem {
         $form = clone $form;
         $form->setTitle($origin->replaceVariables($form->getTitle()));
         if ($form instanceof ModalForm) {
+            $form->setContent($origin->replaceVariables($form->getContent()));
             $form->setButton1($origin->replaceVariables($form->getButton1()));
             $form->setButton2($origin->replaceVariables($form->getButton2()));
         } elseif ($form instanceof ListForm) {
