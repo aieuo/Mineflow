@@ -59,14 +59,23 @@ class CustomForm extends Form {
         return $form;
     }
 
+    public function resetErrors(): Form {
+        foreach ($this->getContents() as $content) {
+            $content->setHighlight(null);
+            $content->setExtraText("");
+        }
+        return parent::resetErrors();
+    }
+
     public function reflectErrors(array $form): array {
         for ($i=0; $i<count($form["content"]); $i++) {
             if (empty($this->highlights[$i])) continue;
+            /** @var Element $content */
             $content = $form["content"][$i];
             $content->setHighlight(TextFormat::YELLOW);
         }
         if (!empty($this->messages) and !empty($this->contents)) {
-            $form["content"][0]->setText(implode("\n", array_keys($this->messages))."\n".$form["content"][0]->getText());
+            $form["content"][0]->setExtraText(implode("\n", array_keys($this->messages))."\n");
         }
         return $form;
     }

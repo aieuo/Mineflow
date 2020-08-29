@@ -155,6 +155,15 @@ abstract class Form implements PMForm {
     }
 
     /**
+     * @return $this
+     */
+    public function resetErrors(): self {
+        $this->messages = [];
+        $this->highlights = [];
+        return $this;
+    }
+
+    /**
      * @param string $text
      * @return string
      */

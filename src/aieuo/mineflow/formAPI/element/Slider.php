@@ -97,7 +97,7 @@ class Slider extends Element {
         }
         return [
             "type" => $this->type,
-            "text" => str_replace("\\n", "\n", $this->reflectHighlight($this->checkTranslate($this->text))),
+            "text" => $this->checkTranslate($this->extraText).$this->reflectHighlight($this->checkTranslate($this->text)),
             "min" => $this->min,
             "max" => $this->max,
             "step" => $this->step,

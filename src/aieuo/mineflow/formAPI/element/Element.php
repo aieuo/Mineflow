@@ -18,6 +18,8 @@ abstract class Element implements \JsonSerializable {
     protected $type;
     /** @var string */
     protected $text = "";
+    /** @var string */
+    protected $extraText = "";
     /** @var string|null */
     protected $highlight = null;
 
@@ -25,7 +27,7 @@ abstract class Element implements \JsonSerializable {
     private $uuid;
 
     public function __construct(string $text, ?string $uuid = null) {
-        $this->text = $text;
+        $this->text = str_replace("\\n", "\n", $text);
         $this->uuid = $uuid;
     }
 
@@ -34,7 +36,16 @@ abstract class Element implements \JsonSerializable {
      * @return self
      */
     public function setText(string $text): self {
-        $this->text = $text;
+        $this->text = str_replace("\\n", "\n", $text);
+        return $this;
+    }
+
+    /**
+     * @param string $extraText
+     * @return self
+     */
+    public function setExtraText(string $extraText): self {
+        $this->extraText = $extraText;
         return $this;
     }
 
