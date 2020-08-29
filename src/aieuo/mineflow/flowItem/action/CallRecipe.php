@@ -68,7 +68,6 @@ class CallRecipe extends ExecuteRecipe {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1]);
         return $this;

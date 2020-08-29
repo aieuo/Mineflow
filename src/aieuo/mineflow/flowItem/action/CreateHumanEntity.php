@@ -97,7 +97,6 @@ class CreateHumanEntity extends Action implements PlayerFlowItem, PositionFlowIt
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         $this->setResultName($content[2]);

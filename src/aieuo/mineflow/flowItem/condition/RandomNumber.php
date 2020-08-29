@@ -99,7 +99,6 @@ class RandomNumber extends Condition {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setMin($content[0]);
         $this->setMax($content[1]);
         $this->setValue($content[2]);

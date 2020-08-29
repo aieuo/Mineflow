@@ -72,7 +72,6 @@ class IsActiveEntity extends Condition {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setEntityId($content[0]);
         return $this;
     }

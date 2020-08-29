@@ -191,7 +191,6 @@ class RepeatAction extends Action implements ActionContainer {
     }
 
     public function loadSaveData(array $contents): Action {
-        if (!isset($contents[1])) throw new \OutOfBoundsException();
         $this->setRepeatCount((string)$contents[0]);
 
         foreach ($contents[1] as $content) {

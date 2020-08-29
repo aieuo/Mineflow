@@ -83,8 +83,6 @@ class SetYaw extends Action implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
-
         $this->setEntityVariableName($content[0]);
         $this->setYaw($content[1]);
         return $this;

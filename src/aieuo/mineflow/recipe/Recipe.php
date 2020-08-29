@@ -319,14 +319,14 @@ class Recipe implements \JsonSerializable, ActionContainer {
     /**
      * @param array $contents
      * @return self
-     * @throws FlowItemLoadException
-     * @throws \InvalidArgumentException
+     * @throws FlowItemLoadException|\ErrorException
      */
     public function loadSaveData(array $contents): self {
         foreach ($contents as $i => $content) {
             try {
                 $action = Action::loadSaveDataStatic($content);
-            } catch (\OutOfBoundsException $e) {
+            } catch (\ErrorException $e) {
+                if (strpos($e->getMessage(), "Undefined offset:") !== 0) throw $e;
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
 

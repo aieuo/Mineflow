@@ -162,7 +162,6 @@ class Calculate2 extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setValue1($content[0]);
         $this->setValue2($content[1]);
         $this->setOperator($content[2]);

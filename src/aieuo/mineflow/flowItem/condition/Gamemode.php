@@ -88,7 +88,6 @@ class Gamemode extends Condition implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setGamemode($content[1]);
         return $this;

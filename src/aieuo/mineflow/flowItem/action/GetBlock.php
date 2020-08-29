@@ -85,7 +85,6 @@ class GetBlock extends Action implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPositionVariableName($content[0]);
         $this->setResultName($content[1]);
         return $this;

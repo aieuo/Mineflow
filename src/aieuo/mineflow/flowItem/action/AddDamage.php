@@ -95,7 +95,6 @@ class AddDamage extends Action implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
         $this->setDamage($content[1]);
         if (isset($content[2])) $this->setCause((int)$content[2]);

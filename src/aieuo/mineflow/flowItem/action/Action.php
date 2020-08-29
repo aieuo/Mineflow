@@ -43,9 +43,7 @@ abstract class Action extends FlowItem implements ActionIds {
     /**
      * @param array $content
      * @return self
-     * @throws FlowItemLoadException
-     * @throws \OutOfBoundsException
-     * @throws \InvalidArgumentException
+     * @throws FlowItemLoadException|\ErrorException
      */
     public static function loadSaveDataStatic(array $content): self {
         $action = ActionFactory::get($content["id"]);
@@ -60,8 +58,7 @@ abstract class Action extends FlowItem implements ActionIds {
     /**
      * @param array $content
      * @return Action
-     * @throws FlowItemLoadException
-     * @throws \OutOfBoundsException
+     * @throws FlowItemLoadException|\ErrorException
      */
     abstract public function loadSaveData(array $content): Action;
 }

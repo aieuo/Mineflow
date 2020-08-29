@@ -100,7 +100,6 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex((string)$content[2]);

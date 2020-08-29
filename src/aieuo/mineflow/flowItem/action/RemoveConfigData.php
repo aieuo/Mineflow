@@ -80,7 +80,6 @@ class RemoveConfigData extends Action implements ConfigFileFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setConfigVariableName($content[0]);
         $this->setKey($content[1]);
         return $this;

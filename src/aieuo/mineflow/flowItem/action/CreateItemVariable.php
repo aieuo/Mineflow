@@ -128,7 +128,6 @@ class CreateItemVariable extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setItemId($content[1]);
         $this->setItemCount($content[2]);

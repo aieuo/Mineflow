@@ -81,7 +81,6 @@ class SetHealth extends Action implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
         $this->setHealth($content[1]);
         return $this;

@@ -219,8 +219,6 @@ class ForAction extends Action implements ActionContainer {
     }
 
     public function loadSaveData(array $contents): Action {
-        if (!isset($contents[4])) throw new \OutOfBoundsException();
-
         foreach ($contents[0] as $content) {
             $action = Action::loadSaveDataStatic($content);
             $this->addAction($action);

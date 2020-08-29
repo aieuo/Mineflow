@@ -99,7 +99,6 @@ class DeleteListVariableContent extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->isLocal = $content[2];

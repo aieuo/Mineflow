@@ -123,7 +123,6 @@ class AddEffect extends Action implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[4])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
         $this->setEffectId($content[1]);
         $this->setTime($content[2]);

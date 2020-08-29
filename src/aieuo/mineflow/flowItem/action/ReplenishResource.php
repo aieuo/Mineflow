@@ -70,7 +70,6 @@ class ReplenishResource extends Action implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setPositionVariableName($content[0]);
         return $this;
     }

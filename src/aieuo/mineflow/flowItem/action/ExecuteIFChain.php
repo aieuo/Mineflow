@@ -108,7 +108,6 @@ class ExecuteIFChain extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setChainName($content[0]);
         $this->setPlayerVariableName($content[1]);
         return $this;

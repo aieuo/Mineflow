@@ -31,9 +31,7 @@ abstract class Condition extends FlowItem implements ConditionIds {
     /**
      * @param array $content
      * @return self
-     * @throws FlowItemLoadException
-     * @throws \OutOfBoundsException
-     * @throws \InvalidArgumentException
+     * @throws FlowItemLoadException|\ErrorException
      */
     public static function loadSaveDataStatic(array $content): ?self {
         $condition = ConditionFactory::get($content["id"]);
@@ -48,8 +46,7 @@ abstract class Condition extends FlowItem implements ConditionIds {
     /**
      * @param array $content
      * @return Condition
-     * @throws FlowItemLoadException
-     * @throws \OutOfBoundsException
+     * @throws FlowItemLoadException|\ErrorException
      */
     abstract public function loadSaveData(array $content): Condition;
 

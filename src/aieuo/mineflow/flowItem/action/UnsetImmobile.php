@@ -63,8 +63,6 @@ class UnsetImmobile extends Action implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
-
         $this->setEntityVariableName($content[0]);
         return $this;
     }

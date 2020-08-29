@@ -59,7 +59,7 @@ class RecipeManager {
             $recipe = new Recipe($data["name"], $group, $data["author"] ?? "");
             try {
                 $recipe->loadSaveData($data["actions"]);
-            } catch (\InvalidArgumentException $e) {
+            } catch (\ErrorException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
             } catch (FlowItemLoadException $e) {

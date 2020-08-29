@@ -119,7 +119,6 @@ class ShowBossbar extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[4])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1]);
         $this->setMax($content[2]);

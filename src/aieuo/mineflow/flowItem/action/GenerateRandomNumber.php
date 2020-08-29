@@ -92,7 +92,6 @@ class GenerateRandomNumber extends TypeGetMathVariable {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setMin($content[0]);
         $this->setMax($content[1]);
         $this->setResultName($content[2]);

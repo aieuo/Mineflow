@@ -221,7 +221,6 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
     }
 
     public function loadSaveData(array $contents): Action {
-        if (!isset($contents[1])) throw new \OutOfBoundsException();
         foreach ($contents[0] as $content) {
             $condition = Condition::loadSaveDataStatic($content);
             $this->addCondition($condition);

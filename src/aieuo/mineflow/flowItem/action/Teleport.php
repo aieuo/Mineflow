@@ -70,7 +70,6 @@ class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         return $this;

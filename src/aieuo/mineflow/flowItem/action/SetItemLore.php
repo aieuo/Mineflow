@@ -84,7 +84,6 @@ class SetItemLore extends Action implements ItemFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setItemVariableName($content[0]);
         $this->setLore($content[1]);
         return $this;

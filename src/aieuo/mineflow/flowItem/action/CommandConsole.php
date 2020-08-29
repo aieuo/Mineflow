@@ -74,7 +74,6 @@ class CommandConsole extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setCommand($content[0]);
         return $this;
     }

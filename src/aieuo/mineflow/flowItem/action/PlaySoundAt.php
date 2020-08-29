@@ -117,7 +117,6 @@ class PlaySoundAt extends Action implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setPositionVariableName($content[0]);
         $this->setSound($content[1]);
         $this->setVolume($content[2]);

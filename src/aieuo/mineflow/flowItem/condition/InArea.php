@@ -78,7 +78,6 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setEntityVariableName($content[0]);
         $this->setPositionVariableName($content[1], "pos1");
         $this->setPositionVariableName($content[2], "pos2");

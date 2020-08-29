@@ -127,8 +127,6 @@ class ComparisonString extends Condition {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
-
         $this->setValues($content[0], $content[2]);
         $this->setOperator($content[1]);
         return $this;

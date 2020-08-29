@@ -72,7 +72,6 @@ class ShowScoreboard extends Action implements PlayerFlowItem, ScoreboardFlowIte
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setScoreboardVariableName($content[1]);
         return $this;

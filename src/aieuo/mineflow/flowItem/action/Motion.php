@@ -106,8 +106,6 @@ class Motion extends Action implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
-
         $this->setEntityVariableName($content[0]);
         $this->setPosition($content[1], $content[2], $content[3]);
         return $this;

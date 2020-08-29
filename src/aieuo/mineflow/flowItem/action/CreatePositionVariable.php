@@ -138,7 +138,6 @@ class CreatePositionVariable extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[4])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setX($content[1]);
         $this->setY($content[2]);

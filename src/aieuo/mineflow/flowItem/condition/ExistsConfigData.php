@@ -77,7 +77,6 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setConfigVariableName($content[0]);
         $this->setKey($content[1]);
         return $this;

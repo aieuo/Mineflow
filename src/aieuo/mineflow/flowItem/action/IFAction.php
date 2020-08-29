@@ -111,7 +111,6 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     }
 
     public function loadSaveData(array $contents): Action {
-        if (!isset($contents[1])) throw new \OutOfBoundsException();
         foreach ($contents[0] as $i => $content) {
             $condition = Condition::loadSaveDataStatic($content);
             $this->addCondition($condition);

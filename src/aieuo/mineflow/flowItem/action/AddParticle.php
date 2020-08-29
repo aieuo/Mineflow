@@ -103,7 +103,6 @@ class AddParticle extends Action implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setPositionVariableName($content[0]);
         $this->setParticle($content[1]);
         $this->setAmount($content[2]);

@@ -88,7 +88,6 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex($content[2]);

@@ -88,7 +88,6 @@ class Kick extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setReason($content[1]);
         if (isset($content[2]) and is_bool($content[2])) $this->isAdmin = $content[2];

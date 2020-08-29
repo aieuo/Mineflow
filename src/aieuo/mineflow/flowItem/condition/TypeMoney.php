@@ -69,8 +69,6 @@ abstract class TypeMoney extends Condition {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
-
         $this->setPlayerName($content[0]);
         $this->setAmount($content[1]);
         return $this;

@@ -50,7 +50,6 @@ abstract class TypeItem extends Action implements PlayerFlowItem, ItemFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         return $this;

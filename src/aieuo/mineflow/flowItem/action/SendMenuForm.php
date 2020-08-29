@@ -157,7 +157,6 @@ class SendMenuForm extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[4])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setResultName($content[1]);
         $this->setFormText($content[2]);

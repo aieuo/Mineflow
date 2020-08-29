@@ -71,7 +71,7 @@ class ActionForm {
         }
         try {
             $action->loadSaveData($data["contents"]);
-        } catch (FlowItemLoadException|\OutOfBoundsException $e) {
+        } catch (\ErrorException $e) {
             $player->sendMessage(Language::get("action.error.recipe"));
             Main::getInstance()->getLogger()->logException($e);
             return;

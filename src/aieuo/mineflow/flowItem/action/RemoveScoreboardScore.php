@@ -78,7 +78,6 @@ class RemoveScoreboardScore extends Action implements ScoreboardFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setScoreboardVariableName($content[0]);
         $this->setScoreName($content[1]);
         return $this;

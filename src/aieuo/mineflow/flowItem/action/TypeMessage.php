@@ -55,8 +55,6 @@ abstract class TypeMessage extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (empty($content[0])) throw new \OutOfBoundsException();
-
         $this->setMessage($content[0]);
         return $this;
     }

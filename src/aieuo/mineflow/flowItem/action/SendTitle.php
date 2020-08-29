@@ -122,7 +122,6 @@ class SendTitle extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1], $content[2]);
         if (isset($content[5])) {

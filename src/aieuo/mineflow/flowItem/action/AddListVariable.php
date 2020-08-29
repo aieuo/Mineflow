@@ -119,7 +119,6 @@ class AddListVariable extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2]) or !is_array($content[1])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->isLocal = $content[2];

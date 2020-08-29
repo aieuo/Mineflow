@@ -61,7 +61,6 @@ class ClearInventory extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         return $this;
     }

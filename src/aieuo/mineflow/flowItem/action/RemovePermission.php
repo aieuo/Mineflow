@@ -81,7 +81,6 @@ class RemovePermission extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setPlayerPermission($content[1]);
         return $this;

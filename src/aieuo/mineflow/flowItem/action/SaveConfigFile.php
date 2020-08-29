@@ -65,7 +65,6 @@ class SaveConfigFile extends Action implements ConfigFileFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setConfigVariableName($content[0]);
         return $this;
     }

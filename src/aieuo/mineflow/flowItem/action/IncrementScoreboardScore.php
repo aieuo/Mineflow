@@ -94,7 +94,6 @@ class IncrementScoreboardScore extends Action implements ScoreboardFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setScoreboardVariableName($content[0]);
         $this->setScoreName($content[1]);
         $this->setScore($content[2]);

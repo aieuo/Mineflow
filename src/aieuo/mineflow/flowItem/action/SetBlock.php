@@ -70,7 +70,6 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPositionVariableName($content[0]);
         $this->setBlockVariableName($content[1]);
         return $this;

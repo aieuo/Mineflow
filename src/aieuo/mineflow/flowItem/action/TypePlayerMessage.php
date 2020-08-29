@@ -63,8 +63,6 @@ abstract class TypePlayerMessage extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
-
         $this->setPlayerVariableName((string)$content[0]);
         $this->setMessage((string)$content[1]);
         return $this;

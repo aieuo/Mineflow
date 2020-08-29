@@ -116,7 +116,6 @@ class PlaySound extends Action implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         $this->setSound($content[1]);
         $this->setVolume($content[2]);

@@ -88,7 +88,6 @@ class GetDistance extends Action implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
         $this->setPositionVariableName($content[0], "pos1");
         $this->setPositionVariableName($content[1], "pos2");
         $this->setResultName($content[2]);

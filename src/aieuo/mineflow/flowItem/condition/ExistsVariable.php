@@ -71,7 +71,6 @@ class ExistsVariable extends Condition {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         return $this;
     }

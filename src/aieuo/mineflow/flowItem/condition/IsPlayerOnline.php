@@ -62,7 +62,6 @@ class IsPlayerOnline extends Condition implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): Condition {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
         $this->setPlayerVariableName($content[0]);
         return $this;
     }

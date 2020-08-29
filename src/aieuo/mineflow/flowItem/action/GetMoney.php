@@ -97,7 +97,6 @@ class GetMoney extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
         $this->setPlayerName($content[0]);
         $this->setResultName($content[1]);
         return $this;

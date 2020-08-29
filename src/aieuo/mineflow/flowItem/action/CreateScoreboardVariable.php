@@ -118,7 +118,6 @@ class CreateScoreboardVariable extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setBoardId($content[1]);
         $this->setDisplayName($content[2]);

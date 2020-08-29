@@ -121,7 +121,6 @@ class AddVariable extends Action {
     }
 
     public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->variableType = $content[2];

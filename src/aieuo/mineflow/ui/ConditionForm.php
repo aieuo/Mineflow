@@ -71,7 +71,7 @@ class ConditionForm {
         }
         try {
             $condition->loadSaveData($data["contents"]);
-        } catch (FlowItemLoadException|\OutOfBoundsException $e) {
+        } catch (FlowItemLoadException|\ErrorException $e) {
             $player->sendMessage(Language::get("action.error.recipe"));
             Main::getInstance()->getLogger()->logException($e);
             return;
