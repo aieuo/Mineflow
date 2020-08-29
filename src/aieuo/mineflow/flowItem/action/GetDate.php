@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\utils\Language;
@@ -81,7 +81,7 @@ class GetDate extends Action {
                 new Label($this->getDescription()),
                 new Input("@action.getDate.form.format", Language::get("form.example", ["H:i:s"]), $default[1] ?? $this->getFormat()),
                 new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["date"]), $default[2] ?? $this->getResultName()),
-                new CancelToggle()
+                new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }
 
