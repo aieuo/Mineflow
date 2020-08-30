@@ -100,4 +100,12 @@ class AndScript extends Condition implements ConditionContainer {
     public function isDataValid(): bool {
         return true;
     }
+
+    public function __clone() {
+        $conditions = [];
+        foreach ($this->getConditions() as $k => $condition) {
+            $conditions[$k] = clone $condition;
+        }
+        $this->setConditions($conditions);
+    }
 }

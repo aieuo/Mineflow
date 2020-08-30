@@ -363,4 +363,12 @@ class Recipe implements \JsonSerializable, ActionContainer {
         if (!file_exists(dirname($path))) @mkdir(dirname($path), 0777, true);
         file_put_contents($path, json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
+
+    public function __clone() {
+        $actions = [];
+        foreach ($this->getActions() as $k => $action) {
+            $actions[$k] = clone $action;
+        }
+        $this->setActions($actions);
+    }
 }

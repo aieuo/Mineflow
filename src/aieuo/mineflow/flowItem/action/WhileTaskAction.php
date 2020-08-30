@@ -235,4 +235,18 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
     public function allowDirectCall(): bool {
         return false;
     }
+
+    public function __clone() {
+        $conditions = [];
+        foreach ($this->getConditions() as $k => $condition) {
+            $conditions[$k] = clone $condition;
+        }
+        $this->setConditions($conditions);
+
+        $actions = [];
+        foreach ($this->getActions() as $k => $action) {
+            $actions[$k] = clone $action;
+        }
+        $this->setActions($actions);
+    }
 }
