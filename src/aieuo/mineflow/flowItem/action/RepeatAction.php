@@ -219,4 +219,12 @@ class RepeatAction extends Action implements ActionContainer {
     public function allowDirectCall(): bool {
         return false;
     }
+
+    public function __clone() {
+        $actions = [];
+        foreach ($this->getActions() as $k => $action) {
+            $actions[$k] = clone $action;
+        }
+        $this->setActions($actions);
+    }
 }
