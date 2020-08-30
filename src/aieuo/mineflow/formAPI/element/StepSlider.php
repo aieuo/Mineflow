@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class StepSlider extends Dropdown {
 
     /** @var string */
@@ -10,7 +12,7 @@ class StepSlider extends Dropdown {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->extraText).$this->reflectHighlight($this->checkTranslate($this->text)),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "steps" => $this->options,
             "default" => $this->default,
         ];

@@ -59,7 +59,7 @@ class CustomForm extends Form {
     public function jsonSerialize(): array {
         $form = [
             "type" => "custom_form",
-            "title" => $this->checkTranslate($this->title),
+            "title" => Language::replace($this->title),
             "content" => $this->contents
         ];
         $form = $this->reflectErrors($form);

@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
 class ListForm extends Form {
@@ -85,8 +86,8 @@ class ListForm extends Form {
     public function jsonSerialize(): array {
         $form = [
             "type" => "form",
-            "title" => $this->checkTranslate($this->title),
-            "content" => str_replace("\\n", "\n", $this->checkTranslate($this->content)),
+            "title" => Language::replace($this->title),
+            "content" => str_replace("\\n", "\n", Language::replace($this->content)),
             "buttons" => $this->buttons
         ];
         $form = $this->reflectErrors($form);

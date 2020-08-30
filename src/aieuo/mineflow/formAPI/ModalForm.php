@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI;
 
+use aieuo\mineflow\utils\Language;
+
 class ModalForm extends Form {
 
     protected $type = self::MODAL_FORM;
@@ -64,10 +66,10 @@ class ModalForm extends Form {
     public function jsonSerialize(): array {
         $form = [
             "type" => self::MODAL_FORM,
-            "title" => $this->checkTranslate($this->title),
-            "content" => str_replace("\\n", "\n", $this->checkTranslate($this->content)),
-            "button1" => str_replace("\\n", "\n", $this->checkTranslate($this->button1)),
-            "button2" => str_replace("\\n", "\n", $this->checkTranslate($this->button2))
+            "title" => Language::replace($this->title),
+            "content" => str_replace("\\n", "\n", Language::replace($this->content)),
+            "button1" => str_replace("\\n", "\n", Language::replace($this->button1)),
+            "button2" => str_replace("\\n", "\n", Language::replace($this->button2))
         ];
         $form = $this->reflectErrors($form);
         return $form;

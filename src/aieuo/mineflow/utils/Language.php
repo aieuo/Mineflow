@@ -60,6 +60,13 @@ class Language {
         return $key;
     }
 
+    public static function replace(string $text) {
+        $text = preg_replace_callback("/@([a-zA-Z.0-9]+)/", function ($matches) {
+            return Language::get($matches[1]);
+        }, $text);
+        return $text;
+    }
+
     public static function getLoadErrorMessage(string $language): array {
         switch ($language) {
             case "jpn":

@@ -116,7 +116,7 @@ abstract class Form implements PMForm {
      * @return self
      */
     public function addError(string $error, int $index): self {
-        $error = $this->checkTranslate($error);
+        $error = Language::replace($error);
         $this->messages[TextFormat::RED.$error.TextFormat::WHITE] = true;
         if ($index !== null) $this->highlights[$index] = TextFormat::YELLOW;
         return $this;
@@ -138,7 +138,7 @@ abstract class Form implements PMForm {
      * @return self
      */
     public function addMessage(string $message): self {
-        $message = $this->checkTranslate($message);
+        $message = Language::replace($message);
         $this->messages[$message] = true;
         return $this;
     }
@@ -161,17 +161,6 @@ abstract class Form implements PMForm {
         $this->messages = [];
         $this->highlights = [];
         return $this;
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function checkTranslate(string $text): string {
-        $text = preg_replace_callback("/@([a-zA-Z.0-9]+)/", function ($matches) {
-            return Language::get($matches[1]);
-        }, $text);
-        return $text;
     }
 
     /**

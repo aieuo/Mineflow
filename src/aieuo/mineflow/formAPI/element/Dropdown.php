@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Dropdown extends Element {
     /** @var string */
     protected $type = self::ELEMENT_DROPDOWN;
@@ -61,7 +63,7 @@ class Dropdown extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->extraText).$this->reflectHighlight($this->checkTranslate($this->text)),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "options" => $this->options,
             "default" => $this->default,
         ];

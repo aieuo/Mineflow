@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Button extends Element {
 
 	/** @var callable|null */
@@ -18,7 +20,7 @@ class Button extends Element {
 
     public function jsonSerialize(): array {
         return [
-            "text" => str_replace("\\n", "\n", $this->checkTranslate($this->text)),
+            "text" => str_replace("\\n", "\n", Language::replace($this->text)),
             "id" => $this->getUUId(),
         ];
     }

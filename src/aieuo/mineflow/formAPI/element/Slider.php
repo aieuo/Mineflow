@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Slider extends Element {
 
     /** @var string */
@@ -97,7 +99,7 @@ class Slider extends Element {
         }
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->extraText).$this->reflectHighlight($this->checkTranslate($this->text)),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "min" => $this->min,
             "max" => $this->max,
             "step" => $this->step,

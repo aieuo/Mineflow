@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Input extends Element {
 
     /** @var string */
@@ -62,9 +64,9 @@ class Input extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => $this->checkTranslate($this->extraText).$this->reflectHighlight($this->checkTranslate($this->text)),
-            "placeholder" => $this->checkTranslate($this->placeholder),
-            "default" => $this->checkTranslate($this->default),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
+            "placeholder" => Language::replace($this->placeholder),
+            "default" => Language::replace($this->default),
         ];
     }
 }
