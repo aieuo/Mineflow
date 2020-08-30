@@ -66,7 +66,7 @@ class GetMoney extends Action {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
@@ -79,6 +79,7 @@ class GetMoney extends Action {
         $money = Economy::getPlugin()->getMoney($targetName);
         $this->lastResult = (string)$money;
         $origin->addVariable(new NumberVariable($money, $resultName));
+        yield true;
         return true;
     }
 

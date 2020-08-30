@@ -52,7 +52,7 @@ class SetFood extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFood()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $health = $origin->replaceVariables($this->getFood());
@@ -63,6 +63,7 @@ class SetFood extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($entity);
 
         $entity->setFood((float)$health);
+        yield true;
         return true;
     }
 

@@ -42,7 +42,7 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getBlockVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
@@ -52,6 +52,7 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
         $this->throwIfInvalidBlock($block);
 
         $position->level->setBlock($position, $block);
+        yield true;
         return true;
     }
 

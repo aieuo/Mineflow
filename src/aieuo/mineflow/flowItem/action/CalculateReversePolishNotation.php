@@ -65,7 +65,7 @@ class CalculateReversePolishNotation extends Action {
         return Language::get($this->detail, [$this->getFormula(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $formula = $origin->replaceVariables($this->getFormula());
@@ -105,6 +105,7 @@ class CalculateReversePolishNotation extends Action {
 
         $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
+        yield true;
         return true;
     }
 

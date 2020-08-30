@@ -61,7 +61,7 @@ class CreateConfigVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getFileName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -72,6 +72,7 @@ class CreateConfigVariable extends Action {
 
         $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file), $name);
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

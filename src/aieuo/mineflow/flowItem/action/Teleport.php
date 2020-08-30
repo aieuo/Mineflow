@@ -42,7 +42,7 @@ class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);
@@ -52,6 +52,7 @@ class Teleport extends Action implements EntityFlowItem, PositionFlowItem {
         $this->throwIfInvalidPosition($position);
 
         $entity->teleport($position);
+        yield true;
         return true;
     }
 

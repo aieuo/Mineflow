@@ -64,7 +64,7 @@ class GetPlayerByName extends Action {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getPlayerName());
@@ -77,6 +77,7 @@ class GetPlayerByName extends Action {
 
         $result = new PlayerObjectVariable($player, $resultName, $player->getName());
         $origin->addVariable($result);
+        yield true;
         return true;
     }
 

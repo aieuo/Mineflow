@@ -75,7 +75,7 @@ class PlaySound extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $sound = $origin->replaceVariables($this->getSound());
@@ -96,6 +96,7 @@ class PlaySound extends Action implements PlayerFlowItem {
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
         $player->dataPacket($pk);
+        yield true;
         return true;
     }
 

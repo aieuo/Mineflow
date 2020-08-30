@@ -69,7 +69,7 @@ class RandomNumber extends Condition {
         return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getValue()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $min = $origin->replaceVariables($this->getMin());

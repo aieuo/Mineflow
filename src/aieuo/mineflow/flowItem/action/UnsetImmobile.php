@@ -39,13 +39,14 @@ class UnsetImmobile extends Action implements EntityFlowItem {
         return $this->getEntityVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
         $entity->setImmobile(false);
+        yield true;
         return true;
     }
 

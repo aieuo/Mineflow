@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\action\ActionContainerTrait;
 use aieuo\mineflow\flowItem\action\Action;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
@@ -71,6 +72,15 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var null|Event */
     private $event = null;
+    /* @var \Generator */
+    private $generator;
+
+    /** @var bool  */
+    private $waiting = false;
+    /* @var bool */
+    private $exit = false;
+    /* @var bool */
+    private $resuming = false;
 
     public function __construct(string $name, string $group = "", string $author = "") {
         $this->name = $name;
@@ -215,7 +225,57 @@ class Recipe implements \JsonSerializable, ActionContainer {
         return true;
     }
 
-    public function execute(array $args = [], int $start = 0): bool {
+    public function execute(array $args = [], bool $first = true): bool {
+        $this->applyArguments($args);
+
+        $this->generator = $this->generator ?? $this->executeActions($this);
+        try {
+            if (!$first) $this->generator->next();
+
+            while ($this->generator->valid()) {
+                if ($this->exit) {
+                    $this->resuming = false;
+                    $this->waiting = false;
+                    return false;
+                }
+
+                $result = $this->generator->current();
+                if (!$result and !$this->resuming) {
+                    $this->waiting = true;
+                    return false;
+                }
+
+                $this->generator->next();
+            }
+        } catch (\UnexpectedValueException $e) {
+            if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->getTarget());
+            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname()]), $this->getTarget());
+            return false;
+        }
+
+        if ($this->sourceRecipe instanceof Recipe) {
+            foreach ($this->getReturnValues() as $value) {
+                $variable = $this->getVariable($value);
+                if ($variable instanceof Variable) $this->sourceRecipe->addVariable($variable);
+            }
+            $this->sourceRecipe->resume();
+        }
+        return true;
+    }
+
+    public function resume() {
+        $this->resuming = true;
+        if (!$this->waiting) return;
+        $this->resuming = false;
+        $this->waiting = false;
+        $this->execute([], false);
+    }
+
+    public function exit() {
+        $this->exit = true;
+    }
+
+    public function applyArguments(array $args) {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {
@@ -229,19 +289,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 $this->addVariable($arg);
             }
         }
-
-        $result = $this->executeActions($this, null, $start);
-
-        if ($result and $this->sourceRecipe instanceof Recipe) {
-            foreach ($this->getReturnValues() as $value) {
-                $variable = $this->getVariable($value);
-                if ($variable instanceof Variable) $this->sourceRecipe->addVariable($variable);
-            }
-            $this->sourceContainer->resume();
-        }
-
-        $this->event = null;
-        return true;
     }
 
     public function getTarget(): ?Entity {

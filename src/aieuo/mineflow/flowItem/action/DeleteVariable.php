@@ -52,7 +52,7 @@ class DeleteVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -61,6 +61,7 @@ class DeleteVariable extends Action {
         } else {
             $origin->removeVariable($name);
         }
+        yield true;
         return true;
     }
 

@@ -52,7 +52,7 @@ class AddXpProgress extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getXp()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $xp = $origin->replaceVariables($this->getXp());
@@ -64,6 +64,7 @@ class AddXpProgress extends Action implements PlayerFlowItem {
         $new = $player->getCurrentTotalXp() + (int)$xp;
         if ($new < 0) $xp = -$player->getCurrentTotalXp();
         $player->addXp($xp);
+        yield true;
         return true;
     }
 

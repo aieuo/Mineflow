@@ -16,7 +16,8 @@ class DoNothing extends Action {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
+        yield true;
         return true;
     }
 

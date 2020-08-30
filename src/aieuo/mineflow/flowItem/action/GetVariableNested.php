@@ -63,7 +63,7 @@ class GetVariableNested extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $variableName = $origin->replaceVariables($this->getVariableName());
@@ -79,6 +79,7 @@ class GetVariableNested extends Action {
 
         $variable->setName($resultName);
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

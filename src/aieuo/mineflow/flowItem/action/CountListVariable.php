@@ -67,7 +67,7 @@ class CountListVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -82,6 +82,7 @@ class CountListVariable extends Action {
         $count = count($variable->getValue());
         $this->lastResult = $count;
         $origin->addVariable(new NumberVariable($count, $resultName));
+        yield true;
         return true;
     }
 

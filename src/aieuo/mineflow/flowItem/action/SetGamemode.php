@@ -59,7 +59,7 @@ class SetGamemode extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $gamemode = $origin->replaceVariables($this->getGamemode());
@@ -69,6 +69,7 @@ class SetGamemode extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->setGamemode((int)$gamemode);
+        yield true;
         return true;
     }
 

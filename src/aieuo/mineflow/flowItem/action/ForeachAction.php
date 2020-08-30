@@ -21,9 +21,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\variable\NumberVariable;
 
 class ForeachAction extends Action implements ActionContainer {
-    use ActionContainerTrait {
-        resume as traitResume;
-    }
+    use ActionContainerTrait;
 
     protected $id = self::ACTION_FOREACH;
 
@@ -95,7 +93,7 @@ class ForeachAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, bool $first = true): bool {
+    public function execute(Recipe $origin, bool $first = true) {
         if ($first) {
             $listName = $origin->replaceVariables($this->listVariableName);
             $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
@@ -123,25 +121,11 @@ class ForeachAction extends Action implements ActionContainer {
             $valueVariable->setName($counter["valueName"]);
             $origin->addVariable($valueVariable);
 
-            if (!$this->executeActions($origin, $this->getParent())) return false;
-            if ($this->wait or $this->isWaiting()) return true;
+            yield from $this->executeActions($origin);
         }
-        $this->getParent()->resume();
+        $origin->resume();
+        yield true;
         return true;
-    }
-
-    public function resume() {
-        $last = $this->next;
-
-        $this->wait = false;
-        $this->next = null;
-
-        if (!$this->isWaiting()) return;
-
-        $this->waiting = false;
-
-        $this->executeActions(...$last);
-        $this->execute($last[0], false);
     }
 
     public function initCounter(ListVariable $listVariable, string $key, string $value) {

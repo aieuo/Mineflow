@@ -52,7 +52,7 @@ class Command extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getCommand()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $command = $origin->replaceVariables($this->getCommand());
@@ -61,6 +61,7 @@ class Command extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Server::getInstance()->dispatchCommand($player, $command);
+        yield true;
         return true;
     }
 

@@ -48,7 +48,7 @@ class ExistsVariable extends Condition {
         return Language::get($this->detail, [$this->getVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();

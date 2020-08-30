@@ -51,12 +51,13 @@ class CommandConsole extends Action {
         return Language::get($this->detail, [$this->getCommand()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $command = $origin->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $command);
+        yield true;
         return true;
     }
 

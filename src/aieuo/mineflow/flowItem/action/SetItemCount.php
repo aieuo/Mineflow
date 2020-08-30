@@ -54,7 +54,7 @@ class SetItemCount extends Action implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getCount()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $count = $origin->replaceVariables($this->getCount());
@@ -65,6 +65,7 @@ class SetItemCount extends Action implements ItemFlowItem {
 
         $item->setCount((int)$count);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        yield true;
         return true;
     }
 

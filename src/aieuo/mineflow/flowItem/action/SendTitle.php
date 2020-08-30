@@ -81,7 +81,7 @@ class SendTitle extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getSubTitle(), $this->fadein, $this->stay, $this->fadeout]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $title = $origin->replaceVariables($this->getTitle());
@@ -96,6 +96,7 @@ class SendTitle extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendTitle($title, $subtitle, ...$times);
+        yield true;
         return true;
     }
 

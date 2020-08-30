@@ -16,7 +16,7 @@ class SetMoney extends TypeMoney {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
@@ -30,6 +30,7 @@ class SetMoney extends TypeMoney {
 
         $economy = Economy::getPlugin();
         $economy->setMoney($name, (int)$amount);
+        yield true;
         return true;
     }
 }

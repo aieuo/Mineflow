@@ -42,7 +42,7 @@ class SetSleeping extends Action implements PlayerFlowItem, PositionFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
@@ -52,6 +52,7 @@ class SetSleeping extends Action implements PlayerFlowItem, PositionFlowItem {
         $this->throwIfInvalidPosition($position);
 
         $player->sleepOn($position);
+        yield true;
         return true;
     }
 

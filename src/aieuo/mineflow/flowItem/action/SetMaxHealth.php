@@ -11,7 +11,7 @@ class SetMaxHealth extends SetHealth {
     protected $name = "action.setMaxHealth.name";
     protected $detail = "action.setMaxHealth.detail";
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $health = $origin->replaceVariables($this->getHealth());
@@ -22,6 +22,7 @@ class SetMaxHealth extends SetHealth {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setMaxHealth((int)$health);
+        yield true;
         return true;
     }
 }

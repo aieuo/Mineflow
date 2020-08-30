@@ -59,7 +59,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $min = $origin->replaceVariables($this->getMin());
@@ -73,6 +73,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         $rand = mt_rand((int)$min, (int)$max);
         $origin->addVariable(new NumberVariable($rand, $resultName));
         $this->lastResult = $rand;
+        yield true;
         return true;
     }
 

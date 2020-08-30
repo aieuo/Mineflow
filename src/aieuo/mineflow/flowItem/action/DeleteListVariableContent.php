@@ -65,7 +65,7 @@ class DeleteListVariableContent extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -73,13 +73,18 @@ class DeleteListVariableContent extends Action {
         $key = $origin->replaceVariables($this->getKey());
 
         $variable = ($this->isLocal ? $origin->getVariable($name) : $helper->get($name)) ?? new MapVariable([], $name);
-        if (!($variable instanceof ListVariable)) return false;
+        if (!($variable instanceof ListVariable)) {
+            throw new \UnexpectedValueException(
+                Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+            );
+        }
 
         $values = $variable->getValue();
         unset($values[$key]);
         $variable->setValue($values);
 
         if ($this->isLocal) $origin->addVariable($variable); else $helper->add($variable);
+        yield true;
         return true;
     }
 

@@ -16,7 +16,7 @@ class CheckNothing extends Condition {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         return true;
     }
 

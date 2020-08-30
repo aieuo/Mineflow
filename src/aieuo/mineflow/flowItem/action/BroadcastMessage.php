@@ -14,11 +14,12 @@ class BroadcastMessage extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
         Server::getInstance()->broadcastMessage($message);
+        yield true;
         return true;
     }
 }

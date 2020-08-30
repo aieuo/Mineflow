@@ -24,7 +24,7 @@ class ElseifAction extends IFAction {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $lastResult = $this->getParent()->getLastActionResult();
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return true;
@@ -33,7 +33,7 @@ class ElseifAction extends IFAction {
             if (!$condition->execute($origin)) return false;
         }
 
-        $this->executeActions($origin, $this->getParent());
+        yield from $this->executeActions($origin);
         return true;
     }
 }

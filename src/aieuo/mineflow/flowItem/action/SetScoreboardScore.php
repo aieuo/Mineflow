@@ -63,7 +63,7 @@ class SetScoreboardScore extends Action implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "" and $this->getScore() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getScoreName());
@@ -75,6 +75,7 @@ class SetScoreboardScore extends Action implements ScoreboardFlowItem {
         $this->throwIfInvalidScoreboard($board);
 
         $board->setScore($name, (int)$score);
+        yield true;
         return true;
     }
 

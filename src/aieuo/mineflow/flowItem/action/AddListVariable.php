@@ -65,7 +65,7 @@ class AddListVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getVariableValue())]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -74,10 +74,13 @@ class AddListVariable extends Action {
 
         if ($this->isLocal) {
             $variable = $origin->getVariables()[$name] ?? new ListVariable([], $name);
-            if (!($variable instanceof ListVariable)) return false;
         } else {
             $variable = $helper->get($name) ?? new ListVariable([], $name);
-            if (!($variable instanceof ListVariable)) return false;
+        }
+        if (!($variable instanceof ListVariable)) {
+            throw new \UnexpectedValueException(
+                Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+            );
         }
 
         foreach ($values as $value) {
@@ -100,6 +103,7 @@ class AddListVariable extends Action {
         } else {
             $helper->add($variable);
         }
+        yield true;
         return true;
     }
 

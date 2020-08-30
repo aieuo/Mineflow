@@ -53,7 +53,7 @@ class SetItemName extends Action implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getItemName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getItemName());
@@ -63,6 +63,7 @@ class SetItemName extends Action implements ItemFlowItem {
 
         $item->setCustomName($name);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        yield true;
         return true;
     }
 

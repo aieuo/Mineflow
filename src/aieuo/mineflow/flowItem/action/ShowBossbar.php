@@ -83,7 +83,7 @@ class ShowBossbar extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getBarId()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $title = $origin->replaceVariables($this->getTitle());
@@ -98,6 +98,7 @@ class ShowBossbar extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::add($player, $id, $title, (float)$max, (float)$value/(float)$max);
+        yield true;
         return true;
     }
 

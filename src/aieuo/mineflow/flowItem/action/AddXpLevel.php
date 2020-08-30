@@ -11,7 +11,7 @@ class AddXpLevel extends AddXpProgress {
     protected $name = "action.addXpLevel.name";
     protected $detail = "action.addXpLevel.detail";
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $xp = $origin->replaceVariables($this->getXp());
@@ -23,6 +23,7 @@ class AddXpLevel extends AddXpProgress {
         $new = $player->getXpLevel() + (int)$xp;
         if ($new < 0) $xp = -$player->getXpLevel();
         $player->addXpLevels((int)$xp);
+        yield true;
         return true;
     }
 }

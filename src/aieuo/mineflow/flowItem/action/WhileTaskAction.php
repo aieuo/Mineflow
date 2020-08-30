@@ -9,8 +9,6 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\ui\FlowItemForm;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -21,15 +19,9 @@ use aieuo\mineflow\ui\ActionContainerForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\task\WhileActionTask;
 
 class WhileTaskAction extends Action implements ActionContainer, ConditionContainer {
-    use ActionContainerTrait {
-        resume as traitResume;
-        wait as traitWait;
-        exitRecipe as traitExit;
-    }
+    use ActionContainerTrait;
     use ConditionContainerTrait;
 
     protected $id = self::ACTION_WHILE_TASK;
@@ -97,62 +89,20 @@ class WhileTaskAction extends Action implements ActionContainer, ConditionContai
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): bool {
-        $script = clone $this;
-        $origin->wait();
-        $handler = Main::getInstance()->getScheduler()->scheduleRepeatingTask(new WhileActionTask($script, $origin), $this->interval);
-        $script->setTaskId($handler->getTaskId());
-        return true;
-    }
-
-    public function check(Recipe $origin) {
-        $origin->addVariable(new NumberVariable($this->loopCount, "i"));
-        foreach ($this->conditions as $i => $condition) {
-            try {
-                $result = $condition->execute($origin);
-            } catch (\UnexpectedValueException $e) {
-                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $origin->getTarget());
-                Logger::warning(Language::get("recipe.execute.failed", [$origin->getPathname(), $i, $origin->getName()]), $origin->getTarget());
-                Main::getInstance()->getScheduler()->cancelTask($this->taskId);
-                return;
+    public function execute(Recipe $origin) {
+        $wait = new Wait(strval($this->getInterval() / 20));
+        while (true) {
+            $origin->addVariable(new NumberVariable($this->loopCount, "i"));
+            foreach ($this->conditions as $i => $condition) {
+                if ($condition->execute($origin) !== true) {
+                    $origin->resume();
+                    return true;
+                }
             }
 
-            if ($result !== true) {
-                Main::getInstance()->getScheduler()->cancelTask($this->taskId);
-                $this->getParent()->resume();
-                return;
-            }
+            yield from $this->executeActions($origin);
+            yield from $wait->execute($origin);
         }
-
-        if (!$this->executeActions($origin, $this->getParent())) {
-            Main::getInstance()->getScheduler()->cancelTask($this->taskId);
-            return;
-        }
-        $this->loopCount ++;
-    }
-
-    public function wait() {
-        Main::getInstance()->getScheduler()->cancelTask($this->taskId);
-        $this->waiting = true;
-        $this->traitWait();
-    }
-
-    public function resume() {
-        $last = $this->next;
-
-        $this->wait = false;
-        $this->next = null;
-
-        if (!$this->isWaiting()) return;
-
-        $this->waiting = false;
-
-        $this->execute($last[0]);
-    }
-
-    public function exitRecipe() {
-        Main::getInstance()->getScheduler()->cancelTask($this->taskId);
-        $this->traitExit();
     }
 
     public function hasCustomMenu(): bool {

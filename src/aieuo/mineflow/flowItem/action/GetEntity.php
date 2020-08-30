@@ -67,7 +67,7 @@ class GetEntity extends Action {
         return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getKey());
@@ -87,6 +87,7 @@ class GetEntity extends Action {
             return true;
         }
         $origin->addVariable(new MapVariable([], $resultName)); // TODO: .
+        yield true;
         return false;
     }
 

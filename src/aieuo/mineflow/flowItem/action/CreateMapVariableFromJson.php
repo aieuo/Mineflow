@@ -64,7 +64,7 @@ class CreateMapVariableFromJson extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getJson()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -83,6 +83,7 @@ class CreateMapVariableFromJson extends Action {
         } else {
             $helper->add($variable);
         }
+        yield true;
         return true;
     }
 

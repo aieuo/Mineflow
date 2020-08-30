@@ -22,7 +22,7 @@ class CallRecipe extends ExecuteRecipe {
         parent::__construct($name, $args);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
@@ -36,9 +36,9 @@ class CallRecipe extends ExecuteRecipe {
             throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
         }
 
-        $recipe = clone $recipe;
         $helper = Main::getVariableHelper();
         $args = [];
+        $recipe = clone $recipe;
         foreach ($this->getArgs() as $arg) {
             if (!$helper->isVariableString($arg)) {
                 $args[] = $helper->replaceVariables($arg, $origin->getVariables());
@@ -47,9 +47,9 @@ class CallRecipe extends ExecuteRecipe {
             $arg = $origin->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
             $args[] = $arg;
         }
-        $this->getParent()->wait();
         $recipe->setSourceRecipe($origin)->setSourceContainer($this->getParent());
         $recipe->executeAllTargets($origin->getTarget(), [], $origin->getEvent(), $args);
+        yield false;
         return true;
     }
 

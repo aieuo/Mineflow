@@ -57,7 +57,7 @@ class Kick extends Action implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $reason = $origin->replaceVariables($this->getReason());
@@ -68,6 +68,7 @@ class Kick extends Action implements PlayerFlowItem {
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($player, $reason): void {
             $player->kick($reason, $this->isAdmin);
         }), 1);
+        yield true;
         return true;
     }
 

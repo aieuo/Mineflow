@@ -21,10 +21,11 @@ class SaveData extends Action {
         return true;
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         Main::getRecipeManager()->saveAll();
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();
+        yield true;
         return true;
     }
 

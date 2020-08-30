@@ -51,19 +51,18 @@ class Wait extends Action {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $time = $origin->replaceVariables($this->getTime());
         $this->throwIfInvalidNumber($time, 1/20);
 
-        $this->getParent()->wait();
-
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function (int $currentTick): void {
-                $this->getParent()->resume();
+            function (int $currentTick) use($origin): void {
+                $origin->resume();
             }
         ), intval(floatval($time) * 20));
+        yield false;
         return true;
     }
 

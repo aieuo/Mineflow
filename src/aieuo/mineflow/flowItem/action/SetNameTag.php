@@ -52,7 +52,7 @@ class SetNameTag extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getNewName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getNewName());
@@ -62,6 +62,7 @@ class SetNameTag extends Action implements EntityFlowItem {
 
         $entity->setNameTag($name);
         if ($entity instanceof Player) $entity->setDisplayName($name);
+        yield true;
         return true;
     }
 

@@ -17,9 +17,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\variable\NumberVariable;
 
 class RepeatAction extends Action implements ActionContainer {
-    use ActionContainerTrait {
-        resume as traitResume;
-    }
+    use ActionContainerTrait;
 
     protected $id = self::ACTION_REPEAT;
 
@@ -94,7 +92,7 @@ class RepeatAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, int $startIndex = 0): bool {
+    public function execute(Recipe $origin) {
         $count = $origin->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 
@@ -102,31 +100,15 @@ class RepeatAction extends Action implements ActionContainer {
         $this->throwIfInvalidNumber($start);
 
         $name = $this->counterName;
-        $start = (int)$start + $startIndex;
-        $end = $start + (int)$count - $startIndex;
+        $end = $start + (int)$count;
 
-        for ($i=$start; $i<$end; $i++) {
+        for ($i=(int)$start; $i<$end; $i++) {
             $this->lastIndex = $i;
             $origin->addVariable(new NumberVariable($i, $name));
-            if (!$this->executeActions($origin, $this->getParent())) return false;
-            if ($this->wait or $this->isWaiting()) return true;
+            yield from $this->executeActions($origin);
         }
-        $this->getParent()->resume();
+        $origin->resume();
         return true;
-    }
-
-    public function resume() {
-        $last = $this->next;
-
-        $this->wait = false;
-        $this->next = null;
-
-        if (!$this->isWaiting()) return;
-
-        $this->waiting = false;
-
-        $this->executeActions(...$last);
-        $this->execute($last[0], $this->lastIndex + 1);
     }
 
     public function hasCustomMenu(): bool {

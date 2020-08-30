@@ -53,7 +53,7 @@ class RemoveConfigData extends Action implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $key = $origin->replaceVariables($this->getKey());
@@ -62,6 +62,7 @@ class RemoveConfigData extends Action implements ConfigFileFlowItem {
         $this->throwIfInvalidConfig($config);
 
         $config->removeNested($key);
+        yield true;
         return true;
     }
 

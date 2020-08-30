@@ -52,7 +52,7 @@ class RemoveBossbar extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getBarId()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getBarId());
@@ -61,6 +61,7 @@ class RemoveBossbar extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::remove($player, $id);
+        yield true;
         return true;
     }
 

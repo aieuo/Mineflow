@@ -54,7 +54,7 @@ class SetItemDamage extends Action implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getDamage()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $damage = $origin->replaceVariables($this->getDamage());
@@ -65,6 +65,7 @@ class SetItemDamage extends Action implements ItemFlowItem {
 
         $item->setDamage((int)$damage);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        yield true;
         return true;
     }
 

@@ -49,7 +49,7 @@ class IsActiveEntity extends Condition {
         return Language::get($this->detail, [$this->getEntityId()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getEntityId());

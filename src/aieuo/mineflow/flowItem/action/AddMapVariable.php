@@ -76,7 +76,7 @@ class AddMapVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey(), $this->getVariableValue()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -102,15 +102,24 @@ class AddMapVariable extends Action {
 
         if ($this->isLocal) {
             $variable = $origin->getVariable($name) ?? new MapVariable([], $name);
-            if (!($variable instanceof MapVariable)) return false;
+            if (!($variable instanceof MapVariable)) {
+                throw new \UnexpectedValueException(
+                    Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+                );
+            }
             $variable->addValue($addVariable);
             $origin->addVariable($variable);
         } else {
             $variable = $helper->get($name) ?? new MapVariable([], $name);
-            if (!($variable instanceof MapVariable)) return false;
+            if (!($variable instanceof MapVariable)) {
+                throw new \UnexpectedValueException(
+                    Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+                );
+            }
             $variable->addValue($addVariable);
             $helper->add($variable);
         }
+        yield true;
         return true;
     }
 

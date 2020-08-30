@@ -15,7 +15,7 @@ class IsPlayer extends IsActiveEntity {
 
     protected $category = Category::PLAYER;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getEntityId());

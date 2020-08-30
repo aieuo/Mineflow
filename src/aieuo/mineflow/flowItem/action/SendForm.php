@@ -59,7 +59,7 @@ class SendForm extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getFormName());
@@ -123,6 +123,7 @@ class SendForm extends Action implements PlayerFlowItem {
             }
         }
         $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
+        yield true;
         return true;
     }
 

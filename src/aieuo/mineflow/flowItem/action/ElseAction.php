@@ -45,12 +45,12 @@ class ElseAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $lastResult = $this->getParent()->getLastActionResult();
         if ($lastResult === null) throw new \UnexpectedValueException();
         if ($lastResult) return false;
 
-        $this->executeActions($origin, $this->getParent());
+        yield from $this->executeActions($origin);
         return true;
     }
 

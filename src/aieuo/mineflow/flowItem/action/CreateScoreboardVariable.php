@@ -86,7 +86,7 @@ class CreateScoreboardVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getBoardId(), $this->getDisplayName(), $this->getDisplayType()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $variableName = $origin->replaceVariables($this->getVariableName());
@@ -98,6 +98,7 @@ class CreateScoreboardVariable extends Action {
 
         $variable = new ScoreboardObjectVariable($scoreboard, $variableName);
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

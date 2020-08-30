@@ -65,7 +65,7 @@ class GetTargetBlock extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $max = $origin->replaceVariables($this->getMax());
@@ -77,6 +77,7 @@ class GetTargetBlock extends Action implements PlayerFlowItem {
 
         $block = $player->getTargetBlock($max);
         $origin->addVariable(new BlockObjectVariable($block, $result));
+        yield true;
         return true;
     }
 

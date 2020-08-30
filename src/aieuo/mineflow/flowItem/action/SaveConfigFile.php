@@ -41,13 +41,14 @@ class SaveConfigFile extends Action implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($origin);
         $this->throwIfInvalidConfig($config);
 
         $config->save();
+        yield true;
         return true;
     }
 

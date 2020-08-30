@@ -37,7 +37,7 @@ class AndScript extends Condition implements ConditionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         foreach ($this->conditions as $condition) {
             if (!$condition->execute($origin)) return false;
         }

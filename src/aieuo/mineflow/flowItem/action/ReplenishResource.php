@@ -41,7 +41,7 @@ class ReplenishResource extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
@@ -52,6 +52,7 @@ class ReplenishResource extends Action implements PositionFlowItem {
         }
         $api = ReplenishResourcesAPI::getInstance();
         $api->replenish($position);
+        yield true;
         return true;
     }
 

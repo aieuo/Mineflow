@@ -81,7 +81,7 @@ class AddEffect extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getEffectId(), $this->getPower(), $this->getTime()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $effectId = $origin->replaceVariables($this->getEffectId());
@@ -100,6 +100,7 @@ class AddEffect extends Action implements EntityFlowItem {
         if ($entity instanceof Living) {
             $entity->addEffect(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, false));
         }
+        yield true;
         return true;
     }
 

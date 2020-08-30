@@ -67,7 +67,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
@@ -87,6 +87,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
 
         $item->addEnchantment(new EnchantmentInstance($enchant, (int)$level));
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        yield true;
         return true;
     }
 

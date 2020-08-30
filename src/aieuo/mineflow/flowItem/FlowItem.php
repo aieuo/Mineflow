@@ -145,9 +145,9 @@ abstract class FlowItem implements \JsonSerializable {
 
     /**
      * @param Recipe $origin
-     * @return boolean
+     * @return bool|\Generator
      */
-    abstract public function execute(Recipe $origin): bool;
+    abstract public function execute(Recipe $origin);
 
     public function hasCustomMenu(): bool {
         return false;

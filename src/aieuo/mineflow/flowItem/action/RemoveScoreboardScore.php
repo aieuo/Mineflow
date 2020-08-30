@@ -51,7 +51,7 @@ class RemoveScoreboardScore extends Action implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getScoreName());
@@ -60,6 +60,7 @@ class RemoveScoreboardScore extends Action implements ScoreboardFlowItem {
         $this->throwIfInvalidScoreboard($board);
 
         $board->removeScore($name);
+        yield true;
         return true;
     }
 

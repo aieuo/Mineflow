@@ -54,7 +54,7 @@ class SetYaw extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getYaw()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $yaw = $origin->replaceVariables($this->getYaw());
@@ -65,6 +65,7 @@ class SetYaw extends Action implements EntityFlowItem {
 
         $entity->setRotation((float)$yaw, $entity->getPitch());
         if ($entity instanceof Player) $entity->teleport($entity, (float)$yaw, $entity->getPitch());
+        yield true;
         return true;
     }
 

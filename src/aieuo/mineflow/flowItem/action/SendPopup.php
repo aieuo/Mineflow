@@ -11,7 +11,7 @@ class SendPopup extends TypePlayerMessage {
     protected $name = "action.sendPopup.name";
     protected $detail = "action.sendPopup.detail";
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
@@ -20,6 +20,7 @@ class SendPopup extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendPopup($message);
+        yield true;
         return true;
     }
 }

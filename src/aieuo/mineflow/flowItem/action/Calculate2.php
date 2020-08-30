@@ -101,7 +101,7 @@ class Calculate2 extends Action {
         return Language::get($this->detail, [$this->getValue1(), $this->getValue2(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());
@@ -142,6 +142,7 @@ class Calculate2 extends Action {
 
         $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
+        yield true;
         return true;
     }
 

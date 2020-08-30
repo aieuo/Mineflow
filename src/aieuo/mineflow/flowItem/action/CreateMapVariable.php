@@ -76,7 +76,7 @@ class CreateMapVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getKey()), implode(",", $this->getVariableValue())]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -111,6 +111,7 @@ class CreateMapVariable extends Action {
         } else {
             $helper->add($variable);
         }
+        yield true;
         return true;
     }
 

@@ -49,7 +49,7 @@ class ExistsConfigFile extends Condition {
         return Language::get($this->detail, [$this->getFileName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getFileName());

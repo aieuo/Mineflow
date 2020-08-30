@@ -59,7 +59,7 @@ class CreateHumanEntity extends Action implements PlayerFlowItem, PositionFlowIt
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPositionVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
@@ -78,7 +78,8 @@ class CreateHumanEntity extends Action implements PlayerFlowItem, PositionFlowIt
 
         $variable = new HumanObjectVariable($entity, $resultName);
         $origin->addVariable($variable);
-        return false;
+        yield true;
+        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

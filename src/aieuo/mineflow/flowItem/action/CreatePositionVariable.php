@@ -96,7 +96,7 @@ class CreatePositionVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -117,6 +117,7 @@ class CreatePositionVariable extends Action {
 
         $variable = new PositionObjectVariable($position, $name);
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

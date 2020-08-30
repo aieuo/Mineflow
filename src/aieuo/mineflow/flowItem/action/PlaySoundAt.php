@@ -76,7 +76,7 @@ class PlaySoundAt extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $sound = $origin->replaceVariables($this->getSound());
@@ -97,6 +97,7 @@ class PlaySoundAt extends Action implements PositionFlowItem {
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
         Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
+        yield true;
         return true;
     }
 

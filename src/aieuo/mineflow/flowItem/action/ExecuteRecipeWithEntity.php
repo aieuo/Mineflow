@@ -39,7 +39,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
@@ -61,6 +61,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         $variables["target"] = $entity instanceof Player ? new PlayerObjectVariable($entity, "target", $entity->getName()) : new EntityObjectVariable($entity, "target", $entity->getNameTag());
         $recipe->addVariables($variables);
         $recipe->setTarget($entity)->execute();
+        yield true;
         return true;
     }
 

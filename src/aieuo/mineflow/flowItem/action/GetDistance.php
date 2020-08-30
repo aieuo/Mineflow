@@ -56,7 +56,7 @@ class GetDistance extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $pos1 = $this->getPosition($origin, "pos1");
@@ -69,6 +69,7 @@ class GetDistance extends Action implements PositionFlowItem {
 
         $this->lastResult = (string)$distance;
         $origin->addVariable(new NumberVariable($distance, $result));
+        yield true;
         return true;
     }
 

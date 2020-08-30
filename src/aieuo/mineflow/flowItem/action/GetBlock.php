@@ -53,7 +53,7 @@ class GetBlock extends Action implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
@@ -65,6 +65,7 @@ class GetBlock extends Action implements PositionFlowItem {
 
         $variable = new BlockObjectVariable($block, $result);
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

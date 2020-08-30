@@ -14,7 +14,7 @@ class SendMessageToOp extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
@@ -24,6 +24,7 @@ class SendMessageToOp extends TypeMessage {
                 $player->sendMessage($message);
             }
         }
+        yield true;
         return true;
     }
 }

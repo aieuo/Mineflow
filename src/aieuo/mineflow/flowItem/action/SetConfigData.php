@@ -67,7 +67,7 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey(), $this->getValue()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $key = $origin->replaceVariables($this->getKey());
@@ -93,6 +93,7 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         $this->throwIfInvalidConfig($config);
 
         $config->setNested($key, $value);
+        yield true;
         return true;
     }
 

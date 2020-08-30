@@ -86,7 +86,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormText(), implode(";", $this->getOptions()), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $text = $origin->replaceVariables($this->getFormText());
@@ -95,8 +95,8 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
-        $origin->wait();
         $this->sendForm($origin, $player, $text, $resultName);
+        yield false;
         return true;
     }
 

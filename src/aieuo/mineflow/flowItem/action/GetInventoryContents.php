@@ -55,7 +55,7 @@ class GetInventoryContents extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());
@@ -68,6 +68,7 @@ class GetInventoryContents extends Action implements PlayerFlowItem {
         }, $entity->getInventory()->getContents()), $resultName);
 
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

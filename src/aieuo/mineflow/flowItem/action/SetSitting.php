@@ -50,7 +50,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
@@ -72,6 +72,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         $player->dataPacket($pk);
 
         self::$entityIds[$player->getName()] = $pk->entityRuntimeId;
+        yield true;
         return true;
     }
 

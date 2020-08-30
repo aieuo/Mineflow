@@ -55,7 +55,7 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $index = $origin->replaceVariables($this->getIndex());
@@ -69,6 +69,7 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
         $this->throwIfInvalidItem($item);
 
         $player->getInventory()->setItem($index, $item);
+        yield true;
         return true;
     }
 

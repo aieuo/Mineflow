@@ -67,7 +67,7 @@ class AddParticle extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() == 1 ? "" : "s"]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $particleName = $origin->replaceVariables($this->getParticle());
@@ -84,6 +84,7 @@ class AddParticle extends Action implements PositionFlowItem {
             $pk->particleName = $particleName;
             Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
         }
+        yield true;
         return true;
     }
 

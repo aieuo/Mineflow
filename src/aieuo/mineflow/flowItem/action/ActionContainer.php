@@ -8,11 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
  * Interface ActionContainer
  * @package aieuo\mineflow\flowItem\action
  *
- * @property bool $wait
- * @property bool $waiting
- * @property array|null $next
- * @property bool $exit
- *
  * @property bool $lastResult
  */
 interface ActionContainer extends FlowItemContainer {
@@ -47,10 +42,4 @@ interface ActionContainer extends FlowItemContainer {
      * @return bool|null
      */
     public function getLastActionResult(): ?bool;
-
-    public function wait();
-
-    public function resume();
-
-    public function exitRecipe();
 }

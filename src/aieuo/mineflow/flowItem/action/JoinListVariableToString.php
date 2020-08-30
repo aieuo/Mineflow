@@ -72,7 +72,7 @@ class JoinListVariableToString extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getSeparator(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -81,13 +81,18 @@ class JoinListVariableToString extends Action {
         $result = $origin->replaceVariables($this->getResultName());
 
         $variable = $origin->getVariables()[$name] ?? $helper->get($name) ?? new ListVariable([], $name);
-        if (!($variable instanceof ListVariable)) return false;
+        if (!($variable instanceof ListVariable)) {
+            throw new \UnexpectedValueException(
+                Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+            );
+        }
 
         $strings = [];
         foreach ($variable->getValue() as $key => $value) {
             $strings[] = (string)$value;
         }
         $origin->addVariable(new StringVariable(implode($separator, $strings), $result));
+        yield true;
         return true;
     }
 

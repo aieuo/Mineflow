@@ -84,7 +84,7 @@ class CreateItemVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -108,6 +108,7 @@ class CreateItemVariable extends Action {
 
         $variable = new ItemObjectVariable($item, $name);
         $origin->addVariable($variable);
+        yield true;
         return true;
     }
 

@@ -43,7 +43,7 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

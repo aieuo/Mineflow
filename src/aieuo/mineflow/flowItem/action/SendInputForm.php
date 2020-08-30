@@ -72,7 +72,7 @@ class SendInputForm extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormText(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $text = $origin->replaceVariables($this->getFormText());
@@ -81,8 +81,8 @@ class SendInputForm extends Action implements PlayerFlowItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
-        $origin->wait();
         $this->sendForm($origin, $player, $text, $resultName);
+        yield false;
         return true;
     }
 
@@ -90,7 +90,7 @@ class SendInputForm extends Action implements PlayerFlowItem {
         (new CustomForm($text))
             ->setContents([
                 new Input($text, "", "", true),
-            ])->onReceive(function (Player $player, array $data) use ($origin, $text, $resultName) {
+            ])->onReceive(function (Player $player, array $data) use ($origin, $resultName) {
                 $this->lastResult = $data[0];
                 $variable = new StringVariable($data[0], $resultName);
                 $origin->addVariable($variable);

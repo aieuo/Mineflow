@@ -49,7 +49,7 @@ class IsPlayerOnlineByName extends Condition {
         return Language::get($this->detail, [$this->getPlayerName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getPlayerName());

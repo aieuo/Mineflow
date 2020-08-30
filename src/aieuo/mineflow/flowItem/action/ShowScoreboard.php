@@ -42,7 +42,7 @@ class ShowScoreboard extends Action implements PlayerFlowItem, ScoreboardFlowIte
         return $this->getPlayerVariableName() !== "" and $this->getScoreboardVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
@@ -52,6 +52,7 @@ class ShowScoreboard extends Action implements PlayerFlowItem, ScoreboardFlowIte
         $this->throwIfInvalidScoreboard($board);
 
         $board->show($player);
+        yield true;
         return true;
     }
 

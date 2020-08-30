@@ -62,7 +62,7 @@ class GetDate extends Action {
         return Language::get($this->detail, [$this->getFormat(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $format = $origin->replaceVariables($this->getFormat());
@@ -71,6 +71,7 @@ class GetDate extends Action {
         $date = date($format);
         $this->lastResult = $date;
         $origin->addVariable(new StringVariable($date, $resultName));
+        yield true;
         return true;
     }
 

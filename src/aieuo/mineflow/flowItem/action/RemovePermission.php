@@ -54,7 +54,7 @@ class RemovePermission extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPlayerPermission()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $permission = $origin->replaceVariables($this->getPlayerPermission());
@@ -63,6 +63,7 @@ class RemovePermission extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->addAttachment(Main::getInstance(), $permission, false);
+        yield true;
         return true;
     }
 

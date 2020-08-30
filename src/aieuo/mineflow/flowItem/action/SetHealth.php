@@ -52,7 +52,7 @@ class SetHealth extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getHealth()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $health = $origin->replaceVariables($this->getHealth());
@@ -63,6 +63,7 @@ class SetHealth extends Action implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setHealth((float)$health);
+        yield true;
         return true;
     }
 

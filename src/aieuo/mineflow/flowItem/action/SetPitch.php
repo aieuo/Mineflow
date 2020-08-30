@@ -54,7 +54,7 @@ class SetPitch extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPitch()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $pitch = $origin->replaceVariables($this->getPitch());
@@ -65,6 +65,7 @@ class SetPitch extends Action implements EntityFlowItem {
 
         $entity->setRotation($entity->getYaw(), (float)$pitch);
         if ($entity instanceof Player) $entity->teleport($entity, $entity->getYaw(), (float)$pitch);
+        yield true;
         return true;
     }
 

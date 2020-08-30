@@ -38,13 +38,14 @@ class ClearInventory extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->clearAll(true);
+        yield true;
         return true;
     }
 

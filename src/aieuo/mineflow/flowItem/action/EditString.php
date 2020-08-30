@@ -100,7 +100,7 @@ class EditString extends Action {
         return Language::get($this->detail, [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());
@@ -130,6 +130,7 @@ class EditString extends Action {
 
         $this->lastResult = (string)$result;
         $origin->addVariable($result);
+        yield true;
         return true;
     }
 

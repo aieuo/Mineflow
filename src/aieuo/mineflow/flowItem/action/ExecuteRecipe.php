@@ -63,7 +63,7 @@ class ExecuteRecipe extends Action {
         return Language::get($this->detail, [$this->getRecipeName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
@@ -92,6 +92,7 @@ class ExecuteRecipe extends Action {
 
         $recipe->addVariables($origin->getVariables());
         $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables(), $origin->getEvent(), $args);
+        yield true;
         return true;
     }
 

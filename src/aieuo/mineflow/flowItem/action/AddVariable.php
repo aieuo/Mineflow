@@ -73,7 +73,7 @@ class AddVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -88,7 +88,7 @@ class AddVariable extends Action {
                 $variable = new NumberVariable((float)$value, $name);
                 break;
             default:
-                return false;
+                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.error.recipe"]]));
         }
 
         if ($this->isLocal) {
@@ -96,6 +96,7 @@ class AddVariable extends Action {
         } else {
             Main::getVariableHelper()->add($variable);
         }
+        yield true;
         return true;
     }
 

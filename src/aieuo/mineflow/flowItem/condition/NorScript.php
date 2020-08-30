@@ -20,7 +20,7 @@ class NorScript extends ORScript {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         return !parent::execute($origin);
     }
 }

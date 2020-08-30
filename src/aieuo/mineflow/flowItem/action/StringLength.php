@@ -65,7 +65,7 @@ class StringLength extends Action {
         return Language::get($this->detail, [$this->getValue(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value = $origin->replaceVariables($this->getValue());
@@ -74,6 +74,7 @@ class StringLength extends Action {
         $length = mb_strlen($value);
         $this->lastResult = (string)$length;
         $origin->addVariable(new NumberVariable($length, $resultName));
+        yield true;
         return true;
     }
 

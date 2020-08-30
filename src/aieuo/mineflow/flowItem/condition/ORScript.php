@@ -20,7 +20,7 @@ class ORScript extends AndScript {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         foreach ($this->getConditions() as $condition) {
             if ($condition->execute($origin)) return true;
         }

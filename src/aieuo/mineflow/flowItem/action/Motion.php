@@ -60,7 +60,7 @@ class Motion extends Action implements EntityFlowItem {
         return Language::get($this->detail, array_merge([$this->getEntityVariableName()], $this->getPosition()));
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $positions = array_map(function ($value) use ($origin) {
@@ -76,6 +76,7 @@ class Motion extends Action implements EntityFlowItem {
 
         $position = new Vector3((float)$positions[0], (float)$positions[1], (float)$positions[2]);
         $entity->setMotion($position);
+        yield true;
         return true;
     }
 

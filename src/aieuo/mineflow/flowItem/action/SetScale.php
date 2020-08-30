@@ -52,7 +52,7 @@ class SetScale extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getScale()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $health = $origin->replaceVariables($this->getScale());
@@ -63,6 +63,7 @@ class SetScale extends Action implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setScale((float)$health);
+        yield true;
         return true;
     }
 

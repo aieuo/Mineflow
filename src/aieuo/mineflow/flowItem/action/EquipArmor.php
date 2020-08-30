@@ -63,7 +63,7 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->places[$this->getIndex()])]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $index = $origin->replaceVariables($this->getIndex());
@@ -79,6 +79,7 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem($index, $item);
         }
+        yield true;
         return true;
     }
 
