@@ -40,8 +40,6 @@ class RepeatAction extends Action implements ActionContainer {
 
     /* @var bool */
     private $lastResult;
-    /* @var int */
-    private $lastIndex;
 
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
         $this->setActions($actions);
@@ -103,7 +101,6 @@ class RepeatAction extends Action implements ActionContainer {
         $end = $start + (int)$count;
 
         for ($i=(int)$start; $i<$end; $i++) {
-            $this->lastIndex = $i;
             $origin->addVariable(new NumberVariable($i, $name));
             yield from $this->executeActions($origin);
         }

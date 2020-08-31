@@ -64,8 +64,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     /** @var Recipe|null */
     private $sourceRecipe;
-    /* @var ActionContainer|null */
-    private $sourceContainer;
     /* @var array */
     private $arguments = [];
     /* @var array */
@@ -356,11 +354,6 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function setSourceRecipe(?Recipe $recipe): self {
         $this->sourceRecipe = $recipe;
-        return $this;
-    }
-
-    public function setSourceContainer(?ActionContainer $container): self {
-        $this->sourceContainer = $container;
         return $this;
     }
 
