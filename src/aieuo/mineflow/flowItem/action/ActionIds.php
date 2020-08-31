@@ -85,7 +85,14 @@ interface ActionIds {
     const CALL_RECIPE = "callRecipe";
 
     const FOUR_ARITHMETIC_OPERATIONS = "fourArithmeticOperations";
+    const FOUR_ARITHMETIC_OPERATIONS_ADD = "add";
+    const FOUR_ARITHMETIC_OPERATIONS_SUB = "sub";
+    const FOUR_ARITHMETIC_OPERATIONS_MUL = "mul";
+    const FOUR_ARITHMETIC_OPERATIONS_DIV = "div";
     const CALCULATE = "calculate";
+    const CALCULATE_SIN = "sin";
+    const CALCULATE_COS = "cos";
+    const CALCULATE_TAN = "tan";
     const CALCULATE2 = "calculate2";
     const GET_PI = "getPi";
     const GET_E = "getE";

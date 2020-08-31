@@ -157,7 +157,7 @@ class VariableHelper {
             $name = $matches[1];
             $parameters = $matches[2];
 
-            $action = ActionFactory::get($name);
+            $action = ActionFactory::get($name, true);
             if ($action === null) {
                 return str_replace("{".$replace."}", "§cUnknown action id", $string);
             }

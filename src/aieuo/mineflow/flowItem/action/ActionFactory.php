@@ -8,6 +8,7 @@ use pocketmine\Server;
 class ActionFactory {
     /** @var Action[] */
     private static $list = [];
+    private static $aliases = [];
 
     public static function init(): void {
         self::register(new DoNothing);
@@ -147,15 +148,66 @@ class ActionFactory {
         if (Server::getInstance()->getPluginManager()->getPlugin("ReplenishResources") !== null) {
             self::register(new ReplenishResource);
         }
+
+        self::registerAliases();
+    }
+
+    public static function registerAliases() {
+        self::registerAlias(new class extends FourArithmeticOperations {
+            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_ADD;
+            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
+                parent::__construct($value1, self::ADDITION, $value2, $resultName);
+            }
+        });
+        self::registerAlias(new class extends FourArithmeticOperations {
+            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_SUB;
+            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
+                parent::__construct($value1, self::SUBTRACTION, $value2, $resultName);
+            }
+        });
+        self::registerAlias(new class extends FourArithmeticOperations {
+            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_MUL;
+            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
+                parent::__construct($value1, self::MULTIPLICATION, $value2, $resultName);
+            }
+        });
+        self::registerAlias(new class extends FourArithmeticOperations {
+            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_DIV;
+            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
+                parent::__construct($value1, self::DIVISION, $value2, $resultName);
+            }
+        });
+        self::registerAlias(new class extends Calculate {
+            protected $id = self::CALCULATE_SIN;
+            public function __construct(string $value = "", string $resultName = "result") {
+                parent::__construct($value, self::CALC_SIN, $resultName);
+            }
+        });
+        self::registerAlias(new class extends Calculate {
+            protected $id = self::CALCULATE_COS;
+            public function __construct(string $value = "", string $resultName = "result") {
+                parent::__construct($value, self::CALC_COS, $resultName);
+            }
+        });
+        self::registerAlias(new class extends Calculate {
+            protected $id = self::CALCULATE_TAN;
+            public function __construct(string $value = "", string $resultName = "result") {
+                parent::__construct($value, self::CALC_TAN, $resultName);
+            }
+        });
     }
 
     /**
-     * @param  string $id
+     * @param string $id
+     * @param bool $alias
      * @return Action|null
      */
-    public static function get(string $id): ?Action {
+    public static function get(string $id, bool $alias = false): ?Action {
         if (isset(self::$list[$id])) {
             return clone self::$list[$id];
+        }
+        if ($alias and isset(self::$aliases[$id])) {
+            return clone self::$aliases[$id];
         }
         return null;
     }
@@ -183,9 +235,16 @@ class ActionFactory {
     }
 
     /**
-     * @param  Action $process
+     * @param  Action $action
      */
-    public static function register(Action $process): void {
-        self::$list[$process->getId()] = clone $process;
+    public static function register(Action $action): void {
+        self::$list[$action->getId()] = clone $action;
+    }
+
+    /**
+     * @param  Action $action
+     */
+    public static function registerAlias(Action $action): void {
+        self::$aliases[$action->getId()] = clone $action;
     }
 }
