@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -72,7 +73,7 @@ class GetPlayerByName extends Action {
 
         $player = Server::getInstance()->getPlayer($name);
         if (!($player instanceof Player)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.getPlayerByName.player.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.getPlayerByName.player.notFound"));
         }
 
         $result = new PlayerObjectVariable($player, $resultName, $player->getName());

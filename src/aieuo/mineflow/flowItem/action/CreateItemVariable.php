@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -94,7 +95,7 @@ class CreateItemVariable extends Action {
         try {
             $item = ItemFactory::fromString($id);
         } catch (\InvalidArgumentException $e) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.createItemVariable.item.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createItemVariable.item.notFound"));
         }
         if (!empty($count)) {
             $this->throwIfInvalidNumber($count, 0);

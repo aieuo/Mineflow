@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -76,7 +77,7 @@ class CountListVariable extends Action {
         $variable = $origin->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
-            throw new \UnexpectedValueException(Language::get("action.countList.error.notList"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.countList.error.notList"));
         }
 
         $count = count($variable->getValue());

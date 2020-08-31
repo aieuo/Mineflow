@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -33,7 +34,7 @@ class CallRecipe extends ExecuteRecipe {
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }
 
         $helper = Main::getVariableHelper();

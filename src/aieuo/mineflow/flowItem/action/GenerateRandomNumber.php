@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -67,7 +68,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         if (!is_numeric($min) or !is_numeric($max)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
 
         $rand = mt_rand((int)$min, (int)$max);

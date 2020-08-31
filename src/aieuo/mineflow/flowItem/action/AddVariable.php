@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -88,7 +89,7 @@ class AddVariable extends Action {
                 $variable = new NumberVariable((float)$value, $name);
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.error.recipe"]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.error.recipe"));
         }
 
         if ($this->isLocal) {

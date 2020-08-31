@@ -4,6 +4,7 @@
 namespace aieuo\mineflow\flowItem\base;
 
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
@@ -33,10 +34,10 @@ trait PlayerFlowItemTrait {
 
     public function throwIfInvalidPlayer(?Player $player, bool $allowOffline = false) {
         if (!($player instanceof Player)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.player"], $this->getPlayerVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.player"], $this->getPlayerVariableName()]));
         }
         if (!$allowOffline and !$player->isOnline()) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.player.offline"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.player.offline"));
         }
     }
 }

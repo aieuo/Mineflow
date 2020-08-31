@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
@@ -101,23 +102,23 @@ abstract class FlowItem implements \JsonSerializable {
     public function throwIfCannotExecute() {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents", [$this->getName()]);
-            throw new \UnexpectedValueException($message);
+            throw new InvalidFlowValueException($this->getName(), $message);
         }
     }
 
     public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null, array $exclude = []) {
         if (!is_numeric($number)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
         $number = (float)$number;
         if ($min !== null and $number < $min) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.lessValue", [$min]]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.lessValue", [$min]));
         }
         if ($max !== null and $number > $max) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.overValue", [$max]]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.overValue", [$max]));
         }
         if (!empty($exclude) and in_array($number, $exclude)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.excludedNumber", [implode(",", $exclude)]]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.excludedNumber", [implode(",", $exclude)]));
         }
     }
 

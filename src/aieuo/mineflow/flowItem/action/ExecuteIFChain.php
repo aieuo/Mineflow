@@ -5,6 +5,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\ip\IFPlugin;
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -71,12 +72,12 @@ class ExecuteIFChain extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         if (Server::getInstance()->getPluginManager()->getPlugin("if") === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.otherPlugin.notFound", ["if"])]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.otherPlugin.notFound", ["if"]));
         }
 
         $manager = IFPlugin::getInstance()->getChainManager();
         if (!$manager->exists($this->getChainName())) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), \aieuo\ip\utils\Language::get("process.cooperation.notFound")]));
+            throw new InvalidFlowValueException($this->getName(), \aieuo\ip\utils\Language::get("process.cooperation.notFound"));
         }
 
         $data = $manager->get($name);

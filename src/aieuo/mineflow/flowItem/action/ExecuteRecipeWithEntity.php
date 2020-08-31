@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -50,7 +51,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }
 
         $entity = $this->getEntity($origin);

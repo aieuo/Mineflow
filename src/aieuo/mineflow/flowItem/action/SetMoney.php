@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use pocketmine\utils\TextFormat;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
@@ -20,7 +21,7 @@ class SetMoney extends TypeMoney {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
-            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
+            throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $name = $origin->replaceVariables($this->getPlayerName());

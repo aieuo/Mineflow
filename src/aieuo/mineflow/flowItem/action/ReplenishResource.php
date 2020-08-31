@@ -48,7 +48,7 @@ class ReplenishResource extends Action implements PositionFlowItem {
         $this->throwIfInvalidPosition($position);
 
         if (Server::getInstance()->getPluginManager()->getPlugin("ReplenishResources") === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.otherPlugin.notFound", ["ReplenishResources"])]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.otherPlugin.notFound", ["ReplenishResources"]));
         }
         $api = ReplenishResourcesAPI::getInstance();
         $api->replenish($position);

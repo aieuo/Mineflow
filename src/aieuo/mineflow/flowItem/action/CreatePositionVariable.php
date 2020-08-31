@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -107,10 +108,10 @@ class CreatePositionVariable extends Action {
         $level = Server::getInstance()->getLevelByName($levelName);
 
         if (!is_numeric($x) or !is_numeric($y) or !is_numeric($z)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
         if ($level === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.createPositionVariable.level.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.level.notFound"));
         }
 
         $position = new Position((float)$x, (float)$y, (float)$z, $level);

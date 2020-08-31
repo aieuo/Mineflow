@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -78,8 +79,8 @@ class AddListVariable extends Action {
             $variable = $helper->get($name) ?? new ListVariable([], $name);
         }
         if (!($variable instanceof ListVariable)) {
-            throw new \UnexpectedValueException(
-                Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+            throw new InvalidFlowValueException(
+                $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
             );
         }
 

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\Button;
@@ -67,7 +68,7 @@ class SendForm extends Action implements PlayerFlowItem {
         $helper = Main::getVariableHelper();
         $form = $manager->getForm($name);
         if ($form === null) {
-            throw new \UnexpectedValueException(Language::get("action.sendForm.notFound", [$this->getName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));
         }
 
         $player = $this->getPlayer($origin);

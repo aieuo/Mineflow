@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -70,7 +71,7 @@ class GetMoney extends Action {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
-            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
+            throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $targetName = $origin->replaceVariables($this->getPlayerName());

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\recipe\Recipe;
 
 class ElseifAction extends IFAction {
@@ -26,7 +27,7 @@ class ElseifAction extends IFAction {
 
     public function execute(Recipe $origin) {
         $lastResult = $this->getParent()->getLastActionResult();
-        if ($lastResult === null) throw new \UnexpectedValueException();
+        if ($lastResult === null) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 
         foreach ($this->getConditions() as $condition) {

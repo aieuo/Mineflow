@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\ActionContainerTrait;
 use aieuo\mineflow\flowItem\action\Action;
@@ -247,9 +248,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
                 $this->generator->next();
             }
-        } catch (\UnexpectedValueException $e) {
+        } catch (InvalidFlowValueException $e) {
             if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->getTarget());
-            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname()]), $this->getTarget());
+            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $e->getName()]), $this->getTarget());
             return false;
         }
 

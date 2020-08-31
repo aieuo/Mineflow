@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\Main;
@@ -101,7 +102,7 @@ class ForeachAction extends Action implements ActionContainer {
             $value = $origin->replaceVariables($this->valueVariableName);
 
             if (!($list instanceof ListVariable)) {
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.foreach.error.notVariable", [$listName]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.foreach.error.notVariable", [$listName]));
             }
 
             $this->initCounter($list, $key, $value);

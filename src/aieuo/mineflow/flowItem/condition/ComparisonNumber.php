@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
@@ -86,7 +87,7 @@ class ComparisonNumber extends Condition {
         $operator = $this->getOperator();
 
         if (!is_numeric($value1) or !is_numeric($value2)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
 
         $value1 = (float)$value1;
@@ -111,7 +112,7 @@ class ComparisonNumber extends Condition {
                 $result = $value1 <= $value2;
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
         return $result;
     }

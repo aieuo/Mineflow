@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Cancellable;
 use aieuo\mineflow\utils\Category;
@@ -23,7 +24,7 @@ class EventCancel extends Action {
 
         $event = $origin->getEvent();
         if (!($event instanceof Cancellable)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.eventCancel.notCancelable"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));
         }
         $event->setCancelled();
         yield true;

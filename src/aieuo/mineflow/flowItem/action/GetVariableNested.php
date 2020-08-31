@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -73,7 +74,7 @@ class GetVariableNested extends Action {
         if (!($variable instanceof Variable)) {
             $variable = Main::getVariableHelper()->getNested($variableName);
             if (!($variable instanceof Variable)) {
-                throw new \UnexpectedValueException("§cUndefined variable: ".$variableName);
+                throw new InvalidFlowValueException($this->getName(), "§cUndefined variable: ".$variableName);
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
@@ -118,18 +119,18 @@ class FourArithmeticOperations extends Action {
                 break;
             case self::DIVISION:
                 if ((float)$value2 == 0) {
-                    throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("variable.number.div.0")]));
+                    throw new InvalidFlowValueException($this->getName(), Language::get("variable.number.div.0"));
                 }
                 $result = (float)$value1 / (float)$value2;
                 break;
             case self::MODULO:
                 if ((float)$value2 == 0) {
-                    throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("variable.number.div.0")]));
+                    throw new InvalidFlowValueException($this->getName(), Language::get("variable.number.div.0"));
                 }
                 $result = (float)$value1 % (float)$value2;
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
         $this->lastResult = (string)$result;

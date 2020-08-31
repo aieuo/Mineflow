@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -74,8 +75,8 @@ class DeleteListVariableContent extends Action {
 
         $variable = ($this->isLocal ? $origin->getVariable($name) : $helper->get($name)) ?? new MapVariable([], $name);
         if (!($variable instanceof ListVariable)) {
-            throw new \UnexpectedValueException(
-                Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+            throw new InvalidFlowValueException(
+                $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
             );
         }
 

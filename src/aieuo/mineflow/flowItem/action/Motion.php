@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -68,7 +69,7 @@ class Motion extends Action implements EntityFlowItem {
         }, $this->getPosition());
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
 
         $entity = $this->getEntity($origin);

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -103,8 +104,8 @@ class AddMapVariable extends Action {
         if ($this->isLocal) {
             $variable = $origin->getVariable($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
-                throw new \UnexpectedValueException(
-                    Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+                throw new InvalidFlowValueException(
+                    $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
                 );
             }
             $variable->addValue($addVariable);
@@ -112,8 +113,8 @@ class AddMapVariable extends Action {
         } else {
             $variable = $helper->get($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
-                throw new \UnexpectedValueException(
-                    Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+                throw new InvalidFlowValueException(
+                    $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
                 );
             }
             $variable->addValue($addVariable);

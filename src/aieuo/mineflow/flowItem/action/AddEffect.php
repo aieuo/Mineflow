@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -90,7 +91,7 @@ class AddEffect extends Action implements EntityFlowItem {
 
         $effect = Effect::getEffectByName($effectId);
         if ($effect === null) $effect = Effect::getEffect($effectId);
-        if ($effect === null) throw new \UnexpectedValueException(Language::get("action.effect.notFound"));
+        if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound"));
         $this->throwIfInvalidNumber($time);
         $this->throwIfInvalidNumber($power);
 

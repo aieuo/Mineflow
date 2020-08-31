@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -73,7 +74,7 @@ class CreateMapVariableFromJson extends Action {
 
         $value = json_decode($json, true);
         if ($value === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), [json_last_error_msg()]]));
+            throw new InvalidFlowValueException($this->getName(), json_last_error_msg());
         }
 
         $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value), $name);

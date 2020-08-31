@@ -4,6 +4,7 @@
 namespace aieuo\mineflow\flowItem\base;
 
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
@@ -34,10 +35,10 @@ trait EntityFlowItemTrait {
 
     public function throwIfInvalidEntity(?Entity $entity) {
         if (!($entity instanceof Entity)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.entity"], $this->getEntityVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.entity"], $this->getEntityVariableName()]));
         }
         if ($entity instanceof Player and !$entity->isOnline()) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.player.offline"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.player.offline"));
         }
     }
 }

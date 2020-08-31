@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -80,7 +81,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
             $enchant = Enchantment::getEnchantmentByName($id);
         }
         if (!($enchant instanceof Enchantment)) {
-            throw new \UnexpectedValueException(Language::get("action.addEnchant.enchant.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound"));
         }
         $level = $origin->replaceVariables($this->getEnchantLevel());
         $this->throwIfInvalidNumber($level);

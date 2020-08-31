@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -97,7 +98,7 @@ class CalculateReversePolishNotation extends Action {
                     $res = $value1 % $value2;
                     break;
                 default:
-                    throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$token]]]));
+                    throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$token]));
             }
             $stack[] = $res;
         }

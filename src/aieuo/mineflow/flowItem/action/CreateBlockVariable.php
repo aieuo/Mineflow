@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -69,12 +70,12 @@ class CreateBlockVariable extends Action {
         try {
             $item = ItemFactory::fromString($id);
         } catch (\InvalidArgumentException $e) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.createBlockVariable.block.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlockVariable.block.notFound"));
         }
 
         $block = $item->getBlock();
         if ($item->getId() !== 0 and $block->getId() === 0) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.createBlockVariable.block.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlockVariable.block.notFound"));
         }
 
         $variable = new BlockObjectVariable($block, $name);

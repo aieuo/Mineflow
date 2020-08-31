@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
@@ -47,7 +48,7 @@ class ElseAction extends Action implements ActionContainer {
 
     public function execute(Recipe $origin) {
         $lastResult = $this->getParent()->getLastActionResult();
-        if ($lastResult === null) throw new \UnexpectedValueException();
+        if ($lastResult === null) throw new InvalidFlowValueException();
         if ($lastResult) return false;
 
         yield from $this->executeActions($origin);

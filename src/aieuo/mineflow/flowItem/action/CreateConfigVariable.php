@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -67,7 +68,7 @@ class CreateConfigVariable extends Action {
         $name = $origin->replaceVariables($this->getVariableName());
         $file = $origin->replaceVariables($this->getFileName());
         if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($file))) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["form.recipe.invalidName"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
 
         $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file), $name);
