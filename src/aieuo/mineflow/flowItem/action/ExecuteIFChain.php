@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\ip\IFPlugin;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -19,7 +20,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\event\Event;
 use pocketmine\Server;
 
-class ExecuteIFChain extends Action implements PlayerFlowItem {
+class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::EXECUTE_IF_CHAIN;
@@ -109,7 +110,7 @@ class ExecuteIFChain extends Action implements PlayerFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setChainName($content[0]);
         $this->setPlayerVariableName($content[1]);
         return $this;

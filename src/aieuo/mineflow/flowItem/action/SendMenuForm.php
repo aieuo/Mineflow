@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -20,7 +20,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\Player;
 
-class SendMenuForm extends Action implements PlayerFlowItem {
+class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::SEND_MENU;
@@ -156,7 +156,7 @@ class SendMenuForm extends Action implements PlayerFlowItem {
         return ["contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel, "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setResultName($content[1]);
         $this->setFormText($content[2]);

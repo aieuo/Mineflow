@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Dropdown;
 
-class ComparisonNumber extends Condition {
+class ComparisonNumber extends FlowItem implements Condition {
 
     protected $id = self::COMPARISON_NUMBER;
 
@@ -114,6 +114,7 @@ class ComparisonNumber extends Condition {
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
+        yield true;
         return $result;
     }
 
@@ -132,7 +133,7 @@ class ComparisonNumber extends Condition {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setValues($content[0], $content[2]);
         $this->setOperator($content[1]);
         return $this;

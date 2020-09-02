@@ -3,12 +3,13 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Cancellable;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class EventCancel extends Action {
+class EventCancel extends FlowItem {
 
     protected $id = self::EVENT_CANCEL;
 
@@ -35,7 +36,7 @@ class EventCancel extends Action {
         return true;
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

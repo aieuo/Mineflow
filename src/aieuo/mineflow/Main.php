@@ -4,8 +4,7 @@ namespace aieuo\mineflow;
 
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\EventManager;
-use aieuo\mineflow\flowItem\action\ActionFactory;
-use aieuo\mineflow\flowItem\condition\ConditionFactory;
+use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\utils\FormManager;
 use aieuo\mineflow\utils\PlayerConfig;
 use pocketmine\utils\Config;
@@ -76,8 +75,7 @@ class Main extends PluginBase {
 
         EntityManager::init();
 
-        ActionFactory::init();
-        ConditionFactory::init();
+        FlowItemFactory::init();
 
 
         self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));

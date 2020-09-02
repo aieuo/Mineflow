@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class IsPlayerOnlineByName extends Condition {
+class IsPlayerOnlineByName extends FlowItem implements Condition {
 
     protected $id = self::IS_PLAYER_ONLINE_BY_NAME;
 
@@ -56,6 +56,7 @@ class IsPlayerOnlineByName extends Condition {
 
         $player = Server::getInstance()->getPlayerExact($name);
 
+        yield true;
         return $player instanceof Player;
     }
 
@@ -72,7 +73,7 @@ class IsPlayerOnlineByName extends Condition {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerName($content[0]);
         return $this;
     }

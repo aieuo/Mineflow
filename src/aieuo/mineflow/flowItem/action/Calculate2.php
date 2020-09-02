@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
@@ -15,7 +16,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Dropdown;
 
-class Calculate2 extends Action {
+class Calculate2 extends FlowItem {
 
     protected $id = self::CALCULATE2;
 
@@ -163,7 +164,7 @@ class Calculate2 extends Action {
         return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setValue1($content[0]);
         $this->setValue2($content[1]);
         $this->setOperator($content[2]);

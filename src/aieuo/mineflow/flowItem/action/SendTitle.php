@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -14,7 +14,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-class SendTitle extends Action implements PlayerFlowItem {
+class SendTitle extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::SEND_TITLE;
@@ -122,7 +122,7 @@ class SendTitle extends Action implements PlayerFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5], $data[6]], "cancel" => $data[7], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1], $content[2]);
         if (isset($content[5])) {

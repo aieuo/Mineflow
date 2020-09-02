@@ -1,9 +1,9 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -13,7 +13,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-class SaveConfigFile extends Action implements ConfigFileFlowItem {
+class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
     protected $id = self::SAVE_CONFIG_FILE;
@@ -65,7 +65,7 @@ class SaveConfigFile extends Action implements ConfigFileFlowItem {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setConfigVariableName($content[0]);
         return $this;
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -12,7 +12,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-class IsActiveEntity extends Condition {
+class IsActiveEntity extends FlowItem implements Condition {
 
     protected $id = self::IS_ACTIVE_ENTITY;
 
@@ -55,6 +55,7 @@ class IsActiveEntity extends Condition {
         $id = $origin->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
+        yield true;
         return EntityHolder::isActive((int)$id);
     }
 
@@ -71,7 +72,7 @@ class IsActiveEntity extends Condition {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityId($content[0]);
         return $this;
     }

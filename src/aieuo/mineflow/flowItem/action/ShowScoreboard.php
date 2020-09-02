@@ -1,11 +1,11 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 
-class ShowScoreboard extends Action implements PlayerFlowItem, ScoreboardFlowItem {
+class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {
     use PlayerFlowItemTrait, ScoreboardFlowItemTrait;
 
     protected $id = self::SHOW_SCOREBOARD;
@@ -72,7 +72,7 @@ class ShowScoreboard extends Action implements PlayerFlowItem, ScoreboardFlowIte
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setScoreboardVariableName($content[1]);
         return $this;

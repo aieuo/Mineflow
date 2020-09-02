@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -16,7 +17,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 
-class Motion extends Action implements EntityFlowItem {
+class Motion extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::MOTION;
@@ -107,7 +108,7 @@ class Motion extends Action implements EntityFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setPosition($content[1], $content[2], $content[3]);
         return $this;

@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class RandomNumber extends Condition {
+class RandomNumber extends FlowItem implements Condition {
 
     protected $id = self::RANDOM_NUMBER;
 
@@ -81,6 +81,7 @@ class RandomNumber extends Condition {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
 
+        yield true;
         return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;
     }
 
@@ -99,7 +100,7 @@ class RandomNumber extends Condition {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setMin($content[0]);
         $this->setMax($content[1]);
         $this->setValue($content[2]);

@@ -22,6 +22,7 @@ class CanAddItem extends TypeItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
+        yield true;
         return $player->getInventory()->canAddItem($item);
     }
 }

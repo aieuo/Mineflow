@@ -1,11 +1,11 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\BlockFlowItem;
 use aieuo\mineflow\flowItem\base\BlockFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
+class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     use PositionFlowItemTrait, BlockFlowItemTrait;
 
     protected $id = self::SET_BLOCK;
@@ -70,7 +70,7 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0]);
         $this->setBlockVariableName($content[1]);
         return $this;

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\recipe\Recipe;
 
 class NandScript extends AndScript {
@@ -13,7 +14,7 @@ class NandScript extends AndScript {
 
     public function getDetail(): string {
         $details = ["-----------nand-----------"];
-        foreach ($this->getConditions() as $condition) {
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";
@@ -21,6 +22,6 @@ class NandScript extends AndScript {
     }
 
     public function execute(Recipe $origin) {
-        return !parent::execute($origin);
+        return !(yield from parent::execute($origin));
     }
 }

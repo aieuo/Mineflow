@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
@@ -14,7 +14,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-class SetGamemode extends Action implements PlayerFlowItem {
+class SetGamemode extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::SET_GAMEMODE;
@@ -89,7 +89,7 @@ class SetGamemode extends Action implements PlayerFlowItem {
         return ["contents" => [$data[1], (string)$data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setGamemode($content[1]);
         return $this;

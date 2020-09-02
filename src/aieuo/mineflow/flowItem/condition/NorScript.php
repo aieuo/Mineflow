@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\recipe\Recipe;
 
 class NorScript extends ORScript {
@@ -13,7 +14,7 @@ class NorScript extends ORScript {
 
     public function getDetail(): string {
         $details = ["-----------nor-----------"];
-        foreach ($this->getConditions() as $condition) {
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";
@@ -21,6 +22,6 @@ class NorScript extends ORScript {
     }
 
     public function execute(Recipe $origin) {
-        return !parent::execute($origin);
+        return !(yield from parent::execute($origin));
     }
 }

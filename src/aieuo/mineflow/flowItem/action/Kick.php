@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -15,7 +15,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\scheduler\ClosureTask;
 
-class Kick extends Action implements PlayerFlowItem {
+class Kick extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::KICK;
@@ -88,7 +88,7 @@ class Kick extends Action implements PlayerFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setReason($content[1]);
         if (isset($content[2]) and is_bool($content[2])) $this->isAdmin = $content[2];

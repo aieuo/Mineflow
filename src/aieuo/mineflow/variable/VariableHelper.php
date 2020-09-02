@@ -1,9 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\variable;
-
-use aieuo\mineflow\flowItem\action\Action;
-use aieuo\mineflow\flowItem\action\ActionFactory;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\utils\Config;
 
@@ -157,7 +156,7 @@ class VariableHelper {
             $name = $matches[1];
             $parameters = $matches[2];
 
-            $action = ActionFactory::get($name, true);
+            $action = FlowItemFactory::get($name, true);
             if ($action === null) {
                 return str_replace("{".$replace."}", "§cUnknown action id", $string);
             }
@@ -166,7 +165,7 @@ class VariableHelper {
             }
 
             $class = get_class($action);
-            /** @var Action $newAction */
+            /** @var FlowItem $newAction */
             $newAction = new $class(...array_filter(array_map("trim", explode(",", $parameters)), function ($t) { return $t !== ""; }));
             /** @noinspection PhpStatementHasEmptyBodyInspection */
             foreach ($newAction->parent($origin)->execute($origin) as $_) {

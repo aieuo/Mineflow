@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -15,7 +15,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 
-class PlaySound extends Action implements PlayerFlowItem {
+class PlaySound extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::PLAY_SOUND;
@@ -116,7 +116,7 @@ class PlaySound extends Action implements PlayerFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setSound($content[1]);
         $this->setVolume($content[2]);

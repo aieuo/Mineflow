@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -14,7 +15,7 @@ use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ConfigObjectVariable;
 
-class CreateConfigVariable extends Action {
+class CreateConfigVariable extends FlowItem {
 
     protected $id = self::CREATE_CONFIG_VARIABLE;
 
@@ -91,7 +92,7 @@ class CreateConfigVariable extends Action {
         return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" =>[]];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setFileName($content[1]);
         return $this;

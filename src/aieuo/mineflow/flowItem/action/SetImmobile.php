@@ -1,9 +1,9 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -13,7 +13,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class SetImmobile extends Action implements EntityFlowItem {
+class SetImmobile extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::SET_IMMOBILE;
@@ -63,7 +63,7 @@ class SetImmobile extends Action implements EntityFlowItem {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         return $this;
     }

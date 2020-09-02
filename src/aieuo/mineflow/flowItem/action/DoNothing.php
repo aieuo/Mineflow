@@ -2,10 +2,11 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class DoNothing extends Action {
+class DoNothing extends FlowItem {
 
     protected $id = self::DO_NOTHING;
 
@@ -25,7 +26,7 @@ class DoNothing extends Action {
         return true;
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

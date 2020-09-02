@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -18,7 +19,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use pocketmine\entity\Entity;
 
-class CreateHumanEntity extends Action implements PlayerFlowItem, PositionFlowItem {
+class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
 
     protected $id = self::CREATE_HUMAN_ENTITY;
@@ -97,7 +98,7 @@ class CreateHumanEntity extends Action implements PlayerFlowItem, PositionFlowIt
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         $this->setResultName($content[2]);

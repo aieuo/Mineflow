@@ -1,9 +1,9 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -16,7 +16,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
-class SetConfigData extends Action implements ConfigFileFlowItem {
+class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
     protected $id = self::SET_CONFIG_VALUE;
@@ -112,7 +112,7 @@ class SetConfigData extends Action implements ConfigFileFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setConfigVariableName($content[0]);
         $this->setKey($content[1]);
         $this->setValue($content[2]);

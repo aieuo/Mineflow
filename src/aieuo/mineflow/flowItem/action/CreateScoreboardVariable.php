@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
@@ -14,7 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
 
-class CreateScoreboardVariable extends Action {
+class CreateScoreboardVariable extends FlowItem {
 
     protected $id = self::CREATE_SCOREBOARD_VARIABLE;
 
@@ -118,7 +119,7 @@ class CreateScoreboardVariable extends Action {
         return ["contents" => [$data[4], $data[1], $data[2], $this->displayTypes[$data[3]]], "cancel" => $data[5], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setBoardId($content[1]);
         $this->setDisplayName($content[2]);

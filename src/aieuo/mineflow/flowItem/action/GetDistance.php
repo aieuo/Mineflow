@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\variable\NumberVariable;
 
-class GetDistance extends Action implements PositionFlowItem {
+class GetDistance extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
     protected $id = self::GET_DISTANCE;
@@ -88,7 +88,7 @@ class GetDistance extends Action implements PositionFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0], "pos1");
         $this->setPositionVariableName($content[1], "pos2");
         $this->setResultName($content[2]);

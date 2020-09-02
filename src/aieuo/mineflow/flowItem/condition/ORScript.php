@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\recipe\Recipe;
 
 class ORScript extends AndScript {
@@ -13,7 +14,7 @@ class ORScript extends AndScript {
 
     public function getDetail(): string {
         $details = ["-----------or-----------"];
-        foreach ($this->getConditions() as $condition) {
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";
@@ -21,8 +22,8 @@ class ORScript extends AndScript {
     }
 
     public function execute(Recipe $origin) {
-        foreach ($this->getConditions() as $condition) {
-            if ($condition->execute($origin)) return true;
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+            if (yield from $condition->execute($origin)) return true;
         }
         return false;
     }

@@ -2,11 +2,12 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\Main;
 
-class SaveData extends Action {
+class SaveData extends FlowItem {
 
     protected $id = self::SAVE_DATA;
 
@@ -29,7 +30,7 @@ class SaveData extends Action {
         return true;
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

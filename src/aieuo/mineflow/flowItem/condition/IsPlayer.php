@@ -21,6 +21,7 @@ class IsPlayer extends IsActiveEntity {
         $id = $origin->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
+        yield true;
         return EntityHolder::isPlayer((int)$id);
     }
 }

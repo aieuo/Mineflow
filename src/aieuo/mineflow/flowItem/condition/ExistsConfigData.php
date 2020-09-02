@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -13,7 +13,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class ExistsConfigData extends Condition implements ConfigFileFlowItem {
+class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
     protected $id = self::EXISTS_CONFIG_DATA;
@@ -59,6 +59,7 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
 
         $key = $this->getKey();
 
+        yield true;
         return $config->getNested($key) !== null;
     }
 
@@ -76,7 +77,7 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setConfigVariableName($content[0]);
         $this->setKey($content[1]);
         return $this;

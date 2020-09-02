@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -11,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\Player;
 
-abstract class FlowItem implements \JsonSerializable {
+abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
     /** @var string */
     protected $id;
@@ -46,6 +47,9 @@ abstract class FlowItem implements \JsonSerializable {
     const PERMISSION_LEVEL_2 = 2;
     /** @var int */
     protected $permission = self::PERMISSION_LEVEL_0;
+
+    /* @var FlowItemContainer */
+    private $parent;
 
     public function getId(): string {
         return $this->id;
@@ -145,6 +149,34 @@ abstract class FlowItem implements \JsonSerializable {
     abstract public function serializeContents(): array;
 
     /**
+     * @param array $content
+     * @return self
+     * @throws FlowItemLoadException|\ErrorException
+     */
+    public static function loadSaveDataStatic(array $content): self {
+        switch ($content["id"]) {
+            case "addScore":
+                $content["id"] = self::REMOVE_SCOREBOARD_SCORE;
+                break;
+        }
+        
+        $action = FlowItemFactory::get($content["id"]);
+        if ($action === null) {
+            throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));
+        }
+
+        $action->setCustomName($content["customName"] ?? "");
+        return $action->loadSaveData($content["contents"]);
+    }
+
+    /**
+     * @param array $content
+     * @return FlowItem
+     * @throws FlowItemLoadException|\ErrorException
+     */
+    abstract public function loadSaveData(array $content): FlowItem;
+
+    /**
      * @param Recipe $origin
      * @return bool|\Generator
      */
@@ -163,5 +195,14 @@ abstract class FlowItem implements \JsonSerializable {
 
     public function allowDirectCall(): bool {
         return true;
+    }
+
+    public function parent(FlowItemContainer $container): self {
+        $this->parent = $container;
+        return $this;
+    }
+
+    public function getParent(): FlowItemContainer {
+        return $this->parent;
     }
 }

@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpUndefinedClassInspection */
 
 namespace aieuo\mineflow\flowItem\action;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -15,7 +15,7 @@ use aieuo\ReplenishResourcesAPI;
 use pocketmine\Server;
 
 
-class ReplenishResource extends Action implements PositionFlowItem {
+class ReplenishResource extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
     protected $id = self::REPLENISH_RESOURCE;
@@ -70,7 +70,7 @@ class ReplenishResource extends Action implements PositionFlowItem {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0]);
         return $this;
     }

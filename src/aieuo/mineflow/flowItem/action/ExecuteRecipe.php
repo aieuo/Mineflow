@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -13,7 +14,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 
-class ExecuteRecipe extends Action {
+class ExecuteRecipe extends FlowItem {
 
     protected $id = self::EXECUTE_RECIPE;
 
@@ -111,7 +112,7 @@ class ExecuteRecipe extends Action {
         return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1] ?? []);
         return $this;

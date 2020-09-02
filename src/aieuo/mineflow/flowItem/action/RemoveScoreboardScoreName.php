@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 
-class RemoveScoreboardScoreName extends Action implements ScoreboardFlowItem {
+class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
 
     protected $id = self::REMOVE_SCOREBOARD_SCORE_NAME;
@@ -81,7 +81,7 @@ class RemoveScoreboardScoreName extends Action implements ScoreboardFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setScoreboardVariableName($content[0]);
         $this->setScore($content[1]);
         return $this;

@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
@@ -19,7 +20,7 @@ use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
 use pocketmine\entity\Living;
 
-class AddEffect extends Action implements EntityFlowItem {
+class AddEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::ADD_EFFECT;
@@ -124,7 +125,7 @@ class AddEffect extends Action implements EntityFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setEffectId($content[1]);
         $this->setTime($content[2]);

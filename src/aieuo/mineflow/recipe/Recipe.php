@@ -1,12 +1,11 @@
 <?php
 
 namespace aieuo\mineflow\recipe;
-
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\action\ActionContainer;
-use aieuo\mineflow\flowItem\action\ActionContainerTrait;
-use aieuo\mineflow\flowItem\action\Action;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\utils\Logger;
@@ -22,11 +21,8 @@ use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\Main;
 
-class Recipe implements \JsonSerializable, ActionContainer {
-    use ActionContainerTrait;
-
-    const CONTENT_TYPE_ACTION = "action";
-    const CONTENT_TYPE_CONDITION = "condition";
+class Recipe implements \JsonSerializable, FlowItemContainer {
+    use FlowItemContainerTrait;
 
     const TARGET_DEFAULT = 0;
     const TARGET_SPECIFIED = 1;
@@ -113,7 +109,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function getDetail(): string {
         $details = [];
-        foreach ($this->getActions() as $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
         return implode("\n", $details);
@@ -227,7 +223,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function execute(array $args = [], bool $first = true): bool {
         $this->applyArguments($args);
 
-        $this->generator = $this->generator ?? $this->executeActions($this);
+        $this->generator = $this->generator ?? $this->executeAll($this, FlowItemContainer::ACTION);
         try {
             if (!$first) $this->generator->next();
 
@@ -242,6 +238,8 @@ class Recipe implements \JsonSerializable, ActionContainer {
                 if (!$result and !$this->resuming) {
                     $this->waiting = true;
                     return false;
+                } elseif (!$result) {
+                    $this->resuming = false;
                 }
 
                 $this->generator->next();
@@ -365,13 +363,13 @@ class Recipe implements \JsonSerializable, ActionContainer {
     public function loadSaveData(array $contents): self {
         foreach ($contents as $i => $content) {
             try {
-                $action = Action::loadSaveDataStatic($content);
+                $action = FlowItem::loadSaveDataStatic($content);
             } catch (\ErrorException $e) {
                 if (strpos($e->getMessage(), "Undefined offset:") !== 0) throw $e;
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
 
-            $this->addAction($action);
+            $this->addItem($action, FlowItemContainer::ACTION);
         }
         return $this;
     }
@@ -381,7 +379,7 @@ class Recipe implements \JsonSerializable, ActionContainer {
             "name" => $this->name,
             "group" => $this->group,
             "author" => $this->author,
-            "actions" => $this->actions,
+            "actions" => $this->getItems(FlowItemContainer::ACTION),
             "triggers" => $this->triggers,
             "target" => [
                 "type" => $this->targetType,
@@ -407,9 +405,9 @@ class Recipe implements \JsonSerializable, ActionContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getActions() as $k => $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
     }
 }

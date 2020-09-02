@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -15,7 +16,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 
-class CreateMapVariable extends Action {
+class CreateMapVariable extends FlowItem {
 
     protected $id = self::CREATE_MAP_VARIABLE;
 
@@ -135,7 +136,7 @@ class CreateMapVariable extends Action {
         return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->setVariableValue($content[2]);

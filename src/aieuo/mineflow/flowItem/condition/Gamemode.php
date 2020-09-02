@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use pocketmine\Player;
 
-class Gamemode extends Condition implements PlayerFlowItem {
+class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::GAMEMODE;
@@ -68,6 +68,7 @@ class Gamemode extends Condition implements PlayerFlowItem {
 
         $gamemode = $this->getGamemode();
 
+        yield true;
         return $player->getGamemode() === $gamemode;
     }
 
@@ -87,7 +88,7 @@ class Gamemode extends Condition implements PlayerFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setGamemode($content[1]);
         return $this;

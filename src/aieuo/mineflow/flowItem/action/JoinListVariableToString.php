@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -15,7 +16,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\ListVariable;
 
-class JoinListVariableToString extends Action {
+class JoinListVariableToString extends FlowItem {
 
     protected $id = self::JOIN_LIST_VARIABLE_TO_STRING;
 
@@ -112,7 +113,7 @@ class JoinListVariableToString extends Action {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setSeparator($content[1]);
         $this->setResultName($content[2]);

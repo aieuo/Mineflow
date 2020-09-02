@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
+class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
 
     protected $id = self::IN_AREA;
@@ -57,6 +57,7 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
 
         $pos = $entity->floor();
 
+        yield true;
         return $pos->x >= min($pos1->x, $pos2->x) and $pos->x <= max($pos1->x, $pos2->x)
             and $pos->y >= min($pos1->y, $pos2->y) and $pos->y <= max($pos1->y, $pos2->y)
             and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);
@@ -77,7 +78,7 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setPositionVariableName($content[1], "pos1");
         $this->setPositionVariableName($content[2], "pos2");

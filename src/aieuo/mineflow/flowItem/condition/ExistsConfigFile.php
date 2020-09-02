@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 
-class ExistsConfigFile extends Condition {
+class ExistsConfigFile extends FlowItem implements Condition {
 
     protected $id = self::EXISTS_CONFIG_FILE;
 
@@ -55,6 +55,7 @@ class ExistsConfigFile extends Condition {
         $name = $origin->replaceVariables($this->getFileName());
         $name = preg_replace("#[.¥/:?<>|*\"]#", "", preg_quote($name));
 
+        yield true;
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
     }
 
@@ -73,7 +74,7 @@ class ExistsConfigFile extends Condition {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setFileName($content[0]);
         return $this;
     }

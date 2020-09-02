@@ -1,8 +1,8 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -16,7 +16,7 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\Item;
 
-class GetInventoryContents extends Action implements PlayerFlowItem {
+class GetInventoryContents extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::GET_INVENTORY_CONTENTS;
@@ -86,7 +86,7 @@ class GetInventoryContents extends Action implements PlayerFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setResultName($content[1]);
         return $this;

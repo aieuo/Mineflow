@@ -30,6 +30,8 @@ class OverMoney extends TypeMoney {
         $this->throwIfInvalidNumber($amount);
 
         $myMoney = Economy::getPlugin()->getMoney($name);
+
+        yield true;
         return $myMoney >= (int)$amount;
     }
 }

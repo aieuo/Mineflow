@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -15,7 +16,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\variable\StringVariable;
 
-class EditString extends Action {
+class EditString extends FlowItem {
 
     protected $id = self::EDIT_STRING;
 
@@ -155,7 +156,7 @@ class EditString extends Action {
         return ["contents" => [$data[1], $this->operators[$data[2]], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setValues($content[0], $content[2]);
         $this->setOperator((string)$content[1]);
         $this->setResultName($content[3]);

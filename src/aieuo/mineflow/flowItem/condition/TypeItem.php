@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-abstract class TypeItem extends Condition implements PlayerFlowItem, ItemFlowItem {
+abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
 
     protected $detailDefaultReplace = ["player", "item"];
@@ -49,7 +49,7 @@ abstract class TypeItem extends Condition implements PlayerFlowItem, ItemFlowIte
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         return $this;

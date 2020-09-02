@@ -1,23 +1,21 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
-use aieuo\mineflow\flowItem\condition\Condition;
-use aieuo\mineflow\flowItem\condition\ConditionContainer;
-use aieuo\mineflow\flowItem\condition\ConditionContainerTrait;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use pocketmine\Player;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\ui\ConditionContainerForm;
-use aieuo\mineflow\ui\ActionForm;
-use aieuo\mineflow\ui\ActionContainerForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
 
-class IFAction extends Action implements ActionContainer, ConditionContainer {
-    use ActionContainerTrait, ConditionContainerTrait;
+class IFAction extends FlowItem implements FlowItemContainer {
+    use FlowItemContainerTrait;
 
     protected $id = self::ACTION_IF;
 
@@ -29,18 +27,18 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
-        $this->setConditions($conditions);
-        $this->setActions($actions);
+        $this->setItems($conditions, FlowItemContainer::CONDITION);
+        $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
     }
 
     public function getDetail(): string {
         $details = ["", "==============if================"];
-        foreach ($this->conditions as $condition) {
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        foreach ($this->actions as $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -52,11 +50,11 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
     }
 
     public function execute(Recipe $origin) {
-        foreach ($this->conditions as $condition) {
-            if (!$condition->execute($origin)) return false;
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+            if (!(yield from $condition->execute($origin))) return false;
         }
 
-        yield from $this->executeActions($origin);
+        yield from $this->executeAll($origin, "action");
         return true;
     }
 
@@ -86,22 +84,22 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
                 switch ($data) {
                     case 0:
                         $session->pop("parents");
-                        (new ActionContainerForm)->sendActionList($player, $parent);
+                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
                         break;
                     case 1:
-                        (new ConditionContainerForm)->sendConditionList($player, $this);
+                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
                         break;
                     case 2:
-                        (new ActionContainerForm)->sendActionList($player, $this);
+                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
                         break;
                     case 3:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                     case 4:
-                        (new ActionContainerForm)->sendMoveAction($player, $parent, array_search($this, $parent->getActions(), true));
+                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($this, $parent->getActions(), true));
                         break;
                     case 5:
-                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
+                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                 }
             })->onClose(function (Player $player) {
@@ -110,23 +108,31 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function loadSaveData(array $contents): Action {
+    public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $i => $content) {
-            $condition = Condition::loadSaveDataStatic($content);
-            $this->addCondition($condition);
+            switch ($content["id"]) {
+                case "removeItem":
+                    $content["id"] = self::REMOVE_ITEM_CONDITION;
+                    break;
+                case "takeMoney":
+                    $content["id"] = self::TAKE_MONEY_CONDITION;
+                    break;
+            }
+            $condition = FlowItem::loadSaveDataStatic($content);
+            $this->addItem($condition, FlowItemContainer::CONDITION);
         }
 
         foreach ($contents[1] as $i => $content) {
-            $action = Action::loadSaveDataStatic($content);
-            $this->addAction($action);
+            $action = FlowItem::loadSaveDataStatic($content);
+            $this->addItem($action, FlowItemContainer::ACTION);
         }
         return $this;
     }
 
     public function serializeContents(): array {
         return  [
-            $this->conditions,
-            $this->actions
+            $this->getItems(FlowItemContainer::CONDITION),
+            $this->getItems(FlowItemContainer::ACTION)
         ];
     }
 
@@ -136,15 +142,15 @@ class IFAction extends Action implements ActionContainer, ConditionContainer {
 
     public function __clone() {
         $conditions = [];
-        foreach ($this->getConditions() as $k => $condition) {
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $k => $condition) {
             $conditions[$k] = clone $condition;
         }
-        $this->setConditions($conditions);
+        $this->setItems($conditions, FlowItemContainer::CONDITION);
         
         $actions = [];
-        foreach ($this->getActions() as $k => $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -12,7 +13,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-class GetDate extends Action {
+class GetDate extends FlowItem {
 
     protected $id = self::GET_DATE;
 
@@ -89,7 +90,7 @@ class GetDate extends Action {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setFormat($content[0]);
         $this->setResultName($content[1]);
         return $this;

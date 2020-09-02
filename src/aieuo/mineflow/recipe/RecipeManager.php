@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\ExecuteRecipe;
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
@@ -151,13 +151,13 @@ class RecipeManager {
         return [array_pop($names), implode("/", $names)];
     }
 
-    public function getWithLinkedRecipes(ActionContainer $recipe, Recipe $origin, bool $base = true): array {
+    public function getWithLinkedRecipes(FlowItemContainer $recipe, Recipe $origin, bool $base = true): array {
         $recipeManager = Main::getRecipeManager();
 
         $recipes = [];
         if ($base) $recipes[$origin->getGroup()."/".$origin->getName()] = $origin;
-        foreach ($recipe->getActions() as $action) {
-            if ($action instanceof ActionContainer) {
+        foreach ($recipe->getItems(FlowItemContainer::ACTION) as $action) {
+            if ($action instanceof FlowItemContainer) {
                 $links = $this->getWithLinkedRecipes($action, $origin, false);
                 $recipes = array_merge($recipes, $links);
                 continue;

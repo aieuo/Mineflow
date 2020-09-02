@@ -23,6 +23,8 @@ class InHand extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $hand = $player->getInventory()->getItemInHand();
+
+        yield true;
         return ($hand->getId() === $item->getId()
             and $hand->getDamage() === $item->getDamage()
             and $hand->getCount() >= $item->getCount()

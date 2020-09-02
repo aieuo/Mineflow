@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -12,7 +13,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\variable\NumberVariable;
 
-class StringLength extends Action {
+class StringLength extends FlowItem {
 
     protected $id = self::STRING_LENGTH;
 
@@ -92,7 +93,7 @@ class StringLength extends Action {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setValue($content[0]);
         $this->setResultName($content[1]);
         return $this;

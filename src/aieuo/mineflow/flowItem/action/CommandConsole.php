@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -13,7 +14,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Server;
 
-class CommandConsole extends Action {
+class CommandConsole extends FlowItem {
 
     protected $id = self::COMMAND_CONSOLE;
 
@@ -74,7 +75,7 @@ class CommandConsole extends Action {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setCommand($content[0]);
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -13,7 +14,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\Main;
 use pocketmine\scheduler\ClosureTask;
 
-class Wait extends Action {
+class Wait extends FlowItem {
 
     protected $id = self::ACTION_WAIT;
 
@@ -79,7 +80,7 @@ class Wait extends Action {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setTime($content[0]);
         return $this;
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -20,7 +20,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
+class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
 
     protected $id = self::SET_SITTING;
@@ -90,7 +90,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         return $this;

@@ -1,11 +1,11 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -17,7 +17,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\entity\Living;
 
-class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
+class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
 
     protected $id = self::EQUIP_ARMOR;
@@ -100,7 +100,7 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex((string)$content[2]);

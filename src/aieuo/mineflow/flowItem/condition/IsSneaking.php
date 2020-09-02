@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -13,7 +13,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 
-class IsSneaking extends Condition implements EntityFlowItem {
+class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::IS_SNEAKING;
@@ -45,6 +45,7 @@ class IsSneaking extends Condition implements EntityFlowItem {
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
+        yield true;
         return $entity->isSneaking();
     }
 
@@ -61,7 +62,7 @@ class IsSneaking extends Condition implements EntityFlowItem {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         if (isset($content[0])) $this->setEntityVariableName($content[0]);
         return $this;
     }

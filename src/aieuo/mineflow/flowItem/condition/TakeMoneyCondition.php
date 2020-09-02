@@ -35,6 +35,8 @@ class TakeMoneyCondition extends TypeMoney {
             $economy->takeMoney($name, (int)$amount);
             return true;
         }
+
+        yield true;
         return false;
     }
 }

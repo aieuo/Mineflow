@@ -22,6 +22,7 @@ class ExistsItem extends TypeItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
+        yield true;
         return $player->getInventory()->contains($item);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -15,7 +16,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\ListVariable;
 
-class CreateListVariable extends Action {
+class CreateListVariable extends FlowItem {
 
     protected $id = self::CREATE_LIST_VARIABLE;
 
@@ -114,7 +115,7 @@ class CreateListVariable extends Action {
         return ["contents" => [$data[1], array_map("trim", explode(",", $data[2])), !$data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->isLocal = $content[2];

@@ -20,6 +20,8 @@ class IsCreature extends IsActiveEntity {
         $this->throwIfInvalidNumber($id);
 
         $entity = EntityHolder::findEntity((int)$id);
+
+        yield true;
         return $entity instanceof Creature;
     }
 }

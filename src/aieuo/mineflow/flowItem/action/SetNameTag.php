@@ -1,9 +1,9 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\Player;
 
-class SetNameTag extends Action implements EntityFlowItem {
+class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::SET_NAME;
@@ -80,7 +80,7 @@ class SetNameTag extends Action implements EntityFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setNewName($content[1]);
         return $this;

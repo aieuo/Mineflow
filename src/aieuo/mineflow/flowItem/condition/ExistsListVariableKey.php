@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
 
-class ExistsListVariableKey extends Condition {
+class ExistsListVariableKey extends FlowItem implements Condition {
 
     protected $id = self::EXISTS_LIST_VARIABLE_KEY;
 
@@ -74,6 +74,8 @@ class ExistsListVariableKey extends Condition {
         $variable = $this->isLocal ? $origin->getVariable($name) : $helper->get($name);
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
+
+        yield true;
         return isset($value[$key]);
     }
 
@@ -92,7 +94,7 @@ class ExistsListVariableKey extends Condition {
         return ["contents" => [$data[1], $data[2], !$data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->isLocal = $content[2];

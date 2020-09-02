@@ -1,7 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -13,7 +13,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 
-class IsFlying extends Condition implements PlayerFlowItem {
+class IsFlying extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::IS_FLYING;
@@ -45,6 +45,7 @@ class IsFlying extends Condition implements PlayerFlowItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
+        yield true;
         return $player->isFlying();
     }
 
@@ -61,7 +62,7 @@ class IsFlying extends Condition implements PlayerFlowItem {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         if (isset($content[0])) $this->setPlayerVariableName($content[0]);
         return $this;
     }

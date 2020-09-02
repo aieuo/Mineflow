@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -11,7 +12,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
-abstract class TypeGetMathVariable extends Action {
+abstract class TypeGetMathVariable extends FlowItem {
 
     protected $detailDefaultReplace = ["result"];
 
@@ -61,7 +62,7 @@ abstract class TypeGetMathVariable extends Action {
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         if (isset($content[0])) $this->setResultName($content[0]);
         return $this;
     }

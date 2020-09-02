@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\recipe\Recipe;
 
 class ElseifAction extends IFAction {
@@ -14,11 +15,11 @@ class ElseifAction extends IFAction {
 
     public function getDetail(): string {
         $details = ["=============elseif============="];
-        foreach ($this->getConditions() as $condition) {
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        foreach ($this->getActions() as $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -30,11 +31,11 @@ class ElseifAction extends IFAction {
         if ($lastResult === null) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 
-        foreach ($this->getConditions() as $condition) {
-            if (!$condition->execute($origin)) return false;
+        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+            if (!(yield from $condition->execute($origin))) return false;
         }
 
-        yield from $this->executeActions($origin);
+        yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         return true;
     }
 }

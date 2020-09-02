@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
@@ -11,7 +12,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-abstract class TypeMoney extends Action {
+abstract class TypeMoney extends FlowItem {
 
     protected $detailDefaultReplace = ["target", "amount"];
 
@@ -68,7 +69,7 @@ abstract class TypeMoney extends Action {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerName($content[0]);
         $this->setAmount($content[1]);
         return $this;

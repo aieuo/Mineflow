@@ -1,10 +1,10 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
-
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\CustomForm;
 
-abstract class TypeItem extends Action implements PlayerFlowItem, ItemFlowItem {
+abstract class TypeItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
 
     protected $detailDefaultReplace = ["player", "item"];
@@ -49,7 +49,7 @@ abstract class TypeItem extends Action implements PlayerFlowItem, ItemFlowItem {
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         return $this;

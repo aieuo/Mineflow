@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\trigger\Trigger;
@@ -66,8 +67,8 @@ class RecipeForm {
                             $recipe = new Recipe($name, $data[1], $player->getName());
                             $manager->add($recipe);
                             Session::getSession($player)
-                                ->set("recipe_menu_prev", [$this, "sendMenu"])
-                                ->set("recipe_menu_prev_data", []);
+                                ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                                ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
                             $this->sendRecipeMenu($player, $recipe);
                         },
                         function (Player $player, string $name) use ($data) {
@@ -84,8 +85,8 @@ class RecipeForm {
 
                 $manager->add($recipe);
                 Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
-                    ->set("recipe_menu_prev_data", []);
+                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                    ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
                 $this->sendRecipeMenu($player, $recipe);
             })->addErrors($errors)->addArgs($name)->show($player);
     }
@@ -94,8 +95,8 @@ class RecipeForm {
         (new MineflowForm)->selectRecipe($player, "@form.recipe.select.title",
             function (Player $player, Recipe $recipe) {
                 Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
-                    ->set("recipe_menu_prev_data", []);
+                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                    ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
                 $this->sendRecipeMenu($player, $recipe);
             },
             function (Player $player) {
@@ -183,7 +184,7 @@ class RecipeForm {
                         break;
                     case 1:
                         Session::getSession($player)->set("parents", []);
-                        (new ActionContainerForm)->sendActionList($player, $recipe);
+                        (new FlowItemContainerForm)->sendActionList($player, $recipe, FlowItemContainer::ACTION);
                         break;
                     case 2:
                         $this->sendChangeName($player, $recipe);

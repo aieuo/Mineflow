@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
@@ -18,7 +19,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 
-class AddEnchantment extends Action implements ItemFlowItem {
+class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
     protected $id = self::ADD_ENCHANTMENT;
@@ -108,7 +109,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
         return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setItemVariableName($content[0]);
         $this->setEnchantId($content[1]);
         $this->setEnchantLevel($content[2]);

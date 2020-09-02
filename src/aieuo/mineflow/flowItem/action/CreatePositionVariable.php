@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
@@ -16,7 +17,7 @@ use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
 use pocketmine\Server;
 
-class CreatePositionVariable extends Action {
+class CreatePositionVariable extends FlowItem {
 
     protected $id = self::CREATE_POSITION_VARIABLE;
 
@@ -139,7 +140,7 @@ class CreatePositionVariable extends Action {
         return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6], "errors" => []];
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setX($content[1]);
         $this->setY($content[2]);
