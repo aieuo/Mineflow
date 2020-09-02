@@ -431,14 +431,14 @@ class FlowItemFactory {
     }
 
     /**
-     * @param  FlowItem $action
+     * @param FlowItem $action
      */
     public static function register(FlowItem $action): void {
         self::$list[$action->getId()] = clone $action;
     }
 
     /**
-     * @param  FlowItem $action
+     * @param FlowItem $action
      */
     public static function registerAlias(FlowItem $action): void {
         self::$aliases[$action->getId()] = clone $action;

@@ -1,21 +1,22 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\NumberVariable;
+use pocketmine\Player;
 
 class RepeatAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -34,7 +35,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     /** @var string */
     private $repeatCount;
 
-    /** @var string  */
+    /** @var string */
     private $startIndex = "0";
     /** @var string */
     private $counterName = "i";
@@ -79,7 +80,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $length = strlen($repeat) - 1;
         $left = ceil($length / 2);
         $right = $length - $left;
-        $details = ["", str_repeat("=", 12-$left)."repeat(".$repeat.")".str_repeat("=", 12-$right)];
+        $details = ["", str_repeat("=", 12 - $left)."repeat(".$repeat.")".str_repeat("=", 12 - $right)];
         foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
@@ -101,7 +102,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $name = $this->counterName;
         $end = $start + (int)$count;
 
-        for ($i=(int)$start; $i<$end; $i++) {
+        for ($i = (int)$start; $i < $end; $i++) {
             $origin->addVariable(new NumberVariable($i, $name));
             yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         }
@@ -184,7 +185,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     }
 
     public function serializeContents(): array {
-        return  [
+        return [
             $this->repeatCount,
             $this->getItems(FlowItemContainer::ACTION),
             $this->startIndex,

@@ -1,6 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\ui;
+
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;

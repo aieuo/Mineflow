@@ -67,7 +67,13 @@ class Bossbar {
         $pk = new AddActorPacket();
         $pk->entityRuntimeId = $bar->getEntityId();
         $pk->type = AddActorPacket::LEGACY_ID_MAP_BC[EntityIds::SHULKER];
-        $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, (1 << Entity::DATA_FLAG_INVISIBLE) | (1 << Entity::DATA_FLAG_IMMOBILE)], Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $title]];
+        $pk->metadata = [
+            Entity::DATA_FLAGS => [
+                Entity::DATA_TYPE_LONG,
+                (1 << Entity::DATA_FLAG_INVISIBLE) | (1 << Entity::DATA_FLAG_IMMOBILE)
+            ],
+            Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $title]
+        ];
         $pk->position = new Vector3(0, 0, 0);
         $player->sendDataPacket($pk);
 

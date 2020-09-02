@@ -1,18 +1,19 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\object\ItemObjectVariable;
 
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -33,7 +34,9 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
 
     public function __construct(string $item = "item", string $lore = "") {
         $this->setItemVariableName($item);
-        $this->lore = array_filter(array_map("trim", explode(";", $lore)), function (string $t) { return $t !== ""; });
+        $this->lore = array_filter(array_map("trim", explode(";", $lore)), function (string $t) {
+            return $t !== "";
+        });
     }
 
     public function setLore(array $lore) {
@@ -80,7 +83,9 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) { return $t !== ""; });
+        $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) {
+            return $t !== "";
+        });
         return ["contents" => [$data[1], $lore], "cancel" => $data[3], "errors" => []];
     }
 

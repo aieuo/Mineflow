@@ -3,19 +3,19 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
-use aieuo\mineflow\formAPI\Form;
-use pocketmine\math\Vector3;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use pocketmine\math\Vector3;
 
 class Motion extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -98,7 +98,7 @@ class Motion extends FlowItem implements EntityFlowItem {
         $errors = [];
         if ($data[1] === "") $data[1] = "target";
         $helper = Main::getVariableHelper();
-        for ($i=2; $i<=4; $i++) {
+        for ($i = 2; $i <= 4; $i++) {
             if ($data[$i] === "") {
                 $data[$i] = "0";
             } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {

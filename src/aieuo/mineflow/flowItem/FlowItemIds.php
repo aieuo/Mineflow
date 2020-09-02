@@ -13,7 +13,7 @@ interface FlowItemIds {
     const SEND_TIP = "sendTip";
     const SEND_POPUP = "sendPopup";
     const BROADCAST_MESSAGE = "broadcastMessage";
-    const SEND_MESSAGE_TO_OP= "sendMessageToOp";
+    const SEND_MESSAGE_TO_OP = "sendMessageToOp";
     const SEND_TITLE = "sendTitle";
 
     const GET_ENTITY = "getEntity";
@@ -97,7 +97,7 @@ interface FlowItemIds {
     const GET_PI = "getPi";
     const GET_E = "getE";
     const GENERATE_RANDOM_NUMBER = "random";
-    CONST REVERSE_POLISH_NOTATION = "calculateRPN";
+    const REVERSE_POLISH_NOTATION = "calculateRPN";
 
     const EDIT_STRING = "editString";
     const STRING_LENGTH = "strlen";

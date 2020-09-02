@@ -1,25 +1,26 @@
 <?php
 
 namespace aieuo\mineflow\recipe;
+
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\ObjectVariable;
-use pocketmine\event\Event;
-use pocketmine\entity\Entity;
-use pocketmine\Server;
-use pocketmine\Player;
 use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\Main;
+use pocketmine\entity\Entity;
+use pocketmine\event\Event;
+use pocketmine\Player;
+use pocketmine\Server;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
     use FlowItemContainerTrait;
@@ -70,7 +71,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     /* @var \Generator */
     private $generator;
 
-    /** @var bool  */
+    /** @var bool */
     private $waiting = false;
     /* @var bool */
     private $exit = false;

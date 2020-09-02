@@ -2,11 +2,11 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
-use pocketmine\utils\TextFormat;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\economy\Economy;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
+use pocketmine\utils\TextFormat;
 
 class SetMoney extends TypeMoney {
 

@@ -2,9 +2,9 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\EntityHolder;
-use aieuo\mineflow\recipe\Recipe;
 
 class IsPlayer extends IsActiveEntity {
 

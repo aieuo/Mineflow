@@ -1,6 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -10,9 +11,9 @@ use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
 class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;

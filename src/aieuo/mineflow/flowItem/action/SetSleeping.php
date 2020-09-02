@@ -1,6 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -11,9 +12,9 @@ use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
 class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;

@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use pocketmine\Server;
 use aieuo\mineflow\recipe\Recipe;
+use pocketmine\Server;
 
 class BroadcastMessage extends TypeMessage {
 

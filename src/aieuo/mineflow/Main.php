@@ -2,20 +2,20 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\command\CommandManager;
+use aieuo\mineflow\command\MineflowCommand;
+use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\EventManager;
-use aieuo\mineflow\flowItem\FlowItemFactory;
-use aieuo\mineflow\utils\FormManager;
-use aieuo\mineflow\utils\PlayerConfig;
-use pocketmine\utils\Config;
-use pocketmine\plugin\PluginBase;
-use aieuo\mineflow\variable\VariableHelper;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\event\ServerStartEvent;
-use aieuo\mineflow\economy\Economy;
-use aieuo\mineflow\command\MineflowCommand;
-use aieuo\mineflow\command\CommandManager;
+use aieuo\mineflow\flowItem\FlowItemFactory;
+use aieuo\mineflow\recipe\RecipeManager;
+use aieuo\mineflow\utils\FormManager;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\PlayerConfig;
+use aieuo\mineflow\variable\VariableHelper;
+use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 
 class Main extends PluginBase {
 

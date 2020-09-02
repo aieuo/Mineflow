@@ -1,14 +1,15 @@
 <?php
 
 namespace aieuo\mineflow\ui;
+
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class FlowItemContainerForm {
@@ -76,7 +77,7 @@ class FlowItemContainerForm {
 
     public function getMovedContents(array $contents, int $from, int $to): array {
         $move = $contents[$from];
-        if ($from < $to) $to --;
+        if ($from < $to) $to--;
         unset($contents[$from]);
         $newContents = [];
         foreach (array_values($contents) as $i => $action) {

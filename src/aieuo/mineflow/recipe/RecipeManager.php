@@ -6,12 +6,12 @@ use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Logger;
 
 class RecipeManager {
 
-    /** @var Recipe[][]*/
+    /** @var Recipe[][] */
     protected $recipes = [];
 
     /** @var string */
@@ -35,7 +35,7 @@ class RecipeManager {
         );
         $files = new \RegexIterator($files, '/\.json$/', \RecursiveRegexIterator::MATCH);
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             /** @var \SplFileInfo $file */
             $pathname = $file->getPathname();
             $group = str_replace(
@@ -130,7 +130,7 @@ class RecipeManager {
         if (!$this->exists($name, $group)) return $name;
         $count = 2;
         while ($this->exists($name." (".$count.")", $group)) {
-            $count ++;
+            $count++;
         }
         $name = $name." (".$count.")";
         return $name;

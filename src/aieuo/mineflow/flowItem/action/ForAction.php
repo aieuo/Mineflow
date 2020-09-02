@@ -1,23 +1,24 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
-use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\NumberVariable;
+use pocketmine\Player;
 
 class ForAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -35,7 +36,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
     /** @var string */
     private $counterName = "i";
-    /** @var string  */
+    /** @var string */
     private $startIndex = "0";
     /** @var string */
     private $endIndex = "9";
@@ -122,7 +123,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
         $counter = $this->counter;
 
-        for ($i=$counter["current"]; $i<=$counter["end"]; $i+=$counter["fluctuation"]) {
+        for ($i = $counter["current"]; $i <= $counter["end"]; $i += $counter["fluctuation"]) {
             $this->counter["current"] += $counter["fluctuation"];
             $origin->addVariable(new NumberVariable($i, $counter["name"]));
             yield from $this->executeAll($origin, FlowItemContainer::ACTION);
@@ -217,7 +218,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
     }
 
     public function serializeContents(): array {
-        return  [
+        return [
             $this->getItems(FlowItemContainer::ACTION),
             $this->counterName,
             $this->startIndex,

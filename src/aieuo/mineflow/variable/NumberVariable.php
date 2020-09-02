@@ -57,14 +57,12 @@ class NumberVariable extends Variable implements \JsonSerializable {
     }
 
     public function __toString() {
-        return (string) $this->getValue();
+        return (string)$this->getValue();
     }
 
     public function jsonSerialize() {
         return [
-            "name" => $this->getName(),
-            "type" => $this->getType(),
-            "value" => $this->getValue(),
+            "name" => $this->getName(), "type" => $this->getType(), "value" => $this->getValue(),
         ];
     }
 

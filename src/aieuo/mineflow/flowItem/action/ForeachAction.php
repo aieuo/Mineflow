@@ -7,21 +7,21 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\variable\NumberVariable;
 
 class ForeachAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -112,8 +112,8 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
         $counter = $this->counter;
 
-        for ($i = $counter["current"]; $i < $counter["size"]; $i ++) {
-            $this->counter["current"] ++;
+        for ($i = $counter["current"]; $i < $counter["size"]; $i++) {
+            $this->counter["current"]++;
 
             $key = $counter["list"][$i][0];
             $keyVariable = is_numeric($key) ? new NumberVariable($key, $counter["keyName"]) : new StringVariable($key, $counter["keyName"]);

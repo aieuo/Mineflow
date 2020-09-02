@@ -2,9 +2,9 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
-use pocketmine\command\CommandSender;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\ui\CommandForm;
+use aieuo\mineflow\utils\Language;
+use pocketmine\command\CommandSender;
 use pocketmine\Player;
 
 class CustomCommandCommand extends MineflowSubcommand {

@@ -8,10 +8,10 @@ use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use pocketmine\scheduler\ClosureTask;
 
 class Wait extends FlowItem {
@@ -56,7 +56,7 @@ class Wait extends FlowItem {
         $this->throwIfCannotExecute();
 
         $time = $origin->replaceVariables($this->getTime());
-        $this->throwIfInvalidNumber($time, 1/20);
+        $this->throwIfInvalidNumber($time, 1 / 20);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
             function (int $currentTick) use($origin): void {

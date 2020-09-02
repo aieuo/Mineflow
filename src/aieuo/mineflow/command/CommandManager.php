@@ -2,11 +2,11 @@
 
 namespace aieuo\mineflow\command;
 
+use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use pocketmine\utils\Config;
 use pocketmine\command\PluginCommand;
-use aieuo\mineflow\Main;
+use pocketmine\utils\Config;
 
 class CommandManager {
 
@@ -37,11 +37,7 @@ class CommandManager {
             if (empty($command["command"])) continue;
             if ($this->isRegistered($command["command"])) continue;
 
-            $this->registerCommand(
-                $command["command"],
-                $command["permission"] ?? "mineflow.customcommand.op",
-                $command["description"] ?? ""
-            );
+            $this->registerCommand($command["command"], $command["permission"] ?? "mineflow.customcommand.op", $command["description"] ?? "");
         }
     }
 

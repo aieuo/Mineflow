@@ -19,7 +19,7 @@ class TriggerHolder {
     }
 
     public function addTrigger(Trigger $trigger) {
-        if (!isset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()]))  {
+        if (!isset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()])) {
             $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()] = new RecipeContainer();
         }
     }

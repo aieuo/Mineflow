@@ -3,18 +3,18 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\Variable;
 
 class CreateMapVariable extends FlowItem {
 
@@ -86,7 +86,7 @@ class CreateMapVariable extends FlowItem {
         $values = $this->getVariableValue();
 
         $variable = new MapVariable([], $name);
-        for ($i=0; $i<count($keys); $i++) {
+        for ($i = 0; $i < count($keys); $i++) {
             $key = $keys[$i];
             $value = $values[$i] ?? "";
             if ($key === "") continue;

@@ -2,52 +2,52 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\flowItem\action\SetSitting;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use pocketmine\command\Command;
-use pocketmine\Server;
-use pocketmine\plugin\MethodEventExecutor;
-use pocketmine\network\mcpe\protocol\InteractPacket;
-use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\server\CommandEvent;
-use pocketmine\event\player\PlayerToggleSprintEvent;
-use pocketmine\event\player\PlayerToggleSneakEvent;
-use pocketmine\event\player\PlayerToggleFlightEvent;
-use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerItemConsumeEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerExhaustEvent;
-use pocketmine\event\player\PlayerEvent;
-use pocketmine\event\player\PlayerDropItemEvent;
-use pocketmine\event\player\PlayerDeathEvent;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerChangeSkinEvent;
-use pocketmine\event\player\PlayerBedEnterEvent;
-use pocketmine\event\level\LevelLoadEvent;
-use pocketmine\event\inventory\FurnaceBurnEvent;
-use pocketmine\event\inventory\CraftItemEvent;
-use pocketmine\event\entity\ProjectileHitEntityEvent;
-use pocketmine\event\entity\EntityLevelChangeEvent;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\block\SignChangeEvent;
-use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\block\BlockEvent;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\Listener;
-use pocketmine\event\EventPriority;
-use pocketmine\event\Event;
-use pocketmine\Player;
-use aieuo\mineflow\variable\DefaultVariables;
-use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\ui\TriggerForm;
-use aieuo\mineflow\event\ServerStartEvent;
+use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DefaultVariables;
+use pocketmine\command\Command;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\SignChangeEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityEvent;
+use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\ProjectileHitEntityEvent;
+use pocketmine\event\Event;
+use pocketmine\event\EventPriority;
+use pocketmine\event\inventory\CraftItemEvent;
+use pocketmine\event\inventory\FurnaceBurnEvent;
+use pocketmine\event\level\LevelLoadEvent;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerBedEnterEvent;
+use pocketmine\event\player\PlayerChangeSkinEvent;
+use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerEvent;
+use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerItemConsumeEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerToggleFlightEvent;
+use pocketmine\event\player\PlayerToggleSneakEvent;
+use pocketmine\event\player\PlayerToggleSprintEvent;
+use pocketmine\event\server\CommandEvent;
+use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\network\mcpe\protocol\InteractPacket;
+use pocketmine\Player;
+use pocketmine\plugin\MethodEventExecutor;
+use pocketmine\Server;
 
 class EventListener implements Listener {
 
@@ -168,7 +168,7 @@ class EventListener implements Listener {
         $command = Server::getInstance()->getCommandMap()->getCommand($origin);
         if (!($command instanceof Command) or !$command->testPermissionSilent($sender)) return;
 
-        for ($i=0; $i<$count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $command = implode(" ", $commands);
             if ($holder->existsRecipeByString(Trigger::TYPE_COMMAND, $origin, $command)) {
                 $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_COMMAND, $origin, $command));

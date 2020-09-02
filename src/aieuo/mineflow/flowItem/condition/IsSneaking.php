@@ -1,17 +1,18 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
-use aieuo\mineflow\flowItem\FlowItem;
+
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;

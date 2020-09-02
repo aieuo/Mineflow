@@ -4,17 +4,17 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\StringVariable;
 
 class JoinListVariableToString extends FlowItem {
 
@@ -84,9 +84,9 @@ class JoinListVariableToString extends FlowItem {
 
         $variable = $origin->getVariables()[$name] ?? $helper->get($name) ?? new ListVariable([], $name);
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException(
-                $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
-            );
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+                $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
+            ]));
         }
 
         $strings = [];

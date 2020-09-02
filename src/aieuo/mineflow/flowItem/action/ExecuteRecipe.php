@@ -4,15 +4,15 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
 class ExecuteRecipe extends FlowItem {
 
@@ -36,7 +36,9 @@ class ExecuteRecipe extends FlowItem {
 
     public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;
-        $this->args = array_filter(array_map("trim", explode(",", $args)), function (string $t) { return $t !== ""; });
+        $this->args = array_filter(array_map("trim", explode(",", $args)), function (string $t) {
+            return $t !== "";
+        });
     }
 
     public function setRecipeName(string $name): self {

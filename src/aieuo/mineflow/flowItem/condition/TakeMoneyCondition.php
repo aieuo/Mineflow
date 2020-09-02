@@ -2,11 +2,11 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
-use pocketmine\utils\TextFormat;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\economy\Economy;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
+use pocketmine\utils\TextFormat;
 
 class TakeMoneyCondition extends TypeMoney {
 

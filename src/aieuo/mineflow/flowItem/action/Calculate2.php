@@ -4,17 +4,17 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\ExampleInput;
 use aieuo\mineflow\formAPI\element\ExampleNumberInput;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate2 extends FlowItem {
 
@@ -46,7 +46,15 @@ class Calculate2 extends FlowItem {
     /** @var string */
     private $resultName;
 
-    private $operatorSymbols = ["min(x, y)", "max(x, y)", "x^y", "log_y(x)", "√(x^2 + y^2)", "atan2(x, y)", "round(x, y)"];
+    private $operatorSymbols = [
+        "min(x, y)",
+        "max(x, y)",
+        "x^y",
+        "log_y(x)",
+        "√(x^2 + y^2)",
+        "atan2(x, y)",
+        "round(x, y)"
+    ];
 
     /* @var string */
     private $lastResult;

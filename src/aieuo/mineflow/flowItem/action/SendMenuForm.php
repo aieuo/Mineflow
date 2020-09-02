@@ -1,23 +1,24 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use pocketmine\Player;
 
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
@@ -49,7 +50,9 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     public function __construct(string $player = "target", string $text = "", string $options = "", string $resultName = "menu") {
         $this->setPlayerVariableName($player);
         $this->formText = $text;
-        $this->options = array_filter(array_map("trim", explode(";", $options)), function (string $o) { return $o !== ""; });
+        $this->options = array_filter(array_map("trim", explode(";", $options)), function (string $o) {
+            return $o !== "";
+        });
         $this->resultName = $resultName;
     }
 
@@ -166,7 +169,13 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getResultName(), $this->getFormText(), $this->getOptions(), $this->resendOnClose];
+        return [
+            $this->getPlayerVariableName(),
+            $this->getResultName(),
+            $this->getFormText(),
+            $this->getOptions(),
+            $this->resendOnClose
+        ];
     }
 
     public function getReturnValue(): string {

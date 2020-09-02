@@ -75,7 +75,7 @@ class CustomForm extends Form {
     }
 
     public function reflectErrors(array $form): array {
-        for ($i=0; $i<count($form["content"]); $i++) {
+        for ($i = 0; $i < count($form["content"]); $i++) {
             if (empty($this->highlights[$i])) continue;
             /** @var Element $content */
             $content = $form["content"][$i];
@@ -88,7 +88,7 @@ class CustomForm extends Form {
     }
 
     public function handleResponse(Player $player, $data): void {
-        if ($data!== null) {
+        if ($data !== null) {
             $errors = [];
             $cancelToggle = false;
             foreach ($this->getContents() as $i => $content) {

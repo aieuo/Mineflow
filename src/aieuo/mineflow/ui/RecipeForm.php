@@ -3,20 +3,20 @@
 namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\trigger\Trigger;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
+use pocketmine\Player;
 
 class RecipeForm {
 
@@ -143,7 +143,7 @@ class RecipeForm {
                     $this->sendRecipeList($player, implode("/", $paths));
                     return;
                 }
-                $data --;
+                $data--;
 
                 $recipe = array_values($recipes)[$data];
                 if ($recipe instanceof Recipe) {
@@ -325,7 +325,7 @@ class RecipeForm {
                 }
 
                 $arguments = [];
-                for ($i=1; $i<count($data); $i++) {
+                for ($i = 1; $i < count($data); $i++) {
                     if ($data[$i] !== "") $arguments[] = $data[$i];
                 }
                 $recipe->setArguments($arguments);
@@ -350,7 +350,7 @@ class RecipeForm {
                 }
 
                 $returnValues = [];
-                for ($i=1; $i<count($data); $i++) {
+                for ($i = 1; $i < count($data); $i++) {
                     if ($data[$i] !== "") $returnValues[] = $data[$i];
                 }
                 $recipe->setReturnValues($returnValues);

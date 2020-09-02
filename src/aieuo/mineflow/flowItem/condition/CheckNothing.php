@@ -1,9 +1,10 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\condition;
+
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 
 class CheckNothing extends FlowItem implements Condition {
 

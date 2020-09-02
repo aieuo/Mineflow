@@ -1,18 +1,18 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\utils\Session;
+use pocketmine\Player;
 
 class IFAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -146,7 +146,7 @@ class IFAction extends FlowItem implements FlowItemContainer {
             $conditions[$k] = clone $condition;
         }
         $this->setItems($conditions, FlowItemContainer::CONDITION);
-        
+
         $actions = [];
         foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
             $actions[$k] = clone $action;

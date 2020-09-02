@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 
 class DoNothing extends FlowItem {
 

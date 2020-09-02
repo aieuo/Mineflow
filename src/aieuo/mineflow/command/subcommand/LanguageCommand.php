@@ -2,9 +2,9 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
-use pocketmine\command\CommandSender;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\utils\Language;
+use pocketmine\command\CommandSender;
 
 class LanguageCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {

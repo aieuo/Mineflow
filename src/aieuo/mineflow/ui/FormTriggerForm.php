@@ -2,18 +2,18 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\trigger\Trigger;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\ModalForm;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\utils\Language;
+use pocketmine\Player;
 
 class FormTriggerForm {
 
@@ -23,15 +23,15 @@ class FormTriggerForm {
                 $content = Language::get("trigger.form.receive");
                 break;
             case "close":
-                $content =  Language::get("trigger.form.close");
+                $content = Language::get("trigger.form.close");
                 break;
             default:
                 $form = Main::getFormManager()->getForm($trigger->getKey());
                 if ($form instanceof ListForm) {
                     $button = $form->getButtonById($trigger->getSubKey());
-                    $content =  Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
+                    $content = Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
                 } else {
-                    $content =  "";
+                    $content = "";
                 }
                 break;
         }

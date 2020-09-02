@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\variable\NumberVariable;
 
 class GetPi extends TypeGetMathVariable {
 

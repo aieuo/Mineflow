@@ -1,6 +1,7 @@
 <?php
 
 namespace aieuo\mineflow\variable;
+
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\Recipe;
@@ -20,22 +21,22 @@ class VariableHelper {
     }
 
     /**
-     * @param  string $name
-     * @param  bool $save
+     * @param string $name
+     * @param bool $save
      * @return bool
      */
-    public function exists(String $name, bool $save = false): bool {
+    public function exists(string $name, bool $save = false): bool {
         if (isset($this->variables[$name]) and !$save) return true;
 
         return $this->file->exists($name);
     }
 
     /**
-     * @param  string $name
-     * @param  bool $save
+     * @param string $name
+     * @param bool $save
      * @return null|Variable
      */
-    public function get(String $name, bool $save = false): ?Variable {
+    public function get(string $name, bool $save = false): ?Variable {
         if (isset($this->variables[$name]) and !$save) return $this->variables[$name];
         if (!$this->exists($name)) return null;
 
@@ -80,7 +81,7 @@ class VariableHelper {
      * @param String $name
      * @return void
      */
-    public function delete(String $name): void {
+    public function delete(string $name): void {
         unset($this->variables[$name]);
 
         $this->file->remove($name);
@@ -166,7 +167,9 @@ class VariableHelper {
 
             $class = get_class($action);
             /** @var FlowItem $newAction */
-            $newAction = new $class(...array_filter(array_map("trim", explode(",", $parameters)), function ($t) { return $t !== ""; }));
+            $newAction = new $class(...array_filter(array_map("trim", explode(",", $parameters)), function ($t) {
+                return $t !== "";
+            }));
             /** @noinspection PhpStatementHasEmptyBodyInspection */
             foreach ($newAction->parent($origin)->execute($origin) as $_) {
             }
@@ -221,7 +224,7 @@ class VariableHelper {
 
     /**
      * 文字列が変数か調べる
-     * @param  string  $variable
+     * @param string $variable
      * @return boolean
      */
     public function isVariableString(string $variable): bool {
@@ -230,7 +233,7 @@ class VariableHelper {
 
     /**
      * 文字列に変数が含まれているか調べる
-     * @param  string  $variable
+     * @param string $variable
      * @return boolean
      */
     public function containsVariable(string $variable): bool {
@@ -239,7 +242,7 @@ class VariableHelper {
 
     /**
      * 文字列の型を調べる
-     * @param  string $string
+     * @param string $string
      * @return int
      */
     public function getType(string $string): int {

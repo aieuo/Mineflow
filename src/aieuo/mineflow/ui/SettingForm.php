@@ -63,7 +63,7 @@ class SettingForm {
                     } elseif (!$data[$count] and isset($enables[$name])) {
                         Main::getEventManager()->setEventEnabled($name, false);
                     }
-                    $count ++;
+                    $count++;
                 }
                 $this->sendMenu($player, ["@setting.event.changed"]);
             })->show($player);

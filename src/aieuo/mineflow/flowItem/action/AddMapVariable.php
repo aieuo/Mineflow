@@ -4,18 +4,18 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\Variable;
 
 class AddMapVariable extends FlowItem {
 
@@ -105,18 +105,18 @@ class AddMapVariable extends FlowItem {
         if ($this->isLocal) {
             $variable = $origin->getVariable($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
-                throw new InvalidFlowValueException(
-                    $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
-                );
+                throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+                    $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
+                ]));
             }
             $variable->addValue($addVariable);
             $origin->addVariable($variable);
         } else {
             $variable = $helper->get($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
-                throw new InvalidFlowValueException(
-                    $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
-                );
+                throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+                    $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
+                ]));
             }
             $variable->addValue($addVariable);
             $helper->add($variable);

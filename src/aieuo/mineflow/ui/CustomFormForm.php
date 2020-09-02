@@ -145,7 +145,7 @@ class CustomFormForm {
                     $this->sendMenu($player);
                     return;
                 }
-                $data --;
+                $data--;
 
                 $form = $forms[$data]["form"];
                 if (!($form instanceof Form)) $form = Form::createFromArray($forms[$data]["form"], $forms[$data]["name"]); // FIXME: error object?
@@ -615,13 +615,13 @@ class CustomFormForm {
                         $options = [];
                         $i = -1;
                         foreach ($element->getOptions() as $i => $option) {
-                            if ($data[$i+1] !== "") $options[] = $data[$i+1];
+                            if ($data[$i + 1] !== "") $options[] = $data[$i + 1];
                         }
-                        foreach (explode(";", $data[$i+2]) as $item) {
+                        foreach (explode(";", $data[$i + 2]) as $item) {
                             if ($item !== "") $options[] = $item;
                         }
                         $element->setOptions($options);
-                        $delete = $data[$i+3];
+                        $delete = $data[$i + 3];
                         break;
                 }
                 if ($delete) {

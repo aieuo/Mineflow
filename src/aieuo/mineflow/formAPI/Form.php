@@ -10,10 +10,10 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
-use pocketmine\utils\TextFormat;
+use aieuo\mineflow\utils\Language;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
+use pocketmine\utils\TextFormat;
 
 abstract class Form implements PMForm {
 

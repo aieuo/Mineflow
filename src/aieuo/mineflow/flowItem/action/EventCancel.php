@@ -4,10 +4,10 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Cancellable;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 
 class EventCancel extends FlowItem {
 

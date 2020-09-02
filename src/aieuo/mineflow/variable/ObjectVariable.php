@@ -34,7 +34,7 @@ class ObjectVariable extends Variable {
     public function getValueFromIndex(string $index): ?Variable {
         return null;
     }
-    
+
     public function isSavable(): bool {
         return false;
     }

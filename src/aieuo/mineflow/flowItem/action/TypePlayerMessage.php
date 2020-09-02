@@ -1,23 +1,24 @@
 <?php
 
 namespace aieuo\mineflow\flowItem\action;
+
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\utils\Language;
 
 abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $detailDefaultReplace = ["player", "message"];
-    
+
     protected $category = Category::PLAYER;
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;

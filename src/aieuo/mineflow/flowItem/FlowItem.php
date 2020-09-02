@@ -8,8 +8,8 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
 abstract class FlowItem implements \JsonSerializable, FlowItemIds {
@@ -23,7 +23,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     protected $name;
     /** @var string */
     protected $detail;
-    /** @var array  */
+    /** @var array */
     protected $detailDefaultReplace = [];
 
     /** @var string */
@@ -159,7 +159,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
                 $content["id"] = self::REMOVE_SCOREBOARD_SCORE;
                 break;
         }
-        
         $action = FlowItemFactory::get($content["id"]);
         if ($action === null) {
             throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));

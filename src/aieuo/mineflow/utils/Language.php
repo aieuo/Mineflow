@@ -73,7 +73,10 @@ class Language {
                 $errors = ["言語ファイルの読み込みに失敗しました", "[".implode(", ", self::$availableLanguages)."]が使用できます"];
                 break;
             default:
-                $errors = ["Failed to load language file.", "Available languages are: [".implode(", ", self::$availableLanguages)."]"];
+                $errors = [
+                    "Failed to load language file.",
+                    "Available languages are: [".implode(", ", self::$availableLanguages)."]"
+                ];
         }
         return $errors;
     }
