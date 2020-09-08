@@ -53,9 +53,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     /** @var Trigger[] */
     private $triggers = [];
 
-    /** @var bool|null */
-    private $lastResult = null;
-
     /** @var array */
     private $variables = [];
 
@@ -296,10 +293,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function setTarget(?Entity $target): self {
         $this->target = $target;
         return $this;
-    }
-
-    public function getLastActionResult(): ?bool {
-        return $this->lastResult;
     }
 
     public function setArguments(array $arguments): void {

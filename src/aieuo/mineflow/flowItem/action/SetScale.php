@@ -65,7 +65,6 @@ class SetScale extends FlowItem implements EntityFlowItem {
 
         $entity->setScale((float)$health);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

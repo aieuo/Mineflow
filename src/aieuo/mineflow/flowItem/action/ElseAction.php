@@ -27,9 +27,6 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    /* @var bool */
-    private $lastResult;
-
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
@@ -49,16 +46,12 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     }
 
     public function execute(Recipe $origin) {
-        $lastResult = $this->getParent()->getLastActionResult();
+        $lastResult = $this->getParent()->getLastResult();
         if ($lastResult === null) throw new InvalidFlowValueException();
         if ($lastResult) return false;
 
         yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         return true;
-    }
-
-    public function getLastActionResult(): ?bool {
-        return $this->lastResult;
     }
 
     public function hasCustomMenu(): bool {

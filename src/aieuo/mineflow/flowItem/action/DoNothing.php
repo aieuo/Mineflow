@@ -19,7 +19,6 @@ class DoNothing extends FlowItem {
 
     public function execute(Recipe $origin) {
         yield true;
-        return true;
     }
 
     public function isDataValid(): bool {

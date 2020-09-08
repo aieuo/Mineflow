@@ -32,9 +32,6 @@ class CalculateReversePolishNotation extends FlowItem {
     /** @var string */
     private $resultName;
 
-    /* @var string */
-    private $lastResult;
-
     public function __construct(string $formula = "", string $resultName = "result") {
         $this->formula = $formula;
         $this->resultName = $resultName;
@@ -105,10 +102,9 @@ class CalculateReversePolishNotation extends FlowItem {
         }
         $result = $stack[0];
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
         yield true;
-        return true;
+        return $result;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -133,9 +129,5 @@ class CalculateReversePolishNotation extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getFormula(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

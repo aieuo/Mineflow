@@ -32,6 +32,5 @@ class SetMoney extends TypeMoney {
         $economy = Economy::getPlugin();
         $economy->setMoney($name, (int)$amount);
         yield true;
-        return true;
     }
 }

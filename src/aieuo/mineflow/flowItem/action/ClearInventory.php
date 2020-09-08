@@ -47,7 +47,6 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
 
         $player->getInventory()->clearAll(true);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

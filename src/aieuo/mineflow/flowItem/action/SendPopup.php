@@ -21,6 +21,5 @@ class SendPopup extends TypePlayerMessage {
 
         $player->sendPopup($message);
         yield true;
-        return true;
     }
 }

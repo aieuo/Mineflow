@@ -65,7 +65,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         $item->setCustomName($name);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
-        return true;
+        return $this->getItemVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -90,9 +90,5 @@ class SetItemName extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getItemName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getItemVariableName();
     }
 }

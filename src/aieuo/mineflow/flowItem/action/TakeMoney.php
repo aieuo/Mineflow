@@ -32,6 +32,5 @@ class TakeMoney extends TypeMoney {
         $economy = Economy::getPlugin();
         $economy->takeMoney($name, (int)$amount);
         yield true;
-        return true;
     }
 }

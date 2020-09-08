@@ -97,7 +97,6 @@ class ExecuteRecipe extends FlowItem {
         $recipe->addVariables($origin->getVariables());
         $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables(), $origin->getEvent(), $args);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

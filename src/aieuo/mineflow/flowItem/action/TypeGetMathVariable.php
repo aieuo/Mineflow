@@ -24,9 +24,6 @@ abstract class TypeGetMathVariable extends FlowItem {
     protected $resultName = "result";
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    /** @var float|int */
-    protected $lastResult;
-
     public function __construct(?string $result = "") {
         $this->resultName = empty($result) ? $this->resultName : $result;
     }
@@ -69,9 +66,5 @@ abstract class TypeGetMathVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return (string)$this->lastResult;
     }
 }

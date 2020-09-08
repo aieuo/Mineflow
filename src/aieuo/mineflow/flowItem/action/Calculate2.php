@@ -56,9 +56,6 @@ class Calculate2 extends FlowItem {
         "round(x, y)"
     ];
 
-    /* @var string */
-    private $lastResult;
-
     public function __construct(string $value1 = "", string $value2 = "", string $operator = null, string $resultName = "result") {
         $this->value1 = $value1;
         $this->value2 = $value2;
@@ -150,10 +147,9 @@ class Calculate2 extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
         yield true;
-        return true;
+        return $result;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -182,9 +178,5 @@ class Calculate2 extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue1(), $this->getValue2(), $this->getOperator(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

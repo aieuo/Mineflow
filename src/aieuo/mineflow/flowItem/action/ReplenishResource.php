@@ -54,7 +54,6 @@ class ReplenishResource extends FlowItem implements PositionFlowItem {
         $api = ReplenishResourcesAPI::getInstance();
         $api->replenish($position);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

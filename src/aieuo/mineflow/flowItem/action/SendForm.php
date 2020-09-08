@@ -126,7 +126,6 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         }
         $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

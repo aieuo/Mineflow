@@ -46,9 +46,6 @@ class FourArithmeticOperations extends FlowItem {
 
     private $operatorSymbols = ["+", "-", "*", "/", "％"];
 
-    /* @var string */
-    private $lastResult;
-
     public function __construct(string $value1 = "", int $operator = self::ADDITION, string $value2 = "", string $resultName = "result") {
         $this->value1 = $value1;
         $this->operator = $operator;
@@ -134,10 +131,9 @@ class FourArithmeticOperations extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
         yield true;
-        return true;
+        return $result;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -165,9 +161,5 @@ class FourArithmeticOperations extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue1(), $this->getOperator(), $this->getValue2(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

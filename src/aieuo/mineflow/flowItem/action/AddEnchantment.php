@@ -90,7 +90,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         $item->addEnchantment(new EnchantmentInstance($enchant, (int)$level));
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
-        return true;
+        return $this->getItemVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -118,9 +118,5 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getItemVariableName();
     }
 }

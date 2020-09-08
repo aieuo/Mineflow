@@ -63,7 +63,6 @@ class DeleteVariable extends FlowItem {
             $origin->removeVariable($name);
         }
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

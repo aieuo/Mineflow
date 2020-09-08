@@ -64,7 +64,6 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
 
         $config->removeNested($key);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

@@ -33,8 +33,6 @@ class GetMoney extends FlowItem {
     private $playerName;
     /** @var string */
     private $resultName;
-    /* @var string */
-    private $lastResult;
 
     public function __construct(string $name = "{target.name}", string $result = "money") {
         $this->playerName = $name;
@@ -79,10 +77,9 @@ class GetMoney extends FlowItem {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         $money = Economy::getPlugin()->getMoney($targetName);
-        $this->lastResult = (string)$money;
         $origin->addVariable(new NumberVariable($money, $resultName));
         yield true;
-        return true;
+        return $money;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -107,9 +104,5 @@ class GetMoney extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

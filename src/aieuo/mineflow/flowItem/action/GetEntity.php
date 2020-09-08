@@ -80,16 +80,16 @@ class GetEntity extends FlowItem {
         if ($entity instanceof Player) {
             $result = new PlayerObjectVariable($entity, $resultName, $entity->getName());
             $origin->addVariable($result);
-            return true;
+            return $this->getResultName();
         }
         if ($entity instanceof Entity) {
             $result = new EntityObjectVariable($entity, $resultName, $entity->getNameTag());
             $origin->addVariable($result);
-            return true;
+            return $this->getResultName();
         }
         $origin->addVariable(new MapVariable([], $resultName)); // TODO: .
         yield true;
-        return false;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -114,9 +114,5 @@ class GetEntity extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getKey(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

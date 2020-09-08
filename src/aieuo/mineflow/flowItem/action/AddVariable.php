@@ -99,7 +99,6 @@ class AddVariable extends FlowItem {
             Main::getVariableHelper()->add($variable);
         }
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

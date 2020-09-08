@@ -63,7 +63,6 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
 
         $player->setAllowFlight($this->isAllow());
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

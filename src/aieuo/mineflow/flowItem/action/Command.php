@@ -63,7 +63,6 @@ class Command extends FlowItem implements PlayerFlowItem {
 
         Server::getInstance()->dispatchCommand($player, $command);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

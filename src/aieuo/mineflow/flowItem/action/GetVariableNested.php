@@ -82,7 +82,7 @@ class GetVariableNested extends FlowItem {
         $variable->setName($resultName);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -107,9 +107,5 @@ class GetVariableNested extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

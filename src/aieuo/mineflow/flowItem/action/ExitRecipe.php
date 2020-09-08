@@ -20,7 +20,6 @@ class ExitRecipe extends FlowItem {
     public function execute(Recipe $origin) {
         $origin->exit();
         yield true;
-        return true;
     }
 
     public function isDataValid(): bool {

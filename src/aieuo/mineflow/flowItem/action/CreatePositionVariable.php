@@ -120,7 +120,7 @@ class CreatePositionVariable extends FlowItem {
         $variable = new PositionObjectVariable($position, $name);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -151,9 +151,5 @@ class CreatePositionVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getVariableName();
     }
 }

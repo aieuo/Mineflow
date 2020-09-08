@@ -31,9 +31,6 @@ class StringLength extends FlowItem {
     /** @var string */
     private $resultName;
 
-    /* @var string */
-    private $lastResult;
-
     public function __construct(string $value = "", string $resultName = "length") {
         $this->value = $value;
         $this->resultName = $resultName;
@@ -73,10 +70,9 @@ class StringLength extends FlowItem {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         $length = mb_strlen($value);
-        $this->lastResult = (string)$length;
         $origin->addVariable(new NumberVariable($length, $resultName));
         yield true;
-        return true;
+        return $length;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -101,9 +97,5 @@ class StringLength extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

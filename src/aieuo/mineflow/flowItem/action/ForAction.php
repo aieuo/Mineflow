@@ -43,9 +43,6 @@ class ForAction extends FlowItem implements FlowItemContainer {
     /** string */
     private $fluctuation = "1";
 
-    /* @var bool */
-    private $lastResult;
-
     /** @var array */
     private $counter;
 
@@ -105,42 +102,24 @@ class ForAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, bool $first = true) {
-        if ($first) {
-            $counterName = $origin->replaceVariables($this->counterName);
+    public function execute(Recipe $origin) {
+        $counterName = $origin->replaceVariables($this->counterName);
 
-            $start = $origin->replaceVariables($this->startIndex);
-            $this->throwIfInvalidNumber($start);
+        $start = $origin->replaceVariables($this->startIndex);
+        $this->throwIfInvalidNumber($start);
 
-            $end = $origin->replaceVariables($this->endIndex);
-            $this->throwIfInvalidNumber($end);
+        $end = $origin->replaceVariables($this->endIndex);
+        $this->throwIfInvalidNumber($end);
 
-            $fluctuation = $origin->replaceVariables($this->fluctuation);
-            $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
+        $fluctuation = $origin->replaceVariables($this->fluctuation);
+        $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
 
-            $this->initCounter($counterName, $start, $end, $fluctuation);
-        }
-
-        $counter = $this->counter;
-
-        for ($i = $counter["current"]; $i <= $counter["end"]; $i += $counter["fluctuation"]) {
-            $this->counter["current"] += $counter["fluctuation"];
-            $origin->addVariable(new NumberVariable($i, $counter["name"]));
+        for ($i = $start; $i <= $end; $i += $fluctuation) {
+            $origin->addVariable(new NumberVariable($i, $counterName));
             yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         }
         $origin->resume();
         yield true;
-        return true;
-    }
-
-    public function initCounter(string $counter, int $start, int $end, int $fluctuation) {
-        $this->counter = [
-            "name" => $counter,
-            "start" => $start,
-            "current" => $start,
-            "end" => $end,
-            "fluctuation" => $fluctuation,
-        ];
     }
 
     public function hasCustomMenu(): bool {

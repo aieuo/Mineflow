@@ -44,9 +44,6 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     /** @var bool */
     private $resendOnClose = false;
 
-    /** @var string */
-    private $lastResult;
-
     public function __construct(string $player = "target", string $text = "", string $options = "", string $resultName = "menu") {
         $this->setPlayerVariableName($player);
         $this->formText = $text;
@@ -100,7 +97,6 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         $this->sendForm($origin, $player, $text, $resultName);
         yield false;
-        return true;
     }
 
     /** @noinspection PhpUnusedParameterInspection */
@@ -113,8 +109,6 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         (new ListForm($text))
             ->setContent($text)
             ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($origin, $resultName) {
-                $this->lastResult = (string)$data;
-
                 $variable = new MapVariable([
                     "id" => new NumberVariable($data, "id"),
                     "text" => new StringVariable($this->options[$data], "text"),
@@ -176,9 +170,5 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             $this->getOptions(),
             $this->resendOnClose
         ];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

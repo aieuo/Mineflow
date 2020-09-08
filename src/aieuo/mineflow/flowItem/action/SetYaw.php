@@ -67,7 +67,6 @@ class SetYaw extends FlowItem implements EntityFlowItem {
         $entity->setRotation((float)$yaw, $entity->getPitch());
         if ($entity instanceof Player) $entity->teleport($entity, (float)$yaw, $entity->getPitch());
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

@@ -170,10 +170,11 @@ class VariableHelper {
             $newAction = new $class(...array_filter(array_map("trim", explode(",", $parameters)), function ($t) {
                 return $t !== "";
             }));
+            $generator = $newAction->parent($origin)->execute($origin);
             /** @noinspection PhpStatementHasEmptyBodyInspection */
-            foreach ($newAction->parent($origin)->execute($origin) as $_) {
+            foreach ($generator as $_) {
             }
-            $result = $newAction->getReturnValue();
+            $result = $generator->getReturn();
             $string = str_replace("{".$replace."}", $result, $string);
         }
         return $string;

@@ -24,6 +24,5 @@ class AddXpLevel extends AddXpProgress {
         if ($new < 0) $xp = -$player->getXpLevel();
         $player->addXpLevels((int)$xp);
         yield true;
-        return true;
     }
 }

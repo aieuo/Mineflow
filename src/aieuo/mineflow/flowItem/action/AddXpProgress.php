@@ -66,7 +66,6 @@ class AddXpProgress extends FlowItem implements PlayerFlowItem {
         if ($new < 0) $xp = -$player->getCurrentTotalXp();
         $player->addXp($xp);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

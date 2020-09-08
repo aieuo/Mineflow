@@ -65,7 +65,6 @@ class SetFood extends FlowItem implements PlayerFlowItem {
 
         $entity->setFood((float)$health);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

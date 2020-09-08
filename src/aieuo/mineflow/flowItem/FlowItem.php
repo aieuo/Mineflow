@@ -188,10 +188,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     public function sendCustomMenu(Player $player, array $messages = []): void {
     }
 
-    public function getReturnValue(): string {
-        return "";
-    }
-
     public function allowDirectCall(): bool {
         return true;
     }

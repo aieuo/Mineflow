@@ -59,7 +59,6 @@ class CommandConsole extends FlowItem {
 
         Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $command);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

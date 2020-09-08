@@ -50,7 +50,6 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
 
         $config->save();
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

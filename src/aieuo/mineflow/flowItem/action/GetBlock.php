@@ -67,7 +67,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         $variable = new BlockObjectVariable($block, $result);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -94,9 +94,5 @@ class GetBlock extends FlowItem implements PositionFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPositionVariableName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

@@ -79,7 +79,6 @@ class Motion extends FlowItem implements EntityFlowItem {
         $position = new Vector3((float)$positions[0], (float)$positions[1], (float)$positions[2]);
         $entity->setMotion($position);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

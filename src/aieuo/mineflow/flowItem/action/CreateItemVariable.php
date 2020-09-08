@@ -111,7 +111,7 @@ class CreateItemVariable extends FlowItem {
         $variable = new ItemObjectVariable($item, $name);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -140,9 +140,5 @@ class CreateItemVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getVariableName();
     }
 }

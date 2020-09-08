@@ -54,7 +54,6 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
 
         $position->level->setBlock($position, $block);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

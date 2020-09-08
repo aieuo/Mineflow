@@ -113,7 +113,6 @@ class CreateMapVariable extends FlowItem {
             $helper->add($variable);
         }
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

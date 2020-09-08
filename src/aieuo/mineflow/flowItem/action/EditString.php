@@ -51,9 +51,6 @@ class EditString extends FlowItem {
     /** @var string */
     private $resultName;
 
-    /* @var string */
-    private $lastResult;
-
     public function __construct(string $value1 = "", string $operator = self::TYPE_JOIN, string $value2 = "", string $resultName = "result") {
         $this->value1 = $value1;
         $this->operator = $operator;
@@ -130,10 +127,9 @@ class EditString extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable($result);
         yield true;
-        return true;
+        return $result;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -165,9 +161,5 @@ class EditString extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue1(), $this->getOperator(), $this->getValue2(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

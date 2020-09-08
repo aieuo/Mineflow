@@ -39,9 +39,6 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     /** @var bool */
     private $resendOnClose = false;
 
-    /** @var string */
-    private $lastResult;
-
     public function __construct(string $player = "target", string $text = "", string $resultName = "input") {
         $this->setPlayerVariableName($player);
         $this->formText = $text;
@@ -84,7 +81,6 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
 
         $this->sendForm($origin, $player, $text, $resultName);
         yield false;
-        return true;
     }
 
     private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []) {
@@ -92,7 +88,6 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
             ->setContents([
                 new Input($text, "", "", true),
             ])->onReceive(function (Player $player, array $data) use ($origin, $resultName) {
-                $this->lastResult = $data[0];
                 $variable = new StringVariable($data[0], $resultName);
                 $origin->addVariable($variable);
                 $origin->resume();
@@ -127,9 +122,5 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getResultName(), $this->getFormText(), $this->resendOnClose];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

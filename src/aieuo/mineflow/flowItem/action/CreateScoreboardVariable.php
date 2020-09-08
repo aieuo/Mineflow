@@ -100,7 +100,7 @@ class CreateScoreboardVariable extends FlowItem {
         $variable = new ScoreboardObjectVariable($scoreboard, $variableName);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -129,9 +129,5 @@ class CreateScoreboardVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getBoardId(), $this->getDisplayName(), $this->getDisplayType()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getVariableName();
     }
 }

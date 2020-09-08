@@ -69,7 +69,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         $item->setLore($lore);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
-        return true;
+        return $this->getItemVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -97,9 +97,5 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getLore()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getItemVariableName();
     }
 }

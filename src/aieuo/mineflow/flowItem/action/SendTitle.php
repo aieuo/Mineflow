@@ -98,7 +98,6 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
 
         $player->sendTitle($title, $subtitle, ...$times);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

@@ -48,7 +48,6 @@ class UnsetImmobile extends FlowItem implements EntityFlowItem {
 
         $entity->setImmobile(false);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

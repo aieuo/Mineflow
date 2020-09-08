@@ -81,7 +81,6 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
             $entity->getArmorInventory()->setItem($index, $item);
         }
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

@@ -95,7 +95,6 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
 
         $config->setNested($key, $value);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

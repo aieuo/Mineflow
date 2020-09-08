@@ -86,7 +86,6 @@ class AddParticle extends FlowItem implements PositionFlowItem {
             Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
         }
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

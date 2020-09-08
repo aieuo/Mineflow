@@ -67,7 +67,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         $item->setCount((int)$count);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
-        return true;
+        return $this->getItemVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -92,9 +92,5 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getCount()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getItemVariableName();
     }
 }

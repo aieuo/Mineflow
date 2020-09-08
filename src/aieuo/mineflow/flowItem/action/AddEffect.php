@@ -103,7 +103,6 @@ class AddEffect extends FlowItem implements EntityFlowItem {
             $entity->addEffect(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, false));
         }
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

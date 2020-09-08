@@ -20,8 +20,7 @@ class GetE extends TypeGetMathVariable {
 
         $resultName = $origin->replaceVariables($this->getResultName());
         $origin->addVariable(new NumberVariable(M_E, $resultName));
-        $this->lastResult = M_E;
         yield true;
-        return true;
+        return M_E;
     }
 }

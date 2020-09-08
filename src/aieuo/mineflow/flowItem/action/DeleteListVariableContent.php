@@ -87,7 +87,6 @@ class DeleteListVariableContent extends FlowItem {
 
         if ($this->isLocal) $origin->addVariable($variable); else $helper->add($variable);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

@@ -64,7 +64,6 @@ class Wait extends FlowItem {
             }
         ), intval(floatval($time) * 20));
         yield false;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

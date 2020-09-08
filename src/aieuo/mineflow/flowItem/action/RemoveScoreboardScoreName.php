@@ -65,7 +65,6 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
 
         $board->removeScoreName((int)$score);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

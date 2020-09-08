@@ -71,7 +71,6 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
 
         $player->setGamemode((int)$gamemode);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

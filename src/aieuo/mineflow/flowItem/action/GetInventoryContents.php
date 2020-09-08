@@ -70,7 +70,7 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
 
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -95,9 +95,5 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

@@ -29,7 +29,6 @@ class EventCancel extends FlowItem {
         }
         $event->setCancelled();
         yield true;
-        return true;
     }
 
     public function isDataValid(): bool {

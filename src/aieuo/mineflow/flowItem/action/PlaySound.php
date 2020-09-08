@@ -98,7 +98,6 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         $pk->pitch = (float)$pitch;
         $player->dataPacket($pk);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

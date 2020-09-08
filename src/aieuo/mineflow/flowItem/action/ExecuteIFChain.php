@@ -93,7 +93,6 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
             $options
         );
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

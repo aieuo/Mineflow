@@ -46,5 +46,5 @@ interface FlowItemContainer {
     /**
      * @return bool|null
      */
-    public function getLastActionResult(): ?bool;
+    public function getLastResult(): ?bool;
 }

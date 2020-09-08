@@ -25,6 +25,5 @@ class SendMessageToOp extends TypeMessage {
             }
         }
         yield true;
-        return true;
     }
 }

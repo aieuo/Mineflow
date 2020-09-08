@@ -100,7 +100,6 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
 
         Bossbar::add($player, $id, $title, (float)$max, (float)$value / (float)$max);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

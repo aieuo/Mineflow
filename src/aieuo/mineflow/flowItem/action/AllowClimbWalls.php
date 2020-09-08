@@ -62,7 +62,6 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
 
         $player->setCanClimbWalls($this->isAllow());
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

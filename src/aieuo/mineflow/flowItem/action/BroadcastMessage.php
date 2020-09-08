@@ -20,6 +20,5 @@ class BroadcastMessage extends TypeMessage {
         $message = $origin->replaceVariables($this->getMessage());
         Server::getInstance()->broadcastMessage($message);
         yield true;
-        return true;
     }
 }

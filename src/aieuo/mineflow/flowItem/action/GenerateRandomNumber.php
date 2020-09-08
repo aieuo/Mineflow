@@ -74,9 +74,8 @@ class GenerateRandomNumber extends TypeGetMathVariable {
 
         $rand = mt_rand((int)$min, (int)$max);
         $origin->addVariable(new NumberVariable($rand, $resultName));
-        $this->lastResult = $rand;
         yield true;
-        return true;
+        return $rand;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

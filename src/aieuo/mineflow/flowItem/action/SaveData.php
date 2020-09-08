@@ -27,7 +27,6 @@ class SaveData extends FlowItem {
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();
         yield true;
-        return true;
     }
 
     public function loadSaveData(array $content): FlowItem {

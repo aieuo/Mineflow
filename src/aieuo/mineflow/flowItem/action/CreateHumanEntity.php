@@ -80,7 +80,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         $variable = new HumanObjectVariable($entity, $resultName);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -107,9 +107,5 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getPositionVariableName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

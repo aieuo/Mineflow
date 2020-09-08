@@ -70,7 +70,6 @@ class Kick extends FlowItem implements PlayerFlowItem {
             $player->kick($reason, $this->isAdmin);
         }), 1);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

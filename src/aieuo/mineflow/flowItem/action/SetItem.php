@@ -71,7 +71,6 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
 
         $player->getInventory()->setItem($index, $item);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

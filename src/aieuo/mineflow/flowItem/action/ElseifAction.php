@@ -27,7 +27,7 @@ class ElseifAction extends IFAction {
     }
 
     public function execute(Recipe $origin) {
-        $lastResult = $this->getParent()->getLastActionResult();
+        $lastResult = $this->getParent()->getLastResult();
         if ($lastResult === null) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 

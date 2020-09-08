@@ -76,7 +76,6 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
 
         $board->setScoreName($name, (int)$score);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

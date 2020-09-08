@@ -63,7 +63,6 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
 
         Bossbar::remove($player, $id);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

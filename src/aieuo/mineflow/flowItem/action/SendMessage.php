@@ -21,6 +21,5 @@ class SendMessage extends TypePlayerMessage {
 
         $player->sendMessage($message);
         yield true;
-        return true;
     }
 }

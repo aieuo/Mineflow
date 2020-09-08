@@ -30,8 +30,6 @@ class GetDate extends FlowItem {
     private $format;
     /** @var string */
     private $resultName;
-    /** @var string */
-    private $lastResult = "";
 
     public function __construct(string $format = "H:i:s", string $resultName = "date") {
         $this->setFormat($format);
@@ -70,10 +68,9 @@ class GetDate extends FlowItem {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         $date = date($format);
-        $this->lastResult = $date;
         $origin->addVariable(new StringVariable($date, $resultName));
         yield true;
-        return true;
+        return $date;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -98,9 +95,5 @@ class GetDate extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getFormat(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

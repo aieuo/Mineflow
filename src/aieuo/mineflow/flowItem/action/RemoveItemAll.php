@@ -24,6 +24,5 @@ class RemoveItemAll extends TypeItem {
 
         $player->getInventory()->remove($item);
         yield true;
-        return true;
     }
 }

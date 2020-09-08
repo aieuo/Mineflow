@@ -23,6 +23,5 @@ class SetMaxHealth extends SetHealth {
 
         $entity->setMaxHealth((int)$health);
         yield true;
-        return true;
     }
 }

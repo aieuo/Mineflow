@@ -31,8 +31,6 @@ class GetDistance extends FlowItem implements PositionFlowItem {
 
     /** @var string */
     private $resultName;
-    /* @var string */
-    private $lastResult;
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", string $result = "distance") {
         $this->setPositionVariableName($pos1, "pos1");
@@ -68,10 +66,9 @@ class GetDistance extends FlowItem implements PositionFlowItem {
 
         $distance = $pos1->distance($pos2);
 
-        $this->lastResult = (string)$distance;
         $origin->addVariable(new NumberVariable($distance, $result));
         yield true;
-        return true;
+        return $distance;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -98,9 +95,5 @@ class GetDistance extends FlowItem implements PositionFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

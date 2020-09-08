@@ -80,7 +80,7 @@ class GetPlayerByName extends FlowItem {
         $result = new PlayerObjectVariable($player, $resultName, $player->getName());
         $origin->addVariable($result);
         yield true;
-        return true;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -105,9 +105,5 @@ class GetPlayerByName extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

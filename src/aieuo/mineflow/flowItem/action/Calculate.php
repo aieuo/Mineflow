@@ -54,9 +54,6 @@ class Calculate extends FlowItem {
 
     private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
-    /* @var string */
-    private $lastResult;
-
     public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
         $this->value = $value;
         $this->operator = (int)($operator ?? self::SQUARE);
@@ -165,10 +162,9 @@ class Calculate extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
         yield true;
-        return true;
+        return $result;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -195,9 +191,5 @@ class Calculate extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue(), $this->getOperator(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->lastResult;
     }
 }

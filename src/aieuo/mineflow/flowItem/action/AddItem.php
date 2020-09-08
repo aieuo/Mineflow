@@ -24,6 +24,5 @@ class AddItem extends TypeItem {
 
         $player->getInventory()->addItem($item);
         yield true;
-        return true;
     }
 }

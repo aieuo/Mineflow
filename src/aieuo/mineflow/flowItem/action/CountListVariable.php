@@ -34,9 +34,6 @@ class CountListVariable extends FlowItem {
     /** @var string */
     private $resultName;
 
-    /** @var int */
-    private $lastResult;
-
     public function __construct(string $name = "", string $result = "count") {
         $this->variableName = $name;
         $this->resultName = $result;
@@ -82,10 +79,9 @@ class CountListVariable extends FlowItem {
         }
 
         $count = count($variable->getValue());
-        $this->lastResult = $count;
         $origin->addVariable(new NumberVariable($count, $resultName));
         yield true;
-        return true;
+        return $count;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -110,9 +106,5 @@ class CountListVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return (string)$this->lastResult;
     }
 }

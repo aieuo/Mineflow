@@ -54,7 +54,6 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
 
         $board->show($player);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

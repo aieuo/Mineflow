@@ -75,7 +75,7 @@ class CreateConfigVariable extends FlowItem {
         $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file), $name);
         $origin->addVariable($variable);
         yield true;
-        return true;
+        return $this->getVariableName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -100,9 +100,5 @@ class CreateConfigVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getFileName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getVariableName();
     }
 }

@@ -65,7 +65,6 @@ class SetHealth extends FlowItem implements EntityFlowItem {
 
         $entity->setHealth((float)$health);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

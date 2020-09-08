@@ -79,7 +79,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         $block = $player->getTargetBlock($max);
         $origin->addVariable(new BlockObjectVariable($block, $result));
         yield true;
-        return true;
+        return $this->getResultName();
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
@@ -106,9 +106,5 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()];
-    }
-
-    public function getReturnValue(): string {
-        return $this->getResultName();
     }
 }

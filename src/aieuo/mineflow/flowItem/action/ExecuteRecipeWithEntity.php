@@ -64,7 +64,6 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         $recipe->addVariables($variables);
         $recipe->setTarget($entity)->execute();
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

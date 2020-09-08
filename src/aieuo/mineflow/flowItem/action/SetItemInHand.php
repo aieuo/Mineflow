@@ -24,6 +24,5 @@ class SetItemInHand extends TypeItem {
 
         $player->getInventory()->setItemInHand($item);
         yield true;
-        return true;
     }
 }

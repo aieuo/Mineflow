@@ -20,7 +20,6 @@ use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\Player;
 
 class ForeachAction extends FlowItem implements FlowItemContainer {
@@ -43,9 +42,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     private $keyVariableName = "key";
     /** @var string */
     private $valueVariableName = "value";
-
-    /* @var bool */
-    private $lastResult;
 
     /** @var array */
     private $counter;
@@ -96,53 +92,28 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, bool $first = true) {
-        if ($first) {
-            $listName = $origin->replaceVariables($this->listVariableName);
-            $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
-            $key = $origin->replaceVariables($this->keyVariableName);
-            $value = $origin->replaceVariables($this->valueVariableName);
+    public function execute(Recipe $origin) {
+        $listName = $origin->replaceVariables($this->listVariableName);
+        $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
+        $keyName = $origin->replaceVariables($this->keyVariableName);
+        $valueName = $origin->replaceVariables($this->valueVariableName);
 
-            if (!($list instanceof ListVariable)) {
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.foreach.error.notVariable", [$listName]));
-            }
-
-            $this->initCounter($list, $key, $value);
+        if (!($list instanceof ListVariable)) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.foreach.error.notVariable", [$listName]));
         }
 
-        $counter = $this->counter;
-
-        for ($i = $counter["current"]; $i < $counter["size"]; $i++) {
-            $this->counter["current"]++;
-
-            $key = $counter["list"][$i][0];
-            $keyVariable = is_numeric($key) ? new NumberVariable($key, $counter["keyName"]) : new StringVariable($key, $counter["keyName"]);
+        foreach ($list->getValue() as $key => $value) {
+            $keyVariable = is_numeric($key) ? new NumberVariable($key, $keyName) : new StringVariable($key, $keyName);
             $origin->addVariable($keyVariable);
 
-            /** @var Variable $valueVariable */
-            $valueVariable = clone $counter["list"][$i][1];
-            $valueVariable->setName($counter["valueName"]);
+            $valueVariable = clone $value;
+            $valueVariable->setName($valueName);
             $origin->addVariable($valueVariable);
 
             yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         }
         $origin->resume();
         yield true;
-        return true;
-    }
-
-    public function initCounter(ListVariable $listVariable, string $key, string $value) {
-        $list = [];
-        foreach ($listVariable->getValue() as $k => $v) {
-            $list[] = [$k, $v];
-        }
-        $this->counter = [
-            "list" => $list,
-            "keyName" => $key,
-            "valueName" => $value,
-            "current" => 0,
-            "size" => count($list),
-        ];
     }
 
     public function hasCustomMenu(): bool {

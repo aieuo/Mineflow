@@ -52,7 +52,6 @@ class CallRecipe extends ExecuteRecipe {
         $recipe->setSourceRecipe($origin);
         $recipe->executeAllTargets($origin->getTarget(), [], $origin->getEvent(), $args);
         yield false;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {

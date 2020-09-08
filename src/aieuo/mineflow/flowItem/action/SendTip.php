@@ -21,6 +21,5 @@ class SendTip extends TypePlayerMessage {
 
         $player->sendTip($message);
         yield true;
-        return true;
     }
 }

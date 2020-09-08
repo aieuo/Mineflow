@@ -65,7 +65,6 @@ class RemovePermission extends FlowItem implements PlayerFlowItem {
 
         $player->addAttachment(Main::getInstance(), $permission, false);
         yield true;
-        return true;
     }
 
     public function getEditForm(array $default = [], array $errors = []): Form {
