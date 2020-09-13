@@ -15,7 +15,7 @@ trait ScoreboardFlowItemTrait {
     private $scoreboardVariableNames = [];
 
     public function getScoreboardVariableName(string $name = ""): string {
-        return $this->scoreboardVariableNames[$name];
+        return $this->scoreboardVariableNames[$name] ?? "";
     }
 
     public function setScoreboardVariableName(string $scoreboard, string $name = "") {

@@ -15,7 +15,7 @@ trait PlayerFlowItemTrait {
     private $playerVariableNames = [];
 
     public function getPlayerVariableName(string $name = ""): string {
-        return $this->playerVariableNames[$name];
+        return $this->playerVariableNames[$name] ?? "";
     }
 
     public function setPlayerVariableName(string $player, string $name = "") {

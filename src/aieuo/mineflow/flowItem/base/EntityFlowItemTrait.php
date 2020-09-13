@@ -16,7 +16,7 @@ trait EntityFlowItemTrait {
     private $entityVariableNames = [];
 
     public function getEntityVariableName(string $name = ""): string {
-        return $this->entityVariableNames[$name];
+        return $this->entityVariableNames[$name] ?? "";
     }
 
     public function setEntityVariableName(string $entity, string $name = "") {

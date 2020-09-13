@@ -15,7 +15,7 @@ trait PositionFlowItemTrait {
     private $positionVariableNames = [];
 
     public function getPositionVariableName(string $name = ""): string {
-        return $this->positionVariableNames[$name];
+        return $this->positionVariableNames[$name] ?? "";
     }
 
     public function setPositionVariableName(string $position, string $name = "") {
@@ -33,6 +33,7 @@ trait PositionFlowItemTrait {
 
     public function throwIfInvalidPosition(?Position $position) {
         if (!($position instanceof Position)) {
+            // FIXME: $nameが空白じゃないとき変数名が取れない
             throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.position"], $this->getPositionVariableName()]));
         }
     }

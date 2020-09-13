@@ -15,7 +15,7 @@ trait BlockFlowItemTrait {
     private $blockVariableNames = [];
 
     public function getBlockVariableName(string $name = ""): string {
-        return $this->blockVariableNames[$name];
+        return $this->blockVariableNames[$name] ?? "";
     }
 
     public function setBlockVariableName(string $block, string $name = "") {

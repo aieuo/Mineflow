@@ -15,7 +15,7 @@ trait ConfigFileFlowItemTrait {
     private $configVariableNames = [];
 
     public function getConfigVariableName(string $name = ""): string {
-        return $this->configVariableNames[$name];
+        return $this->configVariableNames[$name] ?? "";
     }
 
     public function setConfigVariableName(string $config, string $name = "") {

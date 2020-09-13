@@ -15,7 +15,7 @@ trait ItemFlowItemTrait {
     private $itemVariableNames = [];
 
     public function getItemVariableName(string $name = ""): string {
-        return $this->itemVariableNames[$name];
+        return $this->itemVariableNames[$name] ?? "";
     }
 
     public function setItemVariableName(string $item, string $name = "") {
