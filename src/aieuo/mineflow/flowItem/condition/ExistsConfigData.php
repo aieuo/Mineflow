@@ -57,7 +57,7 @@ class ExistsConfigData extends Condition implements ConfigFileFlowItem {
         $config = $this->getConfig($origin);
         $this->throwIfInvalidConfig($config);
 
-        $key = $this->getKey();
+        $key = $origin->replaceVariables($this->getKey());
 
         return $config->getNested($key) !== null;
     }
