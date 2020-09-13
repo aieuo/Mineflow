@@ -19,7 +19,7 @@ use aieuo\mineflow\variable\NumberVariable;
 class RemoveConfigData extends Action implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected $id = self::SET_CONFIG_VALUE;
+    protected $id = self::REMOVE_CONFIG_VALUE;
 
     protected $name = "action.removeConfigData.name";
     protected $detail = "action.removeConfigData.detail";
