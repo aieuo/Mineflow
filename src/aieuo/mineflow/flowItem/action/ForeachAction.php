@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;

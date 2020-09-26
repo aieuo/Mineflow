@@ -1,6 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\mineflow\formAPI\element\mineflow;
+
+use aieuo\mineflow\formAPI\element\Toggle;
 
 class CancelToggle extends Toggle {
 

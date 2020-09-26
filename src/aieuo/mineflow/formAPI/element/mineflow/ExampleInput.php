@@ -1,7 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\mineflow\formAPI\element\mineflow;
 
+use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\utils\Language;
 
 class ExampleInput extends Input {

@@ -4,8 +4,8 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
