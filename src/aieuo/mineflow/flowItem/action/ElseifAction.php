@@ -28,7 +28,7 @@ class ElseifAction extends IFAction {
 
     public function execute(Recipe $origin) {
         $lastResult = $this->getParent()->getLastResult();
-        if ($lastResult === null) throw new InvalidFlowValueException();
+        if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 
         foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {

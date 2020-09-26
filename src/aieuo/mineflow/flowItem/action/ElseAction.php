@@ -47,11 +47,10 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function execute(Recipe $origin) {
         $lastResult = $this->getParent()->getLastResult();
-        if ($lastResult === null) throw new InvalidFlowValueException();
-        if ($lastResult) return false;
+        if (!is_bool($lastResult)) throw new InvalidFlowValueException();
+        if ($lastResult) return;
 
         yield from $this->executeAll($origin, FlowItemContainer::ACTION);
-        return true;
     }
 
     public function hasCustomMenu(): bool {

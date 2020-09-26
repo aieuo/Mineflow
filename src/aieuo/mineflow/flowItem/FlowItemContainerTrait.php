@@ -9,7 +9,7 @@ trait FlowItemContainerTrait {
     /** @var FlowItem[][] */
     private $items = [];
 
-    /** @var bool */
+    /** @var mixed */
     private $lastResult;
 
     /**
@@ -61,11 +61,11 @@ trait FlowItemContainerTrait {
         return true;
     }
 
-    public function getLastResult(): ?bool {
+    public function getLastResult() {
         return $this->lastResult;
     }
 
-    public function setLastResult(bool $lastResult): void {
+    public function setLastResult($lastResult): void {
         $this->lastResult = $lastResult;
     }
 }

@@ -44,7 +44,7 @@ interface FlowItemContainer {
     public function getItems(string $name): array;
 
     /**
-     * @return bool|null
+     * @return mixed
      */
-    public function getLastResult(): ?bool;
+    public function getLastResult();
 }
