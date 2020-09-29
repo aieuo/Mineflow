@@ -102,17 +102,17 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@action.showBossbar.form.title", "20", $default[2] ?? $this->getTitle(), true),
-                new ExampleNumberInput("@action.showBossbar.form.max", "20", $default[3] ?? $this->getMax(), true),
-                new ExampleNumberInput("@action.showBossbar.form.value", "20", $default[4] ?? $this->getValue(), true),
-                new ExampleInput("@action.showBossbar.form.id", "20", $default[5] ?? $this->getBarId(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
+                new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
+                new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
+                new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

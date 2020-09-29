@@ -92,14 +92,14 @@ class GetEntity extends FlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.getEntity.form.target", "aieuo", $default[1] ?? $this->getKey(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "entity", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getKey(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "entity", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

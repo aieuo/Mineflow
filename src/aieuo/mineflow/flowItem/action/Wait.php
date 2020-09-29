@@ -66,11 +66,11 @@ class Wait extends FlowItem {
         yield false;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.wait.form.time", "10", $default[1] ?? $this->getTime(), true),
+                new ExampleInput("@action.wait.form.time", "10", $this->getTime(), true),
                 new CancelToggle()])
             ->addErrors($errors);
     }

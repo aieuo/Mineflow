@@ -64,14 +64,14 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         return $config->getNested($key) !== null;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.config", "target", $default[1] ?? $this->getConfigVariableName(), true),
-                new ExampleInput("@condition.existsConfigData.form.key", "aieuo", $default[2] ?? $this->getKey(), true),
+                new ExampleInput("@flowItem.form.target.config", "target", $this->getConfigVariableName(), true),
+                new ExampleInput("@condition.existsConfigData.form.key", "aieuo", $this->getKey(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

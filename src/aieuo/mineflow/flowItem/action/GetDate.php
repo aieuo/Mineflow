@@ -73,14 +73,14 @@ class GetDate extends FlowItem {
         return $date;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.getDate.form.format", "H:i:s", $default[1] ?? $this->getFormat(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "date", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.getDate.form.format", "H:i:s", $this->getFormat(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "date", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

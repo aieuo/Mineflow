@@ -119,15 +119,15 @@ class ComparisonNumber extends FlowItem implements Condition {
         return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $default[1] ?? $this->getValue1(), true),
-                new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
-                new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $default[3] ?? $this->getValue2(), true),
+                new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
+                new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
+                new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

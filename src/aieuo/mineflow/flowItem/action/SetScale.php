@@ -67,14 +67,14 @@ class SetScale extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleNumberInput("@action.setScale.form.scale", "1", $default[2] ?? $this->getScale(), true, 0, null, [0]),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleNumberInput("@action.setScale.form.scale", "1", $this->getScale(), true, 0, null, [0]),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -72,20 +72,19 @@ class Kick extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName()),
-                new ExampleInput("@action.kick.form.reason", "aieuo", $default[2] ?? $this->getReason()),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName()),
+                new ExampleInput("@action.kick.form.reason", "aieuo", $this->getReason()),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
         if ($data[1] === "") $data[1] = "target";
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
     }
 
     public function loadSaveData(array $content): FlowItem {

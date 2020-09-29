@@ -87,10 +87,21 @@ class CustomForm extends Form {
         return $form;
     }
 
+    public function resend(array $errors = [], array $messages = []) {
+        if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
+
+        $this->setDefaultsFromResponse($this->lastResponse[1])
+            ->resetErrors()
+            ->addMessages($messages)
+            ->addErrors($errors)
+            ->show($this->lastResponse[0]);
+    }
+
     public function handleResponse(Player $player, $data): void {
+        $this->lastResponse = [$player, $data];
         if ($data !== null) {
             $errors = [];
-            $cancelToggle = false;
+            $isCanceled = false;
             foreach ($this->getContents() as $i => $content) {
                 if ($content instanceof Input) {
                     $data[$i] = str_replace("\\n", "\n", $data[$i]);
@@ -113,13 +124,13 @@ class CustomForm extends Form {
                             $errors[] = [Language::get("flowItem.error.excludedNumber", [implode(",", $excludes)]), $i];
                         }
                     }
-                } elseif ($content instanceof CancelToggle) {
-                    $cancelToggle = true;
+                } elseif ($content instanceof CancelToggle and $data[$i]) {
+                    $isCanceled = true;
                 }
             }
 
-            if (!$cancelToggle and !empty($errors)) {
-                $this->setDefaultsFromResponse($data)->resetErrors()->addErrors($errors)->show($player);
+            if (!$isCanceled and !empty($errors)) {
+                $this->resend($errors);
                 return;
             }
         }

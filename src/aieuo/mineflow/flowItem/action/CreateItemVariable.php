@@ -114,16 +114,16 @@ class CreateItemVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.createItemVariable.form.id", "1:0", $default[1] ?? $this->getItemId(), true),
-                new ExampleNumberInput("@action.createItemVariable.form.count", "64", $default[2] ?? $this->getItemCount(), true, 0),
-                new ExampleInput("@action.createItemVariable.form.name", "aieuo", $default[3] ?? $this->getItemName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "item", $default[4] ?? $this->getVariableName(), true),
+                new ExampleInput("@action.createItemVariable.form.id", "1:0", $this->getItemId(), true),
+                new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getItemCount(), true, 0),
+                new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "item", $this->getVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -152,16 +152,16 @@ class Calculate2 extends FlowItem {
         return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleNumberInput("@action.calculate2.form.value1", "10", $default[1] ?? $this->getValue1(), true),
-                new ExampleNumberInput("@action.calculate2.form.value2", "20", $default[2] ?? $this->getValue2(), true),
-                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $default[3] ?? $this->getOperator()),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[4] ?? $this->getResultName(), true),
+                new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
+                new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
+                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

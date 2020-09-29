@@ -85,14 +85,14 @@ class CreateBlockVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.createBlockVariable.form.id", "1:0", $default[1] ?? $this->getBlockId(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "block", $default[2] ?? $this->getVariableName(), true),
+                new ExampleInput("@action.createBlockVariable.form.id", "1:0", $this->getBlockId(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

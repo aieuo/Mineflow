@@ -97,15 +97,15 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getConfigVariableName(), true),
-                new ExampleInput("@action.setConfigData.form.key", "aieuo", $default[2] ?? $this->getKey(), true),
-                new ExampleInput("@action.setConfigData.form.value", "100", $default[3] ?? $this->getValue(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getConfigVariableName(), true),
+                new ExampleInput("@action.setConfigData.form.key", "aieuo", $this->getKey(), true),
+                new ExampleInput("@action.setConfigData.form.value", "100", $this->getValue(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

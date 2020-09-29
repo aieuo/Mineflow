@@ -99,14 +99,14 @@ class ExecuteRecipe extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $default[1] ?? $this->getRecipeName(), true),
-                new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", $default[1] ?? implode(", ", $this->getArgs()), false),
+                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
+                new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

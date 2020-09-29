@@ -66,14 +66,14 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleInput("@action.setNameTag.form.name", "aieuo", $default[2] ?? $this->getNewName(), true),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleInput("@action.setNameTag.form.name", "aieuo", $this->getNewName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

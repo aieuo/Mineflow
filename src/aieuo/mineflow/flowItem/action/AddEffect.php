@@ -105,17 +105,17 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleInput("@action.addEffect.form.effect", "1", $default[2] ?? $this->getEffectId(), true),
-                new ExampleNumberInput("@action.addEffect.form.time", "300", $default[3] ?? $this->getTime(), false, 1),
-                new ExampleNumberInput("@action.addEffect.form.power", "1", $default[4] ?? $this->getPower(), false),
-                new Toggle("@action.addEffect.form.visible", $default[5] ?? $this->visible),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
+                new ExampleNumberInput("@action.addEffect.form.time", "300", $this->getTime(), false, 1),
+                new ExampleNumberInput("@action.addEffect.form.power", "1", $this->getPower(), false),
+                new Toggle("@action.addEffect.form.visible", $this->visible),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

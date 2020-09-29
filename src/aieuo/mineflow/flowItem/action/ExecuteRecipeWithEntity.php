@@ -66,14 +66,14 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $default[1] ?? $this->getRecipeName(), true),
-                new ExampleInput("@flowItem.form.target.entity", "entity", $default[2] ?? $this->getEntityVariableName(), true),
+                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
+                new ExampleInput("@flowItem.form.target.entity", "entity", $this->getEntityVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -75,14 +75,14 @@ class StringLength extends FlowItem {
         return $length;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.strlen.form.value", "aieuo", $default[1] ?? $this->getValue(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "length", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.strlen.form.value", "aieuo", $this->getValue(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "length", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

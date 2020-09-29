@@ -69,14 +69,14 @@ class SetYaw extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleNumberInput("@action.setYaw.form.yaw", "180", $default[2] ?? $this->getYaw(), true),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleNumberInput("@action.setYaw.form.yaw", "180", $this->getYaw(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

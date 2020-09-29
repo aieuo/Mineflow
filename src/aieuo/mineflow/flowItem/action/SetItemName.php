@@ -68,14 +68,14 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.target.require.item", "item", $default[1] ?? $this->getItemVariableName(), true),
-                new ExampleInput("@action.createItemVariable.form.name", "aieuo", $default[2] ?? $this->getItemName(), true),
+                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

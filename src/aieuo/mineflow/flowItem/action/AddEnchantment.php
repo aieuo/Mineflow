@@ -93,15 +93,15 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.target.require.item", "item", $default[1] ?? $this->getItemVariableName(), true),
-                new ExampleInput("@action.addEnchant.form.id", "1", $default[2] ?? $this->getEnchantId(), true),
-                new ExampleNumberInput("@action.addEnchant.form.level", "1", $default[3] ?? $this->getEnchantLevel(), false),
+                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.addEnchant.form.id", "1", $this->getEnchantId(), true),
+                new ExampleNumberInput("@action.addEnchant.form.level", "1", $this->getEnchantLevel(), false),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

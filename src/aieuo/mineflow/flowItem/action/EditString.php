@@ -132,20 +132,20 @@ class EditString extends FlowItem {
         return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         $keys = array_keys($this->operators, $this->getOperator());
 
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $default[1] ?? $this->getValue1(), true),
+                new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
                     return Language::get("action.editString.".$type);
-                }, array_values($this->operators)), $default[2] ?? array_shift($keys) ?? 0),
-                new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $default[3] ?? $this->getValue2(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[4] ?? $this->getResultName(), true),
+                }, array_values($this->operators)), array_shift($keys) ?? 0),
+                new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

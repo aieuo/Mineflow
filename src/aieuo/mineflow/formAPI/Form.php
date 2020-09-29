@@ -39,6 +39,8 @@ abstract class Form implements PMForm {
     protected $messages = [];
     /** @var array */
     protected $highlights = [];
+    /** @var array */
+    protected $lastResponse = [];
 
     public function __construct(string $title = "") {
         $this->title = $title;
@@ -183,7 +185,17 @@ abstract class Form implements PMForm {
      */
     abstract public function reflectErrors(array $form): array;
 
+    public function resend(array $errors = [], array $messages = []) {
+        if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
+
+        $this->resetErrors()
+            ->addMessages($messages)
+            ->addErrors($errors)
+            ->show($this->lastResponse[0]);
+    }
+
     public function handleResponse(Player $player, $data): void {
+        $this->lastResponse = [$player, $data];
         if ($data === null) {
             if (!is_callable($this->onClose)) return;
             call_user_func_array($this->onClose, array_merge([$player], $this->args));

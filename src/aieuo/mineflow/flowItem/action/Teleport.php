@@ -56,14 +56,14 @@ class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleInput("@flowItem.form.target.position", "pos", $default[2] ?? $this->getPositionVariableName(), true),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

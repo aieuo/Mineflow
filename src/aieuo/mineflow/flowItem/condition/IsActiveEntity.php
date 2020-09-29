@@ -60,13 +60,13 @@ class IsActiveEntity extends FlowItem implements Condition {
         return EntityHolder::isActive((int)$id);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@condition.isActiveEntity.form.entityId", "aieuo", $default[1] ?? $this->getEntityId(), true),
+                new ExampleInput("@condition.isActiveEntity.form.entityId", "aieuo", $this->getEntityId(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -155,7 +155,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     public function sendSetRepeatCountForm(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@action.repeat.editCount"))
             ->setContents([
-                new ExampleNumberInput("@action.repeat.repeatCount", "10", $default[0] ?? $this->getRepeatCount(), true, 1),
+                new ExampleNumberInput("@action.repeat.repeatCount", "10", $this->getRepeatCount(), true, 1),
                 new CancelToggle()
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {

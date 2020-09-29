@@ -55,14 +55,14 @@ abstract class TypeMoney extends FlowItem {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getAmount()]);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.money.form.target", "{target.name}", $default[1] ?? $this->getPlayerName(), true),
-                new ExampleNumberInput("@action.money.form.amount", "1000", $default[2] ?? $this->getAmount(), true),
+                new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
+                new ExampleNumberInput("@action.money.form.amount", "1000", $this->getAmount(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

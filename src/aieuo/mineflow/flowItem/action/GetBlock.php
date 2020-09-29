@@ -70,14 +70,14 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $default[1] ?? $this->getPositionVariableName()),
-                new ExampleInput("@flowItem.form.resultVariableName", "block", $default[2] ?? $this->getResultName()),
+                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName()),
+                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getResultName()),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

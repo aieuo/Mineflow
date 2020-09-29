@@ -170,10 +170,10 @@ class ForAction extends FlowItem implements FlowItemContainer {
     public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new ExampleInput("@action.for.counterName", "i", $default[0] ?? $this->getCounterName(), true),
-                new ExampleNumberInput("@action.for.start", "0", $default[1] ?? $this->getStartIndex(), true),
-                new ExampleNumberInput("@action.for.end", "9", $default[2] ?? $this->getEndIndex(), true, null, null, [0]),
-                new Input("@action.for.fluctuation", Language::get("form.example", ["1"]), $default[3] ?? $this->getFluctuation())
+                new ExampleInput("@action.for.counterName", "i", $this->getCounterName(), true),
+                new ExampleNumberInput("@action.for.start", "0", $this->getStartIndex(), true),
+                new ExampleNumberInput("@action.for.end", "9", $this->getEndIndex(), true),
+                new ExampleNumberInput("@action.for.fluctuation", "1", $this->getFluctuation(), true, null, null, [0])
             ])->onReceive(function (Player $player, array $data) {
                 $this->setCounterName($data[0]);
                 $this->setStartIndex($data[1]);

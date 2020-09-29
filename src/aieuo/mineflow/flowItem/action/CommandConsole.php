@@ -61,13 +61,13 @@ class CommandConsole extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.command.form.command", "mineflow", $default[1] ?? $this->getCommand(), true),
+                new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

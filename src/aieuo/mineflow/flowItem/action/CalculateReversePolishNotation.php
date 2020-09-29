@@ -107,14 +107,14 @@ class CalculateReversePolishNotation extends FlowItem {
         return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.calculateRPN.form.value", "1 2 + 3 -", $default[1] ?? $this->getFormula(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.calculateRPN.form.value", "1 2 + 3 -", $this->getFormula(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

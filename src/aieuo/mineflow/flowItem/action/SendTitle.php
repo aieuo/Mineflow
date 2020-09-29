@@ -100,18 +100,18 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@action.sendTitle.form.title", "aieuo", $default[2] ?? $this->getTitle()),
-                new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $default[3] ?? $this->getSubTitle()),
-                new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $default[4] ?? $this->fadein, true, -1),
-                new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $default[5] ?? $this->stay, true, -1),
-                new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $default[6] ?? $this->fadeout, true, -1),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
+                new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
+                new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),
+                new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $this->stay, true, -1),
+                new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $this->fadeout, true, -1),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

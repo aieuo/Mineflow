@@ -64,15 +64,15 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
             and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleInput("@condition.inArea.form.pos1", "pos1", $default[2] ?? $this->getPositionVariableName("pos1"), true),
-                new ExampleInput("@condition.inArea.form.pos2", "pos2", $default[3] ?? $this->getPositionVariableName("pos2"), true),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleInput("@condition.inArea.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
+                new ExampleInput("@condition.inArea.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

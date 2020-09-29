@@ -123,17 +123,17 @@ class CreatePositionVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $default[1] ?? $this->getX(), true),
-                new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $default[2] ?? $this->getY(), true),
-                new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $default[3] ?? $this->getZ(), true),
-                new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $default[4] ?? $this->getLevel(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "pos", $default[5] ?? $this->getVariableName(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $this->getX(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
+                new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $this->getLevel(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "pos", $this->getVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -50,13 +50,13 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         return $entity->isSneaking();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -163,9 +163,9 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new ExampleInput("@action.foreach.listVariableName","list", $default[0] ?? $this->getListVariableName(), true),
-                new ExampleInput("@action.foreach.keyVariableName", "key", $default[1] ?? $this->getKeyVariableName(), true),
-                new ExampleInput("@action.foreach.valueVariableName", "value", $default[2] ?? $this->getValueVariableName(), true),
+                new ExampleInput("@action.foreach.listVariableName","list", $this->getListVariableName(), true),
+                new ExampleInput("@action.foreach.keyVariableName", "key", $this->getKeyVariableName(), true),
+                new ExampleInput("@action.foreach.valueVariableName", "value", $this->getValueVariableName(), true),
             ])->onReceive(function (Player $player, array $data) {
                 $this->setListVariableName($data[0]);
                 $this->setKeyVariableName($data[1]);

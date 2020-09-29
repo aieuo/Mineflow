@@ -84,14 +84,14 @@ class CountListVariable extends FlowItem {
         return $count;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.countList.form.name", "list", $default[1] ?? $this->getVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.countList.form.name", "list", $this->getVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

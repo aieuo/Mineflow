@@ -83,14 +83,14 @@ class GetPlayerByName extends FlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.getPlayerByName.form.target", "aieuo", $default[1] ?? $this->getPlayerName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "player", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.getPlayerByName.form.target", "aieuo", $this->getPlayerName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "player", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

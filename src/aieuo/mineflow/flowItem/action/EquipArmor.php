@@ -83,17 +83,17 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName(), true),
-                new ExampleInput("@flowItem.form.target.item", "item", $default[2] ?? $this->getItemVariableName(), true),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleInput("@flowItem.form.target.item", "item", $this->getItemVariableName(), true),
                 new Dropdown("@action.equipArmor.form.index", array_map(function (string $text) {
                     return Language::get($text);
-                }, $this->places), $default[3] ?? (int)$this->getIndex()),
+                }, $this->places), (int)$this->getIndex()),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

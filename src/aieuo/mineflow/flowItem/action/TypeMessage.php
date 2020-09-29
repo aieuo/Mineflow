@@ -42,13 +42,13 @@ abstract class TypeMessage extends FlowItem {
         return Language::get($this->detail, [$this->getMessage()]);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.message.form.message", "aieuo", $default[1] ?? $this->getMessage(), true),
+                new ExampleInput("@action.message.form.message", "aieuo", $this->getMessage(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

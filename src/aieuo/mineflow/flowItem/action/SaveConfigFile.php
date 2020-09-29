@@ -52,13 +52,13 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.config", "config", $default[1] ?? $this->getConfigVariableName(), true),
+                new ExampleInput("@flowItem.form.target.config", "config", $this->getConfigVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

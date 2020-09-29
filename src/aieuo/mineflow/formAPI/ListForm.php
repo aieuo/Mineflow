@@ -102,6 +102,7 @@ class ListForm extends Form {
     }
 
     public function handleResponse(Player $player, $data): void {
+        $this->lastResponse = [$player, $data];
         if ($data === null) {
             parent::handleResponse($player, $data);
             return;

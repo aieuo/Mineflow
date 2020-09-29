@@ -73,14 +73,14 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "inventory", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "inventory", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

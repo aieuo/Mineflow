@@ -67,12 +67,12 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.scoreboard", "board", $default[1] ?? $this->getScoreboardVariableName(), true),
-                new ExampleNumberInput("@action.setScore.form.score", "100", $default[3] ?? $this->getScore(), true),
+                new ExampleInput("@flowItem.form.target.scoreboard", "board", $this->getScoreboardVariableName(), true),
+                new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
                 new Toggle("@form.cancelAndBack")
             ])->addErrors($errors);
     }

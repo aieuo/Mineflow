@@ -46,13 +46,13 @@ abstract class TypeGetMathVariable extends FlowItem {
         return Language::get($this->detail, [$this->getResultName()]);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $default[1] ?? $this->getResultName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

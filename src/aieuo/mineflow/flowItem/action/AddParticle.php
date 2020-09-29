@@ -88,15 +88,15 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $default[1] ?? $this->getPositionVariableName(), true),
-                new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $default[2] ?? $this->getParticle(), true),
-                new ExampleNumberInput("@action.addParticle.form.amount", "1", $default[3] ?? $this->getAmount(), true, 1),
+                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName(), true),
+                new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $this->getParticle(), true),
+                new ExampleNumberInput("@action.addParticle.form.amount", "1", $this->getAmount(), true, 1),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

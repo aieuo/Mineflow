@@ -36,14 +36,14 @@ abstract class TypeItem extends FlowItem implements PlayerFlowItem, ItemFlowItem
         return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "";
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.target.item", "item", $default[2] ?? $this->getItemVariableName(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.target.item", "item", $this->getItemVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

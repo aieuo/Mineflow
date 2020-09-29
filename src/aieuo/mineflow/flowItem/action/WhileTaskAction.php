@@ -148,7 +148,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     public function sendSetWhileIntervalForm(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@action.repeat.editCount"))
             ->setContents([
-                new ExampleNumberInput("@action.whileTask.interval", "20", $default[0] ?? $this->getInterval(), true, 1),
+                new ExampleNumberInput("@action.whileTask.interval", "20", $this->getInterval(), true, 1),
                 new CancelToggle()
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {

@@ -73,16 +73,16 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         return $player->getGamemode() === $gamemode;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
                 new Dropdown("@condition.gamemode.form.gamemode", array_map(function (string $mode) {
                     return Language::get($mode);
-                }, $this->gamemodes), $default[2] ?? $this->getGamemode()),
+                }, $this->gamemodes), $this->getGamemode()),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

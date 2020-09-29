@@ -82,14 +82,14 @@ class GetMoney extends FlowItem {
         return $money;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.money.form.target", "{target.name}", $default[1] ?? $this->getPlayerName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "money", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "money", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

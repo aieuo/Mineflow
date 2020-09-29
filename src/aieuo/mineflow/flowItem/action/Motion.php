@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
@@ -81,30 +82,20 @@ class Motion extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $default[1] ?? $this->getEntityVariableName()),
-                new ExampleInput("@action.motion.form.x", "2", $default[2] ?? $this->x),
-                new ExampleInput("@action.motion.form.y", "3", $default[3] ?? $this->y),
-                new ExampleInput("@action.motion.form.z", "4", $default[4] ?? $this->z),
+                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new ExampleNumberInput("@action.motion.form.x", "2", $this->x, true),
+                new ExampleNumberInput("@action.motion.form.y", "3", $this->y, true),
+                new ExampleNumberInput("@action.motion.form.z", "4", $this->z, true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        $helper = Main::getVariableHelper();
-        for ($i = 2; $i <= 4; $i++) {
-            if ($data[$i] === "") {
-                $data[$i] = "0";
-            } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {
-                $errors[] = ["@flowItem.error.notNumber", $i];
-            }
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => []];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -96,16 +96,16 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
             })->addErrors($errors)->show($player);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "input", $default[2] ?? $this->getResultName(), true),
-                new ExampleInput("@action.sendInput.form.text", "aieuo", $default[3] ?? $this->getFormText(), true), // TODO: placeholder, default
-                new Toggle("@action.sendInput.form.resendOnClose", $default[4] ?? $this->resendOnClose),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "input", $this->getResultName(), true),
+                new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
+                new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -78,14 +78,14 @@ class CreateConfigVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.createConfigVariable.form.name", "config", $default[1] ?? $this->getFileName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "config", $default[2] ?? $this->getVariableName(), true),
+                new ExampleInput("@action.createConfigVariable.form.name", "config", $this->getFileName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "config", $this->getVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

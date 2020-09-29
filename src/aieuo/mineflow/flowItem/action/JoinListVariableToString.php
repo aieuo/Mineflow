@@ -97,15 +97,15 @@ class JoinListVariableToString extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
-                new ExampleInput("@action.joinToString.form.separator", ", ", $default[2] ?? $this->getSeparator(), false),
-                new ExampleInput("@flowItem.form.resultVariableName", "string", $default[3] ?? $this->getResultName(), true),
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new ExampleInput("@action.joinToString.form.separator", ", ", $this->getSeparator(), false),
+                new ExampleInput("@flowItem.form.resultVariableName", "string", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

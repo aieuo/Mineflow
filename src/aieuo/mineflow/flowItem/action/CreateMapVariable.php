@@ -115,24 +115,23 @@ class CreateMapVariable extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
-                new ExampleInput("@action.variable.form.key", "auieo", $default[2] ?? implode(",", $this->getKey()), false),
-                new ExampleInput("@action.variable.form.value", "aeiuo", $default[3] ?? implode(",", $this->getVariableValue()), false),
-                new Toggle("@action.variable.form.global", $default[4] ?? !$this->isLocal),
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.key", "auieo", implode(",", $this->getKey()), false),
+                new ExampleInput("@action.variable.form.value", "aeiuo", implode(",", $this->getVariableValue()), false),
+                new Toggle("@action.variable.form.global", !$this->isLocal),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
         $name = $data[1];
         $key = array_map("trim", explode(",", $data[2]));
         $value = array_map("trim", explode(",", $data[3]));
-        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => []];
     }
 
     public function loadSaveData(array $content): FlowItem {

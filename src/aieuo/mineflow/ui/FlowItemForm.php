@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
@@ -40,10 +41,10 @@ class FlowItemForm {
                         (new FlowItemContainerForm)->sendActionList($player, $container, $type);
                         break;
                     case 1:
-                        $action->getEditForm()
-                            ->addArgs($container, $action, function ($result) use ($player, $container, $type, $action) {
-                                $this->sendAddedItemMenu($player, $container, $type, $action, [$result ? "@form.changed" : "@form.cancelled"]);
-                            })->onReceive([$this, "onUpdateAction"])->show($player);
+                        $form = $action->getEditForm();
+                        $form->addArgs($form, $action, function ($result) use ($player, $container, $type, $action) {
+                            $this->sendAddedItemMenu($player, $container, $type, $action, [$result ? "@form.changed" : "@form.cancelled"]);
+                        })->onReceive([$this, "onUpdateAction"])->show($player);
                         break;
                     case 2:
                         (new FlowItemContainerForm)->sendMoveAction($player, $container, $type, array_search($action, $container->getItems($type), true));
@@ -55,7 +56,7 @@ class FlowItemForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function onUpdateAction(Player $player, ?array $formData, FlowItemContainer $container, FlowItem $action, callable $callback) {
+    public function onUpdateAction(Player $player, ?array $formData, Form $form, FlowItem $action, callable $callback) {
         if ($formData === null) return;
 
         $data = $action->parseFromFormData($formData);
@@ -65,10 +66,7 @@ class FlowItemForm {
         }
 
         if (!empty($data["errors"])) {
-            $action->getEditForm($formData, $data["errors"])
-                ->addArgs($container, $action, $callback)
-                ->onReceive([$this, "onUpdateAction"])
-                ->show($player);
+            $form->resend($data["errors"]);
             return;
         }
         try {
@@ -159,15 +157,15 @@ class FlowItemForm {
                             $item->sendCustomMenu($player);
                             return;
                         }
-                        $item->getEditForm()
-                            ->addArgs($container, $item, function ($result) use ($player, $container, $type, $item) {
-                                if ($result) {
-                                    $container->addItem($item, $type);
-                                    (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.added"]);
-                                } else {
-                                    $this->sendActionMenu($player, $container, $type, $item, ["@form.cancelled"]);
-                                }
-                            })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
+                        $form = $item->getEditForm();
+                        $form->addArgs($form, $item, function ($result) use ($player, $container, $type, $item) {
+                            if ($result) {
+                                $container->addItem($item, $type);
+                                (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.added"]);
+                            } else {
+                                $this->sendActionMenu($player, $container, $type, $item, ["@form.cancelled"]);
+                            }
+                        })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
                         break;
                     case 2:
                         $config = Main::getInstance()->getPlayerSettings();

@@ -100,16 +100,16 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@action.playSound.form.sound", "random.levelup", $default[2] ?? $this->getSound(), true),
-                new ExampleNumberInput("@action.playSound.form.volume", "1", $default[3] ?? $this->getVolume(), true),
-                new ExampleNumberInput("@action.playSound.form.pitch", "1", $default[4] ?? $this->getPitch(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
+                new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
+                new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

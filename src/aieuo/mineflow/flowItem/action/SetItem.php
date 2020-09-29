@@ -73,15 +73,15 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.target.item", "item", $default[2] ?? $this->getItemVariableName(), true),
-                new ExampleNumberInput("@action.setItem.form.index", "0", $default[3] ?? $this->getIndex(), true, 0),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.target.item", "item", $this->getItemVariableName(), true),
+                new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

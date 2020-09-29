@@ -88,15 +88,15 @@ class CreateMapVariableFromJson extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.variable.form.name", "aieuo", $default[1] ?? $this->getVariableName(), true),
-                new ExampleInput("@action.variable.form.value", "aeiuo", $default[2] ?? $this->getJson(), true),
-                new Toggle("@action.variable.form.global", $default[3] ?? !$this->isLocal),
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.value", "aeiuo", $this->getJson(), true),
+                new Toggle("@action.variable.form.global", !$this->isLocal),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

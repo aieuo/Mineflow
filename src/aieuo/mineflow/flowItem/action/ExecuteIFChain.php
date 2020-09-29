@@ -95,14 +95,14 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.executeIFChain.form.name", "aieuo", $default[1] ?? $this->getChainName(), true),
-                new ExampleInput("@flowItem.form.target.player", "target", $default[2] ?? $this->getPlayerVariableName(), true),
+                new ExampleInput("@action.executeIFChain.form.name", "aieuo", $this->getChainName(), true),
+                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

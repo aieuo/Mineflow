@@ -56,13 +56,13 @@ class ReplenishResource extends FlowItem implements PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $default[1] ?? $this->getPositionVariableName()),
+                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName()),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

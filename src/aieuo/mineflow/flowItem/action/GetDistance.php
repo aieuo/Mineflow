@@ -71,15 +71,15 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         return $distance;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.getDistance.form.pos1", "pos1", $default[1] ?? $this->getPositionVariableName("pos1"), true),
-                new ExampleInput("@action.getDistance.form.pos2", "pos2", $default[2] ?? $this->getPositionVariableName("pos2"), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "distance", $default[3] ?? $this->getResultName(), true),
+                new ExampleInput("@action.getDistance.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
+                new ExampleInput("@action.getDistance.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "distance", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -85,14 +85,14 @@ class GetVariableNested extends FlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.getVariableNested.form.target", "target.hand", $default[1] ?? $this->getVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "item", $default[2] ?? $this->getResultName(), true),
+                new ExampleInput("@action.getVariableNested.form.target", "target.hand", $this->getVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "item", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

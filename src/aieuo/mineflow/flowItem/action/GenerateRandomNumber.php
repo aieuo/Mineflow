@@ -78,15 +78,15 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return $rand;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.generateRandomNumber.form.min", "0", $default[1] ?? $this->getMin(), true),
-                new ExampleInput("@action.generateRandomNumber.form.max", "10", $default[2] ?? $this->getMax(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "random", $default[3] ?? $this->getResultName(), true),
+                new ExampleInput("@action.generateRandomNumber.form.min", "0", $this->getMin(), true),
+                new ExampleInput("@action.generateRandomNumber.form.max", "10", $this->getMax(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "random", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

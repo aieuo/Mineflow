@@ -83,15 +83,15 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@action.createHuman.form.skin", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.target.position", "pos", $default[2] ?? $this->getPositionVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "entity", $default[3] ?? $this->getResultName(), true),
+                new ExampleInput("@action.createHuman.form.skin", "target", $this->getPlayerVariableName(), true),
+                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "entity", $this->getResultName(), true),
                 new CancelToggle()
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

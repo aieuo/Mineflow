@@ -120,18 +120,18 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             })->addErrors($errors)->show($player);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(): Form {
         $contents = [
             new Label($this->getDescription()),
-            new ExampleInput("@flowItem.form.target.player", "target", $default[1] ?? $this->getPlayerVariableName(), true),
-            new ExampleInput("@flowItem.form.resultVariableName", "input", $default[2] ?? $this->getResultName(), true),
-            new ExampleInput("@action.sendInput.form.text", "aieuo", $default[3] ?? $this->getFormText(), true),
+            new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+            new ExampleInput("@flowItem.form.resultVariableName", "input", $this->getResultName(), true),
+            new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true),
         ];
         foreach ($this->getOptions() as $i => $option) {
             $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), Language::get("form.example", ["aieuo"]), $option);
         }
         $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
-        $contents[] = new Toggle("@action.sendInput.form.resendOnClose", $default[4] ?? $this->resendOnClose);
+        $contents[] = new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose);
         $contents[] = new Toggle("@form.cancelAndBack");
 
         return (new CustomForm($this->getName()))
@@ -139,7 +139,6 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
         array_shift($data);
         $target = array_shift($data);
         $resultName = array_shift($data);
@@ -150,7 +149,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         $options = array_filter($data, function (string $o) { return $o !== ""; });
         $options = array_merge($options, $add);
-        return ["contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel, "errors" => $errors];
+        return ["contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel, "errors" => []];
     }
 
     public function loadSaveData(array $content): FlowItem {
