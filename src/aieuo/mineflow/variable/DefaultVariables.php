@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
@@ -13,7 +14,6 @@ use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
@@ -174,17 +174,17 @@ class DefaultVariables {
                 break;
             case $event instanceof EntityDamageEvent:
                 $target = $event->getEntity();
-                $name = $eventName === "EntityAttackEvent" ? "damaged" : "target";
+                $name = $eventName === EntityAttackEvent::class ? "damaged" : "target";
                 $variables = $target instanceof Player ? self::getPlayerVariables($target, $name) : self::getEntityVariables($target, $name);
                 $variables["damage"] = new NumberVariable($event->getBaseDamage(), "damage");
                 $variables["cause"] = new NumberVariable($event->getCause(), "cause");
-                if ($event instanceof EntityDamageByEntityEvent) {
+                if ($event instanceof EntityAttackEvent) {
                     $damager = $event->getDamager();
                     $add = [];
-                    if ($eventName === "EntityDamageEvent") {
+                    if ($eventName === EntityDamageEvent::class) {
                         if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "damager");
                         elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "damager");
-                    } elseif ($eventName === "EntityAttackEvent") {
+                    } elseif ($eventName === EntityAttackEvent::class) {
                         if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "target");
                         elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "target");
                     }
