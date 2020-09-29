@@ -71,8 +71,8 @@ class Wait extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.wait.form.time", "10", $this->getTime(), true),
-                new CancelToggle()])
-            ->addErrors($errors);
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

@@ -135,7 +135,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         $contents[] = new Toggle("@form.cancelAndBack");
 
         return (new CustomForm($this->getName()))
-            ->setContents($contents)->addErrors($errors);
+            ->setContents($contents);
     }
 
     public function parseFromFormData(array $data): array {

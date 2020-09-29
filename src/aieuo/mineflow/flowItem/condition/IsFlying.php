@@ -55,8 +55,8 @@ class IsFlying extends FlowItem implements Condition, PlayerFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
-                new CancelToggle()])
-            ->addErrors($errors);
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

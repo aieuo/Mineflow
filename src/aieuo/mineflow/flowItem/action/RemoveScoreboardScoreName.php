@@ -74,7 +74,7 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
                 new ExampleInput("@flowItem.form.target.scoreboard", "board", $this->getScoreboardVariableName(), true),
                 new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
                 new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+            ]);
     }
 
     public function parseFromFormData(array $data): array {

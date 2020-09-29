@@ -6,6 +6,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -54,7 +55,8 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
-            ])->addErrors($errors);
+                new CancelToggle(),
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
