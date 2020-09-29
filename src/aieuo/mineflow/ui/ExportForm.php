@@ -21,6 +21,7 @@ class ExportForm {
         $this->sendRecipeList($player, $recipes);
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function sendRecipeList(Player $player, array $recipes, array $messages = []) {
         $recipes = array_values($recipes);
 

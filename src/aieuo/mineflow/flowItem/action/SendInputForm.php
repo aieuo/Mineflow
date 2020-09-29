@@ -83,6 +83,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         yield false;
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []) {
         (new CustomForm($text))
             ->setContents([

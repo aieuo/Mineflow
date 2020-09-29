@@ -170,8 +170,9 @@ class VariableHelper {
             $newAction = new $class(...array_filter(array_map("trim", explode(",", $parameters)), function ($t) {
                 return $t !== "";
             }));
-            $generator = $newAction->parent($origin)->execute($origin);
+            $generator = $newAction->setParent($origin)->execute($origin);
             /** @noinspection PhpStatementHasEmptyBodyInspection */
+            /** @noinspection PhpUnusedLocalVariableInspection */
             foreach ($generator as $_) {
             }
             $result = $generator->getReturn();

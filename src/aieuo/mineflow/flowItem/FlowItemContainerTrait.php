@@ -56,7 +56,7 @@ trait FlowItemContainerTrait {
 
     public function executeAll(Recipe $recipe, string $name) {
         foreach ($this->getItems($name) as $i => $action) {
-            $this->setLastResult(/** @noinspection PhpParamsInspection */ yield from $action->parent($this)->execute($recipe));
+            $this->setLastResult(/** @noinspection PhpParamsInspection */ yield from $action->setParent($this)->execute($recipe));
         }
         return true;
     }

@@ -132,16 +132,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     }
 
     /**
-     * @return boolean
-     */
-    abstract public function isDataValid(): bool;
-
-    /**
-     * @return array
-     */
-    abstract public function serializeContents(): array;
-
-    /**
      * @param array $content
      * @return self
      * @throws FlowItemLoadException|\ErrorException
@@ -161,6 +151,36 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         return $action->loadSaveData($content["contents"]);
     }
 
+    public function hasCustomMenu(): bool {
+        return false;
+    }
+
+    public function sendCustomMenu(Player $player, array $messages = []): void {
+    }
+
+    public function allowDirectCall(): bool {
+        return true;
+    }
+
+    public function setParent(FlowItemContainer $container): self {
+        $this->parent = $container;
+        return $this;
+    }
+
+    public function getParent(): FlowItemContainer {
+        return $this->parent;
+    }
+
+    /**
+     * @return boolean
+     */
+    abstract public function isDataValid(): bool;
+
+    /**
+     * @return array
+     */
+    abstract public function serializeContents(): array;
+
     /**
      * @param array $content
      * @return FlowItem
@@ -173,24 +193,4 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
      * @return bool|\Generator
      */
     abstract public function execute(Recipe $origin);
-
-    public function hasCustomMenu(): bool {
-        return false;
-    }
-
-    public function sendCustomMenu(Player $player, array $messages = []): void {
-    }
-
-    public function allowDirectCall(): bool {
-        return true;
-    }
-
-    public function parent(FlowItemContainer $container): self {
-        $this->parent = $container;
-        return $this;
-    }
-
-    public function getParent(): FlowItemContainer {
-        return $this->parent;
-    }
 }
