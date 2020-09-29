@@ -283,7 +283,7 @@ class RecipeForm {
         foreach ($triggers as $trigger) {
             switch ($trigger->getType()) {
                 case Trigger::TYPE_EVENT:
-                    $content = "@trigger.type.".$trigger->getType().": @trigger.event.".$trigger->getKey();
+                    $content = "@trigger.type.".$trigger->getType().": ".Main::getEventManager()->translateEventName($trigger->getKey());
                     break;
                 default:
                     $content = "@trigger.type.".$trigger->getType().": ".$trigger->getKey();

@@ -7,6 +7,7 @@ use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\EventManager;
+use aieuo\mineflow\event\EventTriggerListener;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\RecipeManager;
@@ -91,6 +92,7 @@ class Main extends PluginBase {
         self::$recipeManager->loadRecipes();
 
         (new EventListener($this))->registerEvents();
+        (new EventTriggerListener($this))->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
 

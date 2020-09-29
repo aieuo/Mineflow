@@ -172,8 +172,15 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function setTriggersFromArray(array $triggers) {
+        $eventManager = Main::getEventManager();
+
         $this->removeTriggerAll();
         foreach ($triggers as $trigger) {
+            if ($trigger["type"] === Trigger::TYPE_EVENT) {
+                $fullName = $eventManager->getFullName($trigger["key"]);
+                if ($fullName !== null) $trigger["key"] = $fullName;
+            }
+
             $this->addTrigger(new Trigger($trigger["type"], $trigger["key"], $trigger["subKey"] ?? ""));
         }
     }
