@@ -32,9 +32,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     /** @var string */
     private $customName = "";
 
-    /** @var string */
-    protected $targetRequired;
-
     const RETURN_NONE = "none";
     const RETURN_VARIABLE_NAME = "variableName";
     const RETURN_VARIABLE_VALUE = "variableValue";
@@ -82,10 +79,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
     public function getPermission(): int {
         return $this->permission;
-    }
-
-    public function getRequiredTarget(): string {
-        return $this->targetRequired;
     }
 
     public function getReturnValueType(): string {

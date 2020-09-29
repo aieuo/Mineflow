@@ -152,7 +152,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSetRepeatCountForm(Player $player, array $default = [], array $errors = []) {
+    public function sendSetRepeatCountForm(Player $player) {
         (new CustomForm("@action.repeat.editCount"))
             ->setContents([
                 new ExampleNumberInput("@action.repeat.repeatCount", "10", $this->getRepeatCount(), true, 1),
@@ -165,7 +165,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
                 $this->setRepeatCount($data[0]);
                 $this->sendCustomMenu($player, ["@form.changed"]);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
     public function loadSaveData(array $contents): FlowItem {

@@ -91,8 +91,8 @@ class Main extends PluginBase {
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();
 
-        (new EventListener($this))->registerEvents();
-        (new EventTriggerListener($this))->registerEvents();
+        (new EventListener())->registerEvents();
+        (new EventTriggerListener())->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
 

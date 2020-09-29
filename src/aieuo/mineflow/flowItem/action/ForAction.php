@@ -9,13 +9,11 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
@@ -167,7 +165,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
+    public function sendSettingCounter(Player $player) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
                 new ExampleInput("@action.for.counterName", "i", $this->getCounterName(), true),
@@ -180,7 +178,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
                 $this->setEndIndex($data[2]);
                 $this->setFluctuation($data[3]);
                 $this->sendCustomMenu($player, ["@form.changed"]);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
     public function loadSaveData(array $contents): FlowItem {

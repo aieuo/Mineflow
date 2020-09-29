@@ -23,47 +23,11 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\InteractPacket;
 use pocketmine\Player;
 use pocketmine\Server;
-use function Composer\Autoload\includeFile;
 
 class EventListener implements Listener {
 
-    /** @var Main */
-    private $owner;
-
-    /** @var array */
-    private $eventMethods = [
-        "PlayerChatEvent" => "onChat",
-        "PlayerCommandPreprocessEvent" => "onCommandPreprocess",
-        "BlockBreakEvent" => "onBlockBreak",
-        "BlockPlaceEvent" => "onBlockPlace",
-        "ServerStartEvent" => "onServerStart",
-        "SignChangeEvent" => "onSignChange",
-        "EntityDamageEvent" => "onEntityDamage",
-        "PlayerToggleFlightEvent" => "onToggleFlight",
-        "CraftItemEvent" => "onCraftItem",
-        "PlayerDropItemEvent" => "onDropItem",
-        "FurnaceBurnEvent" => "onFurnaceBurn",
-        "LevelLoadEvent" => "onLevelLoad",
-        "PlayerBedEnterEvent" => "onBedEnter",
-        "PlayerChangeSkinEvent" => "onChangeSkin",
-        "PlayerExhaustEvent" => "onExhaust",
-        "PlayerItemConsumeEvent" => "onItemConsume",
-        "PlayerMoveEvent" => "onMove",
-        "PlayerToggleSneakEvent" => "onToggleSneak",
-        "PlayerToggleSprintEvent" => "onToggleSprint",
-        "ProjectileHitEntityEvent" => "onProjectileHit",
-    ];
-
-    public function __construct(Main $owner) {
-        $this->owner = $owner;
-    }
-
-    private function getOwner(): Main {
-        return $this->owner;
-    }
-
     public function registerEvents() {
-        Server::getInstance()->getPluginManager()->registerEvents($this, $this->getOwner());
+        Server::getInstance()->getPluginManager()->registerEvents($this, Main::getInstance());
     }
 
     public function onJoin(PlayerJoinEvent $event) {

@@ -145,7 +145,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSetWhileIntervalForm(Player $player, array $default = [], array $errors = []) {
+    public function sendSetWhileIntervalForm(Player $player) {
         (new CustomForm("@action.repeat.editCount"))
             ->setContents([
                 new ExampleNumberInput("@action.whileTask.interval", "20", $this->getInterval(), true, 1),
@@ -158,7 +158,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
                 $this->setInterval((int)$data[0]);
                 $this->sendCustomMenu($player, ["@form.changed"]);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
     public function loadSaveData(array $contents): FlowItem {

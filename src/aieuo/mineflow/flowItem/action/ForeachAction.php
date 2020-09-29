@@ -160,7 +160,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
+    public function sendSettingCounter(Player $player) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
                 new ExampleInput("@action.foreach.listVariableName","list", $this->getListVariableName(), true),
@@ -171,7 +171,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
                 $this->setKeyVariableName($data[1]);
                 $this->setValueVariableName($data[2]);
                 $this->sendCustomMenu($player, ["@form.changed"]);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
     public function loadSaveData(array $contents): FlowItem {
