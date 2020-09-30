@@ -110,7 +110,7 @@ class JoinListVariableToString extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -116,7 +116,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => []];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6]];
     }
 
     public function loadSaveData(array $content): FlowItem {

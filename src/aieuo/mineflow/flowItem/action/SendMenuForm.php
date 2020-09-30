@@ -150,7 +150,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         $options = array_filter($data, function (string $o) { return $o !== ""; });
         $options = array_merge($options, $add);
-        return ["contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel, "errors" => []];
+        return ["contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel];
     }
 
     public function loadSaveData(array $content): FlowItem {

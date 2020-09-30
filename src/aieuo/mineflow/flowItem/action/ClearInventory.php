@@ -60,7 +60,7 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => []];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
     public function loadSaveData(array $content): FlowItem {

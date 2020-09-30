@@ -90,7 +90,7 @@ class CreateConfigVariable extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[2], $data[1]], "cancel" => $data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {

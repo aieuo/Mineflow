@@ -107,7 +107,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
 
     public function parseFromFormData(array $data): array {
         if ($data[2] === "") $data[3] = "1";
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
     public function loadSaveData(array $content): FlowItem {

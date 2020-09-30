@@ -132,7 +132,7 @@ class CreateMapVariable extends FlowItem {
         $name = $data[1];
         $key = array_map("trim", explode(",", $data[2]));
         $value = array_map("trim", explode(",", $data[3]));
-        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => []];
+        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5]];
     }
 
     public function loadSaveData(array $content): FlowItem {

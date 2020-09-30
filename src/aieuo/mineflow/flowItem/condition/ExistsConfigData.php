@@ -75,7 +75,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {

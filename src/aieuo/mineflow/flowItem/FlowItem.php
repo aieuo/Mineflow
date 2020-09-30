@@ -129,7 +129,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [], "cancel" => $data[1], "errors" => []];
+        return ["contents" => [], "cancel" => $data[1]];
     }
 
     /**
