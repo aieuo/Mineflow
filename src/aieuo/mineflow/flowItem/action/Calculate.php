@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
@@ -191,5 +192,9 @@ class Calculate extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue(), $this->getOperator(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

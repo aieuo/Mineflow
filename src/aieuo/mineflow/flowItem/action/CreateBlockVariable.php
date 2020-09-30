@@ -12,6 +12,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use pocketmine\item\ItemFactory;
 
@@ -107,5 +108,9 @@ class CreateBlockVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getBlockId()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getVariableName(), DummyVariable::BLOCK)];
     }
 }

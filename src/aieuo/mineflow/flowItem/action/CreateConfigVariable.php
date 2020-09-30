@@ -13,6 +13,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ConfigObjectVariable;
 
 class CreateConfigVariable extends FlowItem {
@@ -100,5 +101,9 @@ class CreateConfigVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getFileName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getVariableName(), DummyVariable::CONFIG)];
     }
 }

@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use pocketmine\entity\Entity;
 
@@ -107,5 +108,9 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getPositionVariableName(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::ENTITY)];
     }
 }

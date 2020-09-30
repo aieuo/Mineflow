@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 
 class SetItemDamage extends FlowItem implements ItemFlowItem {
@@ -92,5 +93,9 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getDamage()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
     }
 }

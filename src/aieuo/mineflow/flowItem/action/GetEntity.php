@@ -12,6 +12,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
@@ -114,5 +115,9 @@ class GetEntity extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getKey(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::PLAYER)];
     }
 }

@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 
 abstract class TypeGetMathVariable extends FlowItem {
 
@@ -66,5 +67,9 @@ abstract class TypeGetMathVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

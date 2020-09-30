@@ -17,6 +17,7 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -184,6 +185,13 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         $this->setKeyVariableName($contents[2]);
         $this->setValueVariableName($contents[3]);
         return $this;
+    }
+
+    public function getAddingVariables(): array {
+        return [
+            new DummyVariable($this->getKeyVariableName(), DummyVariable::UNKNOWN),
+            new DummyVariable($this->getValueVariableName(), DummyVariable::UNKNOWN),
+        ];
     }
 
     public function serializeContents(): array {

@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use pocketmine\level\Position;
 
@@ -94,5 +95,9 @@ class GetBlock extends FlowItem implements PositionFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPositionVariableName(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::BLOCK)];
     }
 }

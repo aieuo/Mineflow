@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\Item;
@@ -95,5 +96,9 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::LIST)];
     }
 }

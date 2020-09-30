@@ -13,6 +13,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\Variable;
 
@@ -144,5 +145,9 @@ class CreateMapVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getKey(), $this->getVariableValue(), $this->isLocal];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getVariableName(), DummyVariable::MAP)];
     }
 }

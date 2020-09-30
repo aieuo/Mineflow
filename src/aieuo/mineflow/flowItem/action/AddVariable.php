@@ -15,6 +15,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
@@ -132,5 +133,10 @@ class AddVariable extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getVariableValue(), $this->variableType, $this->isLocal];
+    }
+
+    public function getAddingVariables(): array {
+        $type = $this->variableTypes[$this->variableType];
+        return [new DummyVariable($this->getVariableName(), $type)];
     }
 }

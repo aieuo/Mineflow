@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate2 extends FlowItem {
@@ -178,5 +179,9 @@ class Calculate2 extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->getValue1(), $this->getValue2(), $this->getOperator(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

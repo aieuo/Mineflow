@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 
 class SetItemCount extends FlowItem implements ItemFlowItem {
@@ -65,7 +66,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         $this->throwIfInvalidItem($item);
 
         $item->setCount((int)$count);
-        $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName())); // TODO: replace variable
         yield true;
         return $this->getItemVariableName();
     }
@@ -92,5 +93,9 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getCount()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
     }
 }

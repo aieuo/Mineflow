@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 
 class GetTargetBlock extends FlowItem implements PlayerFlowItem {
@@ -106,5 +107,9 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
 
     public function serializeContents(): array {
         return [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::BLOCK)];
     }
 }

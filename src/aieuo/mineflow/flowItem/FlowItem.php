@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\Player;
 
 abstract class FlowItem implements \JsonSerializable, FlowItemIds {
@@ -169,6 +170,13 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
     public function getParent(): FlowItemContainer {
         return $this->parent;
+    }
+
+    /**
+     * @return DummyVariable[]
+     */
+    public function getAddingVariables(): array {
+        return [];
     }
 
     /**

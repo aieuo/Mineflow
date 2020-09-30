@@ -15,6 +15,7 @@ use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 
@@ -202,6 +203,10 @@ class ForAction extends FlowItem implements FlowItemContainer {
             $this->endIndex,
             $this->fluctuation,
         ];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getCounterName(), DummyVariable::NUMBER)];
     }
 
     public function isDataValid(): bool {

@@ -15,6 +15,7 @@ use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
 
@@ -83,7 +84,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     public function execute(Recipe $origin) {
         $wait = new Wait(strval($this->getInterval() / 20));
         while (true) {
-            $origin->addVariable(new NumberVariable($this->loopCount, "i"));
+            $origin->addVariable(new NumberVariable($this->loopCount, "i")); // TODO: i を変更できるようにする
             foreach ($this->getItems(FlowItemContainer::CONDITION) as $i => $condition) {
                 if (!(yield from $condition->execute($origin))) {
                     $origin->resume();
@@ -192,6 +193,10 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
             $this->interval,
             $this->limit,
         ];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable("i", DummyVariable::NUMBER)];
     }
 
     public function isDataValid(): bool {

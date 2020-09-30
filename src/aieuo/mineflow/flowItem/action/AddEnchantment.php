@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
@@ -118,5 +119,9 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
     }
 }
