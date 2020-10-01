@@ -6,6 +6,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\VariableDropdown;
 use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Slider;
@@ -57,6 +58,11 @@ class CustomForm extends Form {
         return $this;
     }
 
+    public function setContent(Element $element, int $index): self {
+        $this->contents[$index] = $element;
+        return $this;
+    }
+
     public function jsonSerialize(): array {
         $form = [
             "type" => "custom_form",
@@ -103,6 +109,7 @@ class CustomForm extends Form {
         if ($data !== null) {
             $errors = [];
             $isCanceled = false;
+            $resend = false;
             foreach ($this->getContents() as $i => $content) {
                 if ($content instanceof Input) {
                     $data[$i] = str_replace("\\n", "\n", $data[$i]);
@@ -129,11 +136,19 @@ class CustomForm extends Form {
                     $isCanceled = true;
                 } elseif ($content instanceof VariableDropdown) {
                     $options = $content->getOptions();
-                    $data[$i] = $options[$data[$i]];
+                    $maxIndex = count($options) - 1;
+
+                    if ($data[$i] === $maxIndex) { // 手動で入力する時
+                        $resend = true;
+                        $this->lastResponse[1][$i] = $content->getDefaultText();
+                        $this->setContent(new ExampleInput($content->getText(), $content->getVariableType(), $content->getDefaultText(), true), $i);
+                    } else {
+                        $data[$i] = $options[$data[$i]];
+                    }
                 }
             }
 
-            if (!$isCanceled and !empty($errors)) {
+            if ($resend or (!$isCanceled and !empty($errors))) {
                 $this->resend($errors);
                 return;
             }
