@@ -33,7 +33,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
     /** @var array */
     private $lore;
 
-    public function __construct(string $item = "item", string $lore = "") {
+    public function __construct(string $item = "", string $lore = "") {
         $this->setItemVariableName($item);
         $this->lore = array_filter(array_map("trim", explode(";", $lore)), function (string $t) {
             return $t !== "";
@@ -73,7 +73,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

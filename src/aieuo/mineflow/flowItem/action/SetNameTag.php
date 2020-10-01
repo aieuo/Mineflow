@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -31,7 +32,7 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
     /** @var string */
     private $newName;
 
-    public function __construct(string $entity = "target", string $newName = "") {
+    public function __construct(string $entity = "", string $newName = "") {
         $this->setEntityVariableName($entity);
         $this->newName = $newName;
     }
@@ -66,11 +67,11 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleInput("@action.setNameTag.form.name", "aieuo", $this->getNewName(), true),
                 new CancelToggle()
             ]);

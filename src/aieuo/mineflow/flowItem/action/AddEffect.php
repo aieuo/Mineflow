@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
@@ -43,7 +44,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
     /** @var bool */
     private $visible = false;
 
-    public function __construct(string $entity = "target", string $id = "", string $time = "", string $power = "1") {
+    public function __construct(string $entity = "", string $id = "", string $time = "", string $power = "1") {
         $this->setEntityVariableName($entity);
         $this->effectId = $id;
         $this->time = $time;
@@ -100,16 +101,16 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         if ($entity instanceof Living) {
-            $entity->addEffect(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, false));
+            $entity->addEffect(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, $this->visible));
         }
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
                 new ExampleNumberInput("@action.addEffect.form.time", "300", $this->getTime(), false, 1),
                 new ExampleNumberInput("@action.addEffect.form.power", "1", $this->getPower(), false),

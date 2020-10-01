@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Bossbar;
@@ -35,7 +36,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     private $value;
     private $barId;
 
-    public function __construct(string $player = "target", string $title = "", string $max = "", string $value = "", string $barId = "") {
+    public function __construct(string $player = "", string $title = "", string $max = "", string $value = "", string $barId = "") {
         $this->setPlayerVariableName($player);
         $this->title = $title;
         $this->max = $max;
@@ -102,11 +103,11 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
                 new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
                 new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),

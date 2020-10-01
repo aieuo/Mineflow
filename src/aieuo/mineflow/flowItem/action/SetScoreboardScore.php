@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -33,7 +34,7 @@ class SetScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     /* @var string */
     private $score;
 
-    public function __construct(string $scoreboard = "board", string $name = "", string $score = "") {
+    public function __construct(string $scoreboard = "", string $name = "", string $score = "") {
         $this->setScoreboardVariableName($scoreboard);
         $this->scoreName = $name;
         $this->score = $score;
@@ -79,11 +80,11 @@ class SetScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.scoreboard", "board", $this->getScoreboardVariableName(), true),
+                new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
                 new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
                 new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
                 new CancelToggle()

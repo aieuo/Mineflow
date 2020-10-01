@@ -9,8 +9,9 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -29,7 +30,7 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function __construct(string $player = "target", string $position = "pos") {
+    public function __construct(string $player = "", string $position = "") {
         $this->setPlayerVariableName($player);
         $this->setPositionVariableName($position);
     }
@@ -56,18 +57,17 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName()),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
                 new CancelToggle()
             ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "target";
         if ($data[2] === "") $data[2] = "pos";
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }

@@ -60,7 +60,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

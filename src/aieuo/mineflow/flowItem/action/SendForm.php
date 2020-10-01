@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
@@ -39,7 +40,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
     /** @var string */
     private $formName;
 
-    public function __construct(string $player = "target", string $formName = "") {
+    public function __construct(string $player = "", string $formName = "") {
         $this->setPlayerVariableName($player);
         $this->formName = $formName;
     }
@@ -128,11 +129,11 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleInput("@action.sendForm.form.name", "aieuo", $this->getFormName(), true),
                 new CancelToggle()
             ]);

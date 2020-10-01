@@ -9,9 +9,10 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -33,7 +34,7 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     /** @var string */
     private $index;
 
-    public function __construct(string $player = "target", string $item = "item", string $index = "") {
+    public function __construct(string $player = "", string $item = "", string $index = "") {
         $this->setPlayerVariableName($player);
         $this->setItemVariableName($item);
         $this->index = $index;
@@ -73,12 +74,12 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.target.item", "item", $this->getItemVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ItemVariableDropdown($variables, $this->getItemVariableName()),
                 new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
                 new CancelToggle()
             ]);

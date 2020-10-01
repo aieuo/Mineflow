@@ -9,8 +9,9 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -37,7 +38,7 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     /** @var array */
     private static $entityIds = [];
 
-    public function __construct(string $player = "target", string $position = "pos") {
+    public function __construct(string $player = "", string $position = "") {
         $this->setPlayerVariableName($player);
         $this->setPositionVariableName($position);
     }
@@ -76,12 +77,12 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
                 new CancelToggle()
             ]);
     }

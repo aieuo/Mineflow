@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -29,7 +30,7 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 
-    public function __construct(string $entity = "target", string $pos1 = "pos1", string $pos2 = "pos2") {
+    public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         $this->setEntityVariableName($entity);
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
@@ -64,11 +65,11 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
             and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleInput("@condition.inArea.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
                 new ExampleInput("@condition.inArea.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
                 new CancelToggle()

@@ -12,6 +12,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -37,7 +38,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
     /** @var string */
     private $resultName;
 
-    public function __construct(string $name = "target", string $pos = "pos", string $result = "human") {
+    public function __construct(string $name = "", string $pos = "", string $result = "human") {
         $this->setPlayerVariableName($name);
         $this->setPositionVariableName($pos);
         $this->resultName = $result;
@@ -84,12 +85,12 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return $this->getResultName();
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.createHuman.form.skin", "target", $this->getPlayerVariableName(), true),
-                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName(), true),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
                 new ExampleInput("@flowItem.form.resultVariableName", "entity", $this->getResultName(), true),
                 new CancelToggle()
             ]);

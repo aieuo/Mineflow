@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -29,7 +30,7 @@ class ReplenishResource extends FlowItem implements PositionFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function __construct(string $position = "pos") {
+    public function __construct(string $position = "") {
         $this->setPositionVariableName($position);
     }
 
@@ -56,17 +57,16 @@ class ReplenishResource extends FlowItem implements PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName()),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
                 new CancelToggle()
             ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "pos";
         return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 

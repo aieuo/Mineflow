@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class GetE extends TypeGetMathVariable {

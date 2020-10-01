@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -30,7 +31,7 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     /* @var string */
     private $scoreName;
 
-    public function __construct(string $scoreboard = "board", string $name = "") {
+    public function __construct(string $scoreboard = "", string $name = "") {
         $this->setScoreboardVariableName($scoreboard);
         $this->scoreName = $name;
     }
@@ -64,11 +65,11 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.scoreboard", "board", $this->getScoreboardVariableName(), true),
+                new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
                 new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
                 new CancelToggle()
             ]);

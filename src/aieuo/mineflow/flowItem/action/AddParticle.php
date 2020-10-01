@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -37,7 +38,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
     /** @var string */
     private $amount;
 
-    public function __construct(string $position = "pos", string $particle = "", string $amount = "1") {
+    public function __construct(string $position = "", string $particle = "", string $amount = "1") {
         $this->setPositionVariableName($position);
         $this->particle = $particle;
         $this->amount = $amount;
@@ -88,11 +89,11 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName(), true),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
                 new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $this->getParticle(), true),
                 new ExampleNumberInput("@action.addParticle.form.amount", "1", $this->getAmount(), true, 1),
                 new CancelToggle()

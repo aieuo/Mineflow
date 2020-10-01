@@ -8,8 +8,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
@@ -33,7 +33,7 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
     /** @var bool */
     private $allow;
 
-    public function __construct(string $player = "target", string $allow = "true") {
+    public function __construct(string $player = "", string $allow = "true") {
         $this->setPlayerVariableName($player);
         $this->allow = $allow === "true";
     }
@@ -65,11 +65,11 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new Toggle("@action.allowFlight.form.allow", $this->isAllow()),
                 new CancelToggle()
             ]);

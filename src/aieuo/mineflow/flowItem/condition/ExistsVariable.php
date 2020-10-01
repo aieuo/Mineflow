@@ -59,7 +59,7 @@ class ExistsVariable extends FlowItem implements Condition {
         return $origin->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

@@ -133,7 +133,7 @@ class EditString extends FlowItem {
         return $result;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         $keys = array_keys($this->operators, $this->getOperator());
 
         return (new CustomForm($this->getName()))

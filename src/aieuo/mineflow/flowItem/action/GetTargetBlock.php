@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -36,7 +37,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     /** @var string */
     private $resultName;
 
-    public function __construct(string $player = "target", string $max = "100", string $result = "block") {
+    public function __construct(string $player = "", string $max = "100", string $result = "block") {
         $this->setPlayerVariableName($player);
         $this->max = $max;
         $this->resultName = $result;
@@ -83,11 +84,11 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleNumberInput("@action.getTargetBlock.form.max", "100", $this->getMax(), true),
                 new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getResultName(), true),
                 new CancelToggle()

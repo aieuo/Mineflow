@@ -10,8 +10,9 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -41,7 +42,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         "action.equipArmor.boots",
     ];
 
-    public function __construct(string $entity = "target", string $item = "item", string $index = "") {
+    public function __construct(string $entity = "", string $item = "", string $index = "") {
         $this->setEntityVariableName($entity);
         $this->setItemVariableName($item);
         $this->index = $index;
@@ -83,12 +84,12 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
-                new ExampleInput("@flowItem.form.target.item", "item", $this->getItemVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+                new ItemVariableDropdown($variables, $this->getItemVariableName()),
                 new Dropdown("@action.equipArmor.form.index", array_map(function (string $text) {
                     return Language::get($text);
                 }, $this->places), (int)$this->getIndex()),

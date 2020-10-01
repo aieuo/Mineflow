@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -34,7 +34,7 @@ class AddDamage extends FlowItem implements EntityFlowItem {
     /** @var int */
     private $cause;
 
-    public function __construct(string $entity = "target", string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
+    public function __construct(string $entity = "", string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
         $this->setEntityVariableName($entity);
         $this->damage = $damage;
         $this->cause = $cause;
@@ -81,11 +81,11 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleNumberInput("@action.addDamage.form.damage", "10", $this->getDamage(), true, 1),
                 new CancelToggle()
             ]);

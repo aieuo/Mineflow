@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
@@ -45,7 +46,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     /** @var bool */
     private $resendOnClose = false;
 
-    public function __construct(string $player = "target", string $text = "", string $options = "", string $resultName = "menu") {
+    public function __construct(string $player = "", string $text = "", string $options = "", string $resultName = "menu") {
         $this->setPlayerVariableName($player);
         $this->formText = $text;
         $this->options = array_filter(array_map("trim", explode(";", $options)), function (string $o) {
@@ -121,10 +122,10 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             })->addErrors($errors)->show($player);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         $contents = [
             new Label($this->getDescription()),
-            new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@flowItem.form.resultVariableName", "input", $this->getResultName(), true),
             new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true),
         ];

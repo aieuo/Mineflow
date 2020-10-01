@@ -38,6 +38,10 @@ class DummyVariable extends Variable {
         return $this->description;
     }
 
+    public function getValueType(): string {
+        return $this->valueType;
+    }
+
     public function toStringVariable(): StringVariable {
         return new StringVariable($this->getName(), $this->getValue());
     }

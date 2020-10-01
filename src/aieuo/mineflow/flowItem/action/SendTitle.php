@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -39,7 +40,7 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
     /** @var string */
     private $fadeout;
 
-    public function __construct(string $player = "target", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
+    public function __construct(string $player = "", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
         $this->setPlayerVariableName($player);
         $this->title = $title;
         $this->subtitle = $subtitle;
@@ -100,11 +101,11 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
                 new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
                 new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),

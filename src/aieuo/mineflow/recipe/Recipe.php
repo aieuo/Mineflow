@@ -10,9 +10,11 @@ use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\trigger\TriggerVariables;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\ObjectVariable;
@@ -23,7 +25,9 @@ use pocketmine\Player;
 use pocketmine\Server;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
-    use FlowItemContainerTrait;
+    use FlowItemContainerTrait {
+        getAddingVariablesBefore as traitGetAddingVariableBefore;
+    }
 
     const TARGET_DEFAULT = 0;
     const TARGET_SPECIFIED = 1;
@@ -349,6 +353,15 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function replaceVariables(string $text) {
         return Main::getVariableHelper()->replaceVariablesAndFunctions($text, $this);
+    }
+
+    public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
+        $variables = [new DummyVariable("target", DummyVariable::PLAYER)];
+        foreach ($this->getTriggers() as $trigger) {
+            $variables = array_merge($variables, TriggerVariables::get($trigger));
+        }
+        $variables = array_merge($variables, $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
+        return $variables;
     }
 
     public function setSourceRecipe(?Recipe $recipe): self {

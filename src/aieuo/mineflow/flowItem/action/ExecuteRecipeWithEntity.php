@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -66,12 +67,12 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
-                new ExampleInput("@flowItem.form.target.entity", "entity", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new CancelToggle()
             ]);
     }

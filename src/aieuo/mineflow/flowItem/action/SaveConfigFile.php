@@ -7,8 +7,8 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -29,7 +29,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
 
     protected $permission = self::PERMISSION_LEVEL_2;
 
-    public function __construct(string $config = "config") {
+    public function __construct(string $config = "") {
         $this->setConfigVariableName($config);
     }
 
@@ -52,11 +52,11 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.config", "config", $this->getConfigVariableName(), true),
+                new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
                 new CancelToggle()
             ]);
     }

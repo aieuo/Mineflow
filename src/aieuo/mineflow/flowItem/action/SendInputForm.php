@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
@@ -40,7 +41,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     /** @var bool */
     private $resendOnClose = false;
 
-    public function __construct(string $player = "target", string $text = "", string $resultName = "input") {
+    public function __construct(string $player = "", string $text = "", string $resultName = "input") {
         $this->setPlayerVariableName($player);
         $this->formText = $text;
         $this->resultName = $resultName;
@@ -98,11 +99,11 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
             })->addErrors($errors)->show($player);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleInput("@flowItem.form.resultVariableName", "input", $this->getResultName(), true),
                 new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
                 new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose),

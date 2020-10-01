@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -30,7 +31,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     /** @var string */
     private $key;
 
-    public function __construct(string $config = "config", string $permission = "") {
+    public function __construct(string $config = "", string $permission = "") {
         $this->setConfigVariableName($config);
         $this->key = $permission;
     }
@@ -64,11 +65,11 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         return $config->getNested($key) !== null;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.config", "target", $this->getConfigVariableName(), true),
+                new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
                 new ExampleInput("@condition.existsConfigData.form.key", "aieuo", $this->getKey(), true),
                 new CancelToggle()
             ]);

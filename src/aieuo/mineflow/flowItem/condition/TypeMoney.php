@@ -55,7 +55,7 @@ abstract class TypeMoney extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getAmount()]);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

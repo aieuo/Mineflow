@@ -60,7 +60,7 @@ class IsActiveEntity extends FlowItem implements Condition {
         return EntityHolder::isActive((int)$id);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

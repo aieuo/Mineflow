@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
@@ -34,7 +35,7 @@ class Kick extends FlowItem implements PlayerFlowItem {
     /** @var bool */
     private $isAdmin;
 
-    public function __construct(string $player = "target", string $reason = "", bool $isAdmin = false) {
+    public function __construct(string $player = "", string $reason = "", bool $isAdmin = false) {
         $this->setPlayerVariableName($player);
         $this->reason = $reason;
         $this->isAdmin = $isAdmin;
@@ -72,18 +73,17 @@ class Kick extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName()),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleInput("@action.kick.form.reason", "aieuo", $this->getReason()),
                 new CancelToggle()
             ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "target";
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 

@@ -8,8 +8,8 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
@@ -37,7 +37,7 @@ class Motion extends FlowItem implements EntityFlowItem {
     /** @var string */
     private $z = "0";
 
-    public function __construct(string $entity = "target", string $x = "0", string $y = "0", string $z = "0") {
+    public function __construct(string $entity = "", string $x = "0", string $y = "0", string $z = "0") {
         $this->setEntityVariableName($entity);
         $this->setPosition($x, $y, $z);
     }
@@ -81,11 +81,11 @@ class Motion extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleNumberInput("@action.motion.form.x", "2", $this->x, true),
                 new ExampleNumberInput("@action.motion.form.y", "3", $this->y, true),
                 new ExampleNumberInput("@action.motion.form.z", "4", $this->z, true),

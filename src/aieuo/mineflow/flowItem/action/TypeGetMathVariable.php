@@ -47,7 +47,7 @@ abstract class TypeGetMathVariable extends FlowItem {
         return Language::get($this->detail, [$this->getResultName()]);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

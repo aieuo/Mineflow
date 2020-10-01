@@ -192,7 +192,7 @@ class DefaultVariables {
                 }
                 break;
             case $event instanceof LevelLoadEvent:
-                $variables = ["level" => new LevelObjectVariable($event->getLevel())];
+                $variables = ["level" => new LevelObjectVariable($event->getLevel(), "level")];
                 break;
             case $event instanceof PlayerExhaustEvent:
                 $target = $event->getPlayer();

@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -37,7 +38,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     /* @var string */
     private $value;
 
-    public function __construct(string $config = "config", string $key = "", string $value = "") {
+    public function __construct(string $config = "", string $key = "", string $value = "") {
         $this->setConfigVariableName($config);
         $this->key = $key;
         $this->value = $value;
@@ -97,11 +98,11 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getConfigVariableName(), true),
+                new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
                 new ExampleInput("@action.setConfigData.form.key", "aieuo", $this->getKey(), true),
                 new ExampleInput("@action.setConfigData.form.value", "100", $this->getValue(), true),
                 new CancelToggle()

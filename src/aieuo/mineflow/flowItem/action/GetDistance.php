@@ -33,7 +33,7 @@ class GetDistance extends FlowItem implements PositionFlowItem {
     /** @var string */
     private $resultName;
 
-    public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", string $result = "distance") {
+    public function __construct(string $pos1 = "", string $pos2 = "", string $result = "distance") {
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
         $this->resultName = $result;
@@ -72,7 +72,7 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         return $distance;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

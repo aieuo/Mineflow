@@ -61,11 +61,11 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
         return $player instanceof Player;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerName(), true),
+                new ExampleInput("@condition.isPlayerOnline.form.name", "target", $this->getPlayerName(), true),
                 new CancelToggle()
             ]);
     }

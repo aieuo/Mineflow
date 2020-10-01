@@ -6,6 +6,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\VariableDropdown;
 use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -126,6 +127,9 @@ class CustomForm extends Form {
                     }
                 } elseif ($content instanceof CancelToggle and $data[$i]) {
                     $isCanceled = true;
+                } elseif ($content instanceof VariableDropdown) {
+                    $options = $content->getOptions();
+                    $data[$i] = $options[$data[$i]];
                 }
             }
 

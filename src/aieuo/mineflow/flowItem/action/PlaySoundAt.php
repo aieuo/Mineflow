@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -37,7 +38,7 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
     /** @var string */
     private $pitch;
 
-    public function __construct(string $position = "pos", string $sound = "", string $volume = "1", string $pitch = "1") {
+    public function __construct(string $position = "", string $sound = "", string $volume = "1", string $pitch = "1") {
         $this->setPositionVariableName($position);
         $this->sound = $sound;
         $this->volume = $volume;
@@ -101,11 +102,11 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.position", "pos", $this->getPositionVariableName()), true,
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
                 new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
                 new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
                 new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),

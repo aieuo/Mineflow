@@ -33,7 +33,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
     /** @var string */
     private $itemName;
 
-    public function __construct(string $item = "item", string $itemName = "") {
+    public function __construct(string $item = "", string $itemName = "") {
         $this->setItemVariableName($item);
         $this->itemName = $itemName;
     }
@@ -69,7 +69,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

@@ -68,4 +68,20 @@ trait FlowItemContainerTrait {
     public function setLastResult($lastResult): void {
         $this->lastResult = $lastResult;
     }
+
+    public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
+        $variables = [];
+
+        $target = array_shift($containers);
+        if ($target !== null) {
+            $variables = array_merge($target->getAddingVariables(), $target->getAddingVariablesBefore($flowItem, $containers, $type));
+        }
+        $target = $target ?? $flowItem;
+
+        foreach ($this->getItems($type) as $item) {
+            if ($item === $target) break;
+            $variables = array_merge($item->getAddingVariables(), $variables);
+        }
+        return $variables;
+    }
 }

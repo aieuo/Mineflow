@@ -42,7 +42,7 @@ abstract class TypeMessage extends FlowItem {
         return Language::get($this->detail, [$this->getMessage()]);
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

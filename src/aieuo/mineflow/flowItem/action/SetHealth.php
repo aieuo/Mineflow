@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -31,7 +31,7 @@ class SetHealth extends FlowItem implements EntityFlowItem {
     /** @var string */
     private $health;
 
-    public function __construct(string $entity = "target", string $health = "") {
+    public function __construct(string $entity = "", string $health = "") {
         $this->setEntityVariableName($entity);
         $this->health = $health;
     }
@@ -67,11 +67,11 @@ class SetHealth extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleNumberInput("@action.setHealth.form.health", "20", $this->getHealth(), true, 1),
                 new CancelToggle()
             ]);

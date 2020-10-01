@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
@@ -33,7 +34,7 @@ class RemovePermission extends FlowItem implements PlayerFlowItem {
     /** @var string */
     private $playerPermission;
 
-    public function __construct(string $player = "target", string $permission = "") {
+    public function __construct(string $player = "", string $permission = "") {
         $this->setPlayerVariableName($player);
         $this->playerPermission = $permission;
     }
@@ -67,11 +68,11 @@ class RemovePermission extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleInput("@condition.hasPermission.form.permission", "mineflow.customcommand.op", $this->getPlayerPermission(), true),
                 new CancelToggle()
             ]);

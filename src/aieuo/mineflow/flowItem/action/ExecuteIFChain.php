@@ -41,7 +41,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     /** @var string[] */
     private $args = [];
 
-    public function __construct(string $chain = "", string $player = "target") {
+    public function __construct(string $chain = "", string $player = "") {
         $this->setPlayerVariableName($player);
         $this->chainName = $chain;
     }
@@ -95,12 +95,12 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.executeIFChain.form.name", "aieuo", $this->getChainName(), true),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName(), true),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new CancelToggle()
             ]);
     }

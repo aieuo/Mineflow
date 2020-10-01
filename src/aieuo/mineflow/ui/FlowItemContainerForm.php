@@ -35,14 +35,14 @@ class FlowItemContainerForm {
                     }
                     return;
                 }
+                Session::getSession($player)->push("parents", $container);
+
                 if ($data === 1) {
                     (new FlowItemForm)->selectActionCategory($player, $container, $type);
                     return;
                 }
                 $data -= 2;
-
                 $action = $actions[$data];
-                Session::getSession($player)->push("parents", $container);
 
                 (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $action);
             })->addArgs($container, $actions)->addMessages($messages)->show($player);

@@ -34,7 +34,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
     /** @var string */
     private $count;
 
-    public function __construct(string $item = "item", string $count = "") {
+    public function __construct(string $item = "", string $count = "") {
         $this->setItemVariableName($item);
         $this->count = $count;
     }
@@ -71,7 +71,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

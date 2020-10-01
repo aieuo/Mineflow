@@ -47,4 +47,12 @@ interface FlowItemContainer {
      * @return mixed
      */
     public function getLastResult();
+
+    /**
+     * @param FlowItem $flowItem
+     * @param array $containers
+     * @param string $type
+     * @return mixed
+     */
+    public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type);
 }

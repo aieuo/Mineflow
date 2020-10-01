@@ -7,7 +7,7 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
@@ -32,7 +32,7 @@ class SetPitch extends FlowItem implements EntityFlowItem {
     /** @var string */
     private $pitch;
 
-    public function __construct(string $entity = "target", string $pitch = "") {
+    public function __construct(string $entity = "", string $pitch = "") {
         $this->setEntityVariableName($entity);
         $this->pitch = $pitch;
     }
@@ -69,11 +69,11 @@ class SetPitch extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.entity", "target", $this->getEntityVariableName(), true),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new ExampleNumberInput("@action.setYaw.form.yaw", "180", $this->getPitch(), true),
                 new CancelToggle()
             ]);

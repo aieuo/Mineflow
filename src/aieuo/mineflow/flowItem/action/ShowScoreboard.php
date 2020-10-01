@@ -9,8 +9,9 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -29,7 +30,7 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function __construct(string $player = "target", string $scoreboard = "board") {
+    public function __construct(string $player = "", string $scoreboard = "") {
         $this->setPlayerVariableName($player);
         $this->setScoreboardVariableName($scoreboard);
     }
@@ -56,19 +57,17 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         yield true;
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.form.target.player", "target", $this->getPlayerVariableName()),
-                new ExampleInput("@flowItem.form.target.scoreboard", "board", $this->getScoreboardVariableName()),
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
                 new CancelToggle()
             ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") $data[2] = "board";
         return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 

@@ -34,7 +34,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
     /** @var string */
     private $damage;
 
-    public function __construct(string $item = "item", string $damage = "") {
+    public function __construct(string $item = "", string $damage = "") {
         $this->setItemVariableName($item);
         $this->damage = $damage;
     }
@@ -71,7 +71,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),

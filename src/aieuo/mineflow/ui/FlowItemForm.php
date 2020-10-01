@@ -41,7 +41,10 @@ class FlowItemForm {
                         (new FlowItemContainerForm)->sendActionList($player, $container, $type);
                         break;
                     case 1:
-                        $form = $action->getEditForm();
+                        $parents = Session::getSession($player)->get("parents");
+                        $recipe = array_shift($parents);
+                        $variables = $recipe->getAddingVariablesBefore($action, $parents, $type);
+                        $form = $action->getEditForm($variables);
                         $form->addArgs($form, $action, function ($result) use ($player, $container, $type, $action) {
                             $this->sendAddedItemMenu($player, $container, $type, $action, [$result ? "@form.changed" : "@form.cancelled"]);
                         })->onReceive([$this, "onUpdateAction"])->show($player);
@@ -82,6 +85,7 @@ class FlowItemForm {
     public function selectActionCategory(Player $player, FlowItemContainer $container, string $type) {
         $buttons = [
             new Button("@form.back", function () use($player, $container, $type) {
+                Session::getSession($player)->pop("parents");
                 (new FlowItemContainerForm)->sendActionList($player, $container, $type);
             }),
             new Button("@form.items.category.favorite", function () use($player, $container, $type) {
@@ -157,10 +161,15 @@ class FlowItemForm {
                             $item->sendCustomMenu($player);
                             return;
                         }
-                        $form = $item->getEditForm();
+
+                        $parents = Session::getSession($player)->get("parents");
+                        $recipe = array_shift($parents);
+                        $variables = $recipe->getAddingVariablesBefore($item, $parents, $type);
+                        $form = $item->getEditForm($variables);
                         $form->addArgs($form, $item, function ($result) use ($player, $container, $type, $item) {
                             if ($result) {
                                 $container->addItem($item, $type);
+                                Session::getSession($player)->pop("parents");
                                 (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.added"]);
                             } else {
                                 $this->sendActionMenu($player, $container, $type, $item, ["@form.cancelled"]);
