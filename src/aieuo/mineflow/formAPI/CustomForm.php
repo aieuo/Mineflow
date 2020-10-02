@@ -94,10 +94,10 @@ class CustomForm extends Form {
         return $form;
     }
 
-    public function resend(array $errors = [], array $messages = []) {
+    public function resend(array $errors = [], array $messages = [], array $overwrites = []) {
         if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
 
-        $this->setDefaultsFromResponse($this->lastResponse[1])
+        $this->setDefaultsFromResponse($this->lastResponse[1], $overwrites)
             ->resetErrors()
             ->addMessages($messages)
             ->addErrors($errors)
@@ -110,6 +110,7 @@ class CustomForm extends Form {
             $errors = [];
             $isCanceled = false;
             $resend = false;
+            $overwrites = [];
             foreach ($this->getContents() as $i => $content) {
                 if ($content instanceof Input) {
                     $data[$i] = str_replace("\\n", "\n", $data[$i]);
@@ -140,7 +141,7 @@ class CustomForm extends Form {
 
                     if ($data[$i] === $maxIndex) { // 手動で入力する時
                         $resend = true;
-                        $this->lastResponse[1][$i] = $content->getDefaultText();
+                        $overwrites[$i] = $content->getDefaultText();
                         $this->setContent(new ExampleInput($content->getText(), $content->getVariableType(), $content->getDefaultText(), true), $i);
                     } else {
                         $data[$i] = $options[$data[$i]];
@@ -149,7 +150,7 @@ class CustomForm extends Form {
             }
 
             if ($resend or (!$isCanceled and !empty($errors))) {
-                $this->resend($errors);
+                $this->resend($errors, [], $overwrites);
                 return;
             }
         }
@@ -157,10 +158,10 @@ class CustomForm extends Form {
         parent::handleResponse($player, $data);
     }
 
-    private function setDefaultsFromResponse(array $data): self {
+    private function setDefaultsFromResponse(array $data, array $overwrites): self {
         foreach ($this->getContents() as $i => $content) {
             if ($content instanceof Input or $content instanceof Slider or $content instanceof Dropdown or $content instanceof Toggle) {
-                $content->setDefault($data[$i]);
+                $content->setDefault($overwrites[$i] ?? $data[$i]);
             }
         }
         return $this;
