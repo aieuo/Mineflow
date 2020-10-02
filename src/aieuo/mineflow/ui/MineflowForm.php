@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
@@ -43,9 +43,9 @@ class MineflowForm {
     public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = [], array $errors = []) {
         (new CustomForm($title))
             ->setContents([
-                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
+                new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, string $title, callable $callback, ?callable $onCancel) {
                 if ($data[2]) {
                     if (is_callable($onCancel)) {
@@ -53,11 +53,6 @@ class MineflowForm {
                         return;
                     }
                     (new HomeForm)->sendMenu($player);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->selectRecipe($player, $title, $callback, $onCancel, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 

@@ -4,19 +4,21 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\Server;
 
-class PlaySoundAt extends Action implements PositionFlowItem {
+class PlaySoundAt extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
     protected $id = self::PLAY_SOUND_AT;
@@ -36,7 +38,7 @@ class PlaySoundAt extends Action implements PositionFlowItem {
     /** @var string */
     private $pitch;
 
-    public function __construct(string $position = "pos", string $sound = "", string $volume = "1", string $pitch = "1") {
+    public function __construct(string $position = "", string $sound = "", string $volume = "1", string $pitch = "1") {
         $this->setPositionVariableName($position);
         $this->sound = $sound;
         $this->volume = $volume;
@@ -76,7 +78,7 @@ class PlaySoundAt extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $sound = $origin->replaceVariables($this->getSound());
@@ -97,40 +99,26 @@ class PlaySoundAt extends Action implements PositionFlowItem {
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
         Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Input("@action.playSound.form.sound", Language::get("form.example", ["random.levelup"]), $default[2] ?? $this->getSound()),
-                new Input("@action.playSound.form.volume", Language::get("form.example", ["1"]), $default[3] ?? $this->getVolume()),
-                new Input("@action.playSound.form.pitch", Language::get("form.example", ["1"]), $default[4] ?? $this->getPitch()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+                new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
+                new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
+                new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "pos";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!Main::getVariableHelper()->containsVariable($data[3]) and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        }
-        if ($data[4] === "") {
-            $errors[] = ["@form.insufficient", 4];
-        } elseif (!Main::getVariableHelper()->containsVariable($data[4]) and !is_numeric($data[4])) {
-            $errors[] = ["@flowItem.error.notNumber", 4];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0]);
         $this->setSound($content[1]);
         $this->setVolume($content[2]);

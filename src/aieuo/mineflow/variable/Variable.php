@@ -4,6 +4,7 @@ namespace aieuo\mineflow\variable;
 
 abstract class Variable {
 
+    const DUMMY = -1;
     const STRING = 0;
     const NUMBER = 1;
     const LIST = 2;

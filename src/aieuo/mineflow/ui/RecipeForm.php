@@ -2,19 +2,21 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\trigger\Trigger;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
+use pocketmine\Player;
 
 class RecipeForm {
 
@@ -22,26 +24,13 @@ class RecipeForm {
         (new ListForm("@mineflow.recipe"))
             ->setContent("@form.selectButton")
             ->addButtons([
-                new Button("@form.back"),
-                new Button("@form.add"),
-                new Button("@form.edit"),
-                new Button("@form.recipe.menu.recipeList"),
-            ])->onReceive(function (Player $player, int $data) {
-                switch ($data) {
-                    case 0:
-                        (new HomeForm)->sendMenu($player);
-                        break;
-                    case 1:
-                        $this->sendAddRecipe($player);
-                        break;
-                    case 2:
-                        $this->sendSelectRecipe($player);
-                        break;
-                    case 3:
-                        $this->sendRecipeList($player);
-                        break;
-                }
-            })->addMessages($messages)->show($player);
+                new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
+                new Button("@form.add", function () use($player) { $this->sendAddRecipe($player); }),
+                new Button("@form.edit", function () use($player) { $this->sendSelectRecipe($player); }),
+                new Button("@form.recipe.menu.recipeList", function () use($player) { $this->sendRecipeList($player); }),
+                new Button("@mineflow.export", function () use($player) { (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title", [new ExportForm, "sendRecipeListByRecipe"]); }),
+                new Button("@mineflow.import", function () use($player) { (new ImportForm)->sendSelectImportFile($player); }),
+            ])->addMessages($messages)->show($player);
     }
 
     public function sendAddRecipe(Player $player, array $default = [], array $errors = []) {
@@ -51,7 +40,7 @@ class RecipeForm {
         (new CustomForm("@form.recipe.addRecipe.title"))->setContents([
                 new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, string $defaultName) {
                 if ($data[2]) {
                     $this->sendMenu($player);
@@ -78,8 +67,8 @@ class RecipeForm {
                             $recipe = new Recipe($name, $data[1], $player->getName());
                             $manager->add($recipe);
                             Session::getSession($player)
-                                ->set("recipe_menu_prev", [$this, "sendMenu"])
-                                ->set("recipe_menu_prev_data", []);
+                                ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                                ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
                             $this->sendRecipeMenu($player, $recipe);
                         },
                         function (Player $player, string $name) use ($data) {
@@ -96,8 +85,8 @@ class RecipeForm {
 
                 $manager->add($recipe);
                 Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
-                    ->set("recipe_menu_prev_data", []);
+                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                    ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
                 $this->sendRecipeMenu($player, $recipe);
             })->addErrors($errors)->addArgs($name)->show($player);
     }
@@ -106,8 +95,8 @@ class RecipeForm {
         (new MineflowForm)->selectRecipe($player, "@form.recipe.select.title",
             function (Player $player, Recipe $recipe) {
                 Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendSelectRecipe"])
-                    ->set("recipe_menu_prev_data", []);
+                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
+                    ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
                 $this->sendRecipeMenu($player, $recipe);
             },
             function (Player $player) {
@@ -154,7 +143,7 @@ class RecipeForm {
                     $this->sendRecipeList($player, implode("/", $paths));
                     return;
                 }
-                $data --;
+                $data--;
 
                 $recipe = array_values($recipes)[$data];
                 if ($recipe instanceof Recipe) {
@@ -195,7 +184,7 @@ class RecipeForm {
                         break;
                     case 1:
                         Session::getSession($player)->set("parents", []);
-                        (new ActionContainerForm)->sendActionList($player, $recipe);
+                        (new FlowItemContainerForm)->sendActionList($player, $recipe, FlowItemContainer::ACTION);
                         break;
                     case 2:
                         $this->sendChangeName($player, $recipe);
@@ -258,16 +247,11 @@ class RecipeForm {
         $form = new CustomForm(Language::get("form.recipe.changeName.title", [$recipe->getName()]));
         $form->setContents([
                 new Label("@form.recipe.changeName.content0"),
-                new Input("@form.recipe.changeName.content1", "", $default ?? $recipe->getName()),
-                new Toggle("@form.cancelAndBack")
+                new Input("@form.recipe.changeName.content1", "", $default ?? $recipe->getName(), true),
+                new CancelToggle()
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[2]) {
                     $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
-                    return;
-                }
-
-                if ($data[1] === "") {
-                    $this->sendChangeName($player, $recipe, $data[1], "@form.insufficient");
                     return;
                 }
 
@@ -299,7 +283,7 @@ class RecipeForm {
         foreach ($triggers as $trigger) {
             switch ($trigger->getType()) {
                 case Trigger::TYPE_EVENT:
-                    $content = "@trigger.type.".$trigger->getType().": @trigger.event.".$trigger->getKey();
+                    $content = "@trigger.type.".$trigger->getType().": ".Main::getEventManager()->translateEventName($trigger->getKey());
                     break;
                 default:
                     $content = "@trigger.type.".$trigger->getType().": ".$trigger->getKey();
@@ -341,7 +325,7 @@ class RecipeForm {
                 }
 
                 $arguments = [];
-                for ($i=1; $i<count($data); $i++) {
+                for ($i = 1; $i < count($data); $i++) {
                     if ($data[$i] !== "") $arguments[] = $data[$i];
                 }
                 $recipe->setArguments($arguments);
@@ -366,7 +350,7 @@ class RecipeForm {
                 }
 
                 $returnValues = [];
-                for ($i=1; $i<count($data); $i++) {
+                for ($i = 1; $i < count($data); $i++) {
                     if ($data[$i] !== "") $returnValues[] = $data[$i];
                 }
                 $recipe->setReturnValues($returnValues);
@@ -389,7 +373,7 @@ class RecipeForm {
             ], $default[0] ?? $recipe->getTargetType()),
             new Input("@form.recipe.changeTarget.name", "@form.recipe.changeTarget.name.placeholder", $default1),
             new Input("@form.recipe.changeTarget.random", "@form.recipe.changeTarget.random.placeholder", $default2),
-            new Toggle("@form.cancelAndBack")
+            new CancelToggle()
         ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
             if ($data[3]) {
                 $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);

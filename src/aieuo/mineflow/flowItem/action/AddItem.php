@@ -13,7 +13,7 @@ class AddItem extends TypeItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
@@ -23,6 +23,6 @@ class AddItem extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->addItem($item);
-        return true;
+        yield true;
     }
 }

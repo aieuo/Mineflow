@@ -2,14 +2,16 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
 
 class CallRecipe extends ExecuteRecipe {
 
@@ -22,7 +24,7 @@ class CallRecipe extends ExecuteRecipe {
         parent::__construct($name, $args);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
@@ -33,12 +35,12 @@ class CallRecipe extends ExecuteRecipe {
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }
 
-        $recipe = clone $recipe;
         $helper = Main::getVariableHelper();
         $args = [];
+        $recipe = clone $recipe;
         foreach ($this->getArgs() as $arg) {
             if (!$helper->isVariableString($arg)) {
                 $args[] = $helper->replaceVariables($arg, $origin->getVariables());
@@ -47,32 +49,26 @@ class CallRecipe extends ExecuteRecipe {
             $arg = $origin->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
             $args[] = $arg;
         }
-        $this->getParent()->wait();
-        $recipe->setSourceRecipe($origin)->setSourceContainer($this->getParent());
+        $recipe->setSourceRecipe($origin);
         $recipe->executeAllTargets($origin->getTarget(), [], $origin->getEvent(), $args);
-        return true;
+        yield false;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.executeRecipe.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getRecipeName()),
-                new Input("@action.callRecipe.form.args", Language::get("form.example", ["{target}, 1, aieuo"]), $default[1] ?? implode(", ", $this->getArgs())),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
+                new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs())),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1]);
         return $this;

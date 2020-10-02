@@ -2,31 +2,30 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\flowItem\action\Action;
-use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\FlowItem;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class ActionContainerForm {
+class FlowItemContainerForm {
 
-    public function sendActionList(Player $player, ActionContainer $container, array $messages = []) {
-        $actions = $container->getActions();
+    public function sendActionList(Player $player, FlowItemContainer $container, string $type, array $messages = []) {
+        $actions = $container->getItems($type);
 
-        $buttons = [new Button("@form.back"), new Button("@action.add")];
+        $buttons = [new Button("@form.back"), new Button("@{$type}.add")];
         foreach ($actions as $action) {
             $buttons[] = new Button(empty($action->getCustomName()) ? trim($action->getDetail()) : $action->getCustomName());
         }
 
-        (new ListForm(Language::get("form.actionContainer.actionList.title", [$container->getContainerName()])))
+        (new ListForm(Language::get("form.{$type}Container.list.title", [$container->getContainerName()])))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, ActionContainer $container, array $actions) {
+            ->onReceive(function (Player $player, int $data) use($container, $type, $actions) {
                 if ($data === 0) {
                     if ($container instanceof Recipe) {
                         (new RecipeForm)->sendRecipeMenu($player, $container);
@@ -36,22 +35,21 @@ class ActionContainerForm {
                     }
                     return;
                 }
+                Session::getSession($player)->push("parents", $container);
+
                 if ($data === 1) {
-                    (new ActionForm)->selectActionCategory($player, $container);
+                    (new FlowItemForm)->selectActionCategory($player, $container, $type);
                     return;
                 }
                 $data -= 2;
-
-                /** @var Action $action */
                 $action = $actions[$data];
-                Session::getSession($player)->push("parents", $container);
 
-                (new ActionForm)->sendAddedActionMenu($player, $container, $action);
+                (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $action);
             })->addArgs($container, $actions)->addMessages($messages)->show($player);
     }
 
-    public function sendMoveAction(Player $player, ActionContainer $container, int $selected, array $messages = [], int $count = 0) {
-        $actions = $container->getActions();
+    public function sendMoveAction(Player $player, FlowItemContainer $container, string $type, int $selected, array $messages = [], int $count = 0) {
+        $actions = $container->getItems($type);
         $selectedAction = $actions[$selected];
 
         $buttons = [new Button("@form.back")];
@@ -60,26 +58,26 @@ class ActionContainerForm {
         }
         $buttons[] = new Button("");
 
-        (new ListForm(Language::get("form.actionContainer.moveAction.title", [$container->getContainerName(), $selectedAction->getName()])))
-            ->setContent("@form.actionContainer.moveAction.content")
+        (new ListForm(Language::get("form.{$type}Container.move.title", [$container->getContainerName(), $selectedAction->getName()])))
+            ->setContent("@form.{$type}Container.move.content")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, ActionContainer $container, int $selected, array $actions, int $count = 0) {
+            ->onReceive(function (Player $player, int $data) use($container, $type, $selected, $actions, $count) {
                 $move = $actions[$selected];
                 if ($data === 0) {
-                    (new ActionForm)->sendAddedActionMenu($player, $container, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);
+                    (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);
                     return;
                 }
                 $data -= 1;
 
                 $actions = $this->getMovedContents($actions, $selected, $data);
-                $container->setActions($actions);
-                $this->sendMoveAction($player, $container, $selected < $data ? $data-1 : $data, ["@form.moved"], ++$count);
-            })->addArgs($container, $selected, $actions, $count)->addMessages($messages)->show($player);
+                $container->setItems($actions, $type);
+                $this->sendMoveAction($player, $container, $type, $selected < $data ? $data-1 : $data, ["@form.moved"], ++$count);
+            })->addMessages($messages)->show($player);
     }
 
     public function getMovedContents(array $contents, int $from, int $to): array {
         $move = $contents[$from];
-        if ($from < $to) $to --;
+        if ($from < $to) $to--;
         unset($contents[$from]);
         $newContents = [];
         foreach (array_values($contents) as $i => $action) {

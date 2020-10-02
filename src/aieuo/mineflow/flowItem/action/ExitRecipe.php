@@ -2,10 +2,11 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 
-class ExitRecipe extends Action {
+class ExitRecipe extends FlowItem {
 
     protected $id = self::EXIT_RECIPE;
 
@@ -16,16 +17,16 @@ class ExitRecipe extends Action {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
-        $origin->exitRecipe();
-        return true;
+    public function execute(Recipe $origin) {
+        $origin->exit();
+        yield true;
     }
 
     public function isDataValid(): bool {
         return true;
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

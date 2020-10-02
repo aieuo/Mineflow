@@ -2,21 +2,25 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\Variable;
 
-class AddVariable extends Action {
+class AddVariable extends FlowItem {
 
     protected $id = self::ADD_VARIABLE;
 
@@ -72,7 +76,7 @@ class AddVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -87,7 +91,7 @@ class AddVariable extends Action {
                 $variable = new NumberVariable((float)$value, $name);
                 break;
             default:
-                return false;
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.error.recipe"));
         }
 
         if ($this->isLocal) {
@@ -95,40 +99,31 @@ class AddVariable extends Action {
         } else {
             Main::getVariableHelper()->add($variable);
         }
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.variable.form.value", Language::get("form.example", ["aeiuo"]), $default[2] ?? $this->getVariableValue()),
-                new Dropdown("@action.variable.form.type", $this->variableTypes, $default[3] ?? $this->variableType),
-                new Toggle("@action.variable.form.global", $default[4] ?? !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.value", "aeiuo", $this->getVariableValue(), true),
+                new Dropdown("@action.variable.form.type", $this->variableTypes, $this->variableType),
+                new Toggle("@action.variable.form.global", !$this->isLocal),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        $name = $data[1];
-        $value = $data[2];
-        $type = $data[3];
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        $containsVariable = Main::getVariableHelper()->containsVariable($value);
-        if ($value === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif ($type === Variable::NUMBER and !$containsVariable and !is_numeric($value)) {
+        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
+        if ($data[3] === Variable::NUMBER and !$containsVariable and !is_numeric($data[2])) {
             $errors[] = ["@flowItem.error.notNumber", 1];
         }
-        return ["contents" => [$name, $value, $type, !$data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->variableType = $content[2];
@@ -138,5 +133,10 @@ class AddVariable extends Action {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getVariableValue(), $this->variableType, $this->isLocal];
+    }
+
+    public function getAddingVariables(): array {
+        $type = $this->variableTypes[$this->variableType];
+        return [new DummyVariable($this->getVariableName(), $type)];
     }
 }

@@ -2,18 +2,19 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-abstract class TypeMessage extends Action {
+abstract class TypeMessage extends FlowItem {
 
     protected $detailDefaultReplace = ["message"];
-    
+
     protected $category = Category::PLAYER;
 
     /** @var string */
@@ -41,26 +42,20 @@ abstract class TypeMessage extends Action {
         return Language::get($this->detail, [$this->getMessage()]);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.message.form.message", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getMessage()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.message.form.message", "aieuo", $this->getMessage(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors = [["@form.insufficient", 1]];
-        }
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (empty($content[0])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $content): FlowItem {
         $this->setMessage($content[0]);
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Input extends Element {
 
     /** @var string */
@@ -12,10 +14,15 @@ class Input extends Element {
     /** @var string */
     private $default;
 
-    public function __construct(string $text, string $placeholder = "", string $default = "") {
+    /** @var bool */
+    private $required;
+
+    public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false) {
         parent::__construct($text);
         $this->placeholder = $placeholder;
         $this->default = $default;
+
+        $this->required = $required;
     }
 
     /**
@@ -50,12 +57,16 @@ class Input extends Element {
         return $this->default;
     }
 
+    public function isRequired(): bool {
+        return $this->required;
+    }
+
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => str_replace("\\n", "\n", $this->reflectHighlight($this->checkTranslate($this->text))),
-            "placeholder" => $this->checkTranslate($this->placeholder),
-            "default" => $this->checkTranslate($this->default),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
+            "placeholder" => Language::replace($this->placeholder),
+            "default" => Language::replace($this->default),
         ];
     }
 }

@@ -4,18 +4,21 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use pocketmine\level\Position;
 
-class GetBlock extends Action implements PositionFlowItem {
+class GetBlock extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
     protected $id = self::GET_BLOCK;
@@ -31,7 +34,7 @@ class GetBlock extends Action implements PositionFlowItem {
 
     private $resultName;
 
-    public function __construct(string $position = "pos", string $result = "block") {
+    public function __construct(string $position = "", string $result = "block") {
         $this->setPositionVariableName($position);
         $this->resultName = $result;
     }
@@ -53,7 +56,7 @@ class GetBlock extends Action implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
@@ -65,27 +68,26 @@ class GetBlock extends Action implements PositionFlowItem {
 
         $variable = new BlockObjectVariable($block, $result);
         $origin->addVariable($variable);
-        return true;
+        yield true;
+        return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["block"]), $default[2] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getResultName()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "pos";
         if ($data[2] === "") $data[2] = "block";
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0]);
         $this->setResultName($content[1]);
         return $this;
@@ -95,7 +97,7 @@ class GetBlock extends Action implements PositionFlowItem {
         return [$this->getPositionVariableName(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getResultName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::BLOCK)];
     }
 }

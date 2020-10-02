@@ -6,17 +6,19 @@ use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
+class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
 
     protected $id = self::SET_ITEM;
@@ -32,7 +34,7 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
     /** @var string */
     private $index;
 
-    public function __construct(string $player = "target", string $item = "item", string $index = "") {
+    public function __construct(string $player = "", string $item = "", string $index = "") {
         $this->setPlayerVariableName($player);
         $this->setItemVariableName($item);
         $this->index = $index;
@@ -55,7 +57,7 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $index = $origin->replaceVariables($this->getIndex());
@@ -69,37 +71,25 @@ class SetItem extends Action implements PlayerFlowItem, ItemFlowItem {
         $this->throwIfInvalidItem($item);
 
         $player->getInventory()->setItem($index, $item);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@flowItem.form.target.item", Language::get("form.example", ["item"]), $default[2] ?? $this->getItemVariableName()),
-                new Input("@action.setItem.form.index", Language::get("form.example", ["0"]), $default[3] ?? $this->getIndex()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ItemVariableDropdown($variables, $this->getItemVariableName()),
+                new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") $data[2] = "item";
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[3]);
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!$containsVariable and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        } elseif (!$containsVariable and (float)$data[3] < 0) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [0]), 3];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex($content[2]);

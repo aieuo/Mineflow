@@ -50,20 +50,20 @@ class SettingForm {
         $events = Main::getEventManager()->getEvents();
         $enables = Main::getEventManager()->getEnabledEvents();
         $contents = [];
-        foreach ($events as $name => $path) {
-            $contents[] = new Toggle("@trigger.event.".$name, isset($enables[$name]));
+        foreach ($events as $name) {
+            $contents[] = new Toggle(Main::getEventManager()->translateEventName($name), isset($enables[$name]));
         }
         (new CustomForm("@setting.event"))
             ->setContents($contents)
             ->onReceive(function (Player $player, array $data) use ($events, $enables) {
                 $count = 0;
-                foreach ($events as $name => $event) {
+                foreach ($events as $name) {
                     if ($data[$count] and !isset($enables[$name])) {
                         Main::getEventManager()->setEventEnabled($name, true);
                     } elseif (!$data[$count] and isset($enables[$name])) {
                         Main::getEventManager()->setEventEnabled($name, false);
                     }
-                    $count ++;
+                    $count++;
                 }
                 $this->sendMenu($player, ["@setting.event.changed"]);
             })->show($player);

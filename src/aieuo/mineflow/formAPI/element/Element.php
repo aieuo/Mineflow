@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
-use aieuo\mineflow\utils\Language;
 use pocketmine\utils\UUID;
 
 abstract class Element implements \JsonSerializable {
@@ -18,6 +17,8 @@ abstract class Element implements \JsonSerializable {
     protected $type;
     /** @var string */
     protected $text = "";
+    /** @var string */
+    protected $extraText = "";
     /** @var string|null */
     protected $highlight = null;
 
@@ -25,7 +26,7 @@ abstract class Element implements \JsonSerializable {
     private $uuid;
 
     public function __construct(string $text, ?string $uuid = null) {
-        $this->text = $text;
+        $this->text = str_replace("\\n", "\n", $text);
         $this->uuid = $uuid;
     }
 
@@ -34,7 +35,16 @@ abstract class Element implements \JsonSerializable {
      * @return self
      */
     public function setText(string $text): self {
-        $this->text = $text;
+        $this->text = str_replace("\\n", "\n", $text);
+        return $this;
+    }
+
+    /**
+     * @param string $extraText
+     * @return self
+     */
+    public function setExtraText(string $extraText): self {
+        $this->extraText = $extraText;
         return $this;
     }
 
@@ -65,17 +75,6 @@ abstract class Element implements \JsonSerializable {
     public function getUUId(): string {
         if (empty($this->uuid)) $this->uuid = UUID::fromRandom()->toString();
         return $this->uuid;
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function checkTranslate(string $text): string {
-        $text = preg_replace_callback("/@([a-zA-Z0-9.]+)/", function ($matches) {
-            return Language::get($matches[1]);
-        }, $text);
-        return $text;
     }
 
     /**

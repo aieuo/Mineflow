@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\economy;
 
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\utils\Language;
 
 class Economy {
     /** @var EconomyLoader|null */

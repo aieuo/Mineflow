@@ -18,24 +18,20 @@ class ImportForm {
     public function sendSelectImportFile(Player $player, array $messages = []) {
         $files = glob(Main::getInstance()->getDataFolder()."imports/*.json");
 
-        $buttons = [new Button("@form.back")];
+        $buttons = [
+            new Button("@form.back", function () use($player) { (new RecipeForm)->sendMenu($player); })
+        ];
         foreach ($files as $file) {
-            $buttons[] = new Button(basename($file, ".json"));
+            $buttons[] = new Button(basename($file, ".json"), function () use($player, $file) {
+                $this->sendFileMenu($player, $file);
+            });
         }
 
         (new ListForm("@form.import.selectFile.title"))
             ->setContent("@form.selectButton")
             ->setButtons($buttons)
-            ->onReceive(function (Player $player, int $data, array $files) {
-                if ($data === 0) {
-                    (new HomeForm)->sendMenu($player);
-                    return;
-                }
-                $data -= 1;
-
-                $file = $files[$data];
-                $this->sendFileMenu($player, $file);
-            })->addMessages($messages)->addArgs($files)->show($player);
+            ->addMessages($messages)
+            ->show($player);
     }
 
     public function sendFileMenu(Player $player, string $path) {
@@ -80,7 +76,7 @@ class ImportForm {
 
     public function importRecipes(Player $player, array $recipes, callable $onComplete = null, int $start = 0) {
         $manager = Main::getRecipeManager();
-        for ($i=$start; $i<count($recipes); $i++) {
+        for ($i = $start; $i < count($recipes); $i++) {
             /** @var Recipe $recipe */
             $recipe = $recipes[$i];
 
@@ -103,7 +99,7 @@ class ImportForm {
     public function importCommands(Player $player, array $commands, callable $onComplete = null, int $start = 0) {
         $manager = Main::getCommandManager();
         $commands = array_values($commands);
-        for ($i=$start; $i<count($commands); $i++) {
+        for ($i = $start; $i < count($commands); $i++) {
             $data = $commands[$i];
             $command = $data["command"];
 
@@ -126,7 +122,7 @@ class ImportForm {
     public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0) {
         $manager = Main::getFormManager();
         $names = array_keys($forms);
-        for ($i=$start; $i<count($forms); $i++) {
+        for ($i = $start; $i < count($forms); $i++) {
             $name = $names[$i];
             $formData = $forms[$name];
             $form = Form::createFromArray($formData, $name);
@@ -149,7 +145,7 @@ class ImportForm {
 
     public function importConfigs(Player $player, array $configs, callable $onComplete = null, int $start = 0) {
         $names = array_keys($configs);
-        for ($i=$start; $i<count($configs); $i++) {
+        for ($i = $start; $i < count($configs); $i++) {
             $name = $names[$i];
             $configData = $configs[$name];
 

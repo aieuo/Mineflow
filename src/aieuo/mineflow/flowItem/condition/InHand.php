@@ -13,7 +13,7 @@ class InHand extends TypeItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
@@ -23,6 +23,8 @@ class InHand extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $hand = $player->getInventory()->getItemInHand();
+
+        yield true;
         return ($hand->getId() === $item->getId()
             and $hand->getDamage() === $item->getDamage()
             and $hand->getCount() >= $item->getCount()

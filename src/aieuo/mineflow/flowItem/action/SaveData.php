@@ -2,11 +2,12 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 
-class SaveData extends Action {
+class SaveData extends FlowItem {
 
     protected $id = self::SAVE_DATA;
 
@@ -21,14 +22,14 @@ class SaveData extends Action {
         return true;
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         Main::getRecipeManager()->saveAll();
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();
-        return true;
+        yield true;
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

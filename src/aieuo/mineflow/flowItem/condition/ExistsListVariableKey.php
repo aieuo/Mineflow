@@ -2,18 +2,20 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\ListVariable;
 
-class ExistsListVariableKey extends Condition {
+class ExistsListVariableKey extends FlowItem implements Condition {
 
     protected $id = self::EXISTS_LIST_VARIABLE_KEY;
 
@@ -63,7 +65,7 @@ class ExistsListVariableKey extends Condition {
         return Language::get($this->detail, [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -73,35 +75,27 @@ class ExistsListVariableKey extends Condition {
         $variable = $this->isLocal ? $origin->getVariable($name) : $helper->get($name);
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
+
+        yield true;
         return isset($value[$key]);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.variable.form.key", Language::get("form.example", ["auieo"]), $default[2] ?? $this->getKey()),
-                new Toggle("@action.variable.form.global", $default[4] ?? !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.key", "auieo", $this->getKey(), true),
+                new Toggle("@action.variable.form.global", !$this->isLocal),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $name = $data[1];
-        $key = $data[2];
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        if ($key === "") {
-            $errors[] = ["@form.insufficient", 2];
-        }
-        return ["contents" => [$name, $key, !$data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], !$data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Condition {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->isLocal = $content[2];

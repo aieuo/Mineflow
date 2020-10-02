@@ -2,18 +2,19 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Server;
 
-class CommandConsole extends Action {
+class CommandConsole extends FlowItem {
 
     protected $id = self::COMMAND_CONSOLE;
 
@@ -51,32 +52,29 @@ class CommandConsole extends Action {
         return Language::get($this->detail, [$this->getCommand()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $command = $origin->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $command);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.command.form.command", Language::get("form.example", ["mineflow"]), $default[1] ?? $this->getCommand()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setCommand($content[0]);
         return $this;
     }

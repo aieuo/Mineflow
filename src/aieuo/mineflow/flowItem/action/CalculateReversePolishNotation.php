@@ -2,18 +2,20 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\NumberVariable;
 
-class CalculateReversePolishNotation extends Action {
+class CalculateReversePolishNotation extends FlowItem {
 
     protected $id = self::REVERSE_POLISH_NOTATION;
 
@@ -30,9 +32,6 @@ class CalculateReversePolishNotation extends Action {
     private $formula;
     /** @var string */
     private $resultName;
-
-    /* @var string */
-    private $lastResult;
 
     public function __construct(string $formula = "", string $resultName = "result") {
         $this->formula = $formula;
@@ -66,7 +65,7 @@ class CalculateReversePolishNotation extends Action {
         return Language::get($this->detail, [$this->getFormula(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $formula = $origin->replaceVariables($this->getFormula());
@@ -98,36 +97,32 @@ class CalculateReversePolishNotation extends Action {
                     $res = $value1 % $value2;
                     break;
                 default:
-                    throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$token]]]));
+                    throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$token]));
             }
             $stack[] = $res;
         }
         $result = $stack[0];
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
-        return true;
+        yield true;
+        return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.calculateRPN.form.value", Language::get("form.example", ["1 2 + 3 -"]), $default[1] ?? $this->getFormula()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[2] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.calculateRPN.form.value", "1 2 + 3 -", $this->getFormula(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setFormula($content[0]);
         $this->setResultName($content[1]);
         return $this;
@@ -137,7 +132,7 @@ class CalculateReversePolishNotation extends Action {
         return [$this->getFormula(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->lastResult;
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

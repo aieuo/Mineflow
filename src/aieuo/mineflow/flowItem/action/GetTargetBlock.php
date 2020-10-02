@@ -4,18 +4,21 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 
-class GetTargetBlock extends Action implements PlayerFlowItem {
+class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::GET_TARGET_BLOCK;
@@ -34,7 +37,7 @@ class GetTargetBlock extends Action implements PlayerFlowItem {
     /** @var string */
     private $resultName;
 
-    public function __construct(string $player = "target", string $max = "100", string $result = "block") {
+    public function __construct(string $player = "", string $max = "100", string $result = "block") {
         $this->setPlayerVariableName($player);
         $this->max = $max;
         $this->resultName = $result;
@@ -65,7 +68,7 @@ class GetTargetBlock extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $max = $origin->replaceVariables($this->getMax());
@@ -77,34 +80,26 @@ class GetTargetBlock extends Action implements PlayerFlowItem {
 
         $block = $player->getTargetBlock($max);
         $origin->addVariable(new BlockObjectVariable($block, $result));
-        return true;
+        yield true;
+        return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.getTargetBlock.form.max", Language::get("form.example", ["100"]), $default[2] ?? $this->getMax()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["block"]), $default[3] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ExampleNumberInput("@action.getTargetBlock.form.max", "100", $this->getMax(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        } elseif (!Main::getVariableHelper()->containsVariable($data[2]) and !is_numeric($data[2])) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        }
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setMax($content[1]);
         $this->setResultName($content[2]);
@@ -115,7 +110,7 @@ class GetTargetBlock extends Action implements PlayerFlowItem {
         return [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getResultName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::BLOCK)];
     }
 }

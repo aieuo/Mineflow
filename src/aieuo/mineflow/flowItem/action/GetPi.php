@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\variable\NumberVariable;
 
 class GetPi extends TypeGetMathVariable {
 
@@ -14,12 +14,12 @@ class GetPi extends TypeGetMathVariable {
 
     protected $resultName = "pi";
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());
         $origin->addVariable(new NumberVariable(M_PI, $resultName));
-        $this->lastResult = M_PI;
-        return true;
+        yield true;
+        return M_PI;
     }
 }

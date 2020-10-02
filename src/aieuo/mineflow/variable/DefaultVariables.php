@@ -2,19 +2,22 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\LevelObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use pocketmine\block\Block;
+use pocketmine\entity\Entity;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
+use pocketmine\event\Event;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\inventory\FurnaceBurnEvent;
 use pocketmine\event\level\LevelLoadEvent;
@@ -34,12 +37,8 @@ use pocketmine\event\player\PlayerToggleFlightEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
 use pocketmine\item\Item;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\Event;
-use pocketmine\entity\Entity;
-use pocketmine\block\Block;
-use pocketmine\Server;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\tile\Sign;
 
 class DefaultVariables {
@@ -175,17 +174,17 @@ class DefaultVariables {
                 break;
             case $event instanceof EntityDamageEvent:
                 $target = $event->getEntity();
-                $name = $eventName === "EntityAttackEvent" ? "damaged" : "target";
+                $name = $eventName === EntityAttackEvent::class ? "damaged" : "target";
                 $variables = $target instanceof Player ? self::getPlayerVariables($target, $name) : self::getEntityVariables($target, $name);
                 $variables["damage"] = new NumberVariable($event->getBaseDamage(), "damage");
                 $variables["cause"] = new NumberVariable($event->getCause(), "cause");
-                if ($event instanceof EntityDamageByEntityEvent) {
+                if ($event instanceof EntityAttackEvent) {
                     $damager = $event->getDamager();
                     $add = [];
-                    if ($eventName === "EntityDamageEvent") {
+                    if ($eventName === EntityDamageEvent::class) {
                         if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "damager");
                         elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "damager");
-                    } elseif ($eventName === "EntityAttackEvent") {
+                    } elseif ($eventName === EntityAttackEvent::class) {
                         if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "target");
                         elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "target");
                     }
@@ -193,7 +192,7 @@ class DefaultVariables {
                 }
                 break;
             case $event instanceof LevelLoadEvent:
-                $variables = ["level" => new LevelObjectVariable($event->getLevel())];
+                $variables = ["level" => new LevelObjectVariable($event->getLevel(), "level")];
                 break;
             case $event instanceof PlayerExhaustEvent:
                 $target = $event->getPlayer();

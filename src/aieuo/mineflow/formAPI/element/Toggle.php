@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Toggle extends Element {
 
     /** @var string */
@@ -34,7 +36,7 @@ class Toggle extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => str_replace("\\n", "\n", $this->reflectHighlight($this->checkTranslate($this->text))),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "default" => $this->default,
         ];
     }

@@ -10,7 +10,7 @@ class Session {
     private static $sessions = [];
 
     /**
-     * @param  Player $player
+     * @param Player $player
      * @return Session|null
      */
     public static function getSession(Player $player): ?Session {

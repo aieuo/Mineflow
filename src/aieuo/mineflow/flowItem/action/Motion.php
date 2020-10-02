@@ -2,20 +2,22 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use pocketmine\math\Vector3;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use pocketmine\math\Vector3;
 
-class Motion extends Action implements EntityFlowItem {
+class Motion extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::MOTION;
@@ -35,7 +37,7 @@ class Motion extends Action implements EntityFlowItem {
     /** @var string */
     private $z = "0";
 
-    public function __construct(string $entity = "target", string $x = "0", string $y = "0", string $z = "0") {
+    public function __construct(string $entity = "", string $x = "0", string $y = "0", string $z = "0") {
         $this->setEntityVariableName($entity);
         $this->setPosition($x, $y, $z);
     }
@@ -60,7 +62,7 @@ class Motion extends Action implements EntityFlowItem {
         return Language::get($this->detail, array_merge([$this->getEntityVariableName()], $this->getPosition()));
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $positions = array_map(function ($value) use ($origin) {
@@ -68,7 +70,7 @@ class Motion extends Action implements EntityFlowItem {
         }, $this->getPosition());
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("flowItem.error.notNumber")]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
 
         $entity = $this->getEntity($origin);
@@ -76,38 +78,26 @@ class Motion extends Action implements EntityFlowItem {
 
         $position = new Vector3((float)$positions[0], (float)$positions[1], (float)$positions[2]);
         $entity->setMotion($position);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@action.motion.form.x", Language::get("form.example", ["2"]), $default[2] ?? $this->x),
-                new Input("@action.motion.form.y", Language::get("form.example", ["3"]), $default[3] ?? $this->y),
-                new Input("@action.motion.form.z", Language::get("form.example", ["4"]), $default[4] ?? $this->z),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+                new ExampleNumberInput("@action.motion.form.x", "2", $this->x, true),
+                new ExampleNumberInput("@action.motion.form.y", "3", $this->y, true),
+                new ExampleNumberInput("@action.motion.form.z", "4", $this->z, true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        $helper = Main::getVariableHelper();
-        for ($i=2; $i<=4; $i++) {
-            if ($data[$i] === "") {
-                $data[$i] = "0";
-            } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {
-                $errors[] = ["@flowItem.error.notNumber", $i];
-            }
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setPosition($content[1], $content[2], $content[3]);
         return $this;

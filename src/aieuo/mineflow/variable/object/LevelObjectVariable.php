@@ -2,10 +2,10 @@
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
+use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\Variable;
 use pocketmine\level\Level;
 
 class LevelObjectVariable extends ObjectVariable {

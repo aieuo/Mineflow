@@ -4,6 +4,7 @@
 namespace aieuo\mineflow\flowItem\base;
 
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
@@ -33,7 +34,7 @@ trait ScoreboardFlowItemTrait {
 
     public function throwIfInvalidScoreboard(?Scoreboard $board) {
         if (!($board instanceof Scoreboard)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.scoreboard"], $this->getScoreboardVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.scoreboard"], $this->getScoreboardVariableName()]));
         }
     }
 }

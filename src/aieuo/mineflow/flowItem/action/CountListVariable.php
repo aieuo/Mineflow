@@ -2,19 +2,22 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 
-class CountListVariable extends Action {
+class CountListVariable extends FlowItem {
 
     protected $id = self::COUNT_LIST_VARIABLE;
 
@@ -31,9 +34,6 @@ class CountListVariable extends Action {
     private $variableName;
     /** @var string */
     private $resultName;
-
-    /** @var int */
-    private $lastResult;
 
     public function __construct(string $name = "", string $result = "count") {
         $this->variableName = $name;
@@ -67,7 +67,7 @@ class CountListVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -76,34 +76,30 @@ class CountListVariable extends Action {
         $variable = $origin->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
-            throw new \UnexpectedValueException(Language::get("action.countList.error.notList"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.countList.error.notList"));
         }
 
         $count = count($variable->getValue());
-        $this->lastResult = $count;
         $origin->addVariable(new NumberVariable($count, $resultName));
-        return true;
+        yield true;
+        return $count;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.countList.form.name", Language::get("form.example", ["list"]), $default[1] ?? $this->getVariableName()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[2] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.countList.form.name", "list", $this->getVariableName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setResultName($content[1]);
         return $this;
@@ -113,7 +109,7 @@ class CountListVariable extends Action {
         return [$this->getVariableName(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return (string)$this->lastResult;
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

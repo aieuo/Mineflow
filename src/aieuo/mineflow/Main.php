@@ -2,21 +2,21 @@
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\command\CommandManager;
+use aieuo\mineflow\command\MineflowCommand;
+use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\EventManager;
-use aieuo\mineflow\flowItem\action\ActionFactory;
-use aieuo\mineflow\flowItem\condition\ConditionFactory;
-use aieuo\mineflow\utils\FormManager;
-use aieuo\mineflow\utils\PlayerConfig;
-use pocketmine\utils\Config;
-use pocketmine\plugin\PluginBase;
-use aieuo\mineflow\variable\VariableHelper;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\RecipeManager;
+use aieuo\mineflow\event\EventTriggerListener;
 use aieuo\mineflow\event\ServerStartEvent;
-use aieuo\mineflow\economy\Economy;
-use aieuo\mineflow\command\MineflowCommand;
-use aieuo\mineflow\command\CommandManager;
+use aieuo\mineflow\flowItem\FlowItemFactory;
+use aieuo\mineflow\recipe\RecipeManager;
+use aieuo\mineflow\utils\FormManager;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\PlayerConfig;
+use aieuo\mineflow\variable\VariableHelper;
+use pocketmine\plugin\PluginBase;
+use pocketmine\utils\Config;
 
 class Main extends PluginBase {
 
@@ -76,8 +76,7 @@ class Main extends PluginBase {
 
         EntityManager::init();
 
-        ActionFactory::init();
-        ConditionFactory::init();
+        FlowItemFactory::init();
 
 
         self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));
@@ -92,7 +91,8 @@ class Main extends PluginBase {
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();
 
-        (new EventListener($this))->registerEvents();
+        (new EventListener())->registerEvents();
+        (new EventTriggerListener())->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
 

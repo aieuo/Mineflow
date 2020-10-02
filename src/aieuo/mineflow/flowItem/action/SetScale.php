@@ -4,17 +4,18 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class SetScale extends Action implements EntityFlowItem {
+class SetScale extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::SET_SCALE;
@@ -30,7 +31,7 @@ class SetScale extends Action implements EntityFlowItem {
     /** @var string */
     private $scale;
 
-    public function __construct(string $entity = "target", string $scale = "") {
+    public function __construct(string $entity = "", string $scale = "") {
         $this->setEntityVariableName($entity);
         $this->scale = $scale;
     }
@@ -52,7 +53,7 @@ class SetScale extends Action implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getScale()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $health = $origin->replaceVariables($this->getScale());
@@ -63,34 +64,24 @@ class SetScale extends Action implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setScale((float)$health);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@action.setScale.form.scale", Language::get("form.example", ["1"]), $default[2] ?? $this->getScale()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+                new ExampleNumberInput("@action.setScale.form.scale", "1", $this->getScale(), true, 0, null, [0]),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        } elseif (!$containsVariable and (float)$data[2] < 0) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [0]), 2];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setScale($content[1]);
         return $this;

@@ -2,20 +2,23 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
 use pocketmine\Server;
 
-class CreatePositionVariable extends Action {
+class CreatePositionVariable extends FlowItem {
 
     protected $id = self::CREATE_POSITION_VARIABLE;
 
@@ -96,7 +99,7 @@ class CreatePositionVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -107,49 +110,38 @@ class CreatePositionVariable extends Action {
         $level = Server::getInstance()->getLevelByName($levelName);
 
         if (!is_numeric($x) or !is_numeric($y) or !is_numeric($z)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
         if ($level === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.createPositionVariable.level.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.level.notFound"));
         }
 
         $position = new Position((float)$x, (float)$y, (float)$z, $level);
 
         $variable = new PositionObjectVariable($position, $name);
         $origin->addVariable($variable);
-        return true;
+        yield true;
+        return $this->getVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createPositionVariable.form.x", Language::get("form.example", ["0"]), $default[1] ?? $this->getX()),
-                new Input("@action.createPositionVariable.form.y", Language::get("form.example", ["100"]), $default[2] ?? $this->getY()),
-                new Input("@action.createPositionVariable.form.z", Language::get("form.example", ["16"]), $default[3] ?? $this->getZ()),
-                new Input("@action.createPositionVariable.form.level", Language::get("form.example", ["world"]), $default[4] ?? $this->getLevel()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["pos"]), $default[5] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $this->getX(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
+                new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
+                new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $this->getLevel(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "pos", $this->getVariableName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $helper = Main::getVariableHelper();
-        for ($i=1; $i<=3; $i++) {
-            if ($data[$i] === "") {
-                $errors[] = ["@form.insufficient", $i];
-            } elseif (!$helper->containsVariable($data[$i]) and !is_numeric($data[$i])) {
-                $errors[] = ["@flowItem.error.notNumber", $i];
-            }
-        }
-        if ($data[4] === "") $data[4] = "{target.level.name}";
-        if ($data[5] === "") $data[5] = "pos";
-        return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[4])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setX($content[1]);
         $this->setY($content[2]);
@@ -162,7 +154,7 @@ class CreatePositionVariable extends Action {
         return [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getVariableName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getVariableName(), DummyVariable::POSITION)];
     }
 }

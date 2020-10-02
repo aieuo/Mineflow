@@ -2,28 +2,29 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\ui\FlowItemForm;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\ui\ActionForm;
-use aieuo\mineflow\ui\ActionContainerForm;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\ui\FlowItemContainerForm;
+use aieuo\mineflow\ui\FlowItemForm;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\StringVariable;
+use pocketmine\Player;
 
-class ForeachAction extends Action implements ActionContainer {
-    use ActionContainerTrait {
-        resume as traitResume;
-    }
+class ForeachAction extends FlowItem implements FlowItemContainer {
+    use FlowItemContainerTrait;
 
     protected $id = self::ACTION_FOREACH;
 
@@ -43,14 +44,11 @@ class ForeachAction extends Action implements ActionContainer {
     /** @var string */
     private $valueVariableName = "value";
 
-    /* @var bool */
-    private $lastResult;
-
     /** @var array */
     private $counter;
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
     }
 
@@ -84,7 +82,7 @@ class ForeachAction extends Action implements ActionContainer {
         $repeat = $this->getListVariableName()." as ".$this->getKeyVariableName()." => ".$this->getValueVariableName();
 
         $details = ["", "== foreach(".$repeat.") =="];
-        foreach ($this->actions as $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -95,67 +93,28 @@ class ForeachAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, bool $first = true): bool {
-        if ($first) {
-            $listName = $origin->replaceVariables($this->listVariableName);
-            $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
-            $key = $origin->replaceVariables($this->keyVariableName);
-            $value = $origin->replaceVariables($this->valueVariableName);
+    public function execute(Recipe $origin) {
+        $listName = $origin->replaceVariables($this->listVariableName);
+        $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
+        $keyName = $origin->replaceVariables($this->keyVariableName);
+        $valueName = $origin->replaceVariables($this->valueVariableName);
 
-            if (!($list instanceof ListVariable)) {
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.foreach.error.notVariable", [$listName]]]));
-            }
-
-            $this->initCounter($list, $key, $value);
+        if (!($list instanceof ListVariable)) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.foreach.error.notVariable", [$listName]));
         }
 
-        $counter = $this->counter;
-
-        for ($i = $counter["current"]; $i < $counter["size"]; $i ++) {
-            $this->counter["current"] ++;
-
-            $key = $counter["list"][$i][0];
-            $keyVariable = is_numeric($key) ? new NumberVariable($key, $counter["keyName"]) : new StringVariable($key, $counter["keyName"]);
+        foreach ($list->getValue() as $key => $value) {
+            $keyVariable = is_numeric($key) ? new NumberVariable($key, $keyName) : new StringVariable($key, $keyName);
             $origin->addVariable($keyVariable);
 
-            /** @var Variable $valueVariable */
-            $valueVariable = clone $counter["list"][$i][1];
-            $valueVariable->setName($counter["valueName"]);
+            $valueVariable = clone $value;
+            $valueVariable->setName($valueName);
             $origin->addVariable($valueVariable);
 
-            if (!$this->executeActions($origin, $this->getParent())) return false;
-            if ($this->wait or $this->isWaiting()) return true;
+            yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         }
-        $this->getParent()->resume();
-        return true;
-    }
-
-    public function resume() {
-        $last = $this->next;
-
-        $this->wait = false;
-        $this->next = null;
-
-        if (!$this->isWaiting()) return;
-
-        $this->waiting = false;
-
-        $this->executeActions(...$last);
-        $this->execute($last[0], false);
-    }
-
-    public function initCounter(ListVariable $listVariable, string $key, string $value) {
-        $list = [];
-        foreach ($listVariable->getValue() as $k => $v) {
-            $list[] = [$k, $v];
-        }
-        $this->counter = [
-            "list" => $list,
-            "keyName" => $key,
-            "valueName" => $value,
-            "current" => 0,
-            "size" => count($list),
-        ];
+        $origin->resume();
+        yield true;
     }
 
     public function hasCustomMenu(): bool {
@@ -179,22 +138,22 @@ class ForeachAction extends Action implements ActionContainer {
                 switch ($data) {
                     case 0:
                         $session->pop("parents");
-                        (new ActionContainerForm)->sendActionList($player, $parent);
+                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
                         break;
                     case 1:
-                        (new ActionContainerForm)->sendActionList($player, $this);
+                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
                         break;
                     case 2:
                         $this->sendSettingCounter($player);
                         break;
                     case 3:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                     case 4:
-                        (new ActionContainerForm)->sendMoveAction($player, $parent, array_search($this, $parent->getActions(), true));
+                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($this, $parent->getActions(), true));
                         break;
                     case 5:
-                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
+                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                 }
             })->onClose(function (Player $player) {
@@ -202,33 +161,24 @@ class ForeachAction extends Action implements ActionContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
+    public function sendSettingCounter(Player $player) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new Input("@action.foreach.listVariableName",Language::get("form.example", ["list"]), $default[0] ?? $this->getListVariableName()),
-                new Input("@action.foreach.keyVariableName", Language::get("form.example", ["key"]), $default[1] ?? $this->getKeyVariableName()),
-                new Input("@action.foreach.valueVariableName", Language::get("form.example", ["value"]), $default[2] ?? $this->getValueVariableName()),
+                new ExampleInput("@action.foreach.listVariableName","list", $this->getListVariableName(), true),
+                new ExampleInput("@action.foreach.keyVariableName", "key", $this->getKeyVariableName(), true),
+                new ExampleInput("@action.foreach.valueVariableName", "value", $this->getValueVariableName(), true),
             ])->onReceive(function (Player $player, array $data) {
-                for ($i = 0; $i < 3; $i++) {
-                    if ($data[$i] === "") {
-                        $this->sendSettingCounter($player, $data, [["@form.insufficient", $i]]);
-                        return;
-                    }
-                }
-
                 $this->setListVariableName($data[0]);
                 $this->setKeyVariableName($data[1]);
                 $this->setValueVariableName($data[2]);
                 $this->sendCustomMenu($player, ["@form.changed"]);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
-    public function loadSaveData(array $contents): Action {
-        if (!isset($contents[3])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
-            $action = Action::loadSaveDataStatic($content);
-            $this->addAction($action);
+            $action = FlowItem::loadSaveDataStatic($content);
+            $this->addItem($action, FlowItemContainer::ACTION);
         }
 
         $this->setListVariableName($contents[1]);
@@ -237,8 +187,15 @@ class ForeachAction extends Action implements ActionContainer {
         return $this;
     }
 
+    public function getAddingVariables(): array {
+        return [
+            new DummyVariable($this->getKeyVariableName(), DummyVariable::UNKNOWN),
+            new DummyVariable($this->getValueVariableName(), DummyVariable::UNKNOWN),
+        ];
+    }
+
     public function serializeContents(): array {
-        return [$this->actions, $this->listVariableName, $this->keyVariableName, $this->valueVariableName,];
+        return [$this->getItems(FlowItemContainer::ACTION), $this->listVariableName, $this->keyVariableName, $this->valueVariableName,];
     }
 
     public function isDataValid(): bool {
@@ -251,9 +208,9 @@ class ForeachAction extends Action implements ActionContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getActions() as $k => $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
     }
 }

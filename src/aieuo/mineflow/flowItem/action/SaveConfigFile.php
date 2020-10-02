@@ -4,16 +4,17 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class SaveConfigFile extends Action implements ConfigFileFlowItem {
+class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
     protected $id = self::SAVE_CONFIG_FILE;
@@ -28,7 +29,7 @@ class SaveConfigFile extends Action implements ConfigFileFlowItem {
 
     protected $permission = self::PERMISSION_LEVEL_2;
 
-    public function __construct(string $config = "config") {
+    public function __construct(string $config = "") {
         $this->setConfigVariableName($config);
     }
 
@@ -41,33 +42,30 @@ class SaveConfigFile extends Action implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($origin);
         $this->throwIfInvalidConfig($config);
 
         $config->save();
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.config", Language::get("form.example", ["config"]), $default[1] ?? $this->getConfigVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setConfigVariableName($content[0]);
         return $this;
     }

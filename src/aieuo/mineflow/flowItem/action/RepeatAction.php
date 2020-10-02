@@ -2,22 +2,25 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\ui\FlowItemForm;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\ui\ActionForm;
-use aieuo\mineflow\ui\ActionContainerForm;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\ui\ScriptForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\ui\FlowItemContainerForm;
+use aieuo\mineflow\ui\FlowItemForm;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use pocketmine\Player;
 
-class RepeatAction extends Action implements ActionContainer {
-    use ActionContainerTrait {
-        resume as traitResume;
-    }
+class RepeatAction extends FlowItem implements FlowItemContainer {
+    use FlowItemContainerTrait;
 
     protected $id = self::ACTION_REPEAT;
 
@@ -33,18 +36,13 @@ class RepeatAction extends Action implements ActionContainer {
     /** @var string */
     private $repeatCount;
 
-    /** @var string  */
+    /** @var string */
     private $startIndex = "0";
     /** @var string */
     private $counterName = "i";
 
-    /* @var bool */
-    private $lastResult;
-    /* @var int */
-    private $lastIndex;
-
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
         $this->repeatCount = (string)$count;
         $this->setCustomName($customName);
     }
@@ -80,8 +78,8 @@ class RepeatAction extends Action implements ActionContainer {
         $length = strlen($repeat) - 1;
         $left = ceil($length / 2);
         $right = $length - $left;
-        $details = ["", str_repeat("=", 12-$left)."repeat(".$repeat.")".str_repeat("=", 12-$right)];
-        foreach ($this->actions as $action) {
+        $details = ["", str_repeat("=", 12 - $left)."repeat(".$repeat.")".str_repeat("=", 12 - $right)];
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -92,7 +90,7 @@ class RepeatAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, int $startIndex = 0): bool {
+    public function execute(Recipe $origin) {
         $count = $origin->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 
@@ -100,31 +98,14 @@ class RepeatAction extends Action implements ActionContainer {
         $this->throwIfInvalidNumber($start);
 
         $name = $this->counterName;
-        $start = (int)$start + $startIndex;
-        $end = $start + (int)$count - $startIndex;
+        $end = $start + (int)$count;
 
-        for ($i=$start; $i<$end; $i++) {
-            $this->lastIndex = $i;
+        for ($i = (int)$start; $i < $end; $i++) {
             $origin->addVariable(new NumberVariable($i, $name));
-            if (!$this->executeActions($origin, $this->getParent())) return false;
-            if ($this->wait or $this->isWaiting()) return true;
+            yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         }
-        $this->getParent()->resume();
+        $origin->resume();
         return true;
-    }
-
-    public function resume() {
-        $last = $this->next;
-
-        $this->wait = false;
-        $this->next = null;
-
-        if (!$this->isWaiting()) return;
-
-        $this->waiting = false;
-
-        $this->executeActions(...$last);
-        $this->execute($last[0], $this->lastIndex + 1);
     }
 
     public function hasCustomMenu(): bool {
@@ -149,22 +130,22 @@ class RepeatAction extends Action implements ActionContainer {
                 switch ($data) {
                     case 0:
                         $session->pop("parents");
-                        (new ActionContainerForm)->sendActionList($player, $parent);
+                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
                         break;
                     case 1:
-                        (new ActionContainerForm)->sendActionList($player, $this);
+                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
                         break;
                     case 2:
-                        (new ScriptForm)->sendSetRepeatCount($player, $this);
+                        $this->sendSetRepeatCountForm($player);
                         break;
                     case 3:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                     case 4:
-                        (new ActionContainerForm)->sendMoveAction($player, $parent, array_search($this, $parent->getActions(), true));
+                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($this, $parent->getActions(), true));
                         break;
                     case 5:
-                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
+                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                 }
             })->onClose(function (Player $player) {
@@ -172,13 +153,28 @@ class RepeatAction extends Action implements ActionContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function loadSaveData(array $contents): Action {
-        if (!isset($contents[1])) throw new \OutOfBoundsException();
+    public function sendSetRepeatCountForm(Player $player) {
+        (new CustomForm("@action.repeat.editCount"))
+            ->setContents([
+                new ExampleNumberInput("@action.repeat.repeatCount", "10", $this->getRepeatCount(), true, 1),
+                new CancelToggle()
+            ])->onReceive(function (Player $player, array $data) {
+                if ($data[1]) {
+                    $this->sendCustomMenu($player, ["@form.cancelled"]);
+                    return;
+                }
+
+                $this->setRepeatCount($data[0]);
+                $this->sendCustomMenu($player, ["@form.changed"]);
+            })->show($player);
+    }
+
+    public function loadSaveData(array $contents): FlowItem {
         $this->setRepeatCount((string)$contents[0]);
 
         foreach ($contents[1] as $content) {
-            $action = Action::loadSaveDataStatic($content);
-            $this->addAction($action);
+            $action = FlowItem::loadSaveDataStatic($content);
+            $this->addItem($action, FlowItemContainer::ACTION);
         }
 
         if (isset($contents[2])) $this->startIndex = (string)$contents[2];
@@ -187,12 +183,16 @@ class RepeatAction extends Action implements ActionContainer {
     }
 
     public function serializeContents(): array {
-        return  [
+        return [
             $this->repeatCount,
-            $this->actions,
+            $this->getItems(FlowItemContainer::ACTION),
             $this->startIndex,
             $this->counterName
         ];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getCounterName(), DummyVariable::NUMBER)];
     }
 
     public function isDataValid(): bool {
@@ -205,9 +205,9 @@ class RepeatAction extends Action implements ActionContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getActions() as $k => $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
     }
 }

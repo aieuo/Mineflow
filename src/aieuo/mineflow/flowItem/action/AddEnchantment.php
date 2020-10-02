@@ -2,21 +2,25 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 
-class AddEnchantment extends Action implements ItemFlowItem {
+class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
     protected $id = self::ADD_ENCHANTMENT;
@@ -35,7 +39,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
     /** @var string */
     private $enchantLevel;
 
-    public function __construct(string $item = "item", string $id = "", string $level = "1") {
+    public function __construct(string $item = "", string $id = "", string $level = "1") {
         $this->setItemVariableName($item);
         $this->enchantId = $id;
         $this->enchantLevel = $level;
@@ -66,7 +70,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
@@ -79,37 +83,34 @@ class AddEnchantment extends Action implements ItemFlowItem {
             $enchant = Enchantment::getEnchantmentByName($id);
         }
         if (!($enchant instanceof Enchantment)) {
-            throw new \UnexpectedValueException(Language::get("action.addEnchant.enchant.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound"));
         }
         $level = $origin->replaceVariables($this->getEnchantLevel());
         $this->throwIfInvalidNumber($level);
 
         $item->addEnchantment(new EnchantmentInstance($enchant, (int)$level));
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
-        return true;
+        yield true;
+        return $this->getItemVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.target.require.item", Language::get("form.example", ["item"]), $default[1] ?? $this->getItemVariableName()),
-                new Input("@action.addEnchant.form.id", Language::get("form.example", ["1"]), $default[2] ?? $this->getEnchantId()),
-                new Input("@action.addEnchant.form.level", Language::get("form.example", ["1"]), $default[3] ?? $this->getEnchantLevel()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.addEnchant.form.id", "1", $this->getEnchantId(), true),
+                new ExampleNumberInput("@action.addEnchant.form.level", "1", $this->getEnchantLevel(), false),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "item";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
         if ($data[2] === "") $data[3] = "1";
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setItemVariableName($content[0]);
         $this->setEnchantId($content[1]);
         $this->setEnchantLevel($content[2]);
@@ -120,7 +121,7 @@ class AddEnchantment extends Action implements ItemFlowItem {
         return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getItemVariableName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
     }
 }

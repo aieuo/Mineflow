@@ -2,18 +2,21 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 
-class Calculate extends Action {
+class Calculate extends FlowItem {
 
     protected $id = self::CALCULATE;
 
@@ -51,9 +54,6 @@ class Calculate extends Action {
     private $resultName;
 
     private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
-
-    /* @var string */
-    private $lastResult;
 
     public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
         $this->value = $value;
@@ -97,7 +97,7 @@ class Calculate extends Action {
         return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value = $origin->replaceVariables($this->getValue());
@@ -160,36 +160,30 @@ class Calculate extends Action {
                 $result = ceil($value);
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
-        return true;
+        yield true;
+        return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.calculate.form.value", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue()),
-                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[3] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.calculate.form.value", "10", $this->getValue(), true),
+                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        if ($data[3] === "") $data[3] = "result";
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setValue($content[0]);
         $this->setOperator($content[1]);
         $this->setResultName($content[2]);
@@ -200,7 +194,7 @@ class Calculate extends Action {
         return [$this->getValue(), $this->getOperator(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->lastResult;
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

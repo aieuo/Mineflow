@@ -2,10 +2,11 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 
-class CheckNothing extends Condition {
+class CheckNothing extends FlowItem implements Condition {
 
     protected $id = self::CHECK_NOTHING;
 
@@ -16,7 +17,8 @@ class CheckNothing extends Condition {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
+        yield true;
         return true;
     }
 
@@ -24,7 +26,7 @@ class CheckNothing extends Condition {
         return true;
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

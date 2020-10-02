@@ -2,18 +2,19 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class ComparisonNumber extends Condition {
+class ComparisonNumber extends FlowItem implements Condition {
 
     protected $id = self::COMPARISON_NUMBER;
 
@@ -79,7 +80,7 @@ class ComparisonNumber extends Condition {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());
@@ -87,7 +88,7 @@ class ComparisonNumber extends Condition {
         $operator = $this->getOperator();
 
         if (!is_numeric($value1) or !is_numeric($value2)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
 
         $value1 = (float)$value1;
@@ -112,42 +113,28 @@ class ComparisonNumber extends Condition {
                 $result = $value1 <= $value2;
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
+        yield true;
         return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@condition.comparisonNumber.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
-                new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $default[2] ?? $this->getOperator()),
-                new Input("@condition.comparisonNumber.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
+                new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
+                new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        } elseif (!$containsVariable and !is_numeric($data[1])) {
-            $errors[] = ["@flowItem.error.notNumber", 1];
-        }
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[3]);
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!$containsVariable and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Condition {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $content): FlowItem {
         $this->setValues($content[0], $content[2]);
         $this->setOperator($content[1]);
         return $this;

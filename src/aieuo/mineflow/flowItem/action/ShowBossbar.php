@@ -4,17 +4,20 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Bossbar;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Bossbar;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class ShowBossbar extends Action implements PlayerFlowItem {
+class ShowBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::SHOW_BOSSBAR;
@@ -33,7 +36,7 @@ class ShowBossbar extends Action implements PlayerFlowItem {
     private $value;
     private $barId;
 
-    public function __construct(string $player = "target", string $title = "", string $max = "", string $value = "", string $barId = "") {
+    public function __construct(string $player = "", string $title = "", string $max = "", string $value = "", string $barId = "") {
         $this->setPlayerVariableName($player);
         $this->title = $title;
         $this->max = $max;
@@ -82,7 +85,7 @@ class ShowBossbar extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getBarId()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $title = $origin->replaceVariables($this->getTitle());
@@ -96,34 +99,28 @@ class ShowBossbar extends Action implements PlayerFlowItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
-        Bossbar::add($player, $id, $title, (float)$max, (float)$value/(float)$max);
-        return true;
+        Bossbar::add($player, $id, $title, (float)$max, (float)$value / (float)$max);
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.showBossbar.form.title", Language::get("form.example", ["20"]), $default[2] ?? $this->getTitle()),
-                new Input("@action.showBossbar.form.max", Language::get("form.example", ["20"]), $default[3] ?? $this->getMax()),
-                new Input("@action.showBossbar.form.value", Language::get("form.example", ["20"]), $default[4] ?? $this->getValue()),
-                new Input("@action.showBossbar.form.id", Language::get("form.example", ["20"]), $default[5] ?? $this->getBarId()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
+                new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
+                new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
+                new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        for ($i=2; $i<=5; $i++) {
-            if ($data[$i] === "") $errors[] = ["@form.insufficient", $i];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[4])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1]);
         $this->setMax($content[2]);
@@ -133,6 +130,12 @@ class ShowBossbar extends Action implements PlayerFlowItem {
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getBarId()];
+        return [
+            $this->getPlayerVariableName(),
+            $this->getTitle(),
+            $this->getMax(),
+            $this->getValue(),
+            $this->getBarId()
+        ];
     }
 }

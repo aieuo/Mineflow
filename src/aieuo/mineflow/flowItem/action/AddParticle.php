@@ -4,19 +4,21 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
 
-class AddParticle extends Action implements PositionFlowItem {
+class AddParticle extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
     protected $id = self::ADD_PARTICLE;
@@ -36,7 +38,7 @@ class AddParticle extends Action implements PositionFlowItem {
     /** @var string */
     private $amount;
 
-    public function __construct(string $position = "pos", string $particle = "", string $amount = "1") {
+    public function __construct(string $position = "", string $particle = "", string $amount = "1") {
         $this->setPositionVariableName($position);
         $this->particle = $particle;
         $this->amount = $amount;
@@ -67,7 +69,7 @@ class AddParticle extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() == 1 ? "" : "s"]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $particleName = $origin->replaceVariables($this->getParticle());
@@ -78,42 +80,31 @@ class AddParticle extends Action implements PositionFlowItem {
         $position = $this->getPosition($origin);
         $this->throwIfInvalidPosition($position);
 
-        for ($i=0; $i<(int)$amount; $i++) {
+        for ($i = 0; $i < (int)$amount; $i++) {
             $pk = new SpawnParticleEffectPacket();
             $pk->position = $position;
             $pk->particleName = $particleName;
             Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
         }
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Input("@action.addParticle.form.particle", Language::get("form.example", ["minecraft:explosion_particle"]), $default[2] ?? $this->getParticle()),
-                new Input("@action.addParticle.form.amount", Language::get("form.example", ["1"]), $default[3] ?? $this->getAmount()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+                new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $this->getParticle(), true),
+                new ExampleNumberInput("@action.addParticle.form.amount", "1", $this->getAmount(), true, 1),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "pos";
-        $containsVariable = !Main::getVariableHelper()->containsVariable($data[3]);
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        } elseif (!$containsVariable and !is_numeric($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        } elseif (!$containsVariable and (int)$data[3] < 1) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [1]), 3];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0]);
         $this->setParticle($content[1]);
         $this->setAmount($content[2]);

@@ -2,19 +2,22 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\Variable;
-use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\Variable;
 
-class CreateMapVariable extends Action {
+class CreateMapVariable extends FlowItem {
 
     protected $id = self::CREATE_MAP_VARIABLE;
 
@@ -75,7 +78,7 @@ class CreateMapVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getKey()), implode(",", $this->getVariableValue())]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
@@ -84,7 +87,7 @@ class CreateMapVariable extends Action {
         $values = $this->getVariableValue();
 
         $variable = new MapVariable([], $name);
-        for ($i=0; $i<count($keys); $i++) {
+        for ($i = 0; $i < count($keys); $i++) {
             $key = $keys[$i];
             $value = $values[$i] ?? "";
             if ($key === "") continue;
@@ -110,34 +113,29 @@ class CreateMapVariable extends Action {
         } else {
             $helper->add($variable);
         }
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Input("@action.variable.form.key", Language::get("form.example", ["auieo"]), $default[2] ?? implode(",", $this->getKey())),
-                new Input("@action.variable.form.value", Language::get("form.example", ["aeiuo"]), $default[3] ?? implode(",", $this->getVariableValue())),
-                new Toggle("@action.variable.form.global", $default[4] ?? !$this->isLocal),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new ExampleInput("@action.variable.form.key", "auieo", implode(",", $this->getKey()), false),
+                new ExampleInput("@action.variable.form.value", "aeiuo", implode(",", $this->getVariableValue()), false),
+                new Toggle("@action.variable.form.global", !$this->isLocal),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
         $name = $data[1];
         $key = array_map("trim", explode(",", $data[2]));
         $value = array_map("trim", explode(",", $data[3]));
-        if ($name === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$name, $key, $value, !$data[4]], "cancel" => $data[5]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setKey($content[1]);
         $this->setVariableValue($content[2]);
@@ -147,5 +145,9 @@ class CreateMapVariable extends Action {
 
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getKey(), $this->getVariableValue(), $this->isLocal];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getVariableName(), DummyVariable::MAP)];
     }
 }

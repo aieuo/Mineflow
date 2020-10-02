@@ -2,25 +2,29 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\ui\CustomFormForm;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\ui\CustomFormForm;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 
-class SendForm extends Action implements PlayerFlowItem {
+class SendForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::SEND_FORM;
@@ -36,7 +40,7 @@ class SendForm extends Action implements PlayerFlowItem {
     /** @var string */
     private $formName;
 
-    public function __construct(string $player = "target", string $formName = "") {
+    public function __construct(string $player = "", string $formName = "") {
         $this->setPlayerVariableName($player);
         $this->formName = $formName;
     }
@@ -58,7 +62,7 @@ class SendForm extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getFormName());
@@ -66,7 +70,7 @@ class SendForm extends Action implements PlayerFlowItem {
         $helper = Main::getVariableHelper();
         $form = $manager->getForm($name);
         if ($form === null) {
-            throw new \UnexpectedValueException(Language::get("action.sendForm.notFound", [$this->getName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));
         }
 
         $player = $this->getPlayer($origin);
@@ -122,31 +126,24 @@ class SendForm extends Action implements PlayerFlowItem {
             }
         }
         $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.sendForm.form.name", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getFormName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ExampleInput("@action.sendForm.form.name", "aieuo", $this->getFormName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setFormName($content[1]);
         return $this;

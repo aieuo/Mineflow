@@ -4,6 +4,7 @@
 namespace aieuo\mineflow\flowItem\base;
 
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
@@ -33,7 +34,7 @@ trait ItemFlowItemTrait {
 
     public function throwIfInvalidItem(?Item $item) {
         if (!($item instanceof Item)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.item"], $this->getItemVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.item"], $this->getItemVariableName()]));
         }
     }
 }

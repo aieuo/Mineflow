@@ -6,16 +6,18 @@ use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
+class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
 
     protected $id = self::IN_AREA;
@@ -28,7 +30,7 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 
-    public function __construct(string $entity = "target", string $pos1 = "pos1", string $pos2 = "pos2") {
+    public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         $this->setEntityVariableName($entity);
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
@@ -43,7 +45,7 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);
@@ -57,32 +59,28 @@ class InArea extends Condition implements EntityFlowItem, PositionFlowItem {
 
         $pos = $entity->floor();
 
+        yield true;
         return $pos->x >= min($pos1->x, $pos2->x) and $pos->x <= max($pos1->x, $pos2->x)
             and $pos->y >= min($pos1->y, $pos2->y) and $pos->y <= max($pos1->y, $pos2->y)
             and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@condition.inArea.form.pos1", Language::get("form.example", ["pos1"]), $default[2] ?? $this->getPositionVariableName("pos1")),
-                new Input("@condition.inArea.form.pos2", Language::get("form.example", ["pos2"]), $default[3] ?? $this->getPositionVariableName("pos2")),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+                new ExampleInput("@condition.inArea.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
+                new ExampleInput("@condition.inArea.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Condition {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setPositionVariableName($content[1], "pos1");
         $this->setPositionVariableName($content[2], "pos2");

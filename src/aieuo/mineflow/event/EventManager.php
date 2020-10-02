@@ -4,10 +4,10 @@ namespace aieuo\mineflow\event;
 
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\utils\Language;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
@@ -24,6 +24,7 @@ use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerJumpEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
@@ -37,7 +38,7 @@ class EventManager {
     private $config;
 
     /** @var array */
-    private $eventPaths = [
+    private $fullNames = [
         "PlayerChatEvent" => PlayerChatEvent::class,
         "PlayerCommandPreprocessEvent" => PlayerCommandPreprocessEvent::class,
         "PlayerInteractEvent" => PlayerInteractEvent::class,
@@ -48,7 +49,7 @@ class EventManager {
         "ServerStartEvent" => ServerStartEvent::class,
         "SignChangeEvent" => SignChangeEvent::class,
         "EntityDamageEvent" => EntityDamageEvent::class,
-        "EntityAttackEvent" => EntityDamageByEntityEvent::class,
+        "EntityAttackEvent" => EntityAttackEvent::class,
         "PlayerToggleFlightEvent" => PlayerToggleFlightEvent::class,
         "PlayerDeathEvent" => PlayerDeathEvent::class,
         "EntityLevelChangeEvent" => EntityLevelChangeEvent::class,
@@ -64,23 +65,24 @@ class EventManager {
         "PlayerToggleSneakEvent" => PlayerToggleSneakEvent::class,
         "PlayerToggleSprintEvent" => PlayerToggleSprintEvent::class,
         "ProjectileHitEntityEvent" => ProjectileHitEntityEvent::class,
+        "PlayerJumpEvent" => PlayerJumpEvent::class,
     ];
 
     /** @var array */
     private $defaultEnableEvents = [
-        "PlayerChatEvent",
-        "PlayerCommandPreprocessEvent",
-        "PlayerInteractEvent",
-        "PlayerJoinEvent",
-        "BlockBreakEvent",
-        "BlockPlaceEvent",
-        "ServerStartEvent",
-        "EntityDamageEvent",
-        "EntityAttackEvent",
-        "PlayerToggleFlightEvent",
-        "PlayerDeathEvent",
-        "EntityLevelChangeEvent",
-        "CraftItemEvent",
+        PlayerChatEvent::class,
+        PlayerCommandPreprocessEvent::class,
+        PlayerInteractEvent::class,
+        PlayerJoinEvent::class,
+        BlockBreakEvent::class,
+        BlockPlaceEvent::class,
+        ServerStartEvent::class,
+        EntityDamageEvent::class,
+        EntityAttackEvent::class,
+        PlayerToggleFlightEvent::class,
+        PlayerDeathEvent::class,
+        EntityLevelChangeEvent::class,
+        CraftItemEvent::class,
     ];
 
     /** @var array */
@@ -97,26 +99,40 @@ class EventManager {
     }
 
     public function getEvents(): array {
-        return $this->eventPaths;
+        return $this->config->getAll(true);
     }
 
-    public function getEventPath(string $event): ?string {
-        return $this->eventPaths[$event] ?? null;
+    public function getFullName(string $event): ?string {
+        return $this->fullNames[$event] ?? null;
+    }
+
+    public function getEventName(string $fullName) {
+        $names = explode("\\", $fullName);
+        return end($names);
     }
 
     public function getDefaultEventSettings(): array {
-        $events = $this->getEvents();
         $enables = $this->defaultEnableEvents;
         $settings = [];
 
-        foreach ($events as $event => $value) {
-            $settings[$event] = in_array($event, $enables);
+        foreach ($this->fullNames as $event => $value) {
+            $settings[$value] = in_array($value, $enables);
         }
         return $settings;
     }
 
     private function checkEventSettings() {
         $defaults = $this->getDefaultEventSettings();
+
+        $isOld = false;
+        $new = [];
+        foreach ($this->config->getAll() as $event => $value) {
+            $full = $this->getFullName($event) ?? $event;
+            $new[$full] = $value;
+
+            if ($full !== $event) $isOld = true;
+        }
+        if ($isOld) $this->config->setAll($new);
 
         $this->config->setDefaults($defaults);
         $this->config->save();
@@ -156,5 +172,9 @@ class EventManager {
             }
         }
         return $recipes;
+    }
+
+    public function translateEventName(string $event): string {
+        return Language::exists("trigger.event.".$event) ? Language::get("trigger.event.".$event) : $event;
     }
 }

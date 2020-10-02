@@ -2,17 +2,19 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class ExecuteRecipe extends Action {
+class ExecuteRecipe extends FlowItem {
 
     protected $id = self::EXECUTE_RECIPE;
 
@@ -34,7 +36,9 @@ class ExecuteRecipe extends Action {
 
     public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;
-        $this->args = array_filter(array_map("trim", explode(",", $args)), function (string $t) { return $t !== ""; });
+        $this->args = array_filter(array_map("trim", explode(",", $args)), function (string $t) {
+            return $t !== "";
+        });
     }
 
     public function setRecipeName(string $name): self {
@@ -63,7 +67,7 @@ class ExecuteRecipe extends Action {
         return Language::get($this->detail, [$this->getRecipeName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
@@ -74,7 +78,7 @@ class ExecuteRecipe extends Action {
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), Language::get("action.executeRecipe.notFound")]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }
 
         $recipe = clone $recipe;
@@ -92,29 +96,24 @@ class ExecuteRecipe extends Action {
 
         $recipe->addVariables($origin->getVariables());
         $recipe->executeAllTargets($origin->getTarget(), $origin->getVariables(), $origin->getEvent(), $args);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.executeRecipe.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getRecipeName()),
-                new Input("@action.callRecipe.form.args", Language::get("form.example", ["{target}, 1, aieuo"]), $default[1] ?? implode(", ", $this->getArgs())),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
+                new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors = [["@form.insufficient", 1]];
-        }
-        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1] ?? []);
         return $this;

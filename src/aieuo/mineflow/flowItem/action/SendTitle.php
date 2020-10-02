@@ -4,17 +4,19 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class SendTitle extends Action implements PlayerFlowItem {
+class SendTitle extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::SEND_TITLE;
@@ -38,7 +40,7 @@ class SendTitle extends Action implements PlayerFlowItem {
     /** @var string */
     private $fadeout;
 
-    public function __construct(string $player = "target", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
+    public function __construct(string $player = "", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
         $this->setPlayerVariableName($player);
         $this->title = $title;
         $this->subtitle = $subtitle;
@@ -81,7 +83,7 @@ class SendTitle extends Action implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getSubTitle(), $this->fadein, $this->stay, $this->fadeout]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $title = $origin->replaceVariables($this->getTitle());
@@ -96,40 +98,32 @@ class SendTitle extends Action implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendTitle($title, $subtitle, ...$times);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@action.sendTitle.form.title", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getTitle()),
-                new Input("@action.sendTitle.form.subtitle", Language::get("form.example", ["aieuo"]), $default[3] ?? $this->getSubTitle()),
-                new Input("@action.sendTitle.form.fadein", Language::get("form.example", ["-1"]), $default[4] ?? $this->fadein),
-                new Input("@action.sendTitle.form.stay", Language::get("form.example", ["-1"]), $default[5] ?? $this->stay),
-                new Input("@action.sendTitle.form.fadeout", Language::get("form.example", ["-1"]), $default[6] ?? $this->fadeout),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
+                new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
+                new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),
+                new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $this->stay, true, -1),
+                new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $this->fadeout, true, -1),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        if ($data[1] === "") $data[1] = "target";
         if ($data[2] === "" and $data[3] === "") {
             $errors = [["@form.insufficient", 2], ["@form.insufficient", 3]];
-        }
-        for ($i=4; $i<=6; $i++) {
-            if ($data[$i] === "") $data[$i] = "-1";
-            if (!is_numeric($data[$i]) and !Main::getVariableHelper()->containsVariable($data[$i])) {
-                $errors[] = ["@flowItem.error.notNumber", $i];
-            }
         }
         return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5], $data[6]], "cancel" => $data[7], "errors" => $errors];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1], $content[2]);
         if (isset($content[5])) {

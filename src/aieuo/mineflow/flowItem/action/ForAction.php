@@ -2,25 +2,25 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\ui\FlowItemForm;
-use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\ui\ActionForm;
-use aieuo\mineflow\ui\ActionContainerForm;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\ui\FlowItemContainerForm;
+use aieuo\mineflow\ui\FlowItemForm;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use pocketmine\Player;
 
-class ForAction extends Action implements ActionContainer {
-    use ActionContainerTrait {
-        resume as traitResume;
-    }
+class ForAction extends FlowItem implements FlowItemContainer {
+    use FlowItemContainerTrait;
 
     protected $id = self::ACTION_FOR;
 
@@ -35,21 +35,18 @@ class ForAction extends Action implements ActionContainer {
 
     /** @var string */
     private $counterName = "i";
-    /** @var string  */
+    /** @var string */
     private $startIndex = "0";
     /** @var string */
     private $endIndex = "9";
     /** string */
     private $fluctuation = "1";
 
-    /* @var bool */
-    private $lastResult;
-
     /** @var array */
     private $counter;
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
     }
 
@@ -93,7 +90,7 @@ class ForAction extends Action implements ActionContainer {
         $repeat = str_replace("+=-", "-=", $repeat);
 
         $details = ["", "==== for(".$repeat.") ===="];
-        foreach ($this->actions as $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -104,56 +101,24 @@ class ForAction extends Action implements ActionContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin, bool $first = true): bool {
-        if ($first) {
-            $counterName = $origin->replaceVariables($this->counterName);
+    public function execute(Recipe $origin) {
+        $counterName = $origin->replaceVariables($this->counterName);
 
-            $start = $origin->replaceVariables($this->startIndex);
-            $this->throwIfInvalidNumber($start);
+        $start = $origin->replaceVariables($this->startIndex);
+        $this->throwIfInvalidNumber($start);
 
-            $end = $origin->replaceVariables($this->endIndex);
-            $this->throwIfInvalidNumber($end);
+        $end = $origin->replaceVariables($this->endIndex);
+        $this->throwIfInvalidNumber($end);
 
-            $fluctuation = $origin->replaceVariables($this->fluctuation);
-            $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
+        $fluctuation = $origin->replaceVariables($this->fluctuation);
+        $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
 
-            $this->initCounter($counterName, $start, $end, $fluctuation);
+        for ($i = $start; $i <= $end; $i += $fluctuation) {
+            $origin->addVariable(new NumberVariable($i, $counterName));
+            yield from $this->executeAll($origin, FlowItemContainer::ACTION);
         }
-
-        $counter = $this->counter;
-
-        for ($i=$counter["current"]; $i<=$counter["end"]; $i+=$counter["fluctuation"]) {
-            $this->counter["current"] += $counter["fluctuation"];
-            $origin->addVariable(new NumberVariable($i, $counter["name"]));
-            if (!$this->executeActions($origin, $this->getParent())) return false;
-            if ($this->wait or $this->isWaiting()) return true;
-        }
-        $this->getParent()->resume();
-        return true;
-    }
-
-    public function resume() {
-        $last = $this->next;
-
-        $this->wait = false;
-        $this->next = null;
-
-        if (!$this->isWaiting()) return;
-
-        $this->waiting = false;
-
-        $this->executeActions(...$last);
-        $this->execute($last[0], false);
-    }
-
-    public function initCounter(string $counter, int $start, int $end, int $fluctuation) {
-        $this->counter = [
-            "name" => $counter,
-            "start" => $start,
-            "current" => $start,
-            "end" => $end,
-            "fluctuation" => $fluctuation,
-        ];
+        $origin->resume();
+        yield true;
     }
 
     public function hasCustomMenu(): bool {
@@ -178,22 +143,22 @@ class ForAction extends Action implements ActionContainer {
                 switch ($data) {
                     case 0:
                         $session->pop("parents");
-                        (new ActionContainerForm)->sendActionList($player, $parent);
+                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
                         break;
                     case 1:
-                        (new ActionContainerForm)->sendActionList($player, $this);
+                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
                         break;
                     case 2:
                         $this->sendSettingCounter($player);
                         break;
                     case 3:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent);
+                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                     case 4:
-                        (new ActionContainerForm)->sendMoveAction($player, $parent, array_search($this, $parent->getActions(), true));
+                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($this, $parent->getActions(), true));
                         break;
                     case 5:
-                        (new ActionForm)->sendConfirmDelete($player, $this, $parent);
+                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::ACTION);
                         break;
                 }
             })->onClose(function (Player $player) {
@@ -201,45 +166,26 @@ class ForAction extends Action implements ActionContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSettingCounter(Player $player, array $default = [], array $errors = []) {
+    public function sendSettingCounter(Player $player) {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new Input("@action.for.counterName", Language::get("form.example", ["i"]), $default[0] ?? $this->getCounterName()),
-                new Input("@action.for.start", Language::get("form.example", ["0"]), $default[1] ?? $this->getStartIndex()),
-                new Input("@action.for.end", Language::get("form.example", ["9"]), $default[2] ?? $this->getEndIndex()),
-                new Input("@action.for.fluctuation", Language::get("form.example", ["1"]), $default[3] ?? $this->getFluctuation())
+                new ExampleInput("@action.for.counterName", "i", $this->getCounterName(), true),
+                new ExampleNumberInput("@action.for.start", "0", $this->getStartIndex(), true),
+                new ExampleNumberInput("@action.for.end", "9", $this->getEndIndex(), true),
+                new ExampleNumberInput("@action.for.fluctuation", "1", $this->getFluctuation(), true, null, null, [0])
             ])->onReceive(function (Player $player, array $data) {
-                $variableHelper = Main::getVariableHelper();
-                for ($i=0; $i<4; $i++) {
-                    if ($data[$i] === "") {
-                        $this->sendSettingCounter($player, $data, [["@form.insufficient", $i]]);
-                        return;
-                    }
-                    $contains = $variableHelper->containsVariable($data[$i]);
-                    if ($i !== 0 and !$contains and !is_numeric($data[$i])) {
-                        $this->sendSettingCounter($player, $data, [["@flowItem.error.notNumber", $i]]);
-                        return;
-                    }
-                    if ($i === 3 and $data[$i] == 0) {
-                        $this->sendSettingCounter($player, $data, [["@flowItem.error.excludedNumber", "0"]]);
-                        return;
-                    }
-                }
-
                 $this->setCounterName($data[0]);
                 $this->setStartIndex($data[1]);
                 $this->setEndIndex($data[2]);
                 $this->setFluctuation($data[3]);
                 $this->sendCustomMenu($player, ["@form.changed"]);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
-    public function loadSaveData(array $contents): Action {
-        if (!isset($contents[4])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
-            $action = Action::loadSaveDataStatic($content);
-            $this->addAction($action);
+            $action = FlowItem::loadSaveDataStatic($content);
+            $this->addItem($action, FlowItemContainer::ACTION);
         }
 
         $this->setCounterName($contents[1]);
@@ -250,13 +196,17 @@ class ForAction extends Action implements ActionContainer {
     }
 
     public function serializeContents(): array {
-        return  [
-            $this->actions,
+        return [
+            $this->getItems(FlowItemContainer::ACTION),
             $this->counterName,
             $this->startIndex,
             $this->endIndex,
             $this->fluctuation,
         ];
+    }
+
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getCounterName(), DummyVariable::NUMBER)];
     }
 
     public function isDataValid(): bool {
@@ -269,9 +219,9 @@ class ForAction extends Action implements ActionContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getActions() as $k => $action) {
+        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setActions($actions);
+        $this->setItems($actions, FlowItemContainer::ACTION);
     }
 }

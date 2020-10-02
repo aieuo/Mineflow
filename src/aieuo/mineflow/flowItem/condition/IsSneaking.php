@@ -4,16 +4,17 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class IsSneaking extends Condition implements EntityFlowItem {
+class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
     protected $id = self::IS_SNEAKING;
@@ -26,7 +27,7 @@ class IsSneaking extends Condition implements EntityFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
 
-    public function __construct(string $entity = "target") {
+    public function __construct(string $entity = "") {
         $this->setEntityVariableName($entity);
     }
 
@@ -39,33 +40,30 @@ class IsSneaking extends Condition implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
+        yield true;
         return $entity->isSneaking();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         if (isset($content[0])) $this->setEntityVariableName($content[0]);
         return $this;
     }

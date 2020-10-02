@@ -2,9 +2,9 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
-use pocketmine\command\CommandSender;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
+use pocketmine\command\CommandSender;
 use pocketmine\Player;
 
 class RecipeCommand extends MineflowSubcommand {

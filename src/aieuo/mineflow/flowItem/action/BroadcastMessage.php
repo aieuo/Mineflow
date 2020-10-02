@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use pocketmine\Server;
 use aieuo\mineflow\recipe\Recipe;
+use pocketmine\Server;
 
 class BroadcastMessage extends TypeMessage {
 
@@ -14,11 +14,11 @@ class BroadcastMessage extends TypeMessage {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
         Server::getInstance()->broadcastMessage($message);
-        return true;
+        yield true;
     }
 }

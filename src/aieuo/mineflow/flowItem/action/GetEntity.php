@@ -2,22 +2,24 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\EntityHolder;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
-use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\EntityHolder;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
 
-class GetEntity extends Action {
+class GetEntity extends FlowItem {
 
     protected $id = self::GET_ENTITY;
 
@@ -67,7 +69,7 @@ class GetEntity extends Action {
         return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getKey());
@@ -79,40 +81,33 @@ class GetEntity extends Action {
         if ($entity instanceof Player) {
             $result = new PlayerObjectVariable($entity, $resultName, $entity->getName());
             $origin->addVariable($result);
-            return true;
+            return $this->getResultName();
         }
         if ($entity instanceof Entity) {
             $result = new EntityObjectVariable($entity, $resultName, $entity->getNameTag());
             $origin->addVariable($result);
-            return true;
+            return $this->getResultName();
         }
         $origin->addVariable(new MapVariable([], $resultName)); // TODO: .
-        return false;
+        yield true;
+        return $this->getResultName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.getEntity.form.target", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getKey()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["entity"]), $default[2] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getKey(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "entity", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setKey($content[0]);
         $this->setResultName($content[1]);
         return $this;
@@ -122,7 +117,7 @@ class GetEntity extends Action {
         return [$this->getKey(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getResultName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::PLAYER)];
     }
 }

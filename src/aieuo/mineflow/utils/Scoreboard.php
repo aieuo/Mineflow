@@ -47,7 +47,7 @@ class Scoreboard {
 
     public function setScore(string $name, int $value, int $id = null): self {
         $this->scores[$name] = $value;
-        if (!isset($this->scoreIds[$name])) $this->scoreIds[$name] = $id ?? $this->scoreId ++;
+        if (!isset($this->scoreIds[$name])) $this->scoreIds[$name] = $id ?? $this->scoreId++;
 
         $this->updateScoreToAllPlayer($name, $value, $this->scoreIds[$name]);
         return $this;
@@ -68,22 +68,22 @@ class Scoreboard {
         return $this;
     }
 
-	public function removeScoreName(int $score): self {
-		$oldNames = array_keys($this->scores, $score);
-		if (empty($oldNames)) return $this;
+    public function removeScoreName(int $score): self {
+        $oldNames = array_keys($this->scores, $score);
+        if (empty($oldNames)) return $this;
 
-		foreach ($oldNames as $oldName) {
-			$this->removeScore($oldName);
-		}
-		return $this;
-	}
+        foreach ($oldNames as $oldName) {
+            $this->removeScore($oldName);
+        }
+        return $this;
+    }
 
-	public function removeScoreNames(int ...$scores): self {
-		foreach ($scores as $score) {
-			$this->removeScoreName($score);
-		}
-		return $this;
-	}
+    public function removeScoreNames(int ...$scores): self {
+        foreach ($scores as $score) {
+            $this->removeScoreName($score);
+        }
+        return $this;
+    }
 
     public function getScore(string $name): ?int {
         return $this->scores[$name] ?? null;
@@ -147,7 +147,7 @@ class Scoreboard {
         $entry = new ScorePacketEntry();
         $entry->objectiveName = $this->id;
         $entry->scoreboardId = $this->scoreIds[$scoreName];
-		$entry->score = 0;
+        $entry->score = 0;
 
         $pk = new SetScorePacket();
         $pk->type = $pk::TYPE_REMOVE;

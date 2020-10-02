@@ -2,17 +2,18 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class ExistsVariable extends Condition {
+class ExistsVariable extends FlowItem implements Condition {
 
     protected $id = self::EXISTS_VARIABLE;
 
@@ -48,34 +49,30 @@ class ExistsVariable extends Condition {
         return Language::get($this->detail, [$this->getVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
         $name = $origin->replaceVariables($this->getVariableName());
 
+        yield true;
         return $origin->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.variable.form.name", Language::get("form.example", ["aieuo"]), $default[1] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
-    public function loadSaveData(array $content): Condition {
-        if (!isset($content[0])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         return $this;
     }

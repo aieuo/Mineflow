@@ -4,17 +4,19 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class IncrementScoreboardScore extends Action implements ScoreboardFlowItem {
+class IncrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
 
     protected $id = self::INCREMENT_SCOREBOARD_SCORE;
@@ -32,7 +34,7 @@ class IncrementScoreboardScore extends Action implements ScoreboardFlowItem {
     /* @var string */
     private $score;
 
-    public function __construct(string $scoreboard = "board", string $name = "", string $score = "") {
+    public function __construct(string $scoreboard = "", string $name = "", string $score = "") {
         $this->setScoreboardVariableName($scoreboard);
         $this->scoreName = $name;
         $this->score = $score;
@@ -63,7 +65,7 @@ class IncrementScoreboardScore extends Action implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "" and $this->getScore() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getScoreName());
@@ -75,33 +77,25 @@ class IncrementScoreboardScore extends Action implements ScoreboardFlowItem {
         $this->throwIfInvalidScoreboard($board);
 
         $board->setScore($name, ($board->getScore($name) ?? 0) + (int)$score);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.scoreboard", Language::get("form.example", ["board"]), $default[1] ?? $this->getScoreboardVariableName()),
-                new Input("@action.setScore.form.name", Language::get("form.example", ["aieuo"]), $default[2] ?? $this->getScoreName()),
-                new Input("@action.setScore.form.score", Language::get("form.example", ["100"]), $default[3] ?? $this->getScore()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
+                new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
+                new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "board";
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        if (!is_numeric($data[3]) and !Main::getVariableHelper()->containsVariable($data[3])) {
-            $errors[] = ["@flowItem.error.notNumber", 3];
-        }
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => []];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setScoreboardVariableName($content[0]);
         $this->setScoreName($content[1]);
         $this->setScore($content[2]);

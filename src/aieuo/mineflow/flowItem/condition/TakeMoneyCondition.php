@@ -2,25 +2,26 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use pocketmine\utils\TextFormat;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\economy\Economy;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
+use pocketmine\utils\TextFormat;
 
-class TakeMoney extends TypeMoney {
+class TakeMoneyCondition extends TypeMoney {
 
-    protected $id = self::TAKE_MONEY;
+    protected $id = self::TAKE_MONEY_CONDITION;
 
     protected $name = "condition.takeMoney.name";
     protected $detail = "condition.takeMoney.detail";
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
-            throw new \UnexpectedValueException(TextFormat::RED.Language::get("economy.notfound"));
+            throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $name = $origin->replaceVariables($this->getPlayerName());
@@ -34,6 +35,8 @@ class TakeMoney extends TypeMoney {
             $economy->takeMoney($name, (int)$amount);
             return true;
         }
+
+        yield true;
         return false;
     }
 }

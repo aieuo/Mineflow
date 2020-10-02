@@ -6,6 +6,7 @@ namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
@@ -54,21 +55,16 @@ class CustomFormForm {
     public function sendAddForm(Player $player, array $defaults = [], array $errors = []) {
         (new CustomForm("@form.form.addForm.title"))
             ->setContents([
-                new Input("@customForm.name", "", $defaults[0] ?? ""),
+                new Input("@customForm.name", "", $defaults[0] ?? "", true),
                 new Dropdown("@form.form.addForm.type", [
                     Language::get("customForm.modal"),
                     Language::get("customForm.form"),
                     Language::get("customForm.custom_form"),
                 ]),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[2]) {
                     $this->sendMenu($player);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendAddForm($player, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 
@@ -112,16 +108,11 @@ class CustomFormForm {
     public function sendSelectForm(Player $player, array $default = [], array $errors = []) {
         (new CustomForm("@form.form.select.title"))
             ->setContents([
-                new Input("@customForm.name", "", $default[0] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new Input("@customForm.name", "", $default[0] ?? "", true),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {
                     $this->sendMenu($player);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendSelectForm($player, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 
@@ -154,7 +145,7 @@ class CustomFormForm {
                     $this->sendMenu($player);
                     return;
                 }
-                $data --;
+                $data--;
 
                 $form = $forms[$data]["form"];
                 if (!($form instanceof Form)) $form = Form::createFromArray($forms[$data]["form"], $forms[$data]["name"]); // FIXME: error object?
@@ -226,7 +217,7 @@ class CustomFormForm {
                                     Language::get("customForm.receive.modal.button", ["1"])."\n".
                                     Language::get("customForm.receive.modal.button.text", ["1", $form->getButton1()])),
                                 new Input("@customForm.text", "", $form->getButton1()),
-                                new Toggle("@form.cancelAndBack"),
+                                new CancelToggle(),
                             ])->onReceive(function (Player $player, array $data, ModalForm $form) {
                                 if ($data[2]) {
                                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
@@ -245,7 +236,7 @@ class CustomFormForm {
                                     Language::get("customForm.receive.modal.button", ["2"])."\n".
                                     Language::get("customForm.receive.modal.button.text", ["2", $form->getButton2()])),
                                 new Input("@customForm.text", "", $form->getButton2()),
-                                new Toggle("@form.cancelAndBack"),
+                                new CancelToggle(),
                             ])->onReceive(function (Player $player, array $data, ModalForm $form) {
                                 if ($data[0]) {
                                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
@@ -423,7 +414,7 @@ class CustomFormForm {
         (new CustomForm("@form.form.formMenu.changeTitle"))
             ->setContents([
                 new Input("@customForm.title", "", $form->getTitle()),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Form $form) {
                 if ($data[1]) {
                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
@@ -441,7 +432,7 @@ class CustomFormForm {
         (new CustomForm("@form.form.formMenu.content"))
             ->setContents([
                 new Input("@customForm.content", "", $form->getContent()),
-                new Toggle("@form.cancelAndBack"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Form $form) {
                 if (!($form instanceof ModalForm) and !($form instanceof ListForm)) return;
 
@@ -459,16 +450,11 @@ class CustomFormForm {
     public function sendChangeFormName(Player $player, Form $form, array $default = [], array $errors = []) {
         (new CustomForm("@form.form.formMenu.changeName"))
             ->setContents([
-                new Input("@customForm.name", "", $default[0] ?? $form->getName()),
-                new Toggle("@form.cancelAndBack"),
+                new Input("@customForm.name", "", $default[0] ?? $form->getName(), true),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Form $form) {
                 if ($data[1]) {
                     $this->sendFormMenu($player, $form, ["@form.cancelled"]);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendChangeFormName($player, $form, [["@form.insufficient", 0]]);
                     return;
                 }
 
@@ -499,10 +485,11 @@ class CustomFormForm {
     public function sendAddListButton(Player $player, ListForm $form, array $errors = []) {
         (new CustomForm("@customForm.list.addButton"))
             ->setContents([
-                new Input("@customForm.text"),
+                new Input("@customForm.text", "", "", true),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
-                if ($data[0] === "") {
-                    $this->sendAddListButton($player, $form, [["@form.insufficient", 0]]);
+                if ($data[1]) {
+                    $this->sendListFormMenu($player, $form, ["@form.canceled"]);
                     return;
                 }
 
@@ -524,7 +511,7 @@ class CustomFormForm {
                     Language::get("customForm.toggle", [" (toggle)"]),
                 ]),
                 new Input("@customForm.text"),
-                new Toggle("@form.cancelAndBack")
+                new CancelToggle()
             ])->onReceive(function (Player $player, array $data, CustomForm $form) {
                 if ($data[2]) {
                     $this->sendFormMenu($player, $form);
@@ -628,13 +615,13 @@ class CustomFormForm {
                         $options = [];
                         $i = -1;
                         foreach ($element->getOptions() as $i => $option) {
-                            if ($data[$i+1] !== "") $options[] = $data[$i+1];
+                            if ($data[$i + 1] !== "") $options[] = $data[$i + 1];
                         }
-                        foreach (explode(";", $data[$i+2]) as $item) {
+                        foreach (explode(";", $data[$i + 2]) as $item) {
                             if ($item !== "") $options[] = $item;
                         }
                         $element->setOptions($options);
-                        $delete = $data[$i+3];
+                        $delete = $data[$i + 3];
                         break;
                 }
                 if ($delete) {
@@ -681,16 +668,11 @@ class CustomFormForm {
     public function sendSelectRecipe(Player $player, Form $form, array $default = [], array $errors = []) {
         (new CustomForm(Language::get("form.recipes.add", [$form->getName()])))
             ->setContents([
-                new Input("@form.recipe.recipeName", "", $default[0] ?? ""),
-                new Toggle("@form.cancelAndBack"),
+                new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Form $form) {
                 if ($data[1]) {
                     $this->sendRecipeList($player, $form);
-                    return;
-                }
-
-                if ($data[0] === "") {
-                    $this->sendSelectRecipe($player, $form, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 

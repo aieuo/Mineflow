@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Slider extends Element {
 
     /** @var string */
@@ -90,14 +92,14 @@ class Slider extends Element {
 
     public function jsonSerialize(): array {
         if ($this->min > $this->max) {
-            list($this->min, $this->max) = [$this->max, $this->min]; // 入れ替える
+            [$this->min, $this->max] = [$this->max, $this->min]; // 入れ替える
         }
         if ($this->default === null or $this->default < $this->min) {
             $this->default = $this->min;
         }
         return [
             "type" => $this->type,
-            "text" => str_replace("\\n", "\n", $this->reflectHighlight($this->checkTranslate($this->text))),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "min" => $this->min,
             "max" => $this->max,
             "step" => $this->step,

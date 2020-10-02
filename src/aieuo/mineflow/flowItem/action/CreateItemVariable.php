@@ -2,19 +2,22 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\ItemFactory;
 
-class CreateItemVariable extends Action {
+class CreateItemVariable extends FlowItem {
 
     protected $id = self::CREATE_ITEM_VARIABLE;
 
@@ -84,7 +87,7 @@ class CreateItemVariable extends Action {
         return Language::get($this->detail, [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
@@ -94,7 +97,7 @@ class CreateItemVariable extends Action {
         try {
             $item = ItemFactory::fromString($id);
         } catch (\InvalidArgumentException $e) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.createItemVariable.item.notFound"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createItemVariable.item.notFound"));
         }
         if (!empty($count)) {
             $this->throwIfInvalidNumber($count, 0);
@@ -108,37 +111,27 @@ class CreateItemVariable extends Action {
 
         $variable = new ItemObjectVariable($item, $name);
         $origin->addVariable($variable);
-        return true;
+        yield true;
+        return $this->getVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.createItemVariable.form.id", Language::get("form.example", ["1:0"]), $default[1] ?? $this->getItemId()),
-                new Input("@action.createItemVariable.form.count", Language::get("form.example", ["64"]), $default[2] ?? $this->getItemCount()),
-                new Input("@action.createItemVariable.form.name", Language::get("form.example", ["aieuo"]), $default[3] ?? $this->getItemName()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["item"]), $default[4] ?? $this->getVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.createItemVariable.form.id", "1:0", $this->getItemId(), true),
+                new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getItemCount(), true, 0),
+                new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "item", $this->getVariableName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        $count = $data[2];
-        $containsVariable = Main::getVariableHelper()->containsVariable($count);
-        if ($count !== "" and !$containsVariable and !is_numeric($count)) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        }
-        if ($data[4] === "") $data[4] = "item";
-        return ["contents" => [$data[4], $data[1], $data[2], $data[3]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[4], $data[1], $data[2], $data[3]], "cancel" => $data[5]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setItemId($content[1]);
         $this->setItemCount($content[2]);
@@ -150,7 +143,7 @@ class CreateItemVariable extends Action {
         return [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getVariableName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getVariableName(), DummyVariable::ITEM)];
     }
 }

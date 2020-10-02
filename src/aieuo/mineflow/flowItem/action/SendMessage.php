@@ -11,7 +11,7 @@ class SendMessage extends TypePlayerMessage {
     protected $name = "action.sendMessage.name";
     protected $detail = "action.sendMessage.detail";
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());
@@ -20,6 +20,6 @@ class SendMessage extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendMessage($message);
-        return true;
+        yield true;
     }
 }

@@ -2,19 +2,22 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
 
-class EditString extends Action {
+class EditString extends FlowItem {
 
     protected $id = self::EDIT_STRING;
 
@@ -48,9 +51,6 @@ class EditString extends Action {
     private $value2;
     /** @var string */
     private $resultName;
-
-    /* @var string */
-    private $lastResult;
 
     public function __construct(string $value1 = "", string $operator = self::TYPE_JOIN, string $value2 = "", string $resultName = "result") {
         $this->value1 = $value1;
@@ -100,7 +100,7 @@ class EditString extends Action {
         return Language::get($this->detail, [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());
@@ -125,45 +125,35 @@ class EditString extends Action {
                 }, explode($value2, $value1)), $resultName);
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable($result);
-        return true;
+        yield true;
+        return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         $keys = array_keys($this->operators, $this->getOperator());
 
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.fourArithmeticOperations.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
+                new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
                     return Language::get("action.editString.".$type);
-                }, array_values($this->operators)), $default[2] ?? array_shift($keys) ?? 0),
-                new Input("@action.fourArithmeticOperations.form.value2", Language::get("form.example", ["50"]), $default[3] ?? $this->getValue2()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                }, array_values($this->operators)), array_shift($keys) ?? 0),
+                new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        $operator = $this->operators[$data[2]];
-        if ($data[3] === "") {
-            $errors[] = ["@form.insufficient", 3];
-        }
-        if ($data[4] === "") $data[4] = "result";
-        return ["contents" => [$data[1], $operator, $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $this->operators[$data[2]], $data[3], $data[4]], "cancel" => $data[5]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setValues($content[0], $content[2]);
         $this->setOperator((string)$content[1]);
         $this->setResultName($content[3]);
@@ -174,7 +164,7 @@ class EditString extends Action {
         return [$this->getValue1(), $this->getOperator(), $this->getValue2(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->lastResult;
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::STRING)];
     }
 }

@@ -4,6 +4,7 @@
 namespace aieuo\mineflow\flowItem\base;
 
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
@@ -33,8 +34,7 @@ trait PositionFlowItemTrait {
 
     public function throwIfInvalidPosition(?Position $position) {
         if (!($position instanceof Position)) {
-            // FIXME: $nameが空白じゃないとき変数名が取れない
-            throw new \UnexpectedValueException(Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.position"], $this->getPositionVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.position"], $this->getPositionVariableName()]));
         }
     }
 }

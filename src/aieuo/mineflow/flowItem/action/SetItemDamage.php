@@ -4,18 +4,20 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\Main;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\ItemObjectVariable;
 
-class SetItemDamage extends Action implements ItemFlowItem {
+class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
     protected $id = self::SET_ITEM_DAMAGE;
@@ -32,7 +34,7 @@ class SetItemDamage extends Action implements ItemFlowItem {
     /** @var string */
     private $damage;
 
-    public function __construct(string $item = "item", string $damage = "") {
+    public function __construct(string $item = "", string $damage = "") {
         $this->setItemVariableName($item);
         $this->damage = $damage;
     }
@@ -54,7 +56,7 @@ class SetItemDamage extends Action implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getDamage()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $damage = $origin->replaceVariables($this->getDamage());
@@ -65,35 +67,25 @@ class SetItemDamage extends Action implements ItemFlowItem {
 
         $item->setDamage((int)$damage);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
-        return true;
+        yield true;
+        return $this->getItemVariableName();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.target.require.item", Language::get("form.example", ["item"]), $default[1] ?? $this->getItemVariableName()),
-                new Input("@action.setDamage.form.damage", Language::get("form.example", ["0"]), $default[2] ?? $this->getDamage()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleNumberInput("@action.setDamage.form.damage", "0", $this->getDamage(), true, 0),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "item";
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
-        if ($data[2] === "") {
-            $errors[] = ["@form.insufficient", 2];
-        } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@flowItem.error.notNumber", 2];
-        } elseif (!$containsVariable and (int)$data[2] < 0) {
-            $errors[] = [Language::get("flowItem.error.lessValue", [0]), 2];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setItemVariableName($content[0]);
         $this->setDamage($content[1]);
         return $this;
@@ -103,7 +95,7 @@ class SetItemDamage extends Action implements ItemFlowItem {
         return [$this->getItemVariableName(), $this->getDamage()];
     }
 
-    public function getReturnValue(): string {
-        return $this->getItemVariableName();
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
     }
 }

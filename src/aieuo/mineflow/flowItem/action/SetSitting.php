@@ -6,21 +6,23 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
-use pocketmine\network\mcpe\protocol\types\EntityLink;
-use pocketmine\network\mcpe\protocol\RemoveActorPacket;
-use pocketmine\network\mcpe\protocol\AddActorPacket;
-use pocketmine\entity\Entity;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use pocketmine\entity\Entity;
+use pocketmine\network\mcpe\protocol\AddActorPacket;
+use pocketmine\network\mcpe\protocol\RemoveActorPacket;
+use pocketmine\network\mcpe\protocol\types\EntityLink;
+use pocketmine\Player;
 
-class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
+class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
 
     protected $id = self::SET_SITTING;
@@ -36,7 +38,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
     /** @var array */
     private static $entityIds = [];
 
-    public function __construct(string $player = "target", string $position = "pos") {
+    public function __construct(string $player = "", string $position = "") {
         $this->setPlayerVariableName($player);
         $this->setPositionVariableName($position);
     }
@@ -50,7 +52,7 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
@@ -72,27 +74,24 @@ class SetSitting extends Action implements PlayerFlowItem, PositionFlowItem {
         $player->dataPacket($pk);
 
         self::$entityIds[$player->getName()] = $pk->entityRuntimeId;
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[2] ?? $this->getPositionVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") $data[2] = "pos";
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         return $this;

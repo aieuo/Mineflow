@@ -2,12 +2,14 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Cancellable;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
 
-class EventCancel extends Action {
+class EventCancel extends FlowItem {
 
     protected $id = self::EVENT_CANCEL;
 
@@ -18,22 +20,22 @@ class EventCancel extends Action {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $event = $origin->getEvent();
         if (!($event instanceof Cancellable)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.eventCancel.notCancelable"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));
         }
         $event->setCancelled();
-        return true;
+        yield true;
     }
 
     public function isDataValid(): bool {
         return true;
     }
 
-    public function loadSaveData(array $content): Action {
+    public function loadSaveData(array $content): FlowItem {
         return $this;
     }
 

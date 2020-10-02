@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
 class ListForm extends Form {
@@ -57,11 +58,11 @@ class ListForm extends Form {
         return $this;
     }
 
-	public function forEach(array $inputs, callable $func): self {
-		foreach ($inputs as $input) {
-			$func($this, $input);
-		}
-		return $this;
+    public function forEach(array $inputs, callable $func): self {
+        foreach ($inputs as $input) {
+            $func($this, $input);
+        }
+        return $this;
     }
 
     /**
@@ -85,8 +86,8 @@ class ListForm extends Form {
     public function jsonSerialize(): array {
         $form = [
             "type" => "form",
-            "title" => $this->checkTranslate($this->title),
-            "content" => str_replace("\\n", "\n", $this->checkTranslate($this->content)),
+            "title" => Language::replace($this->title),
+            "content" => str_replace("\\n", "\n", Language::replace($this->content)),
             "buttons" => $this->buttons
         ];
         $form = $this->reflectErrors($form);
@@ -100,18 +101,19 @@ class ListForm extends Form {
         return $form;
     }
 
-	public function handleResponse(Player $player, $data): void {
-		if ($data === null) {
-			parent::handleResponse($player, $data);
-			return;
-		}
+    public function handleResponse(Player $player, $data): void {
+        $this->lastResponse = [$player, $data];
+        if ($data === null) {
+            parent::handleResponse($player, $data);
+            return;
+        }
 
-    	$button = $this->getButton($data);
-    	if ($button === null or $button->getOnClick() === null) {
-			parent::handleResponse($player, $data);
-    		return;
-		}
+        $button = $this->getButton($data);
+        if ($button === null or $button->getOnClick() === null) {
+            parent::handleResponse($player, $data);
+            return;
+        }
 
-    	call_user_func($button->getOnClick(), $player);
-	}
+        call_user_func($button->getOnClick(), $player);
+    }
 }

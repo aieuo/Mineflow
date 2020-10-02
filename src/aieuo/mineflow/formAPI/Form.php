@@ -10,10 +10,10 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
-use pocketmine\utils\TextFormat;
+use aieuo\mineflow\utils\Language;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
+use pocketmine\utils\TextFormat;
 
 abstract class Form implements PMForm {
 
@@ -39,6 +39,8 @@ abstract class Form implements PMForm {
     protected $messages = [];
     /** @var array */
     protected $highlights = [];
+    /** @var array */
+    protected $lastResponse = [];
 
     public function __construct(string $title = "") {
         $this->title = $title;
@@ -116,7 +118,7 @@ abstract class Form implements PMForm {
      * @return self
      */
     public function addError(string $error, int $index): self {
-        $error = $this->checkTranslate($error);
+        $error = Language::replace($error);
         $this->messages[TextFormat::RED.$error.TextFormat::WHITE] = true;
         if ($index !== null) $this->highlights[$index] = TextFormat::YELLOW;
         return $this;
@@ -138,7 +140,7 @@ abstract class Form implements PMForm {
      * @return self
      */
     public function addMessage(string $message): self {
-        $message = $this->checkTranslate($message);
+        $message = Language::replace($message);
         $this->messages[$message] = true;
         return $this;
     }
@@ -155,14 +157,12 @@ abstract class Form implements PMForm {
     }
 
     /**
-     * @param string $text
-     * @return string
+     * @return $this
      */
-    public function checkTranslate(string $text): string {
-        $text = preg_replace_callback("/@([a-zA-Z.0-9]+)/", function ($matches) {
-            return Language::get($matches[1]);
-        }, $text);
-        return $text;
+    public function resetErrors(): self {
+        $this->messages = [];
+        $this->highlights = [];
+        return $this;
     }
 
     /**
@@ -185,7 +185,17 @@ abstract class Form implements PMForm {
      */
     abstract public function reflectErrors(array $form): array;
 
+    public function resend(array $errors = [], array $messages = []) {
+        if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
+
+        $this->resetErrors()
+            ->addMessages($messages)
+            ->addErrors($errors)
+            ->show($this->lastResponse[0]);
+    }
+
     public function handleResponse(Player $player, $data): void {
+        $this->lastResponse = [$player, $data];
         if ($data === null) {
             if (!is_callable($this->onClose)) return;
             call_user_func_array($this->onClose, array_merge([$player], $this->args));

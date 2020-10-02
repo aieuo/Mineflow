@@ -2,17 +2,17 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\trigger\Trigger;
-use pocketmine\Player;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\ModalForm;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\utils\Language;
+use pocketmine\Player;
 
 class CommandTriggerForm {
 
@@ -43,16 +43,11 @@ class CommandTriggerForm {
     public function sendSelectCommand(Player $player, Recipe $recipe, array $default = [], array $errors = []) {
         (new CustomForm(Language::get("trigger.command.select.title", [$recipe->getName()])))
             ->setContents([
-                new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? ""),
+                new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? "", true),
                 new Toggle("@form.back"),
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[1]) {
                     (new TriggerForm)->sendSelectTriggerType($player, $recipe);
-                    return;
-                }
-
-                if (empty($data[0])) {
-                    $this->sendSelectCommand($player, $recipe, $data, [["@form.insufficient", 0]]);
                     return;
                 }
 

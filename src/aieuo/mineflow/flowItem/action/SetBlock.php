@@ -6,16 +6,18 @@ use aieuo\mineflow\flowItem\base\BlockFlowItem;
 use aieuo\mineflow\flowItem\base\BlockFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
+class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     use PositionFlowItemTrait, BlockFlowItemTrait;
 
     protected $id = self::SET_BLOCK;
@@ -28,7 +30,7 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    public function __construct(string $position = "pos", string $block = "block") {
+    public function __construct(string $position = "", string $block = "") {
         $this->setPositionVariableName($position);
         $this->setBlockVariableName($block);
     }
@@ -42,7 +44,7 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getBlockVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
@@ -52,27 +54,24 @@ class SetBlock extends Action implements PositionFlowItem, BlockFlowItem {
         $this->throwIfInvalidBlock($block);
 
         $position->level->setBlock($position, $block);
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.position", Language::get("form.example", ["pos"]), $default[1] ?? $this->getPositionVariableName()),
-                new Input("@flowItem.form.target.block", Language::get("form.example", ["block"]), $default[2] ?? $this->getBlockVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+                new BlockVariableDropdown($variables, $this->getBlockVariableName()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        if ($data[1] === "") $data[1] = "pos";
-        if ($data[2] === "") $data[2] = "block";
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => []];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0]);
         $this->setBlockVariableName($content[1]);
         return $this;

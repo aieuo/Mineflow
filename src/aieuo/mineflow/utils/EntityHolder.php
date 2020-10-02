@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\utils;
 
 use pocketmine\entity\Entity;
-use pocketmine\Server;
 use pocketmine\Player;
+use pocketmine\Server;
 
 class EntityHolder {
 

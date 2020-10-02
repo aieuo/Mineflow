@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\flowItem\action;
+namespace aieuo\mineflow\flowItem;
 
-interface ActionIds {
+interface FlowItemIds {
 
     const DO_NOTHING = "doNothing";
     const GET_DATE = "getDate";
@@ -13,7 +13,7 @@ interface ActionIds {
     const SEND_TIP = "sendTip";
     const SEND_POPUP = "sendPopup";
     const BROADCAST_MESSAGE = "broadcastMessage";
-    const SEND_MESSAGE_TO_OP= "sendMessageToOp";
+    const SEND_MESSAGE_TO_OP = "sendMessageToOp";
     const SEND_TITLE = "sendTitle";
 
     const GET_ENTITY = "getEntity";
@@ -85,12 +85,19 @@ interface ActionIds {
     const CALL_RECIPE = "callRecipe";
 
     const FOUR_ARITHMETIC_OPERATIONS = "fourArithmeticOperations";
+    const FOUR_ARITHMETIC_OPERATIONS_ADD = "add";
+    const FOUR_ARITHMETIC_OPERATIONS_SUB = "sub";
+    const FOUR_ARITHMETIC_OPERATIONS_MUL = "mul";
+    const FOUR_ARITHMETIC_OPERATIONS_DIV = "div";
     const CALCULATE = "calculate";
+    const CALCULATE_SIN = "sin";
+    const CALCULATE_COS = "cos";
+    const CALCULATE_TAN = "tan";
     const CALCULATE2 = "calculate2";
     const GET_PI = "getPi";
     const GET_E = "getE";
     const GENERATE_RANDOM_NUMBER = "random";
-    CONST REVERSE_POLISH_NOTATION = "calculateRPN";
+    const REVERSE_POLISH_NOTATION = "calculateRPN";
 
     const EDIT_STRING = "editString";
     const STRING_LENGTH = "strlen";
@@ -137,8 +144,49 @@ interface ActionIds {
 
     const SET_SCOREBOARD_SCORE = "setScore";
     const SET_SCOREBOARD_SCORE_NAME = "setScoreName";
-    const REMOVE_SCOREBOARD_SCORE = "addScore";
+    const REMOVE_SCOREBOARD_SCORE = "removeScore";
     const REMOVE_SCOREBOARD_SCORE_NAME = "removeScoreName";
     const INCREMENT_SCOREBOARD_SCORE = "incrementScore";
     const DECREMENT_SCOREBOARD_SCORE = "decrementScore";
+
+
+    /* condition */
+    const CHECK_NOTHING = "checkNothing";
+    const IS_OP = "isOp";
+    const IS_SNEAKING = "isSneaking";
+    const IS_FLYING = "isFlying";
+    const IN_AREA = "inArea";
+    const GAMEMODE = "gamemode";
+    const HAS_PERMISSION = "hasPermission";
+
+    const OVER_MONEY = "overMoney";
+    const LESS_MONEY = "lessMoney";
+    const TAKE_MONEY_CONDITION = "takeMoneyCondition";
+
+    const CAN_ADD_ITEM = "canAddItem";
+    const EXISTS_ITEM = "existsItem";
+    const IN_HAND = "isHandItem";
+    const REMOVE_ITEM_CONDITION = "removeItemCondition";
+
+    const COMPARISON_NUMBER = "comparisonNumber";
+    const COMPARISON_STRING = "comparisonString";
+
+    const IS_ACTIVE_ENTITY = "isActiveEntity";
+    const IS_PLAYER = "isPlayer";
+    const IS_PLAYER_ONLINE = "isPlayerOnline";
+    const IS_PLAYER_ONLINE_BY_NAME = "isPlayerOnlineByName";
+    const IS_CREATURE = "isCreature";
+
+    const EXISTS_VARIABLE = "existsVariable";
+    const EXISTS_LIST_VARIABLE_KEY = "existsListVariableKey";
+
+    const CONDITION_AND = "and";
+    const CONDITION_OR = "or";
+    const CONDITION_NAND = "nand";
+    const CONDITION_NOR = "nor";
+    const CONDITION_NOT = "not";
+    const EXISTS_CONFIG_FILE = "existsConfigFile";
+    const EXISTS_CONFIG_DATA = "existsConfig";
+
+    const RANDOM_NUMBER = "randomNumber";
 }

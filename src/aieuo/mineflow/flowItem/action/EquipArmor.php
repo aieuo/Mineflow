@@ -6,18 +6,20 @@ use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Living;
 
-class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
+class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
 
     protected $id = self::EQUIP_ARMOR;
@@ -40,7 +42,7 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         "action.equipArmor.boots",
     ];
 
-    public function __construct(string $entity = "target", string $item = "item", string $index = "") {
+    public function __construct(string $entity = "", string $item = "", string $index = "") {
         $this->setEntityVariableName($entity);
         $this->setItemVariableName($item);
         $this->index = $index;
@@ -63,7 +65,7 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->places[$this->getIndex()])]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $index = $origin->replaceVariables($this->getIndex());
@@ -79,31 +81,27 @@ class EquipArmor extends Action implements EntityFlowItem, ItemFlowItem {
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem($index, $item);
         }
-        return true;
+        yield true;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.entity", Language::get("form.example", ["target"]), $default[1] ?? $this->getEntityVariableName()),
-                new Input("@flowItem.form.target.item", Language::get("form.example", ["item"]), $default[2] ?? $this->getItemVariableName()),
+                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+                new ItemVariableDropdown($variables, $this->getItemVariableName()),
                 new Dropdown("@action.equipArmor.form.index", array_map(function (string $text) {
                     return Language::get($text);
-                }, $this->places), $default[3] ?? (int)$this->getIndex()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                }, $this->places), (int)$this->getIndex()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "target";
-        if ($data[2] === "") $data[2] = "item";
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setEntityVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex((string)$content[2]);

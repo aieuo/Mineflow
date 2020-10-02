@@ -2,14 +2,18 @@
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\recipe\Recipe;
-use pocketmine\entity\Creature;
-use pocketmine\entity\Entity;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\Player;
 
-abstract class FlowItem implements \JsonSerializable {
+abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
     /** @var string */
     protected $id;
@@ -20,7 +24,7 @@ abstract class FlowItem implements \JsonSerializable {
     protected $name;
     /** @var string */
     protected $detail;
-    /** @var array  */
+    /** @var array */
     protected $detailDefaultReplace = [];
 
     /** @var string */
@@ -28,9 +32,6 @@ abstract class FlowItem implements \JsonSerializable {
 
     /** @var string */
     private $customName = "";
-
-    /** @var string */
-    protected $targetRequired;
 
     const RETURN_NONE = "none";
     const RETURN_VARIABLE_NAME = "variableName";
@@ -44,6 +45,9 @@ abstract class FlowItem implements \JsonSerializable {
     const PERMISSION_LEVEL_2 = 2;
     /** @var int */
     protected $permission = self::PERMISSION_LEVEL_0;
+
+    /* @var FlowItemContainer */
+    private $parent;
 
     public function getId(): string {
         return $this->id;
@@ -78,10 +82,6 @@ abstract class FlowItem implements \JsonSerializable {
         return $this->permission;
     }
 
-    public function getRequiredTarget(): string {
-        return $this->targetRequired;
-    }
-
     public function getReturnValueType(): string {
         return $this->returnValueType;
     }
@@ -97,47 +97,87 @@ abstract class FlowItem implements \JsonSerializable {
         return $data;
     }
 
-    public function isValidTarget(?Entity $target): bool {
-        switch ($this->targetRequired) {
-            case Recipe::TARGET_REQUIRED_ENTITY:
-                return $target instanceof Entity;
-            case Recipe::TARGET_REQUIRED_CREATURE:
-                return $target instanceof Creature;
-            case Recipe::TARGET_REQUIRED_PLAYER:
-                return $target instanceof Player;
-        }
-        return true;
-    }
-
     public function throwIfCannotExecute() {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents", [$this->getName()]);
-            throw new \UnexpectedValueException($message);
+            throw new InvalidFlowValueException($this->getName(), $message);
         }
     }
 
     public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null, array $exclude = []) {
         if (!is_numeric($number)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.notNumber"]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }
         $number = (float)$number;
         if ($min !== null and $number < $min) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.lessValue", [$min]]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.lessValue", [$min]));
         }
         if ($max !== null and $number > $max) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.overValue", [$max]]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.overValue", [$max]));
         }
         if (!empty($exclude) and in_array($number, $exclude)) {
-            throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["flowItem.error.excludedNumber", [implode(",", $exclude)]]]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.excludedNumber", [implode(",", $exclude)]));
         }
     }
 
+    public function getEditForm(array $variables = []): Form {
+        return (new CustomForm($this->getName()))
+            ->setContents([
+                new Label($this->getDescription()),
+                new CancelToggle()
+            ]);
+    }
+
+    public function parseFromFormData(array $data): array {
+        return ["contents" => [], "cancel" => $data[1]];
+    }
+
     /**
-     * @param array $default
-     * @param array $errors
-     * @return Form
+     * @param array $content
+     * @return self
+     * @throws FlowItemLoadException|\ErrorException
      */
-    abstract public function getEditForm(array $default = [], array $errors = []): Form;
+    public static function loadSaveDataStatic(array $content): self {
+        switch ($content["id"]) {
+            case "addScore":
+                $content["id"] = self::REMOVE_SCOREBOARD_SCORE;
+                break;
+        }
+        $action = FlowItemFactory::get($content["id"]);
+        if ($action === null) {
+            throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));
+        }
+
+        $action->setCustomName($content["customName"] ?? "");
+        return $action->loadSaveData($content["contents"]);
+    }
+
+    public function hasCustomMenu(): bool {
+        return false;
+    }
+
+    public function sendCustomMenu(Player $player, array $messages = []): void {
+    }
+
+    public function allowDirectCall(): bool {
+        return true;
+    }
+
+    public function setParent(FlowItemContainer $container): self {
+        $this->parent = $container;
+        return $this;
+    }
+
+    public function getParent(): FlowItemContainer {
+        return $this->parent;
+    }
+
+    /**
+     * @return DummyVariable[]
+     */
+    public function getAddingVariables(): array {
+        return [];
+    }
 
     /**
      * @return boolean
@@ -150,23 +190,15 @@ abstract class FlowItem implements \JsonSerializable {
     abstract public function serializeContents(): array;
 
     /**
-     * @param Recipe $origin
-     * @return boolean
+     * @param array $content
+     * @return FlowItem
+     * @throws FlowItemLoadException|\ErrorException
      */
-    abstract public function execute(Recipe $origin): bool;
+    abstract public function loadSaveData(array $content): FlowItem;
 
-    public function hasCustomMenu(): bool {
-        return false;
-    }
-
-    public function sendCustomMenu(Player $player, array $messages = []): void {
-    }
-
-    public function getReturnValue(): string {
-        return "";
-    }
-
-    public function allowDirectCall(): bool {
-        return true;
-    }
+    /**
+     * @param Recipe $origin
+     * @return bool|\Generator
+     */
+    abstract public function execute(Recipe $origin);
 }

@@ -3,15 +3,15 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\flowItem\action\ActionContainer;
 use aieuo\mineflow\flowItem\action\ExecuteRecipe;
+use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Logger;
 
 class RecipeManager {
 
-    /** @var Recipe[][]*/
+    /** @var Recipe[][] */
     protected $recipes = [];
 
     /** @var string */
@@ -35,7 +35,7 @@ class RecipeManager {
         );
         $files = new \RegexIterator($files, '/\.json$/', \RecursiveRegexIterator::MATCH);
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             /** @var \SplFileInfo $file */
             $pathname = $file->getPathname();
             $group = str_replace(
@@ -59,7 +59,7 @@ class RecipeManager {
             $recipe = new Recipe($data["name"], $group, $data["author"] ?? "");
             try {
                 $recipe->loadSaveData($data["actions"]);
-            } catch (\InvalidArgumentException $e) {
+            } catch (\ErrorException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
             } catch (FlowItemLoadException $e) {
@@ -130,7 +130,7 @@ class RecipeManager {
         if (!$this->exists($name, $group)) return $name;
         $count = 2;
         while ($this->exists($name." (".$count.")", $group)) {
-            $count ++;
+            $count++;
         }
         $name = $name." (".$count.")";
         return $name;
@@ -151,13 +151,13 @@ class RecipeManager {
         return [array_pop($names), implode("/", $names)];
     }
 
-    public function getWithLinkedRecipes(ActionContainer $recipe, Recipe $origin, bool $base = true): array {
+    public function getWithLinkedRecipes(FlowItemContainer $recipe, Recipe $origin, bool $base = true): array {
         $recipeManager = Main::getRecipeManager();
 
         $recipes = [];
         if ($base) $recipes[$origin->getGroup()."/".$origin->getName()] = $origin;
-        foreach ($recipe->getActions() as $action) {
-            if ($action instanceof ActionContainer) {
+        foreach ($recipe->getItems(FlowItemContainer::ACTION) as $action) {
+            if ($action instanceof FlowItemContainer) {
                 $links = $this->getWithLinkedRecipes($action, $origin, false);
                 $recipes = array_merge($recipes, $links);
                 continue;

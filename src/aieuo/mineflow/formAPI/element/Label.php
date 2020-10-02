@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\utils\Language;
+
 class Label extends Element {
 
     /** @var string */
@@ -10,7 +12,7 @@ class Label extends Element {
     public function jsonSerialize(): array {
         return [
             "type" => $this->type,
-            "text" => str_replace("\\n", "\n", $this->reflectHighlight($this->checkTranslate($this->text))),
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
         ];
     }
 }

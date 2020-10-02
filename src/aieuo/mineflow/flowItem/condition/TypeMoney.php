@@ -2,16 +2,17 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-abstract class TypeMoney extends Condition {
+abstract class TypeMoney extends FlowItem implements Condition {
 
     protected $detailDefaultReplace = ["target", "amount"];
 
@@ -54,33 +55,21 @@ abstract class TypeMoney extends Condition {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getAmount()]);
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.money.form.target", Language::get("form.example", ["{target.name}"]), $default[1] ?? $this->getPlayerName()),
-                new Input("@action.money.form.amount", Language::get("form.example", ["1000"]), $default[2] ?? $this->getAmount()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
+                new ExampleNumberInput("@action.money.form.amount", "1000", $this->getAmount(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $data[1] = "{target.name}";
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
-        if ($data[2] === "") {
-            $errors = [["@form.insufficient", 2]];
-        } elseif (!$containsVariable and !is_numeric($data[2])) {
-            $errors = [["@flowItem.error.notNumber", 2]];
-        } elseif (!$containsVariable and (int)$data[2] <= 0) {
-            $errors = [["@condition.money.zero", 2]];
-        }
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
-    public function loadSaveData(array $content): Condition {
-        if (!isset($content[1])) throw new \OutOfBoundsException();
-
+    public function loadSaveData(array $content): FlowItem {
         $this->setPlayerName($content[0]);
         $this->setAmount($content[1]);
         return $this;

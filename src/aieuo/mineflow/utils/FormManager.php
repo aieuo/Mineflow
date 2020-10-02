@@ -64,7 +64,7 @@ class FormManager {
         if (!$this->existsForm($name)) return $name;
         $count = 2;
         while ($this->existsForm($name." (".$count.")")) {
-            $count ++;
+            $count++;
         }
         $name = $name." (".$count.")";
         return $name;
@@ -76,7 +76,7 @@ class FormManager {
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
                 $path = $recipe->getGroup()."/".$recipe->getName();
-                if (!isset($recipes[$path])) $recipes[$path] =[];
+                if (!isset($recipes[$path])) $recipes[$path] = [];
                 $recipes[$path][] = $name;
             }
         }
@@ -129,7 +129,7 @@ class FormManager {
                     if ($content instanceof Dropdown) {
                         $selected = $content->getOptions()[$data[$i]];
                         $dropdownVariables[] = new StringVariable($selected);
-                        $dropdown ++;
+                        $dropdown++;
                     }
                 }
                 $variable = new MapVariable([

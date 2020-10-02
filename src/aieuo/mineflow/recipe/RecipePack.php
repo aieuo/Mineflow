@@ -122,7 +122,7 @@ class RecipePack implements \JsonSerializable {
     /**
      * @param string $path
      * @return RecipePack|null
-     * @throws FlowItemLoadException
+     * @throws FlowItemLoadException|\ErrorException
      */
     public static function import(string $path): ?RecipePack {
         if (!file_exists($path)) return null;

@@ -4,17 +4,19 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
-class GetDistance extends Action implements PositionFlowItem {
+class GetDistance extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
     protected $id = self::GET_DISTANCE;
@@ -30,10 +32,8 @@ class GetDistance extends Action implements PositionFlowItem {
 
     /** @var string */
     private $resultName;
-    /* @var string */
-    private $lastResult;
 
-    public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", string $result = "distance") {
+    public function __construct(string $pos1 = "", string $pos2 = "", string $result = "distance") {
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
         $this->resultName = $result;
@@ -56,7 +56,7 @@ class GetDistance extends Action implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $pos1 = $this->getPosition($origin, "pos1");
@@ -67,32 +67,27 @@ class GetDistance extends Action implements PositionFlowItem {
 
         $distance = $pos1->distance($pos2);
 
-        $this->lastResult = (string)$distance;
         $origin->addVariable(new NumberVariable($distance, $result));
-        return true;
+        yield true;
+        return $distance;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.getDistance.form.pos1", Language::get("form.example", ["pos1"]), $default[1] ?? $this->getPositionVariableName("pos1")),
-                new Input("@action.getDistance.form.pos2", Language::get("form.example", ["pos2"]), $default[2] ?? $this->getPositionVariableName("pos2")),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["distance"]), $default[3] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleInput("@action.getDistance.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
+                new ExampleInput("@action.getDistance.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
+                new ExampleInput("@flowItem.form.resultVariableName", "distance", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $errors[] = ["@form.insufficient", 3];
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[2])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setPositionVariableName($content[0], "pos1");
         $this->setPositionVariableName($content[1], "pos2");
         $this->setResultName($content[2]);
@@ -103,7 +98,7 @@ class GetDistance extends Action implements PositionFlowItem {
         return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->lastResult;
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

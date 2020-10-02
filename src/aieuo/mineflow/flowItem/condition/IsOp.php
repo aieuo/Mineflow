@@ -4,16 +4,17 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
 
-class IsOp extends Condition implements PlayerFlowItem {
+class IsOp extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
     protected $id = self::IS_OP;
@@ -26,7 +27,7 @@ class IsOp extends Condition implements PlayerFlowItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function __construct(string $player = "target") {
+    public function __construct(string $player = "") {
         $this->setPlayerVariableName($player);
     }
 
@@ -39,33 +40,30 @@ class IsOp extends Condition implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName()]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
+        yield true;
         return $player->isOp();
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@flowItem.form.target.player", Language::get("form.example", ["target"]), $default[1] ?? $this->getPlayerVariableName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") {
-            $errors[] = ["@form.insufficient", 1];
-        }
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        return ["contents" => [$data[1]], "cancel" => $data[2]];
     }
 
-    public function loadSaveData(array $content): Condition {
+    public function loadSaveData(array $content): FlowItem {
         if (isset($content[0])) $this->setPlayerVariableName($content[0]);
         return $this;
     }

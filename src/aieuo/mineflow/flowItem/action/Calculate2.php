@@ -2,18 +2,22 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\NumberVariable;
 
-class Calculate2 extends Action {
+class Calculate2 extends FlowItem {
 
     protected $id = self::CALCULATE2;
 
@@ -43,10 +47,15 @@ class Calculate2 extends Action {
     /** @var string */
     private $resultName;
 
-    private $operatorSymbols = ["min(x, y)", "max(x, y)", "x^y", "log_y(x)", "√(x^2 + y^2)", "atan2(x, y)", "round(x, y)"];
-
-    /* @var string */
-    private $lastResult;
+    private $operatorSymbols = [
+        "min(x, y)",
+        "max(x, y)",
+        "x^y",
+        "log_y(x)",
+        "√(x^2 + y^2)",
+        "atan2(x, y)",
+        "round(x, y)"
+    ];
 
     public function __construct(string $value1 = "", string $value2 = "", string $operator = null, string $resultName = "result") {
         $this->value1 = $value1;
@@ -100,7 +109,7 @@ class Calculate2 extends Action {
         return Language::get($this->detail, [$this->getValue1(), $this->getValue2(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());
@@ -136,36 +145,31 @@ class Calculate2 extends Action {
                 $result = round($value1, (int)$value2);
                 break;
             default:
-                throw new \UnexpectedValueException(Language::get("flowItem.error", [$this->getName(), ["action.calculate.operator.unknown", [$operator]]]));
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $this->lastResult = (string)$result;
         $origin->addVariable(new NumberVariable($result, $resultName));
-        return true;
+        yield true;
+        return $result;
     }
 
-    public function getEditForm(array $default = [], array $errors = []): Form {
+    public function getEditForm(array $variables = []): Form {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new Input("@action.calculate2.form.value1", Language::get("form.example", ["10"]), $default[1] ?? $this->getValue1()),
-                new Input("@action.calculate2.form.value2", Language::get("form.example", ["20"]), $default[2] ?? $this->getValue2()),
-                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $default[3] ?? $this->getOperator()),
-                new Input("@flowItem.form.resultVariableName", Language::get("form.example", ["result"]), $default[4] ?? $this->getResultName()),
-                new Toggle("@form.cancelAndBack")
-            ])->addErrors($errors);
+                new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
+                new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
+                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
+                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new CancelToggle()
+            ]);
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if ($data[1] === "") $errors[] = ["@form.insufficient", 1];
-        if ($data[2] === "") $errors[] = ["@form.insufficient", 2];
-        if ($data[3] === "") $data[3] = "result";
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5], "errors" => $errors];
+        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5]];
     }
 
-    public function loadSaveData(array $content): Action {
-        if (!isset($content[3])) throw new \OutOfBoundsException();
+    public function loadSaveData(array $content): FlowItem {
         $this->setValue1($content[0]);
         $this->setValue2($content[1]);
         $this->setOperator($content[2]);
@@ -177,7 +181,7 @@ class Calculate2 extends Action {
         return [$this->getValue1(), $this->getValue2(), $this->getOperator(), $this->getResultName()];
     }
 
-    public function getReturnValue(): string {
-        return $this->lastResult;
+    public function getAddingVariables(): array {
+        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
     }
 }

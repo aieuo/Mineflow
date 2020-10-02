@@ -13,7 +13,7 @@ class CanAddItem extends TypeItem {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
 
-    public function execute(Recipe $origin): bool {
+    public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
@@ -22,6 +22,7 @@ class CanAddItem extends TypeItem {
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);
 
+        yield true;
         return $player->getInventory()->canAddItem($item);
     }
 }
