@@ -49,7 +49,7 @@ class Dropdown extends Element {
      * @return self
      */
     public function setDefault(int $default): self {
-        $this->default = $default;
+        $this->default = $default >= 0 ? $default : 0;
         return $this;
     }
 
