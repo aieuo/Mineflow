@@ -89,7 +89,7 @@ trait FlowItemContainerTrait {
 
         foreach ($this->getItems($type) as $item) {
             if ($item === $target) break;
-            $variables = array_merge($item->getAddingVariables(), $variables);
+            $variables = array_merge($variables, $item->getAddingVariables());
         }
         return $variables;
     }
