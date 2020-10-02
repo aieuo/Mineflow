@@ -30,6 +30,15 @@ trait FlowItemContainerTrait {
 
     /**
      * @param int $index
+     * @param FlowItem $action
+     * @param string $name
+     */
+    public function pushItem(int $index, FlowItem $action, string $name): void {
+        array_splice($this->items[$name], $index, 0, [$action]);
+    }
+
+    /**
+     * @param int $index
      * @param string $name
      * @return FlowItem|null
      */

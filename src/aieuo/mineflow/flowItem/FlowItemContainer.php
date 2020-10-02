@@ -26,6 +26,13 @@ interface FlowItemContainer {
 
     /**
      * @param int $index
+     * @param FlowItem $action
+     * @param string $name
+     */
+    public function pushItem(int $index, FlowItem $action, string $name): void;
+
+    /**
+     * @param int $index
      * @param string $name
      * @return FlowItem|null
      */
