@@ -378,13 +378,13 @@ class FlowItemFactory {
         self::registerAlias(new class extends Calculate {
             protected $id = self::CALCULATE_COS;
             public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, self::CALC_COS, $resultName);
+                parent::__construct($value, (string)self::CALC_COS, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {
             protected $id = self::CALCULATE_TAN;
             public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, self::CALC_TAN, $resultName);
+                parent::__construct($value, (string)self::CALC_TAN, $resultName);
             }
         });
     }
@@ -409,7 +409,7 @@ class FlowItemFactory {
      * @param int|null $permission
      * @param bool $getAction
      * @param bool $getCondition
-     * @return Condition[]
+     * @return FlowItem[]
      */
     public static function getByFilter(string $category = null, int $permission = null, bool $getAction = true, bool $getCondition = true): array {
         $items = [];
