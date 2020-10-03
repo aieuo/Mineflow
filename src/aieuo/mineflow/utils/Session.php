@@ -9,12 +9,17 @@ class Session {
     /** @var array */
     private static $sessions = [];
 
+    public static function existsSession(Player $player): bool {
+        return isset(self::$sessions[$player->getName()]);
+    }
+
     /**
      * @param Player $player
-     * @return Session|null
+     * @return Session
      */
-    public static function getSession(Player $player): ?Session {
-        return self::$sessions[$player->getName()] ?? null;
+    public static function getSession(Player $player): Session {
+        if (self::existsSession($player)) self::createSession($player);
+        return self::$sessions[$player->getName()];
     }
 
     /**
