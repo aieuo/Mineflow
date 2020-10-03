@@ -87,7 +87,7 @@ class CreateMapVariable extends FlowItem {
         $values = $this->getVariableValue();
 
         $variable = new MapVariable([], $name);
-        for ($i = 0; $i < count($keys); $i++) {
+        for ($i = 0, $iMax = count($keys); $i < $iMax; $i++) {
             $key = $keys[$i];
             $value = $values[$i] ?? "";
             if ($key === "") continue;

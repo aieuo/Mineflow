@@ -76,7 +76,7 @@ class ImportForm {
 
     public function importRecipes(Player $player, array $recipes, callable $onComplete = null, int $start = 0): void {
         $manager = Main::getRecipeManager();
-        for ($i = $start; $i < count($recipes); $i++) {
+        for ($i = $start, $iMax = count($recipes); $i < $iMax; $i++) {
             /** @var Recipe $recipe */
             $recipe = $recipes[$i];
 
@@ -99,7 +99,7 @@ class ImportForm {
     public function importCommands(Player $player, array $commands, callable $onComplete = null, int $start = 0): void {
         $manager = Main::getCommandManager();
         $commands = array_values($commands);
-        for ($i = $start; $i < count($commands); $i++) {
+        for ($i = $start, $iMax = count($commands); $i < $iMax; $i++) {
             $data = $commands[$i];
             $command = $data["command"];
 
@@ -122,7 +122,7 @@ class ImportForm {
     public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0): void {
         $manager = Main::getFormManager();
         $names = array_keys($forms);
-        for ($i = $start; $i < count($forms); $i++) {
+        for ($i = $start, $iMax = count($forms); $i < $iMax; $i++) {
             $name = $names[$i];
             $formData = $forms[$name];
             $form = Form::createFromArray($formData, $name);
@@ -145,7 +145,7 @@ class ImportForm {
 
     public function importConfigs(Player $player, array $configs, callable $onComplete = null, int $start = 0): void {
         $names = array_keys($configs);
-        for ($i = $start; $i < count($configs); $i++) {
+        for ($i = $start, $iMax = count($configs); $i < $iMax; $i++) {
             $name = $names[$i];
             $configData = $configs[$name];
 

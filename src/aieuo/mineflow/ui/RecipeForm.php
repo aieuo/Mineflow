@@ -325,7 +325,7 @@ class RecipeForm {
                 }
 
                 $arguments = [];
-                for ($i = 1; $i < count($data); $i++) {
+                for ($i = 1, $iMax = count($data); $i < $iMax; $i++) {
                     if ($data[$i] !== "") $arguments[] = $data[$i];
                 }
                 $recipe->setArguments($arguments);
@@ -350,7 +350,7 @@ class RecipeForm {
                 }
 
                 $returnValues = [];
-                for ($i = 1; $i < count($data); $i++) {
+                for ($i = 1, $iMax = count($data); $i < $iMax; $i++) {
                     if ($data[$i] !== "") $returnValues[] = $data[$i];
                 }
                 $recipe->setReturnValues($returnValues);

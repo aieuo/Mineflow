@@ -82,7 +82,7 @@ class CustomForm extends Form {
     }
 
     public function reflectErrors(array $form): array {
-        for ($i = 0; $i < count($form["content"]); $i++) {
+        for ($i = 0, $iMax = count($form["content"]); $i < $iMax; $i++) {
             if (empty($this->highlights[$i])) continue;
             /** @var Element $content */
             $content = $form["content"][$i];
