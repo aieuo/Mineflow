@@ -117,13 +117,15 @@ class FourArithmeticOperations extends FlowItem {
                 $result = (float)$value1 * (float)$value2;
                 break;
             case self::DIVISION:
-                if ((float)$value2 === 0) {
+                /** @noinspection TypeUnsafeComparisonInspection */
+                if ($value2 == 0) {
                     throw new InvalidFlowValueException($this->getName(), Language::get("variable.number.div.0"));
                 }
                 $result = (float)$value1 / (float)$value2;
                 break;
             case self::MODULO:
-                if ((float)$value2 === 0) {
+                /** @noinspection TypeUnsafeComparisonInspection */
+                if ($value2 == 0) {
                     throw new InvalidFlowValueException($this->getName(), Language::get("variable.number.div.0"));
                 }
                 $result = (float)$value1 % (float)$value2;

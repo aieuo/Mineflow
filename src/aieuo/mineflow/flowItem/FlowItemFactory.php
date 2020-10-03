@@ -372,7 +372,7 @@ class FlowItemFactory {
         self::registerAlias(new class extends Calculate {
             protected $id = self::CALCULATE_SIN;
             public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, self::CALC_SIN, $resultName);
+                parent::__construct($value, (string)self::CALC_SIN, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {

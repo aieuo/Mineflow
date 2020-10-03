@@ -92,7 +92,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         $power = $origin->replaceVariables($this->getPower());
 
         $effect = Effect::getEffectByName($effectId);
-        if ($effect === null) $effect = Effect::getEffect($effectId);
+        if ($effect === null) $effect = Effect::getEffect((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound"));
         $this->throwIfInvalidNumber($time);
         $this->throwIfInvalidNumber($power);

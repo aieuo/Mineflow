@@ -11,7 +11,6 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class GenerateRandomNumber extends TypeGetMathVariable {

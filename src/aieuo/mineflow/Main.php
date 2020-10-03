@@ -46,7 +46,7 @@ class Main extends PluginBase {
     /** @var EventManager */
     private static $eventManager;
 
-    public static function getInstance(): ?self {
+    public static function getInstance(): self {
         return self::$instance;
     }
 
