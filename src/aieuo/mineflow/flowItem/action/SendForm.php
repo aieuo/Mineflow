@@ -35,8 +35,6 @@ class SendForm extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::FORM;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     /** @var string */
     private $formName;
 

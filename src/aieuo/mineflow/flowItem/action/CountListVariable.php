@@ -26,8 +26,6 @@ class CountListVariable extends FlowItem {
     protected $detailDefaultReplace = ["name", "result"];
 
     protected $category = Category::VARIABLE;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */

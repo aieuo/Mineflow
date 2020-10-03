@@ -26,8 +26,6 @@ class ExistsConfigFile extends FlowItem implements Condition {
     /** @var string */
     private $fileName;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function __construct(string $name = "") {
         $this->fileName = $name;
     }

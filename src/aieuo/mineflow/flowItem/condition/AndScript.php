@@ -24,8 +24,6 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function getDetail(): string {
         $details = ["----------and-----------"];
         foreach ($this->getConditions() as $condition) {

@@ -23,8 +23,6 @@ class IsActiveEntity extends FlowItem implements Condition {
 
     protected $category = Category::ENTITY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $entityId;
 

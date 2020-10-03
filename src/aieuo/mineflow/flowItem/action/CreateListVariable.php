@@ -27,8 +27,6 @@ class CreateListVariable extends FlowItem {
 
     protected $category = Category::VARIABLE;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $variableName;
     /** @var string[] */

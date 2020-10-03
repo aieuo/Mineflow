@@ -28,8 +28,6 @@ class GetBlock extends FlowItem implements PositionFlowItem {
     protected $detailDefaultReplace = ["position", "result"];
 
     protected $category = Category::LEVEL;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private $resultName;

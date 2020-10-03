@@ -31,8 +31,6 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
     protected $detailDefaultReplace = ["skin", "pos", "result"];
 
     protected $category = Category::ENTITY;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

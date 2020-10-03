@@ -23,8 +23,6 @@ class RandomNumber extends FlowItem implements Condition {
 
     protected $category = Category::MATH;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $min;
     /** @var string */

@@ -31,8 +31,6 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::PLUGIN;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     protected $permission = self::PERMISSION_LEVEL_1;
 
     /** @var string */

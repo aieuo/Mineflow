@@ -24,8 +24,6 @@ class ComparisonString extends FlowItem implements Condition {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
     public const CONTAINS = 2;

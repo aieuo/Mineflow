@@ -29,8 +29,6 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     protected $permission = self::PERMISSION_LEVEL_2;
 
     /** @var string */

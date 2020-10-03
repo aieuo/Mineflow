@@ -16,8 +16,6 @@ class SaveData extends FlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function isDataValid(): bool {
         return true;
     }

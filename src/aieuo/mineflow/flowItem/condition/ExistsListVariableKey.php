@@ -25,8 +25,6 @@ class ExistsListVariableKey extends FlowItem implements Condition {
 
     protected $category = Category::VARIABLE;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $variableName;
     /** @var string */

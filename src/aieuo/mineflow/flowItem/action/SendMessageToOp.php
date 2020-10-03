@@ -12,8 +12,6 @@ class SendMessageToOp extends TypeMessage {
     protected $name = "action.sendMessageToOp.name";
     protected $detail = "action.sendMessageToOp.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

@@ -29,8 +29,6 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
 
     protected $category = Category::INVENTORY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     /** @var string */
     private $index;
 

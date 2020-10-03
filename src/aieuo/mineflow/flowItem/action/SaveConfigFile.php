@@ -25,8 +25,6 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     protected $permission = self::PERMISSION_LEVEL_2;
 
     public function __construct(string $config = "") {

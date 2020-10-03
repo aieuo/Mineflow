@@ -28,8 +28,6 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
 
     protected $category = Category::LEVEL;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function __construct(string $position = "", string $block = "") {
         $this->setPositionVariableName($position);
         $this->setBlockVariableName($block);

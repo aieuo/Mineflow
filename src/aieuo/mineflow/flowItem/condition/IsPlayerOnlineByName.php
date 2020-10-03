@@ -24,8 +24,6 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     /* @var string */
     private $playerName;
 

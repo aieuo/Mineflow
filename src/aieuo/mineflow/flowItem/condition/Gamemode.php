@@ -27,8 +27,6 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     private $gamemodes = [
         "action.gamemode.survival",
         "action.gamemode.creative",

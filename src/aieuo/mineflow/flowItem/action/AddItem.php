@@ -11,8 +11,6 @@ class AddItem extends TypeItem {
     protected $name = "action.addItem.name";
     protected $detail = "action.addItem.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

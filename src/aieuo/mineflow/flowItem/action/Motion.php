@@ -28,8 +28,6 @@ class Motion extends FlowItem implements EntityFlowItem {
 
     protected $category = Category::ENTITY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-
     /** @var string */
     private $x = "0";
     /** @var string */

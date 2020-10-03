@@ -26,8 +26,6 @@ class GetPlayerByName extends FlowItem {
     protected $detailDefaultReplace = ["name", "result"];
 
     protected $category = Category::PLAYER;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

@@ -26,8 +26,6 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $key;
 

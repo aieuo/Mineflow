@@ -25,8 +25,6 @@ class SetImmobile extends FlowItem implements EntityFlowItem {
 
     protected $category = Category::ENTITY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-
     public function __construct(string $entity = "") {
         $this->setEntityVariableName($entity);
     }

@@ -25,8 +25,6 @@ class CreateBlockVariable extends FlowItem {
     protected $detailDefaultReplace = ["block", "id"];
 
     protected $category = Category::BLOCK;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

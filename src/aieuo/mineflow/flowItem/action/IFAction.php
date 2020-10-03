@@ -24,8 +24,6 @@ class IFAction extends FlowItem implements FlowItemContainer {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         $this->setItems($conditions, FlowItemContainer::CONDITION);
         $this->setItems($actions, FlowItemContainer::ACTION);

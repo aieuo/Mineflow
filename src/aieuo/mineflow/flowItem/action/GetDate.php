@@ -23,8 +23,6 @@ class GetDate extends FlowItem {
     protected $detailDefaultReplace = ["format", "result"];
 
     protected $category = Category::COMMON;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */

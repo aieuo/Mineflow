@@ -27,7 +27,6 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $permission = self::PERMISSION_LEVEL_1;
 
     /** @var bool */

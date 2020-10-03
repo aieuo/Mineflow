@@ -25,8 +25,6 @@ class Calculate extends FlowItem {
     protected $detailDefaultReplace = ["value", "operator", "result"];
 
     protected $category = Category::MATH;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const SQUARE = 0;

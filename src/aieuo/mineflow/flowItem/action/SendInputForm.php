@@ -31,7 +31,6 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::FORM;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */

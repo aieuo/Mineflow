@@ -25,8 +25,6 @@ class CreateConfigVariable extends FlowItem {
     protected $detailDefaultReplace = ["config", "name"];
 
     protected $category = Category::SCRIPT;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

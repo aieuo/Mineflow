@@ -15,8 +15,6 @@ class TakeMoney extends TypeMoney {
     protected $name = "action.takeMoney.name";
     protected $detail = "action.takeMoney.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

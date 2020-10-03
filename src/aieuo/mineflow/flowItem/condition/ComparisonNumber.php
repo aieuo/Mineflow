@@ -24,8 +24,6 @@ class ComparisonNumber extends FlowItem implements Condition {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public const EQUAL = 0;
     public const NOT_EQUAL = 1;
     public const GREATER = 2;

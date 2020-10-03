@@ -30,8 +30,6 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
 
     protected $category = Category::INVENTORY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-
     /** @var string */
     private $index;
 

@@ -15,8 +15,6 @@ class ExitRecipe extends FlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function execute(Recipe $origin) {
         $origin->exit();
         yield true;

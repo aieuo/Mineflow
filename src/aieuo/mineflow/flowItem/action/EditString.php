@@ -26,8 +26,6 @@ class EditString extends FlowItem {
     protected $detailDefaultReplace = ["value1", "operator", "value2", "result"];
 
     protected $category = Category::STRING;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const TYPE_JOIN = "join";

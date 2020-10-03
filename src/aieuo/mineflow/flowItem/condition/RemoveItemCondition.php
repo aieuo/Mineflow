@@ -11,8 +11,6 @@ class RemoveItemCondition extends TypeItem {
     protected $name = "condition.removeItem.name";
     protected $detail = "condition.removeItem.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

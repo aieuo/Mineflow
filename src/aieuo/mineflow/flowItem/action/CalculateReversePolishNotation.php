@@ -24,8 +24,6 @@ class CalculateReversePolishNotation extends FlowItem {
     protected $detailDefaultReplace = ["formula", "result"];
 
     protected $category = Category::MATH;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */

@@ -27,8 +27,6 @@ class CreatePositionVariable extends FlowItem {
     protected $detailDefaultReplace = ["position", "x", "y", "z", "level"];
 
     protected $category = Category::LEVEL;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

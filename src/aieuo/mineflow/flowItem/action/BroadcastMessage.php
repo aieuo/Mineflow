@@ -12,8 +12,6 @@ class BroadcastMessage extends TypeMessage {
     protected $name = "action.broadcastMessage.name";
     protected $detail = "action.broadcastMessage.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

@@ -29,8 +29,6 @@ class ReplenishResource extends FlowItem implements PositionFlowItem {
 
     protected $category = Category::PLUGIN;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function __construct(string $position = "") {
         $this->setPositionVariableName($position);
     }

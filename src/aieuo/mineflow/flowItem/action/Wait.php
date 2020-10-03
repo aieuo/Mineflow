@@ -24,8 +24,6 @@ class Wait extends FlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $time;
 

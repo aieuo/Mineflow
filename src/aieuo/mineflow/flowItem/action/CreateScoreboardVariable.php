@@ -25,8 +25,6 @@ class CreateScoreboardVariable extends FlowItem {
     protected $detailDefaultReplace = ["result", "id", "displayName", "type"];
 
     protected $category = Category::SCOREBOARD;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

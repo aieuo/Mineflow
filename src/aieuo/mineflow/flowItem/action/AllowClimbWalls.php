@@ -27,8 +27,6 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     /** @var bool */
     private $allow;
 

@@ -11,8 +11,6 @@ class CanAddItem extends TypeItem {
     protected $name = "condition.canAddItem.name";
     protected $detail = "condition.canAddItem.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

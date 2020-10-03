@@ -15,8 +15,6 @@ class TakeMoneyCondition extends TypeMoney {
     protected $name = "condition.takeMoney.name";
     protected $detail = "condition.takeMoney.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

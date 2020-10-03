@@ -29,8 +29,6 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
 
     protected $category = Category::LEVEL;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /** @var string */
     private $sound;
     /** @var string */

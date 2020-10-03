@@ -28,8 +28,6 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function __construct(string $player = "", string $scoreboard = "") {
         $this->setPlayerVariableName($player);
         $this->setScoreboardVariableName($scoreboard);

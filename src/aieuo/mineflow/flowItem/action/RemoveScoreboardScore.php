@@ -26,8 +26,6 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
 
     protected $category = Category::SCOREBOARD;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     /* @var string */
     private $scoreName;
 

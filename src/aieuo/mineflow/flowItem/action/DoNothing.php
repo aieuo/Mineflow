@@ -15,8 +15,6 @@ class DoNothing extends FlowItem {
 
     protected $category = Category::COMMON;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     public function execute(Recipe $origin) {
         yield true;
     }

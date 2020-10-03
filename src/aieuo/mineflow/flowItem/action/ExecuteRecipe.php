@@ -24,8 +24,6 @@ class ExecuteRecipe extends FlowItem {
 
     protected $category = Category::SCRIPT;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
-
     protected $permission = self::PERMISSION_LEVEL_1;
 
     /** @var string */

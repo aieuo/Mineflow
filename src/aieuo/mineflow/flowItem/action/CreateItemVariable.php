@@ -26,8 +26,6 @@ class CreateItemVariable extends FlowItem {
     protected $detailDefaultReplace = ["item", "id", "count", "name"];
 
     protected $category = Category::ITEM;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

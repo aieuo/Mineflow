@@ -15,8 +15,6 @@ class SetMoney extends TypeMoney {
     protected $name = "action.setMoney.name";
     protected $detail = "action.setMoney.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

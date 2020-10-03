@@ -28,8 +28,6 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function __construct(string $player = "", string $position = "") {
         $this->setPlayerVariableName($player);
         $this->setPositionVariableName($position);

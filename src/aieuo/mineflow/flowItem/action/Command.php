@@ -27,8 +27,6 @@ class Command extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::COMMAND;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     /** @var string */
     private $command;
 

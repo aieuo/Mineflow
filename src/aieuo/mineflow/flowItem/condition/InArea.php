@@ -28,8 +28,6 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
 
     protected $category = Category::ENTITY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-
     public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         $this->setEntityVariableName($entity);
         $this->setPositionVariableName($pos1, "pos1");

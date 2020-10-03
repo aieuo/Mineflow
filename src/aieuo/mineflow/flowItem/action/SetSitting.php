@@ -33,8 +33,6 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     /** @var array */
     private static $entityIds = [];
 

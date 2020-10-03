@@ -11,8 +11,6 @@ class RemoveItemAll extends TypeItem {
     protected $name = "action.removeItemAll.name";
     protected $detail = "action.removeItemAll.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

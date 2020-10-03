@@ -11,8 +11,6 @@ class ExistsItem extends TypeItem {
     protected $name = "condition.existsItem.name";
     protected $detail = "condition.existsItem.detail";
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 

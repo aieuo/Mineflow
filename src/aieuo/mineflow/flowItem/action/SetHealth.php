@@ -26,8 +26,6 @@ class SetHealth extends FlowItem implements EntityFlowItem {
 
     protected $category = Category::ENTITY;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_ENTITY;
-
     /** @var string */
     private $health;
 

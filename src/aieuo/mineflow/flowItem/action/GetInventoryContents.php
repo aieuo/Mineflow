@@ -30,7 +30,6 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
 
     protected $category = Category::PLAYER;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

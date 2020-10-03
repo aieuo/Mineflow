@@ -26,8 +26,6 @@ class GetDistance extends FlowItem implements PositionFlowItem {
     protected $detailDefaultReplace = ["pos1", "pos2", "result"];
 
     protected $category = Category::LEVEL;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */

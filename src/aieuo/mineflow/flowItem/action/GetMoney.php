@@ -27,7 +27,6 @@ class GetMoney extends FlowItem {
 
     protected $category = Category::PLUGIN;
 
-    protected $targetRequired = Recipe::TARGET_REQUIRED_PLAYER;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */

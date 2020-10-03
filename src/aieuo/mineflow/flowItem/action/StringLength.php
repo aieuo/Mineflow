@@ -23,8 +23,6 @@ class StringLength extends FlowItem {
     protected $detailDefaultReplace = ["string", "result"];
 
     protected $category = Category::STRING;
-
-    protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     /** @var string */
