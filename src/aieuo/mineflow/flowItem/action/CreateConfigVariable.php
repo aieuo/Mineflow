@@ -69,7 +69,7 @@ class CreateConfigVariable extends FlowItem {
 
         $name = $origin->replaceVariables($this->getVariableName());
         $file = $origin->replaceVariables($this->getFileName());
-        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($file))) {
+        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($file, "/@#~"))) {
             throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
 

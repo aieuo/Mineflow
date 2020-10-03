@@ -54,7 +54,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getFileName());
-        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name));
+        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
 
         yield true;
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
@@ -71,7 +71,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[1]))) $errors = ["@form.recipe.invalidName", 1];
+        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[1], "/@#~"))) $errors = ["@form.recipe.invalidName", 1];
         return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
     }
 
