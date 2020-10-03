@@ -30,9 +30,9 @@ abstract class Form implements PMForm {
     private $name;
 
     /** @var callable|null */
-    private $onReceive = null;
+    private $onReceive;
     /* @var callable|null */
-    private $onClose = null;
+    private $onClose;
     /** @var array */
     private $args = [];
     /** @var array */

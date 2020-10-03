@@ -177,8 +177,7 @@ class RecipeForm {
                     case 0:
                         $prev = Session::getSession($player)->get("recipe_menu_prev");
                         if (is_callable($prev)) {
-                            $data = array_merge([$player], Session::getSession($player)->get("recipe_menu_prev_data", []));
-                            call_user_func_array($prev, $data);
+                            call_user_func_array($prev, array_merge([$player], Session::getSession($player)->get("recipe_menu_prev_data", [])));
                         }
                         else $this->sendMenu($player);
                         break;

@@ -122,7 +122,7 @@ class CustomForm extends Form {
                     }
 
                     if ($content instanceof NumberInput) {
-                        if (($containsVariable = Main::getVariableHelper()->containsVariable($data[$i]))) continue;
+                        if (Main::getVariableHelper()->containsVariable($data[$i])) continue;
 
                         if (!is_numeric($data[$i])) {
                             $errors[] = ["@flowItem.error.notNumber", $i];

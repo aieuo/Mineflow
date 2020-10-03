@@ -20,10 +20,6 @@ class CallRecipe extends ExecuteRecipe {
     protected $name = "action.callRecipe.name";
     protected $detail = "action.callRecipe.detail";
 
-    public function __construct(string $name = "", string $args = "") {
-        parent::__construct($name, $args);
-    }
-
     public function execute(Recipe $origin) {
         $this->throwIfCannotExecute();
 
@@ -64,17 +60,9 @@ class CallRecipe extends ExecuteRecipe {
             ]);
     }
 
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3]];
-    }
-
     public function loadSaveData(array $content): FlowItem {
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1]);
         return $this;
-    }
-
-    public function serializeContents(): array {
-        return [$this->getRecipeName(), $this->getArgs()];
     }
 }

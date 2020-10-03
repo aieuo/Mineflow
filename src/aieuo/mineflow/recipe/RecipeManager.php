@@ -130,8 +130,7 @@ class RecipeManager {
         while ($this->exists($name." (".$count.")", $group)) {
             $count++;
         }
-        $name = $name." (".$count.")";
-        return $name;
+        return $name." (".$count.")";
     }
 
     public function rename(string $recipeName, string $newName, string $group = ""): void {

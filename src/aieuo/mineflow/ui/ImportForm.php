@@ -93,7 +93,7 @@ class ImportForm {
 
             $manager->add($recipe);
         }
-        if (is_callable($onComplete)) call_user_func($onComplete);
+        if (is_callable($onComplete)) $onComplete();
     }
 
     public function importCommands(Player $player, array $commands, callable $onComplete = null, int $start = 0): void {
@@ -116,7 +116,7 @@ class ImportForm {
 
             $manager->addCommand($data["command"], $data["permission"], $data["description"]);
         }
-        if (is_callable($onComplete)) call_user_func($onComplete);
+        if (is_callable($onComplete)) $onComplete();
     }
 
     public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0): void {
@@ -140,7 +140,7 @@ class ImportForm {
 
             $manager->addForm($name, $form);
         }
-        if (is_callable($onComplete)) call_user_func($onComplete);
+        if (is_callable($onComplete)) $onComplete();
     }
 
     public function importConfigs(Player $player, array $configs, callable $onComplete = null, int $start = 0): void {
@@ -162,7 +162,7 @@ class ImportForm {
 
             ConfigHolder::setConfig($name, $configData, true);
         }
-        if (is_callable($onComplete)) call_user_func($onComplete);
+        if (is_callable($onComplete)) $onComplete();
     }
 
 

@@ -112,6 +112,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
         $fluctuation = $origin->replaceVariables($this->fluctuation);
         $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
+        $fluctuation = (float)$fluctuation;
 
         for ($i = $start; $i <= $end; $i += $fluctuation) {
             $origin->addVariable(new NumberVariable($i, $counterName));

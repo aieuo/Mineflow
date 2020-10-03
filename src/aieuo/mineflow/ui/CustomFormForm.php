@@ -189,7 +189,7 @@ class CustomFormForm {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("form_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        if (is_callable($prev)) $prev($player);
                         else $this->sendMenu($player);
                         break;
                     case 1:
@@ -284,7 +284,7 @@ class CustomFormForm {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("form_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        if (is_callable($prev)) $prev($player);
                         else $this->sendMenu($player);
                         return;
                     case 1:
@@ -368,7 +368,7 @@ class CustomFormForm {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("form_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        if (is_callable($prev)) $prev($player);
                         else $this->sendMenu($player);
                         return;
                     case 1:

@@ -81,7 +81,7 @@ class CommandTriggerForm {
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, callable $callback) {
-                call_user_func_array($callback, [$data]);
+                $callback($data);
             })->addArgs($callback)->show($player);
     }
 }

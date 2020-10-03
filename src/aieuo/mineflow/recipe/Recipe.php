@@ -52,7 +52,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     /** @var array */
     private $targetOptions = [];
     /** @var Entity|null */
-    private $target = null;
+    private $target;
 
     /** @var Trigger[] */
     private $triggers = [];
@@ -68,7 +68,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     private $returnValues = [];
 
     /** @var null|Event */
-    private $event = null;
+    private $event;
     /* @var \Generator */
     private $generator;
 
@@ -338,9 +338,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         if (!isset($this->variables[$name])) return null;
 
         $variable = $this->variables[$name];
-        foreach ($names as $name) {
+        foreach ($names as $name1) {
             if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
-            $variable = $variable->getValueFromIndex($name);
+            $variable = $variable->getValueFromIndex($name1);
         }
         return $variable;
     }

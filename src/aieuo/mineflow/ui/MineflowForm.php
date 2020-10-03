@@ -19,9 +19,9 @@ class MineflowForm {
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, string $name, string $newName, callable $onTrue, callable $onFalse) {
                 if ($data) {
-                    call_user_func_array($onTrue, [$player, $newName]);
+                    $onTrue($player, $newName);
                 } else {
-                    call_user_func_array($onFalse, [$player, $name]);
+                    $onFalse($player, $name);
                 }
             })->addArgs($name, $newName, $onAccept, $onRefuse)->show($player);
     }
@@ -33,9 +33,9 @@ class MineflowForm {
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, callable $onTrue, callable $onFalse) {
                 if ($data) {
-                    call_user_func_array($onTrue, [$player]);
+                    $onTrue($player);
                 } else {
-                    call_user_func_array($onFalse, [$player]);
+                    $onFalse($player);
                 }
             })->addArgs($onAccept, $onRefuse)->show($player);
     }
@@ -49,7 +49,7 @@ class MineflowForm {
             ])->onReceive(function (Player $player, array $data, string $title, callable $callback, ?callable $onCancel) {
                 if ($data[2]) {
                     if (is_callable($onCancel)) {
-                        call_user_func($onCancel, $player);
+                        $onCancel($player);
                         return;
                     }
                     (new HomeForm)->sendMenu($player);
@@ -71,7 +71,7 @@ class MineflowForm {
                     return;
                 }
 
-                call_user_func_array($callback, [$player, $recipe]);
+                $callback($player, $recipe);
             })->addArgs($title, $callback, $onCancel)->addErrors($errors)->show($player);
     }
 }

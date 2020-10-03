@@ -11,7 +11,7 @@ class TriggerHolder {
     private $recipes = [];
 
     /** @var TriggerHolder */
-    private static $instance = null;
+    private static $instance;
 
     public static function getInstance(): self {
         if (self::$instance === null) self::$instance = new self();

@@ -7,7 +7,7 @@ use aieuo\mineflow\utils\Language;
 
 class Economy {
     /** @var EconomyLoader|null */
-    private static $economy = null;
+    private static $economy;
     /* @var Main */
     private $owner;
 

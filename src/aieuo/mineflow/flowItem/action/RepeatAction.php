@@ -98,7 +98,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $this->throwIfInvalidNumber($start);
 
         $name = $this->counterName;
-        $end = $start + (int)$count;
+        $end = (int)$start + (int)$count;
 
         for ($i = (int)$start; $i < $end; $i++) {
             $origin->addVariable(new NumberVariable($i, $name));

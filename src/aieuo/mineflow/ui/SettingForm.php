@@ -39,7 +39,7 @@ class SettingForm {
         $languages = Language::getAvailableLanguages();
         (new CustomForm("@setting.language"))
             ->setContents([
-                new Dropdown("@setting.language", $languages, array_search(Language::getLanguage(), $languages)),
+                new Dropdown("@setting.language", $languages, array_search(Language::getLanguage(), $languages, true)),
             ])->onReceive(function (Player $player, array $data) use ($languages) {
                 $language = $languages[$data[0]];
                 Server::getInstance()->dispatchCommand($player, "mineflow language ".$language);

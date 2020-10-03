@@ -104,8 +104,4 @@ class GenerateRandomNumber extends TypeGetMathVariable {
     public function serializeContents(): array {
         return [$this->getMin(), $this->getMax(), $this->getResultName()];
     }
-
-    public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
-    }
 }

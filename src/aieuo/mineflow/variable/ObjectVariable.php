@@ -41,11 +41,11 @@ class ObjectVariable extends Variable {
     }
 
     public function __toString() {
-        if (!empty($this->showString)) return $this->showString;
+        if (!empty($this->showString)) return (string)$this->showString;
         if (method_exists($this->getValue(), "__toString")) {
-            $str = $this->getValue()->__toString();
+            $str = (string)$this->getValue();
         } else {
-            $str = get_class($this->getValue());
+            $str = (string)get_class($this->getValue());
         }
         return $str;
     }

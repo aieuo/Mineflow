@@ -64,7 +64,7 @@ class FlowItemForm {
 
         $data = $action->parseFromFormData($formData);
         if ($data["cancel"]) {
-            call_user_func_array($callback, [false]);
+            $callback(false);
             return;
         }
 
@@ -79,7 +79,7 @@ class FlowItemForm {
             Main::getInstance()->getLogger()->logException($e);
             return;
         }
-        call_user_func_array($callback, [true]);
+        $callback(true);
     }
 
     public function selectActionCategory(Player $player, FlowItemContainer $container, string $type): void {
@@ -147,7 +147,7 @@ class FlowItemForm {
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),
-                new Button(in_array($item->getId(), $favorites) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
+                new Button(in_array($item->getId(), $favorites, true) ? "@form.items.removeFavorite" : "@form.items.addFavorite"),
             ])->onReceive(function (Player $player, int $data) use($container, $type, $item) {
                 switch ($data) {
                     case 0:

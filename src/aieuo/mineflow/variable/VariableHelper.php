@@ -55,9 +55,9 @@ class VariableHelper {
         if (!$this->exists($name, $save)) return null;
 
         $variable = $this->get($name, $save);
-        foreach ($names as $name) {
+        foreach ($names as $name1) {
             if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
-            $variable = $variable->getValueFromIndex($name);
+            $variable = $variable->getValueFromIndex($name1);
         }
         return $variable;
     }
@@ -267,14 +267,16 @@ class VariableHelper {
      */
     public function currentType(string $value) {
         if (mb_strpos($value, "(str)") === 0) {
-            $value = mb_substr($value, 5);
+            $newValue = mb_substr($value, 5);
         } elseif (mb_strpos($value, "(num)") === 0) {
-            $value = mb_substr($value, 5);
-            if (!$this->containsVariable($value)) $value = (float)$value;
+            $newValue = mb_substr($value, 5);
+            if (!$this->containsVariable($value)) $newValue = (float)$value;
         } elseif (is_numeric($value)) {
-            $value = (float)$value;
+            $newValue = (float)$value;
+        } else {
+            $newValue = $value;
         }
-        return $value;
+        return $newValue;
     }
 
     public function toVariableArray(array $data): array {

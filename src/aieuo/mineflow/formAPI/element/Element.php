@@ -20,7 +20,7 @@ abstract class Element implements \JsonSerializable {
     /** @var string */
     protected $extraText = "";
     /** @var string|null */
-    protected $highlight = null;
+    protected $highlight = "";
 
     /** @var string|null */
     private $uuid;

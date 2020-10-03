@@ -155,7 +155,7 @@ class CommandForm {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("command_menu_prev");
-                        if (is_callable($prev)) call_user_func_array($prev, [$player]);
+                        if (is_callable($prev)) $prev($player);
                         else $this->sendMenu($player);
                         break;
                     case 1:
@@ -305,8 +305,8 @@ class CommandForm {
             })->addMessages($messages)->addArgs($command, $recipes)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, array $command, int $index, array $recipes): void {
-        $command = Main::getCommandManager()->getCommand($command["command"]);
+    public function sendRecipeMenu(Player $player, array $commandData, int $index, array $recipes): void {
+        $command = Main::getCommandManager()->getCommand($commandData["command"]);
         $triggers = array_values($recipes)[$index];
         $content = implode("\n", array_map(function (String $cmd) {
             return "/".$cmd;

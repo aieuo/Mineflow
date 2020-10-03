@@ -69,9 +69,9 @@ class FormManager {
         return $name." (".$count.")";
     }
 
-    public function getAssignedRecipes(string $name): array {
+    public function getAssignedRecipes(string $formName): array {
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(Trigger::TYPE_FORM, $name));
+        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(Trigger::TYPE_FORM, $formName));
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
                 $path = $recipe->getGroup()."/".$recipe->getName();
@@ -106,7 +106,6 @@ class FormManager {
             case $form instanceof CustomForm:
                 $dataVariables = [];
                 $dropdownVariables = [];
-                $dropdown = 0;
                 foreach ($form->getContents() as $i => $content) {
                     switch ($content->getType()) {
                         case Element::ELEMENT_INPUT:
@@ -128,7 +127,6 @@ class FormManager {
                     if ($content instanceof Dropdown) {
                         $selected = $content->getOptions()[$data[$i]];
                         $dropdownVariables[] = new StringVariable($selected);
-                        $dropdown++;
                     }
                 }
                 $variable = new MapVariable([

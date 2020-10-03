@@ -9,6 +9,7 @@ class NumberVariable extends Variable implements \JsonSerializable {
     /**
      * @param int|float $value
      * @param string $name
+     * @noinspection SenselessProxyMethodInspection
      */
     public function __construct($value, string $name = "") {
         parent::__construct($value, $name);
@@ -16,6 +17,7 @@ class NumberVariable extends Variable implements \JsonSerializable {
 
     /**
      * @return int|float
+     * @noinspection SenselessProxyMethodInspection
      */
     public function getValue() {
         return parent::getValue();
