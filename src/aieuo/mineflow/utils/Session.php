@@ -18,7 +18,7 @@ class Session {
      * @return Session
      */
     public static function getSession(Player $player): Session {
-        if (self::existsSession($player)) self::createSession($player);
+        if (!self::existsSession($player)) self::createSession($player);
         return self::$sessions[$player->getName()];
     }
 
