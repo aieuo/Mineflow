@@ -66,11 +66,11 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
     public function getDetail(): string {
         $details = ["", "=========whileTask(".$this->getInterval().")========="];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -85,7 +85,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         $wait = new Wait(strval($this->getInterval() / 20));
         while (true) {
             $origin->addVariable(new NumberVariable($this->loopCount, "i")); // TODO: i を変更できるようにする
-            foreach ($this->getItems(FlowItemContainer::CONDITION) as $i => $condition) {
+            foreach ($this->getConditions() as $i => $condition) {
                 if (!(yield from $condition->execute($origin))) {
                     $origin->resume();
                     return true;
@@ -188,8 +188,8 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
     public function serializeContents(): array {
         return  [
-            $this->getItems(FlowItemContainer::CONDITION),
-            $this->getItems(FlowItemContainer::ACTION),
+            $this->getConditions(),
+            $this->getActions(),
             $this->interval,
             $this->limit,
         ];
@@ -209,13 +209,13 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
     public function __clone() {
         $conditions = [];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $k => $condition) {
+        foreach ($this->getConditions() as $k => $condition) {
             $conditions[$k] = clone $condition;
         }
         $this->setItems($conditions, FlowItemContainer::CONDITION);
 
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

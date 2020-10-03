@@ -28,7 +28,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
 
     public function getDetail(): string {
         $details = ["----------and-----------"];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";
@@ -40,7 +40,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
     }
 
     public function execute(Recipe $origin) {
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             if (!(yield from $condition->execute($origin))) return false;
         }
         return true;
@@ -104,7 +104,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
     }
 
     public function serializeContents(): array {
-        return $this->getItems(FlowItemContainer::CONDITION);
+        return $this->getConditions();
     }
 
     public function isDataValid(): bool {
@@ -113,7 +113,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
 
     public function __clone() {
         $conditions = [];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $k => $condition) {
+        foreach ($this->getConditions() as $k => $condition) {
             $conditions[$k] = clone $condition;
         }
         $this->setItems($conditions, FlowItemContainer::CONDITION);

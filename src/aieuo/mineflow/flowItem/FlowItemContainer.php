@@ -51,6 +51,16 @@ interface FlowItemContainer {
     public function getItems(string $name): array;
 
     /**
+     * @return FlowItem[]
+     */
+    public function getActions(): array;
+
+    /**
+     * @return FlowItem[]
+     */
+    public function getConditions(): array;
+
+    /**
      * @return mixed
      */
     public function getLastResult();

@@ -82,7 +82,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         $repeat = $this->getListVariableName()." as ".$this->getKeyVariableName()." => ".$this->getValueVariableName();
 
         $details = ["", "== foreach(".$repeat.") =="];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -134,6 +134,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
                 $parents = $session->get("parents");
+                /** @var FlowItemContainer $parent */
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
@@ -195,7 +196,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     }
 
     public function serializeContents(): array {
-        return [$this->getItems(FlowItemContainer::ACTION), $this->listVariableName, $this->keyVariableName, $this->valueVariableName,];
+        return [$this->getActions(), $this->listVariableName, $this->keyVariableName, $this->valueVariableName,];
     }
 
     public function isDataValid(): bool {
@@ -208,7 +209,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

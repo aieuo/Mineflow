@@ -14,7 +14,7 @@ class NandScript extends AndScript {
 
     public function getDetail(): string {
         $details = ["-----------nand-----------"];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";

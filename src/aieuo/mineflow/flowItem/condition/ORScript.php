@@ -14,7 +14,7 @@ class ORScript extends AndScript {
 
     public function getDetail(): string {
         $details = ["-----------or-----------"];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";
@@ -22,7 +22,7 @@ class ORScript extends AndScript {
     }
 
     public function execute(Recipe $origin) {
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             if (yield from $condition->execute($origin)) return true;
         }
         return false;

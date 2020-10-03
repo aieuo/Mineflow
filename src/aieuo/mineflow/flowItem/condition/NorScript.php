@@ -14,7 +14,7 @@ class NorScript extends ORScript {
 
     public function getDetail(): string {
         $details = ["-----------nor-----------"];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";

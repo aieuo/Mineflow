@@ -15,11 +15,11 @@ class ElseifAction extends IFAction {
 
     public function getDetail(): string {
         $details = ["=============elseif============="];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -31,7 +31,7 @@ class ElseifAction extends IFAction {
         if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             if (!(yield from $condition->execute($origin))) return false;
         }
 

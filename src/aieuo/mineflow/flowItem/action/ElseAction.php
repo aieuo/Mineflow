@@ -34,7 +34,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function getDetail(): string {
         $details = ["==============else=============="];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -103,7 +103,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     }
 
     public function serializeContents(): array {
-        return $this->getItems(FlowItemContainer::ACTION);
+        return $this->getActions();
     }
 
     public function isDataValid(): bool {
@@ -116,7 +116,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

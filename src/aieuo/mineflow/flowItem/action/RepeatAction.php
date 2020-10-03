@@ -79,7 +79,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $left = ceil($length / 2);
         $right = $length - $left;
         $details = ["", str_repeat("=", 12 - $left)."repeat(".$repeat.")".str_repeat("=", 12 - $right)];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -185,7 +185,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     public function serializeContents(): array {
         return [
             $this->repeatCount,
-            $this->getItems(FlowItemContainer::ACTION),
+            $this->getActions(),
             $this->startIndex,
             $this->counterName
         ];
@@ -205,7 +205,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

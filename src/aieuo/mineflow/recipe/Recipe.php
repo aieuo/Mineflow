@@ -111,7 +111,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getDetail(): string {
         $details = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         return implode("\n", $details);
@@ -393,7 +393,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             "name" => $this->name,
             "group" => $this->group,
             "author" => $this->author,
-            "actions" => $this->getItems(FlowItemContainer::ACTION),
+            "actions" => $this->getActions(),
             "triggers" => $this->triggers,
             "target" => [
                 "type" => $this->targetType,
@@ -419,7 +419,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

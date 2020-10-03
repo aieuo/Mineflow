@@ -34,11 +34,11 @@ class IFAction extends FlowItem implements FlowItemContainer {
 
     public function getDetail(): string {
         $details = ["", "==============if================"];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -50,7 +50,7 @@ class IFAction extends FlowItem implements FlowItemContainer {
     }
 
     public function execute(Recipe $origin) {
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             if (!(yield from $condition->execute($origin))) return false;
         }
 
@@ -80,6 +80,7 @@ class IFAction extends FlowItem implements FlowItemContainer {
             ])->onReceive(function (Player $player, int $data) {
                 $session = Session::getSession($player);
                 $parents = $session->get("parents");
+                /** @var FlowItemContainer $parent */
                 $parent = end($parents);
                 switch ($data) {
                     case 0:
@@ -131,8 +132,8 @@ class IFAction extends FlowItem implements FlowItemContainer {
 
     public function serializeContents(): array {
         return  [
-            $this->getItems(FlowItemContainer::CONDITION),
-            $this->getItems(FlowItemContainer::ACTION)
+            $this->getConditions(),
+            $this->getActions()
         ];
     }
 
@@ -142,13 +143,13 @@ class IFAction extends FlowItem implements FlowItemContainer {
 
     public function __clone() {
         $conditions = [];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $k => $condition) {
+        foreach ($this->getConditions() as $k => $condition) {
             $conditions[$k] = clone $condition;
         }
         $this->setItems($conditions, FlowItemContainer::CONDITION);
 
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

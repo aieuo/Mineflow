@@ -102,7 +102,7 @@ abstract class VariableDropdown extends Dropdown {
                             return;
                         }
 
-                        $place = array_search(Session::getSession($player)->get("action_list_clicked"), $container->getItems(FlowItemContainer::ACTION), true);
+                        $place = array_search(Session::getSession($player)->get("action_list_clicked"), $container->getActions(), true);
                         if ($place === false) {
                             $container->pushItem($place, $action, FlowItemContainer::ACTION);
                         } else {

@@ -156,7 +156,7 @@ class RecipeManager {
 
         $recipes = [];
         if ($base) $recipes[$origin->getGroup()."/".$origin->getName()] = $origin;
-        foreach ($recipe->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($recipe->getActions() as $action) {
             if ($action instanceof FlowItemContainer) {
                 $links = $this->getWithLinkedRecipes($action, $origin, false);
                 $recipes = array_merge($recipes, $links);

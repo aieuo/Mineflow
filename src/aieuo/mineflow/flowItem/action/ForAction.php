@@ -90,7 +90,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
         $repeat = str_replace("+=-", "-=", $repeat);
 
         $details = ["", "==== for(".$repeat.") ===="];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $action) {
+        foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
         $details[] = "================================";
@@ -197,7 +197,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
     public function serializeContents(): array {
         return [
-            $this->getItems(FlowItemContainer::ACTION),
+            $this->getActions(),
             $this->counterName,
             $this->startIndex,
             $this->endIndex,
@@ -219,7 +219,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getItems(FlowItemContainer::ACTION) as $k => $action) {
+        foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
         $this->setItems($actions, FlowItemContainer::ACTION);

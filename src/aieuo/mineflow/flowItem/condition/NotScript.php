@@ -13,7 +13,7 @@ class NotScript extends NandScript {
 
     public function getDetail(): string {
         $details = ["-----------not-----------"];
-        foreach ($this->getItems(FlowItemContainer::CONDITION) as $condition) {
+        foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
         $details[] = "------------------------";
