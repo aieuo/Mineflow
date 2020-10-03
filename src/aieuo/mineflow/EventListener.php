@@ -109,10 +109,8 @@ class EventListener implements Listener {
     public function receive(DataPacketReceiveEvent $event): void {
         $pk = $event->getPacket();
         $player = $event->getPlayer();
-        if ($pk instanceof InteractPacket) {
-            if ($pk->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
-                SetSitting::leave($player);
-            }
+        if (($pk instanceof InteractPacket) and $pk->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
+            SetSitting::leave($player);
         }
     }
 
