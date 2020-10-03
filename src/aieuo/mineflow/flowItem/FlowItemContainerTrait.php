@@ -95,10 +95,12 @@ trait FlowItemContainerTrait {
         }
         $target = $target ?? $flowItem;
 
+        $variablesMerge = [];
         foreach ($this->getItems($type) as $item) {
             if ($item === $target) break;
-            $variables = array_merge($variables, $item->getAddingVariables());
+            $variablesMerge[] = $item->getAddingVariables();
         }
+        $variables = array_merge($variables, ...$variablesMerge);
         return $variables;
     }
 }

@@ -156,7 +156,7 @@ class RecipeManager {
         foreach ($recipe->getActions() as $action) {
             if ($action instanceof FlowItemContainer) {
                 $links = $this->getWithLinkedRecipes($action, $origin, false);
-                $recipes = array_merge($recipes, $links);
+                $recipes[] = $links;
                 continue;
             }
 
@@ -170,9 +170,10 @@ class RecipeManager {
                 if ($recipe === null) $recipe = $recipeManager->get($recipeName, "");
                 if ($recipe === null) continue;
 
-                $recipes = array_merge($recipes, $this->getWithLinkedRecipes($recipe, $recipe));
+                $recipes[] = $this->getWithLinkedRecipes($recipe, $recipe);
             }
         }
+        $recipes = array_merge([], ...$recipes);
         return $recipes;
     }
 }

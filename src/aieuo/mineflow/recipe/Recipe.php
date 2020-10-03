@@ -221,9 +221,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
         if ($event instanceof Event) $variables = array_merge($variables, ["event" => new EventObjectVariable($event, "event")]);
         foreach ($targets as $target) {
-            if ($target instanceof Entity) $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
             $recipe = clone $this;
-            $recipe->setTarget($target)->setEvent($event)->addVariables($variables);
+            $recipe->setTarget($target)->setEvent($event)
+                ->addVariables($target instanceof Entity ? array_merge($variables, DefaultVariables::getEntityVariables($target)) : $variables);
             $recipe->execute($args);
         }
         return true;
@@ -359,10 +359,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
         $variables = [new DummyVariable("target", DummyVariable::PLAYER)];
+        $add = [];
         foreach ($this->getTriggers() as $trigger) {
-            $variables = array_merge($variables, TriggerVariables::get($trigger));
+            $add[] = TriggerVariables::get($trigger);
         }
-        $variables = array_merge($variables, $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
+        $variables = array_merge(array_merge($variables, ...$add), $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
         return $variables;
     }
 
