@@ -44,7 +44,7 @@ abstract class VariableDropdown extends Dropdown {
         $default = $this->defaultText;
 
         $variables = array_filter($variables, function (DummyVariable $v) use ($variableTypes) {
-            return in_array($v->getValueType(), $variableTypes);
+            return in_array($v->getValueType(), $variableTypes, true);
         });
         $options = array_values(array_unique(array_map(function (DummyVariable $v) {
             return empty($v->getDescription()) ? $v->getName() : ($v->getName().self::VALUE_SEPARATOR_LEFT.$v->getDescription().")");

@@ -22,7 +22,7 @@ class Language {
     }
 
     public static function isAvailableLanguage(string $languageName): bool {
-        return in_array($languageName, self::$availableLanguages);
+        return in_array($languageName, self::$availableLanguages, true);
     }
 
     public static function getAvailableLanguages(): array {

@@ -130,7 +130,7 @@ class CustomForm extends Form {
                             $errors[] = [Language::get("flowItem.error.lessValue", [$min]), $i];
                         } elseif (($max = $content->getMax()) !== null and (float)$data[$i] > $max) {
                             $errors[] = [Language::get("flowItem.error.overValue", [$max]), $i];
-                        } elseif (($excludes = $content->getExcludes()) !== null and in_array((float)$data[$i], $excludes)) {
+                        } elseif (($excludes = $content->getExcludes()) !== null and in_array((float)$data[$i], $excludes, true)) {
                             $errors[] = [Language::get("flowItem.error.excludedNumber", [implode(",", $excludes)]), $i];
                         }
                     }

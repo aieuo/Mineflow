@@ -16,7 +16,7 @@ class PlayerConfig extends Config {
 
     public function addFavorite(string $name, string $type, string $favorite): void {
         $favorites = $this->getFavorites($name, $type);
-        if (!in_array($favorite, $favorites)) {
+        if (!in_array($favorite, $favorites, true)) {
             $favorites[] = $favorite;
         }
         $this->setFavorites($name, $type, $favorites);
@@ -31,7 +31,7 @@ class PlayerConfig extends Config {
 
     public function toggleFavorite(string $name, string $type, string $favorite): void {
         $favorites = $this->getFavorites($name, $type);
-        if (in_array($favorite, $favorites)) {
+        if (in_array($favorite, $favorites, true)) {
             $this->removeFavorite($name, $type, $favorite);
         } else {
             $this->addFavorite($name, $type, $favorite);

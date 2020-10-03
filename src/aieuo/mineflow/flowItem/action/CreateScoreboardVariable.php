@@ -80,7 +80,7 @@ class CreateScoreboardVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->boardId !== "" and $this->displayName !== "" and in_array($this->displayType, $this->displayTypes);
+        return $this->variableName !== "" and $this->boardId !== "" and $this->displayName !== "" and in_array($this->displayType, $this->displayTypes, true);
     }
 
     public function getDetail(): string {

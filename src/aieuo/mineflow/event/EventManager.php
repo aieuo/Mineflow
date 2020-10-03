@@ -116,7 +116,7 @@ class EventManager {
         $settings = [];
 
         foreach ($this->fullNames as $event => $value) {
-            $settings[$value] = in_array($value, $enables);
+            $settings[$value] = in_array($value, $enables, true);
         }
         return $settings;
     }

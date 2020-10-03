@@ -56,7 +56,7 @@ class Main extends PluginBase {
 
         $serverLanguage = $this->getServer()->getLanguage()->getLang();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
-            "language" => in_array($serverLanguage, Language::getAvailableLanguages()) ? $serverLanguage : "eng",
+            "language" => in_array($serverLanguage, Language::getAvailableLanguages(), true) ? $serverLanguage : "eng",
         ]);
         $this->config->save();
 
