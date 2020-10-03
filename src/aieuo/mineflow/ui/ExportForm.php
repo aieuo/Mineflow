@@ -97,7 +97,7 @@ class ExportForm {
 
                 /** @var array<string|int>[] $errors */
                 $errors = [];
-                if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($name))) $errors = ["@form.recipe.invalidName", 0];
+                if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($name))) $errors = ["@form.recipe.invalidName", 0];
 
                 if (!empty($errors)) {
                     $this->sendExportMenu($player, $recipes, $data, $errors);

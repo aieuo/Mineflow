@@ -83,7 +83,7 @@ abstract class Element implements \JsonSerializable {
      */
     public function reflectHighlight(string $text): string {
         if (empty($this->highlight)) return $text;
-        return $this->highlight.preg_replace("/§[a-f0-9]/", "", $text);
+        return $this->highlight.preg_replace("/§[a-f0-9]/u", "", $text);
     }
 
     /**

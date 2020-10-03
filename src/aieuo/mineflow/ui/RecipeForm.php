@@ -52,8 +52,8 @@ class RecipeForm {
                 $group = $data[1];
 
                 $errors = [];
-                if (preg_match("#[.¥/:?<>|*\"]#", preg_quote($name))) $errors[] = ["@form.recipe.invalidName", 0];
-                if (preg_match("#[.¥:?<>|*\"]#", preg_quote($group))) $errors[] = ["@form.recipe.invalidName", 1];
+                if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($name))) $errors[] = ["@form.recipe.invalidName", 0];
+                if (preg_match("#[.¥:?<>|*\"]#u", preg_quote($group))) $errors[] = ["@form.recipe.invalidName", 1];
                 if (!empty($errors)) {
                     $this->sendAddRecipe($player, $data, $errors);
                     return;
