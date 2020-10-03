@@ -26,12 +26,12 @@ class ComparisonNumber extends FlowItem implements Condition {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    const EQUAL = 0;
-    const NOT_EQUAL = 1;
-    const GREATER = 2;
-    const LESS = 3;
-    const GREATER_EQUAL = 4;
-    const LESS_EQUAL = 5;
+    public const EQUAL = 0;
+    public const NOT_EQUAL = 1;
+    public const GREATER = 2;
+    public const LESS = 3;
+    public const GREATER_EQUAL = 4;
+    public const LESS_EQUAL = 5;
 
     /** @var string */
     private $value1;

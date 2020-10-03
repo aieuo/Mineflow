@@ -30,11 +30,11 @@ class FourArithmeticOperations extends FlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    const ADDITION = 0;
-    const SUBTRACTION = 1;
-    const MULTIPLICATION = 2;
-    const DIVISION = 3;
-    const MODULO = 4;
+    public const ADDITION = 0;
+    public const SUBTRACTION = 1;
+    public const MULTIPLICATION = 2;
+    public const DIVISION = 3;
+    public const MODULO = 4;
 
     /** @var string */
     private $value1;

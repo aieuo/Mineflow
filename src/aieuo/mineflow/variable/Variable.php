@@ -4,12 +4,12 @@ namespace aieuo\mineflow\variable;
 
 abstract class Variable {
 
-    const DUMMY = -1;
-    const STRING = 0;
-    const NUMBER = 1;
-    const LIST = 2;
-    const MAP = 3;
-    const OBJECT = 4;
+    public const DUMMY = -1;
+    public const STRING = 0;
+    public const NUMBER = 1;
+    public const LIST = 2;
+    public const MAP = 3;
+    public const OBJECT = 4;
 
     /** @var string 変数の名前 */
     protected $name;

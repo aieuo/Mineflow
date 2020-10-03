@@ -26,12 +26,12 @@ class ComparisonString extends FlowItem implements Condition {
 
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
 
-    const EQUALS = 0;
-    const NOT_EQUALS = 1;
-    const CONTAINS = 2;
-    const NOT_CONTAINS = 3;
-    const STARTS_WITH = 4;
-    const ENDS_WITH = 5;
+    public const EQUALS = 0;
+    public const NOT_EQUALS = 1;
+    public const CONTAINS = 2;
+    public const NOT_CONTAINS = 3;
+    public const STARTS_WITH = 4;
+    public const ENDS_WITH = 5;
 
     /** @var string */
     private $value1;

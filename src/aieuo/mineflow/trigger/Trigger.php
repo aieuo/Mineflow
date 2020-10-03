@@ -4,10 +4,10 @@ namespace aieuo\mineflow\trigger;
 
 class Trigger implements \JsonSerializable {
 
-    const TYPE_BLOCK = "block";
-    const TYPE_COMMAND = "command";
-    const TYPE_EVENT = "event";
-    const TYPE_FORM = "form";
+    public const TYPE_BLOCK = "block";
+    public const TYPE_COMMAND = "command";
+    public const TYPE_EVENT = "event";
+    public const TYPE_FORM = "form";
 
     /** @var string */
     private $type;

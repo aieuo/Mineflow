@@ -4,22 +4,22 @@ namespace aieuo\mineflow\utils;
 
 class Category {
 
-    const COMMON = "common";
-    const BLOCK = "block";
-    const COMMAND = "command";
-    const ENTITY = "entity";
-    const EVENT = "event";
-    const FORM = "form";
-    const INVENTORY = "inventory";
-    const ITEM = "item";
-    const LEVEL = "level";
-    const PLAYER = "player";
-    const PLUGIN = "plugin";
-    const MATH = "math";
-    const STRING = "string";
-    const VARIABLE = "variable";
-    const SCRIPT = "script";
-    const SCOREBOARD = "scoreboard";
+    public const COMMON = "common";
+    public const BLOCK = "block";
+    public const COMMAND = "command";
+    public const ENTITY = "entity";
+    public const EVENT = "event";
+    public const FORM = "form";
+    public const INVENTORY = "inventory";
+    public const ITEM = "item";
+    public const LEVEL = "level";
+    public const PLAYER = "player";
+    public const PLUGIN = "plugin";
+    public const MATH = "math";
+    public const STRING = "string";
+    public const VARIABLE = "variable";
+    public const SCRIPT = "script";
+    public const SCOREBOARD = "scoreboard";
 
 
     public static function getCategories(): array {

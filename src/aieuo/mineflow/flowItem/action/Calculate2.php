@@ -30,13 +30,13 @@ class Calculate2 extends FlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    const CALC_MIN = 0;
-    const CALC_MAX = 1;
-    const CALC_POW = 2;
-    const CALC_LOG = 3;
-    const CALC_HYPOT = 4;
-    const CALC_ATAN2 = 5;
-    const CALC_ROUND = 6;
+    public const CALC_MIN = 0;
+    public const CALC_MAX = 1;
+    public const CALC_POW = 2;
+    public const CALC_LOG = 3;
+    public const CALC_HYPOT = 4;
+    public const CALC_ATAN2 = 5;
+    public const CALC_ROUND = 6;
 
     /** @var string */
     private $value1;

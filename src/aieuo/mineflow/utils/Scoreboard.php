@@ -11,9 +11,9 @@ use pocketmine\Server;
 
 class Scoreboard {
 
-    const DISPLAY_SIDEBAR = "sidebar";
-    const DISPLAY_LIST = "list";
-    const DISPLAY_BELOWNAME = "belowname";
+    public const DISPLAY_SIDEBAR = "sidebar";
+    public const DISPLAY_LIST = "list";
+    public const DISPLAY_BELOWNAME = "belowname";
 
     /* @var string */
     private $type;

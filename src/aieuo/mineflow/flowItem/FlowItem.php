@@ -33,16 +33,16 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     /** @var string */
     private $customName = "";
 
-    const RETURN_NONE = "none";
-    const RETURN_VARIABLE_NAME = "variableName";
-    const RETURN_VARIABLE_VALUE = "variableValue";
+    public const RETURN_NONE = "none";
+    public const RETURN_VARIABLE_NAME = "variableName";
+    public const RETURN_VARIABLE_VALUE = "variableValue";
 
     /** @var string */
     protected $returnValueType = self::RETURN_NONE;
 
-    const PERMISSION_LEVEL_0 = 0;
-    const PERMISSION_LEVEL_1 = 1;
-    const PERMISSION_LEVEL_2 = 2;
+    public const PERMISSION_LEVEL_0 = 0;
+    public const PERMISSION_LEVEL_1 = 1;
+    public const PERMISSION_LEVEL_2 = 2;
     /** @var int */
     protected $permission = self::PERMISSION_LEVEL_0;
 

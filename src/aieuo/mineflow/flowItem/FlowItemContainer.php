@@ -4,8 +4,8 @@ namespace aieuo\mineflow\flowItem;
 
 interface FlowItemContainer {
 
-    const ACTION = "action";
-    const CONDITION = "condition";
+    public const ACTION = "action";
+    public const CONDITION = "condition";
 
     /**
      * @return string

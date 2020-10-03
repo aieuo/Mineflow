@@ -30,10 +30,10 @@ class EditString extends FlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    const TYPE_JOIN = "join";
-    const TYPE_DELETE = "delete";
-    const TYPE_REPEAT = "repeat";
-    const TYPE_SPLIT = "split";
+    public const TYPE_JOIN = "join";
+    public const TYPE_DELETE = "delete";
+    public const TYPE_REPEAT = "repeat";
+    public const TYPE_SPLIT = "split";
 
     /** @var string[] */
     private $operators = [

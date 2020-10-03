@@ -11,22 +11,22 @@ class DummyVariable extends Variable {
     /* @var string */
     private $valueType;
 
-    const UNKNOWN = "unknown";
-    const STRING = "string";
-    const NUMBER = "number";
-    const LIST = "list";
-    const MAP = "map";
-    const BLOCK = "block";
-    const CONFIG = "config";
-    const ENTITY = "entity";
-    const EVENT = "event";
-    const HUMAN = "human";
-    const ITEM = "item";
-    const LEVEL = "level";
-    const LOCATION = "location";
-    const PLAYER = "player";
-    const POSITION = "position";
-    const SCOREBOARD = "scoreboard";
+    public const UNKNOWN = "unknown";
+    public const STRING = "string";
+    public const NUMBER = "number";
+    public const LIST = "list";
+    public const MAP = "map";
+    public const BLOCK = "block";
+    public const CONFIG = "config";
+    public const ENTITY = "entity";
+    public const EVENT = "event";
+    public const HUMAN = "human";
+    public const ITEM = "item";
+    public const LEVEL = "level";
+    public const LOCATION = "location";
+    public const PLAYER = "player";
+    public const POSITION = "position";
+    public const SCOREBOARD = "scoreboard";
 
     public function __construct(string $name = "", string $valueType = "", string $description = "") {
         $this->valueType = $valueType;

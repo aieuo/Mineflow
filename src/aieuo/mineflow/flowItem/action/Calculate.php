@@ -29,22 +29,22 @@ class Calculate extends FlowItem {
     protected $targetRequired = Recipe::TARGET_REQUIRED_NONE;
     protected $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    const SQUARE = 0;
-    const SQUARE_ROOT = 1;
-    const FACTORIAL = 2;
-    const CALC_ABS = 3;
-    const CALC_LOG = 4;
-    const CALC_SIN = 5;
-    const CALC_COS = 6;
-    const CALC_TAN = 7;
-    const CALC_ASIN = 8;
-    const CALC_ACOS = 9;
-    const CALC_ATAN = 10;
-    const CALC_DEG2RAD = 11;
-    const CALC_RAD2DEG = 12;
-    const CALC_FLOOR = 13;
-    const CALC_ROUND = 14;
-    const CALC_CEIL = 15;
+    public const SQUARE = 0;
+    public const SQUARE_ROOT = 1;
+    public const FACTORIAL = 2;
+    public const CALC_ABS = 3;
+    public const CALC_LOG = 4;
+    public const CALC_SIN = 5;
+    public const CALC_COS = 6;
+    public const CALC_TAN = 7;
+    public const CALC_ASIN = 8;
+    public const CALC_ACOS = 9;
+    public const CALC_ATAN = 10;
+    public const CALC_DEG2RAD = 11;
+    public const CALC_RAD2DEG = 12;
+    public const CALC_FLOOR = 13;
+    public const CALC_ROUND = 14;
+    public const CALC_CEIL = 15;
 
     /** @var string */
     private $value;

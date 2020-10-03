@@ -6,12 +6,12 @@ use pocketmine\utils\UUID;
 
 abstract class Element implements \JsonSerializable {
 
-    const ELEMENT_LABEL = "label";
-    const ELEMENT_INPUT = "input";
-    const ELEMENT_SLIDER = "slider";
-    const ELEMENT_STEP_SLIDER = "step_slider";
-    const ELEMENT_DROPDOWN = "dropdown";
-    const ELEMENT_TOGGLE = "toggle";
+    public const ELEMENT_LABEL = "label";
+    public const ELEMENT_INPUT = "input";
+    public const ELEMENT_SLIDER = "slider";
+    public const ELEMENT_STEP_SLIDER = "step_slider";
+    public const ELEMENT_DROPDOWN = "dropdown";
+    public const ELEMENT_TOGGLE = "toggle";
 
     /** @var string */
     protected $type;

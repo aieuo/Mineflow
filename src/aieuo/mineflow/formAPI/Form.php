@@ -17,9 +17,9 @@ use pocketmine\utils\TextFormat;
 
 abstract class Form implements PMForm {
 
-    const MODAL_FORM = "modal";
-    const LIST_FORM = "form";
-    const CUSTOM_FORM = "custom_form";
+    public const MODAL_FORM = "modal";
+    public const LIST_FORM = "form";
+    public const CUSTOM_FORM = "custom_form";
 
     /** @var string */
     protected $type;

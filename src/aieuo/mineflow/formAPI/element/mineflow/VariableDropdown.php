@@ -28,7 +28,7 @@ abstract class VariableDropdown extends Dropdown {
     /* @var array */
     private $variableTypes;
 
-    const VALUE_SEPARATOR_LEFT = " §7(";
+    public const VALUE_SEPARATOR_LEFT = " §7(";
 
     public function __construct(string $text, array $variables = [], array $variableTypes = [], string $default = "") {
         $this->defaultText = $default;

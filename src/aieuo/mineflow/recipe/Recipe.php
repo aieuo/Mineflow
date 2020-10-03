@@ -29,16 +29,16 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         getAddingVariablesBefore as traitGetAddingVariableBefore;
     }
 
-    const TARGET_DEFAULT = 0;
-    const TARGET_SPECIFIED = 1;
-    const TARGET_BROADCAST = 2;
-    const TARGET_RANDOM = 3;
-    const TARGET_NONE = 4;
+    public const TARGET_DEFAULT = 0;
+    public const TARGET_SPECIFIED = 1;
+    public const TARGET_BROADCAST = 2;
+    public const TARGET_RANDOM = 3;
+    public const TARGET_NONE = 4;
 
-    const TARGET_REQUIRED_NONE = "none";
-    const TARGET_REQUIRED_ENTITY = "entity";
-    const TARGET_REQUIRED_CREATURE = "creature";
-    const TARGET_REQUIRED_PLAYER = "player";
+    public const TARGET_REQUIRED_NONE = "none";
+    public const TARGET_REQUIRED_ENTITY = "entity";
+    public const TARGET_REQUIRED_CREATURE = "creature";
+    public const TARGET_REQUIRED_PLAYER = "player";
 
     /** @var string */
     private $name;
