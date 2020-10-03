@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\flowItem\FlowItemContainer;
-
 class NotScript extends NandScript {
 
     protected $id = self::CONDITION_NOT;

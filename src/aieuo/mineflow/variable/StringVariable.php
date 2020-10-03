@@ -16,7 +16,7 @@ class StringVariable extends Variable implements \JsonSerializable {
     }
 
     public function replace(StringVariable $var, string $resultName = "result"): StringVariable {
-        $result = str_replace((string)$var->getValue(), "", $this->getValue());
+        $result = str_replace($var->getValue(), "", $this->getValue());
         return new StringVariable($result, $resultName);
     }
 
@@ -28,7 +28,7 @@ class StringVariable extends Variable implements \JsonSerializable {
     public function split(StringVariable $var, string $resultName = "result"): ListVariable {
         $result = array_map(function (string $text) {
             return new StringVariable(trim($text));
-        }, explode((string)$var->getValue(), (string)$this->getValue()));
+        }, explode($var->getValue(), $this->getValue()));
         return new ListVariable($result, $resultName);
     }
 

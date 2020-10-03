@@ -239,7 +239,7 @@ class VariableHelper {
      * @return boolean
      */
     public function containsVariable(string $variable): bool {
-        return preg_match("/.*{.+}.*/", $variable);
+        return preg_match("/{.+}/", $variable);
     }
 
     /**

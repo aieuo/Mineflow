@@ -37,27 +37,17 @@ class NumberVariable extends Variable implements \JsonSerializable {
     }
 
     public function division(NumberVariable $var, string $resultName = "result"): NumberVariable {
-        if ($var->getValue() === 0) {
-            throw new \DivisionByZeroError();
-        }
         $result = $this->getValue() / $var->getValue();
         return new NumberVariable($result, $resultName);
     }
 
     public function modulo(NumberVariable $var, string $resultName = "result"): NumberVariable {
-        if ($var->getValue() === 0) {
-            throw new \DivisionByZeroError();
-        }
         $result = $this->getValue() % $var->getValue();
         return new NumberVariable($result, $resultName);
     }
 
     public function toStringVariable(): StringVariable {
         return new StringVariable((string)$this->getValue(), $this->getName());
-    }
-
-    public function __toString() {
-        return (string)$this->getValue();
     }
 
     public function jsonSerialize() {

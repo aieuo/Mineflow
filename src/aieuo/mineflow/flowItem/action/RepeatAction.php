@@ -74,7 +74,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     }
 
     public function getDetail(): string {
-        $repeat = (string)$this->getRepeatCount();
+        $repeat = $this->getRepeatCount();
         $length = strlen($repeat) - 1;
         $left = ceil($length / 2);
         $right = $length - $left;

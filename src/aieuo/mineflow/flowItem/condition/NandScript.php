@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\recipe\Recipe;
 
 class NandScript extends AndScript {
