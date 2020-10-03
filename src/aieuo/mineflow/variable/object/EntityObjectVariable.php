@@ -32,6 +32,9 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "pitch":
                 $variable = new NumberVariable($entity->getPitch(), "pitch");
                 break;
+            case "direction":
+                $variable = new NumberVariable($entity->getDirection(), "direction");
+                break;
             default:
                 return null;
         }

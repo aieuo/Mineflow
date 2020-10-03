@@ -82,6 +82,7 @@ This can use all the keys of the position variable.
 - {entity.maxHealth} -> entity's max health (number)
 - {entity.yaw} -> entity's yaw (number)
 - {entity.pitch} -> entity's pitch (number)
+- {entity.direction} -> entity's direction (number, 0=South, 1=West, 2=North, 3=East)
 #### human
 A variable containing human data.  
 Available Keys (Let the name of the variable be "human".)  
@@ -254,6 +255,7 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {entity.maxHealth} -> エンティティの最大体力 (number)
 - {entity.yaw} -> エンティティの体の向き (number)
 - {entity.pitch} -> エンティティの頭の向き (number)
+- {entity.direction} -> エンティティの向いている方角 (number, 0=南, 1=西, 2=北, 3=東)
 #### human
 人間の情報を持っている変数  
 使用できるキー (変数名を「human」とします)  
