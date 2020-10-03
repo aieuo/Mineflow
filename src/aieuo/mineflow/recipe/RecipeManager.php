@@ -39,10 +39,8 @@ class RecipeManager {
             /** @var \SplFileInfo $file */
             $pathname = $file->getPathname();
             $group = str_replace(
-                str_replace("\\", "/", substr($this->getSaveDir(), 0, -1)),
-                "",
-                str_replace("\\", "/", $file->getPath())
-            );
+                ["\\", str_replace("\\", "/", substr($this->getSaveDir(), 0, -1))],
+                ["/", ""], $file->getPath());
             if ($group !== "") $group = substr($group, 1);
 
             $data = json_decode(file_get_contents($pathname), true);

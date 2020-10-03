@@ -154,8 +154,7 @@ class VariableHelper {
         if (strpos($string, "{".$replace."}") === false) return $string;
 
         if (preg_match("/^([a-zA-Z0-9]+)\((.*)\)$/", $replace, $matches)) {
-            $name = $matches[1];
-            $parameters = $matches[2];
+            [, $name, $parameters] = $matches;
 
             $action = FlowItemFactory::get($name, true);
             if ($action === null) {
@@ -173,6 +172,7 @@ class VariableHelper {
             $generator = $newAction->setParent($origin)->execute($origin);
             /** @noinspection PhpStatementHasEmptyBodyInspection */
             /** @noinspection PhpUnusedLocalVariableInspection */
+            /** @noinspection LoopWhichDoesNotLoopInspection */
             foreach ($generator as $_) {
             }
             $result = $generator->getReturn();
@@ -248,9 +248,9 @@ class VariableHelper {
      * @return int
      */
     public function getType(string $string): int {
-        if (substr($string, 0, 5) === "(str)") {
+        if (strpos($string, "(str)") === 0) {
             $type = Variable::STRING;
-        } elseif (substr($string, 0, 5) === "(num)") {
+        } elseif (strpos($string, "(num)") === 0) {
             $type = Variable::NUMBER;
         } elseif (is_numeric($string)) {
             $type = Variable::NUMBER;
@@ -266,9 +266,9 @@ class VariableHelper {
      * @return string|float
      */
     public function currentType(string $value) {
-        if (mb_substr($value, 0, 5) === "(str)") {
+        if (mb_strpos($value, "(str)") === 0) {
             $value = mb_substr($value, 5);
-        } elseif (mb_substr($value, 0, 5) === "(num)") {
+        } elseif (mb_strpos($value, "(num)") === 0) {
             $value = mb_substr($value, 5);
             if (!$this->containsVariable($value)) $value = (float)$value;
         } elseif (is_numeric($value)) {

@@ -90,10 +90,7 @@ class AddMapVariable extends FlowItem {
         $type = $helper->getType($value);
 
         $value = $this->getVariableValue();
-        if (!$helper->isVariableString($value)) {
-            $value = $helper->replaceVariables($value, $origin->getVariables());
-            $addVariable = Variable::create($helper->currentType($value), $key, $type);
-        } else {
+        if ($helper->isVariableString($value)) {
             $addVariable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
             if ($addVariable === null) {
                 $value = $helper->replaceVariables($value, $origin->getVariables());
@@ -101,6 +98,9 @@ class AddMapVariable extends FlowItem {
             } else {
                 $addVariable->setName($key);
             }
+        } else {
+            $value = $helper->replaceVariables($value, $origin->getVariables());
+            $addVariable = Variable::create($helper->currentType($value), $key, $type);
         }
 
         if ($this->isLocal) {

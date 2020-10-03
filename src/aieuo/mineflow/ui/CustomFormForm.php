@@ -706,9 +706,8 @@ class CustomFormForm {
                     if ($form instanceof ListForm) {
                         $button = $form->getButtonById($key);
                         return Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
-                    } else {
-                        return "";
                     }
+                    return "";
             }
         }, $triggers));
         (new ListForm(Language::get("form.recipes.title", [$form->getName()])))

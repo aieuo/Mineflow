@@ -9,6 +9,8 @@ class ListVariable extends Variable implements \JsonSerializable {
     /** @var string */
     private $showString;
 
+    protected $value = [];
+
     /**
      * @return Variable[]
      */

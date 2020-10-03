@@ -36,7 +36,7 @@ class FlowItemContainerForm {
                     return;
                 }
                 Session::getSession($player)
-                    ->set("action_list_clicked", false)
+                    ->set("action_list_clicked", null)
                     ->push("parents", $container);
 
                 if ($data === 1) {
@@ -70,7 +70,7 @@ class FlowItemContainerForm {
                     (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);
                     return;
                 }
-                $data -= 1;
+                $data --;
 
                 $actions = $this->getMovedContents($actions, $selected, $data);
                 $container->setItems($actions, $type);

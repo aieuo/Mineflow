@@ -87,15 +87,15 @@ class AddListVariable extends FlowItem {
         }
 
         foreach ($values as $value) {
-            if (!$helper->isVariableString($value)) {
-                $value = $helper->replaceVariables($value, $origin->getVariables());
-                $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
-            } else {
+            if ($helper->isVariableString($value)) {
                 $addVariable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
                 if ($addVariable === null) {
                     $value = $helper->replaceVariables($value, $origin->getVariables());
                     $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
                 }
+            } else {
+                $value = $helper->replaceVariables($value, $origin->getVariables());
+                $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
             }
 
             $variable->addValue($addVariable);

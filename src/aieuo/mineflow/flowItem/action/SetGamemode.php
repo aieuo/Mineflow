@@ -80,7 +80,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
                 new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new Dropdown("@action.setGamemode.form.gamemode", array_map(function (string $mode) {
                     return Language::get($mode);
-                }, $this->gamemodes), intval($this->getGamemode())),
+                }, $this->gamemodes), (int)$this->getGamemode()),
                 new CancelToggle()
             ]);
     }

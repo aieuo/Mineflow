@@ -130,7 +130,7 @@ class Calculate2 extends FlowItem {
                 $result = max($value1, $value2);
                 break;
             case self::CALC_POW:
-                $result = pow($value1, $value2);
+                $result = $value1 ** $value2;
                 break;
             case self::CALC_LOG:
                 $result = log($value1, $value2);

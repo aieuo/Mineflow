@@ -76,6 +76,7 @@ class Language {
             case "jpn":
                 $errors = ["言語ファイルの読み込みに失敗しました", "[".implode(", ", self::$availableLanguages)."]が使用できます"];
                 break;
+            case "eng":
             default:
                 $errors = [
                     "Failed to load language file.",

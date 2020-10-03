@@ -58,8 +58,7 @@ class MineflowForm {
 
                 $manager = Main::getRecipeManager();
 
-                $name = $data[0];
-                $group = $data[1];
+                [$name, $group] = $data;
                 if ($group === "") [$name, $group] = $manager->parseName($data[0]);
                 if (!$manager->exists($name, $group)) {
                     $this->selectRecipe($player, $title, $callback, $onCancel, $data, [["@form.recipe.select.notfound", 0]]);

@@ -59,14 +59,11 @@ class ExportForm {
                 new Button("@form.back"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data, array $recipes, int $index) {
-                switch ($data) {
-                    case 0:
-                        $this->sendRecipeList($player, $recipes);
-                        return;
-                    default:
-                        unset($recipes[$index]);
-
-                        $this->sendRecipeList($player, $recipes, ["@form.delete.success"]);
+                if ($data === 0) {
+                    $this->sendRecipeList($player, $recipes);
+                } else {
+                    unset($recipes[$index]);
+                    $this->sendRecipeList($player, $recipes, ["@form.delete.success"]);
                 }
             })->addArgs($recipes, $index)->show($player);
     }
@@ -96,9 +93,7 @@ class ExportForm {
                     return;
                 }
 
-                $name = $data[0];
-                $author = $data[1];
-                $detail = $data[2];
+                [$name, $author, $detail] = $data;
 
                 /** @var array<string|int>[] $errors */
                 $errors = [];

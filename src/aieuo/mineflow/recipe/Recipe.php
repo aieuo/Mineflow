@@ -247,7 +247,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 if (!$result and !$this->resuming) {
                     $this->waiting = true;
                     return false;
-                } elseif (!$result) {
+                }
+
+                if (!$result) {
                     $this->resuming = false;
                 }
 

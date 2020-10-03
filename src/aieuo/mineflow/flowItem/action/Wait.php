@@ -62,7 +62,7 @@ class Wait extends FlowItem {
             function (int $currentTick) use($origin): void {
                 $origin->resume();
             }
-        ), intval(floatval($time) * 20));
+        ), (int)((float)$time * 20));
         yield false;
     }
 

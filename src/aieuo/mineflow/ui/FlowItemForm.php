@@ -130,7 +130,7 @@ class FlowItemForm {
             ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data) use($container, $type, $items) {
-                $data -= 1;
+                $data --;
 
                 Session::getSession($player)->set($type."s", $items);
                 $item = clone $items[$data];

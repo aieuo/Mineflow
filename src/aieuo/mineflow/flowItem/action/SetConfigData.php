@@ -77,10 +77,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $value = $this->getValue();
 
         $helper = Main::getVariableHelper();
-        if (!$helper->isVariableString($value)) {
-            $value = $helper->replaceVariables($value, $origin->getVariables());
-            if (is_numeric($value)) $value = (float)$value;
-        } else {
+        if ($helper->isVariableString($value)) {
             $variable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
             if ($variable instanceof ListVariable) {
                 $value = $variable->toArray();
@@ -89,6 +86,9 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
             } else {
                 $value = (string)$variable;
             }
+        } else {
+            $value = $helper->replaceVariables($value, $origin->getVariables());
+            if (is_numeric($value)) $value = (float)$value;
         }
 
         $config = $this->getConfig($origin);

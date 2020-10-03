@@ -18,7 +18,7 @@ class Slider extends Element {
     /** @var float */
     private $default;
 
-    public function __construct(string $text, float $min, float $max, float $step = 1.0, ?int $default = null) {
+    public function __construct(string $text, float $min, float $max, float $step = 1.0, float $default = null) {
         parent::__construct($text);
         $this->min = $min;
         $this->max = $max;

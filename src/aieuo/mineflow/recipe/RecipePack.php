@@ -69,7 +69,8 @@ class RecipePack implements \JsonSerializable {
             foreach ($recipe->getTriggers() as $trigger) {
                 if ($trigger->getType() !== Trigger::TYPE_COMMAND) continue;
 
-                $commands[$trigger->getKey()] = $commandManager->getCommand($trigger->getKey());
+                $key = $trigger->getKey();
+                $commands[$key] = $commandManager->getCommand($key);
             }
         }
         return $commands;
@@ -82,7 +83,8 @@ class RecipePack implements \JsonSerializable {
             foreach ($recipe->getTriggers() as $trigger) {
                 if ($trigger->getType() !== Trigger::TYPE_FORM) continue;
 
-                $forms[$trigger->getKey()] = $formManager->getForm($trigger->getKey());
+                $key = $trigger->getKey();
+                $forms[$key] = $formManager->getForm($key);
             }
         }
         return $forms;

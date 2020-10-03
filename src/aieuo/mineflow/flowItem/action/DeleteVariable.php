@@ -57,10 +57,10 @@ class DeleteVariable extends FlowItem {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());
-        if (!$this->isLocal) {
-            Main::getVariableHelper()->delete($name);
-        } else {
+        if ($this->isLocal) {
             $origin->removeVariable($name);
+        } else {
+            Main::getVariableHelper()->delete($name);
         }
         yield true;
     }

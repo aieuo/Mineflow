@@ -66,8 +66,7 @@ class FormManager {
         while ($this->existsForm($name." (".$count.")")) {
             $count++;
         }
-        $name = $name." (".$count.")";
-        return $name;
+        return $name." (".$count.")";
     }
 
     public function getAssignedRecipes(string $name): array {

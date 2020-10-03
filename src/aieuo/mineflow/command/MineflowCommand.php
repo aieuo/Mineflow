@@ -33,7 +33,9 @@ class MineflowCommand extends Command implements PluginIdentifiableCommand {
         if (!isset($args[0]) and $sender instanceof Player) {
             (new HomeForm)->sendMenu($sender);
             return;
-        } elseif (!isset($args[0])) {
+        }
+
+        if (!isset($args[0])) {
             $sender->sendMessage(Language::get("command.mineflow.usage.console"));
             return;
         }
