@@ -104,6 +104,6 @@ class CreateConfigVariable extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getVariableName(), DummyVariable::CONFIG)];
+        return [new DummyVariable($this->getVariableName(), DummyVariable::CONFIG, $this->getFileName())];
     }
 }

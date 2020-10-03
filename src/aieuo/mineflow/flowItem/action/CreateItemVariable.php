@@ -144,6 +144,6 @@ class CreateItemVariable extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getVariableName(), DummyVariable::ITEM)];
+        return [new DummyVariable($this->getVariableName(), DummyVariable::ITEM, $this->getId())];
     }
 }

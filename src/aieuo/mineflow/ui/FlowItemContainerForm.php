@@ -35,7 +35,9 @@ class FlowItemContainerForm {
                     }
                     return;
                 }
-                Session::getSession($player)->push("parents", $container);
+                Session::getSession($player)
+                    ->set("action_list_clicked", false)
+                    ->push("parents", $container);
 
                 if ($data === 1) {
                     (new FlowItemForm)->selectActionCategory($player, $container, $type);
@@ -43,6 +45,7 @@ class FlowItemContainerForm {
                 }
                 $data -= 2;
                 $action = $actions[$data];
+                Session::getSession($player)->set("action_list_clicked", $action);
 
                 (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $action);
             })->addArgs($container, $actions)->addMessages($messages)->show($player);

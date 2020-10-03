@@ -137,6 +137,6 @@ class AddVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         $type = $this->variableTypes[$this->variableType];
-        return [new DummyVariable($this->getVariableName(), $type)];
+        return [new DummyVariable($this->getVariableName(), $type, $this->getVariableValue())];
     }
 }

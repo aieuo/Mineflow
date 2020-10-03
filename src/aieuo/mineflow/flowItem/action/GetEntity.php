@@ -118,6 +118,6 @@ class GetEntity extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::PLAYER)];
+        return [new DummyVariable($this->getResultName(), DummyVariable::PLAYER, $this->getKey())];
     }
 }
