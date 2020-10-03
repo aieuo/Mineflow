@@ -41,7 +41,7 @@ class Kick extends FlowItem implements PlayerFlowItem {
         $this->isAdmin = $isAdmin;
     }
 
-    public function setReason(string $reason) {
+    public function setReason(string $reason): void {
         $this->reason = $reason;
     }
 

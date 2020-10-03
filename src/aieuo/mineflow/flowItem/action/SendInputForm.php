@@ -47,7 +47,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         $this->resultName = $resultName;
     }
 
-    public function setFormText(string $formText) {
+    public function setFormText(string $formText): void {
         $this->formText = $formText;
     }
 
@@ -86,7 +86,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []) {
+    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []): void {
         (new CustomForm($text))
             ->setContents([
                 new Input($text, "", "", true),

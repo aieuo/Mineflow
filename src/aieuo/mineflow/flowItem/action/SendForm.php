@@ -45,7 +45,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         $this->formName = $formName;
     }
 
-    public function setFormName(string $formName) {
+    public function setFormName(string $formName): void {
         $this->formName = $formName;
     }
 

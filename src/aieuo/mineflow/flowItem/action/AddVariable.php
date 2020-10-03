@@ -51,7 +51,7 @@ class AddVariable extends FlowItem {
         $this->isLocal = $local;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -59,7 +59,7 @@ class AddVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setVariableValue(string $variableValue) {
+    public function setVariableValue(string $variableValue): void {
         $this->variableValue = $variableValue;
     }
 

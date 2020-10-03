@@ -344,7 +344,7 @@ class FlowItemFactory {
         self::registerAliases();
     }
 
-    public static function registerAliases() {
+    public static function registerAliases(): void {
         self::registerAlias(new class extends FourArithmeticOperations {
             protected $id = self::FOUR_ARITHMETIC_OPERATIONS_ADD;
             public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {

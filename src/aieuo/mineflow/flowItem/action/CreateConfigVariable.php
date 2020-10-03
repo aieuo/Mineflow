@@ -39,7 +39,7 @@ class CreateConfigVariable extends FlowItem {
         $this->variableName = $name;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -47,7 +47,7 @@ class CreateConfigVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setFileName(string $id) {
+    public function setFileName(string $id): void {
         $this->fileName = $id;
     }
 

@@ -43,7 +43,7 @@ class Language {
         return !empty($messages);
     }
 
-    public static function add(array $messages) {
+    public static function add(array $messages): void {
         self::$messages = array_merge(self::$messages, $messages);
     }
 

@@ -19,9 +19,8 @@ trait BlockFlowItemTrait {
         return $this->blockVariableNames[$name] ?? "";
     }
 
-    public function setBlockVariableName(string $block, string $name = "") {
+    public function setBlockVariableName(string $block, string $name = ""): void {
         $this->blockVariableNames[$name] = $block;
-        return $this;
     }
 
     public function getBlock(Recipe $origin, string $name = ""): ?Block {
@@ -32,7 +31,7 @@ trait BlockFlowItemTrait {
         return $variable->getBlock();
     }
 
-    public function throwIfInvalidBlock(?Block $block) {
+    public function throwIfInvalidBlock(?Block $block): void {
         if (!($block instanceof Block)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.block"], $this->getBlockVariableName()]));
         }

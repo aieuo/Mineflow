@@ -8,21 +8,21 @@ interface EconomyLoader {
      * @param string $name プレイヤーの名前
      * @return int          所持金
      */
-    public function getMoney(string $name);
+    public function getMoney(string $name): int;
 
     /**
      * 所持金を増やす
      * @param string $name プレイヤーの名前
      * @param int $money 増やす額
      */
-    public function addMoney(string $name, int $money);
+    public function addMoney(string $name, int $money): void;
 
     /**
      * 所持金を減らす
      * @param string $name プレイヤーの名前
      * @param int $money 減らす額
      */
-    public function takeMoney(string $name, int $money);
+    public function takeMoney(string $name, int $money): void;
 
     /**
      * 所持金を設定する
@@ -31,5 +31,5 @@ interface EconomyLoader {
      * @param integer $money
      * @return void
      */
-    public function setMoney(string $name, int $money);
+    public function setMoney(string $name, int $money): void;
 }

@@ -19,10 +19,7 @@ class ObjectVariable extends Variable {
         $this->showString = $str;
     }
 
-    /**
-     * @return object
-     */
-    public function getValue() {
+    public function getValue(): object {
         return parent::getValue();
     }
 
@@ -53,7 +50,7 @@ class ObjectVariable extends Variable {
         return $str;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array {
         return [
             $this->getName(),
             $this->getType(),

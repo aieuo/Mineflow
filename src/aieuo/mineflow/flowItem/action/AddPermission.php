@@ -39,7 +39,7 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
         $this->playerPermission = $permission;
     }
 
-    public function setPlayerPermission(string $playerPermission) {
+    public function setPlayerPermission(string $playerPermission): void {
         $this->playerPermission = $playerPermission;
     }
 

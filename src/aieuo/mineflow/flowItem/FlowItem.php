@@ -97,14 +97,14 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         return $data;
     }
 
-    public function throwIfCannotExecute() {
+    public function throwIfCannotExecute(): void {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents", [$this->getName()]);
             throw new InvalidFlowValueException($this->getName(), $message);
         }
     }
 
-    public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null, array $exclude = []) {
+    public function throwIfInvalidNumber(string $number, ?float $min = null, ?float $max = null, array $exclude = []): void {
         if (!is_numeric($number)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
         }

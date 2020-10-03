@@ -40,7 +40,7 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         $this->cause = $cause;
     }
 
-    public function setDamage(string $damage) {
+    public function setDamage(string $damage): void {
         $this->damage = $damage;
     }
 
@@ -48,7 +48,7 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         return $this->damage;
     }
 
-    public function setCause(int $cause) {
+    public function setCause(int $cause): void {
         $this->cause = $cause;
     }
 

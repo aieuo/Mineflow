@@ -55,7 +55,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         $this->resultName = $resultName;
     }
 
-    public function setFormText(string $formText) {
+    public function setFormText(string $formText): void {
         $this->formText = $formText;
     }
 
@@ -102,7 +102,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []) {
+    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []): void {
         $buttons = [];
         foreach ($this->options as $option) {
             $buttons[] = new Button($option);

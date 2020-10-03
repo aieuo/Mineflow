@@ -45,7 +45,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         $this->enchantLevel = $level;
     }
 
-    public function setEnchantId(string $enchantId) {
+    public function setEnchantId(string $enchantId): void {
         $this->enchantId = $enchantId;
     }
 
@@ -53,7 +53,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         return $this->enchantId;
     }
 
-    public function setEnchantLevel(string $enchantLevel) {
+    public function setEnchantLevel(string $enchantLevel): void {
         $this->enchantLevel = $enchantLevel;
     }
 

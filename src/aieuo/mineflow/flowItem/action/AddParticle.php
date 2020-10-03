@@ -44,7 +44,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         $this->amount = $amount;
     }
 
-    public function setParticle(string $particle) {
+    public function setParticle(string $particle): void {
         $this->particle = $particle;
     }
 

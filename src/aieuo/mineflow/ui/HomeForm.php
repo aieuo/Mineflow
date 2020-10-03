@@ -8,7 +8,7 @@ use pocketmine\Player;
 
 class HomeForm {
 
-    public function sendMenu(Player $player) {
+    public function sendMenu(Player $player): void {
         (new ListForm("@form.home.title"))
             ->setContent("@form.selectButton")
             ->addButtons([

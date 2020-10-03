@@ -11,9 +11,9 @@ interface BlockFlowItem {
 
     public function getBlockVariableName(string $name = ""): string;
 
-    public function setBlockVariableName(string $block, string $name = "");
+    public function setBlockVariableName(string $block, string $name = ""): void;
 
     public function getBlock(Recipe $origin, string $name = ""): ?Block;
 
-    public function throwIfInvalidBlock(?Block $block);
+    public function throwIfInvalidBlock(?Block $block): void;
 }

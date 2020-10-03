@@ -12,7 +12,7 @@ use pocketmine\Player;
 
 class MineflowForm {
 
-    public function confirmRename(Player $player, string $name, string $newName, callable $onAccept, callable $onRefuse) {
+    public function confirmRename(Player $player, string $name, string $newName, callable $onAccept, callable $onRefuse): void {
         (new ModalForm("@form.home.rename.title"))
             ->setContent(Language::get("form.home.rename.content", [$name, $newName]))
             ->setButton1("@form.yes")
@@ -26,7 +26,7 @@ class MineflowForm {
             })->addArgs($name, $newName, $onAccept, $onRefuse)->show($player);
     }
 
-    public function confirmDelete(Player $player, string $title, string $name, callable $onAccept, callable $onRefuse) {
+    public function confirmDelete(Player $player, string $title, string $name, callable $onAccept, callable $onRefuse): void {
         (new ModalForm($title))
             ->setContent(Language::get("form.delete.confirm", [$name]))
             ->setButton1("@form.yes")
@@ -40,7 +40,7 @@ class MineflowForm {
             })->addArgs($onAccept, $onRefuse)->show($player);
     }
 
-    public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = [], array $errors = []) {
+    public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = [], array $errors = []): void {
         (new CustomForm($title))
             ->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),

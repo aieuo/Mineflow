@@ -42,7 +42,7 @@ class CreateMapVariableFromJson extends FlowItem {
         $this->isLocal = $local;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -50,7 +50,7 @@ class CreateMapVariableFromJson extends FlowItem {
         return $this->variableName;
     }
 
-    public function setJson(string $json) {
+    public function setJson(string $json): void {
         $this->json = $json;
     }
 

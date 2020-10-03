@@ -47,7 +47,7 @@ class CreateScoreboardVariable extends FlowItem {
         $this->variableName = $name;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -55,7 +55,7 @@ class CreateScoreboardVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setBoardId(string $boardId) {
+    public function setBoardId(string $boardId): void {
         $this->boardId = $boardId;
     }
 
@@ -63,7 +63,7 @@ class CreateScoreboardVariable extends FlowItem {
         return $this->boardId;
     }
 
-    public function setDisplayName(string $displayName) {
+    public function setDisplayName(string $displayName): void {
         $this->displayName = $displayName;
     }
 
@@ -71,7 +71,7 @@ class CreateScoreboardVariable extends FlowItem {
         return $this->displayName;
     }
 
-    public function setDisplayType(string $displayType) {
+    public function setDisplayType(string $displayType): void {
         $this->displayType = $displayType;
     }
 

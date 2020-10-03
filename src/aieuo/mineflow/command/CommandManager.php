@@ -30,7 +30,7 @@ class CommandManager {
         return $this->owner->getServer()->getPluginCommand($command) !== null;
     }
 
-    private function registerCommands() {
+    private function registerCommands(): void {
         $commands = $this->config->getAll();
 
         foreach ($commands as $command) {
@@ -55,7 +55,7 @@ class CommandManager {
         return false;
     }
 
-    public function unregisterCommand(string $command) {
+    public function unregisterCommand(string $command): void {
         if (!isset($this->commandList[$command])) return;
 
         $this->owner->getServer()->getCommandMap()->unregister($this->commandList[$command]);
@@ -67,7 +67,7 @@ class CommandManager {
         return $this->config->exists($commandStr);
     }
 
-    public function addCommand(string $commandStr, string $permission, string $description = "") {
+    public function addCommand(string $commandStr, string $permission, string $description = ""): void {
         $origin = $this->getOriginCommand($commandStr);
         $subCommands = $this->getSubcommandsFromCommand($commandStr);
 
@@ -91,13 +91,13 @@ class CommandManager {
         return $this->config->getAll();
     }
 
-    public function removeCommand(string $commandStr) {
+    public function removeCommand(string $commandStr): void {
         $this->unregisterCommand($this->getOriginCommand($commandStr));
         $this->config->remove($commandStr);
         $this->config->save();
     }
 
-    public function updateCommand(array $command) {
+    public function updateCommand(array $command): void {
         if (!$this->existsCommand($command["command"])) {
             $this->addCommand($command["command"], $command["permission"], $command["description"]);
             return;
@@ -124,7 +124,7 @@ class CommandManager {
         return $recipes;
     }
 
-    public function hasSubCommand(string $subcommand) {
+    public function hasSubCommand(string $subcommand): bool {
         $commands = explode(" ", $subcommand);
         $origin = array_shift($commands);
         if (!$this->existsCommand($origin)) return false;

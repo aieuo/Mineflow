@@ -37,7 +37,7 @@ class Command extends FlowItem implements PlayerFlowItem {
         $this->command = $command;
     }
 
-    public function setCommand(string $health) {
+    public function setCommand(string $health): void {
         $this->command = $health;
     }
 

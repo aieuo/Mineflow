@@ -19,9 +19,8 @@ trait ConfigFileFlowItemTrait {
         return $this->configVariableNames[$name] ?? "";
     }
 
-    public function setConfigVariableName(string $config, string $name = "") {
+    public function setConfigVariableName(string $config, string $name = ""): void {
         $this->configVariableNames[$name] = $config;
-        return $this;
     }
 
     public function getConfig(Recipe $origin, string $name = ""): ?Config {
@@ -32,7 +31,7 @@ trait ConfigFileFlowItemTrait {
         return $variable->getConfig();
     }
 
-    public function throwIfInvalidConfig(?Config $config) {
+    public function throwIfInvalidConfig(?Config $config): void {
         if (!($config instanceof Config)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.config"], $this->getConfigVariableName()]));
         }

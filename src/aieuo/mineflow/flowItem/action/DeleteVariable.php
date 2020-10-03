@@ -36,7 +36,7 @@ class DeleteVariable extends FlowItem {
         $this->isLocal = $local;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 

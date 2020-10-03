@@ -19,9 +19,8 @@ trait ItemFlowItemTrait {
         return $this->itemVariableNames[$name] ?? "";
     }
 
-    public function setItemVariableName(string $item, string $name = "") {
+    public function setItemVariableName(string $item, string $name = ""): void {
         $this->itemVariableNames[$name] = $item;
-        return $this;
     }
 
     public function getItem(Recipe $origin, string $name = ""): ?Item {
@@ -32,7 +31,7 @@ trait ItemFlowItemTrait {
         return $variable->getItem();
     }
 
-    public function throwIfInvalidItem(?Item $item) {
+    public function throwIfInvalidItem(?Item $item): void {
         if (!($item instanceof Item)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.item"], $this->getItemVariableName()]));
         }

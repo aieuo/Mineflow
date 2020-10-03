@@ -68,7 +68,7 @@ abstract class VariableDropdown extends Dropdown {
         return -1;
     }
 
-    public function updateDefault(string $default) {
+    public function updateDefault(string $default): void {
         $this->defaultText = $default;
         $this->setDefault($this->findDefaultKey($default));
     }
@@ -81,7 +81,7 @@ abstract class VariableDropdown extends Dropdown {
         return $this->defaultText;
     }
 
-    public function sendAddVariableForm(Player $player, CustomForm $origin, int $index) {
+    public function sendAddVariableForm(Player $player, CustomForm $origin, int $index): void {
         (new ListForm("@form.element.variableDropdown.createVariable"))
             ->setContent("@form.selectButton")
             ->forEach($this->actions, function (ListForm $form, string $id) use ($player, $origin, $index) {

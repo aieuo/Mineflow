@@ -36,7 +36,7 @@ class SetScale extends FlowItem implements EntityFlowItem {
         $this->scale = $scale;
     }
 
-    public function setScale(string $scale) {
+    public function setScale(string $scale): void {
         $this->scale = $scale;
     }
 

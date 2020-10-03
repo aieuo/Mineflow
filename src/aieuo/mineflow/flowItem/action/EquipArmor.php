@@ -48,7 +48,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         $this->index = $index;
     }
 
-    public function setIndex(string $health) {
+    public function setIndex(string $health): void {
         $this->index = $health;
     }
 

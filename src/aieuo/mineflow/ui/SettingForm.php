@@ -13,7 +13,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 
 class SettingForm {
-    public function sendMenu(Player $player, array $messages = []) {
+    public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@mineflow.settings"))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -35,7 +35,7 @@ class SettingForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function selectLanguageForm(Player $player) {
+    public function selectLanguageForm(Player $player): void {
         $languages = Language::getAvailableLanguages();
         (new CustomForm("@setting.language"))
             ->setContents([
@@ -46,7 +46,7 @@ class SettingForm {
             })->show($player);
     }
 
-    public function sendEventListForm(Player $player) {
+    public function sendEventListForm(Player $player): void {
         $events = Main::getEventManager()->getEvents();
         $enables = Main::getEventManager()->getEnabledEvents();
         $contents = [];

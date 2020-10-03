@@ -12,7 +12,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     /**
      * @return Variable[]
      */
-    public function getValue() {
+    public function getValue(): array {
         return parent::getValue();
     }
 
@@ -26,11 +26,11 @@ class ListVariable extends Variable implements \JsonSerializable {
         $this->showString = $str;
     }
 
-    public function addValue(Variable $value) {
+    public function addValue(Variable $value): void {
         $this->value[] = $value;
     }
 
-    public function removeValue(Variable $value) {
+    public function removeValue(Variable $value): void {
         $index = array_search($value, $this->value, true);
         if ($index === false) return;
         unset($this->value[$index]);

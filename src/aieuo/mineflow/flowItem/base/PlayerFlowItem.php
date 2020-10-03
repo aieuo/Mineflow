@@ -11,9 +11,9 @@ interface PlayerFlowItem {
 
     public function getPlayerVariableName(string $name = ""): string;
 
-    public function setPlayerVariableName(string $player, string $name = "");
+    public function setPlayerVariableName(string $player, string $name = ""): void;
 
     public function getPlayer(Recipe $origin, string $name): ?Player;
 
-    public function throwIfInvalidPlayer(?Player $player);
+    public function throwIfInvalidPlayer(?Player $player): void;
 }

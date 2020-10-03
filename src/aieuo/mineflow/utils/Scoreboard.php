@@ -96,7 +96,7 @@ class Scoreboard {
         return $this;
     }
 
-    public function show(Player $player) {
+    public function show(Player $player): void {
         $pk = new SetDisplayObjectivePacket();
         $pk->displaySlot = $this->type;
         $pk->objectiveName = $this->id;
@@ -125,7 +125,7 @@ class Scoreboard {
         $this->show[$player->getName()] = true;
     }
 
-    public function hide(Player $player) {
+    public function hide(Player $player): void {
         $pk = new RemoveObjectivePacket();
         $pk->objectiveName = $this->id;
         $player->sendDataPacket($pk);
@@ -133,7 +133,7 @@ class Scoreboard {
         unset($this->show[$player->getName()]);
     }
 
-    public function removeScoreFromAllPlayer(string $scoreName) {
+    public function removeScoreFromAllPlayer(string $scoreName): void {
         foreach ($this->show as $name => $value) {
             $player = Server::getInstance()->getPlayerExact($name);
             if (!($player instanceof Player)) continue;
@@ -141,7 +141,7 @@ class Scoreboard {
         }
     }
 
-    public function removeScoreFromPlayer(Player $player, string $scoreName) {
+    public function removeScoreFromPlayer(Player $player, string $scoreName): void {
         if (!isset($this->scoreIds[$scoreName])) return;
 
         $entry = new ScorePacketEntry();
@@ -155,7 +155,7 @@ class Scoreboard {
         $player->sendDataPacket($pk);
     }
 
-    public function updateScoreToAllPlayer(string $scoreName, int $score, int $id) {
+    public function updateScoreToAllPlayer(string $scoreName, int $score, int $id): void {
         foreach ($this->show as $name => $value) {
             $player = Server::getInstance()->getPlayerExact($name);
             if (!($player instanceof Player)) continue;
@@ -163,7 +163,7 @@ class Scoreboard {
         }
     }
 
-    public function updateScoreToPlayer(Player $player, string $scoreName, int $value, int $id) {
+    public function updateScoreToPlayer(Player $player, string $scoreName, int $value, int $id): void {
         $entry = new ScorePacketEntry();
         $entry->objectiveName = $this->id;
         $entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;

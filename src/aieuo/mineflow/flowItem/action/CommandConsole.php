@@ -35,7 +35,7 @@ class CommandConsole extends FlowItem {
         $this->command = $command;
     }
 
-    public function setCommand(string $health) {
+    public function setCommand(string $health): void {
         $this->command = $health;
     }
 

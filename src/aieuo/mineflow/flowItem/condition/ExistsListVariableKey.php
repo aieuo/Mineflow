@@ -40,7 +40,7 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         $this->isLocal = $local;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -48,7 +48,7 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         return $this->variableName;
     }
 
-    public function setKey(string $variableKey) {
+    public function setKey(string $variableKey): void {
         $this->variableKey = $variableKey;
     }
 

@@ -15,7 +15,7 @@ class Economy {
         $this->owner = $owner;
     }
 
-    public function loadPlugin() {
+    public function loadPlugin(): void {
         $pluginManager = $this->owner->getServer()->getPluginManager();
         if (($plugin = $pluginManager->getPlugin("EconomyAPI")) !== null) {
             self::$economy = new EconomyAPILoader($plugin);

@@ -14,21 +14,21 @@ class PocketMoneyLoader implements EconomyLoader {
         return $this->plugin;
     }
 
-    public function getMoney(string $name) {
+    public function getMoney(string $name): int {
         return (int)$this->getPlugin()->getMoney($name);
     }
 
-    public function addMoney(string $name, int $money) {
+    public function addMoney(string $name, int $money): void {
         $mymoney = $this->getMoney($name);
         $this->getPlugin()->setMoney($name, $mymoney + $money);
     }
 
-    public function takeMoney(string $name, int $money) {
+    public function takeMoney(string $name, int $money): void {
         $mymoney = $this->getMoney($name);
         $this->getPlugin()->setMoney($name, $mymoney - $money);
     }
 
-    public function setMoney(string $name, int $money) {
+    public function setMoney(string $name, int $money): void {
         $this->getPlugin()->setMoney($name, $money);
     }
 }

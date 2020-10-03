@@ -46,7 +46,7 @@ class CreateItemVariable extends FlowItem {
         $this->variableName = $variableName;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -54,7 +54,7 @@ class CreateItemVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setItemId(string $id) {
+    public function setItemId(string $id): void {
         $this->itemId = $id;
     }
 
@@ -62,7 +62,7 @@ class CreateItemVariable extends FlowItem {
         return $this->itemId;
     }
 
-    public function setItemCount(string $count) {
+    public function setItemCount(string $count): void {
         $this->itemCount = $count;
     }
 

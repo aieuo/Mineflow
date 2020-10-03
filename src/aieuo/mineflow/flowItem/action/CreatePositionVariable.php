@@ -50,7 +50,7 @@ class CreatePositionVariable extends FlowItem {
         $this->variableName = $name;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -58,7 +58,7 @@ class CreatePositionVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setX(string $x) {
+    public function setX(string $x): void {
         $this->x = $x;
     }
 
@@ -66,7 +66,7 @@ class CreatePositionVariable extends FlowItem {
         return $this->x;
     }
 
-    public function setY(string $y) {
+    public function setY(string $y): void {
         $this->y = $y;
     }
 
@@ -74,7 +74,7 @@ class CreatePositionVariable extends FlowItem {
         return $this->y;
     }
 
-    public function setZ(string $z) {
+    public function setZ(string $z): void {
         $this->z = $z;
     }
 
@@ -82,7 +82,7 @@ class CreatePositionVariable extends FlowItem {
         return $this->z;
     }
 
-    public function setLevel(string $level) {
+    public function setLevel(string $level): void {
         $this->level = $level;
     }
 

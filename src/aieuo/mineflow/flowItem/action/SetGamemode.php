@@ -43,7 +43,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         $this->gamemode = $gamemode;
     }
 
-    public function setGamemode(string $gamemode) {
+    public function setGamemode(string $gamemode): void {
         $this->gamemode = $gamemode;
     }
 

@@ -12,7 +12,7 @@ use pocketmine\Player;
 
 class TriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         switch ($trigger->getType()) {
             case Trigger::TYPE_BLOCK:
                 (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
@@ -44,7 +44,7 @@ class TriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
-    public function sendSelectTriggerType(Player $player, Recipe $recipe) {
+    public function sendSelectTriggerType(Player $player, Recipe $recipe): void {
         (new ListForm(Language::get("form.trigger.selectTriggerType", [$recipe->getName()])))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -74,7 +74,7 @@ class TriggerForm {
             })->addArgs($recipe)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger) {
+    public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger): void {
         (new ModalForm(Language::get("form.items.delete.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent(Language::get("form.delete.confirm", [$trigger->getType().": ".$trigger->getKey()]))
             ->setButton1("@form.yes")

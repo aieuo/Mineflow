@@ -41,7 +41,7 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
         $this->resultName = $resultName;
     }
 
-    public function setResultName(string $health) {
+    public function setResultName(string $health): void {
         $this->resultName = $health;
     }
 

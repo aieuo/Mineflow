@@ -121,7 +121,7 @@ class EventManager {
         return $settings;
     }
 
-    private function checkEventSettings() {
+    private function checkEventSettings(): void {
         $defaults = $this->getDefaultEventSettings();
 
         $isOld = false;
@@ -146,7 +146,7 @@ class EventManager {
         return $this->enabledEvents;
     }
 
-    public function setEventEnabled(string $event, bool $enable) {
+    public function setEventEnabled(string $event, bool $enable): void {
         $this->config->set($event, $enable);
         $this->config->save();
 
@@ -157,7 +157,7 @@ class EventManager {
         }
     }
 
-    public function isEnabledEvent(string $event) {
+    public function isEnabledEvent(string $event): bool {
         return isset($this->enabledEvents[$event]);
     }
 

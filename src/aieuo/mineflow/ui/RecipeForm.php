@@ -20,7 +20,7 @@ use pocketmine\Player;
 
 class RecipeForm {
 
-    public function sendMenu(Player $player, array $messages = []) {
+    public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@mineflow.recipe"))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -33,7 +33,7 @@ class RecipeForm {
             ])->addMessages($messages)->show($player);
     }
 
-    public function sendAddRecipe(Player $player, array $default = [], array $errors = []) {
+    public function sendAddRecipe(Player $player, array $default = [], array $errors = []): void {
         $manager = Main::getRecipeManager();
         $name = $manager->getNotDuplicatedName("recipe");
 
@@ -91,7 +91,7 @@ class RecipeForm {
             })->addErrors($errors)->addArgs($name)->show($player);
     }
 
-    public function sendSelectRecipe(Player $player, array $default = [], array $errors = []) {
+    public function sendSelectRecipe(Player $player, array $default = [], array $errors = []): void {
         (new MineflowForm)->selectRecipe($player, "@form.recipe.select.title",
             function (Player $player, Recipe $recipe) {
                 Session::getSession($player)
@@ -104,7 +104,7 @@ class RecipeForm {
             }, $default, $errors);
     }
 
-    public function sendRecipeList(Player $player, string $path = "") {
+    public function sendRecipeList(Player $player, string $path = ""): void {
         $manager = Main::getRecipeManager();
         $recipeGroups = $manager->getByPath($path);
         $buttons = [new Button("@form.back")];
@@ -157,7 +157,7 @@ class RecipeForm {
             })->addArgs($path, $recipeGroups)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []) {
+    public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []): void {
         $detail = trim($recipe->getDetail());
         (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getPathname()])))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
@@ -243,7 +243,7 @@ class RecipeForm {
             })->addArgs($recipe)->addMessages($messages)->show($player);
     }
 
-    public function sendChangeName(Player $player, Recipe $recipe, ?string $default = null, string $error = null) {
+    public function sendChangeName(Player $player, Recipe $recipe, ?string $default = null, string $error = null): void {
         $form = new CustomForm(Language::get("form.recipe.changeName.title", [$recipe->getName()]));
         $form->setContents([
                 new Label("@form.recipe.changeName.content0"),
@@ -276,7 +276,7 @@ class RecipeForm {
         $form->show($player);
     }
 
-    public function sendTriggerList(Player $player, Recipe $recipe, array $messages = []) {
+    public function sendTriggerList(Player $player, Recipe $recipe, array $messages = []): void {
         $triggers = $recipe->getTriggers();
 
         $buttons = [new Button("@form.back"), new Button("@trigger.add")];
@@ -310,7 +310,7 @@ class RecipeForm {
             })->addArgs($recipe, $triggers)->addMessages($messages)->show($player);
     }
 
-    public function sendSetArgs(Player $player, Recipe $recipe, array $messages = []) {
+    public function sendSetArgs(Player $player, Recipe $recipe, array $messages = []): void {
         $contents = [new Toggle("@form.exit")];
         foreach ($recipe->getArguments() as $i => $argument) {
             $contents[] = new Input(Language::get("form.recipe.args", [$i]), "", $argument);
@@ -335,7 +335,7 @@ class RecipeForm {
             })->addMessages($messages)->addArgs($recipe)->show($player);
     }
 
-    public function sendSetReturns(Player $player, Recipe $recipe, array $messages = []) {
+    public function sendSetReturns(Player $player, Recipe $recipe, array $messages = []): void {
         $contents = [new Toggle("@form.exit")];
         foreach ($recipe->getReturnValues() as $i => $value) {
             $contents[] = new Input(Language::get("form.recipe.returnValue", [$i]), "", $value);
@@ -360,7 +360,7 @@ class RecipeForm {
             })->addMessages($messages)->addArgs($recipe)->show($player);
     }
 
-    public function sendChangeTarget(Player $player, Recipe $recipe, array $default = [], array $errors = []) {
+    public function sendChangeTarget(Player $player, Recipe $recipe, array $default = [], array $errors = []): void {
         $default1 = $default[1] ?? ($recipe->getTargetType() === Recipe::TARGET_SPECIFIED ? implode(",", $recipe->getTargetOptions()["specified"]) : "");
         $default2 = $default[2] ?? ($recipe->getTargetType() === Recipe::TARGET_RANDOM ? (string)$recipe->getTargetOptions()["random"] : "");
         (new CustomForm(Language::get("form.recipe.changeTarget.title", [$recipe->getName()])))->setContents([

@@ -16,13 +16,13 @@ use pocketmine\Player;
 
 class ExportForm {
 
-    public function sendRecipeListByRecipe(Player $player, Recipe $recipe) {
+    public function sendRecipeListByRecipe(Player $player, Recipe $recipe): void {
         $recipes = Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe);
         $this->sendRecipeList($player, $recipes);
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function sendRecipeList(Player $player, array $recipes, array $messages = []) {
+    public function sendRecipeList(Player $player, array $recipes, array $messages = []): void {
         $recipes = array_values($recipes);
 
         $buttons = [
@@ -51,7 +51,7 @@ class ExportForm {
             })->addMessages($messages)->addArgs($recipes)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, array $recipes, int $index) {
+    public function sendRecipeMenu(Player $player, array $recipes, int $index): void {
         $recipe = $recipes[$index];
         (new ListForm($recipe->getName()))
             ->setContent("@form.selectButton")
@@ -77,7 +77,7 @@ class ExportForm {
      * @param array<string|int> $default
      * @param array<string|int>[] $errors
      */
-    public function sendExportMenu(Player $player, array $recipes, array $default = [], array $errors = []) {
+    public function sendExportMenu(Player $player, array $recipes, array $default = [], array $errors = []): void {
         if (empty($recipes)) {
             $this->sendRecipeList($player, $recipes, ["@form.export.empty"]);
             return;

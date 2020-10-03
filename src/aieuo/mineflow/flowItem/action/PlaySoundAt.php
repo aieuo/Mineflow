@@ -45,7 +45,7 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $this->pitch = $pitch;
     }
 
-    public function setSound(string $health) {
+    public function setSound(string $health): void {
         $this->sound = $health;
     }
 

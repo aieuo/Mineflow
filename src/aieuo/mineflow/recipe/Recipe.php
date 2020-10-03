@@ -93,7 +93,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->name;
     }
 
-    public function getPathname() {
+    public function getPathname(): string {
         return empty($this->getGroup()) ? $this->getName() : ($this->getGroup()."/".$this->getName());
     }
 
@@ -101,7 +101,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->getName();
     }
 
-    public function setGroup(string $group) {
+    public function setGroup(string $group): void {
         $this->group = preg_replace("#/+#", "/", $group);
     }
 
@@ -175,7 +175,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->triggers[] = $trigger;
     }
 
-    public function setTriggersFromArray(array $triggers) {
+    public function setTriggersFromArray(array $triggers): void {
         $eventManager = Main::getEventManager();
 
         $this->removeTriggerAll();
@@ -200,7 +200,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->triggers = array_values($this->triggers);
     }
 
-    public function removeTriggerAll() {
+    public function removeTriggerAll(): void {
         foreach ($this->getTriggers() as $trigger) {
             $this->removeTrigger($trigger);
         }
@@ -269,7 +269,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return true;
     }
 
-    public function resume() {
+    public function resume(): void {
         $this->resuming = true;
         if (!$this->waiting) return;
         $this->resuming = false;
@@ -277,11 +277,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->execute([], false);
     }
 
-    public function exit() {
+    public function exit(): void {
         $this->exit = true;
     }
 
-    public function applyArguments(array $args) {
+    public function applyArguments(array $args): void {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (isset($args[$i])) {
@@ -322,11 +322,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->returnValues;
     }
 
-    public function addVariable(Variable $variable) {
+    public function addVariable(Variable $variable): void {
         $this->variables[$variable->getName()] = $variable;
     }
 
-    public function addVariables(array $variables) {
+    public function addVariables(array $variables): void {
         $this->variables = array_merge($this->variables, $variables);
     }
 
@@ -347,11 +347,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->variables;
     }
 
-    public function removeVariable(string $name) {
+    public function removeVariable(string $name): void {
         unset($this->variables[$name]);
     }
 
-    public function replaceVariables(string $text) {
+    public function replaceVariables(string $text): string {
         return Main::getVariableHelper()->replaceVariablesAndFunctions($text, $this);
     }
 

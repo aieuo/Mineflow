@@ -11,9 +11,9 @@ interface ConfigFileFlowItem {
 
     public function getConfigVariableName(string $name = ""): string;
 
-    public function setConfigVariableName(string $config, string $name = "");
+    public function setConfigVariableName(string $config, string $name = ""): void;
 
     public function getConfig(Recipe $origin, string $name = ""): ?Config;
 
-    public function throwIfInvalidConfig(?Config $block);
+    public function throwIfInvalidConfig(?Config $block): void;
 }

@@ -37,7 +37,7 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
         $this->newName = $newName;
     }
 
-    public function setNewName(string $newName) {
+    public function setNewName(string $newName): void {
         $this->newName = $newName;
     }
 

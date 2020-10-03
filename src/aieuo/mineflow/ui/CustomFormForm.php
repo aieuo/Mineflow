@@ -26,7 +26,7 @@ use pocketmine\Player;
 
 class CustomFormForm {
 
-    public function sendMenu(Player $player, array $messages = []) {
+    public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@form.form.menu.title"))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -52,7 +52,7 @@ class CustomFormForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendAddForm(Player $player, array $defaults = [], array $errors = []) {
+    public function sendAddForm(Player $player, array $defaults = [], array $errors = []): void {
         (new CustomForm("@form.form.addForm.title"))
             ->setContents([
                 new Input("@customForm.name", "", $defaults[0] ?? "", true),
@@ -105,7 +105,7 @@ class CustomFormForm {
             })->addErrors($errors)->show($player);
     }
 
-    public function sendSelectForm(Player $player, array $default = [], array $errors = []) {
+    public function sendSelectForm(Player $player, array $default = [], array $errors = []): void {
         (new CustomForm("@form.form.select.title"))
             ->setContents([
                 new Input("@customForm.name", "", $default[0] ?? "", true),
@@ -129,7 +129,7 @@ class CustomFormForm {
         })->addErrors($errors)->show($player);
     }
 
-    public function sendFormList(Player $player) {
+    public function sendFormList(Player $player): void {
         $manager = Main::getFormManager();
         $forms = $manager->getAllFormData();
         $buttons = [new Button("@form.back")];
@@ -154,7 +154,7 @@ class CustomFormForm {
             })->addArgs(array_values($forms))->show($player);
     }
 
-    public function sendFormMenu(Player $player, Form $form, array $messages = []) {
+    public function sendFormMenu(Player $player, Form $form, array $messages = []): void {
         switch ($form->getType()) {
             case Form::MODAL_FORM:
                 if (!($form instanceof ModalForm)) return;
@@ -171,7 +171,7 @@ class CustomFormForm {
         }
     }
 
-    public function sendModalFormMenu(Player $player, ModalForm $form, array $messages = []) {
+    public function sendModalFormMenu(Player $player, ModalForm $form, array $messages = []): void {
         (new ListForm(Language::get($form->getName())))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -261,7 +261,7 @@ class CustomFormForm {
             })->addArgs($form)->addMessages($messages)->show($player);
     }
 
-    public function sendListFormMenu(Player $player, ListForm $form, array $messages = []) {
+    public function sendListFormMenu(Player $player, ListForm $form, array $messages = []): void {
         $buttons = [
             new Button("@form.back"),
             new Button("@form.form.formMenu.preview"),
@@ -346,7 +346,7 @@ class CustomFormForm {
             })->addArgs($form, $form->getButtons())->addMessages($messages)->show($player);
     }
 
-    public function sendCustomFormMenu(Player $player, CustomForm $form, array $messages = []) {
+    public function sendCustomFormMenu(Player $player, CustomForm $form, array $messages = []): void {
         $buttons = [
             new Button("@form.back"),
             new Button("@form.form.formMenu.preview"),
@@ -410,7 +410,7 @@ class CustomFormForm {
             })->addArgs($form, $form->getContents())->addMessages($messages)->show($player);
     }
 
-    public function sendChangeFormTitle(Player $player, Form $form) {
+    public function sendChangeFormTitle(Player $player, Form $form): void {
         (new CustomForm("@form.form.formMenu.changeTitle"))
             ->setContents([
                 new Input("@customForm.title", "", $form->getTitle()),
@@ -427,7 +427,7 @@ class CustomFormForm {
             })->addArgs($form)->show($player);
     }
 
-    public function sendChangeFormContent(Player $player, Form $form) {
+    public function sendChangeFormContent(Player $player, Form $form): void {
         if (!($form instanceof ModalForm) and !($form instanceof ListForm)) return;
         (new CustomForm("@form.form.formMenu.content"))
             ->setContents([
@@ -447,7 +447,7 @@ class CustomFormForm {
             })->addArgs($form)->show($player);
     }
 
-    public function sendChangeFormName(Player $player, Form $form, array $default = [], array $errors = []) {
+    public function sendChangeFormName(Player $player, Form $form, array $default = [], array $errors = []): void {
         (new CustomForm("@form.form.formMenu.changeName"))
             ->setContents([
                 new Input("@customForm.name", "", $default[0] ?? $form->getName(), true),
@@ -482,7 +482,7 @@ class CustomFormForm {
             })->addArgs($form)->addErrors($errors)->show($player);
     }
 
-    public function sendAddListButton(Player $player, ListForm $form, array $errors = []) {
+    public function sendAddListButton(Player $player, ListForm $form, array $errors = []): void {
         (new CustomForm("@customForm.list.addButton"))
             ->setContents([
                 new Input("@customForm.text", "", "", true),
@@ -499,7 +499,7 @@ class CustomFormForm {
             })->addArgs($form)->addErrors($errors)->show($player);
     }
 
-    public function sendAddCustomFormElement(Player $player, CustomForm $form) {
+    public function sendAddCustomFormElement(Player $player, CustomForm $form): void {
         (new CustomForm("@customForm.custom.element.add"))
             ->setContents([
                 new Dropdown("@customForm.custom.element.select", [
@@ -546,7 +546,7 @@ class CustomFormForm {
             })->addArgs($form)->show($player);
     }
 
-    public function sendCustomFormElementMenu(Player $player, CustomForm $form, Element $element, array $messages = []) {
+    public function sendCustomFormElementMenu(Player $player, CustomForm $form, Element $element, array $messages = []): void {
         $contents = [
             new Input("@customForm.text", "", $element->getText())
         ];
@@ -640,7 +640,7 @@ class CustomFormForm {
 
     }
 
-    public function sendRecipeList(Player $player, Form $form, array $messages = []) {
+    public function sendRecipeList(Player $player, Form $form, array $messages = []): void {
         $buttons = [new Button("@form.back"), new Button("@form.add")];
 
         $recipes = Main::getFormManager()->getAssignedRecipes($form->getName());
@@ -665,7 +665,7 @@ class CustomFormForm {
             })->addMessages($messages)->addArgs($form, $recipes)->show($player);
     }
 
-    public function sendSelectRecipe(Player $player, Form $form, array $default = [], array $errors = []) {
+    public function sendSelectRecipe(Player $player, Form $form, array $default = [], array $errors = []): void {
         (new CustomForm(Language::get("form.recipes.add", [$form->getName()])))
             ->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),
@@ -694,7 +694,7 @@ class CustomFormForm {
             })->addArgs($form)->addErrors($errors)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, Form $form, int $index, array $recipes) {
+    public function sendRecipeMenu(Player $player, Form $form, int $index, array $recipes): void {
         $triggers = array_values($recipes)[$index];
         $content = implode("\n", array_map(function (string $key) use ($form) {
             switch ($key) {
@@ -731,7 +731,7 @@ class CustomFormForm {
             })->addArgs($form, $index, $recipes)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, Form $form) {
+    public function sendConfirmDelete(Player $player, Form $form): void {
         (new ModalForm(Language::get("form.recipe.delete.title", [$form->getName()])))
             ->setContent(Language::get("form.delete.confirm", [$form->getName()]))
             ->setButton1("@form.yes")
@@ -747,7 +747,7 @@ class CustomFormForm {
             })->addArgs($form)->show($player);
     }
 
-    public function onReceive(Player $player, $data, Form $form) {
+    public function onReceive(Player $player, $data, Form $form): void {
         $holder = TriggerHolder::getInstance();
         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
         $variables = Main::getFormManager()->getFormDataVariable($form, $data);
@@ -776,7 +776,7 @@ class CustomFormForm {
         }
     }
 
-    public function onClose(Player $player, Form $form) {
+    public function onClose(Player $player, Form $form): void {
         $holder = TriggerHolder::getInstance();
         $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName(), "close");
         if ($holder->existsRecipe($trigger)) {

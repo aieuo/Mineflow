@@ -15,7 +15,7 @@ class NumberVariable extends Variable implements \JsonSerializable {
     }
 
     /**
-     * @return number
+     * @return int|float
      */
     public function getValue() {
         return parent::getValue();

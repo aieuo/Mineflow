@@ -14,7 +14,7 @@ use pocketmine\Server;
 
 class BlockTriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent("type: @trigger.type.".$trigger->getType()."\n".$trigger->getKey())
             ->addButtons([
@@ -42,7 +42,7 @@ class BlockTriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
-    public function sendMenu(Player $player, Recipe $recipe) {
+    public function sendMenu(Player $player, Recipe $recipe): void {
         (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), Trigger::TYPE_BLOCK])))
             ->setContent("@form.selectButton")
             ->addButtons([

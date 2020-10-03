@@ -49,7 +49,7 @@ class RecipeContainer {
         return count($this->getAllRecipe());
     }
 
-    public function executeAll(Entity $target = null, array $variables = [], ?Event $event = null) {
+    public function executeAll(Entity $target = null, array $variables = [], ?Event $event = null): void {
         foreach ($this->getAllRecipe() as $recipe) {
             $recipe->executeAllTargets($target, $variables, $event);
         }

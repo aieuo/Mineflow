@@ -15,7 +15,7 @@ use pocketmine\Player;
 
 class ImportForm {
 
-    public function sendSelectImportFile(Player $player, array $messages = []) {
+    public function sendSelectImportFile(Player $player, array $messages = []): void {
         $files = glob(Main::getInstance()->getDataFolder()."imports/*.json");
 
         $buttons = [
@@ -34,7 +34,7 @@ class ImportForm {
             ->show($player);
     }
 
-    public function sendFileMenu(Player $player, string $path) {
+    public function sendFileMenu(Player $player, string $path): void {
         $data = json_decode(file_get_contents($path), true);
         if ($data === null) {
             $this->sendSelectImportFile($player, [Language::get("recipe.json.decode.failed", [basename($path, ".json"), json_last_error_msg()])]);
@@ -62,7 +62,7 @@ class ImportForm {
 
     }
 
-    public function importPack(Player $player, RecipePack $pack) {
+    public function importPack(Player $player, RecipePack $pack): void {
         $this->importRecipes($player, $pack->getRecipes(), function () use ($player, $pack) {
             $this->importCommands($player, $pack->getCommands(), function () use ($player, $pack) {
                 $this->importForms($player, $pack->getForms(), function () use ($player, $pack) {
@@ -74,7 +74,7 @@ class ImportForm {
         });
     }
 
-    public function importRecipes(Player $player, array $recipes, callable $onComplete = null, int $start = 0) {
+    public function importRecipes(Player $player, array $recipes, callable $onComplete = null, int $start = 0): void {
         $manager = Main::getRecipeManager();
         for ($i = $start; $i < count($recipes); $i++) {
             /** @var Recipe $recipe */
@@ -96,7 +96,7 @@ class ImportForm {
         if (is_callable($onComplete)) call_user_func($onComplete);
     }
 
-    public function importCommands(Player $player, array $commands, callable $onComplete = null, int $start = 0) {
+    public function importCommands(Player $player, array $commands, callable $onComplete = null, int $start = 0): void {
         $manager = Main::getCommandManager();
         $commands = array_values($commands);
         for ($i = $start; $i < count($commands); $i++) {
@@ -119,7 +119,7 @@ class ImportForm {
         if (is_callable($onComplete)) call_user_func($onComplete);
     }
 
-    public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0) {
+    public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0): void {
         $manager = Main::getFormManager();
         $names = array_keys($forms);
         for ($i = $start; $i < count($forms); $i++) {
@@ -143,7 +143,7 @@ class ImportForm {
         if (is_callable($onComplete)) call_user_func($onComplete);
     }
 
-    public function importConfigs(Player $player, array $configs, callable $onComplete = null, int $start = 0) {
+    public function importConfigs(Player $player, array $configs, callable $onComplete = null, int $start = 0): void {
         $names = array_keys($configs);
         for ($i = $start; $i < count($configs); $i++) {
             $name = $names[$i];
@@ -166,7 +166,7 @@ class ImportForm {
     }
 
 
-    public function confirmOverwrite(Player $player, string $name, callable $callback) {
+    public function confirmOverwrite(Player $player, string $name, callable $callback): void {
         (new ModalForm("@mineflow.import"))
             ->setContent(Language::get("form.import.duplicate", [$name]))
             ->setButton1("@form.yes")

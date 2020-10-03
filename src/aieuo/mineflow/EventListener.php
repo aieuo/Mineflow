@@ -26,19 +26,19 @@ use pocketmine\Server;
 
 class EventListener implements Listener {
 
-    public function registerEvents() {
+    public function registerEvents(): void {
         Server::getInstance()->getPluginManager()->registerEvents($this, Main::getInstance());
     }
 
-    public function onJoin(PlayerJoinEvent $event) {
+    public function onJoin(PlayerJoinEvent $event): void {
         Session::createSession($event->getPlayer());
     }
 
-    public function onQuit(PlayerQuitEvent $event) {
+    public function onQuit(PlayerQuitEvent $event): void {
         Session::destroySession($event->getPlayer());
     }
 
-    public function onInteract(PlayerInteractEvent $event) {
+    public function onInteract(PlayerInteractEvent $event): void {
         if ($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK and $event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_AIR) return;
 
         $player = $event->getPlayer();
@@ -70,7 +70,7 @@ class EventListener implements Listener {
         }
     }
 
-    public function command(CommandEvent $event) {
+    public function command(CommandEvent $event): void {
         $sender = $event->getSender();
         if (!($sender instanceof Player)) return;
         if ($event->isCancelled()) return;
@@ -96,17 +96,17 @@ class EventListener implements Listener {
         }
     }
 
-    public function onDeath(PlayerDeathEvent $event) {
+    public function onDeath(PlayerDeathEvent $event): void {
         $player = $event->getPlayer();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
-    public function onLevelChange(EntityLevelChangeEvent $event) {
+    public function onLevelChange(EntityLevelChangeEvent $event): void {
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
-    public function receive(DataPacketReceiveEvent $event) {
+    public function receive(DataPacketReceiveEvent $event): void {
         $pk = $event->getPacket();
         $player = $event->getPlayer();
         if ($pk instanceof InteractPacket) {
@@ -116,12 +116,12 @@ class EventListener implements Listener {
         }
     }
 
-    public function teleport(EntityTeleportEvent $event) {
+    public function teleport(EntityTeleportEvent $event): void {
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
-    public function onEntityDamageByEntity(EntityDamageByEntityEvent $event) {
+    public function onEntityDamageByEntity(EntityDamageByEntityEvent $event): void {
         if ($event instanceof EntityAttackEvent) return;
         (new EntityAttackEvent($event->getDamager(), $event->getEntity(), $event->getCause(), $event->getBaseDamage(), $event->getModifiers(), $event->getKnockBack()))->call();
     }

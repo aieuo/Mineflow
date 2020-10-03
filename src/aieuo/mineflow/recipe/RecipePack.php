@@ -101,7 +101,7 @@ class RecipePack implements \JsonSerializable {
         return $configData;
     }
 
-    public function export(string $path) {
+    public function export(string $path): void {
         if (!file_exists($path)) @mkdir($path, 0777, true);
         file_put_contents($path.$this->name.".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }

@@ -44,7 +44,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         $this->barId = $barId;
     }
 
-    public function setTitle(string $health) {
+    public function setTitle(string $health): void {
         $this->title = $health;
     }
 

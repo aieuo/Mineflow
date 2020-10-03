@@ -63,7 +63,7 @@ class ComparisonNumber extends FlowItem implements Condition {
         return $this->value2;
     }
 
-    public function setOperator(int $operator) {
+    public function setOperator(int $operator): void {
         $this->operator = $operator;
     }
 

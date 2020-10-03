@@ -17,7 +17,7 @@ use pocketmine\Player;
 
 class FormTriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         switch ($trigger->getSubKey()) {
             case "":
                 $content = Language::get("trigger.form.receive");
@@ -58,7 +58,7 @@ class FormTriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
-    public function sendSelectForm(Player $player, Recipe $recipe, array $default = [], array $errors = []) {
+    public function sendSelectForm(Player $player, Recipe $recipe, array $default = [], array $errors = []): void {
         (new CustomForm(Language::get("trigger.form.select.title", [$recipe->getName()])))
             ->setContents([
                 new Input("@trigger.form.select.input", "", $default[0] ?? "", true),
@@ -86,7 +86,7 @@ class FormTriggerForm {
             })->addArgs($recipe)->addErrors($errors)->show($player);
     }
 
-    public function sendSelectFormTriggerButton(Player $player, Recipe $recipe, Form $form) {
+    public function sendSelectFormTriggerButton(Player $player, Recipe $recipe, Form $form): void {
         switch ($form) {
             case $form instanceof CustomForm:
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
@@ -182,7 +182,7 @@ class FormTriggerForm {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function sendConfirmCreate(Player $player, string $name, callable $callback) {
+    public function sendConfirmCreate(Player $player, string $name, callable $callback): void {
         (new ModalForm("@trigger.command.confirmCreate.title"))
             ->setContent(Language::get("trigger.command.confirmCreate.content", [$name]))
             ->setButton1("@form.yes")

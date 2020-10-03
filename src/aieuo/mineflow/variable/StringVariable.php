@@ -6,10 +6,7 @@ class StringVariable extends Variable implements \JsonSerializable {
 
     public $type = Variable::STRING;
 
-    /**
-     * @return String
-     */
-    public function getValue() {
+    public function getValue(): string {
         return parent::getValue();
     }
 

@@ -13,7 +13,7 @@ use pocketmine\Player;
 
 class EventTriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent("type: @trigger.type.".$trigger->getType()."\n".Main::getEventManager()->translateEventName($trigger->getKey()))
             ->addButtons([
@@ -31,7 +31,7 @@ class EventTriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
-    public function sendEventTriggerList(Player $player, Recipe $recipe) {
+    public function sendEventTriggerList(Player $player, Recipe $recipe): void {
         $events = Main::getEventManager()->getEnabledEvents();
         $buttons = [new Button("@form.back")];
         foreach ($events as $event => $value) {
@@ -52,7 +52,7 @@ class EventTriggerForm {
             })->addArgs($recipe, array_keys($events))->show($player);
     }
 
-    public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName) {
+    public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName): void {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
             ->setContent($eventName."\n".Main::getEventManager()->translateEventName($eventName))
             ->addButtons([
@@ -74,7 +74,7 @@ class EventTriggerForm {
             })->addArgs($recipe, $eventName)->show($player);
     }
 
-    public function sendSelectEvent(Player $player) {
+    public function sendSelectEvent(Player $player): void {
         $events = Main::getEventManager()->getEnabledEvents();
         $buttons = [new Button("@form.back")];
         foreach ($events as $event => $value) {
@@ -95,7 +95,7 @@ class EventTriggerForm {
             })->addArgs(array_keys($events))->show($player);
     }
 
-    public function sendRecipeList(Player $player, string $event, array $messages = []) {
+    public function sendRecipeList(Player $player, string $event, array $messages = []): void {
         $buttons = [new Button("@form.back"), new Button("@form.add")];
 
         $recipes = Main::getEventManager()->getAssignedRecipes($event);
@@ -133,7 +133,7 @@ class EventTriggerForm {
             })->addMessages($messages)->addArgs($event, $recipes)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, string $event, string $recipeName) {
+    public function sendRecipeMenu(Player $player, string $event, string $recipeName): void {
         (new ListForm(Language::get("form.recipes.title", [Main::getEventManager()->translateEventName($event)])))
             ->setContent(Language::get("trigger.event.".$event))
             ->setButtons([

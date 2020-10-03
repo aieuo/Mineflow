@@ -43,7 +43,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         $this->resultName = $result;
     }
 
-    public function setMax(string $max) {
+    public function setMax(string $max): void {
         $this->max = $max;
     }
 

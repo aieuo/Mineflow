@@ -16,7 +16,7 @@ use pocketmine\Player;
 
 class CommandTriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []) {
+    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent("type: ".$trigger->getType()."\n/".$trigger->getKey()."\n/".$trigger->getSubKey())
             ->addButtons([
@@ -40,7 +40,7 @@ class CommandTriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
-    public function sendSelectCommand(Player $player, Recipe $recipe, array $default = [], array $errors = []) {
+    public function sendSelectCommand(Player $player, Recipe $recipe, array $default = [], array $errors = []): void {
         (new CustomForm(Language::get("trigger.command.select.title", [$recipe->getName()])))
             ->setContents([
                 new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? "", true),
@@ -75,7 +75,7 @@ class CommandTriggerForm {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function sendConfirmCreate(Player $player, string $name, callable $callback) {
+    public function sendConfirmCreate(Player $player, string $name, callable $callback): void {
         (new ModalForm("@trigger.command.confirmCreate.title"))
             ->setContent(Language::get("trigger.command.confirmCreate.content", [$name]))
             ->setButton1("@form.yes")

@@ -36,7 +36,7 @@ class SetHealth extends FlowItem implements EntityFlowItem {
         $this->health = $health;
     }
 
-    public function setHealth(string $health) {
+    public function setHealth(string $health): void {
         $this->health = $health;
     }
 

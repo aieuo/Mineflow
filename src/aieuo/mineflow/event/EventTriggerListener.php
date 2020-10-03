@@ -19,7 +19,7 @@ use pocketmine\Server;
 
 class EventTriggerListener implements Listener {
 
-    public function registerEvents() {
+    public function registerEvents(): void {
         foreach (Main::getEventManager()->getEnabledEvents() as $event => $value) {
             if (!class_exists($event)) continue;
 
@@ -27,7 +27,7 @@ class EventTriggerListener implements Listener {
         }
     }
 
-    private function registerEvent(string $event, string $method) {
+    private function registerEvent(string $event, string $method): void {
         $pluginManager = Server::getInstance()->getPluginManager();
         $pluginManager->registerEvent($event, $this, EventPriority::NORMAL, new MethodEventExecutor($method), Main::getInstance());
     }

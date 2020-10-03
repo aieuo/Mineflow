@@ -36,7 +36,7 @@ class SetFood extends FlowItem implements PlayerFlowItem {
         $this->food = $health;
     }
 
-    public function setFood(string $health) {
+    public function setFood(string $health): void {
         $this->food = $health;
     }
 

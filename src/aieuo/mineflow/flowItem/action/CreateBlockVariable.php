@@ -39,7 +39,7 @@ class CreateBlockVariable extends FlowItem {
         $this->variableName = $name;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -47,7 +47,7 @@ class CreateBlockVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setBlockId(string $id) {
+    public function setBlockId(string $id): void {
         $this->blockId = $id;
     }
 

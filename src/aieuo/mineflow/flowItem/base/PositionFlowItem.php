@@ -11,9 +11,9 @@ interface PositionFlowItem {
 
     public function getPositionVariableName(string $name = ""): string;
 
-    public function setPositionVariableName(string $position, string $name = "");
+    public function setPositionVariableName(string $position, string $name = ""): void;
 
     public function getPosition(Recipe $origin, string $name = ""): ?Position;
 
-    public function throwIfInvalidPosition(?Position $position);
+    public function throwIfInvalidPosition(?Position $position): void;
 }

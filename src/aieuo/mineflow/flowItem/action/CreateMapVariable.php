@@ -45,7 +45,7 @@ class CreateMapVariable extends FlowItem {
         $this->isLocal = $local;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -53,7 +53,7 @@ class CreateMapVariable extends FlowItem {
         return $this->variableName;
     }
 
-    public function setKey(array $variableKey) {
+    public function setKey(array $variableKey): void {
         $this->variableKey = $variableKey;
     }
 
@@ -61,7 +61,7 @@ class CreateMapVariable extends FlowItem {
         return $this->variableKey;
     }
 
-    public function setVariableValue(array $variableValue) {
+    public function setVariableValue(array $variableValue): void {
         $this->variableValue = $variableValue;
     }
 

@@ -36,7 +36,7 @@ class AddXpProgress extends FlowItem implements PlayerFlowItem {
         $this->xp = $damage;
     }
 
-    public function setXp(string $xp) {
+    public function setXp(string $xp): void {
         $this->xp = $xp;
     }
 

@@ -166,7 +166,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSettingCounter(Player $player) {
+    public function sendSettingCounter(Player $player): void {
         (new CustomForm("@action.for.setting"))
             ->setContents([
                 new ExampleInput("@action.for.counterName", "i", $this->getCounterName(), true),

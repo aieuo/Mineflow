@@ -32,7 +32,7 @@ class ExistsVariable extends FlowItem implements Condition {
         $this->variableName = $name;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 

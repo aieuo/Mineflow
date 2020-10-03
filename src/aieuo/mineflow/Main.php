@@ -50,6 +50,7 @@ class Main extends PluginBase {
         return self::$instance;
     }
 
+    /** @noinspection ReturnTypeCanBeDeclaredInspection */
     public function onEnable() {
         self::$instance = $this;
 
@@ -100,6 +101,7 @@ class Main extends PluginBase {
         (new ServerStartEvent($this))->call();
     }
 
+    /** @noinspection ReturnTypeCanBeDeclaredInspection */
     public function onDisable() {
         if (!$this->loaded) return;
         self::$recipeManager->saveAll();

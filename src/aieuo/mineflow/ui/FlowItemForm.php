@@ -21,7 +21,7 @@ use pocketmine\Player;
 
 class FlowItemForm {
 
-    public function sendAddedItemMenu(Player $player, FlowItemContainer $container, string $type, FlowItem $action, array $messages = []) {
+    public function sendAddedItemMenu(Player $player, FlowItemContainer $container, string $type, FlowItem $action, array $messages = []): void {
         if ($action->hasCustomMenu()) {
             $action->sendCustomMenu($player);
             return;
@@ -59,7 +59,7 @@ class FlowItemForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function onUpdateAction(Player $player, ?array $formData, Form $form, FlowItem $action, callable $callback) {
+    public function onUpdateAction(Player $player, ?array $formData, Form $form, FlowItem $action, callable $callback): void {
         if ($formData === null) return;
 
         $data = $action->parseFromFormData($formData);
@@ -82,7 +82,7 @@ class FlowItemForm {
         call_user_func_array($callback, [true]);
     }
 
-    public function selectActionCategory(Player $player, FlowItemContainer $container, string $type) {
+    public function selectActionCategory(Player $player, FlowItemContainer $container, string $type): void {
         $buttons = [
             new Button("@form.back", function () use($player, $container, $type) {
                 Session::getSession($player)->pop("parents");
@@ -118,7 +118,7 @@ class FlowItemForm {
             ->show($player);
     }
 
-    public function sendSelectAction(Player $player, FlowItemContainer $container, string $type, array $items) {
+    public function sendSelectAction(Player $player, FlowItemContainer $container, string $type, array $items): void {
         $buttons = [
             new Button("@form.back", function () use($player, $container, $type) { $this->selectActionCategory($player, $container, $type); })
         ];
@@ -138,7 +138,7 @@ class FlowItemForm {
             })->show($player);
     }
 
-    public function sendActionMenu(Player $player, FlowItemContainer $container, string $type, FlowItem $item, array $messages = []) {
+    public function sendActionMenu(Player $player, FlowItemContainer $container, string $type, FlowItem $item, array $messages = []): void {
         $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), $type);
 
         /** @var Recipe|FlowItem $container */
@@ -186,7 +186,7 @@ class FlowItemForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, FlowItem $action, FlowItemContainer $container, string $type) {
+    public function sendConfirmDelete(Player $player, FlowItem $action, FlowItemContainer $container, string $type): void {
         (new MineflowForm)->confirmDelete($player,
             Language::get("form.items.delete.title", [$container->getContainerName(), $action->getName()]), trim($action->getDetail()),
             function (Player $player) use ($action, $container, $type) {
@@ -204,7 +204,7 @@ class FlowItemForm {
             });
     }
 
-    public function sendChangeName(Player $player, FlowItem $item, FlowItemContainer $container, string $type) {
+    public function sendChangeName(Player $player, FlowItem $item, FlowItemContainer $container, string $type): void {
         (new CustomForm(Language::get("form.recipe.changeName.title", [$item->getName()])))
             ->setContents([
                 new Input("@form.recipe.changeName.content1", "", $item->getCustomName()),

@@ -40,7 +40,7 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         $this->index = $index;
     }
 
-    public function setIndex(string $health) {
+    public function setIndex(string $health): void {
         $this->index = $health;
     }
 

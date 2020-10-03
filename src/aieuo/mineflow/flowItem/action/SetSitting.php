@@ -101,7 +101,7 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         return [$this->getPlayerVariableName(), $this->getPositionVariableName()];
     }
 
-    public static function leave(Player $player) {
+    public static function leave(Player $player): void {
         if (isset(self::$entityIds[$player->getName()])) {
             $pk = new RemoveActorPacket();
             $pk->entityUniqueId = self::$entityIds[$player->getName()];

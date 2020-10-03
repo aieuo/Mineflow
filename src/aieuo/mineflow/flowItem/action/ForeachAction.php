@@ -162,7 +162,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSettingCounter(Player $player) {
+    public function sendSettingCounter(Player $player): void {
         (new CustomForm("@action.for.setting"))
             ->setContents([
                 new ExampleInput("@action.foreach.listVariableName","list", $this->getListVariableName(), true),

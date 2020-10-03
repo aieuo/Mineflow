@@ -11,9 +11,9 @@ interface EntityFlowItem {
 
     public function getEntityVariableName(string $name = ""): string;
 
-    public function setEntityVariableName(string $entity, string $name = "");
+    public function setEntityVariableName(string $entity, string $name = ""): void;
 
     public function getEntity(Recipe $origin, string $name = ""): ?Entity;
 
-    public function throwIfInvalidEntity(?Entity $player);
+    public function throwIfInvalidEntity(?Entity $player): void;
 }

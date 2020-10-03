@@ -38,7 +38,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         $this->itemName = $itemName;
     }
 
-    public function setItemName(string $itemName) {
+    public function setItemName(string $itemName): void {
         $this->itemName = $itemName;
     }
 

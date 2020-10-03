@@ -42,7 +42,7 @@ class JoinListVariableToString extends FlowItem {
         $this->resultName = $result;
     }
 
-    public function setVariableName(string $variableName) {
+    public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
 
@@ -50,7 +50,7 @@ class JoinListVariableToString extends FlowItem {
         return $this->variableName;
     }
 
-    public function setSeparator(string $separator) {
+    public function setSeparator(string $separator): void {
         $this->separator = $separator;
     }
 

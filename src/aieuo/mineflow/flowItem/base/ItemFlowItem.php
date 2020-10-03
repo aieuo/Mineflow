@@ -11,9 +11,9 @@ interface ItemFlowItem {
 
     public function getItemVariableName(string $name = ""): string;
 
-    public function setItemVariableName(string $item, string $name = "");
+    public function setItemVariableName(string $item, string $name = ""): void;
 
     public function getItem(Recipe $origin, string $name = ""): ?Item;
 
-    public function throwIfInvalidItem(?Item $item);
+    public function throwIfInvalidItem(?Item $item): void;
 }

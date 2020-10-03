@@ -14,7 +14,7 @@ use pocketmine\utils\TextFormat;
 
 class FlowItemContainerForm {
 
-    public function sendActionList(Player $player, FlowItemContainer $container, string $type, array $messages = []) {
+    public function sendActionList(Player $player, FlowItemContainer $container, string $type, array $messages = []): void {
         $actions = $container->getItems($type);
 
         $buttons = [new Button("@form.back"), new Button("@{$type}.add")];
@@ -51,7 +51,7 @@ class FlowItemContainerForm {
             })->addArgs($container, $actions)->addMessages($messages)->show($player);
     }
 
-    public function sendMoveAction(Player $player, FlowItemContainer $container, string $type, int $selected, array $messages = [], int $count = 0) {
+    public function sendMoveAction(Player $player, FlowItemContainer $container, string $type, int $selected, array $messages = [], int $count = 0): void {
         $actions = $container->getItems($type);
         $selectedAction = $actions[$selected];
 

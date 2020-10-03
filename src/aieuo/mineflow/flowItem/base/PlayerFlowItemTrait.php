@@ -19,9 +19,8 @@ trait PlayerFlowItemTrait {
         return $this->playerVariableNames[$name] ?? "";
     }
 
-    public function setPlayerVariableName(string $player, string $name = "") {
+    public function setPlayerVariableName(string $player, string $name = ""): void {
         $this->playerVariableNames[$name] = $player;
-        return $this;
     }
 
     public function getPlayer(Recipe $origin, string $name = ""): ?Player {
@@ -32,7 +31,7 @@ trait PlayerFlowItemTrait {
         return $variable->getPlayer();
     }
 
-    public function throwIfInvalidPlayer(?Player $player, bool $allowOffline = false) {
+    public function throwIfInvalidPlayer(?Player $player, bool $allowOffline = false): void {
         if (!($player instanceof Player)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.player"], $this->getPlayerVariableName()]));
         }

@@ -18,7 +18,7 @@ use pocketmine\Player;
 
 class CommandForm {
 
-    public function sendMenu(Player $player, array $messages = []) {
+    public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@form.command.menu.title"))
             ->setContent("@form.selectButton")
             ->addButtons([
@@ -44,7 +44,7 @@ class CommandForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendAddCommand(Player $player, array $defaults = [], array $errors = []) {
+    public function sendAddCommand(Player $player, array $defaults = [], array $errors = []): void {
         (new CustomForm("@form.command.addCommand.title"))
             ->setContents([
                 new Input("@form.command.menu.title", "@trigger.command.select.placeholder", $defaults[0] ?? ""),
@@ -86,7 +86,7 @@ class CommandForm {
             })->addErrors($errors)->show($player);
     }
 
-    public function sendSelectCommand(Player $player, array $defaults = [], array $errors = []) {
+    public function sendSelectCommand(Player $player, array $defaults = [], array $errors = []): void {
         (new CustomForm("@form.command.select.title"))
             ->setContents([
                 new Input("@form.command.name", "", $defaults[0] ?? "", true),
@@ -111,7 +111,7 @@ class CommandForm {
             })->addErrors($errors)->show($player);
     }
 
-    public function sendCommandList(Player $player) {
+    public function sendCommandList(Player $player): void {
         $manager = Main::getCommandManager();
         $commands = $manager->getCommandAll();
         $buttons = [new Button("@form.back")];
@@ -137,7 +137,7 @@ class CommandForm {
             })->addArgs(array_values($commands))->show($player);
     }
 
-    public function sendCommandMenu(Player $player, array $command, array $messages = []) {
+    public function sendCommandMenu(Player $player, array $command, array $messages = []): void {
         $permissions = [
             "mineflow.customcommand.op" => "@form.command.addCommand.permission.op",
             "mineflow.customcommand.true" => "@form.command.addCommand.permission.true"
@@ -174,7 +174,7 @@ class CommandForm {
             })->addArgs($command)->addMessages($messages)->show($player);
     }
 
-    public function changeDescription(Player $player, array $command) {
+    public function changeDescription(Player $player, array $command): void {
         (new CustomForm(Language::get("form.command.changeDescription.title", ["/".$command["command"]])))
             ->setContents([
                 new Input("@form.command.description", "", $command["description"] ?? ""),
@@ -192,7 +192,7 @@ class CommandForm {
             })->addArgs($command)->show($player);
     }
 
-    public function changePermission(Player $player, array $command) {
+    public function changePermission(Player $player, array $command): void {
         $permissions = ["mineflow.customcommand.op" => 0, "mineflow.customcommand.true" => 1];
         (new CustomForm(Language::get("form.command.changePermission.title", ["/".$command["command"]])))
             ->setContents([
@@ -220,7 +220,7 @@ class CommandForm {
             })->addArgs($command)->show($player);
     }
 
-    public function sendSelectPermissionName(Player $player, array $command, array $default = [], array $errors = []) {
+    public function sendSelectPermissionName(Player $player, array $command, array $default = [], array $errors = []): void {
         (new CustomForm(Language::get("form.command.changePermission.title", ["/".$command["command"]])))
             ->setContents([
                 new Input("@form.command.addCommand.permission.custom.input", "", $default[0] ?? $command["permission"], true),
@@ -238,7 +238,7 @@ class CommandForm {
             })->addErrors($errors)->addArgs($command)->show($player);
     }
 
-    public function sendConfirmDelete(Player $player, array $command) {
+    public function sendConfirmDelete(Player $player, array $command): void {
         (new ModalForm(Language::get("form.command.delete.title", ["/".$command["command"]])))
             ->setContent(Language::get("form.delete.confirm", ["/".$command["command"]]))
             ->setButton1("@form.yes")
@@ -267,7 +267,7 @@ class CommandForm {
             })->addArgs($command)->show($player);
     }
 
-    public function sendRecipeList(Player $player, array $command, array $messages = []) {
+    public function sendRecipeList(Player $player, array $command, array $messages = []): void {
         $buttons = [new Button("@form.back"), new Button("@form.add")];
 
         $recipes = Main::getCommandManager()->getAssignedRecipes($command["command"]);
@@ -305,7 +305,7 @@ class CommandForm {
             })->addMessages($messages)->addArgs($command, $recipes)->show($player);
     }
 
-    public function sendRecipeMenu(Player $player, array $command, int $index, array $recipes) {
+    public function sendRecipeMenu(Player $player, array $command, int $index, array $recipes): void {
         $command = Main::getCommandManager()->getCommand($command["command"]);
         $triggers = array_values($recipes)[$index];
         $content = implode("\n", array_map(function (String $cmd) {

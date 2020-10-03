@@ -27,7 +27,7 @@ class FormManager {
         $this->config->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
     }
 
-    public function saveAll() {
+    public function saveAll(): void {
         $this->config->save();
     }
 
@@ -35,7 +35,7 @@ class FormManager {
         return $this->config->exists($name);
     }
 
-    public function addForm(string $name, Form $form) {
+    public function addForm(string $name, Form $form): void {
         $data = [
             "name" => $name,
             "type" => $form->getType(),
@@ -56,7 +56,7 @@ class FormManager {
         return $this->config->getAll();
     }
 
-    public function removeForm(string $name) {
+    public function removeForm(string $name): void {
         $this->config->remove($name);
     }
 

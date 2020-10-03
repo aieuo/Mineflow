@@ -94,7 +94,7 @@ class CustomForm extends Form {
         return $form;
     }
 
-    public function resend(array $errors = [], array $messages = [], array $overwrites = []) {
+    public function resend(array $errors = [], array $messages = [], array $overwrites = []): void {
         if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
 
         $this->setDefaultsFromResponse($this->lastResponse[1], $overwrites)

@@ -185,7 +185,7 @@ abstract class Form implements PMForm {
      */
     abstract public function reflectErrors(array $form): array;
 
-    public function resend(array $errors = [], array $messages = []) {
+    public function resend(array $errors = [], array $messages = []): void {
         if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
 
         $this->resetErrors()

@@ -40,7 +40,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         });
     }
 
-    public function setLore(array $lore) {
+    public function setLore(array $lore): void {
         $this->lore = $lore;
     }
 

@@ -153,7 +153,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSetRepeatCountForm(Player $player) {
+    public function sendSetRepeatCountForm(Player $player): void {
         (new CustomForm("@action.repeat.editCount"))
             ->setContents([
                 new ExampleNumberInput("@action.repeat.repeatCount", "10", $this->getRepeatCount(), true, 1),

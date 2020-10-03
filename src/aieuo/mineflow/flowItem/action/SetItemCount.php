@@ -39,7 +39,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         $this->count = $count;
     }
 
-    public function setCount(string $count) {
+    public function setCount(string $count): void {
         $this->count = $count;
     }
 

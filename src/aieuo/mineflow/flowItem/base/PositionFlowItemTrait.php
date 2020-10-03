@@ -19,9 +19,8 @@ trait PositionFlowItemTrait {
         return $this->positionVariableNames[$name] ?? "";
     }
 
-    public function setPositionVariableName(string $position, string $name = "") {
+    public function setPositionVariableName(string $position, string $name = ""): void {
         $this->positionVariableNames[$name] = $position;
-        return $this;
     }
 
     public function getPosition(Recipe $origin, string $name = ""): ?Position {
@@ -32,7 +31,7 @@ trait PositionFlowItemTrait {
         return $variable->getPosition();
     }
 
-    public function throwIfInvalidPosition(?Position $position) {
+    public function throwIfInvalidPosition(?Position $position): void {
         if (!($position instanceof Position)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.position"], $this->getPositionVariableName()]));
         }

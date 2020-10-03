@@ -51,7 +51,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         $this->power = $power;
     }
 
-    public function setEffectId(string $effectId) {
+    public function setEffectId(string $effectId): void {
         $this->effectId = $effectId;
     }
 

@@ -20,9 +20,8 @@ trait EntityFlowItemTrait {
         return $this->entityVariableNames[$name] ?? "";
     }
 
-    public function setEntityVariableName(string $entity, string $name = "") {
+    public function setEntityVariableName(string $entity, string $name = ""): void {
         $this->entityVariableNames[$name] = $entity;
-        return $this;
     }
 
     public function getEntity(Recipe $origin, string $name = ""): ?Entity {
@@ -33,7 +32,7 @@ trait EntityFlowItemTrait {
         return $variable->getEntity();
     }
 
-    public function throwIfInvalidEntity(?Entity $entity) {
+    public function throwIfInvalidEntity(?Entity $entity): void {
         if (!($entity instanceof Entity)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.entity"], $this->getEntityVariableName()]));
         }

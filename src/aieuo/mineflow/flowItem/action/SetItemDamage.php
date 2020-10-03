@@ -39,7 +39,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $this->damage = $damage;
     }
 
-    public function setDamage(string $damage) {
+    public function setDamage(string $damage): void {
         $this->damage = $damage;
     }
 
