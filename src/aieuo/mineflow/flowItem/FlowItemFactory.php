@@ -52,6 +52,7 @@ use aieuo\mineflow\flowItem\action\ForAction;
 use aieuo\mineflow\flowItem\action\ForeachAction;
 use aieuo\mineflow\flowItem\action\FourArithmeticOperations;
 use aieuo\mineflow\flowItem\action\GenerateRandomNumber;
+use aieuo\mineflow\flowItem\action\GetArmorInventoryContents;
 use aieuo\mineflow\flowItem\action\GetBlock;
 use aieuo\mineflow\flowItem\action\GetDate;
 use aieuo\mineflow\flowItem\action\GetDistance;
@@ -220,6 +221,7 @@ class FlowItemFactory {
         self::register(new SetItem);
         self::register(new ClearInventory);
         self::register(new GetInventoryContents);
+        self::register(new GetArmorInventoryContents);
         /* script */
         self::register(new IFAction);
         self::register(new ElseifAction);

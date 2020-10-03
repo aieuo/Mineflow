@@ -69,6 +69,7 @@ interface FlowItemIds {
     public const SET_ITEM_NAME = "setItemName";
     public const EQUIP_ARMOR = "equipArmor";
     public const GET_INVENTORY_CONTENTS = "getInventory";
+    public const GET_ARMOR_INVENTORY_CONTENTS = "getArmorInventory";
 
     public const COMMAND = "command";
     public const COMMAND_CONSOLE = "commandConsole";
