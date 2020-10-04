@@ -96,7 +96,10 @@ interface FlowItemIds {
     public const CALCULATE_SIN = "sin";
     public const CALCULATE_COS = "cos";
     public const CALCULATE_TAN = "tan";
+    public const CALCULATE_FLOOR = "floor";
+    public const CALCULATE_CEIL = "ceil";
     public const CALCULATE2 = "calculate2";
+    public const CALCULATE2_ROUND = "round";
     public const GET_PI = "getPi";
     public const GET_E = "getE";
     public const GENERATE_RANDOM_NUMBER = "random";
