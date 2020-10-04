@@ -79,6 +79,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     /* @var bool */
     private $resuming = false;
 
+    /** @var string */
+    private $rawData = "";
+
     public function __construct(string $name, string $group = "", string $author = "") {
         $this->name = $name;
         $this->author = $author;
@@ -107,6 +110,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getGroup(): string {
         return $this->group;
+    }
+
+    public function setRawData(string $rawData): void {
+        $this->rawData = $rawData;
+    }
+
+    public function getRawData(): string {
+        return $this->rawData;
     }
 
     public function getDetail(): string {
@@ -417,7 +428,13 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function save(string $dir): void {
         $path = $this->getFileName($dir);
         if (!file_exists(dirname($path))) @mkdir(dirname($path), 0777, true);
-        file_put_contents($path, json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
+
+        $json = json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+        if ($json === $this->getRawData()) return;
+
+        if (file_put_contents($path, $json) === false) {
+            Main::getInstance()->getLogger()->error(Language::get("recipe.save.failed", [$this->getPathname()]));
+        }
     }
 
     public function __clone() {

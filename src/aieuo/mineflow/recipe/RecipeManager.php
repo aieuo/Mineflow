@@ -43,7 +43,8 @@ class RecipeManager {
                 ["/", ""], $file->getPath());
             if ($group !== "") $group = substr($group, 1);
 
-            $data = json_decode(file_get_contents($pathname), true);
+            $json = file_get_contents($pathname);
+            $data = json_decode($json, true);
             if ($data === null) {
                 Logger::warning(Language::get("recipe.json.decode.failed", [$pathname, json_last_error_msg()]));
                 continue;
@@ -55,6 +56,7 @@ class RecipeManager {
             }
 
             $recipe = new Recipe($data["name"], $group, $data["author"] ?? "");
+            $recipe->setRawData($json);
             try {
                 $recipe->loadSaveData($data["actions"]);
             } catch (\ErrorException $e) {
