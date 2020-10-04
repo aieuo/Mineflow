@@ -58,6 +58,7 @@ use aieuo\mineflow\flowItem\action\GetDate;
 use aieuo\mineflow\flowItem\action\GetDistance;
 use aieuo\mineflow\flowItem\action\GetE;
 use aieuo\mineflow\flowItem\action\GetEntity;
+use aieuo\mineflow\flowItem\action\GetEntitySidePosition;
 use aieuo\mineflow\flowItem\action\GetInventoryContents;
 use aieuo\mineflow\flowItem\action\GetMoney;
 use aieuo\mineflow\flowItem\action\GetPi;
@@ -279,6 +280,7 @@ class FlowItemFactory {
         self::register(new AddParticle);
         self::register(new PlaySoundAt);
         self::register(new GetDistance);
+        self::register(new GetEntitySidePosition);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);
@@ -387,6 +389,24 @@ class FlowItemFactory {
             protected $id = self::CALCULATE_TAN;
             public function __construct(string $value = "", string $resultName = "result") {
                 parent::__construct($value, (string)self::CALC_TAN, $resultName);
+            }
+        });
+        self::registerAlias(new class extends Calculate {
+            protected $id = self::CALCULATE_FLOOR;
+            public function __construct(string $value = "", string $resultName = "result") {
+                parent::__construct($value, (string)self::CALC_FLOOR, $resultName);
+            }
+        });
+        self::registerAlias(new class extends Calculate {
+            protected $id = self::CALCULATE_CEIL;
+            public function __construct(string $value = "", string $resultName = "result") {
+                parent::__construct($value, (string)self::CALC_CEIL, $resultName);
+            }
+        });
+        self::registerAlias(new class extends Calculate2 {
+            protected $id = self::CALCULATE2_ROUND;
+            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
+                parent::__construct($value1, $value2, self::CALC_ROUND, $resultName);
             }
         });
     }

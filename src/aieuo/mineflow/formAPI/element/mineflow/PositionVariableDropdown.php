@@ -11,6 +11,7 @@ class PositionVariableDropdown extends VariableDropdown {
 
     protected $actions = [
         FlowItemIds::CREATE_POSITION_VARIABLE,
+        FlowItemIds::GET_ENTITY_SIDE,
     ];
 
     public function __construct(array $variables = [], string $default = "") {

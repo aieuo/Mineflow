@@ -34,6 +34,7 @@ interface FlowItemIds {
     public const ADD_XP_LEVEL = "addXpLevel";
     public const GET_TARGET_BLOCK = "getTargetBlock";
     public const CREATE_HUMAN_ENTITY = "createHuman";
+    public const GET_ENTITY_SIDE = "getEntitySide";
 
     public const GET_PLAYER = "getPlayer";
     public const SET_SLEEPING = "setSleeping";
