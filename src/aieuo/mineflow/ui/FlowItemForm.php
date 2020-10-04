@@ -156,7 +156,6 @@ class FlowItemForm {
                         break;
                     case 1:
                         if ($item->hasCustomMenu()) {
-                            Session::getSession($player)->push("parents", $container);
                             $container->addItem($item, $type);
                             $item->sendCustomMenu($player);
                             return;

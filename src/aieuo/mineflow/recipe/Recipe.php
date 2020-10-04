@@ -35,11 +35,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public const TARGET_RANDOM = 3;
     public const TARGET_NONE = 4;
 
-    public const TARGET_REQUIRED_NONE = "none";
-    public const TARGET_REQUIRED_ENTITY = "entity";
-    public const TARGET_REQUIRED_CREATURE = "creature";
-    public const TARGET_REQUIRED_PLAYER = "player";
-
     /** @var string */
     private $name;
     /* @var string */
