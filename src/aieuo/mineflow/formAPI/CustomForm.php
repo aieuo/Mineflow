@@ -140,11 +140,11 @@ class CustomForm extends Form {
                     $options = $content->getOptions();
                     $maxIndex = count($options) - 1;
 
-                    if ($data[$i] === $maxIndex - 1) { // 手動で入力する時
+                    if ($data[$i] === $maxIndex) { // 手動で入力する時
                         $resend = true;
                         $overwrites[$i] = $content->getDefaultText();
                         $this->setContent(new ExampleInput($content->getText(), $content->getVariableType(), $content->getDefaultText(), true), $i);
-                    } elseif ($data[$i] === $maxIndex) { // 変数を追加するとき
+                    } elseif ($data[$i] === $maxIndex - 1) { // 変数を追加するとき
                         $addVariableDropdowns = [$content, $i];
                     } else { // 変数名を選択したとき
                         $data[$i] = explode(VariableDropdown::VALUE_SEPARATOR_LEFT, $options[$data[$i]])[0]; // TODO: 文字列操作せずに変数名だけ取り出す

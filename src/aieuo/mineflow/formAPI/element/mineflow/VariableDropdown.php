@@ -54,8 +54,8 @@ abstract class VariableDropdown extends Dropdown {
             $options[] = $default;
         }
 
-        $options[] = Language::get("form.element.variableDropdown.inputManually");
         $options[] = Language::get("form.element.variableDropdown.createVariable");
+        $options[] = Language::get("form.element.variableDropdown.inputManually");
         $this->options = $options;
         return $options;
     }
