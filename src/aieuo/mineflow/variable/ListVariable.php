@@ -44,7 +44,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return $this->value[$index];
     }
 
-    public function getCount() {
+    public function getCount(): int {
         return count($this->value);
     }
 

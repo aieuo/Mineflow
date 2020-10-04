@@ -162,7 +162,7 @@ class FlowItemFactory {
     private static $aliases = [];
 
     public static function init(): void {
-        /** actions */
+        /* actions */
         self::register(new DoNothing);
         self::register(new EventCancel);
         self::register(new GetDate);

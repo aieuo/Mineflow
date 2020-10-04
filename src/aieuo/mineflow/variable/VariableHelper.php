@@ -230,7 +230,7 @@ class VariableHelper {
      * @return boolean
      */
     public function isVariableString(string $variable): bool {
-        return preg_match("/^{[^{}\[\].]+}$/", $variable);
+        return (bool)preg_match("/^{[^{}\[\].]+}$/", $variable);
     }
 
     /**
@@ -239,7 +239,7 @@ class VariableHelper {
      * @return boolean
      */
     public function containsVariable(string $variable): bool {
-        return preg_match("/{.+}/", $variable);
+        return (bool)preg_match("/{.+}/", $variable);
     }
 
     /**

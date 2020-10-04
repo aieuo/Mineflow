@@ -39,7 +39,7 @@ abstract class VariableDropdown extends Dropdown {
         parent::__construct($text, $options, $defaultKey >= 0 ? $defaultKey : 0);
     }
 
-    public function updateOptions(array $variables) {
+    public function updateOptions(array $variables): array {
         $variableTypes = $this->variableTypes;
         $default = $this->defaultText;
 

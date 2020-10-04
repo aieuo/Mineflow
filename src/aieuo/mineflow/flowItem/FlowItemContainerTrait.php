@@ -63,10 +63,16 @@ trait FlowItemContainerTrait {
         return $this->items[$name] ?? [];
     }
 
+    /**
+     * @return FlowItem[]
+     */
     public function getActions(): array {
         return $this->getItems(self::ACTION);
     }
 
+    /**
+     * @return FlowItem[]
+     */
     public function getConditions(): array {
         return $this->getItems(self::CONDITION);
     }
