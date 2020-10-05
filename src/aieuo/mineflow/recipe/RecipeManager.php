@@ -154,7 +154,7 @@ class RecipeManager {
         $recipeManager = Main::getRecipeManager();
 
         $recipes = [];
-        if ($base) $recipes[$origin->getGroup()."/".$origin->getName()] = $origin;
+        if ($base) $recipes[] = [$origin->getGroup()."/".$origin->getName() => $origin];
         foreach ($recipe->getActions() as $action) {
             if ($action instanceof FlowItemContainer) {
                 $links = $this->getWithLinkedRecipes($action, $origin, false);
