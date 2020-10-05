@@ -99,7 +99,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
     public function throwIfCannotExecute(): void {
         if (!$this->isDataValid()) {
-            $message = Language::get("invalid.contents", [$this->getName()]);
+            $message = Language::get("invalid.contents");
             throw new InvalidFlowValueException($this->getName(), $message);
         }
     }
