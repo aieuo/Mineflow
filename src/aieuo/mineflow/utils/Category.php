@@ -21,25 +21,38 @@ class Category {
     public const SCRIPT = "script";
     public const SCOREBOARD = "scoreboard";
 
+    /** @var string[]  */
+    private static $categories = [
+        self::COMMON,
+        self::PLAYER,
+        self::ENTITY,
+        self::INVENTORY,
+        self::ITEM,
+        self::COMMAND,
+        self::BLOCK,
+        self::LEVEL,
+        self::EVENT,
+        self::SCRIPT,
+        self::MATH,
+        self::VARIABLE,
+        self::STRING,
+        self::FORM,
+        self::SCOREBOARD,
+        self::PLUGIN,
+    ];
 
     public static function getCategories(): array {
-        return [
-            self::COMMON,
-            self::PLAYER,
-            self::ENTITY,
-            self::INVENTORY,
-            self::ITEM,
-            self::COMMAND,
-            self::BLOCK,
-            self::LEVEL,
-            self::EVENT,
-            self::SCRIPT,
-            self::MATH,
-            self::VARIABLE,
-            self::STRING,
-            self::FORM,
-            self::SCOREBOARD,
-            self::PLUGIN,
-        ];
+        return self::$categories;
+    }
+
+    public static function existsCategory(string $category): bool {
+        return in_array($category, self::$categories, true);
+    }
+
+    public static function addCategory(string $category): bool {
+        if (self::existsCategory($category)) return false;
+
+        self::$categories[] = $category;
+        return true;
     }
 }
