@@ -75,7 +75,7 @@ class FormTriggerForm {
                         if ($result) {
                             (new CustomFormForm)->sendAddForm($player, [$data[0]]);
                         } else {
-                            $this->sendSelectForm($player, $recipe, $data, [["@trigger.command.select.notFound", 0]]);
+                            $this->sendSelectForm($player, $recipe, $data, [["@trigger.form.select.notFound", 0]]);
                         }
                     });
                     return;

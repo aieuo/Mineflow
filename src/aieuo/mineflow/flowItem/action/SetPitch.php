@@ -72,7 +72,7 @@ class SetPitch extends FlowItem implements EntityFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-                new ExampleNumberInput("@action.setYaw.form.yaw", "180", $this->getPitch(), true),
+                new ExampleNumberInput("@action.setPitch.form.pitch", "180", $this->getPitch(), true),
                 new CancelToggle()
             ]);
     }

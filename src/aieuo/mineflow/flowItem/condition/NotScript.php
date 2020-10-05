@@ -7,7 +7,7 @@ class NotScript extends NandScript {
     protected $id = self::CONDITION_NOT;
 
     protected $name = "condition.not.name";
-    protected $detail = "condition.not.description";
+    protected $detail = "condition.not.detail";
 
     public function getDetail(): string {
         $details = ["-----------not-----------"];
