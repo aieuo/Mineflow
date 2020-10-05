@@ -81,7 +81,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
             $enchant = Enchantment::getEnchantmentByName($id);
         }
         if (!($enchant instanceof Enchantment)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound", [$id]));
         }
         $level = $origin->replaceVariables($this->getEnchantLevel());
         $this->throwIfInvalidNumber($level);
