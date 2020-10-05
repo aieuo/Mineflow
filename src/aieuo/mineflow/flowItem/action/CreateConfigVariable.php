@@ -82,7 +82,7 @@ class CreateConfigVariable extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.createConfigVariable.form.name", "config", $this->getFileName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "config", $this->getVariableName(), true),
+                new ExampleInput("@action.form.resultVariableName", "config", $this->getVariableName(), true),
                 new CancelToggle()
             ]);
     }

@@ -108,7 +108,7 @@ class CreatePositionVariable extends FlowItem {
         $level = Server::getInstance()->getLevelByName($levelName);
 
         if (!is_numeric($x) or !is_numeric($y) or !is_numeric($z)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
         }
         if ($level === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.level.notFound"));
@@ -130,7 +130,7 @@ class CreatePositionVariable extends FlowItem {
                 new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
                 new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
                 new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $this->getLevel(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "pos", $this->getVariableName(), true),
+                new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
                 new CancelToggle()
             ]);
     }

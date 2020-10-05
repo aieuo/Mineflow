@@ -178,7 +178,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
                 new EntityVariableDropdown($variables, $this->getEntityVariableName()),
                 new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
                 new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "pos", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

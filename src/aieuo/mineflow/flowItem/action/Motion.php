@@ -68,7 +68,7 @@ class Motion extends FlowItem implements EntityFlowItem {
         }, $this->getPosition());
 
         if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
         }
 
         $entity = $this->getEntity($origin);

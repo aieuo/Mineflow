@@ -96,7 +96,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
                 new ExampleInput("@action.addEnchant.form.id", "1", $this->getEnchantId(), true),
                 new ExampleNumberInput("@action.addEnchant.form.level", "1", $this->getEnchantLevel(), false),
                 new CancelToggle()

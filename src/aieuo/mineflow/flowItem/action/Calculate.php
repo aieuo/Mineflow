@@ -172,7 +172,7 @@ class Calculate extends FlowItem {
                 new Label($this->getDescription()),
                 new ExampleInput("@action.calculate.form.value", "10", $this->getValue(), true),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

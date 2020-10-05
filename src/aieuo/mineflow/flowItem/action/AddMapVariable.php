@@ -104,7 +104,7 @@ class AddMapVariable extends FlowItem {
         if ($this->isLocal) {
             $variable = $origin->getVariable($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
-                throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
                     $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
                 ]));
             }
@@ -113,7 +113,7 @@ class AddMapVariable extends FlowItem {
         } else {
             $variable = $helper->get($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
-                throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+                throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
                     $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
                 ]));
             }

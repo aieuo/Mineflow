@@ -88,7 +88,7 @@ class CountListVariable extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.countList.form.name", "list", $this->getVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

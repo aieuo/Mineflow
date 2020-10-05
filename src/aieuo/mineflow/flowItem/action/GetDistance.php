@@ -76,7 +76,7 @@ class GetDistance extends FlowItem implements PositionFlowItem {
                 new Label($this->getDescription()),
                 new ExampleInput("@action.getDistance.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
                 new ExampleInput("@action.getDistance.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "distance", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "distance", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

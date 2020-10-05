@@ -69,7 +69,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         $resultName = $origin->replaceVariables($this->getResultName());
 
         if (!is_numeric($min) or !is_numeric($max)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
         }
 
         $rand = mt_rand((int)$min, (int)$max);
@@ -84,7 +84,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
                 new Label($this->getDescription()),
                 new ExampleInput("@action.generateRandomNumber.form.min", "0", $this->getMin(), true),
                 new ExampleInput("@action.generateRandomNumber.form.max", "10", $this->getMax(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "random", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "random", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

@@ -75,7 +75,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getResultName()),
+                new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName()),
                 new CancelToggle()
             ]);
     }

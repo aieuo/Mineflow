@@ -89,7 +89,7 @@ class CreateBlockVariable extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.createBlockVariable.form.id", "1:0", $this->getBlockId(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getVariableName(), true),
+                new ExampleInput("@action.form.resultVariableName", "block", $this->getVariableName(), true),
                 new CancelToggle()
             ]);
     }

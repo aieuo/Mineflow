@@ -71,7 +71,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
                 new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName(), true),
                 new CancelToggle()
             ]);

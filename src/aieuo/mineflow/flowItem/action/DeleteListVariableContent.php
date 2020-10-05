@@ -76,7 +76,7 @@ class DeleteListVariableContent extends FlowItem {
         $variable = ($this->isLocal ? $origin->getVariable($name) : $helper->get($name)) ?? new MapVariable([], $name);
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException(
-                $this->getName(), Language::get("flowItem.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
+                $this->getName(), Language::get("action.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
             );
         }
 

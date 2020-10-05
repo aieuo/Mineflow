@@ -111,7 +111,7 @@ class CalculateReversePolishNotation extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.calculateRPN.form.value", "1 2 + 3 -", $this->getFormula(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

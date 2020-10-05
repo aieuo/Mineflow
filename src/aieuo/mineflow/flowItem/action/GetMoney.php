@@ -87,7 +87,7 @@ class GetMoney extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "money", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "money", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

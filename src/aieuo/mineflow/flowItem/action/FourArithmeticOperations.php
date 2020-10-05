@@ -144,7 +144,7 @@ class FourArithmeticOperations extends FlowItem {
                 new ExampleNumberInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
                 new ExampleNumberInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

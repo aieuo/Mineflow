@@ -125,13 +125,13 @@ class CustomForm extends Form {
                         if ($data[$i] === "" or Main::getVariableHelper()->containsVariable($data[$i])) continue;
 
                         if (!is_numeric($data[$i])) {
-                            $errors[] = ["@flowItem.error.notNumber", $i];
+                            $errors[] = ["@action.error.notNumber", $i];
                         } elseif (($min = $content->getMin()) !== null and (float)$data[$i] < $min) {
-                            $errors[] = [Language::get("flowItem.error.lessValue", [$min]), $i];
+                            $errors[] = [Language::get("action.error.lessValue", [$min]), $i];
                         } elseif (($max = $content->getMax()) !== null and (float)$data[$i] > $max) {
-                            $errors[] = [Language::get("flowItem.error.overValue", [$max]), $i];
+                            $errors[] = [Language::get("action.error.overValue", [$max]), $i];
                         } elseif (($excludes = $content->getExcludes()) !== null and in_array((float)$data[$i], $excludes, true)) {
-                            $errors[] = [Language::get("flowItem.error.excludedNumber", [implode(",", $excludes)]), $i];
+                            $errors[] = [Language::get("action.error.excludedNumber", [implode(",", $excludes)]), $i];
                         }
                     }
                 } elseif ($content instanceof CancelToggle and $data[$i]) {

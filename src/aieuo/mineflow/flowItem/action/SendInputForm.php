@@ -103,7 +103,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new ExampleInput("@flowItem.form.resultVariableName", "input", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
                 new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
                 new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose),
                 new CancelToggle()

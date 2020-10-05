@@ -79,7 +79,7 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new ExampleInput("@flowItem.form.resultVariableName", "inventory", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "inventory", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

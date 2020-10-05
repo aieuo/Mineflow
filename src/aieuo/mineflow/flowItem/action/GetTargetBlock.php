@@ -88,7 +88,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
                 new Label($this->getDescription()),
                 new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
                 new ExampleNumberInput("@action.getTargetBlock.form.max", "100", $this->getMax(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "block", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

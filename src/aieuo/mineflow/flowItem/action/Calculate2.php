@@ -158,7 +158,7 @@ class Calculate2 extends FlowItem {
                 new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
                 new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
                 new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

@@ -89,7 +89,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
                 new Label($this->getDescription()),
                 new ExampleInput("@action.createHuman.form.skin", "target", $this->getPlayerVariableName(), true),
                 new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-                new ExampleInput("@flowItem.form.resultVariableName", "entity", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

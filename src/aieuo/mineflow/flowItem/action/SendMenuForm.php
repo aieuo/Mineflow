@@ -125,7 +125,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         $contents = [
             new Label($this->getDescription()),
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@flowItem.form.resultVariableName", "input", $this->getResultName(), true),
+            new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
             new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true),
         ];
         foreach ($this->getOptions() as $i => $option) {

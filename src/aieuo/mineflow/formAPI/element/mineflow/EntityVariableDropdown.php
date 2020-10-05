@@ -15,6 +15,6 @@ class EntityVariableDropdown extends VariableDropdown {
     ];
 
     public function __construct(array $variables = [], string $default = "") {
-        parent::__construct("@flowItem.form.target.entity", $variables, [DummyVariable::PLAYER, DummyVariable::ENTITY], $default);
+        parent::__construct("@action.form.target.entity", $variables, [DummyVariable::PLAYER, DummyVariable::ENTITY], $default);
     }
 }

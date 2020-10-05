@@ -142,7 +142,7 @@ class EditString extends FlowItem {
                     return Language::get("action.editString.".$type);
                 }, array_values($this->operators)), array_shift($keys) ?? 0),
                 new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "result", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

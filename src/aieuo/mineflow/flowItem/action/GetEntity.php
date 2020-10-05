@@ -96,7 +96,7 @@ class GetEntity extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getKey(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "entity", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

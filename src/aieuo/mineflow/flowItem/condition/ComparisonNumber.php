@@ -86,7 +86,7 @@ class ComparisonNumber extends FlowItem implements Condition {
         $operator = $this->getOperator();
 
         if (!is_numeric($value1) or !is_numeric($value2)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.notNumber"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
         }
 
         $value1 = (float)$value1;

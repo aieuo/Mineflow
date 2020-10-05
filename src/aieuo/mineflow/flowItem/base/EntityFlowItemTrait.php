@@ -34,10 +34,10 @@ trait EntityFlowItemTrait {
 
     public function throwIfInvalidEntity(?Entity $entity): void {
         if (!($entity instanceof Entity)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.target.not.valid", [$this->getName(), ["flowItem.target.require.entity"], $this->getEntityVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [$this->getName(), ["action.target.require.entity"], $this->getEntityVariableName()]));
         }
         if ($entity instanceof Player and !$entity->isOnline()) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error.player.offline"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.player.offline"));
         }
     }
 }

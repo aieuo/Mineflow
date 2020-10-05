@@ -14,6 +14,6 @@ class ConfigVariableDropdown extends VariableDropdown {
     ];
 
     public function __construct(array $variables = [], string $default = "") {
-        parent::__construct("@flowItem.form.target.config", $variables, [DummyVariable::CONFIG], $default);
+        parent::__construct("@action.form.target.config", $variables, [DummyVariable::CONFIG], $default);
     }
 }

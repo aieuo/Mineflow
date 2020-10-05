@@ -127,7 +127,7 @@ class FlowItemForm {
         }
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.select.title", [$container->getContainerName(), Session::getSession($player)->get("flowItem_category", "")])))
-            ->setContent(count($buttons) === 1 ? "@form.flowItem.empty" : "@form.selectButton")
+            ->setContent(count($buttons) === 1 ? "@form.action.empty" : "@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data) use($container, $type, $items) {
                 $data --;

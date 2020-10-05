@@ -83,7 +83,7 @@ class JoinListVariableToString extends FlowItem {
 
         $variable = $origin->getVariables()[$name] ?? $helper->get($name) ?? new ListVariable([], $name);
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
                 $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
             ]));
         }
@@ -102,7 +102,7 @@ class JoinListVariableToString extends FlowItem {
                 new Label($this->getDescription()),
                 new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
                 new ExampleInput("@action.joinToString.form.separator", ", ", $this->getSeparator(), false),
-                new ExampleInput("@flowItem.form.resultVariableName", "string", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "string", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

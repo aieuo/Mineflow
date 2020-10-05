@@ -79,7 +79,7 @@ class StringLength extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.strlen.form.value", "aieuo", $this->getValue(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "length", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "length", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

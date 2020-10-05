@@ -77,7 +77,7 @@ class GetDate extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.getDate.form.format", "H:i:s", $this->getFormat(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "date", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "date", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

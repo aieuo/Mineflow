@@ -79,7 +79,7 @@ class AddListVariable extends FlowItem {
             $variable = $helper->get($name) ?? new ListVariable([], $name);
         }
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("flowItem.error", [
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
                 $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
             ]));
         }

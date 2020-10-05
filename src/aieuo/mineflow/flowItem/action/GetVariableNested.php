@@ -89,7 +89,7 @@ class GetVariableNested extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.getVariableNested.form.target", "target.hand", $this->getVariableName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "item", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "item", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

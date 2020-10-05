@@ -109,7 +109,7 @@ class CreateScoreboardVariable extends FlowItem {
                 new ExampleInput("@action.createScoreboardVariable.form.id", "aieuo", $this->getBoardId(), true),
                 new ExampleInput("@action.createScoreboardVariable.form.displayName", "auieo", $this->getDisplayName(), true),
                 new Dropdown("@action.createScoreboardVariable.form.type", $this->displayTypes, array_search($this->getDisplayType(), $this->displayTypes, true)),
-                new ExampleInput("@flowItem.form.resultVariableName", "board", $this->getVariableName()),
+                new ExampleInput("@action.form.resultVariableName", "board", $this->getVariableName()),
                 new CancelToggle()
             ]);
     }

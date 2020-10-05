@@ -87,7 +87,7 @@ class GetPlayerByName extends FlowItem {
             ->setContents([
                 new Label($this->getDescription()),
                 new ExampleInput("@action.getPlayerByName.form.target", "aieuo", $this->getPlayerName(), true),
-                new ExampleInput("@flowItem.form.resultVariableName", "player", $this->getResultName(), true),
+                new ExampleInput("@action.form.resultVariableName", "player", $this->getResultName(), true),
                 new CancelToggle()
             ]);
     }

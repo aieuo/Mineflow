@@ -73,7 +73,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
                 new ExampleNumberInput("@action.setDamage.form.damage", "0", $this->getDamage(), true, 0),
                 new CancelToggle()
             ]);

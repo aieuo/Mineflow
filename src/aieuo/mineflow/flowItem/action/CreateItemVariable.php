@@ -120,7 +120,7 @@ class CreateItemVariable extends FlowItem {
                 new ExampleInput("@action.createItemVariable.form.id", "1:0", $this->getItemId(), true),
                 new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getItemCount(), false, 0),
                 new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName()),
-                new ExampleInput("@flowItem.form.resultVariableName", "item", $this->getVariableName(), true),
+                new ExampleInput("@action.form.resultVariableName", "item", $this->getVariableName(), true),
                 new CancelToggle()
             ]);
     }

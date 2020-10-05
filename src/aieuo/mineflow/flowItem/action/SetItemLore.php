@@ -75,7 +75,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new ExampleInput("@flowItem.target.require.item", "item", $this->getItemVariableName(), true),
+                new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
                 new ExampleInput("@action.setLore.form.lore", "1;aiueo;abc", implode(";", $this->getLore()), false),
                 new CancelToggle()
             ]);
