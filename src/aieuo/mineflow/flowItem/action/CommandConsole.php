@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\command\MineflowConsoleCommandSender;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
@@ -55,7 +56,7 @@ class CommandConsole extends FlowItem {
 
         $command = $origin->replaceVariables($this->getCommand());
 
-        Server::getInstance()->dispatchCommand(new ConsoleCommandSender(), $command);
+        Server::getInstance()->dispatchCommand(MineflowConsoleCommandSender::getInstance(), $command);
         yield true;
     }
 
