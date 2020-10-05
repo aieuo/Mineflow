@@ -367,7 +367,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $variables = [new DummyVariable("target", DummyVariable::PLAYER)];
         $add = [];
         foreach ($this->getTriggers() as $trigger) {
-            $add[] = TriggerVariables::get($trigger);
+            $add[] = TriggerVariables::getDummy($trigger);
         }
         $variables = array_merge(array_merge($variables, ...$add), $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
         return $variables;

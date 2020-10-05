@@ -31,7 +31,7 @@ use pocketmine\event\player\PlayerToggleSprintEvent;
 
 class TriggerVariables {
 
-    public static function get(Trigger $trigger): array {
+    public static function getDummy(Trigger $trigger): array {
         $variables = [];
         switch ($trigger->getType()) {
             case Trigger::TYPE_BLOCK:
