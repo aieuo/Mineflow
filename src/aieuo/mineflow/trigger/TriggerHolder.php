@@ -18,7 +18,7 @@ class TriggerHolder {
         return self::$instance;
     }
 
-    public function addTrigger(Trigger $trigger): void {
+    public function createContainer(Trigger $trigger): void {
         if (!isset($this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()])) {
             $this->recipes[$trigger->getType()][$trigger->getKey()][$trigger->getSubKey()] = new RecipeContainer();
         }
@@ -33,7 +33,7 @@ class TriggerHolder {
     }
 
     public function addRecipe(Trigger $trigger, Recipe $recipe): void {
-        $this->addTrigger($trigger);
+        $this->createContainer($trigger);
         $container = $this->getRecipes($trigger);
         $container->addRecipe($recipe);
     }
