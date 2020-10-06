@@ -45,7 +45,7 @@ class CommandTriggerForm {
         (new CustomForm(Language::get("trigger.command.select.title", [$recipe->getName()])))
             ->setContents([
                 new Input("@trigger.command.select.input", "@trigger.command.select.placeholder", $default[0] ?? "", true),
-                new Toggle("@form.back"),
+                new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[1]) {
                     (new TriggerForm)->sendSelectTriggerType($player, $recipe);
