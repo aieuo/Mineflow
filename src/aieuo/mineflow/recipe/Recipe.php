@@ -10,7 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\TriggerVariables;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
@@ -222,7 +221,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
-        // TODO: 整理する
         $targets = $this->getTargets($player);
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
         if ($event instanceof Event) $variables = array_merge($variables, ["event" => new EventObjectVariable($event, "event")]);
@@ -367,7 +365,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $variables = [new DummyVariable("target", DummyVariable::PLAYER)];
         $add = [];
         foreach ($this->getTriggers() as $trigger) {
-            $add[] = TriggerVariables::getDummy($trigger);
+            $add[] = $trigger->getVariablesDummy();
         }
         $variables = array_merge(array_merge($variables, ...$add), $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
         return $variables;

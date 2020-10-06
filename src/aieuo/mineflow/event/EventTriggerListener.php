@@ -4,14 +4,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\event;
 
 use aieuo\mineflow\Main;
+use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\variable\DefaultVariables;
-use pocketmine\event\block\BlockEvent;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\inventory\CraftItemEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\event\Listener;
 use pocketmine\event\EventPriority;
@@ -38,17 +33,10 @@ class EventTriggerListener implements Listener {
 
         $holder = TriggerHolder::getInstance();
         if ($holder->existsRecipeByString(Trigger::TYPE_EVENT, $eventName)) {
-            $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_EVENT, $eventName));
-            $target = null;
-            if ($event instanceof PlayerEvent or $event instanceof BlockEvent or $event instanceof CraftItemEvent) {
-                $target = $event->getPlayer();
-            } elseif ($event instanceof EntityDamageByEntityEvent) {
-                $target = $event->getDamager();
-            } elseif ($event instanceof EntityEvent) {
-                $target = $event->getEntity();
-            }
-            $variables = DefaultVariables::getEventVariables($event, $eventName);
-            $recipes->executeAll($target, $variables, $event);
+            $trigger = EventTrigger::create($eventName);
+            $recipes = $holder->getRecipes($trigger);
+            $variables = $trigger->getVariables($event);
+            $recipes->executeAll($trigger->getTargetEntity($event), $variables, $event);
         }
     }
 }

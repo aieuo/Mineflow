@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger;
 
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\Variable;
+
 class Trigger implements \JsonSerializable {
 
     public const TYPE_BLOCK = "block";
@@ -43,6 +46,21 @@ class Trigger implements \JsonSerializable {
 
     public function setSubKey(string $subKey): void {
         $this->subKey = $subKey;
+    }
+
+    /**
+     * @param $data
+     * @return array<string, Variable>
+     */
+    public function getVariables($data): array {
+        return []; // ["variable name" => $variable]
+    }
+
+    /**
+     * @return DummyVariable[]
+     */
+    public function getVariablesDummy(): array {
+        return []; // [$variable];
     }
 
     public function jsonSerialize() {

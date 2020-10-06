@@ -18,7 +18,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
@@ -684,7 +684,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
+                $trigger = new FormTrigger($form->getName());
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendRecipeList($player, $form, ["@trigger.alreadyExists"]);
                     return;
@@ -748,8 +748,8 @@ class CustomFormForm {
 
     public function onReceive(Player $player, $data, Form $form): void {
         $holder = TriggerHolder::getInstance();
-        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
-        $variables = Main::getFormManager()->getFormDataVariable($form, $data);
+        $trigger = new FormTrigger($form->getName());
+        $variables = $trigger->getVariables($form, $data);
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player, $variables);
@@ -777,7 +777,7 @@ class CustomFormForm {
 
     public function onClose(Player $player, Form $form): void {
         $holder = TriggerHolder::getInstance();
-        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName(), "close");
+        $trigger = new FormTrigger($form->getName(), "close");
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player);

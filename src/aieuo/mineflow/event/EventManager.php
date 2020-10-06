@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\event;
 
-use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\block\BlockBreakEvent;
@@ -164,7 +164,7 @@ class EventManager {
 
     public function getAssignedRecipes(string $event): array {
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(Trigger::TYPE_EVENT, $event));
+        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(EventTrigger::create($event));
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
                 $path = $recipe->getGroup()."/".$recipe->getName();

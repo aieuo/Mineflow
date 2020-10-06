@@ -6,6 +6,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
@@ -64,7 +65,7 @@ class EventTriggerForm {
                     return;
                 }
 
-                $trigger = new Trigger(Trigger::TYPE_EVENT, $eventName);
+                $trigger = EventTrigger::create($eventName);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;
@@ -113,7 +114,7 @@ class EventTriggerForm {
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [Language::get("trigger.event.".$event)]),
                             function (Player $player, Recipe $recipe) use ($event) {
-                                $trigger = new Trigger(Trigger::TYPE_EVENT, $event);
+                                $trigger = EventTrigger::create($event);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $event, ["@trigger.alreadyExists"]);
                                     return;

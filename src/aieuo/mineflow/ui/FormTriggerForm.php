@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
@@ -96,7 +97,7 @@ class FormTriggerForm {
                         new Button("@trigger.form.receive"),
                         new Button("@trigger.form.close"),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
-                        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
+                        $trigger = new FormTrigger($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
@@ -122,7 +123,7 @@ class FormTriggerForm {
                         new Button(Language::get("trigger.form.button", [$form->getButton1()])),
                         new Button(Language::get("trigger.form.button", [$form->getButton2()])),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
-                        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
+                        $trigger = new FormTrigger($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
@@ -155,7 +156,7 @@ class FormTriggerForm {
                     ->setContent("@form.selectButton")
                     ->addButtons($buttons)
                     ->onReceive(function (Player $player, int $data, Recipe $recipe, ListForm $form) {
-                        $trigger = new Trigger(Trigger::TYPE_FORM, $form->getName());
+                        $trigger = new FormTrigger($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);

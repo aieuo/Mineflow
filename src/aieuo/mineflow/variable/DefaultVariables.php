@@ -2,41 +2,11 @@
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\object\LevelObjectVariable;
-use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\block\Block;
 use pocketmine\entity\Entity;
-use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\block\SignChangeEvent;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityLevelChangeEvent;
-use pocketmine\event\entity\ProjectileHitEntityEvent;
-use pocketmine\event\Event;
-use pocketmine\event\inventory\CraftItemEvent;
-use pocketmine\event\inventory\FurnaceBurnEvent;
-use pocketmine\event\level\LevelLoadEvent;
-use pocketmine\event\player\PlayerBedEnterEvent;
-use pocketmine\event\player\PlayerChangeSkinEvent;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
-use pocketmine\event\player\PlayerDeathEvent;
-use pocketmine\event\player\PlayerDropItemEvent;
-use pocketmine\event\player\PlayerExhaustEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerItemConsumeEvent;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerToggleFlightEvent;
-use pocketmine\event\player\PlayerToggleSneakEvent;
-use pocketmine\event\player\PlayerToggleSprintEvent;
-use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\tile\Sign;
@@ -85,135 +55,5 @@ class DefaultVariables {
             "cmd" => new StringVariable(array_shift($commands), "cmd"),
             "args" => new ListVariable(array_map(function (string $cmd) { return new StringVariable($cmd); }, $commands), "args"),
         ];
-    }
-
-    public static function getEventVariables(Event $event, string $eventName): array {
-        $variables = [];
-        switch ($event) {
-            /** @noinspection PhpMissingBreakStatementInspection */
-            case $event instanceof PlayerMoveEvent:
-                $variables["move_from"] = new LocationObjectVariable($event->getFrom(), "move_from");
-                $variables["move_to"] = new LocationObjectVariable($event->getTo(), "move_to");
-            case $event instanceof PlayerDeathEvent:
-            case $event instanceof PlayerChangeSkinEvent:
-            case $event instanceof PlayerJoinEvent:
-            case $event instanceof PlayerQuitEvent:
-                $target = $event->getPlayer();
-                $variables = array_merge($variables, self::getPlayerVariables($target));
-                break;
-            case $event instanceof SignChangeEvent:
-                $lines = $event->getLines();
-                $variables["sign_lines"] = new ListVariable(array_map(function (string $line) { return new StringVariable($line); }, $lines), "sign_lines");
-                $target = $event->getPlayer();
-                $block = $event->getBlock();
-                $variables = array_merge($variables, self::getPlayerVariables($target), self::getBlockVariables($block));
-                break;
-            case $event instanceof PlayerInteractEvent:
-            case $event instanceof BlockBreakEvent:
-            case $event instanceof BlockPlaceEvent:
-                $target = $event->getPlayer();
-                $block = $event->getBlock();
-                $variables = array_merge($variables, self::getPlayerVariables($target), self::getBlockVariables($block));
-                break;
-            case $event instanceof PlayerBedEnterEvent:
-                $target = $event->getPlayer();
-                $block = $event->getBed();
-                $variables = array_merge(self::getPlayerVariables($target), self::getBlockVariables($block));
-                break;
-            case $event instanceof PlayerCommandPreprocessEvent:
-                $variables = array_merge($variables, self::getCommandVariables(substr($event->getMessage(), 1)));
-                $target = $event->getPlayer();
-                $variables = array_merge($variables, self::getPlayerVariables($target));
-                $variables["message"] = new StringVariable($event->getMessage(), "message");
-                break;
-            case $event instanceof PlayerChatEvent:
-                $target = $event->getPlayer();
-                $variables = array_merge($variables, self::getPlayerVariables($target));
-                $variables["message"] = new StringVariable($event->getMessage(), "message");
-                break;
-            case $event instanceof PlayerToggleSneakEvent:
-                $target = $event->getPlayer();
-                $variables = self::getPlayerVariables($target);
-                $variables["state"] = new StringVariable($event->isSneaking() ? "true" : "false", "state");
-                break;
-            case $event instanceof PlayerToggleSprintEvent:
-                $target = $event->getPlayer();
-                $variables = self::getPlayerVariables($target);
-                $variables["state"] = new StringVariable($event->isSprinting() ? "true" : "false", "state");
-                break;
-            case $event instanceof PlayerToggleFlightEvent:
-                $target = $event->getPlayer();
-                $variables = self::getPlayerVariables($target);
-                $variables["state"] = new StringVariable($event->isFlying() ? "true" : "false", "state");
-                break;
-            case $event instanceof EntityLevelChangeEvent:
-                $target = $event->getEntity();
-                $variables = self::getEntityVariables($target);
-                $variables["origin_level"] = new LevelObjectVariable($event->getOrigin(), "origin_level");
-                $variables["target_level"] = new LevelObjectVariable($event->getTarget(), "target_level");
-                break;
-            case $event instanceof PlayerDropItemEvent:
-            case $event instanceof PlayerItemConsumeEvent:
-                $target = $event->getPlayer();
-                $item = $event->getItem();
-                $variables = array_merge(self::getPlayerVariables($target), [
-                    "item" => new ItemObjectVariable($item, "item", $item->__toString()),
-                ]);
-                break;
-            case $event instanceof CraftItemEvent:
-                $target = $event->getPlayer();
-                $inputs = array_map(function (Item $input) {
-                    return new ItemObjectVariable($input, "input", $input->__toString());
-                }, $event->getInputs());
-                $outputs = array_map(function (Item $output) {
-                    return new ItemObjectVariable($output, "output", $output->__toString());
-                }, $event->getInputs());
-                $variables = self::getPlayerVariables($target);
-                $variables["inputs"] = new ListVariable($inputs, "inputs");
-                $variables["outputs"] = new ListVariable($outputs, "outputs");
-                break;
-            case $event instanceof EntityDamageEvent:
-                $target = $event->getEntity();
-                $name = $eventName === EntityAttackEvent::class ? "damaged" : "target";
-                $variables = $target instanceof Player ? self::getPlayerVariables($target, $name) : self::getEntityVariables($target, $name);
-                $variables["damage"] = new NumberVariable($event->getBaseDamage(), "damage");
-                $variables["cause"] = new NumberVariable($event->getCause(), "cause");
-                if ($event instanceof EntityAttackEvent) {
-                    $damager = $event->getDamager();
-                    $add = [];
-                    if ($eventName === EntityDamageEvent::class) {
-                        if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "damager");
-                        elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "damager");
-                    } elseif ($eventName === EntityAttackEvent::class) {
-                        if ($damager instanceof Player) $add = self::getPlayerVariables($damager, "target");
-                        elseif ($damager instanceof Entity) $add = self::getEntityVariables($damager, "target");
-                    }
-                    $variables = array_merge($variables, $add);
-                }
-                break;
-            case $event instanceof LevelLoadEvent:
-                $variables = ["level" => new LevelObjectVariable($event->getLevel(), "level")];
-                break;
-            case $event instanceof PlayerExhaustEvent:
-                $target = $event->getPlayer();
-                $variables = self::getEntityVariables($target);
-                $variables["amount"] = new NumberVariable($event->getAmount(), "amount");
-                $variables["cause"] = new NumberVariable($event->getCause(), "cause");
-                break;
-            case $event instanceof ProjectileHitEntityEvent: // TODO: player?
-                $target = $event->getEntity();
-                $variables = self::getEntityVariables($target);
-                $entityHit = $event->getEntityHit();
-                $add = $entityHit instanceof Player ? self::getPlayerVariables($entityHit) : self::getEntityVariables($entityHit);
-                $variables = array_merge($variables, $add);
-                break;
-            case $event instanceof FurnaceBurnEvent:
-                $fuel = $event->getFuel();
-                $variables = [
-                    "fuel" => new ItemObjectVariable($fuel, "fuel"),
-                ];
-                break;
-        }
-        return $variables;
     }
 }

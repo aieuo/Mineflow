@@ -4,11 +4,12 @@ namespace aieuo\mineflow;
 
 use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\flowItem\action\SetSitting;
+use aieuo\mineflow\trigger\block\BlockTrigger;
+use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\ui\TriggerForm;
 use aieuo\mineflow\utils\Session;
-use aieuo\mineflow\variable\DefaultVariables;
 use pocketmine\command\Command;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
@@ -51,7 +52,7 @@ class EventListener implements Listener {
             switch ($session->get("blockTriggerAction")) {
                 case "add":
                     $recipe = $session->get("blockTriggerRecipe");
-                    $trigger = new Trigger(Trigger::TYPE_BLOCK, $position);
+                    $trigger = new BlockTrigger($position);
                     if ($recipe->existsTrigger($trigger)) {
                         (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                         return;
@@ -64,8 +65,9 @@ class EventListener implements Listener {
             return;
         }
         if ($holder->existsRecipeByString(Trigger::TYPE_BLOCK, $position)) {
-            $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_BLOCK, $position));
-            $variables = DefaultVariables::getBlockVariables($block);
+            $trigger = new BlockTrigger($position);
+            $recipes = $holder->getRecipes($trigger);
+            $variables = $trigger->getVariables($block);
             $recipes->executeAll($player, $variables, $event);
         }
     }
@@ -87,8 +89,9 @@ class EventListener implements Listener {
         for ($i = 0; $i < $count; $i++) {
             $command = implode(" ", $commands);
             if ($holder->existsRecipeByString(Trigger::TYPE_COMMAND, $origin, $command)) {
-                $recipes = $holder->getRecipes(new Trigger(Trigger::TYPE_COMMAND, $origin, $command));
-                $variables = DefaultVariables::getCommandVariables($event->getCommand());
+                $trigger = new CommandTrigger($origin, $command);
+                $recipes = $holder->getRecipes($trigger);
+                $variables = $trigger->getVariables($event->getCommand());
                 $recipes->executeAll($sender, $variables, $event);
                 break;
             }

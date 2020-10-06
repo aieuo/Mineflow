@@ -11,7 +11,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\Player;
@@ -256,7 +256,7 @@ class CommandForm {
                         if ($recipe === null) continue;
 
                         foreach ($commands as $cmd) {
-                            $recipe->removeTrigger(new Trigger(Trigger::TYPE_COMMAND, explode(" ", $cmd)[0], $cmd));
+                            $recipe->removeTrigger(new CommandTrigger(explode(" ", $cmd)[0], $cmd));
                         }
                     }
                     $commandManager->removeCommand($command["command"]);
@@ -285,7 +285,7 @@ class CommandForm {
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [$command["command"]]),
                             function (Player $player, Recipe $recipe) use ($command) {
-                                $trigger = new Trigger(Trigger::TYPE_COMMAND, $command["command"], $command["command"]);
+                                $trigger = new CommandTrigger($command["command"], $command["command"]);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
                                     return;

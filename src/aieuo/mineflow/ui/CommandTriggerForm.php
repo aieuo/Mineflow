@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
@@ -64,7 +65,7 @@ class CommandTriggerForm {
                     return;
                 }
 
-                $trigger = new Trigger(Trigger::TYPE_COMMAND, explode(" ", $data[0])[0], $data[0]);
+                $trigger = new CommandTrigger(explode(" ", $data[0])[0], $data[0]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;
