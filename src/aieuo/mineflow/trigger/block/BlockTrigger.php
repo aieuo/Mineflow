@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\trigger\block;
 
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\block\Block;
@@ -10,7 +11,7 @@ use pocketmine\block\Block;
 class BlockTrigger extends Trigger {
 
     public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Trigger::TYPE_BLOCK, $key, $subKey);
+        parent::__construct(TriggerTypes::BLOCK, $key, $subKey);
     }
 
     /**

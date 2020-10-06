@@ -8,11 +8,6 @@ use aieuo\mineflow\variable\Variable;
 
 class Trigger implements \JsonSerializable {
 
-    public const TYPE_BLOCK = "block";
-    public const TYPE_COMMAND = "command";
-    public const TYPE_EVENT = "event";
-    public const TYPE_FORM = "form";
-
     /** @var string */
     private $type;
 

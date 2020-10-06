@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -17,7 +18,7 @@ use aieuo\mineflow\variable\StringVariable;
 class FormTrigger extends Trigger {
 
     public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Trigger::TYPE_FORM, $key, $subKey);
+        parent::__construct(TriggerTypes::FORM, $key, $subKey);
     }
 
     /**

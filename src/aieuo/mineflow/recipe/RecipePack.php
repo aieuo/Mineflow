@@ -6,6 +6,7 @@ use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\CreateConfigVariable;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\utils\ConfigHolder;
 
 class RecipePack implements \JsonSerializable {
@@ -67,7 +68,7 @@ class RecipePack implements \JsonSerializable {
         $commands = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() !== Trigger::TYPE_COMMAND) continue;
+                if ($trigger->getType() !== TriggerTypes::COMMAND) continue;
 
                 $key = $trigger->getKey();
                 $commands[$key] = $commandManager->getCommand($key);
@@ -81,7 +82,7 @@ class RecipePack implements \JsonSerializable {
         $forms = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() !== Trigger::TYPE_FORM) continue;
+                if ($trigger->getType() !== TriggerTypes::FORM) continue;
 
                 $key = $trigger->getKey();
                 $forms[$key] = $formManager->getForm($key);

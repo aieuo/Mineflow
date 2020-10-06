@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
@@ -20,7 +21,7 @@ class EventTrigger extends Trigger {
     }
 
     public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Trigger::TYPE_EVENT, $key, $subKey);
+        parent::__construct(TriggerTypes::EVENT, $key, $subKey);
     }
 
     /**

@@ -6,6 +6,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\level\Position;
@@ -43,7 +44,7 @@ class BlockTriggerForm {
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
-        (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), Trigger::TYPE_BLOCK])))
+        (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), TriggerTypes::BLOCK])))
             ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back"),

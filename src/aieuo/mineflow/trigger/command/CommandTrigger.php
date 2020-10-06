@@ -3,13 +3,14 @@
 namespace aieuo\mineflow\trigger\command;
 
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 
 class CommandTrigger extends Trigger {
 
     public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Trigger::TYPE_COMMAND, $key, $subKey);
+        parent::__construct(TriggerTypes::COMMAND, $key, $subKey);
     }
 
     /**

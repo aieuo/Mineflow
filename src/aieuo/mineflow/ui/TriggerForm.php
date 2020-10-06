@@ -7,6 +7,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -14,16 +15,16 @@ class TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         switch ($trigger->getType()) {
-            case Trigger::TYPE_BLOCK:
+            case TriggerTypes::BLOCK:
                 (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
                 return;
-            case Trigger::TYPE_EVENT:
+            case TriggerTypes::EVENT:
                 (new EventTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
                 return;
-            case Trigger::TYPE_COMMAND:
+            case TriggerTypes::COMMAND:
                 (new CommandTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
                 return;
-            case Trigger::TYPE_FORM:
+            case TriggerTypes::FORM:
                 (new FormTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
                 return;
         }
