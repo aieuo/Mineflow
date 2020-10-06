@@ -5,6 +5,7 @@ namespace aieuo\mineflow\ui;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
@@ -15,7 +16,7 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
-class CommandTriggerForm {
+class CommandTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
@@ -30,7 +31,7 @@ class CommandTriggerForm {
                         (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
-                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
+                        (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
                         $manager = Main::getCommandManager();
@@ -41,6 +42,10 @@ class CommandTriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
+    public function sendMenu(Player $player, Recipe $recipe): void {
+        $this->sendSelectCommand($player, $recipe);
+    }
+
     public function sendSelectCommand(Player $player, Recipe $recipe, array $default = [], array $errors = []): void {
         (new CustomForm(Language::get("trigger.command.select.title", [$recipe->getName()])))
             ->setContents([
@@ -48,7 +53,7 @@ class CommandTriggerForm {
                 new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[1]) {
-                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
                 }
 

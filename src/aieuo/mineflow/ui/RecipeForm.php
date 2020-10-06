@@ -282,7 +282,7 @@ class RecipeForm {
         $buttons = [new Button("@form.back"), new Button("@trigger.add")];
         foreach ($triggers as $trigger) {
             switch ($trigger->getType()) {
-                case Trigger::TriggerTypes::EVENT:
+                case TriggerTypes::EVENT:
                     $content = "@trigger.type.".$trigger->getType().": ".Main::getEventManager()->translateEventName($trigger->getKey());
                     break;
                 default:
@@ -300,13 +300,13 @@ class RecipeForm {
                     return;
                 }
                 if ($data === 1) {
-                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
                 }
                 $data -= 2;
 
                 $trigger = $triggers[$data];
-                (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
+                (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
             })->addArgs($recipe, $triggers)->addMessages($messages)->show($player);
     }
 

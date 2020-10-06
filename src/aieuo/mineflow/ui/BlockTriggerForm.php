@@ -13,7 +13,7 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class BlockTriggerForm {
+class BlockTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
@@ -28,7 +28,7 @@ class BlockTriggerForm {
                         (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
-                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
+                        (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
                         $pos = explode(",", $trigger->getKey());
@@ -51,7 +51,7 @@ class BlockTriggerForm {
                 new Button("@form.add"),
             ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
                 if ($data === 0) {
-                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
                 }
 

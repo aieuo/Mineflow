@@ -13,6 +13,7 @@ use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventTriggerList;
+use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\utils\FormManager;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\PlayerConfig;
@@ -79,6 +80,7 @@ class Main extends PluginBase {
 
         EntityManager::init();
         EventTriggerList::init();
+        TriggerTypes::init();
         FlowItemFactory::init();
 
 

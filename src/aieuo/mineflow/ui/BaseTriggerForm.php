@@ -11,22 +11,13 @@ use aieuo\mineflow\trigger\TriggerTypes;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
-class TriggerForm {
+class BaseTriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        switch ($trigger->getType()) {
-            case TriggerTypes::BLOCK:
-                (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
-                return;
-            case TriggerTypes::EVENT:
-                (new EventTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
-                return;
-            case TriggerTypes::COMMAND:
-                (new CommandTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
-                return;
-            case TriggerTypes::FORM:
-                (new FormTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
-                return;
+        $form = TriggerTypes::getForm($trigger->getType());
+        if ($form !== null) {
+            $form->sendAddedTriggerMenu($player, $recipe, $trigger);
+            return;
         }
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent("type: @trigger.type.".$trigger->getType()."\n".$trigger->getKey())
@@ -46,33 +37,19 @@ class TriggerForm {
     }
 
     public function sendSelectTriggerType(Player $player, Recipe $recipe): void {
+        $buttons = [
+            new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
+        ];
+        foreach (TriggerTypes::getAll() as $type => $form) {
+            $buttons[] = new Button("@trigger.type.".$type, function () use($player, $recipe, $form) {
+                $form->sendMenu($player, $recipe);
+            });
+        }
         (new ListForm(Language::get("form.trigger.selectTriggerType", [$recipe->getName()])))
             ->setContent("@form.selectButton")
-            ->addButtons([
-                new Button("@form.back"),
-                new Button("@trigger.type.block"),
-                new Button("@trigger.type.event"),
-                new Button("@trigger.type.command"),
-                new Button("@trigger.type.form"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
-                switch ($data) {
-                    case 0:
-                        (new RecipeForm)->sendTriggerList($player, $recipe);
-                        break;
-                    case 1:
-                        (new BlockTriggerForm)->sendMenu($player, $recipe);
-                        break;
-                    case 2:
-                        (new EventTriggerForm)->sendEventTriggerList($player, $recipe);
-                        break;
-                    case 3:
-                        (new CommandTriggerForm)->sendSelectCommand($player, $recipe);
-                        break;
-                    case 4:
-                        (new FormTriggerForm)->sendSelectForm($player, $recipe);
-                        break;
-                }
-            })->addArgs($recipe)->show($player);
+            ->addButtons($buttons)
+            ->addArgs($recipe)
+            ->show($player);
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger): void {

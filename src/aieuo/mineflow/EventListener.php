@@ -9,7 +9,7 @@ use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\TriggerTypes;
-use aieuo\mineflow\ui\TriggerForm;
+use aieuo\mineflow\ui\BaseTriggerForm;
 use aieuo\mineflow\utils\Session;
 use pocketmine\command\Command;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -55,11 +55,11 @@ class EventListener implements Listener {
                     $recipe = $session->get("blockTriggerRecipe");
                     $trigger = new BlockTrigger($position);
                     if ($recipe->existsTrigger($trigger)) {
-                        (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
+                        (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                         return;
                     }
                     $recipe->addTrigger($trigger);
-                    (new TriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+                    (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
                     break;
             }
             $session->remove("blockTriggerAction");

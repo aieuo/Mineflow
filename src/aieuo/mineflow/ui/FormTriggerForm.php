@@ -16,7 +16,7 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
-class FormTriggerForm {
+class FormTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         switch ($trigger->getSubKey()) {
@@ -48,7 +48,7 @@ class FormTriggerForm {
                         (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
-                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
+                        (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
                         $manager = Main::getFormManager();
@@ -59,6 +59,10 @@ class FormTriggerForm {
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
     }
 
+    public function sendMenu(Player $player, Recipe $recipe): void {
+        $this->sendSelectForm($player, $recipe);
+    }
+
     public function sendSelectForm(Player $player, Recipe $recipe, array $default = [], array $errors = []): void {
         (new CustomForm(Language::get("trigger.form.select.title", [$recipe->getName()])))
             ->setContents([
@@ -66,7 +70,7 @@ class FormTriggerForm {
                 new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 if ($data[1]) {
-                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
                 }
 

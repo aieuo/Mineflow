@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\Player;
 
-class EventTriggerForm {
+class EventTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
@@ -26,10 +26,14 @@ class EventTriggerForm {
                         (new RecipeForm)->sendTriggerList($player, $recipe);
                         break;
                     case 1:
-                        (new TriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
+                        (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                 }
             })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
+    }
+
+    public function sendMenu(Player $player, Recipe $recipe): void {
+        $this->sendEventTriggerList($player, $recipe);
     }
 
     public function sendEventTriggerList(Player $player, Recipe $recipe): void {
@@ -43,7 +47,7 @@ class EventTriggerForm {
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data, Recipe $recipe, array $events) {
                 if ($data === 0) {
-                    (new TriggerForm)->sendSelectTriggerType($player, $recipe);
+                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
                     return;
                 }
                 $data--;
