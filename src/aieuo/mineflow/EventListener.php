@@ -6,7 +6,6 @@ use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\flowItem\action\SetSitting;
 use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
-use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\BaseTriggerForm;

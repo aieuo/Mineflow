@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\trigger\command;
 
-use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;

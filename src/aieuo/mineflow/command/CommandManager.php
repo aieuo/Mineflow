@@ -4,9 +4,7 @@ namespace aieuo\mineflow\command;
 
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\command\CommandTrigger;
-use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\Triggers;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\Config;
 

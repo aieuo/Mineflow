@@ -5,7 +5,6 @@ namespace aieuo\mineflow\event;
 
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\event\EventTrigger;
-use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
 use pocketmine\plugin\MethodEventExecutor;

@@ -12,7 +12,6 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Server;
 
 class CommandConsole extends FlowItem {
