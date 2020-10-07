@@ -57,4 +57,8 @@ class EventTrigger extends Trigger {
         if ($target === null) return [];
         return DefaultVariables::getEntityVariables($this->getTargetEntity($event));
     }
+
+    public function __toString() {
+        return Language::get("trigger.event.".$this->getKey());
+    }
 }

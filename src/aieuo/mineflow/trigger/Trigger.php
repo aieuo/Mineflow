@@ -67,4 +67,8 @@ abstract class Trigger implements \JsonSerializable {
             "subKey" => $this->getSubKey(),
         ];
     }
+
+    public function __toString() {
+        return $this->getType().": ".$this->getKey().", ".$this->getSubKey();
+    }
 }

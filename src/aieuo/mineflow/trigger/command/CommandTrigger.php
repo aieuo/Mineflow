@@ -39,4 +39,8 @@ class CommandTrigger extends Trigger {
             new DummyVariable("args", DummyVariable::LIST),
         ];
     }
+
+    public function __toString() {
+        return Language::get("trigger.command.string", [$this->getSubKey()]);
+    }
 }
