@@ -7,14 +7,14 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
 class BaseTriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        $form = TriggerTypes::getForm($trigger->getType());
+        $form = Triggers::getForm($trigger->getType());
         if ($form !== null) {
             $form->sendAddedTriggerMenu($player, $recipe, $trigger);
             return;
@@ -40,7 +40,7 @@ class BaseTriggerForm {
         $buttons = [
             new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
         ];
-        foreach (TriggerTypes::getAll() as $type => $form) {
+        foreach (Triggers::getAllForm() as $type => $form) {
             $buttons[] = new Button("@trigger.type.".$type, function () use($player, $recipe, $form) {
                 $form->sendMenu($player, $recipe);
             });

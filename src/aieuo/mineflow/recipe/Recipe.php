@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
@@ -186,12 +186,12 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         $this->removeTriggerAll();
         foreach ($triggers as $trigger) {
-            if ($trigger["type"] === TriggerTypes::EVENT) {
+            if ($trigger["type"] === Triggers::EVENT) {
                 $fullName = $eventManager->getFullName($trigger["key"]);
                 if ($fullName !== null) $trigger["key"] = $fullName;
             }
 
-            $this->addTrigger(new Trigger($trigger["type"], $trigger["key"], $trigger["subKey"] ?? ""));
+            $this->addTrigger(Triggers::getTrigger($trigger["type"], $trigger["key"], $trigger["subKey"] ?? ""));
         }
     }
 

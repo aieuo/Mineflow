@@ -2,15 +2,26 @@
 
 namespace aieuo\mineflow\trigger\command;
 
+use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 
 class CommandTrigger extends Trigger {
 
+    /**
+     * @param string $key
+     * @param string $subKey
+     * @return self
+     */
+    public static function create(string $key, string $subKey = ""): Trigger {
+        return new CommandTrigger($key, $subKey);
+    }
+
     public function __construct(string $key, string $subKey = "") {
-        parent::__construct(TriggerTypes::COMMAND, $key, $subKey);
+        parent::__construct(Triggers::COMMAND, $key, $subKey);
     }
 
     /**

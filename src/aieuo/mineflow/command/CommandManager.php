@@ -3,9 +3,10 @@
 namespace aieuo\mineflow\command;
 
 use aieuo\mineflow\Main;
+use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use pocketmine\command\PluginCommand;
 use pocketmine\utils\Config;
 
@@ -114,7 +115,7 @@ class CommandManager {
     public function getAssignedRecipes(string $command): array {
         $command = $this->getOriginCommand($command);
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new Trigger(TriggerTypes::COMMAND, $command));
+        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(CommandTrigger::create($command));
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
                 $path = $recipe->getGroup()."/".$recipe->getName();

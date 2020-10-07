@@ -7,7 +7,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\event\Listener;
 use pocketmine\event\EventPriority;
@@ -33,7 +33,7 @@ class EventTriggerListener implements Listener {
         $eventName = $event->getEventName();
 
         $holder = TriggerHolder::getInstance();
-        if ($holder->existsRecipeByString(TriggerTypes::EVENT, $eventName)) {
+        if ($holder->existsRecipeByString(Triggers::EVENT, $eventName)) {
             $trigger = EventTrigger::create($eventName);
             $recipes = $holder->getRecipes($trigger);
             $variables = $trigger->getVariables($event);

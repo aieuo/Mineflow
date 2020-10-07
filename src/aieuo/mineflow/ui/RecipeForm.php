@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\Player;
@@ -282,7 +282,7 @@ class RecipeForm {
         $buttons = [new Button("@form.back"), new Button("@trigger.add")];
         foreach ($triggers as $trigger) {
             switch ($trigger->getType()) {
-                case TriggerTypes::EVENT:
+                case Triggers::EVENT:
                     $content = "@trigger.type.".$trigger->getType().": ".Main::getEventManager()->translateEventName($trigger->getKey());
                     break;
                 default:

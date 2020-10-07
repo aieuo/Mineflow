@@ -7,7 +7,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 

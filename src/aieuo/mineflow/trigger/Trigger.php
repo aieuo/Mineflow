@@ -6,7 +6,7 @@ namespace aieuo\mineflow\trigger;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
 
-class Trigger implements \JsonSerializable {
+abstract class Trigger implements \JsonSerializable {
 
     /** @var string */
     private $type;
@@ -16,6 +16,8 @@ class Trigger implements \JsonSerializable {
 
     /** @var string */
     private $subKey;
+
+    abstract public static function create(string $key, string $subKey = ""): Trigger;
 
     public function __construct(string $type, string $key, string $subKey = "") {
         $this->type = $type;

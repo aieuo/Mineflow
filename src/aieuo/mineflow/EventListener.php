@@ -8,7 +8,7 @@ use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\TriggerTypes;
+use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\BaseTriggerForm;
 use aieuo\mineflow\utils\Session;
 use pocketmine\command\Command;
@@ -65,7 +65,7 @@ class EventListener implements Listener {
             $session->remove("blockTriggerAction");
             return;
         }
-        if ($holder->existsRecipeByString(TriggerTypes::BLOCK, $position)) {
+        if ($holder->existsRecipeByString(Triggers::BLOCK, $position)) {
             $trigger = new BlockTrigger($position);
             $recipes = $holder->getRecipes($trigger);
             $variables = $trigger->getVariables($block);
@@ -89,7 +89,7 @@ class EventListener implements Listener {
 
         for ($i = 0; $i < $count; $i++) {
             $command = implode(" ", $commands);
-            if ($holder->existsRecipeByString(TriggerTypes::COMMAND, $origin, $command)) {
+            if ($holder->existsRecipeByString(Triggers::COMMAND, $origin, $command)) {
                 $trigger = new CommandTrigger($origin, $command);
                 $recipes = $holder->getRecipes($trigger);
                 $variables = $trigger->getVariables($event->getCommand());
