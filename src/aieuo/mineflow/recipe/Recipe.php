@@ -117,6 +117,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getDetail(): string {
         $details = [];
+        foreach ($this->getTriggers() as $trigger) {
+            $details[] = (string)$trigger;
+        }
+        $details[] = str_repeat("~", 20);
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
