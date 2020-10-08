@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
@@ -15,8 +16,10 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
+use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\entity\Entity;
+use pocketmine\entity\Human;
 use pocketmine\Player;
 
 class GetEntity extends FlowItem {
@@ -76,17 +79,17 @@ class GetEntity extends FlowItem {
         $this->throwIfInvalidNumber($id, 0);
 
         $entity = EntityHolder::findEntity((int)$id);
+        if ($entity === null) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntity.notFound", [$id]));
+        }
         if ($entity instanceof Player) {
-            $result = new PlayerObjectVariable($entity, $resultName, $entity->getName());
-            $origin->addVariable($result);
-            return $this->getResultName();
+            $variable = new PlayerObjectVariable($entity, $resultName, $entity->getName());
+        } elseif ($entity instanceof Human) {
+            $variable = new HumanObjectVariable($entity, $resultName, $entity->getNameTag());
+        } else {
+            $variable = new EntityObjectVariable($entity, $resultName, $entity->getNameTag());
         }
-        if ($entity instanceof Entity) {
-            $result = new EntityObjectVariable($entity, $resultName, $entity->getNameTag());
-            $origin->addVariable($result);
-            return $this->getResultName();
-        }
-        $origin->addVariable(new MapVariable([], $resultName)); // TODO: .
+        $origin->addVariable($variable);
         yield true;
         return $this->getResultName();
     }
