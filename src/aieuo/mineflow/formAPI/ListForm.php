@@ -25,6 +25,16 @@ class ListForm extends Form {
     }
 
     /**
+	 * @param string $content
+	 * @param bool $newLine
+	 * @return self
+	 */
+	public function appendContent(string $content, bool $newLine = true): self {
+		$this->content .= ($newLine ? "\n" : "").$content;
+		return $this;
+	}
+
+    /**
      * @return string
      */
     public function getContent(): string {
