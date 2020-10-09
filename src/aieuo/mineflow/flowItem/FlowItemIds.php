@@ -81,6 +81,7 @@ interface FlowItemIds {
     public const ADD_PARTICLE = "addParticle";
     public const SET_WEATHER = "setWeather";
     public const GET_DISTANCE = "getDistance";
+    public const DROP_ITEM = "dropItem";
 
     public const EXECUTE_RECIPE = "executeRecipe";
     public const EXECUTE_IF_CHAIN = "executeIFChain";

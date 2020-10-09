@@ -39,6 +39,7 @@ use aieuo\mineflow\flowItem\action\DecrementScoreboardScore;
 use aieuo\mineflow\flowItem\action\DeleteListVariableContent;
 use aieuo\mineflow\flowItem\action\DeleteVariable;
 use aieuo\mineflow\flowItem\action\DoNothing;
+use aieuo\mineflow\flowItem\action\DropItem;
 use aieuo\mineflow\flowItem\action\EditString;
 use aieuo\mineflow\flowItem\action\ElseAction;
 use aieuo\mineflow\flowItem\action\ElseifAction;
@@ -279,6 +280,7 @@ class FlowItemFactory {
         self::register(new GetBlock);
         self::register(new AddParticle);
         self::register(new PlaySoundAt);
+        self::register(new DropItem);
         self::register(new GetDistance);
         self::register(new GetEntitySidePosition);
         /* scoreboard */
