@@ -7,17 +7,23 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\event\EventTrigger;
+use aieuo\mineflow\trigger\event\EventTriggerList;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\Player;
 
 class EventTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent("type: @trigger.type.".$trigger->getType()."\n".Main::getEventManager()->translateEventName($trigger->getKey()))
-            ->addButtons([
+            ->setContent("type: @trigger.type.".$trigger->getType())
+            ->appendContent(Main::getEventManager()->translateEventName($trigger->getKey()))
+            ->appendContent("\n@trigger.event.variable")
+            ->forEach(EventTriggerList::get($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var) {
+                $form->appendContent("{".$var->getName()."} (".$var->getValueType().")");
+            })->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
@@ -59,8 +65,12 @@ class EventTriggerForm extends TriggerForm {
 
     public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName): void {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
-            ->setContent($eventName."\n".Main::getEventManager()->translateEventName($eventName))
-            ->addButtons([
+            ->setContent($eventName)
+            ->appendContent(Main::getEventManager()->translateEventName($eventName))
+            ->appendContent("\n@trigger.event.variable")
+            ->forEach(EventTriggerList::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var) {
+                $form->appendContent("{".$var->getName()."} (".$var->getValueType().")");
+            })->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),
             ])->onReceive(function (Player $player, int $data, Recipe $recipe, string $eventName) {
