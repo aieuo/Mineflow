@@ -76,6 +76,6 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
     }
 
     public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->getItemVariableName(), $this->getIndex()];
+        return [$this->getPositionVariableName(), $this->getItemVariableName()];
     }
 }
