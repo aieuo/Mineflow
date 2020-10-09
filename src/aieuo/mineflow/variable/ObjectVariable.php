@@ -62,4 +62,12 @@ class ObjectVariable extends Variable {
         if (!isset($data["value"])) return null;
         return new self($data["value"], $data["name"] ?? "");
     }
+
+    /**
+     * @param string $name
+     * @return DummyVariable[]
+     */
+    public static function getValuesDummy(string $name): array {
+        return [];
+    }
 }

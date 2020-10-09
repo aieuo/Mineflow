@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -36,5 +37,13 @@ class LevelObjectVariable extends ObjectVariable {
         /** @var Level $value */
         $value = $this->getValue();
         return $value;
+    }
+
+    public static function getValuesDummy(string $name): array {
+        return array_merge(parent::getValuesDummy($name), [
+            new DummyVariable($name.".name", DummyVariable::STRING),
+            new DummyVariable($name.".folderName", DummyVariable::STRING),
+            new DummyVariable($name.".id", DummyVariable::NUMBER),
+        ]);
     }
 }

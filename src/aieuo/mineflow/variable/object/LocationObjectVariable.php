@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\level\Location;
@@ -34,5 +35,12 @@ class LocationObjectVariable extends PositionObjectVariable {
         /** @var Location $value */
         $value = $this->getValue();
         return $value;
+    }
+
+    public static function getValuesDummy(string $name): array {
+        return array_merge(parent::getValuesDummy($name), [
+            new DummyVariable($name.".yaw", DummyVariable::NUMBER),
+            new DummyVariable($name.".pitch", DummyVariable::NUMBER),
+        ]);
     }
 }

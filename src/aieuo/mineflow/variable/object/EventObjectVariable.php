@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
@@ -34,5 +35,12 @@ class EventObjectVariable extends ObjectVariable {
         /** @var Event $value */
         $value = $this->getValue();
         return $value;
+    }
+
+    public static function getValuesDummy(string $name): array {
+        return array_merge(parent::getValuesDummy($name), [
+            new DummyVariable($name.".name", DummyVariable::STRING),
+            new DummyVariable($name.".isCanceled", DummyVariable::STRING),
+        ]);
     }
 }

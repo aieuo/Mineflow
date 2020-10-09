@@ -33,7 +33,7 @@ abstract class VariableDropdown extends Dropdown {
     public function __construct(string $text, array $variables = [], array $variableTypes = [], string $default = "") {
         $this->defaultText = $default;
         $this->variableTypes = $variableTypes;
-        $options = $this->updateOptions($variables);
+        $options = $this->updateOptions($this->flattenVariables($variables));
 
         $defaultKey = $this->findDefaultKey($default);
         parent::__construct($text, $options, $defaultKey >= 0 ? $defaultKey : 0);
@@ -79,6 +79,28 @@ abstract class VariableDropdown extends Dropdown {
 
     public function getDefaultText(): string {
         return $this->defaultText;
+    }
+
+    /**
+     * @param DummyVariable[] $variables
+     * @return DummyVariable[]
+     */
+    public function flattenVariables(array $variables): array {
+        $flat = [];
+        foreach ($variables as $variable) {
+            $flat[] = $variable;
+            foreach ($variable->getObjectValuesDummy() as $value) {
+                if (!$value->isObjectVariableType()) {
+                    $flat[] = $value;
+                    continue;
+                }
+
+                foreach ($this->flattenVariables([$value]) as $flattenVariable) {
+                    $flat[] = $flattenVariable;
+                }
+            }
+        }
+        return $flat;
     }
 
     public function sendAddVariableForm(Player $player, CustomForm $origin, int $index): void {

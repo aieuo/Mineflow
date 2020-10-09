@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
@@ -45,5 +46,15 @@ class ItemObjectVariable extends ObjectVariable {
         /** @var Item $value */
         $value = $this->getValue();
         return $value;
+    }
+
+    public static function getValuesDummy(string $name): array {
+        return array_merge(parent::getValuesDummy($name), [
+            new DummyVariable($name.".name", DummyVariable::STRING),
+            new DummyVariable($name.".id", DummyVariable::NUMBER),
+            new DummyVariable($name.".damage", DummyVariable::NUMBER),
+            new DummyVariable($name.".count", DummyVariable::NUMBER),
+            new DummyVariable($name.".lore", DummyVariable::LIST),
+        ]);
     }
 }
