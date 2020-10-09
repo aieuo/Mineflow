@@ -69,7 +69,7 @@ class CommandTriggerForm extends TriggerForm {
                     return;
                 }
 
-                $trigger = new CommandTrigger(explode(" ", $data[0])[0], $data[0]);
+                $trigger = CommandTrigger::create(explode(" ", $data[0])[0], $data[0]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;

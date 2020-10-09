@@ -25,10 +25,10 @@ class Triggers {
     private static $list = [];
 
     public static function init(): void {
-        self::add(self::BLOCK, new BlockTrigger(""), new BlockTriggerForm());
-        self::add(self::COMMAND, new CommandTrigger(""), new CommandTriggerForm());
-        self::add(self::EVENT, new EventTrigger(""), new EventTriggerForm());
-        self::add(self::FORM, new FormTrigger(""), new FormTriggerForm());
+        self::add(self::BLOCK, BlockTrigger::create(""), new BlockTriggerForm());
+        self::add(self::COMMAND, CommandTrigger::create(""), new CommandTriggerForm());
+        self::add(self::EVENT, EventTrigger::create(""), new EventTriggerForm());
+        self::add(self::FORM, FormTrigger::create(""), new FormTriggerForm());
     }
 
     public static function add(string $type, Trigger $trigger, TriggerForm $form): void {

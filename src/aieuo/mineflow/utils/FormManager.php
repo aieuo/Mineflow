@@ -62,7 +62,7 @@ class FormManager {
 
     public function getAssignedRecipes(string $formName): array {
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(new FormTrigger($formName));
+        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(FormTrigger::create($formName));
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
                 $path = $recipe->getGroup()."/".$recipe->getName();

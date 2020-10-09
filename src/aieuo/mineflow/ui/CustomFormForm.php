@@ -684,7 +684,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $trigger = new FormTrigger($form->getName());
+                $trigger = FormTrigger::create($form->getName());
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendRecipeList($player, $form, ["@trigger.alreadyExists"]);
                     return;
@@ -748,7 +748,7 @@ class CustomFormForm {
 
     public function onReceive(Player $player, $data, Form $form): void {
         $holder = TriggerHolder::getInstance();
-        $trigger = new FormTrigger($form->getName());
+        $trigger = FormTrigger::create($form->getName());
         $variables = $trigger->getVariables($form, $data);
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
@@ -777,7 +777,7 @@ class CustomFormForm {
 
     public function onClose(Player $player, Form $form): void {
         $holder = TriggerHolder::getInstance();
-        $trigger = new FormTrigger($form->getName(), "close");
+        $trigger = FormTrigger::create($form->getName(), "close");
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player);

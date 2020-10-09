@@ -101,7 +101,7 @@ class FormTriggerForm extends TriggerForm {
                         new Button("@trigger.form.receive"),
                         new Button("@trigger.form.close"),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
-                        $trigger = new FormTrigger($form->getName());
+                        $trigger = FormTrigger::create($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
@@ -127,7 +127,7 @@ class FormTriggerForm extends TriggerForm {
                         new Button(Language::get("trigger.form.button", [$form->getButton1()])),
                         new Button(Language::get("trigger.form.button", [$form->getButton2()])),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
-                        $trigger = new FormTrigger($form->getName());
+                        $trigger = FormTrigger::create($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
@@ -160,7 +160,7 @@ class FormTriggerForm extends TriggerForm {
                     ->setContent("@form.selectButton")
                     ->addButtons($buttons)
                     ->onReceive(function (Player $player, int $data, Recipe $recipe, ListForm $form) {
-                        $trigger = new FormTrigger($form->getName());
+                        $trigger = FormTrigger::create($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
