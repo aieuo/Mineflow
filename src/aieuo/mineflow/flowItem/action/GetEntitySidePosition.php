@@ -140,7 +140,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidNumber($step);
 
         $direction = $entity->getDirection();
-        $pos = $entity->getPosition()->floor();
+        $pos = $entity->getPosition()->floor()->add(0.5, 0.5, 0.5);
         switch ($side) {
             case self::SIDE_DOWN:
             case self::SIDE_UP:
