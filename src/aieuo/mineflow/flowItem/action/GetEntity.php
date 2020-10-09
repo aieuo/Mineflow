@@ -14,11 +14,9 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\Player;
 
