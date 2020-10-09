@@ -215,8 +215,8 @@ class CustomFormForm {
                             ->setContents([
                                 new Label(Language::get("customForm.receive", ["true"])."\n".
                                     Language::get("customForm.receive.modal.button", ["1"])."\n".
-                                    Language::get("customForm.receive.modal.button.text", ["1", $form->getButton1()])),
-                                new Input("@customForm.text", "", $form->getButton1()),
+                                    Language::get("customForm.receive.modal.button.text", ["1", $form->getButton1Text()])),
+                                new Input("@customForm.text", "", $form->getButton1Text()),
                                 new CancelToggle(),
                             ])->onReceive(function (Player $player, array $data, ModalForm $form) {
                                 if ($data[2]) {
@@ -234,8 +234,8 @@ class CustomFormForm {
                             ->setContents([
                                 new Label(Language::get("customForm.receive", ["false"])."\n".
                                     Language::get("customForm.receive.modal.button", ["2"])."\n".
-                                    Language::get("customForm.receive.modal.button.text", ["2", $form->getButton2()])),
-                                new Input("@customForm.text", "", $form->getButton2()),
+                                    Language::get("customForm.receive.modal.button.text", ["2", $form->getButton2Text()])),
+                                new Input("@customForm.text", "", $form->getButton2Text()),
                                 new CancelToggle(),
                             ])->onReceive(function (Player $player, array $data, ModalForm $form) {
                                 if ($data[0]) {

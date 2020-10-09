@@ -91,23 +91,16 @@ class EventTriggerForm extends TriggerForm {
 
     public function sendSelectEvent(Player $player): void {
         $events = Main::getEventManager()->getEnabledEvents();
-        $buttons = [new Button("@form.back")];
+        $buttons = [new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); })];
         foreach ($events as $event => $value) {
-            $buttons[] = new Button(Main::getEventManager()->translateEventName($event));
+            $buttons[] = new Button(Main::getEventManager()->translateEventName($event), function () use($player, $event) {
+                $this->sendRecipeList($player, $event);
+            });
         }
         (new ListForm("@form.event.list.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, array $events) {
-                if ($data === 0) {
-                    (new HomeForm)->sendMenu($player);
-                    return;
-                }
-                $data--;
-
-                $event = $events[$data];
-                $this->sendRecipeList($player, $event);
-            })->addArgs(array_keys($events))->show($player);
+            ->show($player);
     }
 
     public function sendRecipeList(Player $player, string $event, array $messages = []): void {

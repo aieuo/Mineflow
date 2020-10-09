@@ -124,8 +124,8 @@ class FormTriggerForm extends TriggerForm {
                     ->addButtons([
                         new Button("@form.cancelAndBack"),
                         new Button("@trigger.form.receive"),
-                        new Button(Language::get("trigger.form.button", [$form->getButton1()])),
-                        new Button(Language::get("trigger.form.button", [$form->getButton2()])),
+                        new Button(Language::get("trigger.form.button", [$form->getButton1Text()])),
+                        new Button(Language::get("trigger.form.button", [$form->getButton2Text()])),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
                         $trigger = FormTrigger::create($form->getName());
                         switch ($data) {

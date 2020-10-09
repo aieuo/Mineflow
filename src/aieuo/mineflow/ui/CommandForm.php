@@ -22,26 +22,11 @@ class CommandForm {
         (new ListForm("@form.command.menu.title"))
             ->setContent("@form.selectButton")
             ->addButtons([
-                new Button("@form.back"),
-                new Button("@form.add"),
-                new Button("@form.edit"),
-                new Button("@form.command.menu.commandList"),
-            ])->onReceive(function (Player $player, int $data) {
-                switch ($data) {
-                    case 0:
-                        (new HomeForm)->sendMenu($player);
-                        break;
-                    case 1:
-                        $this->sendAddCommand($player);
-                        break;
-                    case 2:
-                        $this->sendSelectCommand($player);
-                        break;
-                    case 3:
-                        $this->sendCommandList($player);
-                        break;
-                }
-            })->addMessages($messages)->show($player);
+                new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
+                new Button("@form.add", function () use($player) { $this->sendAddCommand($player); }),
+                new Button("@form.edit", function () use($player) { $this->sendSelectCommand($player); }),
+                new Button("@form.command.menu.commandList", function () use($player) { $this->sendCommandList($player); }),
+            ])->addMessages($messages)->show($player);
     }
 
     public function sendAddCommand(Player $player, array $defaults = [], array $errors = []): void {
@@ -114,27 +99,20 @@ class CommandForm {
     public function sendCommandList(Player $player): void {
         $manager = Main::getCommandManager();
         $commands = $manager->getCommandAll();
-        $buttons = [new Button("@form.back")];
+        $buttons = [new Button("@form.back", function () use($player) { $this->sendMenu($player); })];
         foreach ($commands as $command) {
-            $buttons[] = new Button("/".$command["command"]);
+            $buttons[] = new Button("/".$command["command"], function () use($player, $command) {
+                Session::getSession($player)
+                    ->set("command_menu_prev", [$this, "sendCommandList"])
+                    ->set("command_menu_prev_data", []);
+                $this->sendCommandMenu($player, $command);
+            });
         }
 
         (new ListForm("@form.command.commandList.title"))
             ->setContent("@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, array $commands) {
-                if ($data === 0) {
-                    $this->sendMenu($player);
-                    return;
-                }
-                $data--;
-
-                $command = $commands[$data];
-                Session::getSession($player)
-                    ->set("command_menu_prev", [$this, "sendCommandList"])
-                    ->set("command_menu_prev_data", []);
-                $this->sendCommandMenu($player, $command);
-            })->addArgs(array_values($commands))->show($player);
+            ->show($player);
     }
 
     public function sendCommandMenu(Player $player, array $command, array $messages = []): void {
@@ -285,7 +263,7 @@ class CommandForm {
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [$command["command"]]),
                             function (Player $player, Recipe $recipe) use ($command) {
-                                $trigger = CommandTrigger::create($command["command"], $command["command"]);
+                                $trigger = new CommandTrigger($command["command"], $command["command"]);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
                                     return;
@@ -314,12 +292,8 @@ class CommandForm {
         (new ListForm(Language::get("form.recipes.title", ["/".$command["command"]])))
             ->setContent($content)
             ->setButtons([
-                new Button("@form.back"),
-                new Button("@form.edit")
-            ])->onReceive(function (Player $player, int $data, array $command, int $index, array $recipes) {
-                if ($data === 0) {
-                    $this->sendRecipeList($player, $command);
-                } elseif ($data === 1) {
+                new Button("@form.back", function () use($player, $command) { $this->sendRecipeList($player, $command); }),
+                new Button("@form.edit", function () use($player, $command, $recipes, $index) {
                     Session::getSession($player)
                         ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
                         ->set("recipe_menu_prev_data", [$command, $index, $recipes]);
@@ -327,7 +301,7 @@ class CommandForm {
                     [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
                     $recipe = Main::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
-                }
-            })->addArgs($command, $index, $recipes)->show($player);
+                })
+            ])->show($player);
     }
 }

@@ -44,12 +44,12 @@ class FormTrigger extends Trigger {
                     "data" => new StringVariable($data ? "true" : "false"),
                     "button1" => new MapVariable([
                         "selected" => new StringVariable($data ? "true" : "false"),
-                        "text" => new StringVariable($form->getButton1()),
-                    ], "button1", $form->getButton1()),
+                        "text" => new StringVariable($form->getButton1Text()),
+                    ], "button1", $form->getButton1Text()),
                     "button2" => new MapVariable([
                         "selected" => new StringVariable($data ? "false" : "true"),
-                        "text" => new StringVariable($form->getButton2()),
-                    ], "button2", $form->getButton2()),
+                        "text" => new StringVariable($form->getButton2Text()),
+                    ], "button2", $form->getButton2Text()),
                 ], "form");
                 break;
             case $form instanceof ListForm:
