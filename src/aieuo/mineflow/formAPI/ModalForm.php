@@ -105,6 +105,6 @@ class ModalForm extends Form {
             return;
         }
 
-        $this->handleResponse($player, $data);
+        parent::handleResponse($player, $data);
     }
 }
