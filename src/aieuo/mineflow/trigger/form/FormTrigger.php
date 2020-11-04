@@ -36,7 +36,7 @@ class FormTrigger extends Trigger {
      * @return array
      * @noinspection PhpMissingParamTypeInspection
      */
-    public function getVariables($form, array $data = []): array {
+    public function getVariables($form, $data = []): array {
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */
