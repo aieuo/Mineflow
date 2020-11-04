@@ -147,8 +147,6 @@ interface FlowItemIds {
     public const SEND_SLIDER = "slider";
     public const SEND_DROPDOWN = "dropdown";
 
-    public const REPLENISH_RESOURCE = "replenishResource";
-
     public const SET_SCOREBOARD_SCORE = "setScore";
     public const SET_SCOREBOARD_SCORE_NAME = "setScoreName";
     public const REMOVE_SCOREBOARD_SCORE = "removeScore";

@@ -82,7 +82,6 @@ use aieuo\mineflow\flowItem\action\RemovePermission;
 use aieuo\mineflow\flowItem\action\RemoveScoreboardScore;
 use aieuo\mineflow\flowItem\action\RemoveScoreboardScoreName;
 use aieuo\mineflow\flowItem\action\RepeatAction;
-use aieuo\mineflow\flowItem\action\ReplenishResource;
 use aieuo\mineflow\flowItem\action\SaveConfigFile;
 use aieuo\mineflow\flowItem\action\SaveData;
 use aieuo\mineflow\flowItem\action\SendForm;
@@ -300,9 +299,6 @@ class FlowItemFactory {
         }
         if (Server::getInstance()->getPluginManager()->getPlugin("if") !== null) {
             self::register(new ExecuteIFChain);
-        }
-        if (Server::getInstance()->getPluginManager()->getPlugin("ReplenishResources") !== null) {
-            self::register(new ReplenishResource);
         }
 
 
