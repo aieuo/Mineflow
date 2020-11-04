@@ -30,26 +30,26 @@ class Language {
     }
 
 
-    public static function loadMessage(): bool {
+    public static function loadBaseMessages(string $language = null): void {
+        $language = $language ?? self::$language;
         $owner = Main::getInstance();
 
         $messages = [];
         foreach ($owner->getResources() as $resource) {
-            if ($resource->getFilename() !== self::$language.".ini") continue;
+            if ($resource->getFilename() !== $language.".ini") continue;
             $messages = parse_ini_file($resource->getPathname());
         }
-        self::$messages = $messages;
-
-        return !empty($messages);
+        self::$messages[$language] = $messages;
     }
 
-    public static function add(array $messages): void {
-        self::$messages = array_merge(self::$messages, $messages);
+    public static function add(array $messages, string $language = null): void {
+        $language = $language ?? self::$language;
+        self::$messages[$language] = array_merge(self::$messages[$language], $messages);
     }
 
     public static function get(string $key, array $replaces = []): string {
-        if (isset(self::$messages[$key])) {
-            $message = self::$messages[$key];
+        if (isset(self::$messages[self::$language][$key])) {
+            $message = self::$messages[self::$language][$key];
             foreach ($replaces as $cnt => $value) {
                 if (is_array($value)) $value = self::get($value[0], $value[1] ?? []);
                 $message = str_replace("{%".$cnt."}", $value, $message);
@@ -60,8 +60,8 @@ class Language {
         return $key;
     }
 
-    public static function exists(string $key): bool {
-        return isset(self::$messages[$key]);
+    public static function exists(string $key, string $language = null): bool {
+        return isset(self::$messages[$key][$language ?? self::$language]);
     }
 
     public static function replace(string $text): string {

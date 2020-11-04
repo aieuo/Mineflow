@@ -64,12 +64,15 @@ class Main extends PluginBase {
         $this->config->save();
 
         Language::setLanguage($this->config->get("language", "eng"));
-        if (!Language::loadMessage()) {
+        if (!Language::isAvailableLanguage(Language::getLanguage())) {
             foreach (Language::getLoadErrorMessage($serverLanguage) as $error) {
                 $this->getLogger()->warning($error);
             }
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
+        }
+        foreach (Language::getAvailableLanguages() as $language) {
+            Language::loadBaseMessages($language);
         }
 
         $this->playerSettings = new PlayerConfig($this->getDataFolder()."player.yml", Config::YAML);

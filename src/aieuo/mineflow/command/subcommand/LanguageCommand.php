@@ -17,14 +17,7 @@ class LanguageCommand extends MineflowSubcommand {
             $sender->sendMessage(Language::get("command.language.notfound", [$args[0], implode(", ", Language::getAvailableLanguages())]));
             return;
         }
-
         Language::setLanguage($args[0]);
-        if (!Language::loadMessage()) {
-            $serverLanguage = Main::getInstance()->getServer()->getLanguage()->getLang();
-            foreach (Language::getLoadErrorMessage($serverLanguage) as $error) {
-                $sender->sendMessage($error);
-            }
-        }
 
         $config = Main::getInstance()->getConfig();
         $config->set("language", $args[0]);
