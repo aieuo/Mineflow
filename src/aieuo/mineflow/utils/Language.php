@@ -61,7 +61,7 @@ class Language {
     }
 
     public static function exists(string $key, string $language = null): bool {
-        return isset(self::$messages[$key][$language ?? self::$language]);
+        return isset(self::$messages[$language ?? self::$language][$key]);
     }
 
     public static function replace(string $text): string {
