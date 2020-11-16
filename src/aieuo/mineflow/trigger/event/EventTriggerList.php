@@ -32,6 +32,7 @@ class EventTriggerList {
         self::add(new PlayerToggleSprintEventTrigger());
         self::add(new ProjectileHitEntityEventTrigger());
         self::add(new SignChangeEventTrigger());
+        self::add(new ServerStartEventTrigger());
     }
 
     public static function add(EventTrigger $trigger): void {
