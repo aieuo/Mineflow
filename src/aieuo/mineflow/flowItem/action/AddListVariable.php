@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;

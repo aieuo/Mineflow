@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;

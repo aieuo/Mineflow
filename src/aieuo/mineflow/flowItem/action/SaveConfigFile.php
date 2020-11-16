@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\Form;

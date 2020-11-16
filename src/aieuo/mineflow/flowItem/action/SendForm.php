@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Input;

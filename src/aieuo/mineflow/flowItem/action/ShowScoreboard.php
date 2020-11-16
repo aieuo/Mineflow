@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
