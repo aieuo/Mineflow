@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\element\mineflow\VariableDropdown;
 use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
@@ -94,10 +95,13 @@ class CustomForm extends Form {
         return $form;
     }
 
-    public function resend(array $errors = [], array $messages = [], array $overwrites = []): void {
+    public function resend(array $errors = [], array $messages = [], array $responseOverrides = [], array $elementOverrides = []): void {
         if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
 
-        $this->setDefaultsFromResponse($this->lastResponse[1], $overwrites)
+        foreach ($elementOverrides as $i => $element) {
+            $this->setContent($element, $i);
+        }
+        $this->setDefaultsFromResponse($this->lastResponse[1], $responseOverrides)
             ->resetErrors()
             ->addMessages($messages)
             ->addErrors($errors)
@@ -107,58 +111,25 @@ class CustomForm extends Form {
     public function handleResponse(Player $player, $data): void {
         $this->lastResponse = [$player, $data];
         if ($data !== null) {
-            $errors = [];
-            $isCanceled = false;
-            $resend = false;
-            $overwrites = [];
-            $addVariableDropdowns = [null, 0];
+            $response = new CustomFormResponse($this, $data);
             foreach ($this->getContents() as $i => $content) {
-                if ($content instanceof Input) {
-                    $data[$i] = str_replace("\\n", "\n", $data[$i]);
+                $response->setCurrentIndex($i);
+                $content->onFormSubmit($response, $player);
+            }
 
-                    if ($content->isRequired() and $data[$i] === "") {
-                        $errors[] = ["@form.insufficient", $i];
-                        continue;
-                    }
+            $callback = $response->getInterruptCallback();
+            if (is_callable($callback) and $callback($response->isResponseIgnored())) return;
 
-                    if ($content instanceof NumberInput) {
-                        if ($data[$i] === "" or Main::getVariableHelper()->containsVariable($data[$i])) continue;
+            if (!$response->isResponseIgnored()) {
 
-                        if (!is_numeric($data[$i])) {
-                            $errors[] = ["@action.error.notNumber", $i];
-                        } elseif (($min = $content->getMin()) !== null and (float)$data[$i] < $min) {
-                            $errors[] = [Language::get("action.error.lessValue", [$min]), $i];
-                        } elseif (($max = $content->getMax()) !== null and (float)$data[$i] > $max) {
-                            $errors[] = [Language::get("action.error.overValue", [$max]), $i];
-                        } elseif (($excludes = $content->getExcludes()) !== null and in_array((float)$data[$i], $excludes, true)) {
-                            $errors[] = [Language::get("action.error.excludedNumber", [implode(",", $excludes)]), $i];
-                        }
-                    }
-                } elseif ($content instanceof CancelToggle and $data[$i]) {
-                    $isCanceled = true;
-                } elseif ($content instanceof VariableDropdown) {
-                    $options = $content->getOptions();
-                    $maxIndex = count($options) - 1;
-
-                    if ($data[$i] === $maxIndex) { // 手動で入力する時
-                        $resend = true;
-                        $overwrites[$i] = $content->getDefaultText();
-                        $this->setContent(new ExampleInput($content->getText(), $content->getVariableType(), $content->getDefaultText(), true), $i);
-                    } elseif ($data[$i] === $maxIndex - 1) { // 変数を追加するとき
-                        $addVariableDropdowns = [$content, $i];
-                    } else { // 変数名を選択したとき
-                        $data[$i] = explode(VariableDropdown::VALUE_SEPARATOR_LEFT, $options[$data[$i]])[0]; // TODO: 文字列操作せずに変数名だけ取り出す
-                    }
+                if ($response->shouldResendForm() or $response->hasError()) {
+                    $this->resend($response->getErrors(), [], $response->getDefaultOverrides(), $response->getElementOverrides());
+                    return;
                 }
             }
 
-            if (!$isCanceled and $addVariableDropdowns[0] instanceof VariableDropdown) {
-                $addVariableDropdowns[0]->sendAddVariableForm($player, $this, $addVariableDropdowns[1]);
-                return;
-            }
-            if ($resend or (!$isCanceled and !empty($errors))) {
-                $this->resend($errors, [], $overwrites);
-                return;
+            foreach ($response->getResponseOverrides() as $i => $override) {
+                $data[$i] = $override;
             }
         }
 

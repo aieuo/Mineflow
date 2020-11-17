@@ -89,5 +89,8 @@ abstract class Element implements \JsonSerializable {
     /**
      * @return array
      */
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+    }
+
     abstract public function jsonSerialize(): array;
 }

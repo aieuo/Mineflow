@@ -2,7 +2,9 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\utils\Language;
+use pocketmine\Player;
 
 class Input extends Element {
 
@@ -59,6 +61,16 @@ class Input extends Element {
 
     public function isRequired(): bool {
         return $this->required;
+    }
+
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        $data = str_replace("\\n", "\n", $response->getInputResponse());
+
+        if ($this->isRequired() and $data === "") {
+            $response->addError("@form.insufficient");
+        }
+
+        if ($response->getInputResponse() !== $data) $response->overrideResponse($data);
     }
 
     public function jsonSerialize(): array {

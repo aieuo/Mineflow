@@ -3,6 +3,9 @@
 namespace aieuo\mineflow\formAPI\element;
 
 
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
+use pocketmine\Player;
+
 class CancelToggle extends Toggle {
 
     private $onCancel;
@@ -14,5 +17,15 @@ class CancelToggle extends Toggle {
 
     public function getOnCancel(): ?callable {
         return $this->onCancel;
+    }
+
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        if ($response->getToggleResponse()) {
+            $response->ignoreResponse();
+            if (is_callable($this->getOnCancel())) {
+                ($this->getOnCancel())();
+                $response->setInterruptCallback(function () { return true; });
+            }
+        }
     }
 }

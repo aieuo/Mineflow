@@ -2,6 +2,11 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\utils\Language;
+use pocketmine\Player;
+
 class NumberInput extends Input {
 
     /* @var float|null */
@@ -41,5 +46,22 @@ class NumberInput extends Input {
 
     public function getExcludes(): array {
         return $this->excludes;
+    }
+
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        parent::onFormSubmit($response, $player);
+        $data = $response->getInputResponse();
+
+        if ($data === "" or Main::getVariableHelper()->containsVariable($data)) return;
+
+        if (!is_numeric($data)) {
+            $response->addError("@action.error.notNumber");
+        } elseif (($min = $this->getMin()) !== null and (float)$data < $min) {
+            $response->addError(Language::get("action.error.lessValue", [$min]));
+        } elseif (($max = $this->getMax()) !== null and (float)$data > $max) {
+            $response->addError(Language::get("action.error.overValue", [$max]));
+        } elseif (($excludes = $this->getExcludes()) !== null and in_array((float)$data, $excludes, true)) {
+            $response->addError(Language::get("action.error.excludedNumber", [implode(",", $excludes)]));
+        }
     }
 }

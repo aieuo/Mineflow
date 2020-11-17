@@ -8,6 +8,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
@@ -150,5 +151,24 @@ abstract class VariableDropdown extends Dropdown {
             })->addButton(new Button("@form.cancelAndBack", function () use($origin) {
                 $origin->resend();
             }))->show($player);
+    }
+
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        $options = $this->getOptions();
+        $maxIndex = count($options) - 1;
+        $data = $response->getDropdownResponse();
+
+        if ($data === $maxIndex) { // 手動で入力する時
+            $response->setResend(true);
+            $response->overrideElement(new ExampleInput($this->getText(), $this->getVariableType(), $this->getDefaultText(), true), $this->getDefaultText());
+        } elseif ($data === $maxIndex - 1) { // 変数を追加するとき
+            $index = $response->getCurrentIndex();
+            $response->setInterruptCallback(function () use($response, $player, $index) {
+                $this->sendAddVariableForm($player, $response->getCustomForm(), $index);
+                return true;
+            });
+        } else { // 変数名を選択したとき
+            $response->overrideResponse(explode(VariableDropdown::VALUE_SEPARATOR_LEFT, $options[$data])[0]); // TODO: 文字列操作せずに変数名だけ取り出す
+        }
     }
 }
