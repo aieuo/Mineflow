@@ -32,7 +32,7 @@ class CommandForm {
     public function sendAddCommand(Player $player, array $defaults = [], array $errors = []): void {
         (new CustomForm("@form.command.addCommand.title"))
             ->setContents([
-                new Input("@form.command.menu.title", "@trigger.command.select.placeholder", $defaults[0] ?? ""),
+                new Input("@form.command.menu.title", "@trigger.command.select.placeholder", $defaults[0] ?? "", true),
                 new Input("@form.command.description", "", $defaults[1] ?? ""),
                 new Dropdown("@form.command.permission", [
                     Language::get("form.command.addCommand.permission.op"),

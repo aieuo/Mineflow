@@ -4,7 +4,7 @@ namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\mineflow\CancelToggle;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;

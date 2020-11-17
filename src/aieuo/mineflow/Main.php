@@ -72,7 +72,7 @@ class Main extends PluginBase {
             return;
         }
         foreach (Language::getAvailableLanguages() as $language) {
-            Language::loadBaseMessages($language);
+            Language::loadBaseMessage($language);
         }
 
         $this->playerSettings = new PlayerConfig($this->getDataFolder()."player.yml", Config::YAML);

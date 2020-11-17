@@ -6,11 +6,11 @@ use aieuo\mineflow\Main;
 
 class Language {
 
-    /** @var array */
+    /** @var string[][] */
     private static $messages = [];
     /** @var string */
     private static $language = "eng";
-    /** @var array */
+    /** @var string[] */
     private static $availableLanguages = ["jpn", "eng"];
 
     public static function getLanguage(): string {
@@ -30,7 +30,7 @@ class Language {
     }
 
 
-    public static function loadBaseMessages(string $language = null): void {
+    public static function loadBaseMessage(string $language = null): void {
         $language = $language ?? self::$language;
         $owner = Main::getInstance();
 
