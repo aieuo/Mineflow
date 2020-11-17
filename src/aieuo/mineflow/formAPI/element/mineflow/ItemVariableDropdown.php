@@ -13,7 +13,7 @@ class ItemVariableDropdown extends VariableDropdown {
         FlowItemIds::CREATE_ITEM_VARIABLE,
     ];
 
-    public function __construct(array $variables = [], string $default = "") {
-        parent::__construct("@action.form.target.item", $variables, [DummyVariable::ITEM], $default);
+    public function __construct(array $variables = [], string $default = "", string $text = "@action.form.target.item") {
+        parent::__construct($text, $variables, [DummyVariable::ITEM], $default);
     }
 }

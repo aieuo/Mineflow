@@ -13,7 +13,7 @@ class ScoreboardVariableDropdown extends VariableDropdown {
         FlowItemIds::CREATE_CONFIG_VARIABLE,
     ];
 
-    public function __construct(array $variables = [], string $default = "") {
-        parent::__construct("@action.form.target.scoreboard", $variables, [DummyVariable::SCOREBOARD], $default);
+    public function __construct(array $variables = [], string $default = "", string $text = "@action.form.target.scoreboard") {
+        parent::__construct($text, $variables, [DummyVariable::SCOREBOARD], $default);
     }
 }
