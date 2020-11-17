@@ -30,65 +30,38 @@ abstract class Element implements \JsonSerializable {
         $this->uuid = $uuid;
     }
 
-    /**
-     * @param string $text
-     * @return self
-     */
     public function setText(string $text): self {
         $this->text = str_replace("\\n", "\n", $text);
         return $this;
     }
 
-    /**
-     * @param string $extraText
-     * @return self
-     */
     public function setExtraText(string $extraText): self {
         $this->extraText = $extraText;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getText(): string {
         return $this->text;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string {
         return $this->type;
     }
 
-    /**
-     * @param string|null $color
-     */
     public function setHighlight(?string $color): void {
         $this->highlight = $color;
     }
 
-    /**
-     * @return String
-     */
     public function getUUId(): string {
         if (empty($this->uuid)) $this->uuid = UUID::fromRandom()->toString();
         return $this->uuid;
     }
 
-    /**
-     * @param string $text
-     * @return string
-     */
     public function reflectHighlight(string $text): string {
         if (empty($this->highlight)) return $text;
         return $this->highlight.preg_replace("/§[a-f0-9]/u", "", $text);
     }
 
-    /**
-     * @return array
-     */
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {
     }
 
