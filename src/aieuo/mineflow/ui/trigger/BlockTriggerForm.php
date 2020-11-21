@@ -36,7 +36,6 @@ class BlockTriggerForm extends TriggerForm {
 
     public function sendMenu(Player $player, Recipe $recipe): void {
         (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), Triggers::BLOCK])))
-            ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back", function () use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }),
                 new Button("@form.add", function () use($player, $recipe) {

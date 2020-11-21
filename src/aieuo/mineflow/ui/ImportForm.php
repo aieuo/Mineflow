@@ -28,7 +28,6 @@ class ImportForm {
         }
 
         (new ListForm("@form.import.selectFile.title"))
-            ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->addMessages($messages)
             ->show($player);

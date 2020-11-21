@@ -97,7 +97,6 @@ class FormTriggerForm extends TriggerForm {
         switch ($form) {
             case $form instanceof CustomForm:
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
-                    ->setContent("@form.selectButton")
                     ->addButtons([
                         new Button("@form.cancelAndBack"),
                         new Button("@trigger.form.receive"),
@@ -122,7 +121,6 @@ class FormTriggerForm extends TriggerForm {
                 break;
             case $form instanceof ModalForm:
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
-                    ->setContent("@form.selectButton")
                     ->addButtons([
                         new Button("@form.cancelAndBack"),
                         new Button("@trigger.form.receive"),
@@ -159,7 +157,6 @@ class FormTriggerForm extends TriggerForm {
                     $buttons[] = new Button(Language::get("trigger.form.button", [$button->getText()]));
                 }
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
-                    ->setContent("@form.selectButton")
                     ->addButtons($buttons)
                     ->onReceive(function (Player $player, int $data, Recipe $recipe, ListForm $form) {
                         $trigger = FormTrigger::create($form->getName());

@@ -23,7 +23,6 @@ class RecipeForm {
 
     public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@mineflow.recipe"))
-            ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
                 new Button("@form.add", function () use($player) { $this->sendAddRecipe($player); }),
@@ -130,7 +129,6 @@ class RecipeForm {
         $recipeGroups = array_merge($recipes, array_values($groups));
 
         (new ListForm("@form.recipe.recipeList.title"))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data, string $path, array $recipes) {
                 if ($data === 0) {
@@ -196,7 +194,6 @@ class RecipeForm {
                         break;
                     case 5:
                         (new ListForm("@form.recipe.args.return.set"))
-                            ->setContent("@form.selectButton")
                             ->setButtons([
                                 new Button("@form.back"),
                                 new Button("@form.recipe.args.set"),
@@ -284,7 +281,6 @@ class RecipeForm {
         }
 
         (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data, Recipe $recipe, array $triggers) {
                 if ($data === 0) {

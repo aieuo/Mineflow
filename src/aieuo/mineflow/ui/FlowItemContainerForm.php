@@ -23,7 +23,6 @@ class FlowItemContainerForm {
         }
 
         (new ListForm(Language::get("form.{$type}Container.list.title", [$container->getContainerName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data) use($container, $type, $actions) {
                 if ($data === 0) {

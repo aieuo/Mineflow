@@ -9,12 +9,9 @@ class ModalForm extends Form {
 
     protected $type = self::MODAL_FORM;
 
-    /** @var string */
     private $content = "";
-    /** @var string */
-    private $button1 = "";
-    /** @var string */
-    private $button2 = "";
+    private $button1 = "@form.yes";
+    private $button2 = "@form.no";
 
     /** @var callable|null */
     private $button1Click;

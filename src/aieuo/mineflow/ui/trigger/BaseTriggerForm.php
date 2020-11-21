@@ -38,7 +38,6 @@ class BaseTriggerForm {
             });
         }
         (new ListForm(Language::get("form.trigger.selectTriggerType", [$recipe->getName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->addArgs($recipe)
             ->show($player);

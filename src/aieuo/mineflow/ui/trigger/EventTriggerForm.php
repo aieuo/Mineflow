@@ -52,7 +52,6 @@ class EventTriggerForm extends TriggerForm {
             $buttons[] = new Button(Main::getEventManager()->translateEventName($event));
         }
         (new ListForm(Language::get("trigger.event.list.title", [$recipe->getName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data, Recipe $recipe, array $events) {
                 if ($data === 0) {
@@ -101,7 +100,6 @@ class EventTriggerForm extends TriggerForm {
             });
         }
         (new ListForm("@form.event.list.title"))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->show($player);
     }
@@ -114,7 +112,6 @@ class EventTriggerForm extends TriggerForm {
             $buttons[] = new Button($name);
         }
         (new ListForm(Language::get("form.recipes.title", [Main::getEventManager()->translateEventName($event)])))
-            ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, string $event, array $recipes) {
                 switch ($data) {

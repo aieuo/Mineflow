@@ -10,7 +10,7 @@ class ListForm extends Form {
 
     protected $type = self::LIST_FORM;
 
-    private $content = "";
+    private $content = "@form.selectButton";
     /** @var Button[] */
     private $buttons = [];
 

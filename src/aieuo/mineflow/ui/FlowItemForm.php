@@ -113,7 +113,6 @@ class FlowItemForm {
         }
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.category.title", [$container->getContainerName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->show($player);
     }

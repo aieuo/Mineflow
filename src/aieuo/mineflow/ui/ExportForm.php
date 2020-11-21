@@ -36,7 +36,6 @@ class ExportForm {
         }
 
         (new ListForm("@form.export.recipeList.title"))
-            ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $recipes) {
                 (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
@@ -54,7 +53,6 @@ class ExportForm {
     public function sendRecipeMenu(Player $player, array $recipes, int $index): void {
         $recipe = $recipes[$index];
         (new ListForm($recipe->getName()))
-            ->setContent("@form.selectButton")
             ->setButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),

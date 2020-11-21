@@ -20,7 +20,6 @@ class CommandForm {
 
     public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@form.command.menu.title"))
-            ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
                 new Button("@form.add", function () use($player) { $this->sendAddCommand($player); }),
@@ -110,7 +109,6 @@ class CommandForm {
         }
 
         (new ListForm("@form.command.commandList.title"))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->show($player);
     }
@@ -253,7 +251,6 @@ class CommandForm {
             $buttons[] = new Button($name." | ".count($commands));
         }
         (new ListForm(Language::get("form.recipes.title", ["/".$command["command"]])))
-            ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $command, array $recipes) {
                 switch ($data) {
