@@ -51,10 +51,16 @@ class ListForm extends Form {
         return $this;
     }
 
-    public function forEach(array $inputs, callable $func): self {
-        foreach ($inputs as $input) {
-            $func($this, $input);
+    public function addButtonsEach(array $inputs, callable $convert): self {
+        foreach ($inputs as $i => $input) {
+            $this->addButton($convert($input, $i));
         }
+        return $this;
+    }
+
+    public function removeButton(int $index): self {
+        unset($this->buttons[$index]);
+        $this->buttons = array_values($this->buttons);
         return $this;
     }
 

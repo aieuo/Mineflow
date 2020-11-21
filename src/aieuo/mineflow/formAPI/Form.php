@@ -85,6 +85,13 @@ abstract class Form implements PMForm {
         return $this->name ?? $this->getTitle();
     }
 
+    public function forEach(array $inputs, callable $func): self {
+        foreach ($inputs as $input) {
+            $func($this, $input);
+        }
+        return $this;
+    }
+
     /**
      * @param callable $callable
      * @return self
