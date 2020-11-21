@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\ui;
+namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
@@ -9,6 +9,9 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\event\EventTriggerList;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\ui\HomeForm;
+use aieuo\mineflow\ui\MineflowForm;
+use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
@@ -120,7 +123,7 @@ class EventTriggerForm extends TriggerForm {
                         return;
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [Language::get("trigger.event.".$event)]),
-                            function (Player $player, Recipe $recipe) use ($event) {
+                            function (Recipe $recipe) use ($player, $event) {
                                 $trigger = EventTrigger::create($event);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $event, ["@trigger.alreadyExists"]);
@@ -129,7 +132,7 @@ class EventTriggerForm extends TriggerForm {
                                 $recipe->addTrigger($trigger);
                                 $this->sendRecipeList($player, $event, ["@form.added"]);
                             },
-                            function (Player $player) use ($event) {
+                            function () use ($player, $event) {
                                 $this->sendRecipeList($player, $event);
                             }
                         );

@@ -6,11 +6,11 @@ use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\form\FormTrigger;
-use aieuo\mineflow\ui\BlockTriggerForm;
-use aieuo\mineflow\ui\CommandTriggerForm;
-use aieuo\mineflow\ui\EventTriggerForm;
-use aieuo\mineflow\ui\FormTriggerForm;
-use aieuo\mineflow\ui\TriggerForm;
+use aieuo\mineflow\ui\trigger\BlockTriggerForm;
+use aieuo\mineflow\ui\trigger\CommandTriggerForm;
+use aieuo\mineflow\ui\trigger\EventTriggerForm;
+use aieuo\mineflow\ui\trigger\FormTriggerForm;
+use aieuo\mineflow\ui\trigger\TriggerForm;
 
 class Triggers {
 

@@ -1,12 +1,13 @@
 <?php
 
-namespace aieuo\mineflow\ui;
+namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\level\Position;

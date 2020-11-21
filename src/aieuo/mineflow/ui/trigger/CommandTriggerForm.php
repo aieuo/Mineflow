@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\ui;
+namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
@@ -12,6 +12,8 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\ui\CommandForm;
+use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 

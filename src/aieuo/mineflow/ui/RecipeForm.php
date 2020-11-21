@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\Player;

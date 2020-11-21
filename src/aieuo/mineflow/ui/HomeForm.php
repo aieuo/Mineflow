@@ -4,6 +4,7 @@ namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\ui\trigger\EventTriggerForm;
 use pocketmine\Player;
 
 class HomeForm {
