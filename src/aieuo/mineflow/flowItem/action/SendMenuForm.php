@@ -101,7 +101,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []): void {
+    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName): void {
         $buttons = [];
         foreach ($this->options as $option) {
             $buttons[] = new Button($option);
@@ -117,8 +117,8 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
                 $origin->addVariable($variable);
                 $origin->resume();
             })->onClose(function (Player $player) use ($origin, $text, $resultName) {
-                if ($this->resendOnClose) $this->sendForm($origin, $player, $text, $resultName, [["@form.insufficient", 0]]);
-            })->addErrors($errors)->show($player);
+                if ($this->resendOnClose) $this->sendForm($origin, $player, $text, $resultName);
+            })->show($player);
     }
 
     public function getEditForm(array $variables = []): Form {

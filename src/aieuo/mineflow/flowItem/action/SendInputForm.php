@@ -85,7 +85,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName, array $errors = []): void {
+    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName): void {
         (new CustomForm($text))
             ->setContents([
                 new Input($text, "", "", true),
@@ -95,7 +95,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
                 $origin->resume();
             })->onClose(function (Player $player) use ($origin, $text, $resultName) {
                 if ($this->resendOnClose) $this->sendForm($origin, $player, $text, $resultName);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
     public function getEditForm(array $variables = []): Form {

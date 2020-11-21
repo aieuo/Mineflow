@@ -10,41 +10,24 @@ class ListForm extends Form {
 
     protected $type = self::LIST_FORM;
 
-    /** @var string */
     private $content = "";
     /** @var Button[] */
     private $buttons = [];
 
-    /**
-     * @param string $content
-     * @return self
-     */
     public function setContent(string $content): self {
         $this->content = $content;
         return $this;
     }
 
-    /**
-	 * @param string $content
-	 * @param bool $newLine
-	 * @return self
-	 */
 	public function appendContent(string $content, bool $newLine = true): self {
 		$this->content .= ($newLine ? "\n" : "").$content;
 		return $this;
 	}
 
-    /**
-     * @return string
-     */
     public function getContent(): string {
         return $this->content;
     }
 
-    /**
-     * @param Button $button
-     * @return self
-     */
     public function addButton(Button $button): self {
         $this->buttons[] = $button;
         return $this;
