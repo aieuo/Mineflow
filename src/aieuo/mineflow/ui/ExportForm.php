@@ -40,11 +40,11 @@ class ExportForm {
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $recipes) {
                 (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
-                    function (Player $player, Recipe $recipe) use ($recipes) {
+                    function (Recipe $recipe) use ($player, $recipes) {
                         $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
                         $this->sendRecipeList($player, $recipes, ["@form.added"]);
                     },
-                    function (Player $player) use ($recipes) {
+                    function () use ($player, $recipes) {
                         $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
                     }
                 );

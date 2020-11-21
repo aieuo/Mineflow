@@ -19,9 +19,9 @@ class MineflowForm {
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, string $name, string $newName, callable $onTrue, callable $onFalse) {
                 if ($data) {
-                    $onTrue($player, $newName);
+                    $onTrue($newName);
                 } else {
-                    $onFalse($player, $name);
+                    $onFalse($name);
                 }
             })->addArgs($name, $newName, $onAccept, $onRefuse)->show($player);
     }
@@ -61,7 +61,7 @@ class MineflowForm {
                     return;
                 }
 
-                $callback($player, $recipe);
+                $callback($recipe);
             })->addArgs($callback)->show($player);
     }
 }
