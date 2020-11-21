@@ -51,7 +51,7 @@ class BaseTriggerForm {
             ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, Trigger $trigger) {
                 if ($data) {
                     $recipe->removeTrigger($trigger);
-                    (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
+                    (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.deleted"]);
                 } else {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@form.cancelled"]);
                 }

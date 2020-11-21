@@ -229,7 +229,7 @@ class RecipeForm {
                                 $manager = Main::getRecipeManager();
                                 $recipe->removeTriggerAll();
                                 $manager->remove($recipe->getName(), $recipe->getGroup());
-                                $this->sendMenu($player, ["@form.delete.success"]);
+                                $this->sendMenu($player, ["@form.deleted"]);
                             },
                             function (Player $player) use($recipe) {
                                 $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);

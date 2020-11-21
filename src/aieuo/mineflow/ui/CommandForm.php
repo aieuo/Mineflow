@@ -236,7 +236,7 @@ class CommandForm {
                         }
                     }
                     $commandManager->removeCommand($command["command"]);
-                    $this->sendMenu($player, ["@form.delete.success"]);
+                    $this->sendMenu($player, ["@form.deleted"]);
                 } else {
                     $this->sendCommandMenu($player, $command, ["@form.cancelled"]);
                 }

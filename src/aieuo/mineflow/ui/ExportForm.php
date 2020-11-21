@@ -61,7 +61,7 @@ class ExportForm {
                     $this->sendRecipeList($player, $recipes);
                 } else {
                     unset($recipes[$index]);
-                    $this->sendRecipeList($player, $recipes, ["@form.delete.success"]);
+                    $this->sendRecipeList($player, $recipes, ["@form.deleted"]);
                 }
             })->addArgs($recipes, $index)->show($player);
     }
