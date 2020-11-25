@@ -45,7 +45,7 @@ class ExportForm {
                         $this->sendRecipeList($player, $recipes, ["@form.added"]);
                     },
                     function (Player $player) use ($recipes) {
-                        $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
+                        $this->sendRecipeList($player, $recipes, ["@form.cancelled"]);
                     }
                 );
             })->addMessages($messages)->addArgs($recipes)->show($player);
@@ -89,7 +89,7 @@ class ExportForm {
                 new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, array $recipes) {
                 if ($data[4]) {
-                    $this->sendRecipeList($player, $recipes, ["@form.canceled"]);
+                    $this->sendRecipeList($player, $recipes, ["@form.cancelled"]);
                     return;
                 }
 
