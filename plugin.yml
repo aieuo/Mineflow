@@ -1,13 +1,13 @@
----
 name: Mineflow
 main: aieuo\mineflow\Main
-version: 1.0.1
+version: 1.0.2
 api: 3.13.0
 mcpe-protocol:
   - 389
   - 390
   - 407
   - 408
+  - 419
 load: POSTWORLD
 softdepend:
   - EconomyAPI
@@ -25,4 +25,3 @@ permissions:
   mineflow.customcommand.true:
     default: true
     description: "mineflow.customcommand.true"
-...
