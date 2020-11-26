@@ -108,11 +108,11 @@ class ListForm extends Form {
         }
 
         $button = $this->getButton($data);
-        if ($button === null or $button->getOnClick() === null) {
-            parent::handleResponse($player, $data);
-            return;
+        if ($button !== null and is_callable($button->getOnClick())) {
+            call_user_func($button->getOnClick(), $player);
+            if ($button->skipIfCallOnClick) return;
         }
 
-        call_user_func($button->getOnClick(), $player);
+        parent::handleResponse($player, $data);
     }
 }

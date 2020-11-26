@@ -7,6 +7,11 @@ use pocketmine\utils\UUID;
 
 class Button implements \JsonSerializable {
 
+    public const TYPE_NORMAL = "button";
+    public const TYPE_COMMAND = "commandButton";
+
+    /** @var string */
+    protected $type = self::TYPE_NORMAL;
     /** @var string */
     protected $text = "";
     /** @var string */
@@ -18,9 +23,16 @@ class Button implements \JsonSerializable {
     /** @var callable|null */
     private $onClick;
 
-    public function __construct(string $text, callable $onClick = null) {
+    /** @var bool */
+    public $skipIfCallOnClick = true; // TODO: 名前...
+
+    public function __construct(string $text, ?callable $onClick = null) {
         $this->text = str_replace("\\n", "\n", $text);
         $this->onClick = $onClick;
+    }
+
+    public function getType(): string {
+        return $this->type;
     }
 
     public function setText(string $text): self {
@@ -44,6 +56,10 @@ class Button implements \JsonSerializable {
 
     public function getOnClick(): ?callable {
         return $this->onClick;
+    }
+
+    public function __toString() {
+        return Language::get("form.form.formMenu.list.button", [$this->getText()]);
     }
 
     public function jsonSerialize(): array {
