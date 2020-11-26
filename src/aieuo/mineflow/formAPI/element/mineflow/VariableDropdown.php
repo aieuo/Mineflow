@@ -106,7 +106,6 @@ abstract class VariableDropdown extends Dropdown {
 
     public function sendAddVariableForm(Player $player, CustomForm $origin, int $index): void {
         (new ListForm("@form.element.variableDropdown.createVariable"))
-            ->setContent("@form.selectButton")
             ->forEach($this->actions, function (ListForm $form, string $id) use ($player, $origin, $index) {
                 $action = FlowItemFactory::get($id);
 

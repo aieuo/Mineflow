@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Triggers;
@@ -42,7 +43,7 @@ class RecipeForm {
         $name = $manager->getNotDuplicatedName("recipe");
 
         ($it = new CustomForm("@form.recipe.addRecipe.title"))->setContents([
-                new Input("@form.recipe.recipeName", $name, $default[0] ?? "", true),
+                new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
                 new CancelToggle(function () use($player) { $this->sendMenu($player); }),
             ])->onReceive(function (Player $player, array $data, string $defaultName) use($it) {
@@ -65,9 +66,9 @@ class RecipeForm {
                             $manager = Main::getRecipeManager();
                             $recipe = new Recipe($name, $data[1], $player->getName());
                             $manager->add($recipe);
-                            Session::getSession($player)
-                                ->set("recipe_menu_prev", [$this, "sendRecipeList"])
-                                ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
+                            Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
+                                $this->sendRecipeList($player, $recipe->getGroup());
+                            });
                             $this->sendRecipeMenu($player, $recipe);
                         },
                         function (string $name) use ($it) {
@@ -83,9 +84,9 @@ class RecipeForm {
                 }
 
                 $manager->add($recipe);
-                Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
-                    ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
+                Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
+                    $this->sendRecipeList($player, $recipe->getGroup());
+                });
                 $this->sendRecipeMenu($player, $recipe);
             })->addArgs($name)->show($player);
     }
@@ -93,9 +94,9 @@ class RecipeForm {
     public function sendSelectRecipe(Player $player, array $default = []): void {
         (new MineflowForm)->selectRecipe($player, "@form.recipe.select.title",
             function (Recipe $recipe) use($player) {
-                Session::getSession($player)
-                    ->set("recipe_menu_prev", [$this, "sendRecipeList"])
-                    ->set("recipe_menu_prev_data", [$recipe->getGroup()]);
+                Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
+                    $this->sendRecipeList($player, $recipe->getGroup());
+                });
                 $this->sendRecipeMenu($player, $recipe);
             },
             function () use($player) {
@@ -145,9 +146,9 @@ class RecipeForm {
 
                 $recipe = array_values($recipes)[$data];
                 if ($recipe instanceof Recipe) {
-                    Session::getSession($player)
-                        ->set("recipe_menu_prev", [$this, "sendRecipeList"])
-                        ->set("recipe_menu_prev_data", [$path]);
+                    Session::getSession($player)->set("recipe_menu_prev", function() use($player, $path) {
+                        $this->sendRecipeList($player, $path);
+                    });
                     $this->sendRecipeMenu($player, $recipe);
                     return;
                 }
@@ -174,10 +175,7 @@ class RecipeForm {
                 switch ($data) {
                     case 0:
                         $prev = Session::getSession($player)->get("recipe_menu_prev");
-                        if (is_callable($prev)) {
-                            call_user_func_array($prev, array_merge([$player], Session::getSession($player)->get("recipe_menu_prev_data", [])));
-                        }
-                        else $this->sendMenu($player);
+                        is_callable($prev) ? $prev($player) : $this->sendMenu($player);
                         break;
                     case 1:
                         Session::getSession($player)->set("parents", []);
@@ -223,17 +221,16 @@ class RecipeForm {
                         (new ExportForm)->sendRecipeListByRecipe($player, $recipe);
                         break;
                     case 9:
-                        (new MineflowForm)->confirmDelete($player,
-                            Language::get("form.recipe.delete.title", [$recipe->getName()]), $recipe->getName(),
-                            function (Player $player) use ($recipe) {
+                        (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
+                            ->setContent(Language::get("form.delete.confirm", [$recipe->getName()]))
+                            ->onYes(function() use ($player, $recipe) {
                                 $manager = Main::getRecipeManager();
                                 $recipe->removeTriggerAll();
                                 $manager->remove($recipe->getName(), $recipe->getGroup());
                                 $this->sendMenu($player, ["@form.deleted"]);
-                            },
-                            function (Player $player) use($recipe) {
+                            })->onNo(function() use($player, $recipe) {
                                 $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
-                            });
+                            })->show($player);
                         break;
                 }
             })->addArgs($recipe)->addMessages($messages)->show($player);

@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\formAPI\response;
 
-use aieuo\mineflow\formAPI\Form;
-
 class FormResponse {
     /** @var array */
     private $errors = [];

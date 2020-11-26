@@ -26,20 +26,6 @@ class MineflowForm {
             })->addArgs($name, $newName, $onAccept, $onRefuse)->show($player);
     }
 
-    public function confirmDelete(Player $player, string $title, string $name, callable $onAccept, callable $onRefuse): void {
-        (new ModalForm($title))
-            ->setContent(Language::get("form.delete.confirm", [$name]))
-            ->setButton1("@form.yes")
-            ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, callable $onTrue, callable $onFalse) {
-                if ($data) {
-                    $onTrue($player);
-                } else {
-                    $onFalse($player);
-                }
-            })->addArgs($onAccept, $onRefuse)->show($player);
-    }
-
     public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = []): void {
         ($it = new CustomForm($title))->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),

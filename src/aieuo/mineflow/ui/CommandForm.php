@@ -291,9 +291,9 @@ class CommandForm {
             ->setButtons([
                 new Button("@form.back", function () use($player, $command) { $this->sendRecipeList($player, $command); }),
                 new Button("@form.edit", function () use($player, $command, $recipes, $index) {
-                    Session::getSession($player)
-                        ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
-                        ->set("recipe_menu_prev_data", [$command, $index, $recipes]);
+                    Session::getSession($player)->set("recipe_menu_prev", function() use($player, $command, $index, $recipes) {
+                        $this->sendRecipeMenu($player, $command, $index, $recipes);
+                    });
                     $recipeName = array_keys($recipes)[$index];
                     [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
                     $recipe = Main::getRecipeManager()->get($name, $group);

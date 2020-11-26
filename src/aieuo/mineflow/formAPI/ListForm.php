@@ -77,7 +77,7 @@ class ListForm extends Form {
 
     public function getButtonById(string $id): ?Button {
         foreach ($this->getButtons() as $button) {
-            if ($button->getUUId() === $id) return $button;
+            if ($button->getUUID() === $id) return $button;
         }
         return null;
     }

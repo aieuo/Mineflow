@@ -4,7 +4,6 @@ namespace aieuo\mineflow\formAPI\response;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Element;
-use aieuo\mineflow\formAPI\Form;
 
 class CustomFormResponse extends FormResponse {
     /** @var array */

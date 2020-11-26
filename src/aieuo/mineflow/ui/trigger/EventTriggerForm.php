@@ -151,9 +151,9 @@ class EventTriggerForm extends TriggerForm {
                 if ($data === 0) {
                     $this->sendRecipeList($player, $event);
                 } elseif ($data === 1) {
-                    Session::getSession($player)
-                        ->set("recipe_menu_prev", [$this, "sendRecipeMenu"])
-                        ->set("recipe_menu_prev_data", [$event, $recipeName]);
+                    Session::getSession($player)->set("recipe_menu_prev", function() use($player, $event, $recipeName) {
+                        $this->sendRecipeMenu($player, $event, $recipeName);
+                    });
                     [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
                     $recipe = Main::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);

@@ -171,7 +171,7 @@ class FormTriggerForm extends TriggerForm {
                                 break;
                             default:
                                 $button = $form->getButton($data - 3);
-                                $trigger->setSubKey($button->getUUId());
+                                $trigger->setSubKey($button->getUUID());
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {

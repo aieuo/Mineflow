@@ -12,6 +12,7 @@ use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -185,21 +186,20 @@ class FlowItemForm {
     }
 
     public function sendConfirmDelete(Player $player, FlowItem $action, FlowItemContainer $container, string $type): void {
-        (new MineflowForm)->confirmDelete($player,
-            Language::get("form.items.delete.title", [$container->getContainerName(), $action->getName()]), trim($action->getDetail()),
-            function (Player $player) use ($action, $container, $type) {
+        (new ModalForm(Language::get("form.items.delete.title", [$container->getContainerName(), $action->getName()])))
+            ->setContent(Language::get("form.delete.confirm", [trim($action->getDetail())]))
+            ->onYes(function() use ($player, $action, $container, $type) {
                 $index = array_search($action, $container->getItems($type), true);
                 $container->removeItem($index, $type);
                 Session::getSession($player)->pop("parents");
                 (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.deleted"]);
-            },
-            function (Player $player) use ($action, $container, $type) {
+            })->onNo(function() use ($player, $action, $container, $type) {
                 if ($container instanceof FlowItem and $container->hasCustomMenu()) {
                     $container->sendCustomMenu($player, ["@form.cancelled"]);
                 } else {
                     $this->sendAddedItemMenu($player, $container, $type, $action, ["@form.cancelled"]);
                 }
-            });
+            })->show($player);
     }
 
     public function sendChangeName(Player $player, FlowItem $item, FlowItemContainer $container, string $type): void {
