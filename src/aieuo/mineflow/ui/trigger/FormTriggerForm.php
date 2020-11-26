@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\ui;
+namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
@@ -13,6 +13,8 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\ui\customForm\CustomFormForm;
+use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -95,7 +97,6 @@ class FormTriggerForm extends TriggerForm {
         switch ($form) {
             case $form instanceof CustomForm:
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
-                    ->setContent("@form.selectButton")
                     ->addButtons([
                         new Button("@form.cancelAndBack"),
                         new Button("@trigger.form.receive"),
@@ -120,7 +121,6 @@ class FormTriggerForm extends TriggerForm {
                 break;
             case $form instanceof ModalForm:
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
-                    ->setContent("@form.selectButton")
                     ->addButtons([
                         new Button("@form.cancelAndBack"),
                         new Button("@trigger.form.receive"),
@@ -157,7 +157,6 @@ class FormTriggerForm extends TriggerForm {
                     $buttons[] = new Button(Language::get("trigger.form.button", [$button->getText()]));
                 }
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
-                    ->setContent("@form.selectButton")
                     ->addButtons($buttons)
                     ->onReceive(function (Player $player, int $data, Recipe $recipe, ListForm $form) {
                         $trigger = FormTrigger::create($form->getName());

@@ -113,7 +113,6 @@ class FlowItemForm {
         }
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.category.title", [$container->getContainerName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->show($player);
     }
@@ -192,7 +191,7 @@ class FlowItemForm {
                 $index = array_search($action, $container->getItems($type), true);
                 $container->removeItem($index, $type);
                 Session::getSession($player)->pop("parents");
-                (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.delete.success"]);
+                (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.deleted"]);
             },
             function (Player $player) use ($action, $container, $type) {
                 if ($container instanceof FlowItem and $container->hasCustomMenu()) {

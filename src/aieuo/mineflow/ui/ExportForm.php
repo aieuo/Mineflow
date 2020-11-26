@@ -36,11 +36,10 @@ class ExportForm {
         }
 
         (new ListForm("@form.export.recipeList.title"))
-            ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $recipes) {
                 (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
-                    function (Player $player, Recipe $recipe) use ($recipes) {
+                    function (Recipe $recipe) use ($player, $recipes) {
                         $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
                         $this->sendRecipeList($player, $recipes, ["@form.added"]);
                     },
@@ -54,7 +53,6 @@ class ExportForm {
     public function sendRecipeMenu(Player $player, array $recipes, int $index): void {
         $recipe = $recipes[$index];
         (new ListForm($recipe->getName()))
-            ->setContent("@form.selectButton")
             ->setButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
@@ -63,7 +61,7 @@ class ExportForm {
                     $this->sendRecipeList($player, $recipes);
                 } else {
                     unset($recipes[$index]);
-                    $this->sendRecipeList($player, $recipes, ["@form.delete.success"]);
+                    $this->sendRecipeList($player, $recipes, ["@form.deleted"]);
                 }
             })->addArgs($recipes, $index)->show($player);
     }

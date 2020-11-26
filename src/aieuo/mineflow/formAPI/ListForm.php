@@ -10,41 +10,24 @@ class ListForm extends Form {
 
     protected $type = self::LIST_FORM;
 
-    /** @var string */
-    private $content = "";
+    private $content = "@form.selectButton";
     /** @var Button[] */
     private $buttons = [];
 
-    /**
-     * @param string $content
-     * @return self
-     */
     public function setContent(string $content): self {
         $this->content = $content;
         return $this;
     }
 
-    /**
-	 * @param string $content
-	 * @param bool $newLine
-	 * @return self
-	 */
 	public function appendContent(string $content, bool $newLine = true): self {
 		$this->content .= ($newLine ? "\n" : "").$content;
 		return $this;
 	}
 
-    /**
-     * @return string
-     */
     public function getContent(): string {
         return $this->content;
     }
 
-    /**
-     * @param Button $button
-     * @return self
-     */
     public function addButton(Button $button): self {
         $this->buttons[] = $button;
         return $this;
@@ -68,10 +51,16 @@ class ListForm extends Form {
         return $this;
     }
 
-    public function forEach(array $inputs, callable $func): self {
-        foreach ($inputs as $input) {
-            $func($this, $input);
+    public function addButtonsEach(array $inputs, callable $convert): self {
+        foreach ($inputs as $i => $input) {
+            $this->addButton($convert($input, $i));
         }
+        return $this;
+    }
+
+    public function removeButton(int $index): self {
+        unset($this->buttons[$index]);
+        $this->buttons = array_values($this->buttons);
         return $this;
     }
 

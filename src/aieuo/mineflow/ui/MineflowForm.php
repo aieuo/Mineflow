@@ -19,9 +19,9 @@ class MineflowForm {
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, string $name, string $newName, callable $onTrue, callable $onFalse) {
                 if ($data) {
-                    $onTrue($player, $newName);
+                    $onTrue($newName);
                 } else {
-                    $onFalse($player, $name);
+                    $onFalse($name);
                 }
             })->addArgs($name, $newName, $onAccept, $onRefuse)->show($player);
     }
@@ -40,38 +40,28 @@ class MineflowForm {
             })->addArgs($onAccept, $onRefuse)->show($player);
     }
 
-    public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = [], array $errors = []): void {
-        (new CustomForm($title))
-            ->setContents([
+    public function selectRecipe(Player $player, string $title, callable $callback, ?callable $onCancel = null, array $default = []): void {
+        ($it = new CustomForm($title))->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
-                new CancelToggle(),
-            ])->onReceive(function (Player $player, array $data, string $title, callable $callback, ?callable $onCancel) {
-                if ($data[2]) {
-                    if (is_callable($onCancel)) {
-                        $onCancel($player);
-                        return;
-                    }
-                    (new HomeForm)->sendMenu($player);
-                    return;
-                }
-
+                new CancelToggle(function () use($player, $onCancel) { is_callable($onCancel) ? $onCancel() : (new HomeForm)->sendMenu($player); }),
+            ])->onReceive(function (Player $player, array $data, callable $callback) use($it) {
                 $manager = Main::getRecipeManager();
 
                 [$name, $group] = $data;
                 if ($group === "") [$name, $group] = $manager->parseName($data[0]);
                 if (!$manager->exists($name, $group)) {
-                    $this->selectRecipe($player, $title, $callback, $onCancel, $data, [["@form.recipe.select.notfound", 0]]);
+                    $it->resend([["@form.recipe.select.notfound", 0]]);
                     return;
                 }
 
                 $recipe = $manager->get($name, $group);
                 if ($recipe === null) {
-                    $this->selectRecipe($player, $title, $callback, $onCancel, $data, [["@form.recipe.select.notfound", 0]]);
+                    $it->resend([["@form.recipe.select.notfound", 0]]);
                     return;
                 }
 
-                $callback($player, $recipe);
-            })->addArgs($title, $callback, $onCancel)->addErrors($errors)->show($player);
+                $callback($recipe);
+            })->addArgs($callback)->show($player);
     }
 }

@@ -85,6 +85,13 @@ abstract class Form implements PMForm {
         return $this->name ?? $this->getTitle();
     }
 
+    public function forEach(array $inputs, callable $func): self {
+        foreach ($inputs as $input) {
+            $func($this, $input);
+        }
+        return $this;
+    }
+
     /**
      * @param callable $callable
      * @return self
@@ -221,7 +228,7 @@ abstract class Form implements PMForm {
                 $form->setContent($data["content"]);
                 foreach ($data["buttons"] as $button) {
                     if (!isset($button["text"])) return null;
-                    $form->addButton(new Button($button["text"], null, $button["id"] ?? null));
+                    $form->addButton((new Button($button["text"], null))->uuid($button["id"] ?? ""));
                 }
                 break;
             case self::CUSTOM_FORM:

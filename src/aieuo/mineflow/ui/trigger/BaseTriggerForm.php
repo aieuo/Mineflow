@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\ui;
+namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
@@ -8,6 +8,7 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -37,7 +38,6 @@ class BaseTriggerForm {
             });
         }
         (new ListForm(Language::get("form.trigger.selectTriggerType", [$recipe->getName()])))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->addArgs($recipe)
             ->show($player);
@@ -51,7 +51,7 @@ class BaseTriggerForm {
             ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, Trigger $trigger) {
                 if ($data) {
                     $recipe->removeTrigger($trigger);
-                    (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.delete.success"]);
+                    (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.deleted"]);
                 } else {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@form.cancelled"]);
                 }

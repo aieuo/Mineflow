@@ -9,66 +9,50 @@ class ModalForm extends Form {
 
     protected $type = self::MODAL_FORM;
 
-    /** @var string */
     private $content = "";
-    /** @var string */
-    private $button1 = "";
-    /** @var string */
-    private $button2 = "";
+    private $button1 = "@form.yes";
+    private $button2 = "@form.no";
 
-    /** @var callable */
+    /** @var callable|null */
     private $button1Click;
-    /** @var callable */
+    /** @var callable|null */
     private $button2Click;
 
-    /**
-     * @param string $content
-     * @return self
-     */
     public function setContent(string $content): self {
         $this->content = $content;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getContent(): string {
         return $this->content;
     }
 
-    /**
-     * @param string $text
-     * @param callable|null $onClick
-     * @return self
-     */
     public function setButton1(string $text, callable $onClick = null): self {
         $this->button1 = $text;
         $this->button1Click = $onClick;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+    public function onYes(callable $onClick): self {
+        $this->button1Click = $onClick;
+        return $this;
+    }
+
     public function getButton1Text(): string {
         return $this->button1;
     }
 
-    /**
-     * @param string $text
-     * @param callable|null $onClick
-     * @return self
-     */
     public function setButton2(string $text, callable $onClick = null): self {
         $this->button2 = $text;
         $this->button2Click = $onClick;
         return $this;
     }
 
-    /**
-     * @return string
-     */
+    public function onNo(callable $onClick): self {
+        $this->button2Click = $onClick;
+        return $this;
+    }
+
     public function getButton2Text(): string {
         return $this->button2;
     }

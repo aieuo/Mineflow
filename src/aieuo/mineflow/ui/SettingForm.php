@@ -15,7 +15,6 @@ use pocketmine\Server;
 class SettingForm {
     public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@mineflow.settings"))
-            ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@setting.language"),

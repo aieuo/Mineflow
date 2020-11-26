@@ -34,6 +34,7 @@ class PositionObjectVariable extends ObjectVariable {
                 $variable = new PositionObjectVariable($position, "position");
                 break;
             case "level":
+            case "world":
                 $variable = new LevelObjectVariable($position->level, "level", $position->level->getFolderName());
                 break;
             default:

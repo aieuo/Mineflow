@@ -1,12 +1,13 @@
 <?php
 
-namespace aieuo\mineflow\ui;
+namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\level\Position;
@@ -35,7 +36,6 @@ class BlockTriggerForm extends TriggerForm {
 
     public function sendMenu(Player $player, Recipe $recipe): void {
         (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), Triggers::BLOCK])))
-            ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back", function () use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }),
                 new Button("@form.add", function () use($player, $recipe) {

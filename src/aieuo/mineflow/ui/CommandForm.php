@@ -20,7 +20,6 @@ class CommandForm {
 
     public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@form.command.menu.title"))
-            ->setContent("@form.selectButton")
             ->addButtons([
                 new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
                 new Button("@form.add", function () use($player) { $this->sendAddCommand($player); }),
@@ -110,7 +109,6 @@ class CommandForm {
         }
 
         (new ListForm("@form.command.commandList.title"))
-            ->setContent("@form.selectButton")
             ->addButtons($buttons)
             ->show($player);
     }
@@ -238,7 +236,7 @@ class CommandForm {
                         }
                     }
                     $commandManager->removeCommand($command["command"]);
-                    $this->sendMenu($player, ["@form.delete.success"]);
+                    $this->sendMenu($player, ["@form.deleted"]);
                 } else {
                     $this->sendCommandMenu($player, $command, ["@form.cancelled"]);
                 }
@@ -253,7 +251,6 @@ class CommandForm {
             $buttons[] = new Button($name." | ".count($commands));
         }
         (new ListForm(Language::get("form.recipes.title", ["/".$command["command"]])))
-            ->setContent("@form.selectButton")
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $command, array $recipes) {
                 switch ($data) {
@@ -262,7 +259,7 @@ class CommandForm {
                         return;
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [$command["command"]]),
-                            function (Player $player, Recipe $recipe) use ($command) {
+                            function (Recipe $recipe) use ($player, $command) {
                                 $trigger = new CommandTrigger($command["command"], $command["command"]);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
@@ -271,7 +268,7 @@ class CommandForm {
                                 $recipe->addTrigger($trigger);
                                 $this->sendRecipeList($player, $command, ["@form.added"]);
                             },
-                            function (Player $player) use ($command) {
+                            function () use ($player, $command) {
                                 $this->sendRecipeList($player, $command);
                             }
                         );
