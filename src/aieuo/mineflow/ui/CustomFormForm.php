@@ -489,7 +489,7 @@ class CustomFormForm {
                 new CancelToggle(),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
                 if ($data[1]) {
-                    $this->sendListFormMenu($player, $form, ["@form.canceled"]);
+                    $this->sendListFormMenu($player, $form, ["@form.cancelled"]);
                     return;
                 }
 
