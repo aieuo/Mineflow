@@ -30,10 +30,13 @@ abstract class VariableDropdown extends Dropdown {
     private $variableTypes;
 
     public const VALUE_SEPARATOR_LEFT = " §7(";
+    /* @var bool */
+    private $optional;
 
-    public function __construct(string $text, array $variables = [], array $variableTypes = [], string $default = "") {
+    public function __construct(string $text, array $variables = [], array $variableTypes = [], string $default = "", bool $optional = false) {
         $this->defaultText = $default;
         $this->variableTypes = $variableTypes;
+        $this->optional = $optional;
         $options = $this->updateOptions($this->flattenVariables($variables));
 
         $defaultKey = $this->findDefaultKey($default);
@@ -55,6 +58,7 @@ abstract class VariableDropdown extends Dropdown {
             $options[] = $default;
         }
 
+        if ($this->isOptional()) $options[] = Language::get("form.element.variableDropdown.none");
         $options[] = Language::get("form.element.variableDropdown.createVariable");
         $options[] = Language::get("form.element.variableDropdown.inputManually");
         $this->options = $options;
@@ -62,8 +66,12 @@ abstract class VariableDropdown extends Dropdown {
     }
 
     public function findDefaultKey(string $default, array $options = null): int {
-        if ($default === "") return 0;
-        foreach ($options ?? $this->options as $i => $option) {
+        if ($default === "" and !$this->isOptional()) return 0;
+
+        $options = $options ?? $this->options;
+        if ($default === "") return count($options) - 3;
+
+        foreach ($options as $i => $option) {
             if (strpos(explode(self::VALUE_SEPARATOR_LEFT, $option)[0], $default) !== false) return $i;
         }
         return -1;
@@ -80,6 +88,10 @@ abstract class VariableDropdown extends Dropdown {
 
     public function getDefaultText(): string {
         return $this->defaultText;
+    }
+
+    public function isOptional(): bool {
+        return $this->optional;
     }
 
     /**
@@ -159,13 +171,15 @@ abstract class VariableDropdown extends Dropdown {
 
         if ($data === $maxIndex) { // 手動で入力する時
             $response->setResend(true);
-            $response->overrideElement(new ExampleInput($this->getText(), $this->getVariableType(), $this->getDefaultText(), true), $this->getDefaultText());
+            $response->overrideElement(new ExampleInput($this->getText(), $this->getVariableType(), $this->getDefaultText(), !$this->isOptional()), $this->getDefaultText());
         } elseif ($data === $maxIndex - 1) { // 変数を追加するとき
             $index = $response->getCurrentIndex();
             $response->setInterruptCallback(function () use($response, $player, $index) {
                 $this->sendAddVariableForm($player, $response->getCustomForm(), $index);
                 return true;
             });
+        } elseif ($this->isOptional() and $data === $maxIndex - 2) {
+            $response->overrideResponse("");
         } else { // 変数名を選択したとき
             $response->overrideResponse(explode(VariableDropdown::VALUE_SEPARATOR_LEFT, $options[$data])[0]); // TODO: 文字列操作せずに変数名だけ取り出す
         }

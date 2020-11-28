@@ -13,7 +13,7 @@ class PlayerVariableDropdown extends VariableDropdown {
         FlowItemIds::GET_PLAYER
     ];
 
-    public function __construct(array $variables = [], string $default = "", string $text = "@action.form.target.player") {
-        parent::__construct($text, $variables, [DummyVariable::PLAYER], $default);
+    public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
+        parent::__construct($text ?? "@action.form.target.player", $variables, [DummyVariable::PLAYER], $default, $optional);
     }
 }
