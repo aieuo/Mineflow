@@ -91,10 +91,11 @@ class SendForm extends FlowItem implements PlayerFlowItem {
                         foreach ($variable->getValue() as $value) {
                             $buttons[] = new Button((string)$value);
                         }
+                        continue;
                     }
-                } else {
-                    $buttons[] = new Button($origin->replaceVariables($button->getText()));
                 }
+
+                $buttons[] = $button->setText($origin->replaceVariables($button->getText()));
             }
             $form->setButtons($buttons);
         } elseif ($form instanceof CustomForm) {
