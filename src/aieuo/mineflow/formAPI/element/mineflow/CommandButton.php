@@ -17,8 +17,8 @@ class CommandButton extends Button {
 
     public function __construct(string $command, string $text = null) {
         $this->command = $command;
-        parent::__construct($text ?? "/".$command, function (Player $player) use($command) {
-            Server::getInstance()->dispatchCommand($player, $command);
+        parent::__construct($text ?? "/".$command, function (Player $player) {
+            Server::getInstance()->dispatchCommand($player, $this->command);
         });
     }
 
