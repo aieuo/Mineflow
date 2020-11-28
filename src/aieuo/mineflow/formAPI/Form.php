@@ -7,6 +7,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -226,9 +227,14 @@ abstract class Form implements PMForm {
                 if (!isset($data["content"]) or !isset($data["buttons"])) return null;
                 $form = new ListForm($data["title"]);
                 $form->setContent($data["content"]);
-                foreach ($data["buttons"] as $button) {
-                    if (!isset($button["text"])) return null;
-                    $form->addButton((new Button($button["text"], null))->uuid($button["id"] ?? ""));
+                foreach ($data["buttons"] as $buttonData) {
+                    if (!isset($buttonData["text"])) return null;
+                    if (isset($buttonData["mineflow"]["command"])) {
+                        $button = new CommandButton($buttonData["mineflow"]["command"], $buttonData["text"]);
+                    } else {
+                        $button = new Button($buttonData["text"]);
+                    }
+                    $form->addButton($button->uuid($buttonData["id"] ?? ""));
                 }
                 break;
             case self::CUSTOM_FORM:

@@ -7,6 +7,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
@@ -60,6 +61,7 @@ class CustomListFormForm {
             ->setButtons([
                 new Button("@form.back", function () use($player, $form) { $this->sendMenu($player, $form); }),
                 new Button("@customForm.list.button.type.normal", function () use($player, $form) { $this->sendAddButton($player, $form);}),
+                new Button("@customForm.list.button.type.command", function () use($player, $form) { $this->sendAddCommandButton($player, $form);}),
             ])->show($player);
     }
 
@@ -75,7 +77,25 @@ class CustomListFormForm {
             })->addArgs($form)->show($player);
     }
 
+    public function sendAddCommandButton(Player $player, ListForm $form): void {
+        (new CustomForm("@customForm.list.addButton"))
+            ->setContents([
+                new Input("@customForm.text", "", "", true),
+                new Input("@customForm.list.commandButton.command", "", "", true),
+                new CancelToggle(function() use($player, $form) { $this->sendButtonList($player, $form, ["@form.canceled"]); }),
+            ])->onReceive(function (Player $player, array $data, ListForm $form) {
+                $form->addButton(new CommandButton($data[1], $data[0]));
+                Main::getFormManager()->addForm($form->getName(), $form);
+                $this->sendButtonList($player, $form, ["@form.added"]);
+            })->addArgs($form)->show($player);
+    }
+
     public function sendEditButton(Player $player, ListForm $form, Button $button, int $index): void {
+        if ($button instanceof CommandButton) {
+            $this->sendEditCommandButton($player, $form, $button, $index);
+            return;
+        }
+
         (new CustomForm($button->getText()))
             ->setContents([
                 new Label(Language::get("customForm.receive", [$index])."\n".Language::get("customForm.receive.list.button", [$button->getText()])),
@@ -89,6 +109,25 @@ class CustomListFormForm {
                 }
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$data[2] ? "@form.deleted" : "@form.changed"]);
+            })->show($player);
+    }
+
+    public function sendEditCommandButton(Player $player, ListForm $form, CommandButton $button, int $index): void {
+        (new CustomForm($button->getText()))
+            ->setContents([
+                new Label(Language::get("customForm.receive", [$index])."\n".Language::get("customForm.receive.list.button", [$button->getText()])),
+                new Input("@customForm.text", "", $button->getText(), true),
+                new Input("@customForm.list.commandButton.command", "", $button->getCommand(), true),
+                new CancelToggle(null, "@form.delete"),
+            ])->onReceive(function (Player $player, array $data) use($form, $index, $button) {
+                if ($data[3]) {
+                    $form->removeButton($index);
+                } else {
+                    $button->setText($data[1]);
+                    $button->setCommand($data[2]);
+                }
+                Main::getFormManager()->addForm($form->getName(), $form);
+                $this->sendButtonList($player, $form, [$data[3] ? "@form.deleted" : "@form.changed"]);
             })->show($player);
     }
 
