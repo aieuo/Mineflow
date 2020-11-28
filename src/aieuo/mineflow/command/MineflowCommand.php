@@ -6,7 +6,7 @@ use aieuo\mineflow\command\subcommand\CustomCommandCommand;
 use aieuo\mineflow\command\subcommand\LanguageCommand;
 use aieuo\mineflow\command\subcommand\RecipeCommand;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\ui\CustomFormForm;
+use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\ui\HomeForm;
 use aieuo\mineflow\ui\SettingForm;
 use aieuo\mineflow\utils\Language;

@@ -53,8 +53,21 @@ class ModalForm extends Form {
         return $this;
     }
 
+    public function setButton(int $index, string $text, callable $onClick = null): self {
+        if ($index === 1) {
+            $this->setButton1($text, $onClick);
+        } else {
+            $this->setButton2($text, $onClick);
+        }
+        return $this;
+    }
+
     public function getButton2Text(): string {
         return $this->button2;
+    }
+
+    public function getButtonText(int $index): string {
+        return $index === 1 ? $this->getButton1Text() : $this->getButton2Text();
     }
 
     public function jsonSerialize(): array {

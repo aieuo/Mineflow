@@ -59,6 +59,12 @@ class CustomForm extends Form {
         return $this;
     }
 
+    public function removeContentAt(int $index): self {
+        unset($this->contents[$index]);
+        $this->contents = array_values($this->contents);
+        return $this;
+    }
+
     public function jsonSerialize(): array {
         $form = [
             "type" => "custom_form",
@@ -116,7 +122,6 @@ class CustomForm extends Form {
             if (is_callable($callback) and $callback($response->isResponseIgnored())) return;
 
             if (!$response->isResponseIgnored()) {
-
                 if ($response->shouldResendForm() or $response->hasError()) {
                     $this->resend($response->getErrors(), [], $response->getDefaultOverrides(), $response->getElementOverrides());
                     return;
