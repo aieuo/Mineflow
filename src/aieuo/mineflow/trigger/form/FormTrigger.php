@@ -3,13 +3,16 @@
 namespace aieuo\mineflow\trigger\form;
 
 use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -95,5 +98,26 @@ class FormTrigger extends Trigger {
                 return [];
         }
         return ["form" => $variable];
+    }
+
+    public function __toString() {
+        switch ($this->getSubKey()) {
+            case "":
+                $content = Language::get("trigger.form.string.submit", [$this->getKey()]);
+                break;
+            case "close":
+                $content = Language::get("trigger.form.string.close", [$this->getKey()]);
+                break;
+            default:
+                $form = Main::getFormManager()->getForm($this->getKey());
+                if ($form instanceof ListForm) {
+                    $button = $form->getButtonById($this->getSubKey());
+                    $content = Language::get("trigger.form.string.button", [$this->getKey(), $button instanceof Button ? $button->getText() : ""]);
+                } else {
+                    $content = $this->getKey();
+                }
+                break;
+        }
+        return $content;
     }
 }

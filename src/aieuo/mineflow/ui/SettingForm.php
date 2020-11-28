@@ -8,6 +8,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -50,7 +51,7 @@ class SettingForm {
         $enables = Main::getEventManager()->getEnabledEvents();
         $contents = [];
         foreach ($events as $name) {
-            $contents[] = new Toggle(Main::getEventManager()->translateEventName($name), isset($enables[$name]));
+            $contents[] = new Toggle((string)EventTrigger::create($name), isset($enables[$name]));
         }
         (new CustomForm("@setting.event"))
             ->setContents($contents)

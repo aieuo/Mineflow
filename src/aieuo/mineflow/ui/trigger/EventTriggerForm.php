@@ -21,9 +21,8 @@ class EventTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent("type: @trigger.type.".$trigger->getType())
-            ->appendContent(Main::getEventManager()->translateEventName($trigger->getKey()))
-            ->appendContent("\n@trigger.event.variable")
+            ->setContent((string)$trigger)
+            ->appendContent("@trigger.event.variable", true)
             ->forEach(EventTriggerList::get($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var) {
                 $form->appendContent("{".$var->getName()."} (".$var->getValueType().")");
             })->addButtons([
@@ -49,7 +48,7 @@ class EventTriggerForm extends TriggerForm {
         $events = Main::getEventManager()->getEnabledEvents();
         $buttons = [new Button("@form.back")];
         foreach ($events as $event => $value) {
-            $buttons[] = new Button(Main::getEventManager()->translateEventName($event));
+            $buttons[] = new Button((string)EventTrigger::create($event));
         }
         (new ListForm(Language::get("trigger.event.list.title", [$recipe->getName()])))
             ->addButtons($buttons)
@@ -67,11 +66,10 @@ class EventTriggerForm extends TriggerForm {
 
     public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName): void {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
-            ->setContent($eventName)
-            ->appendContent(Main::getEventManager()->translateEventName($eventName))
-            ->appendContent("\n@trigger.event.variable")
+            ->setContent((string)EventTrigger::create($eventName))
+            ->appendContent("@trigger.event.variable", true)
             ->forEach(EventTriggerList::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var) {
-                $form->appendContent("{".$var->getName()."} (".$var->getValueType().")");
+                $form->appendContent("{".$var->getName()."} (type = ".$var->getValueType().")");
             })->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),
@@ -95,7 +93,7 @@ class EventTriggerForm extends TriggerForm {
         $events = Main::getEventManager()->getEnabledEvents();
         $buttons = [new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); })];
         foreach ($events as $event => $value) {
-            $buttons[] = new Button(Main::getEventManager()->translateEventName($event), function () use($player, $event) {
+            $buttons[] = new Button((string)EventTrigger::create($event), function () use($player, $event) {
                 $this->sendRecipeList($player, $event);
             });
         }
@@ -111,7 +109,7 @@ class EventTriggerForm extends TriggerForm {
         foreach ($recipes as $name => $events) {
             $buttons[] = new Button($name);
         }
-        (new ListForm(Language::get("form.recipes.title", [Main::getEventManager()->translateEventName($event)])))
+        (new ListForm(Language::get("form.recipes.title", [(string)EventTrigger::create($event)])))
             ->setButtons($buttons)
             ->onReceive(function (Player $player, int $data, string $event, array $recipes) {
                 switch ($data) {
@@ -142,8 +140,7 @@ class EventTriggerForm extends TriggerForm {
     }
 
     public function sendRecipeMenu(Player $player, string $event, string $recipeName): void {
-        (new ListForm(Language::get("form.recipes.title", [Main::getEventManager()->translateEventName($event)])))
-            ->setContent(Language::get("trigger.event.".$event))
+        (new ListForm(Language::get("form.recipes.title", [(string)(EventTrigger::create($event))])))
             ->setButtons([
                 new Button("@form.back"),
                 new Button("@form.edit")

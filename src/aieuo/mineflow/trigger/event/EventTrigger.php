@@ -59,6 +59,6 @@ class EventTrigger extends Trigger {
     }
 
     public function __toString() {
-        return Language::get("trigger.event.".$this->getKey());
+        return Language::exists("trigger.event.".$this->getKey()) ? Language::get("trigger.event.".$this->getKey()) : $this->getKey();
     }
 }

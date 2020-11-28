@@ -267,14 +267,7 @@ class RecipeForm {
 
         $buttons = [new Button("@form.back"), new Button("@trigger.add")];
         foreach ($triggers as $trigger) {
-            switch ($trigger->getType()) {
-                case Triggers::EVENT:
-                    $content = "@trigger.type.".$trigger->getType().": ".Main::getEventManager()->translateEventName($trigger->getKey());
-                    break;
-                default:
-                    $content = "@trigger.type.".$trigger->getType().": ".$trigger->getKey();
-            }
-            $buttons[] = new Button($content);
+            $buttons[] = new Button((string)$trigger);
         }
 
         (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))

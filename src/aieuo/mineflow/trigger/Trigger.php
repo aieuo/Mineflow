@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger;
 
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
 
@@ -69,6 +70,7 @@ abstract class Trigger implements \JsonSerializable {
     }
 
     public function __toString() {
-        return $this->getType().": ".$this->getKey().", ".$this->getSubKey();
+        $translate = "trigger.type.".$this->getType();
+        return (Language::exists($translate) ? Language::get($translate) : $this->getType()).": ".$this->getKey().", ".$this->getSubKey();
     }
 }

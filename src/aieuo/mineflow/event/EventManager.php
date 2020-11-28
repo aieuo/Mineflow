@@ -174,8 +174,4 @@ class EventManager {
         }
         return $recipes;
     }
-
-    public function translateEventName(string $event): string {
-        return Language::exists("trigger.event.".$event) ? Language::get("trigger.event.".$event) : $event;
-    }
 }

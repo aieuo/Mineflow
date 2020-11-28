@@ -124,7 +124,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        return implode("\n", $details);
+        return implode("\n§f", $details);
     }
 
     public function setTargetSetting(int $type, array $options = []): void {

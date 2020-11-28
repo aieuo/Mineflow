@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
@@ -21,7 +22,7 @@ class BaseTriggerForm {
             return;
         }
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent("type: @trigger.type.".$trigger->getType()."\n".$trigger->getKey())
+            ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
                 new Button("@form.delete", function () use($player, $recipe, $trigger) { $this->sendConfirmDelete($player, $recipe, $trigger); }),
