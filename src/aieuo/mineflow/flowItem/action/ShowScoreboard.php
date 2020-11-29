@@ -26,7 +26,7 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
     protected $detail = "action.showScoreboard.detail";
     protected $detailDefaultReplace = ["player", "scoreboard"];
 
-    protected $category = Category::PLAYER;
+    protected $category = Category::SCOREBOARD;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         $this->setPlayerVariableName($player);
