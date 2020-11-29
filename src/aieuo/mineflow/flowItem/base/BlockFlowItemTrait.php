@@ -33,7 +33,7 @@ trait BlockFlowItemTrait {
 
     public function throwIfInvalidBlock(?Block $block): void {
         if (!($block instanceof Block)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [$this->getName(), ["action.target.require.block"], $this->getBlockVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.block"], $this->getBlockVariableName()]));
         }
     }
 }

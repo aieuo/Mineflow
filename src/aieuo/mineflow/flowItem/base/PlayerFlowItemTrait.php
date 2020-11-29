@@ -33,7 +33,7 @@ trait PlayerFlowItemTrait {
 
     public function throwIfInvalidPlayer(?Player $player, bool $allowOffline = false): void {
         if (!($player instanceof Player)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [$this->getName(), ["action.target.require.player"], $this->getPlayerVariableName()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.player"], $this->getPlayerVariableName()]));
         }
         if (!$allowOffline and !$player->isOnline()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.player.offline"));
