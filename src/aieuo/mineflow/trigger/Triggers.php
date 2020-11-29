@@ -21,18 +21,18 @@ class Triggers {
 
     /** @var TriggerForm[] */
     private static $forms = [];
-    /** @var Trigger[] */
+    /** @var string[] */
     private static $list = [];
 
     public static function init(): void {
-        self::add(self::BLOCK, BlockTrigger::create(""), new BlockTriggerForm());
-        self::add(self::COMMAND, CommandTrigger::create(""), new CommandTriggerForm());
-        self::add(self::EVENT, EventTrigger::create(""), new EventTriggerForm());
-        self::add(self::FORM, FormTrigger::create(""), new FormTriggerForm());
+        self::add(self::BLOCK, BlockTrigger::class, new BlockTriggerForm());
+        self::add(self::COMMAND, CommandTrigger::class, new CommandTriggerForm());
+        self::add(self::EVENT, EventTrigger::class, new EventTriggerForm());
+        self::add(self::FORM, FormTrigger::class, new FormTriggerForm());
     }
 
-    public static function add(string $type, Trigger $trigger, TriggerForm $form): void {
-        self::$list[$type] = $trigger;
+    public static function add(string $type, string $class, TriggerForm $form): void {
+        self::$list[$type] = $class;
         self::$forms[$type] = $form;
     }
 
@@ -40,10 +40,8 @@ class Triggers {
         $trigger = self::$list[$type] ?? null;
         if ($trigger === null) return null;
 
-        $trigger = clone $trigger;
-        $trigger->setKey($key);
-        $trigger->setSubKey($subKey);
-        return $trigger;
+        /** @var Trigger $trigger */
+        return $trigger::create($key, $subKey);
     }
 
     /**
