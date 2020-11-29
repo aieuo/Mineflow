@@ -35,6 +35,8 @@ interface FlowItemIds {
     public const GET_TARGET_BLOCK = "getTargetBlock";
     public const CREATE_HUMAN_ENTITY = "createHuman";
     public const GET_ENTITY_SIDE = "getEntitySide";
+    public const LOOK_AT = "lookAt";
+    public const MOVE_TO = "moveTo";
 
     public const GET_PLAYER = "getPlayer";
     public const SET_SLEEPING = "setSleeping";
