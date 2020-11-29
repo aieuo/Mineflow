@@ -21,25 +21,8 @@ use pocketmine\Player;
 class FormTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        switch ($trigger->getSubKey()) {
-            case "":
-                $content = Language::get("trigger.form.receive");
-                break;
-            case "close":
-                $content = Language::get("trigger.form.close");
-                break;
-            default:
-                $form = Main::getFormManager()->getForm($trigger->getKey());
-                if ($form instanceof ListForm) {
-                    $button = $form->getButtonById($trigger->getSubKey());
-                    $content = Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
-                } else {
-                    $content = "";
-                }
-                break;
-        }
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent("type: ".$trigger->getType()."\n".$trigger->getKey()."\n".$content)
+            ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
