@@ -179,10 +179,13 @@ interface FlowItemIds {
     public const COMPARISON_STRING = "comparisonString";
 
     public const IS_ACTIVE_ENTITY = "isActiveEntity";
+    public const IS_ACTIVE_ENTITY_VARIABLE = "isActiveEntityVariable";
     public const IS_PLAYER = "isPlayer";
+    public const IS_PLAYER_VARIABLE = "isPlayerVariable";
     public const IS_PLAYER_ONLINE = "isPlayerOnline";
     public const IS_PLAYER_ONLINE_BY_NAME = "isPlayerOnlineByName";
     public const IS_CREATURE = "isCreature";
+    public const IS_CREATURE_VARIABLE = "isCreatureVariable";
 
     public const EXISTS_VARIABLE = "existsVariable";
     public const EXISTS_LIST_VARIABLE_KEY = "existsListVariableKey";

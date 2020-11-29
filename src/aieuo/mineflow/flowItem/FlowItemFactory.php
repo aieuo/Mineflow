@@ -140,12 +140,15 @@ use aieuo\mineflow\flowItem\condition\HasPermission;
 use aieuo\mineflow\flowItem\condition\InArea;
 use aieuo\mineflow\flowItem\condition\InHand;
 use aieuo\mineflow\flowItem\condition\IsActiveEntity;
+use aieuo\mineflow\flowItem\condition\IsActiveEntityVariable;
 use aieuo\mineflow\flowItem\condition\IsCreature;
+use aieuo\mineflow\flowItem\condition\IsCreatureVariable;
 use aieuo\mineflow\flowItem\condition\IsFlying;
 use aieuo\mineflow\flowItem\condition\IsOp;
 use aieuo\mineflow\flowItem\condition\IsPlayer;
 use aieuo\mineflow\flowItem\condition\IsPlayerOnline;
 use aieuo\mineflow\flowItem\condition\IsPlayerOnlineByName;
+use aieuo\mineflow\flowItem\condition\IsPlayerVariable;
 use aieuo\mineflow\flowItem\condition\IsSneaking;
 use aieuo\mineflow\flowItem\condition\LessMoney;
 use aieuo\mineflow\flowItem\condition\NandScript;
@@ -336,6 +339,9 @@ class FlowItemFactory {
         self::register(new IsActiveEntity);
         self::register(new IsPlayer);
         self::register(new IsCreature);
+        self::register(new IsActiveEntityVariable);
+        self::register(new IsPlayerVariable);
+        self::register(new IsCreatureVariable);
         self::register(new InArea);
         /* player */
         self::register(new Gamemode);
