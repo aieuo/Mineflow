@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
@@ -30,18 +29,13 @@ class BaseTriggerForm {
     }
 
     public function sendSelectTriggerType(Player $player, Recipe $recipe): void {
-        $buttons = [
-            new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
-        ];
-        foreach (Triggers::getAllForm() as $type => $form) {
-            $buttons[] = new Button("@trigger.type.".$type, function () use($player, $recipe, $form) {
-                $form->sendMenu($player, $recipe);
-            });
-        }
         (new ListForm(Language::get("form.trigger.selectTriggerType", [$recipe->getName()])))
-            ->addButtons($buttons)
-            ->addArgs($recipe)
-            ->show($player);
+            ->addButton(new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }))
+            ->addButtonsEach(Triggers::getAllForm(), function (TriggerForm $form, string $type) use($player, $recipe) {
+                return new Button("@trigger.type.".$type, function () use($player, $recipe, $form) {
+                    $form->sendMenu($player, $recipe);
+                });
+            })->show($player);
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger): void {
@@ -49,13 +43,13 @@ class BaseTriggerForm {
             ->setContent(Language::get("form.delete.confirm", [$trigger->getType().": ".$trigger->getKey()]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, Recipe $recipe, Trigger $trigger) {
+            ->onReceive(function (Player $player, ?bool $data) use($recipe, $trigger) {
                 if ($data) {
                     $recipe->removeTrigger($trigger);
                     (new RecipeForm)->sendTriggerList($player, $recipe, ["@form.deleted"]);
                 } else {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@form.cancelled"]);
                 }
-            })->addArgs($recipe, $trigger)->show($player);
+            })->show($player);
     }
 }

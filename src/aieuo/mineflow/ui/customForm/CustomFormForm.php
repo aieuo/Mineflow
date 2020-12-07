@@ -58,13 +58,8 @@ class CustomFormForm {
                     Language::get("customForm.form"),
                     Language::get("customForm.custom_form"),
                 ]),
-                new CancelToggle(),
+                new CancelToggle(function () use($player) { $this->sendMenu($player); }),
             ])->onReceive(function (Player $player, array $data) {
-                if ($data[2]) {
-                    $this->sendMenu($player);
-                    return;
-                }
-
                 switch ($data[1]) {
                     case 0:
                         $form = new ModalForm($data[0]);
@@ -129,7 +124,7 @@ class CustomFormForm {
     public function sendFormList(Player $player): void {
         $manager = Main::getFormManager();
         $forms = $manager->getAllFormData();
-        $buttons = [new Button("@form.back")];
+        $buttons = [new Button("@form.back", function() use($player) { $this->sendMenu($player); })];
         foreach ($forms as $form) {
             $buttons[] = new Button($form["name"].": ".Language::get("customForm.".$form["type"]));
         }
@@ -137,10 +132,6 @@ class CustomFormForm {
         (new ListForm("@form.form.menu.formList"))
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $forms) {
-                if ($data === 0) {
-                    $this->sendMenu($player);
-                    return;
-                }
                 $data--;
 
                 $form = $forms[$data]["form"];
@@ -182,26 +173,19 @@ class CustomFormForm {
             ->setContents([
                 new Input("@customForm.content", "", $form->getContent()),
                 new CancelToggle(function() use($player, $form) { $this->sendFormMenu($player, $form, ["@form.cancelled"]); }),
-            ])->onReceive(function (Player $player, array $data, Form $form) {
-                if (!($form instanceof ModalForm) and !($form instanceof ListForm)) return;
-
+            ])->onReceive(function (Player $player, array $data) use($form) {
                 $form->setContent($data[0]);
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendFormMenu($player, $form, ["@form.changed"]);
-            })->addArgs($form)->show($player);
+            })->show($player);
     }
 
     public function sendChangeFormName(Player $player, Form $form, array $default = [], array $errors = []): void {
-        (new CustomForm("@form.form.formMenu.changeName"))
+        ($it = new CustomForm("@form.form.formMenu.changeName"))
             ->setContents([
                 new Input("@customForm.name", "", $default[0] ?? $form->getName(), true),
-                new CancelToggle(),
-            ])->onReceive(function (Player $player, array $data, Form $form) {
-                if ($data[1]) {
-                    $this->sendFormMenu($player, $form, ["@form.cancelled"]);
-                    return;
-                }
-
+                new CancelToggle(function () use($player, $form) { $this->sendFormMenu($player, $form, ["@form.cancelled"]); }),
+            ])->onReceive(function (Player $player, array $data) use($form, $it) {
                 $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
@@ -213,8 +197,8 @@ class CustomFormForm {
                             $manager->addForm($name, $form);
                             $this->sendFormMenu($player, $form, ["@form.changed"]);
                         },
-                        function (string $name) use ($player, $form, $data) {
-                            $this->sendChangeFormName($player, $form, $data, [[Language::get("customForm.exists", [$name]), 0]]);
+                        function (string $name) use ($it) {
+                            $it->resend([[Language::get("customForm.exists", [$name]), 0]]);
                         });
                     return;
                 }
@@ -223,7 +207,7 @@ class CustomFormForm {
                 $form->setName($data[0]);
                 $manager->addForm($data[0], $form);
                 $this->sendFormMenu($player, $form, ["@form.changed"]);
-            })->addArgs($form)->addErrors($errors)->show($player);
+            })->addErrors($errors)->show($player);
     }
 
     public function sendRecipeList(Player $player, Form $form, array $messages = []): void {

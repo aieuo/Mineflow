@@ -118,10 +118,10 @@ abstract class VariableDropdown extends Dropdown {
 
     public function sendAddVariableForm(Player $player, CustomForm $origin, int $index): void {
         (new ListForm("@form.element.variableDropdown.createVariable"))
-            ->forEach($this->actions, function (ListForm $form, string $id) use ($player, $origin, $index) {
+            ->addButtonsEach($this->actions, function (ListForm $form, string $id) use ($player, $origin, $index) {
                 $action = FlowItemFactory::get($id);
 
-                $form->addButton(new Button($action->getName(), function () use ($player, $origin, $index, $action) {
+                return new Button($action->getName(), function () use ($player, $origin, $index, $action) {
                     $parents = Session::getSession($player)->get("parents");
                     /** @var FlowItemContainer $container */
                     $container = end($parents);
@@ -158,7 +158,7 @@ abstract class VariableDropdown extends Dropdown {
 
                         $origin->resend([], ["@form.added"], [$index => $dropdown->getDefault()]);
                     })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
-                }));
+                });
             })->addButton(new Button("@form.cancelAndBack", function () use($origin) {
                 $origin->resend();
             }))->show($player);
