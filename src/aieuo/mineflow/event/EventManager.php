@@ -10,6 +10,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\inventory\CraftItemEvent;
@@ -53,6 +54,7 @@ class EventManager {
         "EntityAttackEvent" => EntityAttackEvent::class,
         "PlayerToggleFlightEvent" => PlayerToggleFlightEvent::class,
         "PlayerDeathEvent" => PlayerDeathEvent::class,
+        "EntityDeathEvent" => EntityDeathEvent::class,
         "EntityLevelChangeEvent" => EntityLevelChangeEvent::class,
         "CraftItemEvent" => CraftItemEvent::class,
         "PlayerDropItemEvent" => PlayerDropItemEvent::class,
