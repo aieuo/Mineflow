@@ -5,7 +5,6 @@ namespace aieuo\mineflow\event;
 
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\utils\Language;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;

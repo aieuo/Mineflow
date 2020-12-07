@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\EntityHolder;
 use pocketmine\entity\Creature;
 
 class IsCreatureVariable extends IsActiveEntityVariable {
