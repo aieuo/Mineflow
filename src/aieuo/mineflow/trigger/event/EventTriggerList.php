@@ -20,6 +20,7 @@ class EventTriggerList {
         self::add(new PlayerChatEventTrigger());
         self::add(new PlayerCommandPreprocessEventTrigger());
         self::add(new PlayerDeathEventTrigger());
+        self::add(new EntityDeathEventTrigger());
         self::add(new PlayerDropItemEventTrigger());
         self::add(new PlayerExhaustEventTrigger());
         self::add(new PlayerInteractEventTrigger());
