@@ -12,12 +12,8 @@ class PlayerBedEnterEventTrigger extends EventTrigger {
         parent::__construct(PlayerBedEnterEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerBedEnterEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerBedEnterEvent $event */
         $target = $event->getPlayer();
         $block = $event->getBed();
         return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($block));

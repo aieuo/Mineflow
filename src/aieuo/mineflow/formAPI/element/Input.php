@@ -27,34 +27,20 @@ class Input extends Element {
         $this->required = $required;
     }
 
-    /**
-     * @param string $placeholder
-     * @return self
-     */
     public function setPlaceholder(string $placeholder): self {
         $this->placeholder = $placeholder;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPlaceholder(): string {
         return $this->placeholder;
     }
 
-    /**
-     * @param string $default
-     * @return self
-     */
     public function setDefault(string $default): self {
         $this->default = $default;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDefault(): string {
         return $this->default;
     }

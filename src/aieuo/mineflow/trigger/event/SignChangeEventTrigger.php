@@ -14,12 +14,8 @@ class SignChangeEventTrigger extends PlayerEventTrigger {
         parent::__construct(SignChangeEvent::class, $subKey);
     }
 
-    /**
-     * @param SignChangeEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var SignChangeEvent $event */
         $lines = $event->getLines();
         $target = $event->getPlayer();
         $block = $event->getBlock();

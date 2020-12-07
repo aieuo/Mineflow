@@ -19,12 +19,8 @@ class BlockPlaceEventTrigger extends EventTrigger {
         return $event->getPlayer();
     }
 
-    /**
-     * @param BlockPlaceEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var BlockPlaceEvent $event */
         $target = $event->getPlayer();
         $block = $event->getBlock();
         return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($block));

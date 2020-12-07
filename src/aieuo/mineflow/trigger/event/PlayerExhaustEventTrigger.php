@@ -13,12 +13,8 @@ class PlayerExhaustEventTrigger extends EventTrigger {
         parent::__construct(PlayerExhaustEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerExhaustEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerExhaustEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getEntityVariables($target);
         $variables["amount"] = new NumberVariable($event->getAmount(), "amount");

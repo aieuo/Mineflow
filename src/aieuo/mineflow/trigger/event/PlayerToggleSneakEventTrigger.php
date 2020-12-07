@@ -13,12 +13,8 @@ class PlayerToggleSneakEventTrigger extends EventTrigger {
         parent::__construct(PlayerToggleSneakEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerToggleSneakEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerToggleSneakEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
         $variables["state"] = new StringVariable($event->isSneaking() ? "true" : "false", "state");

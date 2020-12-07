@@ -12,12 +12,8 @@ class PlayerInteractEventTrigger extends PlayerEventTrigger {
         parent::__construct(PlayerInteractEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerInteractEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerInteractEvent $event */
         $target = $event->getPlayer();
         $block = $event->getBlock();
         return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($block));

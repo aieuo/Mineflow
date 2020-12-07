@@ -13,12 +13,8 @@ class EntityLevelChangeEventTrigger extends EventTrigger {
         parent::__construct(EntityLevelChangeEvent::class, $subKey);
     }
 
-    /**
-     * @param EntityLevelChangeEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var EntityLevelChangeEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target);
         $variables["origin_level"] = new LevelObjectVariable($event->getOrigin(), "origin_level");

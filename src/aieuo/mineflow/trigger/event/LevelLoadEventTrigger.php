@@ -12,12 +12,8 @@ class LevelLoadEventTrigger extends EventTrigger {
         parent::__construct(LevelLoadEvent::class, $subKey);
     }
 
-    /**
-     * @param LevelLoadEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var LevelLoadEvent $event */
         return ["level" => new LevelObjectVariable($event->getLevel(), "level")];
     }
 

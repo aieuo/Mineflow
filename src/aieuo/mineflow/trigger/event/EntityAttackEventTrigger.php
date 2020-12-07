@@ -20,12 +20,8 @@ class EntityAttackEventTrigger extends PlayerEventTrigger {
         return $event->getDamageEvent()->getDamager();
     }
 
-    /**
-     * @param EntityAttackEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var EntityAttackEvent $event */
         $entityDamageEvent = $event->getDamageEvent();
         $target = $entityDamageEvent->getEntity();
         $variables = DefaultVariables::getEntityVariables($target, "damaged");

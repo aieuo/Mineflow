@@ -13,12 +13,8 @@ class PlayerToggleSprintEventTrigger extends EventTrigger {
         parent::__construct(PlayerToggleSprintEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerToggleSprintEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerToggleSprintEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
         $variables["state"] = new StringVariable($event->isSprinting() ? "true" : "false", "state");

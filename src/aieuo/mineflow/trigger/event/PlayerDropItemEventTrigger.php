@@ -13,12 +13,8 @@ class PlayerDropItemEventTrigger extends EventTrigger {
         parent::__construct(PlayerDropItemEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerDropItemEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerDropItemEvent $event */
         $target = $event->getPlayer();
         $item = $event->getItem();
         return array_merge(DefaultVariables::getPlayerVariables($target), [

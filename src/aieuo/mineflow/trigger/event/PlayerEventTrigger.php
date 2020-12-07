@@ -9,12 +9,8 @@ use pocketmine\event\player\PlayerEvent;
 
 class PlayerEventTrigger extends EventTrigger {
 
-    /**
-     * @param PlayerEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerEvent $event */
         $target = $event->getPlayer();
         return array_merge(DefaultVariables::getPlayerVariables($target));
     }

@@ -13,12 +13,8 @@ class PlayerItemConsumeEventTrigger extends EventTrigger {
         parent::__construct(PlayerItemConsumeEvent::class, $subKey);
     }
 
-    /**
-     * @param PlayerItemConsumeEvent $event
-     * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
-     */
     public function getVariables($event): array {
+        /** @var PlayerItemConsumeEvent $event */
         $target = $event->getPlayer();
         $item = $event->getItem();
         return array_merge(DefaultVariables::getPlayerVariables($target), [
