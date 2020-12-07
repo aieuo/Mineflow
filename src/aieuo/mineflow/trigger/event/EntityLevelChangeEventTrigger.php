@@ -8,7 +8,7 @@ use aieuo\mineflow\variable\object\LevelObjectVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 
-class EntityLevelChangeEventTrigger extends EventTrigger {
+class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
         parent::__construct(EntityLevelChangeEvent::class, $subKey);
     }
@@ -24,7 +24,7 @@ class EntityLevelChangeEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::ENTITY),
+            "target" => new DummyVariable("target", DummyVariable::PLAYER),
             "origin_level" => new DummyVariable("origin_level", DummyVariable::LEVEL),
             "target_level" => new DummyVariable("target_level", DummyVariable::LEVEL),
         ];

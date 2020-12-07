@@ -36,7 +36,7 @@ class EntityAttackEventTrigger extends PlayerEventTrigger {
             "target" => new DummyVariable("target", DummyVariable::PLAYER),
             "damage" => new DummyVariable("damage", DummyVariable::NUMBER),
             "cause" => new DummyVariable("cause", DummyVariable::NUMBER),
-            "damaged" => new DummyVariable("damaged", DummyVariable::ENTITY),
+            "damaged" => new DummyVariable("damaged", DummyVariable::PLAYER),
         ];
     }
 }
