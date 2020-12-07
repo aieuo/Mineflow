@@ -10,7 +10,7 @@ use aieuo\mineflow\ui\trigger\BlockTriggerForm;
 use aieuo\mineflow\ui\trigger\CommandTriggerForm;
 use aieuo\mineflow\ui\trigger\EventTriggerForm;
 use aieuo\mineflow\ui\trigger\FormTriggerForm;
-use aieuo\mineflow\ui\TriggerForm;
+use aieuo\mineflow\ui\trigger\TriggerForm;
 
 class Triggers {
 
