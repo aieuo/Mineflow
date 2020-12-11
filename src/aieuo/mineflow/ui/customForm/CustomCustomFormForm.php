@@ -85,10 +85,12 @@ class CustomCustomFormForm {
                 new Dropdown("@customForm.custom.element.select", [
                     Language::get("customForm.label", [" (label)"]),
                     Language::get("customForm.input", [" (input)"]),
+                    Language::get("customForm.numberInput", [" (number input)"]),
                     Language::get("customForm.slider", [" (slider)"]),
                     Language::get("customForm.step_slider", [" (step_slider)"]),
                     Language::get("customForm.dropdown", [" (dropdown)"]),
                     Language::get("customForm.toggle", [" (toggle)"]),
+                    Language::get("customForm.cancelToggle", [" (cancel toggle)"]),
                 ]),
                 new Input("@customForm.text"),
                 new CancelToggle(function() use($player, $form) { $this->sendElementList($player, $form); })
@@ -101,16 +103,22 @@ class CustomCustomFormForm {
                         $element = new Input($data[1]);
                         break;
                     case 2:
-                        $element = new Slider($data[1], 0, 0);
+                        $element = new NumberInput($data[1]);
                         break;
                     case 3:
-                        $element = new StepSlider($data[1]);
+                        $element = new Slider($data[1], 0, 0);
                         break;
                     case 4:
-                        $element = new Dropdown($data[1]);
+                        $element = new StepSlider($data[1]);
                         break;
                     case 5:
+                        $element = new Dropdown($data[1]);
+                        break;
+                    case 6:
                         $element = new Toggle($data[1]);
+                        break;
+                    case 7:
+                        $element = new CancelToggle(null, $data[1]);
                         break;
                     default:
                         return;
@@ -125,6 +133,11 @@ class CustomCustomFormForm {
         $contents = [new Input("@customForm.text", "", $element->getText())];
         $index = array_search($element, $form->getContents(), true);
         switch (true) {
+            case $element instanceof CancelToggle:
+                array_unshift($messages, Language::get("customForm.receive.custom", [$index, "(true | false)"]));
+                array_unshift($messages, Language::get("customForm.cancelToggle.detail"));
+                $contents[] = new CancelToggle(null, "@customForm.default", $element->getDefault());
+                break;
             case $element instanceof Toggle:
                 array_unshift($messages, Language::get("customForm.receive.custom", [$index, "(true | false)"]));
                 $contents[] = new Toggle("@customForm.default", $element->getDefault());
@@ -132,10 +145,19 @@ class CustomCustomFormForm {
             case $element instanceof Label:
                 array_unshift($messages, Language::get("customForm.receive.custom", [$index, ""]));
                 break;
+            case $element instanceof NumberInput:
+                array_unshift($messages, Language::get("customForm.receive.custom.input", [$index]));
+                $contents[] = new Input("@customForm.input.placeholder", "", $element->getPlaceholder());
+                $contents[] = new NumberInput("@customForm.default", "", $element->getDefault());
+                $contents[] = new Toggle("@customForm.input.required", $element->isRequired());
+                $contents[] = new NumberInput("@customForm.numberInput.min", "", (string)$element->getMin());
+                $contents[] = new NumberInput("@customForm.numberInput.max", "", (string)$element->getMax());
+                break;
             case $element instanceof Input:
                 array_unshift($messages, Language::get("customForm.receive.custom.input", [$index]));
                 $contents[] = new Input("@customForm.input.placeholder", "", $element->getPlaceholder());
                 $contents[] = new Input("@customForm.default", "", $element->getDefault());
+                $contents[] = new Toggle("@customForm.input.required", $element->isRequired());
                 break;
             case $element instanceof Slider:
                 array_unshift($messages, Language::get("customForm.receive.custom.slider", [$index]));
@@ -177,9 +199,17 @@ class CustomCustomFormForm {
                     case $element instanceof Toggle:
                         $element->setDefault($data[0]);
                         break;
+                    case $element instanceof NumberInput:
+                        $element->setPlaceholder($data[0]);
+                        $element->setDefault($data[1]);
+                        $element->setRequired($data[2]);
+                        $element->setMin($data[3] === "" ? null : (float)$data[3]);
+                        $element->setMax($data[4] === "" ? null : (float)$data[4]);
+                        break;
                     case $element instanceof Input:
                         $element->setPlaceholder($data[0]);
                         $element->setDefault($data[1]);
+                        $element->setRequired($data[2]);
                         break;
                     case $element instanceof Slider:
                         $element->setMin((float)$data[0]);

@@ -3,11 +3,13 @@
 namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
+use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -243,27 +245,43 @@ abstract class Form implements PMForm {
                 foreach ($data["content"] as $content) {
                     if (!isset($content["type"]) or !isset($content["text"])) return null;
 
+                    $text = $content["text"];
                     switch ($content["type"]) {
                         case Element::ELEMENT_LABEL:
-                            $element = new Label($content["text"]);
+                            $element = new Label($text);
                             break;
                         case Element::ELEMENT_TOGGLE:
-                            $element = new Toggle($content["text"], $content["default"] ?? false);
+                            $default = $content["default"] ?? false;
+                            if (isset($content["mineflow"]["type"]) and $content["mineflow"]["type"] === "cancelToggle") {
+                                $element = new CancelToggle(null, $text, $default);
+                            } else {
+                                $element = new Toggle($text, $default);
+                            }
                             break;
                         case Element::ELEMENT_INPUT:
-                            $element = new Input($content["text"], $content["placeholder"] ?? "", $content["default"] ?? "");
+                            $placeholder = $content["placeholder"] ?? "";
+                            $default = $content["default"] ?? "";
+                            $required = $content["mineflow"]["required"] ?? false;
+                            if (isset($content["mineflow"]["type"]) and $content["mineflow"]["type"] === "number") {
+                                $min = $content["mineflow"]["min"] ?? null;
+                                $max = $content["mineflow"]["max"] ?? null;
+                                $excludes = $content["mineflow"]["excludes"] ?? [];
+                                $element = new NumberInput($text, $placeholder, $default, $required, $min, $max, $excludes);
+                            } else {
+                                $element = new Input($text, $placeholder, $default, $required);
+                            }
                             break;
                         case Element::ELEMENT_SLIDER:
                             if (!isset($content["min"]) or !isset($content["max"])) return null;
-                            $element = new Slider($content["text"], $content["min"], $content["max"], $content["step"] ?? 1, $content["default"] ?? null);
+                            $element = new Slider($text, $content["min"], $content["max"], $content["step"] ?? 1, $content["default"] ?? null);
                             break;
                         case Element::ELEMENT_STEP_SLIDER:
                             if (!isset($content["steps"])) return null;
-                            $element = new StepSlider($content["text"], $content["steps"], $content["default"] ?? 0);
+                            $element = new StepSlider($text, $content["steps"], $content["default"] ?? 0);
                             break;
                         case Element::ELEMENT_DROPDOWN:
                             if (!isset($content["options"])) return null;
-                            $element = new Dropdown($content["text"], $content["options"], $content["default"] ?? 0);
+                            $element = new Dropdown($text, $content["options"], $content["default"] ?? 0);
                             break;
                         default:
                             return null;

@@ -49,6 +49,11 @@ class Input extends Element {
         return $this->required;
     }
 
+    public function setRequired(bool $required): self {
+        $this->required = $required;
+        return $this;
+    }
+
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {
         $data = str_replace("\\n", "\n", $response->getInputResponse());
 
@@ -65,6 +70,14 @@ class Input extends Element {
             "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "placeholder" => Language::replace($this->placeholder),
             "default" => Language::replace($this->default),
+            "mineflow" => $this->serializeExtraData(),
+        ];
+    }
+
+    public function serializeExtraData(): array {
+        return [
+            "type" => "text",
+            "required" => $this->isRequired(),
         ];
     }
 }

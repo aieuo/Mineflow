@@ -64,4 +64,14 @@ class NumberInput extends Input {
             $response->addError(Language::get("action.error.excludedNumber", [implode(",", $excludes)]));
         }
     }
+
+    public function serializeExtraData(): array {
+        return [
+            "type" => "number",
+            "required" => $this->isRequired(),
+            "min" => $this->getMin(),
+            "max" => $this->getMax(),
+            "excludes" => $this->getExcludes(),
+        ];
+    }
 }

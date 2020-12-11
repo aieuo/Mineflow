@@ -4,6 +4,7 @@ namespace aieuo\mineflow\formAPI\element;
 
 
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
+use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
 class CancelToggle extends Toggle {
@@ -27,5 +28,16 @@ class CancelToggle extends Toggle {
                 $response->setInterruptCallback(function () { return true; });
             }
         }
+    }
+
+    public function jsonSerialize(): array {
+        return [
+            "type" => $this->type,
+            "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
+            "default" => $this->getDefault(),
+            "mineflow" => [
+                "type" => "cancelToggle"
+            ]
+        ];
     }
 }
