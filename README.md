@@ -11,7 +11,7 @@
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
 rewrite of https://github.com/aieuo/if_plugin  
-
+Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
 
 ### [English](#English),  [日本語](#日本語)
 
