@@ -115,4 +115,12 @@ class ListForm extends Form {
 
         parent::handleResponse($player, $data);
     }
+
+    public function __clone() {
+        $buttons = [];
+        foreach ($this->getButtons() as $i => $button) {
+            $buttons[$i] = (clone $button)->uuid($button->getUUID());
+        }
+        $this->setButtons($buttons);
+    }
 }

@@ -38,14 +38,14 @@ class CustomCustomFormForm {
                         is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
                         return;
                     case 1:
-                        $form->onReceive(function (Player $player) use ($form) {
+                        (clone $form)->onReceive(function (Player $player) use ($form) {
                             $this->sendMenu($player, $form);
                         })->onClose(function (Player $player) use ($form) {
                             $this->sendMenu($player, $form);
                         })->show($player);
                         return;
                     case 2:
-                        $form->onReceive([new CustomFormForm(), "onReceive"])
+                        (clone $form)->onReceive([new CustomFormForm(), "onReceive"])
                             ->onClose([new CustomFormForm(), "onClose"])
                             ->addArgs($form)->show($player);
                         return;

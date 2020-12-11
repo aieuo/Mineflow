@@ -144,4 +144,12 @@ class CustomForm extends Form {
         }
         return $this;
     }
+
+    public function __clone() {
+        $elements = [];
+        foreach ($this->getContents() as $i => $content) {
+            $elements[$i] = clone $content;
+        }
+        $this->setContents($elements);
+    }
 }

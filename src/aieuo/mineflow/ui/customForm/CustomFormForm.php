@@ -324,6 +324,7 @@ class CustomFormForm {
                 }
                 break;
         }
+        $form->resetErrors();
     }
 
     public function onClose(Player $player, Form $form): void {
@@ -333,5 +334,6 @@ class CustomFormForm {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player);
         }
+        $form->resetErrors();
     }
 }
