@@ -124,6 +124,9 @@ class EventListener implements Listener {
 
     public function onEntityDamageByEntity(EntityDamageByEntityEvent $event): void {
         if ($event instanceof EntityAttackEvent) return;
-        (new EntityAttackEvent(Main::getInstance(), $event))->call();
+        ($ev = new EntityAttackEvent(Main::getInstance(), $event))->call();
+        if ($ev->isCancelled()) {
+            $event->setCancelled();
+        }
     }
 }
