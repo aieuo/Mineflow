@@ -23,7 +23,7 @@ class CraftItemEventTrigger extends EventTrigger {
         }, $event->getInputs());
         $outputs = array_map(function (Item $output) {
             return new ItemObjectVariable($output, "output", $output->__toString());
-        }, $event->getInputs());
+        }, $event->getOutputs());
         $variables = DefaultVariables::getPlayerVariables($target);
         $variables["inputs"] = new ListVariable($inputs, "inputs");
         $variables["outputs"] = new ListVariable($outputs, "outputs");
