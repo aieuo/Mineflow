@@ -34,6 +34,7 @@ class EventTriggerList {
         self::add(new ProjectileHitEntityEventTrigger());
         self::add(new SignChangeEventTrigger());
         self::add(new ServerStartEventTrigger());
+        self::add(new InventoryPickupItemEventTrigger());
     }
 
     public static function add(EventTrigger $trigger): void {

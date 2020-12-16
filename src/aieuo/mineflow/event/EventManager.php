@@ -14,6 +14,7 @@ use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\inventory\FurnaceBurnEvent;
+use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\level\LevelLoadEvent;
 use pocketmine\event\player\PlayerBedEnterEvent;
 use pocketmine\event\player\PlayerChangeSkinEvent;
@@ -68,6 +69,7 @@ class EventManager {
         "PlayerToggleSprintEvent" => PlayerToggleSprintEvent::class,
         "ProjectileHitEntityEvent" => ProjectileHitEntityEvent::class,
         "PlayerJumpEvent" => PlayerJumpEvent::class,
+        "InventoryPickupItemEvent" => InventoryPickupItemEvent::class,
     ];
 
     /** @var array */
