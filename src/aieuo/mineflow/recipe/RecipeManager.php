@@ -59,7 +59,14 @@ class RecipeManager {
             $recipe->setRawData($json);
             try {
                 $recipe->loadSaveData($data["actions"]);
-            } catch (\ErrorException $e) {
+                $recipe->setTargetSetting(
+                    $data["target"]["type"] ?? Recipe::TARGET_DEFAULT,
+                    $data["target"]["options"] ?? []
+                );
+                $recipe->setTriggersFromArray($data["triggers"] ?? []);
+                $recipe->setArguments($data["arguments"] ?? []);
+                $recipe->setReturnValues($data["returnValues"] ?? []);
+            } catch (\ErrorException|\UnexpectedValueException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
             } catch (FlowItemLoadException $e) {
@@ -68,13 +75,6 @@ class RecipeManager {
                 continue;
             }
 
-            $recipe->setTargetSetting(
-                $data["target"]["type"] ?? Recipe::TARGET_DEFAULT,
-                $data["target"]["options"] ?? []
-            );
-            $recipe->setTriggersFromArray($data["triggers"] ?? []);
-            $recipe->setArguments($data["arguments"] ?? []);
-            $recipe->setReturnValues($data["returnValues"] ?? []);
 
             $this->add($recipe, false);
         }
