@@ -69,7 +69,7 @@ class Input extends Element {
             "type" => $this->type,
             "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "placeholder" => Language::replace($this->placeholder),
-            "default" => Language::replace($this->default),
+            "default" => str_replace("\n", "\\n", Language::replace($this->default)),
             "mineflow" => $this->serializeExtraData(),
         ];
     }
