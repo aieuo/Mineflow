@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
+use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
@@ -235,6 +236,9 @@ abstract class Form implements PMForm {
                         $button = new CommandButton($buttonData["mineflow"]["command"], $buttonData["text"]);
                     } else {
                         $button = new Button($buttonData["text"]);
+                    }
+                    if (isset($buttonData["image"])) {
+                        $button->setImage(new ButtonImage($buttonData["image"]["data"], $buttonData["image"]["type"]));
                     }
                     $form->addButton($button->uuid($buttonData["id"] ?? ""));
                 }

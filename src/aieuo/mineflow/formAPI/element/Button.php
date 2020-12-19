@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\UUID;
 
@@ -14,6 +15,8 @@ class Button implements \JsonSerializable {
     protected $type = self::TYPE_NORMAL;
     /** @var string */
     protected $text = "";
+    /** @var ButtonImage|null */
+    private $image;
     /** @var string */
     protected $extraText = "";
     /** @var string */
@@ -26,9 +29,10 @@ class Button implements \JsonSerializable {
     /** @var bool */
     public $skipIfCallOnClick = true; // TODO: 名前...
 
-    public function __construct(string $text, ?callable $onClick = null) {
+    public function __construct(string $text, ?callable $onClick = null, ?ButtonImage $image = null) {
         $this->text = str_replace("\\n", "\n", $text);
         $this->onClick = $onClick;
+        $this->image = $image;
     }
 
     public function getType(): string {
@@ -42,6 +46,14 @@ class Button implements \JsonSerializable {
 
     public function getText(): string {
         return $this->text;
+    }
+
+    public function getImage(): ?ButtonImage {
+        return $this->image;
+    }
+
+    public function setImage(?ButtonImage $image): void {
+        $this->image = $image;
     }
 
     public function uuid(string $id): self {
@@ -66,6 +78,7 @@ class Button implements \JsonSerializable {
         return [
             "text" => Language::replace($this->text),
             "id" => $this->getUUID(),
+            "image" => $this->getImage(),
         ];
     }
 }

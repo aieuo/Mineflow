@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
@@ -69,9 +70,11 @@ class CustomListFormForm {
         (new CustomForm("@customForm.list.addButton"))
             ->setContents([
                 new Input("@customForm.text", "", "", true),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), ""),
                 new CancelToggle(function() use($player, $form) { $this->sendButtonList($player, $form, ["@form.canceled"]); }),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
-                $form->addButton(new Button($data[0]));
+                $image = $data[1] === "" ? null : new ButtonImage($data[1], ButtonImage::TYPE_PATH);
+                $form->addButton(new Button($data[0], null, $image));
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, ["@form.added"]);
             })->addArgs($form)->show($player);
@@ -82,9 +85,11 @@ class CustomListFormForm {
             ->setContents([
                 new Input("@customForm.text", "", "", true),
                 new Input("@customForm.list.commandButton.command", "", "", true),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), ""),
                 new CancelToggle(function() use($player, $form) { $this->sendButtonList($player, $form, ["@form.canceled"]); }),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
-                $form->addButton(new CommandButton($data[1], $data[0]));
+                $image = $data[2] === "" ? null : new ButtonImage($data[2], ButtonImage::TYPE_PATH);
+                $form->addButton(new CommandButton($data[1], $data[0], $image));
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, ["@form.added"]);
             })->addArgs($form)->show($player);
@@ -100,12 +105,14 @@ class CustomListFormForm {
             ->setContents([
                 new Label(Language::get("customForm.receive", [$index])."\n".Language::get("customForm.receive.list.button", [$button->getText()])),
                 new Input("@customForm.text", "", $button->getText(), true),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), $button->getImage() === null ? "" : $button->getImage()->getData()),
                 new CancelToggle(null, "@form.delete"),
             ])->onReceive(function (Player $player, array $data) use($form, $index, $button) {
-                if ($data[2]) {
+                if ($data[3]) {
                     $form->removeButton($index);
                 } else {
                     $button->setText($data[1]);
+                    $button->setImage($data[2] === "" ? null : new ButtonImage($data[2], ButtonImage::TYPE_PATH));
                 }
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$data[2] ? "@form.deleted" : "@form.changed"]);
@@ -118,13 +125,15 @@ class CustomListFormForm {
                 new Label(Language::get("customForm.receive", [$index])."\n".Language::get("customForm.receive.list.button", [$button->getText()])),
                 new Input("@customForm.text", "", $button->getText(), true),
                 new Input("@customForm.list.commandButton.command", "", $button->getCommand(), true),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), $button->getImage() === null ? "" : $button->getImage()->getData()),
                 new CancelToggle(null, "@form.delete"),
             ])->onReceive(function (Player $player, array $data) use($form, $index, $button) {
-                if ($data[3]) {
+                if ($data[4]) {
                     $form->removeButton($index);
                 } else {
                     $button->setText($data[1]);
                     $button->setCommand($data[2]);
+                    $button->setImage($data[3] === "" ? null : new ButtonImage($data[3], ButtonImage::TYPE_PATH));
                 }
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$data[3] ? "@form.deleted" : "@form.changed"]);
