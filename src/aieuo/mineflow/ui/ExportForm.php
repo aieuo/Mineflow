@@ -43,7 +43,7 @@ class ExportForm {
                         $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
                         $this->sendRecipeList($player, $recipes, ["@form.added"]);
                     },
-                    function (Player $player) use ($recipes) {
+                    function () use ($player, $recipes) {
                         $this->sendRecipeList($player, $recipes, ["@form.cancelled"]);
                     }
                 );
