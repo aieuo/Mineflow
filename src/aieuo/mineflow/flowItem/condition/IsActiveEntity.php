@@ -48,7 +48,7 @@ class IsActiveEntity extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getEntityId()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getEntityId());

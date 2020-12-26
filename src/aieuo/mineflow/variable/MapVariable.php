@@ -10,7 +10,7 @@ class MapVariable extends ListVariable {
         $this->value[$value->getName()] = $value;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
         foreach ($this->getValue() as $key => $value) {

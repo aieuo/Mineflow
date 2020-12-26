@@ -40,7 +40,7 @@ class ObjectVariable extends Variable {
         return new StringVariable($this->__toString(), $this->getName());
     }
 
-    public function __toString() {
+    public function __toString(): string {
         if (!empty($this->showString)) return (string)$this->showString;
         if (method_exists($this->getValue(), "__toString")) {
             $str = (string)$this->getValue();

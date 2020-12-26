@@ -39,7 +39,7 @@ class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowIt
         return Language::get($this->detail, [$this->getEntityVariableName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

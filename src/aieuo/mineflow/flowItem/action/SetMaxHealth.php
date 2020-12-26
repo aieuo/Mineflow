@@ -11,7 +11,7 @@ class SetMaxHealth extends SetHealth {
     protected $name = "action.setMaxHealth.name";
     protected $detail = "action.setMaxHealth.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $health = $origin->replaceVariables($this->getHealth());

@@ -53,7 +53,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $key = $origin->replaceVariables($this->getKey());

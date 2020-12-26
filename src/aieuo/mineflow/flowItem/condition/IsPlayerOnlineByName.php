@@ -48,7 +48,7 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getPlayerName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getPlayerName());

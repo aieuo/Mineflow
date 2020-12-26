@@ -64,7 +64,7 @@ class GetVariableNested extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $variableName = $origin->replaceVariables($this->getVariableName());

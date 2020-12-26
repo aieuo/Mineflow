@@ -24,7 +24,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     protected $name;
     /** @var string */
     protected $detail;
-    /** @var array */
+    /** @var string[] */
     protected $detailDefaultReplace = [];
 
     /** @var string */

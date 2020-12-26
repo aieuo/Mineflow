@@ -63,7 +63,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->places[$this->getIndex()])]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $index = $origin->replaceVariables($this->getIndex());

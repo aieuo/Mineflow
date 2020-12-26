@@ -61,7 +61,7 @@ abstract class Trigger implements \JsonSerializable {
         return []; // [$variable];
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array {
         return [
             "type" => $this->getType(),
             "key" => $this->getKey(),
@@ -69,7 +69,7 @@ abstract class Trigger implements \JsonSerializable {
         ];
     }
 
-    public function __toString() {
+    public function __toString(): string {
         $translate = "trigger.type.".$this->getType();
         return (Language::exists($translate) ? Language::get($translate) : $this->getType()).": ".$this->getKey().", ".$this->getSubKey();
     }

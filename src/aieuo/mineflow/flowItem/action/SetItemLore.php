@@ -55,7 +55,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), implode(";", $this->getLore())]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

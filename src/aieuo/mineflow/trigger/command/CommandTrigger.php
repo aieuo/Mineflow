@@ -39,7 +39,7 @@ class CommandTrigger extends Trigger {
         ];
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return Language::get("trigger.command.string", [$this->getSubKey()]);
     }
 }

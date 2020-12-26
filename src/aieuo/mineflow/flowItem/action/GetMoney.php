@@ -66,7 +66,7 @@ class GetMoney extends FlowItem {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {

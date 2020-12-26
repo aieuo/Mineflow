@@ -11,7 +11,7 @@ class AddXpLevel extends AddXpProgress {
     protected $name = "action.addXpLevel.name";
     protected $detail = "action.addXpLevel.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $xp = $origin->replaceVariables($this->getXp());

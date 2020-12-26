@@ -11,7 +11,7 @@ class ExistsItem extends TypeItem {
     protected $name = "condition.existsItem.name";
     protected $detail = "condition.existsItem.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

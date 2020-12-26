@@ -12,7 +12,7 @@ class IsCreatureVariable extends IsActiveEntityVariable {
     protected $name = "condition.isCreatureVariable.name";
     protected $detail = "condition.isCreatureVariable.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

@@ -20,7 +20,7 @@ class CallRecipe extends ExecuteRecipe {
     protected $name = "action.callRecipe.name";
     protected $detail = "action.callRecipe.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getRecipeName());
@@ -29,7 +29,7 @@ class CallRecipe extends ExecuteRecipe {
         [$recipeName, $group] = $recipeManager->parseName($name);
         if (empty($group)) $group = $origin->getGroup();
 
-        $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
+        $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName);
         if ($recipe === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }

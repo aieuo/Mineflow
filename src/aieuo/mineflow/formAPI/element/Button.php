@@ -70,7 +70,7 @@ class Button implements \JsonSerializable {
         return $this->onClick;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return Language::get("form.form.formMenu.list.button", [$this->getText()]);
     }
 

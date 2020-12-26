@@ -42,7 +42,7 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         return $this->getPlayerVariableName() !== "" and $this->getScoreboardVariableName() !== "";
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);

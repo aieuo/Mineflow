@@ -57,7 +57,7 @@ class Kick extends FlowItem implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $reason = $origin->replaceVariables($this->getReason());

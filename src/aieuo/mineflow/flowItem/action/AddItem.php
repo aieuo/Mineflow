@@ -11,7 +11,7 @@ class AddItem extends TypeItem {
     protected $name = "action.addItem.name";
     protected $detail = "action.addItem.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

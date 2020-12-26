@@ -42,7 +42,7 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getBlockVariableName() !== "";
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);

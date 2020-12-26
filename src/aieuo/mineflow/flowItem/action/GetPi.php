@@ -14,7 +14,7 @@ class GetPi extends TypeGetMathVariable {
 
     protected $resultName = "pi";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());

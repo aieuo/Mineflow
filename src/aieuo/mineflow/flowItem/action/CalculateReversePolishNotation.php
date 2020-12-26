@@ -63,7 +63,7 @@ class CalculateReversePolishNotation extends FlowItem {
         return Language::get($this->detail, [$this->getFormula(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $formula = $origin->replaceVariables($this->getFormula());

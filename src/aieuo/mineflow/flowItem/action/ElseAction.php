@@ -43,7 +43,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $lastResult = $this->getParent()->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return;

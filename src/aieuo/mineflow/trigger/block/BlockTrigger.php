@@ -37,7 +37,7 @@ class BlockTrigger extends Trigger {
         return [new DummyVariable("block", DummyVariable::BLOCK)];
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return Language::get("trigger.block.string", [$this->getKey()]);
     }
 }

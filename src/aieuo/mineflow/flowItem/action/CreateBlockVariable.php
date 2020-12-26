@@ -62,7 +62,7 @@ class CreateBlockVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getBlockId()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getVariableName());

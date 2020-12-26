@@ -11,7 +11,7 @@ class SendMessage extends TypePlayerMessage {
     protected $name = "action.sendMessage.name";
     protected $detail = "action.sendMessage.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());

@@ -127,7 +127,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

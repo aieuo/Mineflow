@@ -15,7 +15,7 @@ class SetMoney extends TypeMoney {
     protected $name = "action.setMoney.name";
     protected $detail = "action.setMoney.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {

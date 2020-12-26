@@ -59,7 +59,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);

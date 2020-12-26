@@ -108,7 +108,7 @@ class RecipePack implements \JsonSerializable {
         file_put_contents($path.$this->name.".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array {
         return [
             "name" => $this->name,
             "author" => $this->author,

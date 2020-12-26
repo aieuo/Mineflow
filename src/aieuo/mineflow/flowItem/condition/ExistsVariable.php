@@ -47,7 +47,7 @@ class ExistsVariable extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getVariableName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();

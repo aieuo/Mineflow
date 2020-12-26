@@ -6,7 +6,6 @@ use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\event\block\SignChangeEvent;
 
 class SignChangeEventTrigger extends PlayerEventTrigger {

@@ -11,7 +11,7 @@ class SetItemInHand extends TypeItem {
     protected $name = "action.setItemInHand.name";
     protected $detail = "action.setItemInHand.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

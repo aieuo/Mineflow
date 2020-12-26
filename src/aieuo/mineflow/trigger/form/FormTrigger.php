@@ -100,7 +100,7 @@ class FormTrigger extends Trigger {
         return ["form" => $variable];
     }
 
-    public function __toString() {
+    public function __toString(): string {
         switch ($this->getSubKey()) {
             case "":
                 $content = Language::get("trigger.form.string.submit", [$this->getKey()]);

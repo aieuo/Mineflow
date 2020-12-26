@@ -6,7 +6,6 @@ use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
 

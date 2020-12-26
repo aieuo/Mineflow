@@ -62,7 +62,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getChainName(), $this->getPlayerVariableName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $name = $origin->replaceVariables($this->getChainName());

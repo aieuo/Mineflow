@@ -237,7 +237,7 @@ abstract class Form implements PMForm {
                     } else {
                         $button = new Button($buttonData["text"]);
                     }
-                    if (isset($buttonData["image"])) {
+                    if (!empty($buttonData["image"])) {
                         $button->setImage(new ButtonImage($buttonData["image"]["data"], $buttonData["image"]["type"]));
                     }
                     $form->addButton($button->uuid($buttonData["id"] ?? ""));

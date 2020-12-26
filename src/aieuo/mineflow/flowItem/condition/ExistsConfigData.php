@@ -51,7 +51,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($origin);

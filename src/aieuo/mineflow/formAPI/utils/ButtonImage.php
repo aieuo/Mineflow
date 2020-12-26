@@ -31,7 +31,7 @@ class ButtonImage implements \JsonSerializable {
 		$this->data = $data;
 	}
 
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 	    return [
 	        "type" => $this->getType(),
             "data" => $this->getData(),

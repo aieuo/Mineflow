@@ -60,7 +60,7 @@ class GetDate extends FlowItem {
         return Language::get($this->detail, [$this->getFormat(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $format = $origin->replaceVariables($this->getFormat());

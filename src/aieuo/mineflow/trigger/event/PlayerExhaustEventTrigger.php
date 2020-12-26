@@ -5,7 +5,6 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\event\player\PlayerExhaustEvent;
 
 class PlayerExhaustEventTrigger extends EventTrigger {

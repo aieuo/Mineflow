@@ -38,7 +38,7 @@ class UnsetImmobile extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "";
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

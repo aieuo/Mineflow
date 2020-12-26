@@ -38,7 +38,7 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

@@ -42,7 +42,7 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getItemVariableName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);

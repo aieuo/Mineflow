@@ -12,7 +12,7 @@ class SendMessageToOp extends TypeMessage {
     protected $name = "action.sendMessageToOp.name";
     protected $detail = "action.sendMessageToOp.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());

@@ -15,7 +15,7 @@ class OverMoney extends TypeMoney {
     protected $name = "condition.overMoney.name";
     protected $detail = "condition.overMoney.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {

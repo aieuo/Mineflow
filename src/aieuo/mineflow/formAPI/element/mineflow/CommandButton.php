@@ -32,7 +32,7 @@ class CommandButton extends Button {
         return $this->command;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return Language::get("form.form.formMenu.list.commandButton", [$this->getText(), $this->getCommand()]);
     }
 

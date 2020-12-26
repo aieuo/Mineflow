@@ -18,7 +18,7 @@ class EventCancel extends FlowItem {
 
     protected $category = Category::EVENT;
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $event = $origin->getEvent();

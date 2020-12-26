@@ -26,7 +26,7 @@ class ElseifAction extends IFAction {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $lastResult = $this->getParent()->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return true;

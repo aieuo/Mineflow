@@ -69,7 +69,7 @@ class RandomNumber extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getValue()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $min = $origin->replaceVariables($this->getMin());

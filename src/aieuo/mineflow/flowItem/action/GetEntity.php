@@ -68,7 +68,7 @@ class GetEntity extends FlowItem {
         return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $id = $origin->replaceVariables($this->getKey());

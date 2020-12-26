@@ -36,11 +36,11 @@ class StringVariable extends Variable implements \JsonSerializable {
         return $this;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return $this->getValue();
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array {
         return [
             "name" => $this->getName(),
             "type" => $this->getType(),

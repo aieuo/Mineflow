@@ -52,7 +52,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new StringVariable($this->__toString(), $this->getName());
     }
 
-    public function __toString() {
+    public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
         foreach ($this->getValue() as $value) {
@@ -65,7 +65,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return $this->showString;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize(): array {
         return [
             "name" => $this->getName(),
             "type" => $this->getType(),

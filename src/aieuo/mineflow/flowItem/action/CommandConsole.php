@@ -50,7 +50,7 @@ class CommandConsole extends FlowItem {
         return Language::get($this->detail, [$this->getCommand()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $command = $origin->replaceVariables($this->getCommand());

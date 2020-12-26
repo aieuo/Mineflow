@@ -11,7 +11,7 @@ class InHand extends TypeItem {
     protected $name = "condition.inHand.name";
     protected $detail = "condition.inHand.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

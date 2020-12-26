@@ -110,7 +110,7 @@ class EventManager {
         return $this->fullNames[$event] ?? null;
     }
 
-    public function getEventName(string $fullName) {
+    public function getEventName(string $fullName): string {
         $names = explode("\\", $fullName);
         return end($names);
     }

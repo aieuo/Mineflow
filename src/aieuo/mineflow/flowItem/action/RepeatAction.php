@@ -74,7 +74,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     public function getDetail(): string {
         $repeat = $this->getRepeatCount();
         $length = strlen($repeat) - 1;
-        $left = ceil($length / 2);
+        $left = (int)ceil($length / 2);
         $right = $length - $left;
         $details = ["", str_repeat("=", 12 - $left)."repeat(".$repeat.")".str_repeat("=", 12 - $right)];
         foreach ($this->getActions() as $action) {
@@ -88,7 +88,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $count = $origin->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 

@@ -11,7 +11,7 @@ class SendPopup extends TypePlayerMessage {
     protected $name = "action.sendPopup.name";
     protected $detail = "action.sendPopup.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $message = $origin->replaceVariables($this->getMessage());

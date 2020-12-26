@@ -50,7 +50,7 @@ class Wait extends FlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $time = $origin->replaceVariables($this->getTime());

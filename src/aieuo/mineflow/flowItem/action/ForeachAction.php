@@ -91,7 +91,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $listName = $origin->replaceVariables($this->listVariableName);
         $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
         $keyName = $origin->replaceVariables($this->keyVariableName);

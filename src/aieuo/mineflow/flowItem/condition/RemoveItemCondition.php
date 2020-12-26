@@ -11,7 +11,7 @@ class RemoveItemCondition extends TypeItem {
     protected $name = "condition.removeItem.name";
     protected $detail = "condition.removeItem.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

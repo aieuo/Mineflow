@@ -15,7 +15,7 @@ class TakeMoneyCondition extends TypeMoney {
     protected $name = "condition.takeMoney.name";
     protected $detail = "condition.takeMoney.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {

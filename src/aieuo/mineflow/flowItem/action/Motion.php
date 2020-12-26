@@ -60,7 +60,7 @@ class Motion extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, array_merge([$this->getEntityVariableName()], $this->getPosition()));
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $positions = array_map(function ($value) use ($origin) {

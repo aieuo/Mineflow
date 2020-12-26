@@ -99,7 +99,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $counterName = $origin->replaceVariables($this->counterName);
 
         $start = $origin->replaceVariables($this->startIndex);

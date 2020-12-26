@@ -11,7 +11,7 @@ class RemoveItem extends TypeItem {
     protected $name = "action.removeItem.name";
     protected $detail = "action.removeItem.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);

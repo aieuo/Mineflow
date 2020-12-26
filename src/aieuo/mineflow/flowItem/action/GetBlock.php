@@ -54,7 +54,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);

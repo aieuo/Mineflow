@@ -94,7 +94,7 @@ class DummyVariable extends Variable {
         }
     }
 
-    public function isObjectVariableType() {
+    public function isObjectVariableType(): bool {
         return in_array($this->getValueType(), [
             self::BLOCK,
             self::CONFIG,

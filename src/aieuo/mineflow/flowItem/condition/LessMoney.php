@@ -15,7 +15,7 @@ class LessMoney extends TypeMoney {
     protected $name = "condition.lessMoney.name";
     protected $detail = "condition.lessMoney.detail";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {

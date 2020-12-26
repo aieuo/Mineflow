@@ -60,7 +60,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPositionVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);

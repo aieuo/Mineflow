@@ -4,7 +4,6 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\LevelObjectVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\event\level\LevelLoadEvent;
 
 class LevelLoadEventTrigger extends EventTrigger {

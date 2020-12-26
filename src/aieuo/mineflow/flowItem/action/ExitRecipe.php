@@ -15,7 +15,7 @@ class ExitRecipe extends FlowItem {
 
     protected $category = Category::SCRIPT;
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $origin->exit();
         yield true;
     }

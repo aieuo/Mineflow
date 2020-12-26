@@ -4,7 +4,6 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 
 class ProjectileHitEntityEventTrigger extends EventTrigger {

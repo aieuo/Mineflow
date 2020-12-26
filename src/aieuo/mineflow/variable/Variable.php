@@ -84,7 +84,7 @@ abstract class Variable {
         return true;
     }
 
-    public function __toString() {
+    public function __toString(): string {
         return (string)$this->getValue();
     }
 

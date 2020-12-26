@@ -68,7 +68,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() == 1 ? "" : "s"]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $particleName = $origin->replaceVariables($this->getParticle());

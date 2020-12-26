@@ -5,11 +5,7 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
-use pocketmine\event\inventory\InventoryTransactionEvent;
-use pocketmine\event\player\PlayerBlockPickEvent;
-use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\inventory\PlayerInventory;
 
 class InventoryPickupItemEventTrigger extends EventTrigger {

@@ -54,7 +54,7 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPlayerPermission()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $permission = $origin->replaceVariables($this->getPlayerPermission());

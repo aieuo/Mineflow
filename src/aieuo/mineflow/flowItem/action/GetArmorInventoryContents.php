@@ -17,7 +17,7 @@ class GetArmorInventoryContents extends GetInventoryContents {
     protected $detail = "action.getArmorInventory.detail";
 
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());

@@ -15,7 +15,7 @@ class GetE extends TypeGetMathVariable {
     /** @var string */
     protected $resultName = "e";
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $resultName = $origin->replaceVariables($this->getResultName());

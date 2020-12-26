@@ -78,7 +78,7 @@ class ComparisonString extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $value1 = $origin->replaceVariables($this->getValue1());

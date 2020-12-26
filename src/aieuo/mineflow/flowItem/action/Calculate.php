@@ -95,7 +95,7 @@ class Calculate extends FlowItem {
         return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $value = $origin->replaceVariables($this->getValue());

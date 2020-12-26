@@ -40,7 +40,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName()]);
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($origin);

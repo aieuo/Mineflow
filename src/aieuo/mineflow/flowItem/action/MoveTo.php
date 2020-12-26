@@ -79,7 +79,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         return $this->speedZ;
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($origin);

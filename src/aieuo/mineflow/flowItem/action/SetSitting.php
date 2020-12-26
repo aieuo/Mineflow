@@ -50,7 +50,7 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(Recipe $origin) {
+    public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
         $player = $this->getPlayer($origin);
