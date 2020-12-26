@@ -53,6 +53,7 @@ use aieuo\mineflow\flowItem\action\ForAction;
 use aieuo\mineflow\flowItem\action\ForeachAction;
 use aieuo\mineflow\flowItem\action\FourArithmeticOperations;
 use aieuo\mineflow\flowItem\action\GenerateRandomNumber;
+use aieuo\mineflow\flowItem\action\GenerateRandomPosition;
 use aieuo\mineflow\flowItem\action\GetArmorInventoryContents;
 use aieuo\mineflow\flowItem\action\GetBlock;
 use aieuo\mineflow\flowItem\action\GetDate;
@@ -75,6 +76,7 @@ use aieuo\mineflow\flowItem\action\LookAt;
 use aieuo\mineflow\flowItem\action\Motion;
 use aieuo\mineflow\flowItem\action\PlaySound;
 use aieuo\mineflow\flowItem\action\PlaySoundAt;
+use aieuo\mineflow\flowItem\action\RegisterCraftingRecipe;
 use aieuo\mineflow\flowItem\action\RemoveBossbar;
 use aieuo\mineflow\flowItem\action\RemoveConfigData;
 use aieuo\mineflow\flowItem\action\RemoveItem;
@@ -171,6 +173,7 @@ class FlowItemFactory {
         self::register(new DoNothing);
         self::register(new EventCancel);
         self::register(new GetDate);
+        self::register(new RegisterCraftingRecipe);
         /* message */
         self::register(new SendMessage);
         self::register(new SendTip);
@@ -289,6 +292,7 @@ class FlowItemFactory {
         self::register(new DropItem);
         self::register(new GetDistance);
         self::register(new GetEntitySidePosition);
+        self::register(new GenerateRandomPosition);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);

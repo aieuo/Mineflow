@@ -84,6 +84,7 @@ interface FlowItemIds {
     public const SET_WEATHER = "setWeather";
     public const GET_DISTANCE = "getDistance";
     public const DROP_ITEM = "dropItem";
+    public const GENERATE_RANDOM_POSITION = "randomPosition";
 
     public const EXECUTE_RECIPE = "executeRecipe";
     public const EXECUTE_IF_CHAIN = "executeIFChain";
@@ -155,6 +156,8 @@ interface FlowItemIds {
     public const REMOVE_SCOREBOARD_SCORE_NAME = "removeScoreName";
     public const INCREMENT_SCOREBOARD_SCORE = "incrementScore";
     public const DECREMENT_SCOREBOARD_SCORE = "decrementScore";
+
+    public const REGISTER_SHAPED_RECIPE = "registerShapedRecipe";
 
 
     /* condition */
