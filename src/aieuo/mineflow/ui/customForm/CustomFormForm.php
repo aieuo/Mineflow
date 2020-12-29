@@ -191,9 +191,9 @@ class CustomFormForm {
                     $newName = $manager->getNotDuplicatedName($data[0]);
                     (new MineflowForm)->confirmRename($player, $data[0], $newName,
                         function (string $name) use ($player, $form) {
-                            $form->setName($name);
                             $manager = Main::getFormManager();
-                            $manager->removeForm($name);
+                            $manager->removeForm($form->getName());
+                            $form->setName($name);
                             $manager->addForm($name, $form);
                             $this->sendFormMenu($player, $form, ["@form.changed"]);
                         },
