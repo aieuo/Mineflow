@@ -28,7 +28,7 @@ class MineflowCommand extends Command implements PluginIdentifiableCommand {
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
-        if (!$this->testPermission($sender)) return;
+        if (!$this->testPermission($sender) or $sender instanceof MineflowConsoleCommandSender) return;
 
         if (!isset($args[0]) and $sender instanceof Player) {
             (new HomeForm)->sendMenu($sender);

@@ -55,7 +55,7 @@ class CommandConsole extends FlowItem {
 
         $command = $origin->replaceVariables($this->getCommand());
 
-        Server::getInstance()->dispatchCommand(MineflowConsoleCommandSender::getInstance(), $command);
+        Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(), $command);
         yield true;
     }
 
