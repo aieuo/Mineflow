@@ -15,6 +15,7 @@ interface FlowItemIds {
     public const SEND_POPUP = "sendPopup";
     public const BROADCAST_MESSAGE = "broadcastMessage";
     public const SEND_MESSAGE_TO_OP = "sendMessageToOp";
+    public const SEND_MESSAGE_TO_CONSOLE = "sendMessageToConsole";
     public const SEND_TITLE = "sendTitle";
 
     public const GET_ENTITY = "getEntity";

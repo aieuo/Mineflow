@@ -91,6 +91,7 @@ use aieuo\mineflow\flowItem\action\SendForm;
 use aieuo\mineflow\flowItem\action\SendInputForm;
 use aieuo\mineflow\flowItem\action\SendMenuForm;
 use aieuo\mineflow\flowItem\action\SendMessage;
+use aieuo\mineflow\flowItem\action\SendMessageToConsole;
 use aieuo\mineflow\flowItem\action\SendMessageToOp;
 use aieuo\mineflow\flowItem\action\SendPopup;
 use aieuo\mineflow\flowItem\action\SendTip;
@@ -164,6 +165,7 @@ use aieuo\mineflow\flowItem\condition\TakeMoneyCondition;
 use pocketmine\Server;
 
 class FlowItemFactory {
+
     /** @var FlowItem[] */
     private static $list = [];
     private static $aliases = [];
@@ -174,6 +176,7 @@ class FlowItemFactory {
         self::register(new EventCancel);
         self::register(new GetDate);
         self::register(new RegisterCraftingRecipe);
+        self::register(new SendMessageToConsole);
         /* message */
         self::register(new SendMessage);
         self::register(new SendTip);
