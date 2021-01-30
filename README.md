@@ -13,7 +13,7 @@
 Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
 
 ---
-### [Wiki](https://github.com/aieuo/Mineflow/wiki)
+### [Wiki](https://github.com/aieuo/Mineflow/wiki), [Example recipes](https://github.com/aieuo/MineflowExamples), [Example videos](https://www.youtube.com/watch?v=w7foeznrqd0&list=PL2poTI_Jv_RgIrAT62jWQ55KSfonOxW6X)
 ---
 
 ### [English](#English),  [日本語](#日本語)
