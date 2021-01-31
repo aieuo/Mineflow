@@ -16,7 +16,6 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
 

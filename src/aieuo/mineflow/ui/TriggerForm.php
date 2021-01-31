@@ -7,5 +7,5 @@ namespace aieuo\mineflow\ui;
  * @package aieuo\mineflow\ui
  * @deprecated
  */
-abstract class TriggerForm extends \aieuo\mineflow\ui\trigger\TriggerForm {
+abstract class TriggerForm extends trigger\TriggerForm {
 }
