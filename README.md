@@ -10,11 +10,8 @@
 
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
+rewrite of https://github.com/aieuo/if_plugin  
 Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
-
----
-### [Wiki](https://github.com/aieuo/Mineflow/wiki), [Example recipes](https://github.com/aieuo/MineflowExamples), [Example videos](https://www.youtube.com/watch?v=w7foeznrqd0&list=PL2poTI_Jv_RgIrAT62jWQ55KSfonOxW6X)
----
 
 ### [English](#English),  [日本語](#日本語)
 
