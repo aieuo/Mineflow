@@ -86,6 +86,7 @@ interface FlowItemIds {
     public const GET_DISTANCE = "getDistance";
     public const DROP_ITEM = "dropItem";
     public const GENERATE_RANDOM_POSITION = "randomPosition";
+    public const POSITION_VARIABLE_ADDITION = "positionAddition";
 
     public const EXECUTE_RECIPE = "executeRecipe";
     public const EXECUTE_IF_CHAIN = "executeIFChain";
@@ -126,6 +127,9 @@ interface FlowItemIds {
     public const CREATE_BLOCK_VARIABLE = "createBlock";
     public const GET_VARIABLE_NESTED = "getVariable";
     public const COUNT_LIST_VARIABLE = "count";
+    public const GET_LIST_KEYS = "keys";
+    public const GET_LIST_VALUES = "values";
+    public const SEARCH_LIST_KEY = "searchKey";
     public const DELETE_LIST_VARIABLE_CONTENT = "removeContent";
     public const CREATE_SCOREBOARD_VARIABLE = "createScoreboard";
 

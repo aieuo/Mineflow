@@ -77,6 +77,7 @@ use aieuo\mineflow\flowItem\action\LookAt;
 use aieuo\mineflow\flowItem\action\Motion;
 use aieuo\mineflow\flowItem\action\PlaySound;
 use aieuo\mineflow\flowItem\action\PlaySoundAt;
+use aieuo\mineflow\flowItem\action\PositionVariableAddition;
 use aieuo\mineflow\flowItem\action\RegisterCraftingRecipe;
 use aieuo\mineflow\flowItem\action\RemoveBossbar;
 use aieuo\mineflow\flowItem\action\RemoveConfigData;
@@ -298,6 +299,7 @@ class FlowItemFactory {
         self::register(new GetDistance);
         self::register(new GetEntitySidePosition);
         self::register(new GenerateRandomPosition);
+        self::register(new PositionVariableAddition);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);
