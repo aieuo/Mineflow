@@ -118,7 +118,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         return (new CustomForm($this->getName()))
             ->setContents([
                 new Label($this->getDescription()),
-                new PositionVariableDropdown(),
+                new PositionVariableDropdown($variables),
                 new ExampleNumberInput("@action.positionAddition.form.x", "0", $this->getX(), true),
                 new ExampleNumberInput("@action.positionAddition.form.y", "100", $this->getY(), true),
                 new ExampleNumberInput("@action.positionAddition.form.z", "16", $this->getZ(), true),
