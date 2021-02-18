@@ -136,6 +136,7 @@ interface FlowItemIds {
     public const ACTION_WHILE = "while";
     public const ACTION_WAIT = "wait";
     public const ACTION_FOR = "for";
+    public const FOREACH_POSITION = "foreachPosition";
     public const ACTION_FOREACH = "foreach";
     public const SAVE_DATA = "save";
     public const ACTION_WHILE_TASK = "whileTask";

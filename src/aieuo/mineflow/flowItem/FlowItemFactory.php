@@ -51,6 +51,7 @@ use aieuo\mineflow\flowItem\action\ExecuteRecipeWithEntity;
 use aieuo\mineflow\flowItem\action\ExitRecipe;
 use aieuo\mineflow\flowItem\action\ForAction;
 use aieuo\mineflow\flowItem\action\ForeachAction;
+use aieuo\mineflow\flowItem\action\ForeachPosition;
 use aieuo\mineflow\flowItem\action\FourArithmeticOperations;
 use aieuo\mineflow\flowItem\action\GenerateRandomNumber;
 use aieuo\mineflow\flowItem\action\GenerateRandomPosition;
@@ -243,6 +244,7 @@ class FlowItemFactory {
         self::register(new RepeatAction);
         self::register(new ForAction);
         self::register(new ForeachAction);
+        self::register(new ForeachPosition);
         self::register(new WhileTaskAction);
         self::register(new Wait);
         self::register(new CallRecipe);
