@@ -63,15 +63,15 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     }
 
     public function getDetail(): string {
-        $details = ["", "=========whileTask(".$this->getInterval().")========="];
+        $details = ["", "§7========§f whileTask(".$this->getInterval().") §7========§f"];
         foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
-        $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+        $details[] = "§7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f";
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

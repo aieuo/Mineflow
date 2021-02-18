@@ -31,15 +31,15 @@ class IFAction extends FlowItem implements FlowItemContainer {
     }
 
     public function getDetail(): string {
-        $details = ["", "==============if================"];
+        $details = ["", "§7=============§f if §7===============§f"];
         foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
-        $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+        $details[] = "§7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f";
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

@@ -79,11 +79,11 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     public function getDetail(): string {
         $repeat = $this->getListVariableName()." as ".$this->getKeyVariableName()." => ".$this->getValueVariableName();
 
-        $details = ["", "== foreach(".$repeat.") =="];
+        $details = ["", "§7==§f foreach(".$repeat.") §7==§f"];
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

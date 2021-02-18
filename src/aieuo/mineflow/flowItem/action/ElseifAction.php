@@ -14,15 +14,15 @@ class ElseifAction extends IFAction {
     protected $detail = "action.elseif.description";
 
     public function getDetail(): string {
-        $details = ["=============elseif============="];
+        $details = ["§7=============§f elseif §7=============§f"];
         foreach ($this->getConditions() as $condition) {
             $details[] = $condition->getDetail();
         }
-        $details[] = "~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+        $details[] = "§7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f";
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

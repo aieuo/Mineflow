@@ -76,11 +76,11 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $length = strlen($repeat) - 1;
         $left = (int)ceil($length / 2);
         $right = $length - $left;
-        $details = ["", str_repeat("=", 12 - $left)."repeat(".$repeat.")".str_repeat("=", 12 - $right)];
+        $details = ["", "§7".str_repeat("=", 12 - $left)."§frepeat(".$repeat.")§7".str_repeat("=", 12 - $right)."§f"];
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

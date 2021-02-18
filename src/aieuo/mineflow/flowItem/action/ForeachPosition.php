@@ -56,7 +56,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

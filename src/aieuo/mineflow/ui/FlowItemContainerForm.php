@@ -19,7 +19,7 @@ class FlowItemContainerForm {
 
         $buttons = [new Button("@form.back"), new Button("@{$type}.add")];
         foreach ($actions as $action) {
-            $buttons[] = new Button(empty($action->getCustomName()) ? trim($action->getDetail()) : $action->getCustomName());
+            $buttons[] = new Button(empty($action->getCustomName()) ? trim(TextFormat::clean($action->getDetail())) : $action->getCustomName());
         }
 
         (new ListForm(Language::get("form.{$type}Container.list.title", [$container->getContainerName()])))
@@ -56,7 +56,7 @@ class FlowItemContainerForm {
 
         $buttons = [new Button("@form.back")];
         foreach ($actions as $i => $action) {
-            $buttons[] = new Button(($i === $selected ? TextFormat::AQUA : "").trim($action->getDetail()));
+            $buttons[] = new Button(($i === $selected ? TextFormat::AQUA : "").trim(TextFormat::clean($action->getDetail())));
         }
         $buttons[] = new Button("");
 

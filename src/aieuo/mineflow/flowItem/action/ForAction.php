@@ -87,11 +87,11 @@ class ForAction extends FlowItem implements FlowItemContainer {
         $repeat = $counter."=".$this->getStartIndex()."; ".$counter."<=".$this->getEndIndex()."; ".$counter."+=".$this->getFluctuation();
         $repeat = str_replace("+=-", "-=", $repeat);
 
-        $details = ["", "==== for(".$repeat.") ===="];
+        $details = ["", "§7====§f for(".$repeat.") §7====§f"];
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 

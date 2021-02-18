@@ -31,11 +31,11 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     }
 
     public function getDetail(): string {
-        $details = ["==============else=============="];
+        $details = ["§7=============§f else §7=============§f"];
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
-        $details[] = "================================";
+        $details[] = "§7================================§f";
         return implode("\n", $details);
     }
 
