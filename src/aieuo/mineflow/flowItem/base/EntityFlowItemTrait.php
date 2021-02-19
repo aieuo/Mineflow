@@ -24,19 +24,19 @@ trait EntityFlowItemTrait {
         $this->entityVariableNames[$name] = $entity;
     }
 
-    public function getEntity(Recipe $origin, string $name = ""): ?Entity {
-        $entity = $origin->replaceVariables($this->getEntityVariableName($name));
+    public function getEntity(Recipe $origin, string $name = ""): Entity {
+        $entity = $origin->replaceVariables($rawName = $this->getEntityVariableName($name));
 
         $variable = $origin->getVariable($entity);
-        if (!($variable instanceof EntityObjectVariable)) return null;
-        return $variable->getEntity();
+        if ($variable instanceof EntityObjectVariable and ($entity = $variable->getEntity())) {
+            return $entity;
+        }
+
+        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.entity"], $rawName]));
     }
 
-    public function throwIfInvalidEntity(?Entity $entity): void {
-        if (!($entity instanceof Entity)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.entity"], $this->getEntityVariableName()]));
-        }
-        if ($entity instanceof Player and !$entity->isOnline()) {
+    public function throwIfInvalidEntity(Entity $entity, bool $checkOnline = true): void {
+        if ($entity instanceof Player and $checkOnline and !$entity->isOnline()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.player.offline"));
         }
     }

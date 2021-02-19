@@ -24,13 +24,20 @@ trait ItemFlowItemTrait {
     }
 
     public function getItem(Recipe $origin, string $name = ""): ?Item {
-        $item = $origin->replaceVariables($this->getItemVariableName($name));
+        $item = $origin->replaceVariables($rawName = $this->getItemVariableName($name));
 
         $variable = $origin->getVariable($item);
-        if (!($variable instanceof ItemObjectVariable)) return null;
-        return $variable->getItem();
+        if ($variable instanceof ItemObjectVariable and ($item = $variable->getItem()) instanceof Item) {
+            return $item;
+        }
+
+        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $rawName]));
     }
 
+    /**
+     * @param Item|null $item
+     * @deprecated merge this into getItem()
+     */
     public function throwIfInvalidItem(?Item $item): void {
         if (!($item instanceof Item)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $this->getItemVariableName()]));

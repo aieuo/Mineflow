@@ -59,7 +59,6 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
         $key = $origin->replaceVariables($this->getKey());
 
         $config = $this->getConfig($origin);
-        $this->throwIfInvalidConfig($config);
 
         $config->removeNested($key);
         yield true;

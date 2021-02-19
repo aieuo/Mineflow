@@ -23,14 +23,27 @@ trait BlockFlowItemTrait {
         $this->blockVariableNames[$name] = $block;
     }
 
-    public function getBlock(Recipe $origin, string $name = ""): ?Block {
-        $block = $origin->replaceVariables($this->getBlockVariableName($name));
+    /**
+     * @param Recipe $origin
+     * @param string $name
+     * @return Block
+     * @throws InvalidFlowValueException
+     */
+    public function getBlock(Recipe $origin, string $name = ""): Block {
+        $block = $origin->replaceVariables($rawName = $this->getBlockVariableName($name));
 
         $variable = $origin->getVariable($block);
-        if (!($variable instanceof BlockObjectVariable)) return null;
-        return $variable->getBlock();
+        if ($variable instanceof BlockObjectVariable and ($block = $variable->getBlock()) instanceof Block) {
+            return $block;
+        }
+
+        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.block"], $rawName]));
     }
 
+    /**
+     * @param Block|null $block
+     * @deprecated merge this into getBlock()
+     */
     public function throwIfInvalidBlock(?Block $block): void {
         if (!($block instanceof Block)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.block"], $this->getBlockVariableName()]));

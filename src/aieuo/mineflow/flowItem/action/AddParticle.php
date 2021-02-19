@@ -77,7 +77,6 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         $this->throwIfInvalidNumber($amount, 1);
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         for ($i = 0; $i < (int)$amount; $i++) {
             $pk = new SpawnParticleEffectPacket();

@@ -66,7 +66,6 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $player->getInventory()->setItem((int)$index, $item);
         yield true;

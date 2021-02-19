@@ -87,7 +87,6 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $this->throwIfInvalidNumber($pitch);
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         $pk = new PlaySoundPacket();
         $pk->soundName = $sound;

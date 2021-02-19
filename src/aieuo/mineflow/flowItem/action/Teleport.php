@@ -49,7 +49,6 @@ class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         $entity->teleport($position);
         yield true;

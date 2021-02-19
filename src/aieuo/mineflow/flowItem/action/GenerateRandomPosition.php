@@ -65,9 +65,6 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $pos2 = $this->getPosition($origin, "pos2");
         $resultName = $origin->replaceVariables($this->getResultName());
 
-        $this->throwIfInvalidPosition($pos1);
-        $this->throwIfInvalidPosition($pos2);
-
         if ($pos1->getLevelNonNull()->getFolderName() !== $pos2->getLevelNonNull()->getFolderName()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
         }

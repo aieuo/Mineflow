@@ -23,14 +23,21 @@ trait ScoreboardFlowItemTrait {
         $this->scoreboardVariableNames[$name] = $scoreboard;
     }
 
-    public function getScoreboard(Recipe $origin, string $name = ""): ?Scoreboard {
-        $scoreboard = $origin->replaceVariables($this->getScoreboardVariableName($name));
+    public function getScoreboard(Recipe $origin, string $name = ""): Scoreboard {
+        $scoreboard = $origin->replaceVariables($rawName = $this->getScoreboardVariableName($name));
 
         $variable = $origin->getVariable($scoreboard);
-        if (!($variable instanceof ScoreboardObjectVariable)) return null;
-        return $variable->getScoreboard();
+        if ($variable instanceof ScoreboardObjectVariable and ($scoreboard = $variable->getScoreboard()) instanceof Scoreboard) {
+            return $scoreboard;
+        }
+
+        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.scoreboard"], $rawName]));
     }
 
+    /**
+     * @param Scoreboard|null $board
+     * @deprecated merge this into getScoreboard()
+     */
     public function throwIfInvalidScoreboard(?Scoreboard $board): void {
         if (!($board instanceof Scoreboard)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [$this->getName(), ["action.target.require.scoreboard"], $this->getScoreboardVariableName()]));

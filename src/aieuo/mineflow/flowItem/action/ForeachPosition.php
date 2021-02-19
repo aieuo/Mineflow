@@ -68,9 +68,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         $counterName = $origin->replaceVariables($this->counterName);
 
         $pos1 = $this->getPosition($origin, "pos1");
-        $this->throwIfInvalidPosition($pos1);
         $pos2 = $this->getPosition($origin, "pos2");
-        $this->throwIfInvalidPosition($pos2);
 
         [$sx, $ex] = [min($pos1->x, $pos2->x), max($pos1->x, $pos2->x)];
         [$sy, $ey] = [min($pos1->y, $pos2->y), max($pos1->y, $pos2->y)];

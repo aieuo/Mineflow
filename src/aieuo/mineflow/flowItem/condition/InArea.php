@@ -50,11 +50,7 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         $this->throwIfInvalidEntity($entity);
 
         $pos1 = $this->getPosition($origin, "pos1");
-        $this->throwIfInvalidPosition($pos1);
-
         $pos2 = $this->getPosition($origin, "pos2");
-        $this->throwIfInvalidPosition($pos2);
-
         $pos = $entity->floor();
 
         yield true;

@@ -61,7 +61,6 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $this->throwIfInvalidNumber($damage, 0);
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $item->setDamage((int)$damage);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));

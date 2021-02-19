@@ -67,7 +67,6 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         $this->throwIfInvalidPlayer($player);
 
         $pos = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($pos);
 
         $resultName = $origin->replaceVariables($this->getResultName());
 

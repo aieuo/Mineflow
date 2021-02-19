@@ -46,10 +46,8 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         $block = $this->getBlock($origin);
-        $this->throwIfInvalidBlock($block);
 
         $position->level->setBlock($position, $block);
         yield true;

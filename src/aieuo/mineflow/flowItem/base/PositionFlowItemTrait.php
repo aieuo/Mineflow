@@ -23,14 +23,21 @@ trait PositionFlowItemTrait {
         $this->positionVariableNames[$name] = $position;
     }
 
-    public function getPosition(Recipe $origin, string $name = ""): ?Position {
-        $position = $origin->replaceVariables($this->getPositionVariableName($name));
+    public function getPosition(Recipe $origin, string $name = ""): Position {
+        $position = $origin->replaceVariables($rawName = $this->getPositionVariableName($name));
 
         $variable = $origin->getVariable($position);
-        if (!($variable instanceof PositionObjectVariable)) return null;
-        return $variable->getPosition();
+        if ($variable instanceof PositionObjectVariable and ($position = $variable->getPosition()) instanceof Position) {
+            return $position;
+        }
+
+        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.position"], $rawName]));
     }
 
+    /**
+     * @param Position|null $position
+     * @deprecated merge this into getPosition()
+     */
     public function throwIfInvalidPosition(?Position $position): void {
         if (!($position instanceof Position)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.position"], $this->getPositionVariableName()]));

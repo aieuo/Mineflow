@@ -55,7 +55,6 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($origin);
-        $this->throwIfInvalidConfig($config);
 
         $key = $origin->replaceVariables($this->getKey());
 

@@ -57,7 +57,6 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         self::leave($player);
 

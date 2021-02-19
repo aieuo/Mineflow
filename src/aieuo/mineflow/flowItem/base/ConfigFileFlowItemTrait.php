@@ -23,14 +23,21 @@ trait ConfigFileFlowItemTrait {
         $this->configVariableNames[$name] = $config;
     }
 
-    public function getConfig(Recipe $origin, string $name = ""): ?Config {
-        $config = $origin->replaceVariables($this->getConfigVariableName($name));
+    public function getConfig(Recipe $origin, string $name = ""): Config {
+        $config = $origin->replaceVariables($rawName = $this->getConfigVariableName($name));
 
         $variable = $origin->getVariable($config);
-        if (!($variable instanceof ConfigObjectVariable)) return null;
-        return $variable->getConfig();
+        if ($variable instanceof ConfigObjectVariable and ($config = $variable->getConfig()) instanceof Config) {
+            return $config;
+        }
+
+        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.config"], $rawName]));
     }
 
+    /**
+     * @param Config|null $config
+     * @deprecated merge this into getConfig()
+     */
     public function throwIfInvalidConfig(?Config $config): void {
         if (!($config instanceof Config)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.config"], $this->getConfigVariableName()]));

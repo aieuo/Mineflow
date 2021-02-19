@@ -90,7 +90,6 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         }
 
         $config = $this->getConfig($origin);
-        $this->throwIfInvalidConfig($config);
 
         $config->setNested($key, $value);
         yield true;

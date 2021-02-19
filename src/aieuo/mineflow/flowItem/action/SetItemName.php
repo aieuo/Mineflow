@@ -59,7 +59,6 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         $name = $origin->replaceVariables($this->getItemName());
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $item->setCustomName($name);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));

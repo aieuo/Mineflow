@@ -49,7 +49,6 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         $this->throwIfInvalidPlayer($player);
 
         $board = $this->getScoreboard($origin);
-        $this->throwIfInvalidScoreboard($board);
 
         $board->hide($player);
         yield true;

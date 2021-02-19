@@ -44,7 +44,6 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($origin);
-        $this->throwIfInvalidConfig($config);
 
         $config->save();
         yield true;

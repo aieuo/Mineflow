@@ -72,7 +72,6 @@ class SetScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $this->throwIfInvalidNumber($score);
 
         $board = $this->getScoreboard($origin);
-        $this->throwIfInvalidScoreboard($board);
 
         $board->setScore($name, (int)$score);
         yield true;

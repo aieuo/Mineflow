@@ -50,7 +50,6 @@ class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         if ($entity instanceof Living) {
             $entity->lookAt($position);

@@ -59,7 +59,6 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $lore = array_map(function (string $lore) use ($origin) {
             return $origin->replaceVariables($lore);

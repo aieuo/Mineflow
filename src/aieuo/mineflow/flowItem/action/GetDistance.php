@@ -58,9 +58,7 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         $this->throwIfCannotExecute();
 
         $pos1 = $this->getPosition($origin, "pos1");
-        $this->throwIfInvalidPosition($pos1);
         $pos2 = $this->getPosition($origin, "pos2");
-        $this->throwIfInvalidPosition($pos2);
         $result = $origin->replaceVariables($this->getResultName());
 
         $distance = $pos1->distance($pos2);

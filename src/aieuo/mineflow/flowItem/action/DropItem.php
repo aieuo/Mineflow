@@ -46,10 +46,8 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $position->getLevelNonNull()->dropItem($position, $item);
         yield true;

@@ -15,7 +15,6 @@ class RemoveItemAll extends TypeItem {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $player = $this->getPlayer($origin);
         $this->throwIfInvalidPlayer($player);

@@ -72,7 +72,6 @@ class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $this->throwIfInvalidNumber($score);
 
         $board = $this->getScoreboard($origin);
-        $this->throwIfInvalidScoreboard($board);
 
         $board->setScore($name, ($board->getScore($name) ?? 0) - (int)$score);
         yield true;

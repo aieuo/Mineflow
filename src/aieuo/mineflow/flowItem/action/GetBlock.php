@@ -58,7 +58,6 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         $this->throwIfCannotExecute();
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
         $result = $origin->replaceVariables($this->getResultName());
 
         /** @var Position $position */

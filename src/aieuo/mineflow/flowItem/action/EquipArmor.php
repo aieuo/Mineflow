@@ -74,7 +74,6 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem((int)$index, $item);

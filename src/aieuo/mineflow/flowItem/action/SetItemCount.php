@@ -61,7 +61,6 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         $this->throwIfInvalidNumber($count, 0);
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $item->setCount((int)$count);
         $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName())); // TODO: replace variable

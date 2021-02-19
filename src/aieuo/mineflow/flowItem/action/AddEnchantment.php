@@ -72,7 +72,6 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($origin);
-        $this->throwIfInvalidItem($item);
 
         $id = $origin->replaceVariables($this->getEnchantId());
         if (is_numeric($id)) {

@@ -95,7 +95,6 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         $this->throwIfCannotExecute();
 
         $pos = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($pos);
 
         $x = $origin->replaceVariables($this->getX());
         $y = $origin->replaceVariables($this->getY());

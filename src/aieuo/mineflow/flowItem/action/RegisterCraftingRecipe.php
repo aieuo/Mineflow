@@ -97,7 +97,6 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $this->throwIfCannotExecute();
 
         $output = $this->getItem($origin, "output");
-        $this->throwIfInvalidItem($output);
         $shape = ["", "", ""];
         $ingredients = [];
         $keys = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];

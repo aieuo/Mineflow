@@ -57,7 +57,6 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $name = $origin->replaceVariables($this->getScoreName());
 
         $board = $this->getScoreboard($origin);
-        $this->throwIfInvalidScoreboard($board);
 
         $board->removeScore($name);
         yield true;

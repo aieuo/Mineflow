@@ -86,7 +86,6 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $position = $this->getPosition($origin);
-        $this->throwIfInvalidPosition($position);
 
         $speedX = $origin->replaceVariables($this->getSpeedX());
         $this->throwIfInvalidNumber($speedX, 0, null);

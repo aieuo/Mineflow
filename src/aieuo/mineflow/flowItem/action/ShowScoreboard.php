@@ -49,7 +49,6 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         $this->throwIfInvalidPlayer($player);
 
         $board = $this->getScoreboard($origin);
-        $this->throwIfInvalidScoreboard($board);
 
         $board->show($player);
         yield true;
