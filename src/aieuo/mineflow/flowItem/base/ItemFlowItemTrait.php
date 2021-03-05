@@ -23,7 +23,7 @@ trait ItemFlowItemTrait {
         $this->itemVariableNames[$name] = $item;
     }
 
-    public function getItem(Recipe $origin, string $name = ""): ?Item {
+    public function getItem(Recipe $origin, string $name = ""): Item {
         $item = $origin->replaceVariables($rawName = $this->getItemVariableName($name));
 
         $variable = $origin->getVariable($item);
