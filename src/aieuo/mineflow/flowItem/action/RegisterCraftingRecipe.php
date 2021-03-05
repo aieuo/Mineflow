@@ -103,8 +103,8 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $index = -1;
         $items = [];
         for ($i=0; $i<9; $i++) {
-            $input = $this->getItem($origin, "input".$i);
-            if ($input instanceof Item) {
+            try {
+                $input = $this->getItem($origin, "input".$i);
                 $itemId = $input->getId().":".$input->getDamage();
                 if (isset($items[$itemId])) {
                     $key = $keys[$items[$itemId]];
@@ -114,7 +114,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
                     $key = $keys[$index];
                     $ingredients[$key] = $input;
                 }
-            } else {
+            } catch (InvalidFlowValueException $e) {
                 $key = " ";
             }
             $shape[floor($i/3)] .= $key;
