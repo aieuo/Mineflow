@@ -112,10 +112,33 @@ class FlowItemForm {
                 $this->sendSelectAction($player, $container, $type, $actions);
             });
         }
+
+        $buttons[] = new Button("@form.search", function () use($player, $container, $type) {
+            $this->sendSearchAction($player, $container, $type);
+        });
+
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.category.title", [$container->getContainerName()])))
             ->addButtons($buttons)
             ->show($player);
+    }
+
+    public function sendSearchAction(Player $player, FlowItemContainer $container, string $type): void {
+        (new CustomForm(Language::get("form.{$type}.search.title", [$container->getContainerName()])))
+            ->setContents([
+                new Input("@form.items.search.keyword", "", Session::getSession($player)->get("flowItem_search", ""), true),
+                new CancelToggle(function () use($player, $container, $type) { $this->selectActionCategory($player, $container, $type); })
+            ])->onReceive(function (Player  $player, array $data) use($container, $type) {
+                $isCondition = $type === FlowItemContainer::CONDITION;
+                $permission = Main::getInstance()->getPlayerSettings()->getNested($player->getName().".permission", 0);
+                $actions = array_values(array_filter(FlowItemFactory::getByFilter(null, $permission, !$isCondition, $isCondition), function (FlowItem  $item) use($data) {
+                    return stripos($item->getName(), $data[0]) !== false;
+                }));
+
+                Session::getSession($player)->set("flowItem_search", $data[0]);
+                Session::getSession($player)->set("flowItem_category", Language::get("form.items.category.search", [$data[0]]));
+                $this->sendSelectAction($player, $container, $type, $actions);
+            })->show($player);
     }
 
     public function sendSelectAction(Player $player, FlowItemContainer $container, string $type, array $items): void {
