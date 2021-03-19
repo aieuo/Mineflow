@@ -63,19 +63,17 @@ class Motion extends FlowItem implements EntityFlowItem {
     public function execute(Recipe $origin): \Generator {
         $this->throwIfCannotExecute();
 
-        $positions = array_map(function ($value) use ($origin) {
-            return $origin->replaceVariables($value);
+        $motions = array_map(function ($value) use ($origin) {
+            $v = $origin->replaceVariables($value);
+            $this->throwIfInvalidNumber($v);
+            return $v;
         }, $this->getPosition());
-
-        if (!is_numeric($positions[0]) or !is_numeric($positions[1]) or !is_numeric($positions[2])) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
-        }
 
         $entity = $this->getEntity($origin);
         $this->throwIfInvalidEntity($entity);
 
-        $position = new Vector3((float)$positions[0], (float)$positions[1], (float)$positions[2]);
-        $entity->setMotion($position);
+        $motion = new Vector3((float)$motions[0], (float)$motions[1], (float)$motions[2]);
+        $entity->setMotion($motion);
         yield true;
     }
 

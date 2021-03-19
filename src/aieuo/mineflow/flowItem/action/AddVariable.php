@@ -116,7 +116,7 @@ class AddVariable extends FlowItem {
         $errors = [];
         $containsVariable = Main::getVariableHelper()->containsVariable($data[2]);
         if ($data[3] === Variable::NUMBER and !$containsVariable and !is_numeric($data[2])) {
-            $errors[] = ["@action.error.notNumber", 1];
+            $errors[] = [Language::get("action.error.notNumber", [$data[4]]), 1];
         }
         return ["contents" => [$data[1], $data[2], $data[3], !$data[4]], "cancel" => $data[5], "errors" => $errors];
     }

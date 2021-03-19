@@ -55,13 +55,13 @@ class NumberInput extends Input {
         if ($data === "" or Main::getVariableHelper()->containsVariable($data)) return;
 
         if (!is_numeric($data)) {
-            $response->addError("@action.error.notNumber");
+            $response->addError(Language::get("action.error.notNumber", [$data]));
         } elseif (($min = $this->getMin()) !== null and (float)$data < $min) {
-            $response->addError(Language::get("action.error.lessValue", [$min]));
+            $response->addError(Language::get("action.error.lessValue", [$min, $data]));
         } elseif (($max = $this->getMax()) !== null and (float)$data > $max) {
-            $response->addError(Language::get("action.error.overValue", [$max]));
+            $response->addError(Language::get("action.error.overValue", [$max, $data]));
         } elseif (($excludes = $this->getExcludes()) !== null and in_array((float)$data, $excludes, true)) {
-            $response->addError(Language::get("action.error.excludedNumber", [implode(",", $excludes)]));
+            $response->addError(Language::get("action.error.excludedNumber", [implode(",", $excludes), $data]));
         }
     }
 

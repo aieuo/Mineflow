@@ -68,9 +68,8 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         $max = $origin->replaceVariables($this->getMax());
         $resultName = $origin->replaceVariables($this->getResultName());
 
-        if (!is_numeric($min) or !is_numeric($max)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
-        }
+        $this->throwIfInvalidNumber($min);
+        $this->throwIfInvalidNumber($max);
 
         $rand = mt_rand((int)$min, (int)$max);
         $origin->addVariable(new NumberVariable($rand, $resultName));

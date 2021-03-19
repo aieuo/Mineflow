@@ -76,9 +76,9 @@ class RandomNumber extends FlowItem implements Condition {
         $max = $origin->replaceVariables($this->getMax());
         $value = $origin->replaceVariables($this->getValue());
 
-        if (!is_numeric($min) or !is_numeric($max) or !is_numeric($value)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
-        }
+        $this->throwIfInvalidNumber($min);
+        $this->throwIfInvalidNumber($max);
+        $this->throwIfInvalidNumber($value);
 
         yield true;
         return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;

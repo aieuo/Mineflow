@@ -106,17 +106,17 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
     public function throwIfInvalidNumber(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): void {
         if (!is_numeric($numberStr)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$numberStr]));
         }
         $number = (float)$numberStr;
         if ($min !== null and $number < $min) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.lessValue", [$min]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.lessValue", [$min, $number]));
         }
         if ($max !== null and $number > $max) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.overValue", [$max]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.overValue", [$max, $number]));
         }
         if (!empty($exclude) and in_array($number, $exclude, true)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.excludedNumber", [implode(",", $exclude)]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
         }
     }
 

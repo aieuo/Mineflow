@@ -101,9 +101,9 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         $z = $origin->replaceVariables($this->getZ());
         $name = $origin->replaceVariables($this->getResultName());
 
-        if (!is_numeric($x) or !is_numeric($y) or !is_numeric($z)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
-        }
+        $this->throwIfInvalidNumber($x);
+        $this->throwIfInvalidNumber($y);
+        $this->throwIfInvalidNumber($z);
 
         $position = Position::fromObject($pos->add($x, $y, $z), $pos->getLevel());
 
