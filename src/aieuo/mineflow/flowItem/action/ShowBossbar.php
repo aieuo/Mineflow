@@ -5,13 +5,9 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Bossbar;
 use aieuo\mineflow\utils\Category;
@@ -101,21 +97,14 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
-                new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
-                new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
-                new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
+            new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
+            new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
+            new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

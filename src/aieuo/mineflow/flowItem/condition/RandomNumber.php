@@ -2,13 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -84,19 +79,12 @@ class RandomNumber extends FlowItem implements Condition {
         return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleNumberInput("@condition.randomNumber.form.min", "0", $this->getMin(), true),
-                new ExampleNumberInput("@condition.randomNumber.form.max", "10", $this->getMax(), true),
-                new ExampleNumberInput("@condition.randomNumber.form.value", "0", $this->getValue(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleNumberInput("@condition.randomNumber.form.min", "0", $this->getMin(), true),
+            new ExampleNumberInput("@condition.randomNumber.form.max", "10", $this->getMax(), true),
+            new ExampleNumberInput("@condition.randomNumber.form.value", "0", $this->getValue(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

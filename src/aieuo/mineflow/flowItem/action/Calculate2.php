@@ -4,13 +4,9 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -151,20 +147,13 @@ class Calculate2 extends FlowItem {
         return $result;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
-                new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
-                new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
+            new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
+            new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
+            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

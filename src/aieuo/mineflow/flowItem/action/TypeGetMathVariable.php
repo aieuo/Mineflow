@@ -3,11 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -44,17 +40,10 @@ abstract class TypeGetMathVariable extends FlowItem {
         return Language::get($this->detail, [$this->getResultName()]);
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1]], "cancel" => $data[2]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

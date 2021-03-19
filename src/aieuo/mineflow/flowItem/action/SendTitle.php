@@ -5,13 +5,9 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -99,26 +95,23 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
-                new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
-                new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),
-                new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $this->stay, true, -1),
-                new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $this->fadeout, true, -1),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
+            new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
+            new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),
+            new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $this->stay, true, -1),
+            new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $this->fadeout, true, -1),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        if ($data[2] === "" and $data[3] === "") {
-            $errors = [["@form.insufficient", 2], ["@form.insufficient", 3]];
+        if ($data[1] === "" and $data[2] === "") {
+            $errors = [["@form.insufficient", 1], ["@form.insufficient", 2]];
         }
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5], $data[6]], "cancel" => $data[7], "errors" => $errors];
+        return ["contents" => $data, "errors" => $errors];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -2,13 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
@@ -77,19 +72,12 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return $rand;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.generateRandomNumber.form.min", "0", $this->getMin(), true),
-                new ExampleInput("@action.generateRandomNumber.form.max", "10", $this->getMax(), true),
-                new ExampleInput("@action.form.resultVariableName", "random", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.generateRandomNumber.form.min", "0", $this->getMin(), true),
+            new ExampleInput("@action.generateRandomNumber.form.max", "10", $this->getMax(), true),
+            new ExampleInput("@action.form.resultVariableName", "random", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

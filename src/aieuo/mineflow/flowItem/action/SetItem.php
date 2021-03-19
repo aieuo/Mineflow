@@ -7,13 +7,9 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -71,19 +67,12 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new ItemVariableDropdown($variables, $this->getItemVariableName()),
-                new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            new ItemVariableDropdown($variables, $this->getItemVariableName()),
+            new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

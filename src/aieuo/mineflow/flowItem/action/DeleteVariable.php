@@ -3,12 +3,8 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -63,18 +59,15 @@ class DeleteVariable extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-                new Toggle("@action.variable.form.global", !$this->isLocal),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+            new Toggle("@action.variable.form.global", !$this->isLocal),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], !$data[2]], "cancel" => $data[3]];
+        return ["contents" => [$data[0], !$data[1]]];
     }
 
     public function loadSaveData(array $content): FlowItem {

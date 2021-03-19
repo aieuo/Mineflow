@@ -8,12 +8,8 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -93,18 +89,11 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.executeIFChain.form.name", "aieuo", $this->getChainName(), true),
-                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.executeIFChain.form.name", "aieuo", $this->getChainName(), true),
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

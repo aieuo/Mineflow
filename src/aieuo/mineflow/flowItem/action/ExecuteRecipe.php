@@ -4,11 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -97,18 +93,15 @@ class ExecuteRecipe extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
-                new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
+            new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], array_map("trim", explode(",", $data[2]))], "cancel" => $data[3]];
+        return ["contents" => [$data[0], array_map("trim", explode(",", $data[1]))]];
     }
 
     public function loadSaveData(array $content): FlowItem {

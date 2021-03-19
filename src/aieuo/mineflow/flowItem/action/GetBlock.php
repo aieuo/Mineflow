@@ -5,12 +5,8 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -69,19 +65,11 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-                new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName()),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        if ($data[2] === "") $data[2] = "block";
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+            new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

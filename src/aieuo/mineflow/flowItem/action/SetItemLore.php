@@ -5,11 +5,7 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -70,21 +66,18 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
-                new ExampleInput("@action.setLore.form.lore", "1;aiueo;abc", implode(";", $this->getLore()), false),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
+            new ExampleInput("@action.setLore.form.lore", "1;aiueo;abc", implode(";", $this->getLore()), false),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        $lore = array_filter(array_map("trim", explode(";", $data[2])), function (string $t) {
+        $lore = array_filter(array_map("trim", explode(";", $data[1])), function (string $t) {
             return $t !== "";
         });
-        return ["contents" => [$data[1], $lore], "cancel" => $data[3]];
+        return ["contents" => [$data[0], $lore]];
     }
 
     public function loadSaveData(array $content): FlowItem {

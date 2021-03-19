@@ -5,13 +5,9 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -77,19 +73,12 @@ class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
-                new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
-                new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
+            new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
+            new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -5,12 +5,8 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -95,19 +91,12 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
-                new ExampleInput("@action.setConfigData.form.key", "aieuo", $this->getKey(), true),
-                new ExampleInput("@action.setConfigData.form.value", "100", $this->getValue(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
+            new ExampleInput("@action.setConfigData.form.key", "aieuo", $this->getKey(), true),
+            new ExampleInput("@action.setConfigData.form.value", "100", $this->getValue(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

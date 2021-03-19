@@ -7,14 +7,10 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -171,20 +167,17 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-                new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
-                new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
-                new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+            new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
+            new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
+            new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $this->directions[$data[2]] ?? "", $data[3], $data[4]], "cancel" => $data[5]];
+        return ["contents" => [$data[0], $this->directions[$data[1]] ?? "", $data[2], $data[3]]];
     }
 
     public function loadSaveData(array $content): FlowItem {

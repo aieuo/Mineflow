@@ -4,12 +4,8 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -122,21 +118,18 @@ class CreatePositionVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $this->getX(), true),
-                new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
-                new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
-                new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $this->getLevel(), true),
-                new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $this->getX(), true),
+            new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
+            new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
+            new ExampleInput("@action.createPositionVariable.form.level", "{target.level}", $this->getLevel(), true),
+            new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[5], $data[1], $data[2], $data[3], $data[4]], "cancel" => $data[6]];
+        return ["contents" => [$data[4], $data[0], $data[1], $data[2], $data[3]]];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -6,7 +6,9 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\recipe\Recipe;
@@ -129,7 +131,10 @@ abstract class VariableDropdown extends Dropdown {
                     $recipe = array_shift($parents);
                     $variables = $recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION);
 
-                    $form = $action->getEditForm($variables);
+                    $form = new CustomForm($action->getName());
+                    $form->addContent(new Label($action->getDescription()));
+                    $form->addContents($action->getEditFormElements($variables));
+                    $form->addContent(new CancelToggle());
                     $form->addArgs($form, $action, function ($result) use ($player, $origin, $index, $action, $parents, $recipe, $container) {
                         if (!$result) {
                             $origin->resend([], ["@form.cancelled"]);

@@ -2,24 +2,18 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
-use pocketmine\Server;
 
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -113,21 +107,14 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PositionVariableDropdown($variables),
-                new ExampleNumberInput("@action.positionAddition.form.x", "0", $this->getX(), true),
-                new ExampleNumberInput("@action.positionAddition.form.y", "100", $this->getY(), true),
-                new ExampleNumberInput("@action.positionAddition.form.z", "16", $this->getZ(), true),
-                new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PositionVariableDropdown($variables),
+            new ExampleNumberInput("@action.positionAddition.form.x", "0", $this->getX(), true),
+            new ExampleNumberInput("@action.positionAddition.form.y", "100", $this->getY(), true),
+            new ExampleNumberInput("@action.positionAddition.form.z", "16", $this->getZ(), true),
+            new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

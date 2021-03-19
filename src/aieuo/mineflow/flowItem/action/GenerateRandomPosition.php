@@ -6,12 +6,8 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -78,19 +74,12 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PositionVariableDropdown($variables, $this->getPositionVariableName("pos1"), "@action.form.target.position 1"),
-                new PositionVariableDropdown($variables, $this->getPositionVariableName("pos2"), "@action.form.target.position 2"),
-                new ExampleInput("@action.form.resultVariableName", "position", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PositionVariableDropdown($variables, $this->getPositionVariableName("pos1"), "@action.form.target.position 1"),
+            new PositionVariableDropdown($variables, $this->getPositionVariableName("pos2"), "@action.form.target.position 2"),
+            new ExampleInput("@action.form.resultVariableName", "position", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

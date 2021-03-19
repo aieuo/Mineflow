@@ -4,11 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\command\MineflowConsoleCommandSender;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -59,17 +55,10 @@ class CommandConsole extends FlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1]], "cancel" => $data[2]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

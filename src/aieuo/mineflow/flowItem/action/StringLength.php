@@ -3,11 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -74,18 +70,11 @@ class StringLength extends FlowItem {
         return $length;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.strlen.form.value", "aieuo", $this->getValue(), true),
-                new ExampleInput("@action.form.resultVariableName", "length", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.strlen.form.value", "aieuo", $this->getValue(), true),
+            new ExampleInput("@action.form.resultVariableName", "length", $this->getResultName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

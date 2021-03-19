@@ -7,8 +7,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -131,24 +131,19 @@ class EditString extends FlowItem {
         return $result;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        $keys = array_keys($this->operators, $this->getOperator());
-
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
-                new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
-                    return Language::get("action.editString.".$type);
-                }, array_values($this->operators)), array_shift($keys) ?? 0),
-                new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
-                new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
+            new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
+                return Language::get("action.editString.".$type);
+            }, array_values($this->operators)), array_shift($keys) ?? 0),
+            new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
+            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $this->operators[$data[2]], $data[3], $data[4]], "cancel" => $data[5]];
+        return ["contents" => [$data[0], $this->operators[$data[1]], $data[2], $data[3]]];
     }
 
     public function loadSaveData(array $content): FlowItem {

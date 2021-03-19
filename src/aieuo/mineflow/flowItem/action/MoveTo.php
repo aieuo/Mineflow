@@ -7,13 +7,9 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -107,21 +103,14 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-                new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-                new ExampleNumberInput("@action.moveTo.form.speedX", "0.1", $this->getSpeedX()),
-                new ExampleNumberInput("@action.moveTo.form.speedY", "0", $this->getSpeedY()),
-                new ExampleNumberInput("@action.moveTo.form.speedZ", "0.1", $this->getSpeedZ()),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+            new ExampleNumberInput("@action.moveTo.form.speedX", "0.1", $this->getSpeedX()),
+            new ExampleNumberInput("@action.moveTo.form.speedY", "0", $this->getSpeedY()),
+            new ExampleNumberInput("@action.moveTo.form.speedZ", "0.1", $this->getSpeedZ()),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

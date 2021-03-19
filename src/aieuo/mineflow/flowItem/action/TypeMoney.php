@@ -3,12 +3,8 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
@@ -55,18 +51,11 @@ abstract class TypeMoney extends FlowItem {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getAmount()]);
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
-                new ExampleNumberInput("@action.money.form.amount", "1000", $this->getAmount(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
+            new ExampleNumberInput("@action.money.form.amount", "1000", $this->getAmount(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -7,9 +7,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
@@ -121,9 +121,8 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             })->show($player);
     }
 
-    public function getEditForm(array $variables = []): Form {
+    public function getEditFormElements(array $variables): array {
         $contents = [
-            new Label($this->getDescription()),
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
             new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true),
@@ -133,24 +132,23 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         }
         $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
         $contents[] = new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose);
-        $contents[] = new Toggle("@form.cancelAndBack");
-
-        return (new CustomForm($this->getName()))
-            ->setContents($contents);
+        return $contents;
     }
 
     public function parseFromFormData(array $data): array {
-        array_shift($data);
         $target = array_shift($data);
         $resultName = array_shift($data);
         $text = array_shift($data);
-        $cancel = array_pop($data);
         $resendOnClose = array_pop($data);
-        $add = array_filter(array_map("trim", explode(";", array_pop($data))), function (string $o) { return $o !== ""; });
+        $add = array_filter(array_map("trim", explode(";", array_pop($data))), function (string $o) {
+            return $o !== "";
+        });
 
-        $options = array_filter($data, function (string $o) { return $o !== ""; });
+        $options = array_filter($data, function (string $o) {
+            return $o !== "";
+        });
         $options = array_merge($options, $add);
-        return ["contents" => [$target, $resultName, $text, $options, $resendOnClose], "cancel" => $cancel];
+        return ["contents" => [$target, $resultName, $text, $options, $resendOnClose]];
     }
 
     public function loadSaveData(array $content): FlowItem {

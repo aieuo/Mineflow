@@ -6,8 +6,8 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\Form;
@@ -72,10 +72,6 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
                 new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
                 new Toggle("@form.cancelAndBack")
             ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -6,13 +6,10 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -98,20 +95,13 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
             })->show($player);
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
-                new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
-                new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4]], "cancel" => $data[5]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
+            new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
+            new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

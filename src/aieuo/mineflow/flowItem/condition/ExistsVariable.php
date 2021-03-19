@@ -3,11 +3,7 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -57,17 +53,10 @@ class ExistsVariable extends FlowItem implements Condition {
         return $origin->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1]], "cancel" => $data[2]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -3,11 +3,7 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
@@ -58,19 +54,16 @@ class ExistsConfigFile extends FlowItem implements Condition {
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.createConfigVariable.form.name", "config", $this->getFileName(), true),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.createConfigVariable.form.name", "config", $this->getFileName(), true),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
         $errors = [];
-        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[1], "/@#~"))) $errors = ["@form.recipe.invalidName", 1];
-        return ["contents" => [$data[1]], "cancel" => $data[2], "errors" => $errors];
+        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[0], "/@#~"))) $errors = ["@form.recipe.invalidName", 0];
+        return ["contents" => [$data[0]], "errors" => $errors];
     }
 
     public function loadSaveData(array $content): FlowItem {

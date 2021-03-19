@@ -120,16 +120,12 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         }
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [], "cancel" => $data[1]];
+        return ["contents" => $data];
     }
 
     /**

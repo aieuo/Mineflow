@@ -6,14 +6,10 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -42,7 +38,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
     /** @var bool */
     private $visible = false;
 
-    public function __construct(string $entity = "", string $id = "", string $time = "", string $power = "1") {
+    public function __construct(string $entity = "", string $id = "", string $time = "300", string $power = "1") {
         $this->setEntityVariableName($entity);
         $this->effectId = $id;
         $this->time = $time;
@@ -104,23 +100,14 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         yield true;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-                new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
-                new ExampleNumberInput("@action.addEffect.form.time", "300", $this->getTime(), false, 1),
-                new ExampleNumberInput("@action.addEffect.form.power", "1", $this->getPower(), false),
-                new Toggle("@action.addEffect.form.visible", $this->visible),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        if ($data[3] === "") $data[3] = "300";
-        if ($data[4] === "") $data[4] = "1";
-        return ["contents" => [$data[1], $data[2], $data[3], $data[4], $data[5]], "cancel" => $data[6]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+            new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
+            new ExampleNumberInput("@action.addEffect.form.time", "300", $this->getTime(), true, 1),
+            new ExampleNumberInput("@action.addEffect.form.power", "1", $this->getPower(), true),
+            new Toggle("@action.addEffect.form.visible", $this->visible),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

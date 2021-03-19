@@ -4,12 +4,8 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -113,20 +109,17 @@ class CreateItemVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.createItemVariable.form.id", "1:0", $this->getItemId(), true),
-                new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getItemCount(), false, 0),
-                new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName()),
-                new ExampleInput("@action.form.resultVariableName", "item", $this->getVariableName(), true),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.createItemVariable.form.id", "1:0", $this->getItemId(), true),
+            new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getItemCount(), false, 0),
+            new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName()),
+            new ExampleInput("@action.form.resultVariableName", "item", $this->getVariableName(), true),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[4], $data[1], $data[2], $data[3]], "cancel" => $data[5]];
+        return ["contents" => [$data[3], $data[0], $data[1], $data[2]]];
     }
 
     public function loadSaveData(array $content): FlowItem {
