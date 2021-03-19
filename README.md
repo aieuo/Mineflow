@@ -22,7 +22,9 @@ Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flat
 
 # English
 
-You can combine actions and create something like a plugin without any coding knowledge.
+You can combine actions and create something like a plugin without any coding knowledge.  
+
+\* Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.
 
 
 ## Command
