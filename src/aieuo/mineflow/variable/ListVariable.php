@@ -48,17 +48,14 @@ class ListVariable extends Variable implements \JsonSerializable {
         return count($this->value);
     }
 
-    public function toStringVariable(): StringVariable {
-        return new StringVariable($this->__toString(), $this->getName());
-    }
-
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
+
         $values = [];
         foreach ($this->getValue() as $value) {
-            $values[] = $value->__toString();
+            $values[] = (string)$value;
         }
-        return str_replace("\"", "", json_encode($values, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        return "[".implode(",", $values)."]";
     }
 
     public function getShowString(): string {

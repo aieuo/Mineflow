@@ -14,9 +14,9 @@ class MapVariable extends ListVariable {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
         foreach ($this->getValue() as $key => $value) {
-            $values[$key] = $value->__toString();
+            $values[] = $key.":".$value;
         }
-        return str_replace(["{", "}", "\""] ,["<", ">", ""], json_encode($values, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        return "<".implode(",", $values).">";
     }
 
     public static function fromArray(array $data): ?Variable {
