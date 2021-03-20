@@ -21,10 +21,4 @@ interface PositionFlowItem {
      * @throws InvalidFlowValueException
      */
     public function getPosition(Recipe $origin, string $name = ""): Position;
-
-    /**
-     * @param Position|null $position
-     * @deprecated merge this into getPosition()
-     */
-    public function throwIfInvalidPosition(?Position $position): void;
 }

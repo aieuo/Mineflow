@@ -33,14 +33,4 @@ trait ItemFlowItemTrait {
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $rawName]));
     }
-
-    /**
-     * @param Item|null $item
-     * @deprecated merge this into getItem()
-     */
-    public function throwIfInvalidItem(?Item $item): void {
-        if (!($item instanceof Item)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $this->getItemVariableName()]));
-        }
-    }
 }

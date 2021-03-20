@@ -21,10 +21,4 @@ interface ConfigFileFlowItem {
      * @throws InvalidFlowValueException
      */
     public function getConfig(Recipe $origin, string $name = ""): Config;
-
-    /**
-     * @param Config|null $config
-     * @deprecated merge this into getConfig()
-     */
-    public function throwIfInvalidConfig(?Config $config): void;
 }

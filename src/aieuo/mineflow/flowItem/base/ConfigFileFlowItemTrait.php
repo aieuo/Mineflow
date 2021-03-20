@@ -33,14 +33,4 @@ trait ConfigFileFlowItemTrait {
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.config"], $rawName]));
     }
-
-    /**
-     * @param Config|null $config
-     * @deprecated merge this into getConfig()
-     */
-    public function throwIfInvalidConfig(?Config $config): void {
-        if (!($config instanceof Config)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.config"], $this->getConfigVariableName()]));
-        }
-    }
 }

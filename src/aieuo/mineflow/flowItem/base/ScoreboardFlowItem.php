@@ -21,10 +21,4 @@ interface ScoreboardFlowItem {
      * @throws InvalidFlowValueException
      */
     public function getScoreboard(Recipe $origin, string $name = ""): Scoreboard;
-
-    /**
-     * @param Scoreboard|null $board
-     * @deprecated merge this into getScoreboard()
-     */
-    public function throwIfInvalidScoreboard(?Scoreboard $board): void;
 }

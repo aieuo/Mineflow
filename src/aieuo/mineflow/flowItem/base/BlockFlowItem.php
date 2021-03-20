@@ -21,10 +21,4 @@ interface BlockFlowItem {
      * @throws InvalidFlowValueException
      */
     public function getBlock(Recipe $origin, string $name = ""): Block;
-
-    /**
-     * @param Block|null $block
-     * @deprecated merge this into getBlock()
-     */
-    public function throwIfInvalidBlock(?Block $block): void;
 }

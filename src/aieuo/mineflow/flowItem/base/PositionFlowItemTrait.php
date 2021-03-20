@@ -33,14 +33,4 @@ trait PositionFlowItemTrait {
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.position"], $rawName]));
     }
-
-    /**
-     * @param Position|null $position
-     * @deprecated merge this into getPosition()
-     */
-    public function throwIfInvalidPosition(?Position $position): void {
-        if (!($position instanceof Position)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.position"], $this->getPositionVariableName()]));
-        }
-    }
 }

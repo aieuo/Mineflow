@@ -21,10 +21,4 @@ interface ItemFlowItem {
      * @throws InvalidFlowValueException
      */
     public function getItem(Recipe $origin, string $name = ""): Item;
-
-    /**
-     * @param Item|null $item
-     * @deprecated merge this into getItem()
-     */
-    public function throwIfInvalidItem(?Item $item): void;
 }
