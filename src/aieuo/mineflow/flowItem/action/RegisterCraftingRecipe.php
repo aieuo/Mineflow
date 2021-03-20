@@ -154,22 +154,19 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         return array_values($shape);
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()."\n|ABC|\n|EDF| => RESULT\n|GHI|"),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input0"), "@action.registerRecipe.ingredients A", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input1"), "@action.registerRecipe.ingredients B", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input2"), "@action.registerRecipe.ingredients C", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input3"), "@action.registerRecipe.ingredients D", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input4"), "@action.registerRecipe.ingredients E", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input5"), "@action.registerRecipe.ingredients F", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input6"), "@action.registerRecipe.ingredients G", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input7"), "@action.registerRecipe.ingredients H", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("input8"), "@action.registerRecipe.ingredients I", true),
-                new ItemVariableDropdown($variables, $this->getItemVariableName("output"), "@action.registerRecipe.results RESULT"),
-                new CancelToggle(),
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input0"), "@action.registerRecipe.ingredients A", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input1"), "@action.registerRecipe.ingredients B", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input2"), "@action.registerRecipe.ingredients C", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input3"), "@action.registerRecipe.ingredients D", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input4"), "@action.registerRecipe.ingredients E", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input5"), "@action.registerRecipe.ingredients F", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input6"), "@action.registerRecipe.ingredients G", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input7"), "@action.registerRecipe.ingredients H", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input8"), "@action.registerRecipe.ingredients I", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("output"), "@action.registerRecipe.results RESULT"),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {
