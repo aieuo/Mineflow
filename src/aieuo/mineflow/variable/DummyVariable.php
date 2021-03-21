@@ -58,10 +58,6 @@ class DummyVariable extends Variable {
         return new StringVariable($this->getName(), $this->getValue());
     }
 
-    public function isSavable(): bool {
-        return false;
-    }
-
     /**
      * @return DummyVariable[]
      */
@@ -108,10 +104,5 @@ class DummyVariable extends Variable {
             self::POSITION,
             self::SCOREBOARD,
         ], true);
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        return new self($data["value"], $data["name"] ?? "");
     }
 }

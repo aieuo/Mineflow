@@ -18,14 +18,4 @@ class MapVariable extends ListVariable {
         }
         return "<".implode(",", $values).">";
     }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        $values = [];
-        foreach ($data["value"] as $name => $value) {
-            if (!isset($value["type"])) return null;
-            $values[$name] = Variable::create($value["value"], $value["name"] ?? "", $value["type"]);
-        }
-        return new self($values, $data["name"] ?? "");
-    }
 }

@@ -87,15 +87,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents as $content) {
-            switch ($content["id"]) {
-                case "removeItem":
-                    $content["id"] = self::REMOVE_ITEM_CONDITION;
-                    break;
-                case "takeMoney":
-                    $content["id"] = self::TAKE_MONEY_CONDITION;
-                    break;
-            }
-            $condition = FlowItem::loadSaveDataStatic($content);
+            $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
         }
         return $this;

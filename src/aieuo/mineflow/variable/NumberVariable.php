@@ -57,9 +57,4 @@ class NumberVariable extends Variable implements \JsonSerializable {
             "name" => $this->getName(), "type" => $this->getType(), "value" => $this->getValue(),
         ];
     }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        return new self((float)$data["value"], $data["name"] ?? "");
-    }
 }

@@ -32,24 +32,11 @@ class StringVariable extends Variable implements \JsonSerializable {
         return new ListVariable($result, $resultName);
     }
 
-    public function toStringVariable(): StringVariable {
-        return $this;
-    }
-
-    public function __toString(): string {
-        return $this->getValue();
-    }
-
     public function jsonSerialize(): array {
         return [
             "name" => $this->getName(),
             "type" => $this->getType(),
             "value" => $this->getValue(),
         ];
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        return new self($data["value"], $data["name"] ?? "");
     }
 }

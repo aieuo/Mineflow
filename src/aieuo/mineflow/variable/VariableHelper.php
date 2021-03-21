@@ -44,11 +44,6 @@ class VariableHelper {
         return $data instanceof Variable ? $data : Variable::create($data["value"], $data["name"], $data["type"]);
     }
 
-    /**
-     * @param string $name
-     * @param bool $save
-     * @return Variable|null
-     */
     public function getNested(string $name, bool $save = false): ?Variable {
         $names = explode(".", $name);
         $name = array_shift($names);
@@ -72,7 +67,7 @@ class VariableHelper {
             return;
         }
 
-        if (!$variable->isSavable() or empty($variable->getName())) return;
+        if (!($variable instanceof \JsonSerializable) or empty($variable->getName())) return;
         $this->file->set($variable->getName(), $variable);
         $this->file->save();
     }
@@ -106,11 +101,9 @@ class VariableHelper {
     }
 
     /**
-     * 文字列の中にある変数を置き換える
-     * @param string $string
-     * @param Variable[] $variables
-     * @param bool $global
-     * @return string
+     * @param array $tokens
+     * @param int $priority
+     * @return array|Variable|string
      */
     public function replaceVariables(string $string, array $variables = [], bool $global = true): string {
         $limit = 10;

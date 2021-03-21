@@ -18,12 +18,6 @@ abstract class Variable {
     /** @var int 変数の型 */
     public $type;
 
-    /**
-     * @param mixed $value
-     * @param string $name
-     * @param int $type
-     * @return self|null
-     */
     public static function create($value, string $name = "", int $type = self::STRING): ?self {
         $variable = null;
         switch ($type) {
@@ -80,15 +74,7 @@ abstract class Variable {
         return $this->type;
     }
 
-    public function isSavable(): bool {
-        return true;
-    }
-
     public function __toString(): string {
         return (string)$this->getValue();
     }
-
-    abstract public function toStringVariable(): StringVariable;
-
-    abstract public static function fromArray(array $data): ?Variable;
 }
