@@ -129,7 +129,7 @@ class CreatePositionVariable extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[4], $data[0], $data[1], $data[2], $data[3]]];
+        return [$data[4], $data[0], $data[1], $data[2], $data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {

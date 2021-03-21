@@ -121,7 +121,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => $data];
+        return $data;
     }
 
     /**

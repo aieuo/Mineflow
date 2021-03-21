@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\ui;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
@@ -70,18 +71,20 @@ class FlowItemForm {
         array_shift($data);
         $cancelChecked = array_pop($data);
 
-        $values = $action->parseFromFormData($data);
         if ($cancelChecked) {
             $callback(false);
             return;
         }
 
-        if (!empty($values["errors"])) {
-            $form->resend(array_map(function (array $v) { return [$v[0], $v[1] + 1]; }, $values["errors"]));
+        try {
+            $values = $action->parseFromFormData($data);
+        } catch (InvalidFormValueException $e) {
+            $form->resend([[$e->getMessage(), $e->getIndex() + 1]]);
             return;
         }
+
         try {
-            $action->loadSaveData($values["contents"]);
+            $action->loadSaveData($values);
         } catch (FlowItemLoadException|\ErrorException $e) {
             $player->sendMessage(Language::get("action.error.recipe"));
             Main::getInstance()->getLogger()->logException($e);

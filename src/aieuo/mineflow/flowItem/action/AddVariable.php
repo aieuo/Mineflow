@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
@@ -106,12 +107,12 @@ class AddVariable extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
         $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
         if ($data[2] === Variable::NUMBER and !$containsVariable and !is_numeric($data[1])) {
-            $errors[] = [Language::get("action.error.notNumber", [$data[3]]), 1];
+            throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
         }
-        return ["contents" => [$data[0], $data[1], $data[2], !$data[3]], "errors" => $errors];
+
+        return [$data[0], $data[1], $data[2], !$data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {

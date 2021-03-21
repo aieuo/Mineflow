@@ -108,7 +108,7 @@ class CreateScoreboardVariable extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[3], $data[0], $data[1], $this->displayTypes[$data[2]]]];
+        return [$data[3], $data[0], $data[1], $this->displayTypes[$data[2]]];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -61,9 +62,8 @@ class ExistsConfigFile extends FlowItem implements Condition {
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
-        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[0], "/@#~"))) $errors = ["@form.recipe.invalidName", 0];
-        return ["contents" => [$data[0]], "errors" => $errors];
+        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[0], "/@#~"))) throw new InvalidFormValueException("@form.recipe.invalidName", 0);
+        return [$data[0]];
     }
 
     public function loadSaveData(array $content): FlowItem {

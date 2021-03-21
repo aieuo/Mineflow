@@ -112,7 +112,7 @@ class AddListVariable extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[0], array_map("trim", explode(",", $data[1])), !$data[2]]];
+        return [$data[0], array_map("trim", explode(",", $data[1])), !$data[2]];
     }
 
     public function loadSaveData(array $content): FlowItem {

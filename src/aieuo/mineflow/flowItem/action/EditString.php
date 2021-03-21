@@ -139,7 +139,7 @@ class EditString extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[0], $this->operators[$data[1]], $data[2], $data[3]]];
+        return [$data[0], $this->operators[$data[1]], $data[2], $data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -77,7 +77,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[0], (string)$data[1]]];
+        return [$data[0], (string)$data[1]];
     }
 
     public function loadSaveData(array $content): FlowItem {

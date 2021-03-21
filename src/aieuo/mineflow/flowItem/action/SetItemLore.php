@@ -77,7 +77,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         $lore = array_filter(array_map("trim", explode(";", $data[1])), function (string $t) {
             return $t !== "";
         });
-        return ["contents" => [$data[0], $lore]];
+        return [$data[0], $lore];
     }
 
     public function loadSaveData(array $content): FlowItem {

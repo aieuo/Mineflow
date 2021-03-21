@@ -53,7 +53,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => $data];
+        return $data;
     }
 
     public function loadSaveData(array $content): FlowItem {

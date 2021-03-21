@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -107,11 +108,10 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        $errors = [];
         if ($data[1] === "" and $data[2] === "") {
-            $errors = [["@form.insufficient", 1], ["@form.insufficient", 2]];
+            throw new InvalidFormValueException("@form.insufficient", 1);
         }
-        return ["contents" => $data, "errors" => $errors];
+        return $data;
     }
 
     public function loadSaveData(array $content): FlowItem {

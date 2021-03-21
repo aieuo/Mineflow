@@ -112,7 +112,7 @@ class ExecuteRecipe extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[0], array_map("trim", explode(",", $data[1]))]];
+        return [$data[0], array_map("trim", explode(",", $data[1]))];
     }
 
     public function loadSaveData(array $content): FlowItem {

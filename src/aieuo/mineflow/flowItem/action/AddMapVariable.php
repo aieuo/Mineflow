@@ -130,7 +130,7 @@ class AddMapVariable extends FlowItem {
 
     public function parseFromFormData(array $data): array {
         // TODO: AddListVariableのように区切って複数同時に追加できるようにする
-        return ["contents" => [$data[0], $data[1], $data[2], !$data[3]]];
+        return [$data[0], $data[1], $data[2], !$data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {
