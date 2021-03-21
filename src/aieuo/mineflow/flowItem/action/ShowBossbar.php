@@ -79,18 +79,18 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getBarId()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $title = $origin->replaceVariables($this->getTitle());
-        $max = $origin->replaceVariables($this->getMax());
-        $value = $origin->replaceVariables($this->getValue());
-        $id = $origin->replaceVariables($this->getBarId());
+        $title = $source->replaceVariables($this->getTitle());
+        $max = $source->replaceVariables($this->getMax());
+        $value = $source->replaceVariables($this->getValue());
+        $id = $source->replaceVariables($this->getBarId());
 
         $this->throwIfInvalidNumber($max, 1);
         $this->throwIfInvalidNumber($value);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::add($player, $id, $title, (float)$max, (float)$value / (float)$max);

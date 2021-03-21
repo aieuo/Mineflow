@@ -52,7 +52,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
     public function getDetail(): string {
         $repeat = $this->getPositionVariableName("pos1")." -> ".$this->getPositionVariableName("pos2")."; (".$this->counterName.")";
 
-        $details = ["", "== eachPos(".$repeat.") =="];
+        $details = ["", "§7==§f eachPos(".$repeat.") §7==§f"];
         foreach ($this->getActions() as $action) {
             $details[] = $action->getDetail();
         }
@@ -64,27 +64,28 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
-        $counterName = $origin->replaceVariables($this->counterName);
+    public function execute(Recipe $source): \Generator {
+        $counterName = $source->replaceVariables($this->counterName);
 
-        $pos1 = $this->getPosition($origin, "pos1");
-        $pos2 = $this->getPosition($origin, "pos2");
+        $pos1 = $this->getPosition($source, "pos1");
+        $pos2 = $this->getPosition($source, "pos2");
 
         [$sx, $ex] = [min($pos1->x, $pos2->x), max($pos1->x, $pos2->x)];
         [$sy, $ey] = [min($pos1->y, $pos2->y), max($pos1->y, $pos2->y)];
         [$sz, $ez] = [min($pos1->z, $pos2->z), max($pos1->z, $pos2->z)];
 
-        for ($x = $sx; $x <= $ex; $x ++) {
-            for ($y = $sy; $y <= $ey; $y ++) {
-                for ($z = $sz; $z <= $ez; $z ++) {
+        for ($x = $sx; $x <= $ex; $x++) {
+            for ($y = $sy; $y <= $ey; $y++) {
+                for ($z = $sz; $z <= $ez; $z++) {
                     $pos = new Position($x, $y, $z, $pos1->getLevel());
-                    $origin->addVariable(new PositionObjectVariable($pos, $counterName));
-                    yield from $this->executeAll($origin, FlowItemContainer::ACTION);
+
+                    $source->addVariable(new PositionObjectVariable($pos, $counterName));
+                    yield from $this->executeAll($source, FlowItemContainer::ACTION);
                 }
             }
         }
 
-        $origin->resume();
+        $source->resume();
         yield true;
     }
 
@@ -149,7 +150,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
 

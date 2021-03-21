@@ -50,10 +50,10 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), ["action.allowFlight.".($this->isAllow() ? "allow" : "notAllow")]]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $player->setAllowFlight($this->isAllow());

@@ -57,10 +57,10 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getFormName());
+        $name = $source->replaceVariables($this->getFormName());
         $manager = Main::getFormManager();
         $helper = Main::getVariableHelper();
         $form = $manager->getForm($name);
@@ -68,22 +68,22 @@ class SendForm extends FlowItem implements PlayerFlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));
         }
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $form = clone $form;
-        $form->setTitle($origin->replaceVariables($form->getTitle()));
+        $form->setTitle($source->replaceVariables($form->getTitle()));
         if ($form instanceof ModalForm) {
-            $form->setContent($origin->replaceVariables($form->getContent()));
-            $form->setButton1($origin->replaceVariables($form->getButton1Text()));
-            $form->setButton2($origin->replaceVariables($form->getButton2Text()));
+            $form->setContent($source->replaceVariables($form->getContent()));
+            $form->setButton1($source->replaceVariables($form->getButton1Text()));
+            $form->setButton2($source->replaceVariables($form->getButton2Text()));
         } elseif ($form instanceof ListForm) {
-            $form->setContent($origin->replaceVariables($form->getContent()));
+            $form->setContent($source->replaceVariables($form->getContent()));
             $buttons = [];
             foreach ($form->getButtons() as $button) {
                 if ($helper->isVariableString($button->getText())) {
                     $variableName = substr($button->getText(), 1, -1);
-                    $variable = $origin->getVariable($variableName) ?? $helper->getNested($variableName);
+                    $variable = $source->getVariable($variableName) ?? $helper->getNested($variableName);
                     if ($variable instanceof ListVariable) {
                         foreach ($variable->getValue() as $value) {
                             $buttons[] = new Button((string)$value);
@@ -92,29 +92,29 @@ class SendForm extends FlowItem implements PlayerFlowItem {
                     }
                 }
 
-                $buttons[] = $button->setText($origin->replaceVariables($button->getText()));
+                $buttons[] = $button->setText($source->replaceVariables($button->getText()));
             }
             $form->setButtons($buttons);
         } elseif ($form instanceof CustomForm) {
             $contents = $form->getContents();
             foreach ($contents as $content) {
-                $content->setText($origin->replaceVariables($content->getText()));
+                $content->setText($source->replaceVariables($content->getText()));
                 if ($content instanceof Input) {
-                    $content->setPlaceholder($origin->replaceVariables($content->getPlaceholder()));
-                    $content->setDefault($origin->replaceVariables($content->getDefault()));
+                    $content->setPlaceholder($source->replaceVariables($content->getPlaceholder()));
+                    $content->setDefault($source->replaceVariables($content->getDefault()));
                 } elseif ($content instanceof Dropdown) {
                     $options = [];
                     foreach ($content->getOptions() as $option) {
                         if ($helper->isVariableString($option)) {
                             $variableName = substr($option, 1, -1);
-                            $variable = $origin->getVariable($variableName) ?? $helper->getNested($variableName);
+                            $variable = $source->getVariable($variableName) ?? $helper->getNested($variableName);
                             if ($variable instanceof ListVariable) {
                                 foreach ($variable->getValue() as $value) {
-                                    $options[] = $origin->replaceVariables($value);
+                                    $options[] = $source->replaceVariables($value);
                                 }
                             }
                         } else {
-                            $options[] = $origin->replaceVariables($option);
+                            $options[] = $source->replaceVariables($option);
                         }
                     }
                     $content->setOptions($options);

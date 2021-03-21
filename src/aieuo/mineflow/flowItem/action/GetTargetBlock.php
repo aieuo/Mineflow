@@ -62,18 +62,18 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $max = $origin->replaceVariables($this->getMax());
+        $max = $source->replaceVariables($this->getMax());
         $this->throwIfInvalidNumber($max, 1);
-        $result = $origin->replaceVariables($this->getResultName());
+        $result = $source->replaceVariables($this->getResultName());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $block = $player->getTargetBlock((int)$max);
-        $origin->addVariable(new BlockObjectVariable($block, $result));
+        $source->addVariable(new BlockObjectVariable($block, $result));
         yield true;
         return $this->getResultName();
     }

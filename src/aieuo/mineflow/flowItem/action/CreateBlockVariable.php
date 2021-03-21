@@ -58,11 +58,11 @@ class CreateBlockVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getBlockId()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
-        $id = $origin->replaceVariables($this->getBlockId());
+        $name = $source->replaceVariables($this->getVariableName());
+        $id = $source->replaceVariables($this->getBlockId());
         try {
             $item = ItemFactory::fromString($id);
         } catch (\InvalidArgumentException $e) {
@@ -75,7 +75,7 @@ class CreateBlockVariable extends FlowItem {
         }
 
         $variable = new BlockObjectVariable($block, $name);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getVariableName();
     }

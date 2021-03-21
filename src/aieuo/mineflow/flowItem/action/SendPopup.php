@@ -11,12 +11,12 @@ class SendPopup extends TypePlayerMessage {
     protected $name = "action.sendPopup.name";
     protected $detail = "action.sendPopup.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $origin->replaceVariables($this->getMessage());
+        $message = $source->replaceVariables($this->getMessage());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $player->sendPopup($message);

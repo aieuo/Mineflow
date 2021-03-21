@@ -91,11 +91,11 @@ class Calculate extends FlowItem {
         return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value = $origin->replaceVariables($this->getValue());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $value = $source->replaceVariables($this->getValue());
+        $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
         $this->throwIfInvalidNumber($value);
@@ -110,7 +110,7 @@ class Calculate extends FlowItem {
                 break;
             case self::FACTORIAL:
                 $result = 1;
-                for ($i=abs($value); $i>1; $i--) {
+                for ($i = abs($value); $i > 1; $i--) {
                     $result *= $i;
                 }
                 break;
@@ -157,7 +157,7 @@ class Calculate extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $origin->addVariable(new NumberVariable($result, $resultName));
+        $source->addVariable(new NumberVariable($result, $resultName));
         yield true;
         return $result;
     }

@@ -15,10 +15,10 @@ interface PositionFlowItem {
     public function setPositionVariableName(string $position, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param Recipe $source
      * @param string $name
      * @return Position
      * @throws InvalidFlowValueException
      */
-    public function getPosition(Recipe $origin, string $name = ""): Position;
+    public function getPosition(Recipe $source, string $name = ""): Position;
 }

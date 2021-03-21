@@ -73,39 +73,39 @@ class AddMapVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey(), $this->getVariableValue()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
-        $key = $origin->replaceVariables($this->getKey());
-        $value = $origin->replaceVariables($this->getVariableValue());
+        $name = $source->replaceVariables($this->getVariableName());
+        $key = $source->replaceVariables($this->getKey());
+        $value = $source->replaceVariables($this->getVariableValue());
 
         $type = $helper->getType($value);
 
         $value = $this->getVariableValue();
         if ($helper->isVariableString($value)) {
-            $addVariable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
+            $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
             if ($addVariable === null) {
-                $value = $helper->replaceVariables($value, $origin->getVariables());
+                $value = $helper->replaceVariables($value, $source->getVariables());
                 $addVariable = Variable::create($helper->currentType($value), $key, $type);
             } else {
                 $addVariable->setName($key);
             }
         } else {
-            $value = $helper->replaceVariables($value, $origin->getVariables());
+            $value = $helper->replaceVariables($value, $source->getVariables());
             $addVariable = Variable::create($helper->currentType($value), $key, $type);
         }
 
         if ($this->isLocal) {
-            $variable = $origin->getVariable($name) ?? new MapVariable([], $name);
+            $variable = $source->getVariable($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
                     $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
                 ]));
             }
             $variable->addValue($addVariable);
-            $origin->addVariable($variable);
+            $source->addVariable($variable);
         } else {
             $variable = $helper->get($name) ?? new MapVariable([], $name);
             if (!($variable instanceof MapVariable)) {

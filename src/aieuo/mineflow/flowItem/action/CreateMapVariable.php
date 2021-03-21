@@ -72,13 +72,13 @@ class CreateMapVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getKey()), implode(",", $this->getVariableValue())]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
-        $keys = array_map(function(string $key) use ($origin): string {
-            return $origin->replaceVariables($key);
+        $name = $source->replaceVariables($this->getVariableName());
+        $keys = array_map(function (string $key) use ($source): string {
+            return $source->replaceVariables($key);
         }, $this->getKey());
         $values = $this->getVariableValue();
 
@@ -89,15 +89,15 @@ class CreateMapVariable extends FlowItem {
             if ($key === "") continue;
 
             if ($helper->isVariableString($value)) {
-                $addVariable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
+                $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
                 if ($addVariable === null) {
-                    $value = $helper->replaceVariables($value, $origin->getVariables());
+                    $value = $helper->replaceVariables($value, $source->getVariables());
                     $addVariable = Variable::create($helper->currentType($value), $key, $helper->getType($value));
                 } else {
                     $addVariable->setName($key);
                 }
             } else {
-                $value = $helper->replaceVariables($value, $origin->getVariables());
+                $value = $helper->replaceVariables($value, $source->getVariables());
                 $addVariable = Variable::create($helper->currentType($value), $key, $helper->getType($value));
             }
 
@@ -105,7 +105,7 @@ class CreateMapVariable extends FlowItem {
         }
 
         if ($this->isLocal) {
-            $origin->addVariable($variable);
+            $source->addVariable($variable);
         } else {
             $helper->add($variable);
         }

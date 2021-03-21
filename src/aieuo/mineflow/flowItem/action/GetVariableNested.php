@@ -60,13 +60,13 @@ class GetVariableNested extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $variableName = $origin->replaceVariables($this->getVariableName());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $variableName = $source->replaceVariables($this->getVariableName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $origin->getVariable($variableName);
+        $variable = $source->getVariable($variableName);
         if (!($variable instanceof Variable)) {
             $variable = Main::getVariableHelper()->getNested($variableName);
             if (!($variable instanceof Variable)) {
@@ -75,7 +75,7 @@ class GetVariableNested extends FlowItem {
         }
 
         $variable->setName($resultName);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getResultName();
     }

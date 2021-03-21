@@ -23,10 +23,10 @@ trait PlayerFlowItemTrait {
         $this->playerVariableNames[$name] = $player;
     }
 
-    public function getPlayer(Recipe $origin, string $name = ""): Player {
-        $player = $origin->replaceVariables($rawName = $this->getPlayerVariableName($name));
+    public function getPlayer(Recipe $source, string $name = ""): Player {
+        $player = $source->replaceVariables($rawName = $this->getPlayerVariableName($name));
 
-        $variable = $origin->getVariable($player);
+        $variable = $source->getVariable($player);
         if ($variable instanceof PlayerObjectVariable and ($player = $variable->getPlayer()) instanceof Player) {
             return $player;
         }

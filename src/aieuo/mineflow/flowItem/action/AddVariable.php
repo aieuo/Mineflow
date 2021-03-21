@@ -70,11 +70,11 @@ class AddVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
-        $value = $origin->replaceVariables($this->getVariableValue());
+        $name = $source->replaceVariables($this->getVariableName());
+        $value = $source->replaceVariables($this->getVariableValue());
 
         switch ($this->variableType) {
             case Variable::STRING:
@@ -89,7 +89,7 @@ class AddVariable extends FlowItem {
         }
 
         if ($this->isLocal) {
-            $origin->addVariable($variable);
+            $source->addVariable($variable);
         } else {
             Main::getVariableHelper()->add($variable);
         }

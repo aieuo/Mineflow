@@ -15,12 +15,12 @@ interface PlayerFlowItem {
     public function setPlayerVariableName(string $player, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param Recipe $source
      * @param string $name
      * @return Player
      * @throws InvalidFlowValueException
      */
-    public function getPlayer(Recipe $origin, string $name): Player;
+    public function getPlayer(Recipe $source, string $name): Player;
 
     public function throwIfInvalidPlayer(Player $player): void;
 }

@@ -53,12 +53,12 @@ class Kick extends FlowItem implements PlayerFlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $reason = $origin->replaceVariables($this->getReason());
+        $reason = $source->replaceVariables($this->getReason());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($player, $reason): void {

@@ -61,20 +61,20 @@ class CountListVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $name = $source->replaceVariables($this->getVariableName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $origin->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
+        $variable = $source->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.countList.error.notList"));
         }
 
         $count = count($variable->getValue());
-        $origin->addVariable(new NumberVariable($count, $resultName));
+        $source->addVariable(new NumberVariable($count, $resultName));
         yield true;
         return $count;
     }

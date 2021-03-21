@@ -20,7 +20,7 @@ class SaveData extends FlowItem {
         return true;
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         Main::getRecipeManager()->saveAll();
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();

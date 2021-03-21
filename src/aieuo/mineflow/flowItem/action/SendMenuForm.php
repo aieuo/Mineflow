@@ -87,21 +87,20 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormText(), implode(";", $this->getOptions()), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $text = $origin->replaceVariables($this->getFormText());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $text = $source->replaceVariables($this->getFormText());
+        $resultName = $source->replaceVariables($this->getResultName());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $this->sendForm($origin, $player, $text, $resultName);
+        $this->sendForm($source, $player, $text, $resultName);
         yield false;
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
-    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName): void {
+    private function sendForm(Recipe $source, Player $player, string $text, string $resultName): void {
         $buttons = [];
         foreach ($this->options as $option) {
             $buttons[] = new Button($option);
@@ -109,15 +108,15 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         (new ListForm($text))
             ->setContent($text)
-            ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($origin, $resultName) {
+            ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($source, $resultName) {
                 $variable = new MapVariable([
                     "id" => new NumberVariable($data, "id"),
                     "text" => new StringVariable($this->options[$data], "text"),
                 ], $resultName, $this->options[$data]);
-                $origin->addVariable($variable);
-                $origin->resume();
-            })->onClose(function (Player $player) use ($origin, $text, $resultName) {
-                if ($this->resendOnClose) $this->sendForm($origin, $player, $text, $resultName);
+                $source->addVariable($variable);
+                $source->resume();
+            })->onClose(function (Player $player) use ($source, $text, $resultName) {
+                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);
             })->show($player);
     }
 

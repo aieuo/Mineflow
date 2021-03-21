@@ -49,15 +49,15 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getItemName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getItemName());
+        $name = $source->replaceVariables($this->getItemName());
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
         $item->setCustomName($name);
-        $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }

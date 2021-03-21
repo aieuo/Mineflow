@@ -79,19 +79,19 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $wait = new Wait((string)($this->getInterval() / 20));
         while (true) {
-            $origin->addVariable(new NumberVariable($this->loopCount, "i")); // TODO: i を変更できるようにする
+            $source->addVariable(new NumberVariable($this->loopCount, "i")); // TODO: i を変更できるようにする
             foreach ($this->getConditions() as $i => $condition) {
-                if (!(yield from $condition->execute($origin))) {
-                    $origin->resume();
+                if (!(yield from $condition->execute($source))) {
+                    $source->resume();
                     return true;
                 }
             }
 
-            yield from $this->executeAll($origin, "action");
-            yield from $wait->execute($origin);
+            yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
+            yield from $wait->execute($source);
         }
     }
 
@@ -170,12 +170,12 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
                     $content["id"] = self::TAKE_MONEY_CONDITION;
                     break;
             }
-            $condition = FlowItem::loadSaveDataStatic($content);
+            $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
         }
 
         foreach ($contents[1] as $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
 
@@ -185,7 +185,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     }
 
     public function serializeContents(): array {
-        return  [
+        return [
             $this->getConditions(),
             $this->getActions(),
             $this->interval,

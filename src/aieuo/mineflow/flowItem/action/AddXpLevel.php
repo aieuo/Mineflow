@@ -11,13 +11,13 @@ class AddXpLevel extends AddXpProgress {
     protected $name = "action.addXpLevel.name";
     protected $detail = "action.addXpLevel.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $xp = $origin->replaceVariables($this->getXp());
+        $xp = $source->replaceVariables($this->getXp());
         $this->throwIfInvalidNumber($xp);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $new = $player->getXpLevel() + (int)$xp;

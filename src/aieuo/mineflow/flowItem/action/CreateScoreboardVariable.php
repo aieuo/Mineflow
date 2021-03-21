@@ -82,18 +82,18 @@ class CreateScoreboardVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getBoardId(), $this->getDisplayName(), $this->getDisplayType()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $variableName = $origin->replaceVariables($this->getVariableName());
-        $id = $origin->replaceVariables($this->getBoardId());
-        $displayName = $origin->replaceVariables($this->getDisplayName());
+        $variableName = $source->replaceVariables($this->getVariableName());
+        $id = $source->replaceVariables($this->getBoardId());
+        $displayName = $source->replaceVariables($this->getDisplayName());
         $type = $this->getDisplayType();
 
         $scoreboard = new Scoreboard($type, $id, $displayName);
 
         $variable = new ScoreboardObjectVariable($scoreboard, $variableName);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getVariableName();
     }

@@ -89,12 +89,12 @@ class FourArithmeticOperations extends FlowItem {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $origin->replaceVariables($this->getValue1());
-        $value2 = $origin->replaceVariables($this->getValue2());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $value1 = $source->replaceVariables($this->getValue1());
+        $value2 = $source->replaceVariables($this->getValue2());
+        $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
         $this->throwIfInvalidNumber($value1);
@@ -128,7 +128,7 @@ class FourArithmeticOperations extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $origin->addVariable(new NumberVariable($result, $resultName));
+        $source->addVariable(new NumberVariable($result, $resultName));
         yield true;
         return $result;
     }

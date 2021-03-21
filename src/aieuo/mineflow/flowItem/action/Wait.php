@@ -46,15 +46,15 @@ class Wait extends FlowItem {
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $time = $origin->replaceVariables($this->getTime());
+        $time = $source->replaceVariables($this->getTime());
         $this->throwIfInvalidNumber($time, 1 / 20);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function (int $currentTick) use($origin): void {
-                $origin->resume();
+            function (int $currentTick) use ($source): void {
+                $source->resume();
             }
         ), (int)((float)$time * 20));
         yield false;

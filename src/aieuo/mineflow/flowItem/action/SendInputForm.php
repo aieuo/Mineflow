@@ -68,30 +68,29 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormText(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $text = $origin->replaceVariables($this->getFormText());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $text = $source->replaceVariables($this->getFormText());
+        $resultName = $source->replaceVariables($this->getResultName());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $this->sendForm($origin, $player, $text, $resultName);
+        $this->sendForm($source, $player, $text, $resultName);
         yield false;
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
-    private function sendForm(Recipe $origin, Player $player, string $text, string $resultName): void {
+    private function sendForm(Recipe $source, Player $player, string $text, string $resultName): void {
         (new CustomForm($text))
             ->setContents([
                 new Input($text, "", "", true),
-            ])->onReceive(function (Player $player, array $data) use ($origin, $resultName) {
+            ])->onReceive(function (Player $player, array $data) use ($source, $resultName) {
                 $variable = new StringVariable($data[0], $resultName);
-                $origin->addVariable($variable);
-                $origin->resume();
-            })->onClose(function (Player $player) use ($origin, $text, $resultName) {
-                if ($this->resendOnClose) $this->sendForm($origin, $player, $text, $resultName);
+                $source->addVariable($variable);
+                $source->resume();
+            })->onClose(function (Player $player) use ($source, $text, $resultName) {
+                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);
             })->show($player);
     }
 

@@ -59,11 +59,11 @@ class CalculateReversePolishNotation extends FlowItem {
         return Language::get($this->detail, [$this->getFormula(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $formula = $origin->replaceVariables($this->getFormula());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $formula = $source->replaceVariables($this->getFormula());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $stack = [];
         foreach (explode(" ", $formula) as $token) {
@@ -97,7 +97,7 @@ class CalculateReversePolishNotation extends FlowItem {
         }
         $result = $stack[0];
 
-        $origin->addVariable(new NumberVariable($result, $resultName));
+        $source->addVariable(new NumberVariable($result, $resultName));
         yield true;
         return $result;
     }

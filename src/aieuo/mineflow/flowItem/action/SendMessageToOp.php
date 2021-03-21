@@ -12,10 +12,10 @@ class SendMessageToOp extends TypeMessage {
     protected $name = "action.sendMessageToOp.name";
     protected $detail = "action.sendMessageToOp.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $origin->replaceVariables($this->getMessage());
+        $message = $source->replaceVariables($this->getMessage());
         $players = Server::getInstance()->getOnlinePlayers();
         foreach ($players as $player) {
             if ($player->isOp()) {

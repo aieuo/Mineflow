@@ -38,25 +38,25 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityVariableName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getRecipeName());
+        $name = $source->replaceVariables($this->getRecipeName());
 
         $recipeManager = Main::getRecipeManager();
         [$recipeName, $group] = $recipeManager->parseName($name);
-        if (empty($group)) $group = $origin->getGroup();
+        if (empty($group)) $group = $source->getGroup();
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $recipe = clone $recipe;
-        $variables = $origin->getVariables();
+        $variables = $source->getVariables();
         $variables["target"] = $entity instanceof Player ? new PlayerObjectVariable($entity, "target", $entity->getName()) : new EntityObjectVariable($entity, "target", $entity->getNameTag());
         $recipe->addVariables($variables);
         $recipe->setTarget($entity)->execute();

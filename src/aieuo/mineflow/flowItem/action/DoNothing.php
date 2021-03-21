@@ -15,7 +15,7 @@ class DoNothing extends FlowItem {
 
     protected $category = Category::COMMON;
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         yield true;
     }
 

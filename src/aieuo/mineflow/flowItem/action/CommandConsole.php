@@ -46,10 +46,10 @@ class CommandConsole extends FlowItem {
         return Language::get($this->detail, [$this->getCommand()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $command = $origin->replaceVariables($this->getCommand());
+        $command = $source->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(), $command);
         yield true;

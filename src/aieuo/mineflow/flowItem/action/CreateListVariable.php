@@ -61,11 +61,11 @@ class CreateListVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getVariableValue())]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
+        $name = $source->replaceVariables($this->getVariableName());
         $values = $this->getVariableValue();
 
         $variable = new ListVariable([], $name);
@@ -73,13 +73,13 @@ class CreateListVariable extends FlowItem {
         foreach ($values as $value) {
             if ($value === "") continue;
             if ($helper->isVariableString($value)) {
-                $addVariable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
+                $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
                 if ($addVariable === null) {
-                    $value = $helper->replaceVariables($value, $origin->getVariables());
+                    $value = $helper->replaceVariables($value, $source->getVariables());
                     $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
                 }
             } else {
-                $value = $helper->replaceVariables($value, $origin->getVariables());
+                $value = $helper->replaceVariables($value, $source->getVariables());
                 $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
             }
 
@@ -87,7 +87,7 @@ class CreateListVariable extends FlowItem {
         }
 
         if ($this->isLocal) {
-            $origin->addVariable($variable);
+            $source->addVariable($variable);
         } else {
             $helper->add($variable);
         }

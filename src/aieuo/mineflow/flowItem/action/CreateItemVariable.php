@@ -81,13 +81,13 @@ class CreateItemVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
-        $id = $origin->replaceVariables($this->getItemId());
-        $count = $origin->replaceVariables($this->getItemCount());
-        $itemName = $origin->replaceVariables($this->getItemName());
+        $name = $source->replaceVariables($this->getVariableName());
+        $id = $source->replaceVariables($this->getItemId());
+        $count = $source->replaceVariables($this->getItemCount());
+        $itemName = $source->replaceVariables($this->getItemName());
         try {
             $item = ItemFactory::fromString($id);
         } catch (\InvalidArgumentException $e) {
@@ -104,7 +104,7 @@ class CreateItemVariable extends FlowItem {
         }
 
         $variable = new ItemObjectVariable($item, $name);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getVariableName();
     }

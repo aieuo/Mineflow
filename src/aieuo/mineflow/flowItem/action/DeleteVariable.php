@@ -47,12 +47,12 @@ class DeleteVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global"]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
+        $name = $source->replaceVariables($this->getVariableName());
         if ($this->isLocal) {
-            $origin->removeVariable($name);
+            $source->removeVariable($name);
         } else {
             Main::getVariableHelper()->delete($name);
         }

@@ -15,10 +15,10 @@ class IsPlayerVariable extends IsActiveEntityVariable {
 
     protected $category = Category::PLAYER;
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         yield true;

@@ -49,13 +49,13 @@ class SetYaw extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getYaw()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $yaw = $origin->replaceVariables($this->getYaw());
+        $yaw = $source->replaceVariables($this->getYaw());
         $this->throwIfInvalidNumber($yaw);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $entity->setRotation((float)$yaw, $entity->getPitch());

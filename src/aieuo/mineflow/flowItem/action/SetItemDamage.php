@@ -50,16 +50,16 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getDamage()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $damage = $origin->replaceVariables($this->getDamage());
+        $damage = $source->replaceVariables($this->getDamage());
         $this->throwIfInvalidNumber($damage, 0);
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
         $item->setDamage((int)$damage);
-        $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }

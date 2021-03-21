@@ -46,13 +46,13 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $keys = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
         $index = -1;
         $items = [];
-        for ($i=0; $i<9; $i++) {
+        for ($i = 0; $i < 9; $i++) {
             $input = $this->getItemVariableName("input".$i);
             if ($input !== "") {
                 if (isset($items[$input])) {
                     $key = $keys[$items[$input]];
                 } else {
-                    $index ++;
+                    $index++;
                     $items[$input] = $index;
                     $key = $keys[$index];
                     $ingredients[$key] = $input;
@@ -60,7 +60,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
             } else {
                 $key = " ";
             }
-            $shape[floor($i/3)] .= $key;
+            $shape[floor($i / 3)] .= $key;
         }
         $shape = $this->trimShape($shape);
 
@@ -80,36 +80,36 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
     }
 
     public function setInputItemVariableNames(array $items): void {
-        for ($i=0; $i<9; $i++) {
+        for ($i = 0; $i < 9; $i++) {
             $this->setItemVariableName($items[$i], "input".$i);
         }
     }
 
     public function getInputItemVariableNames(): array {
         $items = [];
-        for ($i=0; $i<9; $i++) {
+        for ($i = 0; $i < 9; $i++) {
             $items[] = $this->getItemVariableName("input".$i);
         }
         return $items;
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $output = $this->getItem($origin, "output");
+        $output = $this->getItem($source, "output");
         $shape = ["", "", ""];
         $ingredients = [];
         $keys = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
         $index = -1;
         $items = [];
-        for ($i=0; $i<9; $i++) {
+        for ($i = 0; $i < 9; $i++) {
             try {
-                $input = $this->getItem($origin, "input".$i);
+                $input = $this->getItem($source, "input".$i);
                 $itemId = $input->getId().":".$input->getDamage();
                 if (isset($items[$itemId])) {
                     $key = $keys[$items[$itemId]];
                 } else {
-                    $index ++;
+                    $index++;
                     $items[$itemId] = $index;
                     $key = $keys[$index];
                     $ingredients[$key] = $input;
@@ -117,7 +117,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
             } catch (InvalidFlowValueException $e) {
                 $key = " ";
             }
-            $shape[floor($i/3)] .= $key;
+            $shape[floor($i / 3)] .= $key;
         }
 
         $shape = $this->trimShape($shape);
@@ -132,21 +132,21 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
 
     public function trimShape(array $shape): array {
         $col = ["", "", ""];
-        for($i = 0; $i < 3; $i ++) {
-            for($j = 0; $j < 3; $j ++) {
+        for ($i = 0; $i < 3; $i++) {
+            for ($j = 0; $j < 3; $j++) {
                 $col[$i] .= $shape[$j][$i];
             }
         }
 
         $colStart = 0;
         $colEnd = 2;
-        if ($col[0] === "   ") $colStart ++;
-        if ($col[2] === "   ") $colEnd --;
-        if ($col[0] === "   " and $col[2] !== "   " and $col[1] === "   ") $colStart ++;
-        if ($col[2] === "   " and $col[0] !== "   " and $col[1] === "   ") $colEnd --;
+        if ($col[0] === "   ") $colStart++;
+        if ($col[2] === "   ") $colEnd--;
+        if ($col[0] === "   " and $col[2] !== "   " and $col[1] === "   ") $colStart++;
+        if ($col[2] === "   " and $col[0] !== "   " and $col[1] === "   ") $colEnd--;
         if ($col[0] === "   " and $col[1] === "   " and $col[2] === "   ") return [];
 
-        for($i = 0; $i < 3; $i ++) {
+        for ($i = 0; $i < 3; $i++) {
             $line = substr($shape[$i], $colStart, $colEnd - $colStart + 1);
             $shape[$i] = $line;
             if (trim($line) === "") unset($shape[$i]);

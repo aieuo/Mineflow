@@ -88,21 +88,21 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
-        $count = $origin->replaceVariables($this->repeatCount);
+    public function execute(Recipe $source): \Generator {
+        $count = $source->replaceVariables($this->repeatCount);
         $this->throwIfInvalidNumber($count, 1);
 
-        $start = $origin->replaceVariables($this->startIndex);
+        $start = $source->replaceVariables($this->startIndex);
         $this->throwIfInvalidNumber($start);
 
         $name = $this->counterName;
         $end = (int)$start + (int)$count;
 
         for ($i = (int)$start; $i < $end; $i++) {
-            $origin->addVariable(new NumberVariable($i, $name));
-            yield from $this->executeAll($origin, FlowItemContainer::ACTION);
+            $source->addVariable(new NumberVariable($i, $name));
+            yield from $this->executeAll($source, FlowItemContainer::ACTION);
         }
-        $origin->resume();
+        $source->resume();
         return true;
     }
 
@@ -171,7 +171,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $this->setRepeatCount((string)$contents[0]);
 
         foreach ($contents[1] as $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
 

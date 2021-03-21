@@ -50,12 +50,12 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPlayerPermission()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $permission = $origin->replaceVariables($this->getPlayerPermission());
+        $permission = $source->replaceVariables($this->getPlayerPermission());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $player->addAttachment(Main::getInstance(), $permission, true);

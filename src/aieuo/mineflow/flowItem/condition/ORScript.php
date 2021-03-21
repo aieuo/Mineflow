@@ -20,9 +20,9 @@ class ORScript extends AndScript {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         foreach ($this->getConditions() as $condition) {
-            if (yield from $condition->execute($origin)) return true;
+            if (yield from $condition->execute($source)) return true;
         }
         return false;
     }

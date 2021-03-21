@@ -78,12 +78,12 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getEffectId(), $this->getPower(), $this->getTime()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $effectId = $origin->replaceVariables($this->getEffectId());
-        $time = $origin->replaceVariables($this->getTime());
-        $power = $origin->replaceVariables($this->getPower());
+        $effectId = $source->replaceVariables($this->getEffectId());
+        $time = $source->replaceVariables($this->getTime());
+        $power = $source->replaceVariables($this->getPower());
 
         $effect = Effect::getEffectByName($effectId);
         if ($effect === null) $effect = Effect::getEffect((int)$effectId);
@@ -91,7 +91,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidNumber($time);
         $this->throwIfInvalidNumber($power);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         if ($entity instanceof Living) {

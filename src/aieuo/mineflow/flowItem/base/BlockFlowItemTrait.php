@@ -24,15 +24,15 @@ trait BlockFlowItemTrait {
     }
 
     /**
-     * @param Recipe $origin
+     * @param Recipe $source
      * @param string $name
      * @return Block
      * @throws InvalidFlowValueException
      */
-    public function getBlock(Recipe $origin, string $name = ""): Block {
-        $block = $origin->replaceVariables($rawName = $this->getBlockVariableName($name));
+    public function getBlock(Recipe $source, string $name = ""): Block {
+        $block = $source->replaceVariables($rawName = $this->getBlockVariableName($name));
 
-        $variable = $origin->getVariable($block);
+        $variable = $source->getVariable($block);
         if ($variable instanceof BlockObjectVariable and ($block = $variable->getBlock()) instanceof Block) {
             return $block;
         }

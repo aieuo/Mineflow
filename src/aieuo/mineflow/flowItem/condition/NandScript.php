@@ -20,7 +20,7 @@ class NandScript extends AndScript {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin): \Generator {
-        return !(yield from parent::execute($origin));
+    public function execute(Recipe $source): \Generator {
+        return !(yield from parent::execute($source));
     }
 }

@@ -47,13 +47,13 @@ class AddXpProgress extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getXp()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $xp = $origin->replaceVariables($this->getXp());
+        $xp = $source->replaceVariables($this->getXp());
         $this->throwIfInvalidNumber($xp);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $new = $player->getCurrentTotalXp() + (int)$xp;

@@ -63,15 +63,15 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() === "1" ? "" : "s"]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $particleName = $origin->replaceVariables($this->getParticle());
-        $amount = $origin->replaceVariables($this->getAmount());
+        $particleName = $source->replaceVariables($this->getParticle());
+        $amount = $source->replaceVariables($this->getAmount());
 
         $this->throwIfInvalidNumber($amount, 1);
 
-        $position = $this->getPosition($origin);
+        $position = $this->getPosition($source);
 
         for ($i = 0; $i < (int)$amount; $i++) {
             $pk = new SpawnParticleEffectPacket();

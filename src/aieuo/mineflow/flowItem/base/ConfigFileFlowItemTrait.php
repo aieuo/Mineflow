@@ -23,10 +23,10 @@ trait ConfigFileFlowItemTrait {
         $this->configVariableNames[$name] = $config;
     }
 
-    public function getConfig(Recipe $origin, string $name = ""): Config {
-        $config = $origin->replaceVariables($rawName = $this->getConfigVariableName($name));
+    public function getConfig(Recipe $source, string $name = ""): Config {
+        $config = $source->replaceVariables($rawName = $this->getConfigVariableName($name));
 
-        $variable = $origin->getVariable($config);
+        $variable = $source->getVariable($config);
         if ($variable instanceof ConfigObjectVariable and ($config = $variable->getConfig()) instanceof Config) {
             return $config;
         }

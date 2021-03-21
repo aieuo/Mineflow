@@ -133,12 +133,12 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
      * @return self
      * @throws FlowItemLoadException|\ErrorException
      */
-    public static function loadSaveDataStatic(array $content): self {
         switch ($content["id"]) {
             case "addScore":
                 $content["id"] = self::REMOVE_SCOREBOARD_SCORE;
                 break;
         }
+    public static function loadEachSaveData(array $content): self {
         $action = FlowItemFactory::get($content["id"]);
         if ($action === null) {
             throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));
@@ -193,8 +193,8 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     abstract public function loadSaveData(array $content): FlowItem;
 
     /**
-     * @param Recipe $origin
-     * @return bool|\Generator
+     * @param Recipe $source
+     * @return bool|string|int|\Generator
      */
-    abstract public function execute(Recipe $origin);
+    abstract public function execute(Recipe $source);
 }

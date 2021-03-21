@@ -49,13 +49,13 @@ class SetPitch extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPitch()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $pitch = $origin->replaceVariables($this->getPitch());
+        $pitch = $source->replaceVariables($this->getPitch());
         $this->throwIfInvalidNumber($pitch);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $entity->setRotation($entity->getYaw(), (float)$pitch);

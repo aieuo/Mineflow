@@ -15,15 +15,15 @@ class TakeMoney extends TypeMoney {
     protected $name = "action.takeMoney.name";
     protected $detail = "action.takeMoney.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
             throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
-        $name = $origin->replaceVariables($this->getPlayerName());
-        $amount = $origin->replaceVariables($this->getAmount());
+        $name = $source->replaceVariables($this->getPlayerName());
+        $amount = $source->replaceVariables($this->getAmount());
 
         $this->throwIfInvalidNumber($amount, 1);
 

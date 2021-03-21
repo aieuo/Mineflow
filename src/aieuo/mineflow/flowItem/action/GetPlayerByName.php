@@ -61,11 +61,11 @@ class GetPlayerByName extends FlowItem {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getPlayerName());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $name = $source->replaceVariables($this->getPlayerName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $player = Server::getInstance()->getPlayer($name);
         if (!($player instanceof Player)) {
@@ -73,7 +73,7 @@ class GetPlayerByName extends FlowItem {
         }
 
         $result = new PlayerObjectVariable($player, $resultName, $player->getName());
-        $origin->addVariable($result);
+        $source->addVariable($result);
         yield true;
         return $this->getResultName();
     }

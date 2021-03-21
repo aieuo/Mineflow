@@ -38,13 +38,13 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         return $this->getPlayerVariableName() !== "" and $this->getScoreboardVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $board = $this->getScoreboard($origin);
+        $board = $this->getScoreboard($source);
 
         $board->hide($player);
         yield true;

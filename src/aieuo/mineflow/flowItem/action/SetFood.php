@@ -47,14 +47,14 @@ class SetFood extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFood()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $origin->replaceVariables($this->getFood());
+        $health = $source->replaceVariables($this->getFood());
 
         $this->throwIfInvalidNumber($health, 0, 20);
 
-        $entity = $this->getPlayer($origin);
+        $entity = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($entity);
 
         $entity->setFood((float)$health);

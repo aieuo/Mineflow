@@ -62,14 +62,14 @@ class DeleteListVariableContent extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
-        $key = $origin->replaceVariables($this->getKey());
+        $name = $source->replaceVariables($this->getVariableName());
+        $key = $source->replaceVariables($this->getKey());
 
-        $variable = ($this->isLocal ? $origin->getVariable($name) : $helper->get($name)) ?? new MapVariable([], $name);
+        $variable = ($this->isLocal ? $source->getVariable($name) : $helper->get($name)) ?? new MapVariable([], $name);
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException(
                 $this->getName(), Language::get("action.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
@@ -80,7 +80,7 @@ class DeleteListVariableContent extends FlowItem {
         unset($values[$key]);
         $variable->setValue($values);
 
-        if ($this->isLocal) $origin->addVariable($variable); else $helper->add($variable);
+        if ($this->isLocal) $source->addVariable($variable); else $helper->add($variable);
         yield true;
     }
 

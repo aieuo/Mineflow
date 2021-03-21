@@ -43,12 +43,12 @@ class ElseAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $lastResult = $this->getParent()->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return;
 
-        yield from $this->executeAll($origin, FlowItemContainer::ACTION);
+        yield from $this->executeAll($source, FlowItemContainer::ACTION);
     }
 
     public function hasCustomMenu(): bool {
@@ -94,7 +94,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents as $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
         return $this;

@@ -15,7 +15,7 @@ class CheckNothing extends FlowItem implements Condition {
 
     protected $category = Category::COMMON;
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         yield true;
         return true;
     }

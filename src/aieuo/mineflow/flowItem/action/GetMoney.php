@@ -62,18 +62,18 @@ class GetMoney extends FlowItem {
         return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
             throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
         }
 
-        $targetName = $origin->replaceVariables($this->getPlayerName());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $targetName = $source->replaceVariables($this->getPlayerName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $money = Economy::getPlugin()->getMoney($targetName);
-        $origin->addVariable(new NumberVariable($money, $resultName));
+        $source->addVariable(new NumberVariable($money, $resultName));
         yield true;
         return $money;
     }

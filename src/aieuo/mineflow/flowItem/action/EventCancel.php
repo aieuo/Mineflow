@@ -18,10 +18,10 @@ class EventCancel extends FlowItem {
 
     protected $category = Category::EVENT;
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $event = $origin->getEvent();
+        $event = $source->getEvent();
         if (!($event instanceof Cancellable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));
         }

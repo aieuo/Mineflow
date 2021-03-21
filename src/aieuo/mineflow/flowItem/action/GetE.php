@@ -15,11 +15,11 @@ class GetE extends TypeGetMathVariable {
     /** @var string */
     protected $resultName = "e";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $resultName = $origin->replaceVariables($this->getResultName());
-        $origin->addVariable(new NumberVariable(M_E, $resultName));
+        $resultName = $source->replaceVariables($this->getResultName());
+        $source->addVariable(new NumberVariable(M_E, $resultName));
         yield true;
         return M_E;
     }

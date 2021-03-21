@@ -64,12 +64,12 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
-        $id = $origin->replaceVariables($this->getEnchantId());
+        $id = $source->replaceVariables($this->getEnchantId());
         if (is_numeric($id)) {
             $enchant = Enchantment::getEnchantment((int)$id);
         } else {
@@ -78,11 +78,11 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         if (!($enchant instanceof Enchantment)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound", [$id]));
         }
-        $level = $origin->replaceVariables($this->getEnchantLevel());
+        $level = $source->replaceVariables($this->getEnchantLevel());
         $this->throwIfInvalidNumber($level);
 
         $item->addEnchantment(new EnchantmentInstance($enchant, (int)$level));
-        $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
+        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }

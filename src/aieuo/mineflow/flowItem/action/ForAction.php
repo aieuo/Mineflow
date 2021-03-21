@@ -99,24 +99,24 @@ class ForAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
-        $counterName = $origin->replaceVariables($this->counterName);
+    public function execute(Recipe $source): \Generator {
+        $counterName = $source->replaceVariables($this->counterName);
 
-        $start = $origin->replaceVariables($this->startIndex);
+        $start = $source->replaceVariables($this->startIndex);
         $this->throwIfInvalidNumber($start);
 
-        $end = $origin->replaceVariables($this->endIndex);
+        $end = $source->replaceVariables($this->endIndex);
         $this->throwIfInvalidNumber($end);
 
-        $fluctuation = $origin->replaceVariables($this->fluctuation);
+        $fluctuation = $source->replaceVariables($this->fluctuation);
         $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
         $fluctuation = (float)$fluctuation;
 
         for ($i = $start; $i <= $end; $i += $fluctuation) {
-            $origin->addVariable(new NumberVariable($i, $counterName));
-            yield from $this->executeAll($origin, FlowItemContainer::ACTION);
+            $source->addVariable(new NumberVariable($i, $counterName));
+            yield from $this->executeAll($source, FlowItemContainer::ACTION);
         }
-        $origin->resume();
+        $source->resume();
         yield true;
     }
 
@@ -183,7 +183,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
 

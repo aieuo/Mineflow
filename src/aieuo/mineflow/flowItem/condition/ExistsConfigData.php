@@ -47,12 +47,12 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $config = $this->getConfig($origin);
+        $config = $this->getConfig($source);
 
-        $key = $origin->replaceVariables($this->getKey());
+        $key = $source->replaceVariables($this->getKey());
 
         yield true;
         return $config->getNested($key) !== null;

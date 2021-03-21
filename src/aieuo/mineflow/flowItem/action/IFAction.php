@@ -47,12 +47,12 @@ class IFAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         foreach ($this->getConditions() as $condition) {
-            if (!(yield from $condition->execute($origin))) return false;
+            if (!(yield from $condition->execute($source))) return false;
         }
 
-        yield from $this->executeAll($origin, "action");
+        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
         return true;
     }
 
@@ -117,19 +117,19 @@ class IFAction extends FlowItem implements FlowItemContainer {
                     $content["id"] = self::TAKE_MONEY_CONDITION;
                     break;
             }
-            $condition = FlowItem::loadSaveDataStatic($content);
+            $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
         }
 
         foreach ($contents[1] as $i => $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
         return $this;
     }
 
     public function serializeContents(): array {
-        return  [
+        return [
             $this->getConditions(),
             $this->getActions()
         ];

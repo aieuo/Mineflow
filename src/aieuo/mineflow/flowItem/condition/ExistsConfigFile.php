@@ -44,10 +44,10 @@ class ExistsConfigFile extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getFileName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getFileName());
+        $name = $source->replaceVariables($this->getFileName());
         $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
 
         yield true;

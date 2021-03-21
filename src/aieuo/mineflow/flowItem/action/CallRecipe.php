@@ -16,14 +16,14 @@ class CallRecipe extends ExecuteRecipe {
     protected $name = "action.callRecipe.name";
     protected $detail = "action.callRecipe.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getRecipeName());
+        $name = $source->replaceVariables($this->getRecipeName());
 
         $recipeManager = Main::getRecipeManager();
         [$recipeName, $group] = $recipeManager->parseName($name);
-        if (empty($group)) $group = $origin->getGroup();
+        if (empty($group)) $group = $source->getGroup();
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName);
         if ($recipe === null) {
@@ -35,14 +35,14 @@ class CallRecipe extends ExecuteRecipe {
         $recipe = clone $recipe;
         foreach ($this->getArgs() as $arg) {
             if (!$helper->isVariableString($arg)) {
-                $args[] = $helper->replaceVariables($arg, $origin->getVariables());
+                $args[] = $helper->replaceVariables($arg, $source->getVariables());
                 continue;
             }
-            $arg = $origin->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
+            $arg = $source->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
             $args[] = $arg;
         }
-        $recipe->setSourceRecipe($origin);
-        $recipe->executeAllTargets($origin->getTarget(), [], $origin->getEvent(), $args);
+        $recipe->setSourceRecipe($source);
+        $recipe->executeAllTargets($source->getTarget(), [], $source->getEvent(), $args);
         yield false;
     }
 

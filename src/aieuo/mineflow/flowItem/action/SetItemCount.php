@@ -50,16 +50,16 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         return Language::get($this->detail, [$this->getItemVariableName(), $this->getCount()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $count = $origin->replaceVariables($this->getCount());
+        $count = $source->replaceVariables($this->getCount());
         $this->throwIfInvalidNumber($count, 0);
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
         $item->setCount((int)$count);
-        $origin->addVariable(new ItemObjectVariable($item, $this->getItemVariableName())); // TODO: replace variable
+        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName())); // TODO: replace variable
         yield true;
         return $this->getItemVariableName();
     }

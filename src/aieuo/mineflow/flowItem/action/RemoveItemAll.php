@@ -11,12 +11,12 @@ class RemoveItemAll extends TypeItem {
     protected $name = "action.removeItemAll.name";
     protected $detail = "action.removeItemAll.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->remove($item);

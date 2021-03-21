@@ -59,14 +59,14 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
-        $key = $origin->replaceVariables($this->getKey());
+        $name = $source->replaceVariables($this->getVariableName());
+        $key = $source->replaceVariables($this->getKey());
 
-        $variable = $this->isLocal ? $origin->getVariable($name) : $helper->get($name);
+        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
 

@@ -93,14 +93,14 @@ class CreatePositionVariable extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getVariableName());
-        $x = $origin->replaceVariables($this->getX());
-        $y = $origin->replaceVariables($this->getY());
-        $z = $origin->replaceVariables($this->getZ());
-        $levelName = $origin->replaceVariables($this->getLevel());
+        $name = $source->replaceVariables($this->getVariableName());
+        $x = $source->replaceVariables($this->getX());
+        $y = $source->replaceVariables($this->getY());
+        $z = $source->replaceVariables($this->getZ());
+        $levelName = $source->replaceVariables($this->getLevel());
         $level = Server::getInstance()->getLevelByName($levelName);
 
         $this->throwIfInvalidNumber($x);
@@ -113,7 +113,7 @@ class CreatePositionVariable extends FlowItem {
         $position = new Position((float)$x, (float)$y, (float)$z, $level);
 
         $variable = new PositionObjectVariable($position, $name);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getVariableName();
     }

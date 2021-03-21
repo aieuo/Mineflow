@@ -91,11 +91,11 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
-        $listName = $origin->replaceVariables($this->listVariableName);
-        $list = $origin->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
-        $keyName = $origin->replaceVariables($this->keyVariableName);
-        $valueName = $origin->replaceVariables($this->valueVariableName);
+    public function execute(Recipe $source): \Generator {
+        $listName = $source->replaceVariables($this->listVariableName);
+        $list = $source->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
+        $keyName = $source->replaceVariables($this->keyVariableName);
+        $valueName = $source->replaceVariables($this->valueVariableName);
 
         if (!($list instanceof ListVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.foreach.error.notVariable", [$listName]));
@@ -103,15 +103,15 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
         foreach ($list->getValue() as $key => $value) {
             $keyVariable = is_numeric($key) ? new NumberVariable($key, $keyName) : new StringVariable($key, $keyName);
-            $origin->addVariable($keyVariable);
+            $source->addVariable($keyVariable);
 
             $valueVariable = clone $value;
             $valueVariable->setName($valueName);
-            $origin->addVariable($valueVariable);
+            $source->addVariable($valueVariable);
 
-            yield from $this->executeAll($origin, FlowItemContainer::ACTION);
+            yield from $this->executeAll($source, FlowItemContainer::ACTION);
         }
-        $origin->resume();
+        $source->resume();
         yield true;
     }
 
@@ -163,7 +163,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     public function sendSettingCounter(Player $player): void {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new ExampleInput("@action.foreach.listVariableName","list", $this->getListVariableName(), true),
+                new ExampleInput("@action.foreach.listVariableName", "list", $this->getListVariableName(), true),
                 new ExampleInput("@action.foreach.keyVariableName", "key", $this->getKeyVariableName(), true),
                 new ExampleInput("@action.foreach.valueVariableName", "value", $this->getValueVariableName(), true),
             ])->onReceive(function (Player $player, array $data) {
@@ -176,7 +176,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
-            $action = FlowItem::loadSaveDataStatic($content);
+            $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
 

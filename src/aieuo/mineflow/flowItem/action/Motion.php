@@ -55,16 +55,16 @@ class Motion extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, array_merge([$this->getEntityVariableName()], $this->getPosition()));
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $motions = array_map(function ($value) use ($origin) {
-            $v = $origin->replaceVariables($value);
+        $motions = array_map(function ($value) use ($source) {
+            $v = $source->replaceVariables($value);
             $this->throwIfInvalidNumber($v);
             return $v;
         }, $this->getPosition());
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $motion = new Vector3((float)$motions[0], (float)$motions[1], (float)$motions[2]);

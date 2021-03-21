@@ -47,14 +47,14 @@ class SetScale extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getScale()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $origin->replaceVariables($this->getScale());
+        $health = $source->replaceVariables($this->getScale());
 
         $this->throwIfInvalidNumber($health, 0, null);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $entity->setScale((float)$health);

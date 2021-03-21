@@ -13,10 +13,10 @@ class IsCreature extends IsActiveEntity {
     protected $name = "condition.isCreature.name";
     protected $detail = "condition.isCreature.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $origin->replaceVariables($this->getEntityId());
+        $id = $source->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
         $entity = EntityHolder::findEntity((int)$id);

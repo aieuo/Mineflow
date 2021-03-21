@@ -51,17 +51,17 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $index = $origin->replaceVariables($this->getIndex());
+        $index = $source->replaceVariables($this->getIndex());
 
         $this->throwIfInvalidNumber($index, 0);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
         $player->getInventory()->setItem((int)$index, $item);
         yield true;

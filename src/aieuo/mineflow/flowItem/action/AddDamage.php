@@ -59,15 +59,15 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getDamage()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $damage = $origin->replaceVariables($this->getDamage());
+        $damage = $source->replaceVariables($this->getDamage());
         $cause = $this->getCause();
 
         $this->throwIfInvalidNumber($damage, 1);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $event = new EntityDamageEvent($entity, $cause, (float)$damage);

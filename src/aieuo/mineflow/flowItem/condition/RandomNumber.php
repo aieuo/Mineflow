@@ -64,12 +64,12 @@ class RandomNumber extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getValue()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $min = $origin->replaceVariables($this->getMin());
-        $max = $origin->replaceVariables($this->getMax());
-        $value = $origin->replaceVariables($this->getValue());
+        $min = $source->replaceVariables($this->getMin());
+        $max = $source->replaceVariables($this->getMax());
+        $value = $source->replaceVariables($this->getValue());
 
         $this->throwIfInvalidNumber($min);
         $this->throwIfInvalidNumber($max);

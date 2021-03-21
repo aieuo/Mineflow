@@ -15,10 +15,10 @@ interface ItemFlowItem {
     public function setItemVariableName(string $item, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param Recipe $source
      * @param string $name
      * @return Item
      * @throws InvalidFlowValueException
      */
-    public function getItem(Recipe $origin, string $name = ""): Item;
+    public function getItem(Recipe $source, string $name = ""): Item;
 }

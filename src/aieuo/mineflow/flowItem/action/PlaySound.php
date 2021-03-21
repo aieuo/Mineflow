@@ -71,17 +71,17 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $sound = $origin->replaceVariables($this->getSound());
-        $volume = $origin->replaceVariables($this->getVolume());
-        $pitch = $origin->replaceVariables($this->getPitch());
+        $sound = $source->replaceVariables($this->getSound());
+        $volume = $source->replaceVariables($this->getVolume());
+        $pitch = $source->replaceVariables($this->getPitch());
 
         $this->throwIfInvalidNumber($volume);
         $this->throwIfInvalidNumber($pitch);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $pk = new PlaySoundPacket();

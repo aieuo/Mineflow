@@ -63,16 +63,16 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey(), $this->getValue()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $key = $origin->replaceVariables($this->getKey());
+        $key = $source->replaceVariables($this->getKey());
 
         $value = $this->getValue();
 
         $helper = Main::getVariableHelper();
         if ($helper->isVariableString($value)) {
-            $variable = $origin->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
+            $variable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
             if ($variable instanceof ListVariable) {
                 $value = $variable->toArray();
             } else if ($variable instanceof NumberVariable) {
@@ -81,11 +81,11 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
                 $value = (string)$variable;
             }
         } else {
-            $value = $helper->replaceVariables($value, $origin->getVariables());
+            $value = $helper->replaceVariables($value, $source->getVariables());
             if (is_numeric($value)) $value = (float)$value;
         }
 
-        $config = $this->getConfig($origin);
+        $config = $this->getConfig($source);
 
         $config->setNested($key, $value);
         yield true;

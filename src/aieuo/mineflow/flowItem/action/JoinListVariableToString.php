@@ -69,15 +69,15 @@ class JoinListVariableToString extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->getSeparator(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
-        $separator = $origin->replaceVariables($this->getSeparator());
-        $result = $origin->replaceVariables($this->getResultName());
+        $name = $source->replaceVariables($this->getVariableName());
+        $separator = $source->replaceVariables($this->getSeparator());
+        $result = $source->replaceVariables($this->getResultName());
 
-        $variable = $origin->getVariables()[$name] ?? $helper->get($name) ?? new ListVariable([], $name);
+        $variable = $source->getVariables()[$name] ?? $helper->get($name) ?? new ListVariable([], $name);
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
                 $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
@@ -88,7 +88,7 @@ class JoinListVariableToString extends FlowItem {
         foreach ($variable->getValue() as $key => $value) {
             $strings[] = (string)$value;
         }
-        $origin->addVariable(new StringVariable(implode($separator, $strings), $result));
+        $source->addVariable(new StringVariable(implode($separator, $strings), $result));
         yield true;
     }
 

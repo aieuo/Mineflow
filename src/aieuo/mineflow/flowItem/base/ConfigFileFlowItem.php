@@ -15,10 +15,10 @@ interface ConfigFileFlowItem {
     public function setConfigVariableName(string $config, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param Recipe $source
      * @param string $name
      * @return Config
      * @throws InvalidFlowValueException
      */
-    public function getConfig(Recipe $origin, string $name = ""): Config;
+    public function getConfig(Recipe $source, string $name = ""): Config;
 }

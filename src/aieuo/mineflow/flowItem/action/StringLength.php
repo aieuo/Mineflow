@@ -58,14 +58,14 @@ class StringLength extends FlowItem {
         return Language::get($this->detail, [$this->getValue(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value = $origin->replaceVariables($this->getValue());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $value = $source->replaceVariables($this->getValue());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $length = mb_strlen($value);
-        $origin->addVariable(new NumberVariable($length, $resultName));
+        $source->addVariable(new NumberVariable($length, $resultName));
         yield true;
         return $length;
     }

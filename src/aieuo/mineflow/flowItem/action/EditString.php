@@ -98,12 +98,12 @@ class EditString extends FlowItem {
         return Language::get($this->detail, [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $origin->replaceVariables($this->getValue1());
-        $value2 = $origin->replaceVariables($this->getValue2());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $value1 = $source->replaceVariables($this->getValue1());
+        $value2 = $source->replaceVariables($this->getValue2());
+        $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
         switch ($operator) {
@@ -126,7 +126,7 @@ class EditString extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $origin->addVariable($result);
+        $source->addVariable($result);
         yield true;
         return $result;
     }

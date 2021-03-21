@@ -23,10 +23,10 @@ trait ItemFlowItemTrait {
         $this->itemVariableNames[$name] = $item;
     }
 
-    public function getItem(Recipe $origin, string $name = ""): Item {
-        $item = $origin->replaceVariables($rawName = $this->getItemVariableName($name));
+    public function getItem(Recipe $source, string $name = ""): Item {
+        $item = $source->replaceVariables($rawName = $this->getItemVariableName($name));
 
-        $variable = $origin->getVariable($item);
+        $variable = $source->getVariable($item);
         if ($variable instanceof ItemObjectVariable and ($item = $variable->getItem()) instanceof Item) {
             return $item;
         }

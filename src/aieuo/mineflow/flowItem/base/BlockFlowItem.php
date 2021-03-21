@@ -15,10 +15,10 @@ interface BlockFlowItem {
     public function setBlockVariableName(string $block, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param Recipe $source
      * @param string $name
      * @return Block
      * @throws InvalidFlowValueException
      */
-    public function getBlock(Recipe $origin, string $name = ""): Block;
+    public function getBlock(Recipe $source, string $name = ""): Block;
 }

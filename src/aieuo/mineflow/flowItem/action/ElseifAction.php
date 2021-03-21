@@ -26,16 +26,16 @@ class ElseifAction extends IFAction {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $lastResult = $this->getParent()->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 
         foreach ($this->getConditions() as $condition) {
-            if (!(yield from $condition->execute($origin))) return false;
+            if (!(yield from $condition->execute($source))) return false;
         }
 
-        yield from $this->executeAll($origin, FlowItemContainer::ACTION);
+        yield from $this->executeAll($source, FlowItemContainer::ACTION);
         return true;
     }
 }

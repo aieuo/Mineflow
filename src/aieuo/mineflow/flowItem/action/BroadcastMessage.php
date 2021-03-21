@@ -12,10 +12,10 @@ class BroadcastMessage extends TypeMessage {
     protected $name = "action.broadcastMessage.name";
     protected $detail = "action.broadcastMessage.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $origin->replaceVariables($this->getMessage());
+        $message = $source->replaceVariables($this->getMessage());
         Server::getInstance()->broadcastMessage($message);
         yield true;
     }

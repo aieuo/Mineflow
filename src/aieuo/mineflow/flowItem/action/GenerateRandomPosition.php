@@ -54,12 +54,12 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $pos1 = $this->getPosition($origin, "pos1");
-        $pos2 = $this->getPosition($origin, "pos2");
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $pos1 = $this->getPosition($source, "pos1");
+        $pos2 = $this->getPosition($source, "pos2");
+        $resultName = $source->replaceVariables($this->getResultName());
 
         if ($pos1->getLevelNonNull()->getFolderName() !== $pos2->getLevelNonNull()->getFolderName()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
@@ -69,7 +69,7 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $y = mt_rand(min($pos1->y, $pos2->y), max($pos1->y, $pos2->y));
         $z = mt_rand(min($pos1->z, $pos2->z), max($pos1->z, $pos2->z));
         $rand = new Position($x, $y, $z, $pos1->getLevelNonNull());
-        $origin->addVariable(new PositionObjectVariable($rand, $resultName));
+        $source->addVariable(new PositionObjectVariable($rand, $resultName));
         yield true;
         return $this->getResultName();
     }

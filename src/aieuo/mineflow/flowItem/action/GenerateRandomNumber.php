@@ -56,18 +56,18 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $min = $origin->replaceVariables($this->getMin());
-        $max = $origin->replaceVariables($this->getMax());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $min = $source->replaceVariables($this->getMin());
+        $max = $source->replaceVariables($this->getMax());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $this->throwIfInvalidNumber($min);
         $this->throwIfInvalidNumber($max);
 
         $rand = mt_rand((int)$min, (int)$max);
-        $origin->addVariable(new NumberVariable($rand, $resultName));
+        $source->addVariable(new NumberVariable($rand, $resultName));
         yield true;
         return $rand;
     }

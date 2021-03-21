@@ -61,11 +61,11 @@ class CreateMapVariableFromJson extends FlowItem {
         return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getJson()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
+        $name = $source->replaceVariables($this->getVariableName());
         $json = $this->getJson();
 
         $value = json_decode($json, true);
@@ -76,7 +76,7 @@ class CreateMapVariableFromJson extends FlowItem {
         $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value), $name);
 
         if ($this->isLocal) {
-            $origin->addVariable($variable);
+            $source->addVariable($variable);
         } else {
             $helper->add($variable);
         }

@@ -50,17 +50,17 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $position = $this->getPosition($origin);
-        $result = $origin->replaceVariables($this->getResultName());
+        $position = $this->getPosition($source);
+        $result = $source->replaceVariables($this->getResultName());
 
         /** @var Position $position */
         $block = $position->level->getBlock($position);
 
         $variable = new BlockObjectVariable($block, $result);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getResultName();
     }

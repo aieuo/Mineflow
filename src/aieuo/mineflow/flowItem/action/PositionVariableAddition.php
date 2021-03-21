@@ -85,15 +85,15 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $pos = $this->getPosition($origin);
+        $pos = $this->getPosition($source);
 
-        $x = $origin->replaceVariables($this->getX());
-        $y = $origin->replaceVariables($this->getY());
-        $z = $origin->replaceVariables($this->getZ());
-        $name = $origin->replaceVariables($this->getResultName());
+        $x = $source->replaceVariables($this->getX());
+        $y = $source->replaceVariables($this->getY());
+        $z = $source->replaceVariables($this->getZ());
+        $name = $source->replaceVariables($this->getResultName());
 
         $this->throwIfInvalidNumber($x);
         $this->throwIfInvalidNumber($y);
@@ -102,7 +102,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         $position = Position::fromObject($pos->add($x, $y, $z), $pos->getLevel());
 
         $variable = new PositionObjectVariable($position, $name);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getResultName();
     }

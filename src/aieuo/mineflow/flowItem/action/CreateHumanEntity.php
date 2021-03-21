@@ -56,15 +56,15 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPositionVariableName(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $pos = $this->getPosition($origin);
+        $pos = $this->getPosition($source);
 
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $nbt = Entity::createBaseNBT($pos);
         $nbt->setTag($player->namedtag->getCompoundTag("Skin"));
@@ -73,7 +73,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         $entity->spawnToAll();
 
         $variable = new HumanObjectVariable($entity, $resultName);
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getResultName();
     }

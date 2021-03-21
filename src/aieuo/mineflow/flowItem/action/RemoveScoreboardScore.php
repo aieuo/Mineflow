@@ -47,12 +47,12 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "";
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getScoreName());
+        $name = $source->replaceVariables($this->getScoreName());
 
-        $board = $this->getScoreboard($origin);
+        $board = $this->getScoreboard($source);
 
         $board->removeScore($name);
         yield true;

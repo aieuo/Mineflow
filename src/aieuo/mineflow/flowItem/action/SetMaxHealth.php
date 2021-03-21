@@ -11,14 +11,14 @@ class SetMaxHealth extends SetHealth {
     protected $name = "action.setMaxHealth.name";
     protected $detail = "action.setMaxHealth.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $origin->replaceVariables($this->getHealth());
+        $health = $source->replaceVariables($this->getHealth());
 
         $this->throwIfInvalidNumber($health, 1, null);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         $entity->setMaxHealth((int)$health);

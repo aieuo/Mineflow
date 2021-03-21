@@ -74,11 +74,11 @@ class ComparisonNumber extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $origin->replaceVariables($this->getValue1());
-        $value2 = $origin->replaceVariables($this->getValue2());
+        $value1 = $source->replaceVariables($this->getValue1());
+        $value2 = $source->replaceVariables($this->getValue2());
         $operator = $this->getOperator();
 
         $this->throwIfInvalidNumber($value1);

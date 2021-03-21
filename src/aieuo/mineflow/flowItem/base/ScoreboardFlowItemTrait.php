@@ -23,10 +23,10 @@ trait ScoreboardFlowItemTrait {
         $this->scoreboardVariableNames[$name] = $scoreboard;
     }
 
-    public function getScoreboard(Recipe $origin, string $name = ""): Scoreboard {
-        $scoreboard = $origin->replaceVariables($rawName = $this->getScoreboardVariableName($name));
+    public function getScoreboard(Recipe $source, string $name = ""): Scoreboard {
+        $scoreboard = $source->replaceVariables($rawName = $this->getScoreboardVariableName($name));
 
-        $variable = $origin->getVariable($scoreboard);
+        $variable = $source->getVariable($scoreboard);
         if ($variable instanceof ScoreboardObjectVariable and ($scoreboard = $variable->getScoreboard()) instanceof Scoreboard) {
             return $scoreboard;
         }

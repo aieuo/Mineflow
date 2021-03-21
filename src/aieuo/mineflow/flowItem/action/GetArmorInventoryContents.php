@@ -17,19 +17,19 @@ class GetArmorInventoryContents extends GetInventoryContents {
     protected $detail = "action.getArmorInventory.detail";
 
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
-        $entity = $this->getPlayer($origin);
+        $entity = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($entity);
 
         $variable = new ListVariable(array_map(function (Item $item) {
             return new ItemObjectVariable($item);
         }, $entity->getArmorInventory()->getContents()), $resultName);
 
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getResultName();
     }

@@ -23,10 +23,10 @@ trait PositionFlowItemTrait {
         $this->positionVariableNames[$name] = $position;
     }
 
-    public function getPosition(Recipe $origin, string $name = ""): Position {
-        $position = $origin->replaceVariables($rawName = $this->getPositionVariableName($name));
+    public function getPosition(Recipe $source, string $name = ""): Position {
+        $position = $source->replaceVariables($rawName = $this->getPositionVariableName($name));
 
-        $variable = $origin->getVariable($position);
+        $variable = $source->getVariable($position);
         if ($variable instanceof PositionObjectVariable and ($position = $variable->getPosition()) instanceof Position) {
             return $position;
         }

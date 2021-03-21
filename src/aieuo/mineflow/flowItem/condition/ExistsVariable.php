@@ -43,14 +43,14 @@ class ExistsVariable extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getVariableName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
+        $name = $source->replaceVariables($this->getVariableName());
 
         yield true;
-        return $origin->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
+        return $source->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -37,9 +37,9 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         foreach ($this->getConditions() as $condition) {
-            if (!(yield from $condition->execute($origin))) return false;
+            if (!(yield from $condition->execute($source))) return false;
         }
         return true;
     }

@@ -58,15 +58,15 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "" and $this->getScore() !== "";
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $origin->replaceVariables($this->getScoreName());
-        $score = $origin->replaceVariables($this->getScore());
+        $name = $source->replaceVariables($this->getScoreName());
+        $score = $source->replaceVariables($this->getScore());
 
         $this->throwIfInvalidNumber($score);
 
-        $board = $this->getScoreboard($origin);
+        $board = $this->getScoreboard($source);
 
         $board->setScoreName($name, (int)$score);
         yield true;

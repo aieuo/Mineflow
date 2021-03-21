@@ -64,21 +64,24 @@ class FlowItemForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function onUpdateAction(Player $player, ?array $formData, Form $form, FlowItem $action, callable $callback): void {
-        if ($formData === null) return;
+    public function onUpdateAction(Player $player, ?array $data, Form $form, FlowItem $action, callable $callback): void {
+        if ($data === null) return;
 
-        $data = $action->parseFromFormData($formData);
-        if ($data["cancel"]) {
+        array_shift($data);
+        $cancelChecked = array_pop($data);
+
+        $values = $action->parseFromFormData($data);
+        if ($cancelChecked) {
             $callback(false);
             return;
         }
 
-        if (!empty($data["errors"])) {
-            $form->resend($data["errors"]);
+        if (!empty($values["errors"])) {
+            $form->resend(array_map(function (array $v) { return [$v[0], $v[1] + 1]; }, $values["errors"]));
             return;
         }
         try {
-            $action->loadSaveData($data["contents"]);
+            $action->loadSaveData($values["contents"]);
         } catch (FlowItemLoadException|\ErrorException $e) {
             $player->sendMessage(Language::get("action.error.recipe"));
             Main::getInstance()->getLogger()->logException($e);

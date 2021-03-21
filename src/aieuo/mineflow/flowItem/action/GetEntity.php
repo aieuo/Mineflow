@@ -64,11 +64,11 @@ class GetEntity extends FlowItem {
         return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $origin->replaceVariables($this->getKey());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $id = $source->replaceVariables($this->getKey());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $this->throwIfInvalidNumber($id, 0);
 
@@ -83,7 +83,7 @@ class GetEntity extends FlowItem {
         } else {
             $variable = new EntityObjectVariable($entity, $resultName, $entity->getNameTag());
         }
-        $origin->addVariable($variable);
+        $source->addVariable($variable);
         yield true;
         return $this->getResultName();
     }

@@ -59,17 +59,17 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->places[$this->getIndex()])]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $index = $origin->replaceVariables($this->getIndex());
+        $index = $source->replaceVariables($this->getIndex());
 
         $this->throwIfInvalidNumber($index, 0, 3);
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem((int)$index, $item);

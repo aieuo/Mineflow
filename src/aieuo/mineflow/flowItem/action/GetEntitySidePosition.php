@@ -34,9 +34,9 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
     /** @var string */
     private $direction;
-    /** @var string  */
+    /** @var string */
     private $steps;
-    /** @var string  */
+    /** @var string */
     private $resultName;
 
     public const SIDE_DOWN = "down";
@@ -50,7 +50,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     public const SIDE_LEFT = "left";
     public const SIDE_RIGHT = "right";
 
-    /** @var string[]  */
+    /** @var string[] */
     private $directions = [
         self::SIDE_DOWN,
         self::SIDE_UP,
@@ -123,15 +123,15 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        $side = $origin->replaceVariables($this->getDirection());
-        $step = $origin->replaceVariables($this->getSteps());
-        $resultName = $origin->replaceVariables($this->getResultName());
+        $side = $source->replaceVariables($this->getDirection());
+        $step = $source->replaceVariables($this->getSteps());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $this->throwIfInvalidNumber($step);
 
@@ -148,13 +148,13 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case self::SIDE_LEFT:
-                $direction ++;
+                $direction++;
             /** @noinspection PhpMissingBreakStatementInspection */
             case self::SIDE_BEHIND:
-                $direction ++;
+                $direction++;
             /** @noinspection PhpMissingBreakStatementInspection */
             case self::SIDE_RIGHT:
-                $direction ++;
+                $direction++;
             case self::SIDE_FRONT:
                 $pos = $pos->getSide($this->directionSideMap[$direction % 4], (int)$step);
                 break;
@@ -162,7 +162,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntitySide.direction.notFound", [$side]));
         }
 
-        $origin->addVariable(new PositionObjectVariable(Position::fromObject($pos, $entity->getLevelNonNull()), $resultName));
+        $source->addVariable(new PositionObjectVariable(Position::fromObject($pos, $entity->getLevelNonNull()), $resultName));
         yield true;
         return $this->getResultName();
     }

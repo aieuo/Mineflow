@@ -39,13 +39,13 @@ class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        $position = $this->getPosition($origin);
+        $position = $this->getPosition($source);
 
         if ($entity instanceof Living) {
             $entity->lookAt($position);

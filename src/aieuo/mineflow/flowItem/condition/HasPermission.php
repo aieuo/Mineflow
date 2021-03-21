@@ -47,10 +47,10 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPlayerPermission()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $permission = $this->getPlayerPermission();

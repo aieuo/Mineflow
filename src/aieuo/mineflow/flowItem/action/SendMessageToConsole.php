@@ -15,10 +15,10 @@ class SendMessageToConsole extends TypeMessage {
     protected $name = "action.sendMessageToConsole.name";
     protected $detail = "action.sendMessageToConsole.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $origin->replaceVariables($this->getMessage());
+        $message = $source->replaceVariables($this->getMessage());
         Main::getInstance()->getLogger()->info($message);
         yield true;
     }

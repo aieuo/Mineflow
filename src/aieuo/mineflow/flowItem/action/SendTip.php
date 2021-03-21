@@ -11,12 +11,12 @@ class SendTip extends TypePlayerMessage {
     protected $name = "action.sendTip.name";
     protected $detail = "action.sendTip.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $origin->replaceVariables($this->getMessage());
+        $message = $source->replaceVariables($this->getMessage());
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $player->sendTip($message);

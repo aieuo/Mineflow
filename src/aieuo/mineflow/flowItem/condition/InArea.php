@@ -39,14 +39,14 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(Recipe $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        $pos1 = $this->getPosition($origin, "pos1");
-        $pos2 = $this->getPosition($origin, "pos2");
+        $pos1 = $this->getPosition($source, "pos1");
+        $pos2 = $this->getPosition($source, "pos2");
         $pos = $entity->floor();
 
         yield true;
