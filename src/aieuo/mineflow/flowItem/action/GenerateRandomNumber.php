@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
 
@@ -56,7 +56,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getResultName()]);
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $min = $source->replaceVariables($this->getMin());

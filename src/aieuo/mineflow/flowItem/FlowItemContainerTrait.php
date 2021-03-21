@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\flowItem;
 
-use aieuo\mineflow\recipe\Recipe;
-
 trait FlowItemContainerTrait {
 
     /** @var FlowItem[][] */
@@ -75,13 +73,6 @@ trait FlowItemContainerTrait {
      */
     public function getConditions(): array {
         return $this->getItems(self::CONDITION);
-    }
-
-    public function executeAll(Recipe $recipe, string $name) {
-        foreach ($this->getItems($name) as $i => $action) {
-            $this->setLastResult(/** @noinspection PhpParamsInspection */ yield from $action->setParent($this)->execute($recipe));
-        }
-        return true;
     }
 
     public function getLastResult() {

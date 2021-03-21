@@ -7,20 +7,16 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
 use pocketmine\Player;
@@ -64,7 +60,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $counterName = $source->replaceVariables($this->counterName);
 
         $pos1 = $this->getPosition($source, "pos1");
@@ -79,8 +75,9 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
                 for ($z = $sz; $z <= $ez; $z++) {
                     $pos = new Position($x, $y, $z, $pos1->getLevel());
 
-                    $source->addVariable(new PositionObjectVariable($pos, $counterName));
-                    yield from $this->executeAll($source, FlowItemContainer::ACTION);
+                    yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
+                        $counterName => new PositionObjectVariable($pos, $counterName)
+                    ], $source))->executeGenerator();
                 }
             }
         }

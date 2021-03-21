@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
@@ -23,7 +23,7 @@ trait ScoreboardFlowItemTrait {
         $this->scoreboardVariableNames[$name] = $scoreboard;
     }
 
-    public function getScoreboard(Recipe $source, string $name = ""): Scoreboard {
+    public function getScoreboard(FlowItemExecutor $source, string $name = ""): Scoreboard {
         $scoreboard = $source->replaceVariables($rawName = $this->getScoreboardVariableName($name));
 
         $variable = $source->getVariable($scoreboard);

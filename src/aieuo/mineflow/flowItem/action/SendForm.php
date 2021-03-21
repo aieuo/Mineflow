@@ -6,6 +6,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Dropdown;
@@ -15,7 +16,6 @@ use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
@@ -57,7 +57,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getFormName());

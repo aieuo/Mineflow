@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\Server;
 
 class BroadcastMessage extends TypeMessage {
@@ -12,7 +12,7 @@ class BroadcastMessage extends TypeMessage {
     protected $name = "action.broadcastMessage.name";
     protected $detail = "action.broadcastMessage.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $message = $source->replaceVariables($this->getMessage());

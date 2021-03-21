@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Scoreboard;
 
 interface ScoreboardFlowItem {
@@ -15,10 +15,10 @@ interface ScoreboardFlowItem {
     public function setScoreboardVariableName(string $scoreboard, string $name = ""): void;
 
     /**
-     * @param Recipe $source
+     * @param FlowItemExecutor $source
      * @param string $name
      * @return Scoreboard
      * @throws InvalidFlowValueException
      */
-    public function getScoreboard(Recipe $source, string $name = ""): Scoreboard;
+    public function getScoreboard(FlowItemExecutor $source, string $name = ""): Scoreboard;
 }

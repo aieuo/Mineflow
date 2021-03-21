@@ -6,16 +6,11 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\inventory\ShapedRecipe;
-use pocketmine\item\Item;
 use pocketmine\Server;
 
 class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
@@ -93,7 +88,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         return $items;
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $output = $this->getItem($source, "output");

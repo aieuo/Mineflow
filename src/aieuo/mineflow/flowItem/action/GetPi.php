@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\NumberVariable;
 
 class GetPi extends TypeGetMathVariable {
@@ -14,7 +14,7 @@ class GetPi extends TypeGetMathVariable {
 
     protected $resultName = "pi";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $resultName = $source->replaceVariables($this->getResultName());

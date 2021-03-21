@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class AddXpLevel extends AddXpProgress {
 
@@ -11,7 +11,7 @@ class AddXpLevel extends AddXpProgress {
     protected $name = "action.addXpLevel.name";
     protected $detail = "action.addXpLevel.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $xp = $source->replaceVariables($this->getXp());

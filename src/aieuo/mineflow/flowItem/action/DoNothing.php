@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Category;
 
 class DoNothing extends FlowItem {
@@ -15,7 +15,7 @@ class DoNothing extends FlowItem {
 
     protected $category = Category::COMMON;
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         yield true;
     }
 

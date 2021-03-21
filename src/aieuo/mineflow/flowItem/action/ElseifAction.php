@@ -3,8 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\FlowItemContainer;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ElseifAction extends IFAction {
 
@@ -26,8 +25,8 @@ class ElseifAction extends IFAction {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $source): \Generator {
-        $lastResult = $this->getParent()->getLastResult();
+    public function execute(FlowItemExecutor $source): \Generator {
+        $lastResult = $source->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException();
         if ($lastResult) return true;
 
@@ -35,7 +34,7 @@ class ElseifAction extends IFAction {
             if (!(yield from $condition->execute($source))) return false;
         }
 
-        yield from $this->executeAll($source, FlowItemContainer::ACTION);
+        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
         return true;
     }
 }

@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\item\Item;
 
 interface ItemFlowItem {
@@ -15,10 +15,10 @@ interface ItemFlowItem {
     public function setItemVariableName(string $item, string $name = ""): void;
 
     /**
-     * @param Recipe $source
+     * @param FlowItemExecutor $source
      * @param string $name
      * @return Item
      * @throws InvalidFlowValueException
      */
-    public function getItem(Recipe $source, string $name = ""): Item;
+    public function getItem(FlowItemExecutor $source, string $name = ""): Item;
 }

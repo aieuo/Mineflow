@@ -163,7 +163,7 @@ class RecipeManager {
             }
 
             if ($action instanceof ExecuteRecipe) {
-                $name = $origin->replaceVariables($action->getRecipeName());
+                $name = Main::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
 
                 [$recipeName, $group] = $recipeManager->parseName($name);
                 if (empty($group)) $group = $origin->getGroup();

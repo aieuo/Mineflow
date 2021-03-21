@@ -5,12 +5,12 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
@@ -79,7 +79,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $wait = new Wait((string)($this->getInterval() / 20));
         while (true) {
             $source->addVariable(new NumberVariable($this->loopCount, "i")); // TODO: i を変更できるようにする
@@ -162,14 +162,6 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
-            switch ($content["id"]) {
-                case "removeItem":
-                    $content["id"] = self::REMOVE_ITEM_CONDITION;
-                    break;
-                case "takeMoney":
-                    $content["id"] = self::TAKE_MONEY_CONDITION;
-                    break;
-            }
             $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
         }

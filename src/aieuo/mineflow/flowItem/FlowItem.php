@@ -4,11 +4,6 @@ namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\Player;
@@ -43,6 +38,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     public const PERMISSION_LEVEL_0 = 0;
     public const PERMISSION_LEVEL_1 = 1;
     public const PERMISSION_LEVEL_2 = 2;
+
     /** @var int */
     protected $permission = self::PERMISSION_LEVEL_0;
 
@@ -133,11 +129,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
      * @return self
      * @throws FlowItemLoadException|\ErrorException
      */
-        switch ($content["id"]) {
-            case "addScore":
-                $content["id"] = self::REMOVE_SCOREBOARD_SCORE;
-                break;
-        }
     public static function loadEachSaveData(array $content): self {
         $action = FlowItemFactory::get($content["id"]);
         if ($action === null) {
@@ -159,15 +150,6 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         return true;
     }
 
-    public function setParent(FlowItemContainer $container): self {
-        $this->parent = $container;
-        return $this;
-    }
-
-    public function getParent(): FlowItemContainer {
-        return $this->parent;
-    }
-
     /**
      * @return DummyVariable[]
      */
@@ -175,14 +157,8 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         return [];
     }
 
-    /**
-     * @return boolean
-     */
     abstract public function isDataValid(): bool;
 
-    /**
-     * @return array
-     */
     abstract public function serializeContents(): array;
 
     /**
@@ -193,8 +169,8 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     abstract public function loadSaveData(array $content): FlowItem;
 
     /**
-     * @param Recipe $source
+     * @param FlowItemExecutor $source
      * @return bool|string|int|\Generator
      */
-    abstract public function execute(Recipe $source);
+    abstract public function execute(FlowItemExecutor $source);
 }

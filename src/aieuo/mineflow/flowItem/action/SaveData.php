@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 
 class SaveData extends FlowItem {
@@ -20,7 +20,7 @@ class SaveData extends FlowItem {
         return true;
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         Main::getRecipeManager()->saveAll();
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();

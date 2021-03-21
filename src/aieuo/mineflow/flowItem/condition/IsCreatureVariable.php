@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\entity\Creature;
 
 class IsCreatureVariable extends IsActiveEntityVariable {
@@ -12,7 +12,7 @@ class IsCreatureVariable extends IsActiveEntityVariable {
     protected $name = "condition.isCreatureVariable.name";
     protected $detail = "condition.isCreatureVariable.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $entity = $this->getEntity($source);

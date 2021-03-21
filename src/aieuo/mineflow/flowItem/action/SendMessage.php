@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SendMessage extends TypePlayerMessage {
 
@@ -11,7 +11,7 @@ class SendMessage extends TypePlayerMessage {
     protected $name = "action.sendMessage.name";
     protected $detail = "action.sendMessage.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $message = $source->replaceVariables($this->getMessage());

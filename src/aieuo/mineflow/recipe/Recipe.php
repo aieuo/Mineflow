@@ -3,10 +3,10 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -15,9 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
-use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -46,33 +44,17 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     private $targetType = self::TARGET_DEFAULT;
     /** @var array */
     private $targetOptions = [];
-    /** @var Entity|null */
-    private $target;
 
     /** @var Trigger[] */
     private $triggers = [];
 
-    /** @var array */
-    private $variables = [];
-
-    /** @var Recipe|null */
-    private $sourceRecipe;
     /* @var array */
     private $arguments = [];
     /* @var array */
     private $returnValues = [];
 
-    /** @var null|Event */
-    private $event;
-    /* @var \Generator */
-    private $generator;
-
-    /** @var bool */
-    private $waiting = false;
-    /* @var bool */
-    private $exit = false;
-    /* @var bool */
-    private $resuming = false;
+    /** @var null|FlowItemExecutor */
+    private $executor;
 
     /** @var string */
     private $rawData = "";
@@ -173,9 +155,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $targets;
     }
 
-    /**
-     * @return Trigger[]
-     */
     public function getTriggers(): array {
         return $this->triggers;
     }
@@ -218,105 +197,54 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }
     }
 
-    public function setEvent(?Event $event): self {
-        $this->event = $event;
-        return $this;
-    }
-
-    public function getEvent(): ?Event {
-        return $this->event;
-    }
-
-    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = []): ?bool {
+    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = [], ?FlowItemExecutor $returnExecutor = null): ?bool {
         $targets = $this->getTargets($player);
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
-        if ($event instanceof Event) $variables = array_merge($variables, ["event" => new EventObjectVariable($event, "event")]);
+
         foreach ($targets as $target) {
             $recipe = clone $this;
-            $recipe->setTarget($target)->setEvent($event)
-                ->addVariables($target instanceof Entity ? array_merge($variables, DefaultVariables::getEntityVariables($target)) : $variables);
-            $recipe->execute($args);
+            $recipe->execute($target, $event, $variables, $args, $returnExecutor);
         }
         return true;
     }
 
-    public function execute(array $args = [], bool $first = true): bool {
-        $this->applyArguments($args);
-
-        $this->generator = $this->generator ?? $this->executeAll($this, FlowItemContainer::ACTION);
-        try {
-            if (!$first) $this->generator->next();
-
-            while ($this->generator->valid()) {
-                if ($this->exit) {
-                    $this->resuming = false;
-                    $this->waiting = false;
-                    return false;
-                }
-
-                $result = $this->generator->current();
-                if (!$result and !$this->resuming) {
-                    $this->waiting = true;
-                    return false;
-                }
-
-                if (!$result) {
-                    $this->resuming = false;
-                }
-
-                $this->generator->next();
-            }
-        } catch (InvalidFlowValueException $e) {
-            if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->getTarget());
-            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $e->getName()]), $this->getTarget());
-            return false;
-        }
-
-        if ($this->sourceRecipe instanceof Recipe) {
-            foreach ($this->getReturnValues() as $value) {
-                $variable = $this->getVariable($value);
-                if ($variable instanceof Variable) $this->sourceRecipe->addVariable($variable);
-            }
-            $this->sourceRecipe->resume();
-        }
-        return true;
+    public function getExecutor(): ?FlowItemExecutor {
+        return $this->executor;
     }
 
-    public function resume(): void {
-        $this->resuming = true;
-        if (!$this->waiting) return;
-        $this->resuming = false;
-        $this->waiting = false;
-        $this->execute([], false);
-    }
-
-    public function exit(): void {
-        $this->exit = true;
-    }
-
-    public function applyArguments(array $args): void {
+    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $args = [], ?FlowItemExecutor $returnExecutor = null): bool {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
-            if (isset($args[$i])) {
-                $arg = $args[$i];
-                if ($arg instanceof Variable) {
-                    $arg->setName($argument);
-                } else {
-                    $type = $helper->getType($arg);
-                    $arg = Variable::create($helper->currentType($arg), $argument, $type);
-                }
-                $this->addVariable($arg);
+            if (!isset($args[$i])) continue;
+
+            $arg = $args[$i];
+            if ($arg instanceof Variable) {
+                $arg->setName($argument);
+            } else {
+                $arg = Variable::create($helper->currentType($arg), $argument, $helper->getType($arg));
             }
+            $variables[$argument] = $arg;
         }
-    }
+        if ($target !== null) {
+            $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
+        }
+        if ($event !== null) {
+            $variables["event"] = new EventObjectVariable($event, "event");
+        }
 
-    public function getTarget(): ?Entity {
-        return $this->target;
-    }
-
-    public function setTarget(?Entity $target): self {
-        $this->target = $target;
-        return $this;
+        $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($returnExecutor) {
+            if ($returnExecutor !== null) {
+                foreach ($this->getReturnValues() as $value) {
+                    $variable = $executor->getVariable($value);
+                    if ($variable instanceof Variable) $returnExecutor->addVariable($variable);
+                }
+                $returnExecutor->resume();
+            }
+        }, function (string $flowItemName, ?Entity $target) {
+            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $flowItemName]), $target);
+        }, $this);
+        $this->executor->execute();
+        return true;
     }
 
     public function setArguments(array $arguments): void {
@@ -335,39 +263,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->returnValues;
     }
 
-    public function addVariable(Variable $variable): void {
-        $this->variables[$variable->getName()] = $variable;
-    }
-
-    public function addVariables(array $variables): void {
-        $this->variables = array_merge($this->variables, $variables);
-    }
-
-    public function getVariable(string $name): ?Variable {
-        $names = explode(".", $name);
-        $name = array_shift($names);
-        if (!isset($this->variables[$name])) return null;
-
-        $variable = $this->variables[$name];
-        foreach ($names as $name1) {
-            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
-            $variable = $variable->getValueFromIndex($name1);
-        }
-        return $variable;
-    }
-
-    public function getVariables(): array {
-        return $this->variables;
-    }
-
-    public function removeVariable(string $name): void {
-        unset($this->variables[$name]);
-    }
-
-    public function replaceVariables(string $text): string {
-        return Main::getVariableHelper()->replaceVariablesAndFunctions($text, $this);
-    }
-
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
         $variables = [new DummyVariable("target", DummyVariable::PLAYER)];
         $add = [];
@@ -378,11 +273,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $variables;
     }
 
-    public function setSourceRecipe(?Recipe $recipe): self {
-        $this->sourceRecipe = $recipe;
-        return $this;
-    }
-
     /**
      * @param array $contents
      * @return self
@@ -391,7 +281,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function loadSaveData(array $contents): self {
         foreach ($contents as $i => $content) {
             try {
-                $action = FlowItem::loadSaveDataStatic($content);
+                $action = FlowItem::loadEachSaveData($content);
             } catch (\ErrorException $e) {
                 if (strpos($e->getMessage(), "Undefined offset:") !== 0) throw $e;
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));

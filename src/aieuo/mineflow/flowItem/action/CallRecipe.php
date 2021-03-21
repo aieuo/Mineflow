@@ -2,12 +2,10 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Language;
 
 class CallRecipe extends ExecuteRecipe {
 
@@ -16,33 +14,13 @@ class CallRecipe extends ExecuteRecipe {
     protected $name = "action.callRecipe.name";
     protected $detail = "action.callRecipe.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $source->replaceVariables($this->getRecipeName());
+        $recipe = clone $this->getRecipe($source);
+        $args = $this->getArguments($source);
 
-        $recipeManager = Main::getRecipeManager();
-        [$recipeName, $group] = $recipeManager->parseName($name);
-        if (empty($group)) $group = $source->getGroup();
-
-        $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName);
-        if ($recipe === null) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
-        }
-
-        $helper = Main::getVariableHelper();
-        $args = [];
-        $recipe = clone $recipe;
-        foreach ($this->getArgs() as $arg) {
-            if (!$helper->isVariableString($arg)) {
-                $args[] = $helper->replaceVariables($arg, $source->getVariables());
-                continue;
-            }
-            $arg = $source->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
-            $args[] = $arg;
-        }
-        $recipe->setSourceRecipe($source);
-        $recipe->executeAllTargets($source->getTarget(), [], $source->getEvent(), $args);
+        $recipe->executeAllTargets($source->getTarget(), [], $source->getEvent(), $args, $source);
         yield false;
     }
 

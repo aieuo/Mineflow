@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use pocketmine\block\Block;
@@ -24,12 +24,12 @@ trait BlockFlowItemTrait {
     }
 
     /**
-     * @param Recipe $source
+     * @param FlowItemExecutor $source
      * @param string $name
      * @return Block
      * @throws InvalidFlowValueException
      */
-    public function getBlock(Recipe $source, string $name = ""): Block {
+    public function getBlock(FlowItemExecutor $source, string $name = ""): Block {
         $block = $source->replaceVariables($rawName = $this->getBlockVariableName($name));
 
         $variable = $source->getVariable($block);

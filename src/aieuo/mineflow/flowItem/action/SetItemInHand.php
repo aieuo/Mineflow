@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SetItemInHand extends TypeItem {
 
@@ -11,7 +11,7 @@ class SetItemInHand extends TypeItem {
     protected $name = "action.setItemInHand.name";
     protected $detail = "action.setItemInHand.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);

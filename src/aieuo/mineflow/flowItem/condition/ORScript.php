@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ORScript extends AndScript {
 
@@ -20,7 +20,7 @@ class ORScript extends AndScript {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         foreach ($this->getConditions() as $condition) {
             if (yield from $condition->execute($source)) return true;
         }

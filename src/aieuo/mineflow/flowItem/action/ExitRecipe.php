@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Category;
 
 class ExitRecipe extends FlowItem {
@@ -15,7 +15,7 @@ class ExitRecipe extends FlowItem {
 
     protected $category = Category::SCRIPT;
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $source->exit();
         yield true;
     }

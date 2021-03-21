@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
@@ -23,7 +23,7 @@ trait PositionFlowItemTrait {
         $this->positionVariableNames[$name] = $position;
     }
 
-    public function getPosition(Recipe $source, string $name = ""): Position {
+    public function getPosition(FlowItemExecutor $source, string $name = ""): Position {
         $position = $source->replaceVariables($rawName = $this->getPositionVariableName($name));
 
         $variable = $source->getVariable($position);

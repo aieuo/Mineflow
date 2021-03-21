@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class RemoveItemAll extends TypeItem {
 
@@ -11,7 +11,7 @@ class RemoveItemAll extends TypeItem {
     protected $name = "action.removeItemAll.name";
     protected $detail = "action.removeItemAll.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);

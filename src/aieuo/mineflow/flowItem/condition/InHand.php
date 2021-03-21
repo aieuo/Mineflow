@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class InHand extends TypeItem {
 
@@ -11,7 +11,7 @@ class InHand extends TypeItem {
     protected $name = "condition.inHand.name";
     protected $detail = "condition.inHand.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);

@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class NorScript extends ORScript {
 
@@ -20,7 +20,7 @@ class NorScript extends ORScript {
         return implode("\n", $details);
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         return !(yield from parent::execute($source));
     }
 }

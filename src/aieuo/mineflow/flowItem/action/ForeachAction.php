@@ -6,12 +6,12 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
@@ -91,7 +91,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $listName = $source->replaceVariables($this->listVariableName);
         $list = $source->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
         $keyName = $source->replaceVariables($this->keyVariableName);
@@ -103,13 +103,14 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
         foreach ($list->getValue() as $key => $value) {
             $keyVariable = is_numeric($key) ? new NumberVariable($key, $keyName) : new StringVariable($key, $keyName);
-            $source->addVariable($keyVariable);
 
             $valueVariable = clone $value;
             $valueVariable->setName($valueName);
-            $source->addVariable($valueVariable);
 
-            yield from $this->executeAll($source, FlowItemContainer::ACTION);
+            yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
+                $keyName => $keyVariable,
+                $valueName => $valueVariable
+            ], $source))->executeGenerator();
         }
         $source->resume();
         yield true;

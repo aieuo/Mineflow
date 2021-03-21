@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SetMaxHealth extends SetHealth {
 
@@ -11,7 +11,7 @@ class SetMaxHealth extends SetHealth {
     protected $name = "action.setMaxHealth.name";
     protected $detail = "action.setMaxHealth.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $health = $source->replaceVariables($this->getHealth());

@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\action;
 
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 
 class SendMessageToConsole extends TypeMessage {
@@ -15,7 +15,7 @@ class SendMessageToConsole extends TypeMessage {
     protected $name = "action.sendMessageToConsole.name";
     protected $detail = "action.sendMessageToConsole.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $message = $source->replaceVariables($this->getMessage());

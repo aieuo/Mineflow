@@ -5,12 +5,12 @@ namespace aieuo\mineflow\flowItem\action;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
@@ -99,7 +99,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $counterName = $source->replaceVariables($this->counterName);
 
         $start = $source->replaceVariables($this->startIndex);
@@ -113,8 +113,9 @@ class ForAction extends FlowItem implements FlowItemContainer {
         $fluctuation = (float)$fluctuation;
 
         for ($i = $start; $i <= $end; $i += $fluctuation) {
-            $source->addVariable(new NumberVariable($i, $counterName));
-            yield from $this->executeAll($source, FlowItemContainer::ACTION);
+            yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
+                $counterName => new NumberVariable($i, $counterName)
+            ], $source))->executeGenerator();
         }
         $source->resume();
         yield true;

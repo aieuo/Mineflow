@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\utils\Config;
 
 interface ConfigFileFlowItem {
@@ -15,10 +15,10 @@ interface ConfigFileFlowItem {
     public function setConfigVariableName(string $config, string $name = ""): void;
 
     /**
-     * @param Recipe $source
+     * @param FlowItemExecutor $source
      * @param string $name
      * @return Config
      * @throws InvalidFlowValueException
      */
-    public function getConfig(Recipe $source, string $name = ""): Config;
+    public function getConfig(FlowItemExecutor $source, string $name = ""): Config;
 }

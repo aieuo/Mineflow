@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\TextFormat;
 
@@ -15,7 +15,7 @@ class SetMoney extends TypeMoney {
     protected $name = "action.setMoney.name";
     protected $detail = "action.setMoney.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {

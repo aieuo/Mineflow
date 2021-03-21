@@ -4,6 +4,7 @@ namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
@@ -61,22 +62,35 @@ class ExecuteRecipe extends FlowItem {
         return Language::get($this->detail, [$this->getRecipeName()]);
     }
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
+        $recipe = clone $this->getRecipe($source);
+        $args = $this->getArguments($source);
+
+        $recipe->executeAllTargets($source->getTarget(), $source->getVariables(), $source->getEvent(), $args);
+        yield true;
+    }
+
+    public function getRecipe(FlowItemExecutor $source): Recipe {
         $name = $source->replaceVariables($this->getRecipeName());
 
         $recipeManager = Main::getRecipeManager();
         [$recipeName, $group] = $recipeManager->parseName($name);
-        if (empty($group)) $group = $source->getGroup();
+        if (empty($group)) {
+            $sr = $source->getSourceRecipe();
+            if ($sr !== null) $group = $sr->getGroup();
+        }
 
         $recipe = $recipeManager->get($recipeName, $group) ?? $recipeManager->get($recipeName, "");
         if ($recipe === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.executeRecipe.notFound"));
         }
 
-        $recipe = clone $recipe;
+        return $recipe;
+    }
 
+    public function getArguments(FlowItemExecutor $source): array {
         $helper = Main::getVariableHelper();
         $args = [];
         foreach ($this->getArgs() as $arg) {
@@ -87,10 +101,7 @@ class ExecuteRecipe extends FlowItem {
             $arg = $source->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
             $args[] = $arg;
         }
-
-        $recipe->executeAllTargets($source->getTarget(), $source->getVariables(), $source->getEvent(), $args);
-        $recipe->addVariables($source->getVariables());
-        yield true;
+        return $args;
     }
 
     public function getEditFormElements(array $variables): array {

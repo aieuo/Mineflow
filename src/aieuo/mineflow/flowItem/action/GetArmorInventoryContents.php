@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\action;
 
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\Item;
@@ -17,7 +17,7 @@ class GetArmorInventoryContents extends GetInventoryContents {
     protected $detail = "action.getArmorInventory.detail";
 
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $resultName = $source->replaceVariables($this->getResultName());

@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class CanAddItem extends TypeItem {
 
@@ -11,7 +11,7 @@ class CanAddItem extends TypeItem {
     protected $name = "condition.canAddItem.name";
     protected $detail = "condition.canAddItem.detail";
 
-    public function execute(Recipe $source): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);
