@@ -11,10 +11,10 @@ class UndefinedMineflowPropertyException extends \InvalidStateException {
     /** @var string */
     private $propertyName;
 
-    public function __construct(string $variableName, string $propertyName, string $message = "", int $code = 0, Throwable $previous = null) {
+    public function __construct(string $variableName, string $propertyName, string $message = null, int $code = 0, Throwable $previous = null) {
         $this->variableName = $variableName;
         $this->propertyName = $propertyName;
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message ?? "§cUndefined index: ".$variableName.".§l".$propertyName."§r", $code, $previous);
     }
 
     public function getVariableName(): string {

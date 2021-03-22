@@ -9,9 +9,9 @@ class UndefinedMineflowVariableException extends \InvalidStateException {
     /* @var string */
     private $variableName;
 
-    public function __construct(string $variableName, string $message = "", int $code = 0, Throwable $previous = null) {
+    public function __construct(string $variableName, string $message = null, int $code = 0, Throwable $previous = null) {
         $this->variableName = $variableName;
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message ?? "§cUndefined variable: ".$variableName."§r", $code, $previous);
     }
 
     public function getVariableName(): string {
