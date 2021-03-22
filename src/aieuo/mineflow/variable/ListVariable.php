@@ -39,9 +39,10 @@ class ListVariable extends Variable implements \JsonSerializable {
         $this->value = array_merge($this->value);
     }
 
-    public function getValueFromIndex($index): ?Variable {
-        if (!isset($this->value[$index])) return null;
-        return $this->value[$index];
+    public function getValueFromIndex(string $index): ?Variable {
+        if (!isset($this->value[(int)$index])) return null;
+        return $this->value[(int)$index];
+    }
     }
 
     public function getCount(): int {
