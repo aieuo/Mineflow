@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\exception\UnsupportedCalculationException;
+
 class StringVariable extends Variable implements \JsonSerializable {
 
     public $type = Variable::STRING;
@@ -30,6 +32,21 @@ class StringVariable extends Variable implements \JsonSerializable {
             return new StringVariable(trim($text));
         }, explode($var->getValue(), $this->getValue()));
         return new ListVariable($result, $resultName);
+    }
+
+    public function add($target): Variable {
+        return new StringVariable($this->getValue().$target, "result");
+    }
+
+    public function sub($target): Variable {
+        return new StringVariable(str_replace((string)$target, "", $this->getValue()), "result");
+    }
+
+    public function mul($target): Variable {
+        if ($target instanceof NumberVariable) $target = $target->getValue();
+        if(is_numeric($target)) new StringVariable(str_repeat($this->getValue(), (int)$target), "result");
+
+        throw new UnsupportedCalculationException();
     }
 
     public function jsonSerialize(): array {

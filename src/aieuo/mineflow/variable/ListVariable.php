@@ -43,6 +43,13 @@ class ListVariable extends Variable implements \JsonSerializable {
         if (!isset($this->value[(int)$index])) return null;
         return $this->value[(int)$index];
     }
+
+    public function callMethod(string $name, array $parameters = []): ?Variable {
+        switch ($name) {
+            case "count":
+                return new NumberVariable(count($this->value), $name);
+        }
+        return null;
     }
 
     public function getCount(): int {

@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\exception\UnsupportedCalculationException;
+
 abstract class Variable {
 
     public const DUMMY = -1;
@@ -71,11 +73,35 @@ abstract class Variable {
         return $this->value;
     }
 
+    public function getValueFromIndex(string $index): ?Variable {
+        return null;
+    }
+
+    public function callMethod(string $name, array $parameters = []): ?Variable {
+        return null;
+    }
+
     public function getType(): int {
         return $this->type;
     }
 
     public function __toString(): string {
         return (string)$this->getValue();
+    }
+
+    public function add($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
+
+    public function sub($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
+
+    public function mul($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
+
+    public function div($target): Variable {
+        throw new UnsupportedCalculationException();
     }
 }
