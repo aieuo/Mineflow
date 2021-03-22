@@ -3,6 +3,10 @@
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\exception\UndefinedMineflowMethodException;
+use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
+use aieuo\mineflow\exception\UndefinedMineflowVariableException;
+use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Logger;
@@ -34,6 +38,8 @@ class FlowItemExecutor {
     /** @var mixed */
     private $lastResult;
 
+    /** @var FlowItem */
+    private $currentFlowItem;
     /** @var \Generator */
     private $generator;
 
@@ -61,6 +67,7 @@ class FlowItemExecutor {
 
     public function executeGenerator(): \Generator {
         foreach ($this->items as $i => $item) {
+            $this->currentFlowItem = $item;
             $this->lastResult = yield from $item->execute($this);
         }
     }
@@ -90,10 +97,9 @@ class FlowItemExecutor {
 
                 $this->generator->next();
             }
-        } catch (InvalidFlowValueException $e) {
-            if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->getTarget());
-            if ($this->onError !== null) ($this->onError)($e->getFlowItemName(), $this->target);
-            return false;
+        } catch (InvalidFlowValueException|UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|UnsupportedCalculationException $e) {
+            if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
+            if ($this->onError !== null) ($this->onError)($this->currentFlowItem->getName(), $this->target);
         }
 
         if ($this->onComplete !== null) ($this->onComplete)($this);
@@ -136,7 +142,7 @@ class FlowItemExecutor {
     }
 
     public function replaceVariables(string $text): string {
-        return Main::getVariableHelper()->replaceVariables($text, $this->getVariables());
+        return Main::getVariableHelper()->replaceVariables($text, $this->getVariables(), $this);
     }
 
     public function getVariable(string $name): ?Variable {
