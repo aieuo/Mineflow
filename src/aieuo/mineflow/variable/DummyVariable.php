@@ -13,6 +13,7 @@ use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
+use aieuo\mineflow\variable\object\Vector3ObjectVariable;
 
 class DummyVariable extends Variable {
 
@@ -41,6 +42,7 @@ class DummyVariable extends Variable {
     public const LOCATION = "location";
     public const PLAYER = "player";
     public const POSITION = "position";
+    public const VECTOR3 = "vector3";
     public const SCOREBOARD = "scoreboard";
 
     public function __construct(string $name = "", string $valueType = "", string $description = "") {
@@ -95,6 +97,8 @@ class DummyVariable extends Variable {
                 return PlayerObjectVariable::getValuesDummy($this->getName());
             case self::POSITION:
                 return PositionObjectVariable::getValuesDummy($this->getName());
+            case self::VECTOR3:
+                return Vector3ObjectVariable::getValuesDummy($this->getName());
             case self::SCOREBOARD:
                 return ScoreboardObjectVariable::getValuesDummy($this->getName());
             default:
@@ -114,6 +118,7 @@ class DummyVariable extends Variable {
             self::LOCATION,
             self::PLAYER,
             self::POSITION,
+            self::VECTOR3,
             self::SCOREBOARD,
         ], true);
     }

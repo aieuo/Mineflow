@@ -15,18 +15,6 @@ class PositionObjectVariable extends Vector3ObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
         $position = $this->getPosition();
         switch ($index) {
-            case "x":
-                $variable = new NumberVariable($position->x, "x");
-                break;
-            case "y":
-                $variable = new NumberVariable($position->y, "y");
-                break;
-            case "z":
-                $variable = new NumberVariable($position->z, "z");
-                break;
-            case "xyz":
-                $variable = new StringVariable($position->x.",".$position->y.",".$position->z, "xyz");
-                break;
             case "position":
                 $variable = new PositionObjectVariable($position);
                 break;
@@ -48,11 +36,8 @@ class PositionObjectVariable extends Vector3ObjectVariable {
 
     public static function getValuesDummy(string $name): array {
         return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".x", DummyVariable::NUMBER),
-            new DummyVariable($name.".y", DummyVariable::NUMBER),
-            new DummyVariable($name.".z", DummyVariable::NUMBER),
-            new DummyVariable($name.".xyz", DummyVariable::STRING),
-            new DummyVariable($name.".level", DummyVariable::LEVEL)
+            new DummyVariable($name.".level", DummyVariable::LEVEL),
+            new DummyVariable($name.".world", DummyVariable::LEVEL),
         ]);
     }
 
