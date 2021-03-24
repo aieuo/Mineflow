@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -23,7 +24,7 @@ class EventObjectVariable extends ObjectVariable {
                 $variable = new StringVariable(end($names));
                 break;
             case "isCanceled":
-                $variable = new StringVariable($event->isCancelled() ? "true" : "false");
+                $variable = new BoolVariable($event->isCancelled());
                 break;
             default:
                 return null;

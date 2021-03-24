@@ -28,6 +28,7 @@ class DummyVariable extends Variable {
     public const UNKNOWN = "unknown";
     public const STRING = "string";
     public const NUMBER = "number";
+    public const BOOLEAN = "boolean";
     public const LIST = "list";
     public const MAP = "map";
     public const BLOCK = "block";

@@ -2,9 +2,9 @@
 
 namespace aieuo\mineflow\trigger\event;
 
+use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\StringVariable;
 use pocketmine\event\player\PlayerToggleFlightEvent;
 
 class PlayerToggleFlightEventTrigger extends EventTrigger {
@@ -16,14 +16,14 @@ class PlayerToggleFlightEventTrigger extends EventTrigger {
         /** @var PlayerToggleFlightEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
-        $variables["state"] = new StringVariable($event->isFlying() ? "true" : "false");
+        $variables["state"] = new BoolVariable($event->isFlying());
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
             "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "state" => new DummyVariable("state", DummyVariable::STRING),
+            "state" => new DummyVariable("state", DummyVariable::BOOLEAN),
         ];
     }
 }
