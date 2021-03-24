@@ -26,9 +26,9 @@ class RecipeCommand extends MineflowSubcommand {
             case "list":
                 (new RecipeForm)->sendRecipeList($sender);
                 break;
-            case "test":
+            case "execute":
                 if (!isset($args[1])) {
-                    $sender->sendMessage("Usage: /mineflow recipe test <name> [group]");
+                    $sender->sendMessage("Usage: /mineflow recipe execute <name> [group]");
                     return;
                 }
                 $path = (isset($args[2]) ? ($args[2]."/") : "").$args[1];
