@@ -77,18 +77,19 @@ class JoinListVariableToString extends FlowItem {
         $separator = $source->replaceVariables($this->getSeparator());
         $result = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariables()[$name] ?? $helper->get($name) ?? new ListVariable([], $name);
+        $variable = $source->getVariable($name) ?? $helper->getNested($name);
+        if ($variable === null) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
+        }
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
-                $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
-            ]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 
         $strings = [];
         foreach ($variable->getValue() as $key => $value) {
             $strings[] = (string)$value;
         }
-        $source->addVariable(new StringVariable(implode($separator, $strings), $result));
+        $source->addVariable($result, new StringVariable(implode($separator, $strings)));
         yield true;
     }
 

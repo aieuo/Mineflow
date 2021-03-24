@@ -101,8 +101,8 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
         $position = Position::fromObject($pos->add($x, $y, $z), $pos->getLevel());
 
-        $variable = new PositionObjectVariable($position, $name);
-        $source->addVariable($variable);
+        $variable = new PositionObjectVariable($position);
+        $source->addVariable($name, $variable);
         yield true;
         return $this->getResultName();
     }

@@ -218,10 +218,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             if (!isset($args[$i])) continue;
 
             $arg = $args[$i];
-            if ($arg instanceof Variable) {
-                $arg->setName($argument);
-            } else {
-                $arg = Variable::create($helper->currentType($arg), $argument, $helper->getType($arg));
+            if (!$arg instanceof Variable) {
+                $arg = Variable::create($helper->currentType($arg), $helper->getType($arg));
             }
             $variables[$argument] = $arg;
         }
@@ -236,7 +234,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             if ($returnExecutor !== null) {
                 foreach ($this->getReturnValues() as $value) {
                     $variable = $executor->getVariable($value);
-                    if ($variable instanceof Variable) $returnExecutor->addVariable($variable);
+                    if ($variable instanceof Variable) $returnExecutor->addVariable($value, $variable);
                 }
                 $returnExecutor->resume();
             }

@@ -92,8 +92,8 @@ class CreateScoreboardVariable extends FlowItem {
 
         $scoreboard = new Scoreboard($type, $id, $displayName);
 
-        $variable = new ScoreboardObjectVariable($scoreboard, $variableName);
-        $source->addVariable($variable);
+        $variable = new ScoreboardObjectVariable($scoreboard);
+        $source->addVariable($variableName, $variable);
         yield true;
         return $this->getVariableName();
     }

@@ -102,10 +102,8 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         }
 
         foreach ($list->getValue() as $key => $value) {
-            $keyVariable = is_numeric($key) ? new NumberVariable($key, $keyName) : new StringVariable($key, $keyName);
-
+            $keyVariable = is_numeric($key) ? new NumberVariable($key) : new StringVariable($key);
             $valueVariable = clone $value;
-            $valueVariable->setName($valueName);
 
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
                 $keyName => $keyVariable,

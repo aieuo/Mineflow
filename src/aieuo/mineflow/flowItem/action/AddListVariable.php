@@ -69,15 +69,12 @@ class AddListVariable extends FlowItem {
         $name = $source->replaceVariables($this->getVariableName());
         $values = $this->getVariableValue();
 
-        if ($this->isLocal) {
-            $variable = $source->getVariables()[$name] ?? new ListVariable([], $name);
-        } else {
-            $variable = $helper->get($name) ?? new ListVariable([], $name);
+        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
+        if ($variable === null) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error", [
-                $this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]
-            ]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 
         foreach ($values as $value) {
@@ -85,20 +82,14 @@ class AddListVariable extends FlowItem {
                 $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
                 if ($addVariable === null) {
                     $value = $helper->replaceVariables($value, $source->getVariables());
-                    $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
+                    $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
                 }
             } else {
                 $value = $helper->replaceVariables($value, $source->getVariables());
-                $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
+                $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
             }
 
-            $variable->addValue($addVariable);
-        }
-
-        if ($this->isLocal) {
-            $source->addVariable($variable);
-        } else {
-            $helper->add($variable);
+            $variable->appendValue($addVariable);
         }
         yield true;
     }

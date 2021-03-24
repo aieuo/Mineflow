@@ -103,8 +103,8 @@ class CreateItemVariable extends FlowItem {
             $item->setCustomName($itemName);
         }
 
-        $variable = new ItemObjectVariable($item, $name);
-        $source->addVariable($variable);
+        $variable = new ItemObjectVariable($item);
+        $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();
     }

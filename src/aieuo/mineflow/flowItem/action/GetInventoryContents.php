@@ -63,9 +63,9 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
 
         $variable = new ListVariable(array_map(function (Item $item) {
             return new ItemObjectVariable($item);
-        }, $entity->getInventory()->getContents()), $resultName);
+        }, $entity->getInventory()->getContents()));
 
-        $source->addVariable($variable);
+        $source->addVariable($resultName, $variable);
         yield true;
         return $this->getResultName();
     }

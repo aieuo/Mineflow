@@ -10,9 +10,9 @@ use pocketmine\event\Event;
 
 class EventObjectVariable extends ObjectVariable {
 
-    public function __construct(Event $value, string $name = "", ?string $str = null) {
+    public function __construct(Event $value, ?string $str = null) {
         $names = explode("\\", $value->getEventName());
-        parent::__construct($value, $name, $str ?? end($names));
+        parent::__construct($value, $str ?? end($names));
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -20,10 +20,10 @@ class EventObjectVariable extends ObjectVariable {
         switch ($index) {
             case "name":
                 $names = explode("\\", $event->getEventName());
-                $variable = new StringVariable(end($names), "name");
+                $variable = new StringVariable(end($names));
                 break;
             case "isCanceled":
-                $variable = new StringVariable($event->isCancelled() ? "true" : "false", "isCanceled");
+                $variable = new StringVariable($event->isCancelled() ? "true" : "false");
                 break;
             default:
                 return null;

@@ -104,14 +104,14 @@ class EditString extends FlowItem {
 
         switch ($operator) {
             case self::TYPE_JOIN:
-                $result = new StringVariable($value1.$value2, $resultName);
+                $result = new StringVariable($value1.$value2);
                 break;
             case self::TYPE_DELETE:
-                $result = new StringVariable(str_replace($value2, "", $value1), $resultName);
+                $result = new StringVariable(str_replace($value2, "", $value1));
                 break;
             case self::TYPE_REPEAT:
                 $this->throwIfInvalidNumber($value2, 1);
-                $result = new StringVariable(str_repeat($value1, (int)$value2), $resultName);
+                $result = new StringVariable(str_repeat($value1, (int)$value2));
                 break;
             case self::TYPE_SPLIT:
                 $result = new ListVariable(array_map(function (string $str) {
@@ -122,7 +122,7 @@ class EditString extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $source->addVariable($result);
+        $source->addVariable($resultName, $result);
         yield true;
         return $result;
     }

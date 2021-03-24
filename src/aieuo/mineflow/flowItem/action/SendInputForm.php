@@ -86,8 +86,8 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
             ->setContents([
                 new Input($text, "", "", true),
             ])->onReceive(function (Player $player, array $data) use ($source, $resultName) {
-                $variable = new StringVariable($data[0], $resultName);
-                $source->addVariable($variable);
+                $variable = new StringVariable($data[0]);
+                $source->addVariable($resultName, $variable);
                 $source->resume();
             })->onClose(function (Player $player) use ($source, $text, $resultName) {
                 if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);

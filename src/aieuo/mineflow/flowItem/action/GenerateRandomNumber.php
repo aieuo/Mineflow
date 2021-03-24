@@ -67,7 +67,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         $this->throwIfInvalidNumber($max);
 
         $rand = mt_rand((int)$min, (int)$max);
-        $source->addVariable(new NumberVariable($rand, $resultName));
+        $source->addVariable($resultName, new NumberVariable($rand));
         yield true;
         return $rand;
     }

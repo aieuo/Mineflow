@@ -11,21 +11,21 @@ use pocketmine\level\Level;
 
 class LevelObjectVariable extends ObjectVariable {
 
-    public function __construct(Level $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? $value->getFolderName());
+    public function __construct(Level $value, ?string $str = null) {
+        parent::__construct($value, $str ?? $value->getFolderName());
     }
 
     public function getValueFromIndex(string $index): ?Variable {
         $level = $this->getLevel();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($level->getName(), "name");
+                $variable = new StringVariable($level->getName());
                 break;
             case "folderName":
-                $variable = new StringVariable($level->getFolderName(), "folderName");
+                $variable = new StringVariable($level->getFolderName());
                 break;
             case "id":
-                $variable = new NumberVariable($level->getId(), "id");
+                $variable = new NumberVariable($level->getId());
                 break;
             default:
                 return null;

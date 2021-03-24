@@ -12,7 +12,6 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\MapVariable;
 
 class DeleteListVariableContent extends FlowItem {
 
@@ -69,18 +68,17 @@ class DeleteListVariableContent extends FlowItem {
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
 
-        $variable = ($this->isLocal ? $source->getVariable($name) : $helper->get($name)) ?? new MapVariable([], $name);
+        $variable = ($this->isLocal ? $source->getVariable($name) : $helper->getNested($name));
+        if ($variable === null) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
+        }
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException(
-                $this->getName(), Language::get("action.error", [$this->getName(), ["action.addListVariable.error.existsOtherType", [$name, (string)$variable]]])
-            );
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 
         $values = $variable->getValue();
         unset($values[$key]);
         $variable->setValue($values);
-
-        if ($this->isLocal) $source->addVariable($variable); else $helper->add($variable);
         yield true;
     }
 

@@ -112,8 +112,8 @@ class CreatePositionVariable extends FlowItem {
 
         $position = new Position((float)$x, (float)$y, (float)$z, $level);
 
-        $variable = new PositionObjectVariable($position, $name);
-        $source->addVariable($variable);
+        $variable = new PositionObjectVariable($position);
+        $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();
     }

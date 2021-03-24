@@ -3,16 +3,13 @@
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\ObjectVariable;
-use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\level\Position;
 
-class PositionObjectVariable extends ObjectVariable {
+class PositionObjectVariable extends Vector3ObjectVariable {
 
-    public function __construct(Position $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? ($value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName()));
+    public function __construct(Position $value, ?string $str = null) {
+        parent::__construct($value, $str);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -31,11 +28,11 @@ class PositionObjectVariable extends ObjectVariable {
                 $variable = new StringVariable($position->x.",".$position->y.",".$position->z, "xyz");
                 break;
             case "position":
-                $variable = new PositionObjectVariable($position, "position");
+                $variable = new PositionObjectVariable($position);
                 break;
             case "level":
             case "world":
-                $variable = new LevelObjectVariable($position->level, "level", $position->level->getFolderName());
+                $variable = new LevelObjectVariable($position->level, $position->level->getFolderName());
                 break;
             default:
                 return null;
@@ -57,5 +54,10 @@ class PositionObjectVariable extends ObjectVariable {
             new DummyVariable($name.".xyz", DummyVariable::STRING),
             new DummyVariable($name.".level", DummyVariable::LEVEL)
         ]);
+    }
+
+    public function __toString(): string {
+        $value = $this->getPosition();
+        return $value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName();
     }
 }

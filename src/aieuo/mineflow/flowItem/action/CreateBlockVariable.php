@@ -75,7 +75,7 @@ class CreateBlockVariable extends FlowItem {
         }
 
         $variable = new BlockObjectVariable($block, $name);
-        $source->addVariable($variable);
+        $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();
     }

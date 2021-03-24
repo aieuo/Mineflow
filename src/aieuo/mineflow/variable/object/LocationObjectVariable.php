@@ -9,8 +9,8 @@ use pocketmine\level\Location;
 
 class LocationObjectVariable extends PositionObjectVariable {
 
-    public function __construct(Location $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? ($value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName()." (".$value->getYaw().",".$value->getPitch().")"));
+    public function __construct(Location $value, ?string $str = null) {
+        parent::__construct($value, $str);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -20,10 +20,10 @@ class LocationObjectVariable extends PositionObjectVariable {
         $location = $this->getLocation();
         switch ($index) {
             case "yaw":
-                $variable = new NumberVariable($location->yaw, "yaw");
+                $variable = new NumberVariable($location->yaw);
                 break;
             case "pitch":
-                $variable = new NumberVariable($location->pitch, "pitch");
+                $variable = new NumberVariable($location->pitch);
                 break;
             default:
                 return null;
@@ -42,5 +42,10 @@ class LocationObjectVariable extends PositionObjectVariable {
             new DummyVariable($name.".yaw", DummyVariable::NUMBER),
             new DummyVariable($name.".pitch", DummyVariable::NUMBER),
         ]);
+    }
+
+    public function __toString(): string {
+        $value = $this->getLocation();
+        return $value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName()." (".$value->getYaw().",".$value->getPitch().")";
     }
 }

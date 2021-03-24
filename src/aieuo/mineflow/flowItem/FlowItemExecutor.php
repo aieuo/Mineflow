@@ -168,11 +168,11 @@ class FlowItemExecutor {
         return $variables;
     }
 
-    public function addVariable(Variable $variable, bool $onlyThisScope = false): void {
-        $this->variables[$variable->getName()] = $variable;
+    public function addVariable(string $name, Variable $variable, bool $onlyThisScope = false): void {
+        $this->variables[$name] = $variable;
 
         if (!$onlyThisScope and $this->parent !== null) {
-            $this->parent->addVariable($variable);
+            $this->parent->addVariable($name, $variable);
         }
     }
 

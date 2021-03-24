@@ -63,7 +63,7 @@ class GetDate extends FlowItem {
         $resultName = $source->replaceVariables($this->getResultName());
 
         $date = date($format);
-        $source->addVariable(new StringVariable($date, $resultName));
+        $source->addVariable($resultName, new StringVariable($date));
         yield true;
         return $date;
     }

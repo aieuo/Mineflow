@@ -6,8 +6,8 @@ class BoolVariable extends Variable implements \JsonSerializable {
 
     public $type = Variable::BOOLEAN;
 
-    public function __construct(bool $value, string $name = "") {
-        parent::__construct($value, $name);
+    public function __construct(bool $value) {
+        parent::__construct($value);
     }
 
     public function getValue(): bool {
@@ -20,7 +20,8 @@ class BoolVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "name" => $this->getName(), "type" => $this->getType(), "value" => $this->getValue(),
+            "type" => $this->getType(),
+            "value" => $this->getValue(),
         ];
     }
 }

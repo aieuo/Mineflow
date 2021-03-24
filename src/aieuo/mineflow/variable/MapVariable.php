@@ -6,8 +6,12 @@ class MapVariable extends ListVariable {
 
     public $type = Variable::MAP;
 
-    public function addValue(Variable $value): void {
-        $this->value[$value->getName()] = $value;
+    /**
+     * @param int|string $key
+     * @param Variable $value
+     */
+    public function setValueAt($key, Variable $value): void {
+        $this->value[$key] = $value;
     }
 
     public function __toString(): string {

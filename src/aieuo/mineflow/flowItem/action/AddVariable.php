@@ -79,20 +79,20 @@ class AddVariable extends FlowItem {
 
         switch ($this->variableType) {
             case Variable::STRING:
-                $variable = new StringVariable($value, $name);
+                $variable = new StringVariable($value);
                 break;
             case Variable::NUMBER:
                 $this->throwIfInvalidNumber($value);
-                $variable = new NumberVariable((float)$value, $name);
+                $variable = new NumberVariable((float)$value);
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.error.recipe"));
         }
 
         if ($this->isLocal) {
-            $source->addVariable($variable);
+            $source->addVariable($name, $variable);
         } else {
-            Main::getVariableHelper()->add($variable);
+            Main::getVariableHelper()->add($name, $variable);
         }
         yield true;
     }

@@ -10,8 +10,8 @@ use pocketmine\block\Block;
 
 class BlockObjectVariable extends PositionObjectVariable {
 
-    public function __construct(Block $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? ($value->getId().":".$value->getDamage()));
+    public function __construct(Block $value, ?string $str = null) {
+        parent::__construct($value, $str);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -21,13 +21,13 @@ class BlockObjectVariable extends PositionObjectVariable {
         $block = $this->getBlock();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($block->getName(), "name");
+                $variable = new StringVariable($block->getName());
                 break;
             case "id":
-                $variable = new NumberVariable($block->getId(), "id");
+                $variable = new NumberVariable($block->getId());
                 break;
             case "damage":
-                $variable = new NumberVariable($block->getDamage(), "damage");
+                $variable = new NumberVariable($block->getDamage());
                 break;
             default:
                 return null;

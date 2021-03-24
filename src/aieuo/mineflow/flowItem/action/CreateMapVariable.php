@@ -82,7 +82,7 @@ class CreateMapVariable extends FlowItem {
         }, $this->getKey());
         $values = $this->getVariableValue();
 
-        $variable = new MapVariable([], $name);
+        $variable = new MapVariable([]);
         for ($i = 0, $iMax = count($keys); $i < $iMax; $i++) {
             $key = $keys[$i];
             $value = $values[$i] ?? "";
@@ -92,22 +92,20 @@ class CreateMapVariable extends FlowItem {
                 $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
                 if ($addVariable === null) {
                     $value = $helper->replaceVariables($value, $source->getVariables());
-                    $addVariable = Variable::create($helper->currentType($value), $key, $helper->getType($value));
-                } else {
-                    $addVariable->setName($key);
+                    $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
                 }
             } else {
                 $value = $helper->replaceVariables($value, $source->getVariables());
-                $addVariable = Variable::create($helper->currentType($value), $key, $helper->getType($value));
+                $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
             }
 
-            $variable->addValue($addVariable);
+            $variable->setValueAt($key, $addVariable);
         }
 
         if ($this->isLocal) {
-            $source->addVariable($variable);
+            $source->addVariable($name, $variable);
         } else {
-            $helper->add($variable);
+            $helper->add($name, $variable);
         }
         yield true;
     }

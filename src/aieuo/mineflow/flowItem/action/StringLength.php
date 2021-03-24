@@ -65,7 +65,7 @@ class StringLength extends FlowItem {
         $resultName = $source->replaceVariables($this->getResultName());
 
         $length = mb_strlen($value);
-        $source->addVariable(new NumberVariable($length, $resultName));
+        $source->addVariable($resultName, new NumberVariable($length));
         yield true;
         return $length;
     }

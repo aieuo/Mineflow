@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -59,14 +60,13 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $item = $this->getItem($source);
 
         $item->setDamage((int)$damage);
-        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleNumberInput("@action.setDamage.form.damage", "0", $this->getDamage(), true, 0),
         ];
     }

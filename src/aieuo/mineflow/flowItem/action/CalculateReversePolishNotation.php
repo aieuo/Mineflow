@@ -97,7 +97,7 @@ class CalculateReversePolishNotation extends FlowItem {
         }
         $result = $stack[0];
 
-        $source->addVariable(new NumberVariable($result, $resultName));
+        $source->addVariable($resultName, new NumberVariable($result));
         yield true;
         return $result;
     }

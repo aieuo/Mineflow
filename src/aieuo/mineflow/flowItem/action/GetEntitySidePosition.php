@@ -162,7 +162,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntitySide.direction.notFound", [$side]));
         }
 
-        $source->addVariable(new PositionObjectVariable(Position::fromObject($pos, $entity->getLevelNonNull()), $resultName));
+        $source->addVariable($resultName, new PositionObjectVariable(Position::fromObject($pos, $entity->getLevelNonNull())));
         yield true;
         return $this->getResultName();
     }

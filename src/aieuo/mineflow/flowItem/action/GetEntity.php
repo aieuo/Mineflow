@@ -77,13 +77,13 @@ class GetEntity extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntity.notFound", [$id]));
         }
         if ($entity instanceof Player) {
-            $variable = new PlayerObjectVariable($entity, $resultName, $entity->getName());
+            $variable = new PlayerObjectVariable($entity, $entity->getName());
         } elseif ($entity instanceof Human) {
-            $variable = new HumanObjectVariable($entity, $resultName, $entity->getNameTag());
+            $variable = new HumanObjectVariable($entity, $entity->getNameTag());
         } else {
-            $variable = new EntityObjectVariable($entity, $resultName, $entity->getNameTag());
+            $variable = new EntityObjectVariable($entity, $entity->getNameTag());
         }
-        $source->addVariable($variable);
+        $source->addVariable($resultName, $variable);
         yield true;
         return $this->getResultName();
     }

@@ -11,11 +11,10 @@ class ObjectVariable extends Variable {
 
     /**
      * @param object $value
-     * @param string $name
      * @param string|null $str
      */
-    public function __construct(object $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name);
+    public function __construct(object $value, ?string $str = null) {
+        parent::__construct($value);
         $this->showString = $str;
     }
 

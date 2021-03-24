@@ -59,7 +59,7 @@ class GetDistance extends FlowItem implements PositionFlowItem {
 
         $distance = $pos1->distance($pos2);
 
-        $source->addVariable(new NumberVariable($distance, $result));
+        $source->addVariable($result, new NumberVariable($distance));
         yield true;
         return $distance;
     }

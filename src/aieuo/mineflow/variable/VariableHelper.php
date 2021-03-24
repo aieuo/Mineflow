@@ -45,7 +45,7 @@ class VariableHelper {
         if (!$this->exists($name)) return null;
 
         $data = $this->file->get($name);
-        return $data instanceof Variable ? $data : Variable::create($data["value"], $data["name"], $data["type"]);
+        return $data instanceof Variable ? $data : Variable::create($data["value"], $data["type"]);
     }
 
     public function getNested(string $name, bool $save = false): ?Variable {
@@ -61,18 +61,14 @@ class VariableHelper {
         return $variable;
     }
 
-    /**
-     * @param Variable $variable
-     * @param bool $save
-     */
-    public function add(Variable $variable, bool $save = false): void {
+    public function add(string $name, Variable $variable, bool $save = false): void {
         if (!$save) {
-            $this->variables[$variable->getName()] = $variable;
+            $this->variables[$name] = $variable;
             return;
         }
 
-        if (!($variable instanceof \JsonSerializable) or empty($variable->getName())) return;
-        $this->file->set($variable->getName(), $variable);
+        if (!($variable instanceof \JsonSerializable) and $name !== "") return;
+        $this->file->set($name, $variable);
         $this->file->save();
     }
 
@@ -87,8 +83,8 @@ class VariableHelper {
     }
 
     public function saveAll(): void {
-        foreach ($this->variables as $variable) {
-            $this->add($variable, true);
+        foreach ($this->variables as $name => $variable) {
+            $this->add($name, $variable, true);
         }
         $this->variables = [];
     }

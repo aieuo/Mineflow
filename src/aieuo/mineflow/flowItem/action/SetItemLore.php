@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -61,14 +62,13 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         }, $this->getLore());
 
         $item->setLore($lore);
-        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleInput("@action.setLore.form.lore", "1;aiueo;abc", implode(";", $this->getLore()), false),
         ];
     }

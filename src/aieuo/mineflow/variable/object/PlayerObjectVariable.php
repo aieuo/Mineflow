@@ -9,8 +9,8 @@ use pocketmine\Player;
 
 class PlayerObjectVariable extends HumanObjectVariable {
 
-    public function __construct(Player $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? $value->getName());
+    public function __construct(Player $value, ?string $str = null) {
+        parent::__construct($value, $str ?? $value->getName());
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -20,7 +20,7 @@ class PlayerObjectVariable extends HumanObjectVariable {
         $player = $this->getPlayer();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($player->getName(), "name");
+                $variable = new StringVariable($player->getName());
                 break;
             default:
                 return null;

@@ -128,7 +128,7 @@ class FourArithmeticOperations extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
         }
 
-        $source->addVariable(new NumberVariable($result, $resultName));
+        $source->addVariable($resultName, new NumberVariable($result));
         yield true;
         return $result;
     }

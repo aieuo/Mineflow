@@ -18,7 +18,7 @@ class GetPi extends TypeGetMathVariable {
         $this->throwIfCannotExecute();
 
         $resultName = $source->replaceVariables($this->getResultName());
-        $source->addVariable(new NumberVariable(M_PI, $resultName));
+        $source->addVariable($resultName, new NumberVariable(M_PI));
         yield true;
         return M_PI;
     }

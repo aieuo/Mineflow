@@ -73,12 +73,12 @@ class CreateMapVariableFromJson extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), json_last_error_msg());
         }
 
-        $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value), $name);
+        $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value));
 
         if ($this->isLocal) {
-            $source->addVariable($variable);
+            $source->addVariable($name, $variable);
         } else {
-            $helper->add($variable);
+            $helper->add($name, $variable);
         }
         yield true;
     }

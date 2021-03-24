@@ -72,8 +72,8 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         $entity = new MineflowHuman($pos->getLevel(), $nbt);
         $entity->spawnToAll();
 
-        $variable = new HumanObjectVariable($entity, $resultName);
-        $source->addVariable($variable);
+        $variable = new HumanObjectVariable($entity);
+        $source->addVariable($resultName, $variable);
         yield true;
         return $this->getResultName();
     }

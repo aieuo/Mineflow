@@ -19,7 +19,7 @@ class GetE extends TypeGetMathVariable {
         $this->throwIfCannotExecute();
 
         $resultName = $source->replaceVariables($this->getResultName());
-        $source->addVariable(new NumberVariable(M_E, $resultName));
+        $source->addVariable($resultName, new NumberVariable(M_E));
         yield true;
         return M_E;
     }

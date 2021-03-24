@@ -82,7 +82,6 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         $this->throwIfInvalidNumber($level);
 
         $item->addEnchantment(new EnchantmentInstance($enchant, (int)$level));
-        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }

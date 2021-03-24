@@ -10,7 +10,6 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\Variable;
 
 class GetVariableNested extends FlowItem {
 
@@ -66,16 +65,12 @@ class GetVariableNested extends FlowItem {
         $variableName = $source->replaceVariables($this->getVariableName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($variableName);
-        if (!($variable instanceof Variable)) {
-            $variable = Main::getVariableHelper()->getNested($variableName);
-            if (!($variable instanceof Variable)) {
-                throw new InvalidFlowValueException($this->getName(), "§cUndefined variable: ".$variableName);
-            }
+        $variable = $source->getVariable($variableName) ?? Main::getVariableHelper()->getNested($variableName);
+        if ($variable === null) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$variableName]));
         }
 
-        $variable->setName($resultName);
-        $source->addVariable($variable);
+        $source->addVariable($resultName, $variable);
         yield true;
         return $this->getResultName();
     }

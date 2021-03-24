@@ -17,25 +17,25 @@ class EntityObjectVariable extends PositionObjectVariable {
         $entity = $this->getEntity();
         switch ($index) {
             case "id":
-                $variable = new NumberVariable($entity->getId(), "id");
+                $variable = new NumberVariable($entity->getId());
                 break;
             case "nameTag":
-                $variable = new StringVariable($entity->getNameTag(), "nameTag");
+                $variable = new StringVariable($entity->getNameTag());
                 break;
             case "health":
-                $variable = new NumberVariable($entity->getHealth(), "health");
+                $variable = new NumberVariable($entity->getHealth());
                 break;
             case "maxHealth":
-                $variable = new NumberVariable($entity->getMaxHealth(), "maxHealth");
+                $variable = new NumberVariable($entity->getMaxHealth());
                 break;
             case "yaw":
-                $variable = new NumberVariable($entity->getYaw(), "yaw");
+                $variable = new NumberVariable($entity->getYaw());
                 break;
             case "pitch":
-                $variable = new NumberVariable($entity->getPitch(), "pitch");
+                $variable = new NumberVariable($entity->getPitch());
                 break;
             case "direction":
-                $variable = new NumberVariable($entity->getDirection(), "direction");
+                $variable = new NumberVariable($entity->getDirection());
                 break;
             default:
                 return null;

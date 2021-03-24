@@ -68,7 +68,7 @@ class CreateListVariable extends FlowItem {
         $name = $source->replaceVariables($this->getVariableName());
         $values = $this->getVariableValue();
 
-        $variable = new ListVariable([], $name);
+        $variable = new ListVariable([]);
 
         foreach ($values as $value) {
             if ($value === "") continue;
@@ -76,20 +76,20 @@ class CreateListVariable extends FlowItem {
                 $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
                 if ($addVariable === null) {
                     $value = $helper->replaceVariables($value, $source->getVariables());
-                    $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
+                    $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
                 }
             } else {
                 $value = $helper->replaceVariables($value, $source->getVariables());
-                $addVariable = Variable::create($helper->currentType($value), "", $helper->getType($value));
+                $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
             }
 
-            $variable->addValue($addVariable);
+            $variable->appendValue($addVariable);
         }
 
         if ($this->isLocal) {
-            $source->addVariable($variable);
+            $source->addVariable($name, $variable);
         } else {
-            $helper->add($variable);
+            $helper->add($name, $variable);
         }
         yield true;
     }

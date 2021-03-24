@@ -9,8 +9,8 @@ use pocketmine\entity\Human;
 
 class HumanObjectVariable extends EntityObjectVariable {
 
-    public function __construct(Human $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? $value->getName());
+    public function __construct(Human $value, ?string $str = null) {
+        parent::__construct($value, $str ?? $value->getName());
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -20,10 +20,10 @@ class HumanObjectVariable extends EntityObjectVariable {
         $human = $this->getHuman();
         switch ($index) {
             case "hand":
-                $variable = new ItemObjectVariable($human->getInventory()->getItemInHand(), "hand");
+                $variable = new ItemObjectVariable($human->getInventory()->getItemInHand());
                 break;
             case "food":
-                $variable = new NumberVariable($human->getFood(), "food");
+                $variable = new NumberVariable($human->getFood());
                 break;
             default:
                 return null;

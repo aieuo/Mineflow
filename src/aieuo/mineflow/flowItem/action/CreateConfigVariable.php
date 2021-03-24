@@ -67,8 +67,8 @@ class CreateConfigVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
 
-        $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file), $name);
-        $source->addVariable($variable);
+        $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file));
+        $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();
     }

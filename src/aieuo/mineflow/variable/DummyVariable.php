@@ -18,6 +18,8 @@ class DummyVariable extends Variable {
 
     public $type = Variable::DUMMY;
 
+    /** @var string  */
+    protected $name;
     /* @var string */
     private $description;
     /* @var string */
@@ -41,9 +43,18 @@ class DummyVariable extends Variable {
     public const SCOREBOARD = "scoreboard";
 
     public function __construct(string $name = "", string $valueType = "", string $description = "") {
+        $this->name = $name;
         $this->valueType = $valueType;
         $this->description = $description;
-        parent::__construct("", $name);
+        parent::__construct("");
+    }
+
+    public function setName(string $name): void {
+        $this->name = $name;
+    }
+
+    public function getName(): string {
+        return $this->name;
     }
 
     public function getDescription(): string {
@@ -55,7 +66,7 @@ class DummyVariable extends Variable {
     }
 
     public function toStringVariable(): StringVariable {
-        return new StringVariable($this->getName(), $this->getValue());
+        return new StringVariable($this->getValue());
     }
 
     /**

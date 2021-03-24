@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -57,14 +58,13 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         $item = $this->getItem($source);
 
         $item->setCustomName($name);
-        $source->addVariable(new ItemObjectVariable($item, $this->getItemVariableName()));
         yield true;
         return $this->getItemVariableName();
     }
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName(), true),
         ];
     }

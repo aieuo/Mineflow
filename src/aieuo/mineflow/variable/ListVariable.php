@@ -20,16 +20,24 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     /**
      * @param Variable[] $value
-     * @param string $name
      * @param string|null $str
      */
-    public function __construct(array $value, string $name = "", ?string $str = "") {
-        parent::__construct($value, $name);
+    public function __construct(array $value, ?string $str = "") {
+        parent::__construct($value);
         $this->showString = $str;
     }
 
-    public function addValue(Variable $value): void {
+    public function appendValue(Variable $value): void {
         $this->value[] = $value;
+    }
+
+    /**
+     * @param int|string $key
+     * @param Variable $value
+     */
+    public function setValueAt($key, Variable $value): void {
+        $this->value[(int)$key] = $value;
+        $this->value = array_values($this->value);
     }
 
     public function removeValue(Variable $value): void {
@@ -47,7 +55,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     public function callMethod(string $name, array $parameters = []): ?Variable {
         switch ($name) {
             case "count":
-                return new NumberVariable(count($this->value), $name);
+                return new NumberVariable(count($this->value));
         }
         return null;
     }
@@ -72,7 +80,6 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "name" => $this->getName(),
             "type" => $this->getType(),
             "value" => $this->getValue(),
         ];

@@ -59,8 +59,8 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         /** @var Position $position */
         $block = $position->level->getBlock($position);
 
-        $variable = new BlockObjectVariable($block, $result);
-        $source->addVariable($variable);
+        $variable = new BlockObjectVariable($block);
+        $source->addVariable($result, $variable);
         yield true;
         return $this->getResultName();
     }

@@ -73,7 +73,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $block = $player->getTargetBlock((int)$max);
-        $source->addVariable(new BlockObjectVariable($block, $result));
+        $source->addVariable($result, new BlockObjectVariable($block));
         yield true;
         return $this->getResultName();
     }

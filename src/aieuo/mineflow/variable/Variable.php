@@ -14,27 +14,25 @@ abstract class Variable {
     public const OBJECT = 4;
     public const BOOLEAN = 5;
 
-    /** @var string */
-    protected $name;
     /** @var string|int|Variable[]|object */
     protected $value;
     /** @var int */
     public $type;
 
-    public static function create($value, string $name = "", int $type = self::STRING): ?self {
+    public static function create($value, int $type = self::STRING): ?self {
         $variable = null;
         switch ($type) {
             case self::STRING:
-                $variable = new StringVariable((string)$value, $name);
+                $variable = new StringVariable((string)$value);
                 break;
             case self::NUMBER:
-                $variable = new NumberVariable((float)$value, $name);
+                $variable = new NumberVariable((float)$value);
                 break;
             case self::LIST:
-                $variable = new ListVariable($value, $name);
+                $variable = new ListVariable($value);
                 break;
             case self::MAP:
-                $variable = new MapVariable($value, $name);
+                $variable = new MapVariable($value);
                 break;
             default:
                 return null;
@@ -44,19 +42,9 @@ abstract class Variable {
 
     /**
      * @param mixed $value
-     * @param string $name
      */
-    public function __construct($value, string $name = "") {
+    public function __construct($value) {
         $this->value = $value;
-        $this->name = $name;
-    }
-
-    public function setName(string $name): void {
-        $this->name = $name;
-    }
-
-    public function getName(): string {
-        return $this->name;
     }
 
     /**
