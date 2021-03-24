@@ -114,7 +114,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
 
         for ($i = $start; $i <= $end; $i += $fluctuation) {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
-                $counterName => new NumberVariable($i, $counterName)
+                $counterName => new NumberVariable($i)
             ], $source))->executeGenerator();
         }
         $source->resume();

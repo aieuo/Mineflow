@@ -48,11 +48,11 @@ class FormTrigger extends Trigger {
                     "button1" => new MapVariable([
                         "selected" => new StringVariable($data ? "true" : "false"),
                         "text" => new StringVariable($form->getButton1Text()),
-                    ], "button1", $form->getButton1Text()),
+                    ],  $form->getButton1Text()),
                     "button2" => new MapVariable([
                         "selected" => new StringVariable($data ? "false" : "true"),
                         "text" => new StringVariable($form->getButton2Text()),
-                    ], "button2", $form->getButton2Text()),
+                    ], $form->getButton2Text()),
                 ], "form");
                 break;
             case $form instanceof ListForm:
@@ -90,8 +90,8 @@ class FormTrigger extends Trigger {
                     }
                 }
                 $variable = new MapVariable([
-                    "data" => new ListVariable($dataVariables, "data"),
-                    "selected" => new ListVariable($dropdownVariables, "selected"),
+                    "data" => new ListVariable($dataVariables),
+                    "selected" => new ListVariable($dropdownVariables),
                 ], "form");
                 break;
             default:

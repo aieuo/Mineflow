@@ -100,7 +100,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
         for ($i = (int)$start; $i < $end; $i++) {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
-                $name => new NumberVariable($i, $name)
+                $name => new NumberVariable($i)
             ], $source))->executeGenerator();
         }
         $source->resume();

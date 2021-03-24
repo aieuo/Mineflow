@@ -16,8 +16,8 @@ class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
         /** @var EntityLevelChangeEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target);
-        $variables["origin_level"] = new LevelObjectVariable($event->getOrigin(), "origin_level");
-        $variables["target_level"] = new LevelObjectVariable($event->getTarget(), "target_level");
+        $variables["origin_level"] = new LevelObjectVariable($event->getOrigin());
+        $variables["target_level"] = new LevelObjectVariable($event->getTarget());
         return $variables;
     }
 

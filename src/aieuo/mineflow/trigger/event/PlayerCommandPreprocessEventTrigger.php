@@ -16,7 +16,7 @@ class PlayerCommandPreprocessEventTrigger extends EventTrigger {
         /** @var PlayerCommandPreprocessEvent $event */
         $target = $event->getPlayer();
         $variables = array_merge(DefaultVariables::getCommandVariables(substr($event->getMessage(), 1)), DefaultVariables::getPlayerVariables($target));
-        $variables["message"] = new StringVariable($event->getMessage(), "message");
+        $variables["message"] = new StringVariable($event->getMessage());
         return $variables;
     }
 

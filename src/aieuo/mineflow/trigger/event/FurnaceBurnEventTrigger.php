@@ -14,7 +14,7 @@ class FurnaceBurnEventTrigger extends EventTrigger {
     public function getVariables($event): array {
         /** @var FurnaceBurnEvent $event */
         $fuel = $event->getFuel();
-        return ["fuel" => new ItemObjectVariable($fuel, "fuel"),];
+        return ["fuel" => new ItemObjectVariable($fuel),];
     }
 
     public function getVariablesDummy(): array {

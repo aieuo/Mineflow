@@ -18,11 +18,11 @@ class InventoryPickupItemEventTrigger extends EventTrigger {
         /** @var InventoryPickupItemEvent $event */
         $inventory = $event->getInventory();
         if ($inventory instanceof PlayerInventory) {
-            $variables = array_merge($variables, DefaultVariables::getPlayerVariables($inventory->getHolder()));
+            $variables = array_merge($variables, DefaultVariables::getEntityVariables($inventory->getHolder()));
         }
         $item = $event->getItem()->getItem();
         return array_merge($variables, [
-            "item" => new ItemObjectVariable($item, "item", $item->__toString()),
+            "item" => new ItemObjectVariable($item),
         ]);
     }
 

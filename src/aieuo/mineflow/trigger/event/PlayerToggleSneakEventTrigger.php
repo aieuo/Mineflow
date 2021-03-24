@@ -16,7 +16,7 @@ class PlayerToggleSneakEventTrigger extends EventTrigger {
         /** @var PlayerToggleSneakEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
-        $variables["state"] = new StringVariable($event->isSneaking() ? "true" : "false", "state");
+        $variables["state"] = new StringVariable($event->isSneaking() ? "true" : "false");
         return $variables;
     }
 

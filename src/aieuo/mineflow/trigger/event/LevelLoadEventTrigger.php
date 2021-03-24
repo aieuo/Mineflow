@@ -13,7 +13,7 @@ class LevelLoadEventTrigger extends EventTrigger {
 
     public function getVariables($event): array {
         /** @var LevelLoadEvent $event */
-        return ["level" => new LevelObjectVariable($event->getLevel(), "level")];
+        return ["level" => new LevelObjectVariable($event->getLevel())];
     }
 
     public function getVariablesDummy(): array {

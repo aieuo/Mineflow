@@ -340,7 +340,7 @@ class VariableHelper {
                 if (array_values($value) === $value) {
                     $result[$key] = new ListVariable($this->toVariableArray($value));
                 } else {
-                    $result[$key] = new MapVariable($this->toVariableArray($value), $key);
+                    $result[$key] = new MapVariable($this->toVariableArray($value));
                 }
             } elseif (is_numeric($value)) {
                 $result[$key] = new NumberVariable((float)$value);

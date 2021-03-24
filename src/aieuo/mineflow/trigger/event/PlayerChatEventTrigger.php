@@ -16,7 +16,7 @@ class PlayerChatEventTrigger extends EventTrigger {
         /** @var PlayerChatEvent $event */
         $target = $event->getPlayer();
         $variables =  DefaultVariables::getPlayerVariables($target);
-        $variables["message"] = new StringVariable($event->getMessage(), "message");
+        $variables["message"] = new StringVariable($event->getMessage());
         return $variables;
     }
 

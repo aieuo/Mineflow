@@ -19,32 +19,32 @@ class DefaultVariables {
             return new StringVariable($player->getName());
         }, array_values($server->getOnlinePlayers()));
         return [
-            "server_name" => new StringVariable($server->getName(), "server_name"),
-            "microtime" => new NumberVariable(microtime(true), "microtime"),
-            "time" => new StringVariable(date("H:i:s"), "time"),
-            "date" => new StringVariable(date("m/d"), "date"),
-            "default_level" => new StringVariable($server->getDefaultLevel()->getFolderName(), "default_level"),
-            "onlines" => new ListVariable($onlines, "onlines"),
-            "ops" => new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true)), "ops"),
+            "server_name" => new StringVariable($server->getName()),
+            "microtime" => new NumberVariable(microtime(true)),
+            "time" => new StringVariable(date("H:i:s")),
+            "date" => new StringVariable(date("m/d")),
+            "default_level" => new StringVariable($server->getDefaultLevel()->getFolderName()),
+            "onlines" => new ListVariable($onlines),
+            "ops" => new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true))),
         ];
     }
 
     public static function getEntityVariables(Entity $target, string $name = "target"): array {
         if ($target instanceof Player) return self::getPlayerVariables($target, $name);
-        return [$name => new EntityObjectVariable($target, $name, $target->getNameTag())];
+        return [$name => new EntityObjectVariable($target, $target->getNameTag())];
     }
 
     public static function getPlayerVariables(Player $target, string $name = "target"): array {
-        return [$name => new PlayerObjectVariable($target, $name, $target->getName())];
+        return [$name => new PlayerObjectVariable($target, $target->getName())];
     }
 
     public static function getBlockVariables(Block $block, string $name = "block"): array {
-        $variables = [$name => new BlockObjectVariable($block, $name, $block->getId().":".$block->getDamage())];
+        $variables = [$name => new BlockObjectVariable($block, $block->getId().":".$block->getDamage())];
         $tile = $block->level->getTile($block);
         if ($tile instanceof Sign) {
             $variables["sign_lines"] = new ListVariable(array_map(function (string $text) {
                 return new StringVariable($text);
-            }, $tile->getText()), "sign_lines");
+            }, $tile->getText()));
         }
         return $variables;
     }
@@ -52,8 +52,8 @@ class DefaultVariables {
     public static function getCommandVariables(string $command): array {
         $commands = explode(" ", $command);
         return [
-            "cmd" => new StringVariable(array_shift($commands), "cmd"),
-            "args" => new ListVariable(array_map(function (string $cmd) { return new StringVariable($cmd); }, $commands), "args"),
+            "cmd" => new StringVariable(array_shift($commands)),
+            "args" => new ListVariable(array_map(function (string $cmd) { return new StringVariable($cmd); }, $commands)),
         ];
     }
 }

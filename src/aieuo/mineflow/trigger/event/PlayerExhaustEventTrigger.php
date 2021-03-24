@@ -16,8 +16,8 @@ class PlayerExhaustEventTrigger extends EventTrigger {
         /** @var PlayerExhaustEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getEntityVariables($target);
-        $variables["amount"] = new NumberVariable($event->getAmount(), "amount");
-        $variables["cause"] = new NumberVariable($event->getCause(), "cause");
+        $variables["amount"] = new NumberVariable($event->getAmount());
+        $variables["cause"] = new NumberVariable($event->getCause());
         return $variables;
     }
 

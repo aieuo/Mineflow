@@ -15,8 +15,8 @@ class PlayerMoveEventTrigger extends PlayerEventTrigger {
     public function getVariables($event): array {
         /** @var PlayerMoveEvent $event */
         $variables = [
-            "move_from" => new LocationObjectVariable($event->getFrom(), "move_from"),
-            "move_to" => new LocationObjectVariable($event->getTo(), "move_to")
+            "move_from" => new LocationObjectVariable($event->getFrom()),
+            "move_to" => new LocationObjectVariable($event->getTo())
         ];
         $target = $event->getPlayer();
         return array_merge($variables, DefaultVariables::getPlayerVariables($target));

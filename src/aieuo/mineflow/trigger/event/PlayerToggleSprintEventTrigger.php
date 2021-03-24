@@ -16,7 +16,7 @@ class PlayerToggleSprintEventTrigger extends EventTrigger {
         /** @var PlayerToggleSprintEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
-        $variables["state"] = new StringVariable($event->isSprinting() ? "true" : "false", "state");
+        $variables["state"] = new StringVariable($event->isSprinting() ? "true" : "false");
         return $variables;
     }
 

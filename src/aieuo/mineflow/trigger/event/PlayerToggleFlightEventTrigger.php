@@ -16,7 +16,7 @@ class PlayerToggleFlightEventTrigger extends EventTrigger {
         /** @var PlayerToggleFlightEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
-        $variables["state"] = new StringVariable($event->isFlying() ? "true" : "false", "state");
+        $variables["state"] = new StringVariable($event->isFlying() ? "true" : "false");
         return $variables;
     }
 

@@ -107,10 +107,10 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             ->setContent($text)
             ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($source, $resultName) {
                 $variable = new MapVariable([
-                    "id" => new NumberVariable($data, "id"),
-                    "text" => new StringVariable($this->options[$data], "text"),
-                ], $resultName, $this->options[$data]);
-                $source->addVariable($variable);
+                    "id" => new NumberVariable($data),
+                    "text" => new StringVariable($this->options[$data]),
+                ], $this->options[$data]);
+                $source->addVariable($resultName, $variable);
                 $source->resume();
             })->onClose(function (Player $player) use ($source, $text, $resultName) {
                 if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);

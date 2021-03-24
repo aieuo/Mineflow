@@ -227,7 +227,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
         }
         if ($event !== null) {
-            $variables["event"] = new EventObjectVariable($event, "event");
+            $variables["event"] = new EventObjectVariable($event);
         }
 
         $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($returnExecutor) {

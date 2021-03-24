@@ -17,7 +17,7 @@ class PlayerItemConsumeEventTrigger extends EventTrigger {
         $target = $event->getPlayer();
         $item = $event->getItem();
         return array_merge(DefaultVariables::getPlayerVariables($target), [
-            "item" => new ItemObjectVariable($item, "item", $item->__toString()),
+            "item" => new ItemObjectVariable($item),
         ]);
     }
 

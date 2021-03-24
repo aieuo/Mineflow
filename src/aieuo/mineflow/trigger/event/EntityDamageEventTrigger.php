@@ -17,8 +17,8 @@ class EntityDamageEventTrigger extends PlayerEventTrigger {
         /** @var EntityDamageEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target, "target");
-        $variables["damage"] = new NumberVariable($event->getBaseDamage(), "damage");
-        $variables["cause"] = new NumberVariable($event->getCause(), "cause");
+        $variables["damage"] = new NumberVariable($event->getBaseDamage());
+        $variables["cause"] = new NumberVariable($event->getCause());
         if ($event instanceof EntityDamageByEntityEvent) {
             $damager = $event->getDamager();
             $variables = array_merge($variables, DefaultVariables::getEntityVariables($damager, "damager"));
