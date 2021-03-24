@@ -93,6 +93,8 @@ class GetVariableNested extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::UNKNOWN)];
+        return [
+            $this->getResultName() => new DummyVariable(DummyVariable::UNKNOWN)
+        ];
     }
 }

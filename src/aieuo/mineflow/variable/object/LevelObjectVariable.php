@@ -39,11 +39,11 @@ class LevelObjectVariable extends ObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".name", DummyVariable::STRING),
-            new DummyVariable($name.".folderName", DummyVariable::STRING),
-            new DummyVariable($name.".id", DummyVariable::NUMBER),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "name" => new DummyVariable(DummyVariable::STRING),
+            "folderName" => new DummyVariable(DummyVariable::STRING),
+            "id" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
 }

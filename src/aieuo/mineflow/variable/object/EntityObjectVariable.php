@@ -49,15 +49,15 @@ class EntityObjectVariable extends PositionObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".id", DummyVariable::NUMBER),
-            new DummyVariable($name.".nameTag", DummyVariable::STRING),
-            new DummyVariable($name.".health", DummyVariable::NUMBER),
-            new DummyVariable($name.".maxHealth", DummyVariable::NUMBER),
-            new DummyVariable($name.".yaw", DummyVariable::NUMBER),
-            new DummyVariable($name.".pitch", DummyVariable::NUMBER),
-            new DummyVariable($name.".direction", DummyVariable::NUMBER),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "id" => new DummyVariable(DummyVariable::NUMBER),
+            "nameTag" => new DummyVariable(DummyVariable::STRING),
+            "health" => new DummyVariable(DummyVariable::NUMBER),
+            "maxHealth" => new DummyVariable(DummyVariable::NUMBER),
+            "yaw" => new DummyVariable(DummyVariable::NUMBER),
+            "pitch" => new DummyVariable(DummyVariable::NUMBER),
+            "direction" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
 }

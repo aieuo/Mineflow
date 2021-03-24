@@ -55,10 +55,10 @@ abstract class Trigger implements \JsonSerializable {
     }
 
     /**
-     * @return DummyVariable[]
+     * @return array<string, DummyVariable>
      */
     public function getVariablesDummy(): array {
-        return []; // [$variable];
+        return []; // ["variable name" => $variable];
     }
 
     public function jsonSerialize(): array {

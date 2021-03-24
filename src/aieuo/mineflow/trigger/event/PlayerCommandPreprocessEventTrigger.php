@@ -22,10 +22,10 @@ class PlayerCommandPreprocessEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "message" => new DummyVariable("message", DummyVariable::STRING),
-            "cmd" => new DummyVariable("cmd", DummyVariable::STRING),
-            "args" => new DummyVariable("args", DummyVariable::LIST),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "message" => new DummyVariable(DummyVariable::STRING),
+            "cmd" => new DummyVariable(DummyVariable::STRING),
+            "args" => new DummyVariable(DummyVariable::LIST),
         ];
     }
 }

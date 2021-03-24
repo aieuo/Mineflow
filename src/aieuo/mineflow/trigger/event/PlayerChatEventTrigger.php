@@ -22,8 +22,8 @@ class PlayerChatEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "message" => new DummyVariable("message", DummyVariable::STRING),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "message" => new DummyVariable(DummyVariable::STRING),
         ];
     }
 }

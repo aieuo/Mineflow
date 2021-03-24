@@ -37,10 +37,10 @@ class LocationObjectVariable extends PositionObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".yaw", DummyVariable::NUMBER),
-            new DummyVariable($name.".pitch", DummyVariable::NUMBER),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "yaw" => new DummyVariable(DummyVariable::NUMBER),
+            "pitch" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
 

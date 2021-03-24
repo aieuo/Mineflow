@@ -22,8 +22,8 @@ class PlayerToggleSprintEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "state" => new DummyVariable("state", DummyVariable::BOOLEAN),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "state" => new DummyVariable(DummyVariable::BOOLEAN),
         ];
     }
 }

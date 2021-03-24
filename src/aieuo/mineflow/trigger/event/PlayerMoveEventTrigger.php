@@ -24,9 +24,9 @@ class PlayerMoveEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "move_from" => new DummyVariable("move_from", DummyVariable::LOCATION),
-            "move_to" => new DummyVariable("move_to", DummyVariable::LOCATION),
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
+            "move_from" => new DummyVariable(DummyVariable::LOCATION),
+            "move_to" => new DummyVariable(DummyVariable::LOCATION),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
         ];
     }
 }

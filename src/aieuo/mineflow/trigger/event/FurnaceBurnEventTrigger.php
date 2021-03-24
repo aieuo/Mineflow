@@ -18,6 +18,8 @@ class FurnaceBurnEventTrigger extends EventTrigger {
     }
 
     public function getVariablesDummy(): array {
-        return ["fuel" => new DummyVariable("fuel". DummyVariable::ITEM)];
+        return [
+            "fuel" => new DummyVariable(DummyVariable::ITEM)
+        ];
     }
 }

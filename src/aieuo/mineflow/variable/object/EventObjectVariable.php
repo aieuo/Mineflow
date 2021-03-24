@@ -38,10 +38,10 @@ class EventObjectVariable extends ObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".name", DummyVariable::STRING),
-            new DummyVariable($name.".isCanceled", DummyVariable::STRING),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "name" => new DummyVariable(DummyVariable::STRING),
+            "isCanceled" => new DummyVariable(DummyVariable::STRING),
         ]);
     }
 }

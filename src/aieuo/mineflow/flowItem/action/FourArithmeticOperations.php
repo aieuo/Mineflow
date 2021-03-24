@@ -154,6 +154,8 @@ class FourArithmeticOperations extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::NUMBER)];
+        return [
+            $this->getResultName() => new DummyVariable(DummyVariable::NUMBER)
+        ];
     }
 }

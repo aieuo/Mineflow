@@ -98,6 +98,8 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::BLOCK)];
+        return [
+            $this->getResultName() => new DummyVariable(DummyVariable::BLOCK)
+        ];
     }
 }

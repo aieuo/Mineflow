@@ -102,6 +102,8 @@ class CreateBlockVariable extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getVariableName(), DummyVariable::BLOCK, $this->getBlockId())];
+        return [
+            $this->getVariableName() => new DummyVariable(DummyVariable::BLOCK, $this->getBlockId())
+        ];
     }
 }

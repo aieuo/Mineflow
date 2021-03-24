@@ -37,10 +37,9 @@ class ObjectVariable extends Variable {
     }
 
     /**
-     * @param string $name
-     * @return DummyVariable[]
+     * @return array<string, DummyVariable>
      */
-    public static function getValuesDummy(string $name): array {
+    public static function getValuesDummy(): array {
         return [];
     }
 }

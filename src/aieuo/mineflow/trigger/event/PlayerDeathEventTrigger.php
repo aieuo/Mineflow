@@ -29,8 +29,8 @@ class PlayerDeathEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "killer" => new DummyVariable("killer", DummyVariable::PLAYER),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "killer" => new DummyVariable(DummyVariable::PLAYER),
         ];
     }
 }

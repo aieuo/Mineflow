@@ -28,10 +28,10 @@ class EntityDamageEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "damage" => new DummyVariable("damage", DummyVariable::NUMBER),
-            "cause" => new DummyVariable("cause", DummyVariable::NUMBER),
-            "damager" => new DummyVariable("damager", DummyVariable::PLAYER),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "damage" => new DummyVariable(DummyVariable::NUMBER),
+            "cause" => new DummyVariable(DummyVariable::NUMBER),
+            "damager" => new DummyVariable(DummyVariable::PLAYER),
         ];
     }
 }

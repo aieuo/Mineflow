@@ -19,8 +19,6 @@ class DummyVariable extends Variable {
 
     public $type = Variable::DUMMY;
 
-    /** @var string  */
-    protected $name;
     /* @var string */
     private $description;
     /* @var string */
@@ -45,19 +43,10 @@ class DummyVariable extends Variable {
     public const VECTOR3 = "vector3";
     public const SCOREBOARD = "scoreboard";
 
-    public function __construct(string $name = "", string $valueType = "", string $description = "") {
-        $this->name = $name;
+    public function __construct(string $valueType = "", string $description = "") {
         $this->valueType = $valueType;
         $this->description = $description;
         parent::__construct("");
-    }
-
-    public function setName(string $name): void {
-        $this->name = $name;
-    }
-
-    public function getName(): string {
-        return $this->name;
     }
 
     public function getDescription(): string {
@@ -73,34 +62,34 @@ class DummyVariable extends Variable {
     }
 
     /**
-     * @return DummyVariable[]
+     * @return array<string, DummyVariable>
      */
     public function getObjectValuesDummy(): array {
         switch ($this->getValueType()) {
             case self::BLOCK:
-                return BlockObjectVariable::getValuesDummy($this->getName());
+                return BlockObjectVariable::getValuesDummy();
             case self::CONFIG:
-                return ConfigObjectVariable::getValuesDummy($this->getName());
+                return ConfigObjectVariable::getValuesDummy();
             case self::ENTITY:
-                return EntityObjectVariable::getValuesDummy($this->getName());
+                return EntityObjectVariable::getValuesDummy();
             case self::EVENT:
-                return EventObjectVariable::getValuesDummy($this->getName());
+                return EventObjectVariable::getValuesDummy();
             case self::HUMAN:
-                return HumanObjectVariable::getValuesDummy($this->getName());
+                return HumanObjectVariable::getValuesDummy();
             case self::ITEM:
-                return ItemObjectVariable::getValuesDummy($this->getName());
+                return ItemObjectVariable::getValuesDummy();
             case self::LEVEL:
-                return LevelObjectVariable::getValuesDummy($this->getName());
+                return LevelObjectVariable::getValuesDummy();
             case self::LOCATION:
-                return LocationObjectVariable::getValuesDummy($this->getName());
+                return LocationObjectVariable::getValuesDummy();
             case self::PLAYER:
-                return PlayerObjectVariable::getValuesDummy($this->getName());
+                return PlayerObjectVariable::getValuesDummy();
             case self::POSITION:
-                return PositionObjectVariable::getValuesDummy($this->getName());
+                return PositionObjectVariable::getValuesDummy();
             case self::VECTOR3:
-                return Vector3ObjectVariable::getValuesDummy($this->getName());
+                return Vector3ObjectVariable::getValuesDummy();
             case self::SCOREBOARD:
-                return ScoreboardObjectVariable::getValuesDummy($this->getName());
+                return ScoreboardObjectVariable::getValuesDummy();
             default:
                 return [];
         }

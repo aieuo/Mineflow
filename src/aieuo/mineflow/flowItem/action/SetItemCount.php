@@ -6,13 +6,11 @@ use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
 
 class SetItemCount extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -79,9 +77,5 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
 
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getCount()];
-    }
-
-    public function getAddingVariables(): array {
-        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
     }
 }

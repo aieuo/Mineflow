@@ -42,12 +42,12 @@ class Vector3ObjectVariable extends ObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".x", DummyVariable::NUMBER),
-            new DummyVariable($name.".y", DummyVariable::NUMBER),
-            new DummyVariable($name.".z", DummyVariable::NUMBER),
-            new DummyVariable($name.".xyz", DummyVariable::STRING),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "x" => new DummyVariable(DummyVariable::NUMBER),
+            "y" => new DummyVariable(DummyVariable::NUMBER),
+            "z" => new DummyVariable(DummyVariable::NUMBER),
+            "xyz" => new DummyVariable(DummyVariable::STRING),
         ]);
     }
 

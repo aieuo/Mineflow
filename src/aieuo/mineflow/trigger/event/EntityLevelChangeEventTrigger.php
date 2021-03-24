@@ -23,9 +23,9 @@ class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "origin_level" => new DummyVariable("origin_level", DummyVariable::LEVEL),
-            "target_level" => new DummyVariable("target_level", DummyVariable::LEVEL),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "origin_level" => new DummyVariable(DummyVariable::LEVEL),
+            "target_level" => new DummyVariable(DummyVariable::LEVEL),
         ];
     }
 }

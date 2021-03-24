@@ -37,10 +37,10 @@ class HumanObjectVariable extends EntityObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".hand", DummyVariable::ITEM),
-            new DummyVariable($name.".food", DummyVariable::NUMBER),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "hand" => new DummyVariable(DummyVariable::ITEM),
+            "food" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
 }

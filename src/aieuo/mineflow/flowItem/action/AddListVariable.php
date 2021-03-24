@@ -118,6 +118,8 @@ class AddListVariable extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getVariableName(), DummyVariable::LIST, "[".implode(",", $this->getVariableValue())."]")];
+        return [
+            $this->getVariableName() => new DummyVariable(DummyVariable::LIST, "[".implode(",", $this->getVariableValue())."]")
+        ];
     }
 }

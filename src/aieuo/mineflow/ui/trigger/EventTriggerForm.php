@@ -23,8 +23,8 @@ class EventTriggerForm extends TriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent((string)$trigger)
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(EventTriggerList::get($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var) {
-                $form->appendContent("{".$var->getName()."} (".$var->getValueType().")");
+            ->forEach(EventTriggerList::get($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+                $form->appendContent("{".$name."} (type=".$var->getValueType().")");
             })->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
@@ -68,8 +68,8 @@ class EventTriggerForm extends TriggerForm {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
             ->setContent((string)EventTrigger::create($eventName))
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(EventTriggerList::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var) {
-                $form->appendContent("{".$var->getName()."} (type = ".$var->getValueType().")");
+            ->forEach(EventTriggerList::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+                $form->appendContent("{".$name."} (type = ".$var->getValueType().")");
             })->addButtons([
                 new Button("@form.back"),
                 new Button("@form.add"),

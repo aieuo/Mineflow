@@ -132,6 +132,8 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
     public function getAddingVariables(): array {
         $desc = $this->getPositionVariableName()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
-        return [new DummyVariable($this->getResultName(), DummyVariable::POSITION, $desc)];
+        return [
+            $this->getResultName() => new DummyVariable(DummyVariable::POSITION, $desc)
+        ];
     }
 }

@@ -98,6 +98,8 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::ENTITY, $this->getPlayerVariableName())];
+        return [
+            $this->getResultName() => new DummyVariable(DummyVariable::ENTITY, $this->getPlayerVariableName())
+        ];
     }
 }

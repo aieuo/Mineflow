@@ -34,10 +34,10 @@ class PositionObjectVariable extends Vector3ObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".level", DummyVariable::LEVEL),
-            new DummyVariable($name.".world", DummyVariable::LEVEL),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "level" => new DummyVariable(DummyVariable::LEVEL),
+            "world" => new DummyVariable(DummyVariable::LEVEL),
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\Player;
@@ -116,6 +117,10 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         }
     }
 
+    /**
+     * @param array<string, DummyVariable> $variables
+     * @return Element[]
+     */
     public function getEditFormElements(array $variables): array {
         return [];
     }
@@ -151,7 +156,7 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
     }
 
     /**
-     * @return DummyVariable[]
+     * @return array<string, DummyVariable>
      */
     public function getAddingVariables(): array {
         return [];

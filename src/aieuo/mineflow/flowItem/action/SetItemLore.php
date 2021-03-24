@@ -11,7 +11,6 @@ use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
 
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -91,6 +90,8 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)];
+        return [
+            new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)
+        ];
     }
 }

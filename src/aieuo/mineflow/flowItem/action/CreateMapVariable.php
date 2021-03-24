@@ -139,6 +139,8 @@ class CreateMapVariable extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getVariableName(), DummyVariable::MAP)];
+        return [
+            $this->getVariableName() => new DummyVariable(DummyVariable::MAP)
+        ];
     }
 }

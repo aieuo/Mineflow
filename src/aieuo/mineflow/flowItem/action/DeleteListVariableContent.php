@@ -106,6 +106,8 @@ class DeleteListVariableContent extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getVariableName(), DummyVariable::LIST)];
+        return [
+            $this->getVariableName() => new DummyVariable(DummyVariable::LIST)
+        ];
     }
 }

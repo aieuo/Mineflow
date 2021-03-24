@@ -28,8 +28,8 @@ class InventoryPickupItemEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "item" => new DummyVariable("item", DummyVariable::ITEM),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "item" => new DummyVariable(DummyVariable::ITEM),
         ];
     }
 }

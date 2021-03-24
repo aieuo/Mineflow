@@ -18,7 +18,7 @@ class LevelLoadEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "level" => new DummyVariable("level", DummyVariable::LEVEL),
+            "level" => new DummyVariable(DummyVariable::LEVEL),
         ];
     }
 }

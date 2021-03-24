@@ -262,7 +262,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
-        $variables = [new DummyVariable("target", DummyVariable::PLAYER)];
+        $variables = [
+            "target" => new DummyVariable(DummyVariable::PLAYER)
+        ];
+
         $add = [];
         foreach ($this->getTriggers() as $trigger) {
             $add[] = $trigger->getVariablesDummy();

@@ -88,6 +88,8 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
     }
 
     public function getAddingVariables(): array {
-        return [new DummyVariable($this->getResultName(), DummyVariable::LIST)];
+        return [
+            $this->getResultName() => new DummyVariable(DummyVariable::LIST)
+        ];
     }
 }
