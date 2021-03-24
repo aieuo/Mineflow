@@ -47,10 +47,7 @@ class FlowItemForm {
                         $parents = Session::getSession($player)->get("parents");
                         $recipe = array_shift($parents);
                         $variables = $recipe->getAddingVariablesBefore($action, $parents, $type);
-                        $form = new CustomForm($action->getName());
-                        $form->addContent(new Label($action->getDescription()));
-                        $form->addContents($action->getEditFormElements($variables));
-                        $form->addContent(new CancelToggle());
+                        $form = $action->getEditForm($variables);
                         $form->addArgs($form, $action, function ($result) use ($player, $container, $type, $action) {
                             $this->sendAddedItemMenu($player, $container, $type, $action, [$result ? "@form.changed" : "@form.cancelled"]);
                         })->onReceive([$this, "onUpdateAction"])->show($player);
@@ -197,10 +194,7 @@ class FlowItemForm {
                         $parents = Session::getSession($player)->get("parents");
                         $recipe = array_shift($parents);
                         $variables = $recipe->getAddingVariablesBefore($item, $parents, $type);
-                        $form = new CustomForm($item->getName());
-                        $form->addContent(new Label($item->getDescription()));
-                        $form->addContents($item->getEditFormElements($variables));
-                        $form->addContent(new CancelToggle());
+                        $form = $item->getEditForm($variables);
                         $form->addArgs($form, $item, function ($result) use ($player, $container, $type, $item) {
                             if ($result) {
                                 $container->addItem($item, $type);

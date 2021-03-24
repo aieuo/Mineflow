@@ -4,7 +4,10 @@ namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\formAPI\CustomForm;
+use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Element;
+use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\Player;
@@ -115,6 +118,17 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         if (!empty($exclude) and in_array($number, $exclude, true)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
         }
+    }
+
+    /**
+     * @param array<string, DummyVariable> $variables
+     * @return CustomForm
+     */
+    public function getEditForm(array $variables): CustomForm {
+        return (new CustomForm($this->getName()))
+            ->addContent(new Label($this->getDescription()))
+            ->addContents($this->getEditFormElements($variables))
+            ->addContent(new CancelToggle());
     }
 
     /**

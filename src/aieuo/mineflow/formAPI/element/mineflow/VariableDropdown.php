@@ -148,10 +148,7 @@ abstract class VariableDropdown extends Dropdown {
                     $recipe = array_shift($parents);
                     $variables = $recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION);
 
-                    $form = new CustomForm($action->getName());
-                    $form->addContent(new Label($action->getDescription()));
-                    $form->addContents($action->getEditFormElements($variables));
-                    $form->addContent(new CancelToggle());
+                    $form = $action->getEditForm($variables);
                     $form->addArgs($form, $action, function ($result) use ($player, $origin, $index, $action, $parents, $recipe, $container) {
                         if (!$result) {
                             $origin->resend([], ["@form.cancelled"]);
@@ -173,12 +170,17 @@ abstract class VariableDropdown extends Dropdown {
                         $add = $action->getAddingVariables();
                         $variables = array_merge($recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION), $add);
 
-                        /** @var VariableDropdown $dropdown */
-                        $dropdown = $origin->getContent($index);
-                        $dropdown->updateOptions($variables);
-                        $dropdown->updateDefault(array_key_first($add));
+                        $indexes = [];
+                        foreach ($origin->getContents() as $i => $content) {
+                            if ($content instanceof VariableDropdown) {
+                                $tmp = $content->getDefaultText();
+                                $content->updateOptions($variables);
+                                $content->updateDefault($index === $i ? array_key_first($add) : $tmp);
+                                $indexes[$i] = $content->getDefault();
+                            }
+                        }
 
-                        $origin->resend([], ["@form.added"], [$index => $dropdown->getDefault()]);
+                        $origin->resend([], ["@form.added"], $indexes);
                     })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
                 });
             })->addButton(new Button("@form.cancelAndBack", function () use($origin) {
