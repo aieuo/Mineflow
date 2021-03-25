@@ -27,11 +27,12 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         getAddingVariablesBefore as traitGetAddingVariableBefore;
     }
 
-    public const TARGET_DEFAULT = 0;
-    public const TARGET_SPECIFIED = 1;
-    public const TARGET_BROADCAST = 2;
-    public const TARGET_RANDOM = 3;
-    public const TARGET_NONE = 4;
+    public const TARGET_NONE = 0;
+    public const TARGET_DEFAULT = 1;
+    public const TARGET_SPECIFIED = 2;
+    public const TARGET_ON_WORLD = 3;
+    public const TARGET_BROADCAST = 4;
+    public const TARGET_RANDOM = 5;
 
     /** @var string */
     private $name;
@@ -132,6 +133,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function getTargets(?Entity $player = null): array {
         $targets = [];
         switch ($this->targetType) {
+            case self::TARGET_NONE:
+                $targets = [null];
+                break;
             case self::TARGET_DEFAULT:
                 $targets = [$player];
                 break;
@@ -142,6 +146,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                     if (!($target instanceof Player)) continue;
                     $targets[] = $target;
                 }
+                break;
+            case self::TARGET_ON_WORLD:
+                $targets = $player->getLevelNonNull()->getPlayers();
                 break;
             case self::TARGET_BROADCAST:
                 $targets = Server::getInstance()->getOnlinePlayers();
@@ -154,9 +161,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 foreach ($keys as $key) {
                     $targets[] = $onlines[$key];
                 }
-                break;
-            case self::TARGET_NONE:
-                $targets = [null];
                 break;
         }
         return $targets;
@@ -346,6 +350,21 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function upgrade(?string $from, string $to): void {
+        if (version_compare("2.0.0", $to, "<=") and ($from === null or version_compare($from, "2.0.0", "<"))) {
+            $oldToNewTargetMap = [
+                4 => self::TARGET_NONE,
+                0 => self::TARGET_DEFAULT,
+                1 => self::TARGET_SPECIFIED,
+                2 => self::TARGET_BROADCAST,
+                3 => self::TARGET_RANDOM,
+            ];
+            if (isset($oldToNewTargetMap[$this->targetType])) {
+                $this->targetType = $oldToNewTargetMap[$this->targetType];
+            }
+            $from = "2.0.0";
+        }
+
+        $this->version = $from;
     }
 
     public function __clone() {

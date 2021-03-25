@@ -342,11 +342,12 @@ class RecipeForm {
         $default2 = $default[2] ?? ($recipe->getTargetType() === Recipe::TARGET_RANDOM ? (string)$recipe->getTargetOptions()["random"] : "");
         (new CustomForm(Language::get("form.recipe.changeTarget.title", [$recipe->getName()])))->setContents([
             new Dropdown("@form.recipe.changeTarget.type", [
+                Language::get("form.recipe.target.none"),
                 Language::get("form.recipe.target.default"),
                 Language::get("form.recipe.target.specified"),
+                Language::get("form.recipe.target.onWorld"),
                 Language::get("form.recipe.target.all"),
                 Language::get("form.recipe.target.random"),
-                Language::get("form.recipe.target.none"),
             ], $default[0] ?? $recipe->getTargetType()),
             new Input("@form.recipe.changeTarget.name", "@form.recipe.changeTarget.name.placeholder", $default1),
             new Input("@form.recipe.changeTarget.random", "@form.recipe.changeTarget.random.placeholder", $default2),
@@ -357,20 +358,20 @@ class RecipeForm {
                 return;
             }
 
-            if ($data[0] === 1 and $data[1] === "") {
+            if ($data[0] === Recipe::TARGET_SPECIFIED and $data[1] === "") {
                 $this->sendChangeTarget($player, $recipe, $data, [["@form.insufficient", 1]]);
                 return;
             }
-            if ($data[0] === 3 and $data[2] === "") {
+            if ($data[0] === Recipe::TARGET_RANDOM and $data[2] === "") {
                 $this->sendChangeTarget($player, $recipe, $data, [["@form.insufficient", 2]]);
                 return;
             }
 
             switch ($data[0]) {
-                case 1:
+                case Recipe::TARGET_SPECIFIED:
                     $recipe->setTargetSetting((int)$data[0], ["specified" => explode(",", $data[1])]);
                     break;
-                case 3:
+                case Recipe::TARGET_RANDOM:
                     $recipe->setTargetSetting((int)$data[0], ["random" => empty($data[2]) ? 1 : (int)$data[2]]);
                     break;
                 default:
