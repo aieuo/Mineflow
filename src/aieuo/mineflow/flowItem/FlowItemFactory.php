@@ -21,6 +21,7 @@ use aieuo\mineflow\flowItem\action\BroadcastMessage;
 use aieuo\mineflow\flowItem\action\Calculate;
 use aieuo\mineflow\flowItem\action\Calculate2;
 use aieuo\mineflow\flowItem\action\CalculateReversePolishNotation;
+use aieuo\mineflow\flowItem\action\CallCustomTrigger;
 use aieuo\mineflow\flowItem\action\CallRecipe;
 use aieuo\mineflow\flowItem\action\ClearInventory;
 use aieuo\mineflow\flowItem\action\Command;
@@ -176,6 +177,7 @@ class FlowItemFactory {
         /* actions */
         self::register(new DoNothing);
         self::register(new EventCancel);
+        self::register(new CallCustomTrigger);
         self::register(new GetDate);
         self::register(new RegisterCraftingRecipe);
         self::register(new SendMessageToConsole);
