@@ -350,6 +350,21 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function upgrade(?string $from, string $to): void {
+        if (version_compare("2.0.0", $to, "<=") and ($from === null or version_compare($from, "2.0.0", "<"))) {
+            $oldToNewTargetMap = [
+                4 => self::TARGET_NONE,
+                0 => self::TARGET_DEFAULT,
+                1 => self::TARGET_SPECIFIED,
+                2 => self::TARGET_BROADCAST,
+                3 => self::TARGET_RANDOM,
+            ];
+            if (isset($oldToNewTargetMap[$this->targetType])) {
+                $this->targetType = $oldToNewTargetMap[$this->targetType];
+            }
+            $from = "2.0.0";
+        }
+
+        $this->version = $from;
     }
 
     public function __clone() {
