@@ -74,7 +74,7 @@ class RecipeManager {
                 Logger::warning($e->getMessage().PHP_EOL);
                 continue;
             }
-
+            $recipe->checkVersion();
 
             $this->add($recipe, false);
         }

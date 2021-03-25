@@ -66,8 +66,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->author = $author;
         $this->group = preg_replace("#/+#", "/", $group);
         $this->version = $version;
-
-        $this->checkVersion();
     }
 
     public function setName(string $name): void {
@@ -344,10 +342,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         if ($createdVersion !== null and version_compare($createdVersion, $currentVersion, "=")) return;
 
-        $this->updateVersion($createdVersion, $currentVersion);
+        $this->upgrade($createdVersion, $currentVersion);
     }
 
-    public function updateVersion(?string $from, string $to): void {
+    public function upgrade(?string $from, string $to): void {
     }
 
     public function __clone() {
