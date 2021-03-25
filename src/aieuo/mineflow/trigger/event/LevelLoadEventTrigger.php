@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\LevelObjectVariable;
+use aieuo\mineflow\variable\object\WorldObjectVariable;
 use pocketmine\event\level\LevelLoadEvent;
 
 class LevelLoadEventTrigger extends EventTrigger {
@@ -13,12 +15,12 @@ class LevelLoadEventTrigger extends EventTrigger {
 
     public function getVariables($event): array {
         /** @var LevelLoadEvent $event */
-        return ["level" => new LevelObjectVariable($event->getLevel())];
+        return ["world" => new WorldObjectVariable($event->getLevel())];
     }
 
     public function getVariablesDummy(): array {
         return [
-            "level" => new DummyVariable(DummyVariable::LEVEL),
+            "world" => new DummyVariable(DummyVariable::WORLD),
         ];
     }
 }

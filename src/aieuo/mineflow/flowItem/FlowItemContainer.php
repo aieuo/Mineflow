@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\variable\DummyVariable;
