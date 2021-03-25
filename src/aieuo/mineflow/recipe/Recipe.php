@@ -148,6 +148,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 }
                 break;
             case self::TARGET_ON_WORLD:
+                if ($player === null) return [];
                 $targets = $player->getLevelNonNull()->getPlayers();
                 break;
             case self::TARGET_BROADCAST:
