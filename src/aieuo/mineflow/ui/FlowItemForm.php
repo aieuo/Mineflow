@@ -29,6 +29,7 @@ class FlowItemForm {
             $action->sendCustomMenu($player);
             return;
         }
+
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.addedItemMenu.title", [$container->getContainerName(), $action->getName()])))
             ->setContent(trim($action->getDetail()))
@@ -36,6 +37,7 @@ class FlowItemForm {
                 new Button("@form.back"),
                 new Button("@form.edit"),
                 new Button("@form.move"),
+                new Button("@form.duplicate"),
                 new Button("@form.delete"),
             ])->onReceive(function (Player $player, int $data) use($container, $type, $action) {
                 switch ($data) {
@@ -56,6 +58,12 @@ class FlowItemForm {
                         (new FlowItemContainerForm)->sendMoveAction($player, $container, $type, array_search($action, $container->getItems($type), true));
                         break;
                     case 3:
+                        $newItem = clone $action;
+                        $container->addItem($newItem, $type);
+                        Session::getSession($player)->pop("parents");
+                        (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.duplicate.success"]);
+                        break;
+                    case 4:
                         $this->sendConfirmDelete($player, $action, $container, $type);
                         break;
                 }
