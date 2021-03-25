@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\trigger\event;
 
+use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
@@ -17,13 +18,16 @@ use pocketmine\Player;
 
 class EventTrigger extends Trigger {
 
+    /** @var bool */
+    private $enabled = true;
+
     /**
      * @param string $eventName
      * @param string $subKey
      * @return self
      */
     public static function create(string $eventName, string $subKey = ""): Trigger {
-        return EventTriggerList::get($eventName) ?? new EventTrigger($eventName, $subKey);
+        return Main::getEventManager()->getTrigger($eventName) ?? new EventTrigger($eventName, $subKey);
     }
 
     public function __construct(string $key, string $subKey = "") {
@@ -56,6 +60,14 @@ class EventTrigger extends Trigger {
         $target = $this->getTargetEntity($event);
         if ($target === null) return [];
         return DefaultVariables::getEntityVariables($this->getTargetEntity($event));
+    }
+
+    public function setEnabled(bool $enabled): void {
+        $this->enabled = $enabled;
+    }
+
+    public function isEnabled(): bool {
+        return $this->enabled;
     }
 
     public function __toString(): string {

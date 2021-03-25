@@ -7,7 +7,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\event\EventTrigger;
-use aieuo\mineflow\trigger\event\EventTriggerList;
+use aieuo\mineflow\trigger\event\EventManager;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\HomeForm;
 use aieuo\mineflow\ui\MineflowForm;
@@ -23,7 +23,7 @@ class EventTriggerForm extends TriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent((string)$trigger)
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(EventTriggerList::get($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            ->forEach(Main::getEventManager()->getTrigger($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
                 $form->appendContent("{".$name."} (type=".$var->getValueType().")");
             })->addButtons([
                 new Button("@form.back"),
@@ -68,7 +68,7 @@ class EventTriggerForm extends TriggerForm {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
             ->setContent((string)EventTrigger::create($eventName))
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(EventTriggerList::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            ->forEach(Main::getEventManager()->getTrigger($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
                 $form->appendContent("{".$name."} (type = ".$var->getValueType().")");
             })->addButtons([
                 new Button("@form.back"),

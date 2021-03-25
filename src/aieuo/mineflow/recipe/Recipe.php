@@ -177,15 +177,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function setTriggersFromArray(array $triggers): void {
-        $eventManager = Main::getEventManager();
-
         $this->removeTriggerAll();
         foreach ($triggers as $triggerData) {
-            if ($triggerData["type"] === Triggers::EVENT) {
-                $fullName = $eventManager->getFullName($triggerData["key"]);
-                if ($fullName !== null) $triggerData["key"] = $fullName;
-            }
-
             $trigger = Triggers::getTrigger($triggerData["type"], $triggerData["key"], $triggerData["subKey"] ?? "");
             if ($trigger === null) throw new \UnexpectedValueException(Language::get("trigger.notFound", [$triggerData["type"]]));
             $this->addTrigger($trigger);

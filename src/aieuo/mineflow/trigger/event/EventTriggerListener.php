@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace aieuo\mineflow\event;
+namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\Main;
-use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
 use pocketmine\plugin\MethodEventExecutor;
@@ -15,17 +14,15 @@ use pocketmine\Server;
 
 class EventTriggerListener implements Listener {
 
-    public function registerEvents(): void {
-        foreach (Main::getEventManager()->getEnabledEvents() as $event => $value) {
-            if (!class_exists($event)) continue;
+    /** @var string[] */
+    private $registeredEvents = [];
 
-            $this->registerEvent($event, "onEvent");
-        }
-    }
+    public function registerEvent(string $event): void {
+        if (in_array($event, $this->registeredEvents, true)) return;
 
-    private function registerEvent(string $event, string $method): void {
         $pluginManager = Server::getInstance()->getPluginManager();
-        $pluginManager->registerEvent($event, $this, EventPriority::NORMAL, new MethodEventExecutor($method), Main::getInstance());
+        $pluginManager->registerEvent($event, $this, EventPriority::NORMAL, new MethodEventExecutor("onEvent"), Main::getInstance());
+        $this->registeredEvents[] = $event;
     }
 
     public function onEvent(Event $event): void {
