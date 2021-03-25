@@ -54,27 +54,65 @@ class FlowItemContainerForm {
         $actions = $container->getItems($type);
         $selectedAction = $actions[$selected];
 
-        $buttons = [new Button("@form.back")];
-        foreach ($actions as $i => $action) {
-            $buttons[] = new Button(($i === $selected ? TextFormat::AQUA : "").trim(TextFormat::clean($action->getDetail())));
+        $parents = Session::getSession($player)->get("parents");
+        array_pop($parents);
+        /** @var FlowItemContainer|null $parent */
+        $parent = array_pop($parents);
+
+        $buttons = [
+            new Button("@form.back", function (Player $player) use($container, $type, $selected, $actions, $count) {
+                (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $actions[$selected], [$count === 0 ? "@form.cancelled" : "@form.moved"]);
+            }),
+        ];
+
+        if ($parent instanceof FlowItemContainer) {
+            $buttons[] = new Button("@action.move.outside", function (Player $player) use($parent, $container, $type, $selected, $count) {
+                $tmp = $container->getItem($selected, $type);
+                $container->removeItem($selected, $type);
+                $parent->addItem($tmp, $type);
+                Session::getSession($player)->pop("parents");
+                $this->sendMoveAction($player, $parent, $type, count($parent->getItems($type)) - 1, ["@form.moved"], ++ $count);
+            });
         }
-        $buttons[] = new Button("");
+
+        $i = 0;
+        foreach ($actions as $i => $action) {
+            if ($i !== $selected and $i !== $selected + 1) {
+                $buttons[] = new Button("@form.move.to.here", function (Player $player) use($actions, $container, $type, $selected, $count, $i) {
+                    $this->moveContent($player, $container, $type, $actions, $selected, $i, $count);
+                });
+            }
+
+            $color = ($i === $selected ? TextFormat::AQUA : "");
+            $buttons[] = new Button($color.trim(TextFormat::clean($action->getDetail())), function (Player $player) use($i, $action, $container, $type, $selected, $count) {
+                if ($i === $selected or !($action instanceof FlowItemContainer)) {
+                    $this->sendMoveAction($player, $container, $type, $selected, ["@form.move.target.invalid"], $count);
+                } else {
+                    $tmp = $container->getItem($selected, $type);
+                    $container->removeItem($selected, $type);
+                    $action->addItem($tmp, $type);
+                    Session::getSession($player)->push("parents", $action);
+                    $this->sendMoveAction($player, $action, $type, count($action->getItems($type)) - 1, ["@form.moved"], ++ $count);
+                }
+            });
+        }
+        if ($selected !== count($actions) - 1) {
+            $buttons[] = new Button("@form.move.to.here", function (Player $player) use($actions, $container, $type, $selected, $count, $i) {
+                $this->moveContent($player, $container, $type, $actions, $selected, $i + 1, $count);
+            });
+        }
 
         (new ListForm(Language::get("form.{$type}Container.move.title", [$container->getContainerName(), $selectedAction->getName()])))
             ->setContent("@form.{$type}Container.move.content")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data) use($container, $type, $selected, $actions, $count) {
-                $move = $actions[$selected];
-                if ($data === 0) {
-                    (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $move, [$count === 0 ? "@form.cancelled" : "@form.moved"]);
-                    return;
-                }
-                $data --;
+            ->addMessages($messages)
+            ->show($player);
+    }
 
-                $actions = $this->getMovedContents($actions, $selected, $data);
-                $container->setItems($actions, $type);
-                $this->sendMoveAction($player, $container, $type, $selected < $data ? $data-1 : $data, ["@form.moved"], ++$count);
-            })->addMessages($messages)->show($player);
+    public function moveContent(Player $player, FlowItemContainer $container, string $type, array $actions, int $from, int $to, int $count): void {
+        $actions = $this->getMovedContents($actions, $from, $to);
+        $container->setItems($actions, $type);
+        $this->sendMoveAction($player, $container, $type, $from < $to ? $to - 1 : $to, ["@form.moved"], ++ $count);
     }
 
     public function getMovedContents(array $contents, int $from, int $to): array {
