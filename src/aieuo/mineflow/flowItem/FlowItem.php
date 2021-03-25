@@ -13,7 +13,6 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use JsonSerializable;
-use pocketmine\Player;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 

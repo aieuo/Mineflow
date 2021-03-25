@@ -7,7 +7,6 @@ namespace aieuo\mineflow\flowItem\action\script;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
 
 class CallRecipe extends ExecuteRecipe {
 

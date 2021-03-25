@@ -9,7 +9,6 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\event\EventTrigger;
-use aieuo\mineflow\trigger\event\EventManager;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 use pocketmine\Server;

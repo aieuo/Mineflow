@@ -153,7 +153,7 @@ abstract class Form implements PMForm {
      */
     public function addMessage(string $message): self {
         $message = Language::replace($message);
-        $this->messages[$message] = true;
+        $this->messages[TextFormat::AQUA.$message.TextFormat::WHITE] = true;
         return $this;
     }
 

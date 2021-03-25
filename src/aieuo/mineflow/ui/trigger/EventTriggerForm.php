@@ -7,7 +7,6 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\event\EventTrigger;
-use aieuo\mineflow\trigger\event\EventManager;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\HomeForm;
 use aieuo\mineflow\ui\MineflowForm;

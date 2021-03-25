@@ -4,7 +4,6 @@ namespace aieuo\mineflow\trigger\time;
 
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\trigger\Triggers;
 use pocketmine\scheduler\Task;
 
 class CheckTimeTriggerTask extends Task {

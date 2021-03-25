@@ -8,7 +8,6 @@ use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
-use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\ui\trigger\BlockTriggerForm;
 use aieuo\mineflow\utils\Session;
 use pocketmine\command\Command;

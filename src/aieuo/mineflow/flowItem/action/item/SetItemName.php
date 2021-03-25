@@ -12,7 +12,6 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\DummyVariable;
 
 class SetItemName extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;

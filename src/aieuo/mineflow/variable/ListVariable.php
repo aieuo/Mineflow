@@ -85,16 +85,6 @@ class ListVariable extends Variable implements \JsonSerializable {
         ];
     }
 
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        $values = [];
-        foreach ($data["value"] as $value) {
-            if (!isset($value["type"])) return null;
-            $values[] = Variable::create($value["value"], $value["name"] ?? "", $value["type"]);
-        }
-        return new self($values, $data["name"] ?? "");
-    }
-
     public function toArray(): array {
         $result = [];
         foreach ($this->getValue() as $i => $value) {
