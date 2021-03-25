@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
+use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
@@ -24,6 +25,22 @@ class RecipeCommand extends MineflowSubcommand {
                 break;
             case "list":
                 (new RecipeForm)->sendRecipeList($sender);
+                break;
+            case "execute":
+                if (!isset($args[1])) {
+                    $sender->sendMessage("Usage: /mineflow recipe execute <name> [group]");
+                    return;
+                }
+                $path = (isset($args[2]) ? ($args[2]."/") : "").$args[1];
+                [$name, $group] = Main::getRecipeManager()->parseName($path);
+
+                $recipe = Main::getRecipeManager()->get($name, $group);
+                if ($recipe === null) {
+                    $sender->sendMessage(Language::get("action.executeRecipe.notFound"));
+                    return;
+                }
+
+                $recipe->executeAllTargets($sender);
                 break;
             default:
                 $sender->sendMessage(Language::get("command.recipe.usage"));
