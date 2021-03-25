@@ -13,9 +13,11 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
+use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
@@ -96,16 +98,19 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
                 (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
             }),
             new Button("@action.for.setting", function (Player $player) {
-                $this->sendSettingCounter($player);
+                $parents = Session::getSession($player)->get("parents");
+                $recipe = array_shift($parents);
+                $variables = $recipe->getAddingVariablesBefore($this, $parents, FlowItemContainer::ACTION);
+                $this->sendSettingCounter($player, $variables);
             }),
         ];
     }
 
-    public function sendSettingCounter(Player $player): void {
+    public function sendSettingCounter(Player $player, array $variables): void {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                new ExampleInput("@action.foreachPosition.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
-                new ExampleInput("@action.foreachPosition.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName("pos1"), "@action.foreachPosition.form.pos1"),
+                new PositionVariableDropdown($variables, $this->getPositionVariableName("pos2"), "@action.foreachPosition.form.pos2"),
                 new ExampleInput("@action.for.counterName", "pos", $this->counterName, true),
             ])->onReceive(function (Player $player, array $data) {
                 $this->setPositionVariableName($data[0], "pos1");
