@@ -10,11 +10,9 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\Player;
@@ -99,49 +97,18 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         return true;
     }
 
-    public function sendCustomMenu(Player $player, array $messages = []): void {
-        $detail = trim($this->getDetail());
-        (new ListForm($this->getName()))
-            ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
-            ->addButtons([
-                new Button("@form.back"),
-                new Button("@condition.edit"),
-                new Button("@action.edit"),
-                new Button("@action.whileTask.editInterval"),
-                new Button("@form.home.rename.title"),
-                new Button("@form.move"),
-                new Button("@form.delete"),
-            ])->onReceive(function (Player $player, int $data) {
-                $session = Session::getSession($player);
-                $parents = $session->get("parents");
-                $parent = end($parents);
-                switch ($data) {
-                    case 0:
-                        $session->pop("parents");
-                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
-                        break;
-                    case 1:
-                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
-                        break;
-                    case 2:
-                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
-                        break;
-                    case 3:
-                        $this->sendSetWhileIntervalForm($player);
-                        break;
-                    case 4:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
-                        break;
-                    case 5:
-                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($this, $parent->getActions(), true));
-                        break;
-                    case 6:
-                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::ACTION);
-                        break;
-                }
-            })->onClose(function (Player $player) {
-                Session::getSession($player)->removeAll();
-            })->addMessages($messages)->show($player);
+    public function getCustomMenuButtons(): array {
+        return [
+            new Button("@condition.edit", function (Player $player) {
+                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
+            }),
+            new Button("@action.edit", function (Player $player) {
+                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
+            }),
+            new Button("@action.whileTask.editInterval", function (Player $player) {
+                $this->sendSetWhileIntervalForm($player);
+            }),
+        ];
     }
 
     public function sendSetWhileIntervalForm(Player $player): void {
@@ -151,12 +118,12 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
                 new CancelToggle()
             ])->onReceive(function (Player $player, array $data) {
                 if ($data[1]) {
-                    $this->sendCustomMenu($player, ["@form.cancelled"]);
+                    (new FlowItemForm)->sendFlowItemCustomMenu($player, $this, FlowItemContainer::ACTION, ["@form.cancelled"]);
                     return;
                 }
 
                 $this->setInterval((int)$data[0]);
-                $this->sendCustomMenu($player, ["@form.changed"]);
+                (new FlowItemForm)->sendFlowItemCustomMenu($player, $this, FlowItemContainer::ACTION, ["@form.changed"]);
             })->show($player);
     }
 

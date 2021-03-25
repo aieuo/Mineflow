@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
@@ -263,28 +264,14 @@ class RecipeForm {
 
     public function sendTriggerList(Player $player, Recipe $recipe, array $messages = []): void {
         $triggers = $recipe->getTriggers();
-
-        $buttons = [new Button("@form.back"), new Button("@trigger.add")];
-        foreach ($triggers as $trigger) {
-            $buttons[] = new Button((string)$trigger);
-        }
-
         (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))
-            ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data, Recipe $recipe, array $triggers) {
-                if ($data === 0) {
-                    $this->sendRecipeMenu($player, $recipe);
-                    return;
-                }
-                if ($data === 1) {
-                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
-                    return;
-                }
-                $data -= 2;
-
-                $trigger = $triggers[$data];
-                (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
-            })->addArgs($recipe, $triggers)->addMessages($messages)->show($player);
+            ->addButton(new Button("@form.back", function() use($player, $recipe) { $this->sendRecipeMenu($player, $recipe); }))
+            ->addButton(new Button("@form.add", function() use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }))
+            ->addButtonsEach($triggers, function (Trigger $trigger) use($player, $recipe) {
+                return new Button((string)$trigger, function () use($player, $recipe, $trigger) {
+                    (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
+                });
+            })->addMessages($messages)->show($player);
     }
 
     public function sendSetArgs(Player $player, Recipe $recipe, array $messages = []): void {

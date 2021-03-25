@@ -30,7 +30,7 @@ class FlowItemContainerForm {
                         (new RecipeForm)->sendRecipeMenu($player, $container);
                     } else {
                         /** @var FlowItem $container */
-                        $container->sendCustomMenu($player);
+                        (new FlowItemForm)->sendFlowItemCustomMenu($player, $container, $type);
                     }
                     return;
                 }

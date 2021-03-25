@@ -125,48 +125,18 @@ class ForAction extends FlowItem implements FlowItemContainer {
         return true;
     }
 
-    public function sendCustomMenu(Player $player, array $messages = []): void {
-        $detail = trim($this->getDetail());
-        (new ListForm($this->getName()))
-            ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
-            ->addButtons([
-                new Button("@form.back"),
-                new Button("@action.edit"),
-                new Button("@action.for.setting"),
-                new Button("@form.home.rename.title"),
-                new Button("@form.move"),
-                new Button("@form.delete"),
-            ])->onReceive(function (Player $player, int $data) {
-                $session = Session::getSession($player);
-                $parents = $session->get("parents");
-                $parent = end($parents);
-                switch ($data) {
-                    case 0:
-                        $session->pop("parents");
-                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
-                        break;
-                    case 1:
-                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
-                        break;
-                    case 2:
-                        $this->sendSettingCounter($player);
-                        break;
-                    case 3:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
-                        break;
-                    case 4:
-                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($this, $parent->getActions(), true));
-                        break;
-                    case 5:
-                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::ACTION);
-                        break;
-                }
-            })->onClose(function (Player $player) {
-                Session::getSession($player)->removeAll();
-            })->addMessages($messages)->show($player);
+    public function getCustomMenuButtons(): array {
+        return [
+            new Button("@action.edit", function (Player $player) {
+                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
+            }),
+            new Button("@action.for.setting", function (Player $player) {
+                $this->sendCounterSetting($player);
+            }),
+        ];
     }
 
-    public function sendSettingCounter(Player $player): void {
+    public function sendCounterSetting(Player $player): void {
         (new CustomForm("@action.for.setting"))
             ->setContents([
                 new ExampleInput("@action.for.counterName", "i", $this->getCounterName(), true),
@@ -178,7 +148,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
                 $this->setStartIndex($data[1]);
                 $this->setEndIndex($data[2]);
                 $this->setFluctuation($data[3]);
-                $this->sendCustomMenu($player, ["@form.changed"]);
+                (new FlowItemForm)->sendFlowItemCustomMenu($player, $this, FlowItemContainer::ACTION, ["@form.changed"]);
             })->show($player);
     }
 

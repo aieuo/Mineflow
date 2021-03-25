@@ -10,7 +10,6 @@ use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use pocketmine\Player;
 
 abstract class FlowItem implements \JsonSerializable, FlowItemIds {
 
@@ -162,7 +161,8 @@ abstract class FlowItem implements \JsonSerializable, FlowItemIds {
         return false;
     }
 
-    public function sendCustomMenu(Player $player, array $messages = []): void {
+    public function getCustomMenuButtons(): array {
+        return [];
     }
 
     public function allowDirectCall(): bool {
