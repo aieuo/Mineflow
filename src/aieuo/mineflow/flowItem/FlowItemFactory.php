@@ -27,6 +27,7 @@ use aieuo\mineflow\flowItem\action\entity\SetScale;
 use aieuo\mineflow\flowItem\action\entity\SetYaw;
 use aieuo\mineflow\flowItem\action\entity\Teleport;
 use aieuo\mineflow\flowItem\action\entity\UnsetImmobile;
+use aieuo\mineflow\flowItem\action\event\CallCustomTrigger;
 use aieuo\mineflow\flowItem\action\event\EventCancel;
 use aieuo\mineflow\flowItem\action\form\SendForm;
 use aieuo\mineflow\flowItem\action\form\SendInputForm;
