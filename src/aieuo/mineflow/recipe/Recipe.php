@@ -30,7 +30,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public const TARGET_NONE = 0;
     public const TARGET_DEFAULT = 1;
     public const TARGET_SPECIFIED = 2;
-    public const TARGET_ON_LEVEL = 3;
+    public const TARGET_ON_WORLD = 3;
     public const TARGET_BROADCAST = 4;
     public const TARGET_RANDOM = 5;
 
@@ -140,7 +140,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                     $targets[] = $target;
                 }
                 break;
-            case self::TARGET_ON_LEVEL:
+            case self::TARGET_ON_WORLD:
                 $targets = $player->getLevelNonNull()->getPlayers();
                 break;
             case self::TARGET_BROADCAST:
