@@ -1,6 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\flowItem\action;
+declare(strict_types=1);
+
+namespace aieuo\mineflow\flowItem\action\event;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
