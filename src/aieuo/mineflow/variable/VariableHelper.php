@@ -91,9 +91,8 @@ class VariableHelper {
 
     public function findVariables(string $string): array {
         $variables = [];
-        if (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
+        if (preg_match_all("/{(.+?)}/", $string, $matches)) {
             foreach ($matches[0] as $name) {
-                $name = substr($name, 1, -1);
                 $variables[] = $name;
             }
         }
@@ -108,7 +107,7 @@ class VariableHelper {
      * @return string
      */
     public function replaceVariables(string $string, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
-        if (preg_match_all("/{(.+)}/", $string, $matches)) {
+        if (preg_match_all("/{(.+?)}/", $string, $matches)) {
             foreach ($matches[1] as $value) {
                 $string = $this->replaceVariable($string, $value, $variables, $executor, $global);
             }
