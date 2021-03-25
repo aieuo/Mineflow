@@ -6,10 +6,12 @@ use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\form\FormTrigger;
+use aieuo\mineflow\trigger\time\TimeTrigger;
 use aieuo\mineflow\ui\trigger\BlockTriggerForm;
 use aieuo\mineflow\ui\trigger\CommandTriggerForm;
 use aieuo\mineflow\ui\trigger\EventTriggerForm;
 use aieuo\mineflow\ui\trigger\FormTriggerForm;
+use aieuo\mineflow\ui\trigger\TimeTriggerForm;
 use aieuo\mineflow\ui\trigger\TriggerForm;
 
 class Triggers {
@@ -18,6 +20,7 @@ class Triggers {
     public const COMMAND = "command";
     public const EVENT = "event";
     public const FORM = "form";
+    public const TIME = "time";
 
     /** @var TriggerForm[] */
     private static $forms = [];
@@ -29,6 +32,7 @@ class Triggers {
         self::add(self::COMMAND, CommandTrigger::class, new CommandTriggerForm());
         self::add(self::EVENT, EventTrigger::class, new EventTriggerForm());
         self::add(self::FORM, FormTrigger::class, new FormTriggerForm());
+        self::add(self::TIME, TimeTrigger::class, new TimeTriggerForm());
     }
 
     public static function add(string $type, string $class, TriggerForm $form): void {

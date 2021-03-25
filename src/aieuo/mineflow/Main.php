@@ -13,6 +13,7 @@ use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventTriggerList;
+use aieuo\mineflow\trigger\time\CheckTimeTriggerTask;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\FormManager;
 use aieuo\mineflow\utils\Language;
@@ -106,6 +107,8 @@ class Main extends PluginBase {
         (new EventTriggerListener())->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
+
+        CheckTimeTriggerTask::start($this);
 
         $this->loaded = true;
         (new ServerStartEvent($this))->call();
