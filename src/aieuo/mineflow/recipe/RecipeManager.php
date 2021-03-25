@@ -3,11 +3,12 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\flowItem\action\ExecuteRecipe;
+use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
+use ErrorException;
 
 class RecipeManager {
 
@@ -118,6 +119,18 @@ class RecipeManager {
         unset($this->recipes[$group][$name]);
     }
 
+    public function deleteGroup(string $group): bool {
+        try {
+            $deleted = rmdir($this->getSaveDir().$group);
+            if ($deleted) {
+                unset($this->recipes[$group]);
+            }
+            return $deleted;
+        } catch (ErrorException $e) {
+            return false;
+        }
+    }
+
     public function saveAll(): void {
         foreach ($this->getAll() as $group) {
             foreach ($group as $recipe) {
@@ -148,6 +161,12 @@ class RecipeManager {
     public function parseName(string $name): array {
         $names = explode("/", $name);
         return [array_pop($names), implode("/", $names)];
+    }
+
+    public function getParentPath(string $group): string {
+        $names = explode("/", $group);
+        array_pop($names);
+        return implode("/", $names);
     }
 
     public function getWithLinkedRecipes(FlowItemContainer $recipe, Recipe $origin, bool $base = true): array {

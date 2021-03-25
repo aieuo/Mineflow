@@ -104,10 +104,13 @@ class RecipeForm {
             }, $default);
     }
 
-    public function sendRecipeList(Player $player, string $path = ""): void {
+    public function sendRecipeList(Player $player, string $path = "", array $messages = []): void {
         $manager = Main::getRecipeManager();
         $recipeGroups = $manager->getByPath($path);
-        $buttons = [new Button("@form.back")];
+        $buttons = [
+            new Button("@form.back"),
+            new Button("@recipe.add"),
+        ];
         $recipes = $recipeGroups[$path] ?? [];
         foreach ($recipes as $recipe) {
             $buttons[] = new Button($recipe->getName());
@@ -127,6 +130,8 @@ class RecipeForm {
                 $groups[$name] = $path !== "" ? $path."/".$name : $name;
             }
         }
+        if ($path !== "") $buttons[] = new Button("@recipe.group.delete");
+
         $recipeGroups = array_merge($recipes, array_values($groups));
 
         (new ListForm("@form.recipe.recipeList.title"))
@@ -142,18 +147,29 @@ class RecipeForm {
                     $this->sendRecipeList($player, implode("/", $paths));
                     return;
                 }
-                $data--;
 
-                $recipe = array_values($recipes)[$data];
-                if ($recipe instanceof Recipe) {
-                    Session::getSession($player)->set("recipe_menu_prev", function() use($player, $path) {
-                        $this->sendRecipeList($player, $path);
-                    });
-                    $this->sendRecipeMenu($player, $recipe);
+                if ($data === 1) {
+                    $this->sendAddRecipe($player, ["", $path]);
                     return;
                 }
-                $this->sendRecipeList($player, $recipe);
-            })->addArgs($path, $recipeGroups)->show($player);
+
+                $data -= 2;
+                $recipes = array_values($recipes);
+                if (isset($recipes[$data])) {
+                    $recipe = $recipes[$data];
+                    if ($recipe instanceof Recipe) {
+                        Session::getSession($player)->set("recipe_menu_prev", function() use($player, $path) {
+                            $this->sendRecipeList($player, $path);
+                        });
+                        $this->sendRecipeMenu($player, $recipe);
+                        return;
+                    }
+                    $this->sendRecipeList($player, $recipe);
+                    return;
+                }
+
+                $this->confirmDeleteRecipeGroup($player, $path);
+            })->addMessages($messages)->addArgs($path, $recipeGroups)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []): void {
@@ -227,7 +243,7 @@ class RecipeForm {
                                 $manager = Main::getRecipeManager();
                                 $recipe->removeTriggerAll();
                                 $manager->remove($recipe->getName(), $recipe->getGroup());
-                                $this->sendMenu($player, ["@form.deleted"]);
+                                $this->sendRecipeList($player, $recipe->getGroup(), ["@form.deleted"]);
                             })->onNo(function() use($player, $recipe) {
                                 $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
                             })->show($player);
@@ -367,5 +383,23 @@ class RecipeForm {
             }
             $this->sendRecipeMenu($player, $recipe, ["@form.changed"]);
         })->addArgs($recipe)->addErrors($errors)->show($player);
+    }
+
+    public function confirmDeleteRecipeGroup(Player $player, string $path): void {
+        $recipes = Main::getRecipeManager()->getByPath($path);
+        $count = count($recipes) - 1 + count($recipes[$path] ?? []);
+        if ($count >= 1) {
+            $this->sendRecipeList($player, $path, ["@recipe.group.delete.not.empty"]);
+            return;
+        }
+        (new ModalForm(Language::get("form.recipe.delete.title", [$path])))
+            ->setContent(Language::get("form.delete.confirm", [$path, count($recipes)]))
+            ->onYes(function() use ($player, $path) {
+                $manager = Main::getRecipeManager();
+                $result = $manager->deleteGroup($path);
+                $this->sendRecipeList($player, $manager->getParentPath($path), [$result ? "@form.deleted" : "@recipe.group.delete.not.empty"]);
+            })->onNo(function() use($player, $path) {
+                $this->sendRecipeList($player, $path, ["@form.cancelled"]);
+            })->show($player);
     }
 }
