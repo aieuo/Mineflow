@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -18,9 +20,8 @@ class PositionObjectVariable extends Vector3ObjectVariable {
             case "position":
                 $variable = new PositionObjectVariable($position);
                 break;
-            case "level":
             case "world":
-                $variable = new LevelObjectVariable($position->level, $position->level->getFolderName());
+                $variable = new WorldObjectVariable($position->level, $position->level->getFolderName());
                 break;
             default:
                 return null;
@@ -36,8 +37,7 @@ class PositionObjectVariable extends Vector3ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "level" => new DummyVariable(DummyVariable::LEVEL),
-            "world" => new DummyVariable(DummyVariable::LEVEL),
+            "world" => new DummyVariable(DummyVariable::WORLD),
         ]);
     }
 

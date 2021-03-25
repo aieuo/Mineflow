@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
@@ -10,8 +12,10 @@ use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
+use JsonSerializable;
+use pocketmine\Player;
 
-abstract class FlowItem implements \JsonSerializable, FlowItemIds {
+abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /** @var string */
     protected $id;

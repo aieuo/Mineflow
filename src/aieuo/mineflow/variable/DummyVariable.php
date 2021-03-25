@@ -8,7 +8,7 @@ use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\object\LevelObjectVariable;
+use aieuo\mineflow\variable\object\WorldObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
@@ -36,7 +36,7 @@ class DummyVariable extends Variable {
     public const EVENT = "event";
     public const HUMAN = "human";
     public const ITEM = "item";
-    public const LEVEL = "level";
+    public const WORLD = "world";
     public const LOCATION = "location";
     public const PLAYER = "player";
     public const POSITION = "position";
@@ -78,8 +78,8 @@ class DummyVariable extends Variable {
                 return HumanObjectVariable::getValuesDummy();
             case self::ITEM:
                 return ItemObjectVariable::getValuesDummy();
-            case self::LEVEL:
-                return LevelObjectVariable::getValuesDummy();
+            case self::WORLD:
+                return WorldObjectVariable::getValuesDummy();
             case self::LOCATION:
                 return LocationObjectVariable::getValuesDummy();
             case self::PLAYER:
@@ -103,7 +103,7 @@ class DummyVariable extends Variable {
             self::EVENT,
             self::HUMAN,
             self::ITEM,
-            self::LEVEL,
+            self::WORLD,
             self::LOCATION,
             self::PLAYER,
             self::POSITION,

@@ -23,7 +23,7 @@ class DefaultVariables {
             "microtime" => new NumberVariable(microtime(true)),
             "time" => new StringVariable(date("H:i:s")),
             "date" => new StringVariable(date("m/d")),
-            "default_level" => new StringVariable($server->getDefaultLevel()->getFolderName()),
+            "default_world" => new StringVariable($server->getDefaultLevel()->getFolderName()),
             "onlines" => new ListVariable($onlines),
             "ops" => new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true))),
         ];
