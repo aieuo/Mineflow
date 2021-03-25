@@ -164,6 +164,11 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         ];
     }
 
+    public function parseFromFormData(array $data): array {
+        $result = array_pop($data);
+        return [$data, $result];
+    }
+
     public function loadSaveData(array $content): FlowItem {
         $this->setInputItemVariableNames($content[0]);
         $this->setItemVariableName($content[1], "output");
