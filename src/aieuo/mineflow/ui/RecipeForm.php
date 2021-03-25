@@ -63,7 +63,7 @@ class RecipeForm {
                     (new MineflowForm)->confirmRename($player, $name, $newName,
                         function (string $name) use ($player, $data) {
                             $manager = Main::getRecipeManager();
-                            $recipe = new Recipe($name, $data[1], $player->getName());
+                            $recipe = new Recipe($name, $data[1], $player->getName(), Main::getPluginVersion());
                             $manager->add($recipe);
                             Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
                                 $this->sendRecipeList($player, $recipe->getGroup());
@@ -76,7 +76,7 @@ class RecipeForm {
                     return;
                 }
 
-                $recipe = new Recipe($name, $group, $player->getName());
+                $recipe = new Recipe($name, $group, $player->getName(), Main::getPluginVersion());
                 if (file_exists($recipe->getFileName($manager->getSaveDir()))) {
                     $it->resend([[Language::get("form.recipe.exists", [$name]), 0]]);
                     return;

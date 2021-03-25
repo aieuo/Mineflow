@@ -55,7 +55,7 @@ class RecipeManager {
                 continue;
             }
 
-            $recipe = new Recipe($data["name"], $group, $data["author"] ?? "");
+            $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? null);
             $recipe->setRawData($json);
             try {
                 $recipe->loadSaveData($data["actions"]);
