@@ -40,6 +40,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     private $author;
     /* @var string */
     private $group;
+    /* @var string */
+    private $version;
 
     /** @var int */
     private $targetType = self::TARGET_DEFAULT;
@@ -60,10 +62,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     /** @var string */
     private $rawData = "";
 
-    public function __construct(string $name, string $group = "", string $author = "") {
+    public function __construct(string $name, string $group = "", string $author = "", string $version = null) {
         $this->name = $name;
         $this->author = $author;
         $this->group = preg_replace("#/+#", "/", $group);
+        $this->version = $version;
     }
 
     public function setName(string $name): void {
@@ -88,6 +91,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getGroup(): string {
         return $this->group;
+    }
+
+    public function getPluginVersion(): string {
+        return $this->version;
     }
 
     public function setRawData(string $rawData): void {
@@ -301,6 +308,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return [
             "name" => $this->name,
             "group" => $this->group,
+            "plugin_version" => $this->version,
             "author" => $this->author,
             "actions" => $this->getActions(),
             "triggers" => $this->triggers,
@@ -330,6 +338,18 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         if (file_put_contents($path, $json) === false) {
             Main::getInstance()->getLogger()->error(Language::get("recipe.save.failed", [$this->getPathname()]));
         }
+    }
+
+    public function checkVersion(): void {
+        $createdVersion = $this->version;
+        $currentVersion = Main::getPluginVersion();
+
+        if ($createdVersion !== null and version_compare($createdVersion, $currentVersion, "=")) return;
+
+        $this->upgrade($createdVersion, $currentVersion);
+    }
+
+    public function upgrade(?string $from, string $to): void {
     }
 
     public function __clone() {

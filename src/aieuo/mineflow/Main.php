@@ -25,6 +25,8 @@ class Main extends PluginBase {
 
     /** @var Main */
     private static $instance;
+    /** @var string */
+    private static $pluginVersion;
 
     /** @var Config */
     private $config;
@@ -56,6 +58,7 @@ class Main extends PluginBase {
     /** @noinspection ReturnTypeCanBeDeclaredInspection */
     public function onEnable() {
         self::$instance = $this;
+        self::$pluginVersion = $this->getDescription()->getVersion();
 
         $serverLanguage = $this->getServer()->getLanguage()->getLang();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
@@ -142,5 +145,9 @@ class Main extends PluginBase {
 
     public static function getVariableHelper(): VariableHelper {
         return self::$variableHelper;
+    }
+
+    public static function getPluginVersion(): string {
+        return self::$pluginVersion;
     }
 }

@@ -39,7 +39,7 @@ class RecipePack implements \JsonSerializable {
         $this->forms = $forms ?? $this->getLinkedForms();
         $this->configs = $configs ?? $this->getLinkedConfigFiles();
 
-        $this->version = $version ?? Main::getInstance()->getDescription()->getVersion();
+        $this->version = $version ?? Main::getPluginVersion();
     }
 
     public function getRecipes(): array {
@@ -137,7 +137,7 @@ class RecipePack implements \JsonSerializable {
 
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
-            $recipe = new Recipe($data["name"], $data["group"], $data["author"]);
+            $recipe = new Recipe($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? null);
             $recipe->loadSaveData($data["actions"]);
 
             $recipe->setTargetSetting(
@@ -147,6 +147,7 @@ class RecipePack implements \JsonSerializable {
             $recipe->setTriggersFromArray($data["triggers"] ?? []);
             $recipe->setArguments($data["arguments"] ?? []);
             $recipe->setReturnValues($data["returnValues"] ?? []);
+            $recipe->checkVersion();
 
             $recipes[] = $recipe;
         }
