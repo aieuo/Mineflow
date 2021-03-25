@@ -19,7 +19,7 @@ trait Vector3FlowItemTrait {
         return $this->vector3VariableNames[$name] ?? "";
     }
 
-    public function setVector3VariableNames(string $vector3, string $name = ""): void {
+    public function setVector3VariableName(string $vector3, string $name = ""): void {
         $this->vector3VariableNames[$name] = $vector3;
     }
 
