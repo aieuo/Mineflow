@@ -3,7 +3,7 @@
 namespace aieuo\mineflow;
 
 use aieuo\mineflow\event\EntityAttackEvent;
-use aieuo\mineflow\flowItem\action\SetSitting;
+use aieuo\mineflow\flowItem\action\player\SetSitting;
 use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -123,7 +123,6 @@ class EventListener implements Listener {
     }
 
     public function onEntityDamageByEntity(EntityDamageByEntityEvent $event): void {
-        if ($event instanceof EntityAttackEvent) return;
         ($ev = new EntityAttackEvent(Main::getInstance(), $event))->call();
         if ($ev->isCancelled()) {
             $event->setCancelled();
