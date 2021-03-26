@@ -16,16 +16,16 @@ class PlayerExhaustEventTrigger extends EventTrigger {
         /** @var PlayerExhaustEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getEntityVariables($target);
-        $variables["amount"] = new NumberVariable($event->getAmount(), "amount");
-        $variables["cause"] = new NumberVariable($event->getCause(), "cause");
+        $variables["amount"] = new NumberVariable($event->getAmount());
+        $variables["cause"] = new NumberVariable($event->getCause());
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "amount" => new DummyVariable("amount", DummyVariable::NUMBER),
-            "cause" => new DummyVariable("cause", DummyVariable::NUMBER),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "amount" => new DummyVariable(DummyVariable::NUMBER),
+            "cause" => new DummyVariable(DummyVariable::NUMBER),
         ];
     }
 }

@@ -24,18 +24,18 @@ class EntityAttackEventTrigger extends PlayerEventTrigger {
         $entityDamageEvent = $event->getDamageEvent();
         $target = $entityDamageEvent->getEntity();
         $variables = DefaultVariables::getEntityVariables($target, "damaged");
-        $variables["damage"] = new NumberVariable($entityDamageEvent->getBaseDamage(), "damage");
-        $variables["cause"] = new NumberVariable($entityDamageEvent->getCause(), "cause");
+        $variables["damage"] = new NumberVariable($entityDamageEvent->getBaseDamage());
+        $variables["cause"] = new NumberVariable($entityDamageEvent->getCause());
         $variables = array_merge($variables, DefaultVariables::getEntityVariables($entityDamageEvent->getDamager(), "target"));
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "damage" => new DummyVariable("damage", DummyVariable::NUMBER),
-            "cause" => new DummyVariable("cause", DummyVariable::NUMBER),
-            "damaged" => new DummyVariable("damaged", DummyVariable::PLAYER),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "damage" => new DummyVariable(DummyVariable::NUMBER),
+            "cause" => new DummyVariable(DummyVariable::NUMBER),
+            "damaged" => new DummyVariable(DummyVariable::PLAYER),
         ];
     }
 }

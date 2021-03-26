@@ -26,7 +26,7 @@ class BlockTriggerForm extends TriggerForm {
                     $pos = explode(",", $trigger->getKey());
                     $level = Server::getInstance()->getLevelByName($pos[3]);
                     if ($level === null) {
-                        $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.block.level.notfound"]);
+                        $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.block.world.notfound"]);
                         return;
                     }
                     $player->teleport(new Position((int)$pos[0], (int)$pos[1], (int)$pos[2], $level));

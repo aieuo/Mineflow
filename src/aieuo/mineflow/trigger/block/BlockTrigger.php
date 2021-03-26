@@ -34,7 +34,9 @@ class BlockTrigger extends Trigger {
     }
 
     public function getVariablesDummy(): array {
-        return [new DummyVariable("block", DummyVariable::BLOCK)];
+        return [
+            "block" => new DummyVariable(DummyVariable::BLOCK)
+        ];
     }
 
     public function __toString(): string {

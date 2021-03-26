@@ -20,16 +20,24 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     /**
      * @param Variable[] $value
-     * @param string $name
      * @param string|null $str
      */
-    public function __construct(array $value, string $name = "", ?string $str = "") {
-        parent::__construct($value, $name);
+    public function __construct(array $value, ?string $str = "") {
+        parent::__construct($value);
         $this->showString = $str;
     }
 
-    public function addValue(Variable $value): void {
+    public function appendValue(Variable $value): void {
         $this->value[] = $value;
+    }
+
+    /**
+     * @param int|string $key
+     * @param Variable $value
+     */
+    public function setValueAt($key, Variable $value): void {
+        $this->value[(int)$key] = $value;
+        $this->value = array_values($this->value);
     }
 
     public function removeValue(Variable $value): void {
@@ -39,26 +47,31 @@ class ListVariable extends Variable implements \JsonSerializable {
         $this->value = array_merge($this->value);
     }
 
-    public function getValueFromIndex($index): ?Variable {
-        if (!isset($this->value[$index])) return null;
-        return $this->value[$index];
+    public function getValueFromIndex(string $index): ?Variable {
+        if (!isset($this->value[(int)$index])) return null;
+        return $this->value[(int)$index];
+    }
+
+    public function callMethod(string $name, array $parameters = []): ?Variable {
+        switch ($name) {
+            case "count":
+                return new NumberVariable(count($this->value));
+        }
+        return null;
     }
 
     public function getCount(): int {
         return count($this->value);
     }
 
-    public function toStringVariable(): StringVariable {
-        return new StringVariable($this->__toString(), $this->getName());
-    }
-
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
+
         $values = [];
         foreach ($this->getValue() as $value) {
-            $values[] = $value->__toString();
+            $values[] = (string)$value;
         }
-        return str_replace("\"", "", json_encode($values, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        return "[".implode(",", $values)."]";
     }
 
     public function getShowString(): string {
@@ -67,20 +80,9 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "name" => $this->getName(),
             "type" => $this->getType(),
             "value" => $this->getValue(),
         ];
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        $values = [];
-        foreach ($data["value"] as $value) {
-            if (!isset($value["type"])) return null;
-            $values[] = Variable::create($value["value"], $value["name"] ?? "", $value["type"]);
-        }
-        return new self($values, $data["name"] ?? "");
     }
 
     public function toArray(): array {

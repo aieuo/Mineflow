@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class RemoveItemCondition extends TypeItem {
 
@@ -11,12 +11,12 @@ class RemoveItemCondition extends TypeItem {
     protected $name = "condition.removeItem.name";
     protected $detail = "condition.removeItem.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $item = $this->getItem($origin);
+        $item = $this->getItem($source);
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         if (!$player->getInventory()->contains($item)) return false;

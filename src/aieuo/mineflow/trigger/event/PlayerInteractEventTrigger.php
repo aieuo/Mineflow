@@ -20,8 +20,8 @@ class PlayerInteractEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "block" => new DummyVariable("block", DummyVariable::BLOCK),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "block" => new DummyVariable(DummyVariable::BLOCK),
         ];
     }
 }

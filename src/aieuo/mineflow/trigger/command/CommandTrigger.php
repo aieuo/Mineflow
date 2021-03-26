@@ -34,8 +34,8 @@ class CommandTrigger extends Trigger {
 
     public function getVariablesDummy(): array {
         return [
-            new DummyVariable("cmd", DummyVariable::STRING),
-            new DummyVariable("args", DummyVariable::LIST),
+            "cmd" => new DummyVariable(DummyVariable::STRING),
+            "args" => new DummyVariable(DummyVariable::LIST),
         ];
     }
 

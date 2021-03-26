@@ -48,20 +48,19 @@ class SettingForm {
 
     public function sendEventListForm(Player $player): void {
         $events = Main::getEventManager()->getEvents();
-        $enables = Main::getEventManager()->getEnabledEvents();
         $contents = [];
-        foreach ($events as $name) {
-            $contents[] = new Toggle((string)EventTrigger::create($name), isset($enables[$name]));
+        foreach ($events as $name => $enabled) {
+            $contents[] = new Toggle((string)EventTrigger::create($name), $enabled);
         }
         (new CustomForm("@setting.event"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, array $data) use ($events, $enables) {
+            ->onReceive(function (Player $player, array $data) use ($events) {
                 $count = 0;
-                foreach ($events as $name) {
-                    if ($data[$count] and !isset($enables[$name])) {
-                        Main::getEventManager()->setEventEnabled($name, true);
-                    } elseif (!$data[$count] and isset($enables[$name])) {
-                        Main::getEventManager()->setEventEnabled($name, false);
+                foreach ($events as $name => $enabled) {
+                    if ($data[$count] and !$enabled) {
+                        Main::getEventManager()->enableEvent($name);
+                    } elseif (!$data[$count] and $enabled) {
+                        Main::getEventManager()->disableEvent($name);
                     }
                     $count++;
                 }

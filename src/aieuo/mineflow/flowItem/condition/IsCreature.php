@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 use pocketmine\entity\Creature;
 
@@ -13,10 +13,10 @@ class IsCreature extends IsActiveEntity {
     protected $name = "condition.isCreature.name";
     protected $detail = "condition.isCreature.detail";
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $origin->replaceVariables($this->getEntityId());
+        $id = $source->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
         $entity = EntityHolder::findEntity((int)$id);

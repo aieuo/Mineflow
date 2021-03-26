@@ -4,13 +4,9 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
@@ -78,16 +74,15 @@ class ComparisonNumber extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $origin->replaceVariables($this->getValue1());
-        $value2 = $origin->replaceVariables($this->getValue2());
+        $value1 = $source->replaceVariables($this->getValue1());
+        $value2 = $source->replaceVariables($this->getValue2());
         $operator = $this->getOperator();
 
-        if (!is_numeric($value1) or !is_numeric($value2)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber"));
-        }
+        $this->throwIfInvalidNumber($value1);
+        $this->throwIfInvalidNumber($value2);
 
         $value1 = (float)$value1;
         $value2 = (float)$value2;
@@ -117,19 +112,12 @@ class ComparisonNumber extends FlowItem implements Condition {
         return $result;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
-                new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
-                new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), true),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], $data[3]], "cancel" => $data[4]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
+            new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
+            new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), true),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

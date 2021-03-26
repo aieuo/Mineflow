@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -10,9 +11,9 @@ use pocketmine\event\Event;
 
 class EventObjectVariable extends ObjectVariable {
 
-    public function __construct(Event $value, string $name = "", ?string $str = null) {
+    public function __construct(Event $value, ?string $str = null) {
         $names = explode("\\", $value->getEventName());
-        parent::__construct($value, $name, $str ?? end($names));
+        parent::__construct($value, $str ?? end($names));
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -20,10 +21,10 @@ class EventObjectVariable extends ObjectVariable {
         switch ($index) {
             case "name":
                 $names = explode("\\", $event->getEventName());
-                $variable = new StringVariable(end($names), "name");
+                $variable = new StringVariable(end($names));
                 break;
             case "isCanceled":
-                $variable = new StringVariable($event->isCancelled() ? "true" : "false", "isCanceled");
+                $variable = new BoolVariable($event->isCancelled());
                 break;
             default:
                 return null;
@@ -37,10 +38,10 @@ class EventObjectVariable extends ObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".name", DummyVariable::STRING),
-            new DummyVariable($name.".isCanceled", DummyVariable::STRING),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "name" => new DummyVariable(DummyVariable::STRING),
+            "isCanceled" => new DummyVariable(DummyVariable::STRING),
         ]);
     }
 }

@@ -5,13 +5,10 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\ui\FlowItemContainerForm;
-use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
-use aieuo\mineflow\utils\Session;
 use pocketmine\Player;
 
 class AndScript extends FlowItem implements Condition, FlowItemContainer {
@@ -37,9 +34,9 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         foreach ($this->getConditions() as $condition) {
-            if (!(yield from $condition->execute($origin))) return false;
+            if (!(yield from $condition->execute($source))) return false;
         }
         return true;
     }
@@ -48,54 +45,17 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
         return true;
     }
 
-    public function sendCustomMenu(Player $player, array $messages = []): void {
-        $detail = trim($this->getDetail());
-        (new ListForm($this->getName()))
-            ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
-            ->addButtons([
-                new Button("@form.back"),
-                new Button("@condition.edit"),
-                new Button("@form.home.rename.title"),
-                new Button("@form.move"),
-                new Button("@form.delete"),
-            ])->onReceive(function (Player $player, int $data) {
-                $session = Session::getSession($player);
-                $parents = $session->get("parents");
-                $parent = end($parents);
-                switch ($data) {
-                    case 0:
-                        $session->pop("parents");
-                        (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::CONDITION);
-                        break;
-                    case 1:
-                        (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
-                        break;
-                    case 2:
-                        (new FlowItemForm)->sendChangeName($player, $this, $parent, FlowItemContainer::ACTION);
-                        break;
-                    case 3:
-                        (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::CONDITION, array_search($this, $parent->getConditions(), true));
-                        break;
-                    case 4:
-                        (new FlowItemForm)->sendConfirmDelete($player, $this, $parent, FlowItemContainer::CONDITION);
-                        break;
-                }
-            })->onClose(function (Player $player) {
-                Session::getSession($player)->removeAll();
-            })->addMessages($messages)->show($player);
+    public function getCustomMenuButtons(): array {
+        return [
+            new Button("@condition.edit", function (Player $player) {
+                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
+            }),
+        ];
     }
 
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents as $content) {
-            switch ($content["id"]) {
-                case "removeItem":
-                    $content["id"] = self::REMOVE_ITEM_CONDITION;
-                    break;
-                case "takeMoney":
-                    $content["id"] = self::TAKE_MONEY_CONDITION;
-                    break;
-            }
-            $condition = FlowItem::loadSaveDataStatic($content);
+            $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
         }
         return $this;

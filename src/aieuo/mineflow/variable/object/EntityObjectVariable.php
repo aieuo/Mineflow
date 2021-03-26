@@ -17,25 +17,25 @@ class EntityObjectVariable extends PositionObjectVariable {
         $entity = $this->getEntity();
         switch ($index) {
             case "id":
-                $variable = new NumberVariable($entity->getId(), "id");
+                $variable = new NumberVariable($entity->getId());
                 break;
             case "nameTag":
-                $variable = new StringVariable($entity->getNameTag(), "nameTag");
+                $variable = new StringVariable($entity->getNameTag());
                 break;
             case "health":
-                $variable = new NumberVariable($entity->getHealth(), "health");
+                $variable = new NumberVariable($entity->getHealth());
                 break;
             case "maxHealth":
-                $variable = new NumberVariable($entity->getMaxHealth(), "maxHealth");
+                $variable = new NumberVariable($entity->getMaxHealth());
                 break;
             case "yaw":
-                $variable = new NumberVariable($entity->getYaw(), "yaw");
+                $variable = new NumberVariable($entity->getYaw());
                 break;
             case "pitch":
-                $variable = new NumberVariable($entity->getPitch(), "pitch");
+                $variable = new NumberVariable($entity->getPitch());
                 break;
             case "direction":
-                $variable = new NumberVariable($entity->getDirection(), "direction");
+                $variable = new NumberVariable($entity->getDirection());
                 break;
             default:
                 return null;
@@ -49,15 +49,15 @@ class EntityObjectVariable extends PositionObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".id", DummyVariable::NUMBER),
-            new DummyVariable($name.".nameTag", DummyVariable::STRING),
-            new DummyVariable($name.".health", DummyVariable::NUMBER),
-            new DummyVariable($name.".maxHealth", DummyVariable::NUMBER),
-            new DummyVariable($name.".yaw", DummyVariable::NUMBER),
-            new DummyVariable($name.".pitch", DummyVariable::NUMBER),
-            new DummyVariable($name.".direction", DummyVariable::NUMBER),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "id" => new DummyVariable(DummyVariable::NUMBER),
+            "nameTag" => new DummyVariable(DummyVariable::STRING),
+            "health" => new DummyVariable(DummyVariable::NUMBER),
+            "maxHealth" => new DummyVariable(DummyVariable::NUMBER),
+            "yaw" => new DummyVariable(DummyVariable::NUMBER),
+            "pitch" => new DummyVariable(DummyVariable::NUMBER),
+            "direction" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
 }

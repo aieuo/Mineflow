@@ -11,11 +11,10 @@ class ObjectVariable extends Variable {
 
     /**
      * @param object $value
-     * @param string $name
      * @param string|null $str
      */
-    public function __construct(object $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name);
+    public function __construct(object $value, ?string $str = null) {
+        parent::__construct($value);
         $this->showString = $str;
     }
 
@@ -25,19 +24,6 @@ class ObjectVariable extends Variable {
 
     public function getShowString(): ?string {
         return $this->showString;
-    }
-
-    /** @noinspection PhpUnusedParameterInspection */
-    public function getValueFromIndex(string $index): ?Variable {
-        return null;
-    }
-
-    public function isSavable(): bool {
-        return false;
-    }
-
-    public function toStringVariable(): StringVariable {
-        return new StringVariable($this->__toString(), $this->getName());
     }
 
     public function __toString(): string {
@@ -50,24 +36,10 @@ class ObjectVariable extends Variable {
         return $str;
     }
 
-    public function jsonSerialize(): array {
-        return [
-            $this->getName(),
-            $this->getType(),
-            $this->getValue(),
-        ];
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        return new self($data["value"], $data["name"] ?? "");
-    }
-
     /**
-     * @param string $name
-     * @return DummyVariable[]
+     * @return array<string, DummyVariable>
      */
-    public static function getValuesDummy(string $name): array {
+    public static function getValuesDummy(): array {
         return [];
     }
 }

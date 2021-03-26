@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Category;
 
 class CheckNothing extends FlowItem implements Condition {
@@ -15,7 +15,7 @@ class CheckNothing extends FlowItem implements Condition {
 
     protected $category = Category::COMMON;
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         yield true;
         return true;
     }

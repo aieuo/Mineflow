@@ -24,9 +24,9 @@ class SignChangeEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "sign_lines" => new DummyVariable("sign_lines", DummyVariable::LIST),
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "block" => new DummyVariable("block", DummyVariable::BLOCK),
+            "sign_lines" => new DummyVariable(DummyVariable::LIST),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "block" => new DummyVariable(DummyVariable::BLOCK),
         ];
     }
 }

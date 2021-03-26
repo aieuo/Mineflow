@@ -3,14 +3,10 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
@@ -63,14 +59,14 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         return Language::get($this->detail, [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $helper = Main::getVariableHelper();
-        $name = $origin->replaceVariables($this->getVariableName());
-        $key = $origin->replaceVariables($this->getKey());
+        $name = $source->replaceVariables($this->getVariableName());
+        $key = $source->replaceVariables($this->getKey());
 
-        $variable = $this->isLocal ? $origin->getVariable($name) : $helper->get($name);
+        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
 
@@ -78,19 +74,16 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         return isset($value[$key]);
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-                new ExampleInput("@action.variable.form.key", "auieo", $this->getKey(), true),
-                new Toggle("@action.variable.form.global", !$this->isLocal),
-                new CancelToggle()
-            ]);
+    public function getEditFormElements(array $variables): array {
+        return [
+            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
+            new ExampleInput("@action.variable.form.key", "auieo", $this->getKey(), true),
+            new Toggle("@action.variable.form.global", !$this->isLocal),
+        ];
     }
 
     public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2], !$data[3]], "cancel" => $data[4]];
+        return [$data[0], $data[1], !$data[2]];
     }
 
     public function loadSaveData(array $content): FlowItem {

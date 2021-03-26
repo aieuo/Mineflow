@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\exception\UnsupportedCalculationException;
+
 abstract class Variable {
 
     public const DUMMY = -1;
@@ -10,34 +12,27 @@ abstract class Variable {
     public const LIST = 2;
     public const MAP = 3;
     public const OBJECT = 4;
+    public const BOOLEAN = 5;
 
-    /** @var string 変数の名前 */
-    protected $name;
-    /** @var string|int|Variable[]|object 変数の値 */
+    /** @var string|int|Variable[]|object */
     protected $value;
-    /** @var int 変数の型 */
+    /** @var int */
     public $type;
 
-    /**
-     * @param mixed $value
-     * @param string $name
-     * @param int $type
-     * @return self|null
-     */
-    public static function create($value, string $name = "", int $type = self::STRING): ?self {
+    public static function create($value, int $type = self::STRING): ?self {
         $variable = null;
         switch ($type) {
             case self::STRING:
-                $variable = StringVariable::fromArray(["name" => $name, "value" => (string)$value]);
+                $variable = new StringVariable((string)$value);
                 break;
             case self::NUMBER:
-                $variable = NumberVariable::fromArray(["name" => $name, "value" => (float)$value]);
+                $variable = new NumberVariable((float)$value);
                 break;
             case self::LIST:
-                $variable = ListVariable::fromArray(["name" => $name, "value" => $value]);
+                $variable = new ListVariable($value);
                 break;
             case self::MAP:
-                $variable = MapVariable::fromArray(["name" => $name, "value" => $value]);
+                $variable = new MapVariable($value);
                 break;
             default:
                 return null;
@@ -47,19 +42,9 @@ abstract class Variable {
 
     /**
      * @param mixed $value
-     * @param string $name
      */
-    public function __construct($value, string $name = "") {
+    public function __construct($value) {
         $this->value = $value;
-        $this->name = $name;
-    }
-
-    public function setName(string $name): void {
-        $this->name = $name;
-    }
-
-    public function getName(): string {
-        return $this->name;
     }
 
     /**
@@ -70,25 +55,41 @@ abstract class Variable {
     }
 
     /**
-     * @return string|int|Variable[]|object
+     * @return string|int|Variable[]|object|bool
      */
     public function getValue() {
         return $this->value;
+    }
+
+    public function getValueFromIndex(string $index): ?Variable {
+        return null;
+    }
+
+    public function callMethod(string $name, array $parameters = []): ?Variable {
+        return null;
     }
 
     public function getType(): int {
         return $this->type;
     }
 
-    public function isSavable(): bool {
-        return true;
-    }
-
     public function __toString(): string {
         return (string)$this->getValue();
     }
 
-    abstract public function toStringVariable(): StringVariable;
+    public function add($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
 
-    abstract public static function fromArray(array $data): ?Variable;
+    public function sub($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
+
+    public function mul($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
+
+    public function div($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
 }

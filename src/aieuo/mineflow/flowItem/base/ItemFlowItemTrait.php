@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use pocketmine\item\Item;
@@ -23,24 +23,14 @@ trait ItemFlowItemTrait {
         $this->itemVariableNames[$name] = $item;
     }
 
-    public function getItem(Recipe $origin, string $name = ""): Item {
-        $item = $origin->replaceVariables($rawName = $this->getItemVariableName($name));
+    public function getItem(FlowItemExecutor $source, string $name = ""): Item {
+        $item = $source->replaceVariables($rawName = $this->getItemVariableName($name));
 
-        $variable = $origin->getVariable($item);
+        $variable = $source->getVariable($item);
         if ($variable instanceof ItemObjectVariable and ($item = $variable->getItem()) instanceof Item) {
             return $item;
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $rawName]));
-    }
-
-    /**
-     * @param Item|null $item
-     * @deprecated merge this into getItem()
-     */
-    public function throwIfInvalidItem(?Item $item): void {
-        if (!($item instanceof Item)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $this->getItemVariableName()]));
-        }
     }
 }

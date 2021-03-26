@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem;
+
+use aieuo\mineflow\variable\DummyVariable;
 
 interface FlowItemContainer {
 
@@ -61,15 +65,10 @@ interface FlowItemContainer {
     public function getConditions(): array;
 
     /**
-     * @return mixed
-     */
-    public function getLastResult();
-
-    /**
      * @param FlowItem $flowItem
-     * @param array $containers
+     * @param FlowItemContainer[] $containers
      * @param string $type
-     * @return mixed
+     * @return array<string, DummyVariable>
      */
-    public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type);
+    public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array;
 }

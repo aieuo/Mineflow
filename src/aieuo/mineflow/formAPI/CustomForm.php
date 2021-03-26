@@ -49,7 +49,11 @@ class CustomForm extends Form {
         return $this->contents[$index] ?? null;
     }
 
-    public function addContents(Element ...$contents): self {
+    /**
+     * @param Element[] $contents
+     * @return $this
+     */
+    public function addContents(array $contents): self {
         $this->contents = array_merge($this->contents, $contents);
         return $this;
     }

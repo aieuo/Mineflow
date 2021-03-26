@@ -16,14 +16,14 @@ class PlayerChatEventTrigger extends EventTrigger {
         /** @var PlayerChatEvent $event */
         $target = $event->getPlayer();
         $variables =  DefaultVariables::getPlayerVariables($target);
-        $variables["message"] = new StringVariable($event->getMessage(), "message");
+        $variables["message"] = new StringVariable($event->getMessage());
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "message" => new DummyVariable("message", DummyVariable::STRING),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "message" => new DummyVariable(DummyVariable::STRING),
         ];
     }
 }

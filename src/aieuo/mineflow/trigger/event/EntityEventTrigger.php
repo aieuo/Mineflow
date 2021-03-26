@@ -16,7 +16,7 @@ class EntityEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::ENTITY),
+            "target" => new DummyVariable(DummyVariable::ENTITY),
         ];
     }
 }

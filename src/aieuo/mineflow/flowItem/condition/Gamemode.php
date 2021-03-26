@@ -5,13 +5,9 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\Form;
-use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
@@ -59,10 +55,10 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         return Language::get($this->detail, [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])]);
     }
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($origin);
+        $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
         $gamemode = $this->getGamemode();
@@ -71,20 +67,13 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         return $player->getGamemode() === $gamemode;
     }
 
-    public function getEditForm(array $variables = []): Form {
-        return (new CustomForm($this->getName()))
-            ->setContents([
-                new Label($this->getDescription()),
-                new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-                new Dropdown("@condition.gamemode.form.gamemode", array_map(function (string $mode) {
-                    return Language::get($mode);
-                }, $this->gamemodes), $this->getGamemode()),
-                new CancelToggle()
-            ]);
-    }
-
-    public function parseFromFormData(array $data): array {
-        return ["contents" => [$data[1], $data[2]], "cancel" => $data[3]];
+    public function getEditFormElements(array $variables): array {
+        return [
+            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            new Dropdown("@condition.gamemode.form.gamemode", array_map(function (string $mode) {
+                return Language::get($mode);
+            }, $this->gamemodes), $this->getGamemode()),
+        ];
     }
 
     public function loadSaveData(array $content): FlowItem {

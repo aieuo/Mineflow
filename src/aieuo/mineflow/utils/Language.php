@@ -29,7 +29,6 @@ class Language {
         return self::$availableLanguages;
     }
 
-
     public static function loadBaseMessage(string $language = null): void {
         $language = $language ?? self::$language;
         $owner = Main::getInstance();

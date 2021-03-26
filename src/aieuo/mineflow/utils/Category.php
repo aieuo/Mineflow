@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\utils;
 
 class Category {
@@ -12,7 +14,7 @@ class Category {
     public const FORM = "form";
     public const INVENTORY = "inventory";
     public const ITEM = "item";
-    public const LEVEL = "level";
+    public const WORLD = "world";
     public const PLAYER = "player";
     public const PLUGIN = "plugin";
     public const MATH = "math";
@@ -30,7 +32,7 @@ class Category {
         self::ITEM,
         self::COMMAND,
         self::BLOCK,
-        self::LEVEL,
+        self::WORLD,
         self::EVENT,
         self::SCRIPT,
         self::MATH,

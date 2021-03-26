@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use pocketmine\level\Position;
@@ -23,24 +23,14 @@ trait PositionFlowItemTrait {
         $this->positionVariableNames[$name] = $position;
     }
 
-    public function getPosition(Recipe $origin, string $name = ""): Position {
-        $position = $origin->replaceVariables($rawName = $this->getPositionVariableName($name));
+    public function getPosition(FlowItemExecutor $source, string $name = ""): Position {
+        $position = $source->replaceVariables($rawName = $this->getPositionVariableName($name));
 
-        $variable = $origin->getVariable($position);
+        $variable = $source->getVariable($position);
         if ($variable instanceof PositionObjectVariable and ($position = $variable->getPosition()) instanceof Position) {
             return $position;
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.position"], $rawName]));
-    }
-
-    /**
-     * @param Position|null $position
-     * @deprecated merge this into getPosition()
-     */
-    public function throwIfInvalidPosition(?Position $position): void {
-        if (!($position instanceof Position)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.position"], $this->getPositionVariableName()]));
-        }
     }
 }

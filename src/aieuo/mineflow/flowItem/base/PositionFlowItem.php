@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\level\Position;
 
 interface PositionFlowItem {
@@ -15,16 +15,10 @@ interface PositionFlowItem {
     public function setPositionVariableName(string $position, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param FlowItemExecutor $source
      * @param string $name
      * @return Position
      * @throws InvalidFlowValueException
      */
-    public function getPosition(Recipe $origin, string $name = ""): Position;
-
-    /**
-     * @param Position|null $position
-     * @deprecated merge this into getPosition()
-     */
-    public function throwIfInvalidPosition(?Position $position): void;
+    public function getPosition(FlowItemExecutor $source, string $name = ""): Position;
 }

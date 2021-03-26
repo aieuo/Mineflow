@@ -14,6 +14,12 @@ class EntityVariableDropdown extends VariableDropdown {
         FlowItemIds::CREATE_HUMAN_ENTITY,
     ];
 
+    /**
+     * @param array<string, DummyVariable> $variables
+     * @param string $default
+     * @param string|null $text
+     * @param bool $optional
+     */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
         parent::__construct($text ?? "@action.form.target.entity", $variables, [DummyVariable::PLAYER, DummyVariable::ENTITY], $default, $optional);
     }

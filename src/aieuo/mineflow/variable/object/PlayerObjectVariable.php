@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -9,8 +11,8 @@ use pocketmine\Player;
 
 class PlayerObjectVariable extends HumanObjectVariable {
 
-    public function __construct(Player $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? $value->getName());
+    public function __construct(Player $value, ?string $str = null) {
+        parent::__construct($value, $str ?? $value->getName());
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -20,7 +22,7 @@ class PlayerObjectVariable extends HumanObjectVariable {
         $player = $this->getPlayer();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($player->getName(), "name");
+                $variable = new StringVariable($player->getName());
                 break;
             default:
                 return null;
@@ -34,9 +36,9 @@ class PlayerObjectVariable extends HumanObjectVariable {
         return $value;
     }
 
-    public static function getValuesDummy(string $name): array {
-        return array_merge(parent::getValuesDummy($name), [
-            new DummyVariable($name.".name", DummyVariable::STRING),
+    public static function getValuesDummy(): array {
+        return array_merge(parent::getValuesDummy(), [
+            "name" => new DummyVariable(DummyVariable::STRING),
         ]);
     }
 }

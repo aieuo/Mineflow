@@ -8,14 +8,14 @@ use Throwable;
 
 class InvalidFlowValueException extends \RuntimeException {
     /** @var string */
-    private $name;
+    private $flowItemName;
 
-    public function __construct(string $name = "", string $message = "", int $code = 0, Throwable $previous = null) {
-        parent::__construct(Language::get("action.error", [$name, $message]), $code, $previous);
-        $this->name = $name;
+    public function __construct(string $flowItemName = "", string $message = "", int $code = 0, Throwable $previous = null) {
+        parent::__construct(Language::get("action.error", [$flowItemName, $message]), $code, $previous);
+        $this->flowItemName = $flowItemName;
     }
 
-    public function getName(): string {
-        return $this->name;
+    public function getFlowItemName(): string {
+        return $this->flowItemName;
     }
 }

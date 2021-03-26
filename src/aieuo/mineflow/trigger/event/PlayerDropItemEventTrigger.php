@@ -17,14 +17,14 @@ class PlayerDropItemEventTrigger extends EventTrigger {
         $target = $event->getPlayer();
         $item = $event->getItem();
         return array_merge(DefaultVariables::getPlayerVariables($target), [
-            "item" => new ItemObjectVariable($item, "item", $item->__toString()),
+            "item" => new ItemObjectVariable($item),
         ]);
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "item" => new DummyVariable("item", DummyVariable::ITEM),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "item" => new DummyVariable(DummyVariable::ITEM),
         ];
     }
 }

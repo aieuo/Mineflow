@@ -2,17 +2,22 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\exception\UnsupportedCalculationException;
+
 class NumberVariable extends Variable implements \JsonSerializable {
 
     public $type = Variable::NUMBER;
 
+    public static function zero(): self {
+        return new NumberVariable(0);
+    }
+
     /**
      * @param int|float $value
-     * @param string $name
      * @noinspection SenselessProxyMethodInspection
      */
-    public function __construct($value, string $name = "") {
-        parent::__construct($value, $name);
+    public function __construct($value) {
+        parent::__construct($value);
     }
 
     /**
@@ -23,43 +28,67 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return parent::getValue();
     }
 
-    public function addition(NumberVariable $var, string $resultName = "result"): NumberVariable {
+    public function addition(NumberVariable $var): NumberVariable {
         $result = $this->getValue() + $var->getValue();
-        return new NumberVariable($result, $resultName);
+        return new NumberVariable($result);
     }
 
-    public function subtraction(NumberVariable $var, string $resultName = "result"): NumberVariable {
+    public function subtraction(NumberVariable $var): NumberVariable {
         $result = $this->getValue() - $var->getValue();
-        return new NumberVariable($result, $resultName);
+        return new NumberVariable($result);
     }
 
-    public function multiplication(NumberVariable $var, string $resultName = "result"): NumberVariable {
+    public function multiplication(NumberVariable $var): NumberVariable {
         $result = $this->getValue() * $var->getValue();
-        return new NumberVariable($result, $resultName);
+        return new NumberVariable($result);
     }
 
-    public function division(NumberVariable $var, string $resultName = "result"): NumberVariable {
+    public function division(NumberVariable $var): NumberVariable {
         $result = $this->getValue() / $var->getValue();
-        return new NumberVariable($result, $resultName);
+        return new NumberVariable($result);
     }
 
-    public function modulo(NumberVariable $var, string $resultName = "result"): NumberVariable {
+    public function modulo(NumberVariable $var): NumberVariable {
         $result = $this->getValue() % $var->getValue();
-        return new NumberVariable($result, $resultName);
+        return new NumberVariable($result);
+    }
+
+    public function add($target): Variable {
+        if ($target instanceof NumberVariable) return $this->addition($target);
+        if (is_numeric($target)) return new NumberVariable($this->getValue() + $target);
+
+        throw new UnsupportedCalculationException();
+    }
+
+    public function sub($target): Variable {
+        if ($target instanceof NumberVariable) return $this->subtraction($target);
+        if (is_numeric($target)) return new NumberVariable($this->getValue() - $target);
+
+        throw new UnsupportedCalculationException();
+    }
+
+    public function mul($target): Variable {
+        if ($target instanceof NumberVariable) return $this->multiplication($target);
+        if (is_numeric($target)) return new NumberVariable($this->getValue() * $target);
+
+        throw new UnsupportedCalculationException();
+    }
+
+    public function div($target): Variable {
+        if ($target instanceof NumberVariable) return $this->division($target);
+        if (is_numeric($target)) return new NumberVariable($this->getValue() / $target);
+
+        throw new UnsupportedCalculationException();
     }
 
     public function toStringVariable(): StringVariable {
-        return new StringVariable((string)$this->getValue(), $this->getName());
+        return new StringVariable((string)$this->getValue());
     }
 
     public function jsonSerialize(): array {
         return [
-            "name" => $this->getName(), "type" => $this->getType(), "value" => $this->getValue(),
+            "type" => $this->getType(),
+            "value" => $this->getValue(),
         ];
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        return new self((float)$data["value"], $data["name"] ?? "");
     }
 }

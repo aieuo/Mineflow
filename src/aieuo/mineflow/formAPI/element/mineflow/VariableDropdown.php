@@ -28,53 +28,66 @@ abstract class VariableDropdown extends Dropdown {
     protected $actions = [];
     /* @var array */
     private $variableTypes;
+    /** @var array */
+    private $variableNames = [];
 
-    public const VALUE_SEPARATOR_LEFT = " §7(";
     /* @var bool */
     private $optional;
 
+    private $createVariableOptionIndex = -1;
+    private $inputManuallyOptionIndex = -1;
+
+    /**
+     * @param string $text
+     * @param array<string, DummyVariable> $variables
+     * @param string[] $variableTypes
+     * @param string $default
+     * @param bool $optional
+     */
     public function __construct(string $text, array $variables = [], array $variableTypes = [], string $default = "", bool $optional = false) {
         $this->defaultText = $default;
         $this->variableTypes = $variableTypes;
         $this->optional = $optional;
         $options = $this->updateOptions($this->flattenVariables($variables));
 
-        $defaultKey = $this->findDefaultKey($default);
-        parent::__construct($text, $options, $defaultKey >= 0 ? $defaultKey : 0);
+        parent::__construct($text, $options, $this->findDefaultKey($default));
     }
 
     public function updateOptions(array $variables): array {
         $variableTypes = $this->variableTypes;
         $default = $this->defaultText;
 
-        $variables = array_filter($variables, function (DummyVariable $v) use ($variableTypes) {
-            return in_array($v->getValueType(), $variableTypes, true);
-        });
-        $options = array_values(array_unique(array_map(function (DummyVariable $v) {
-            return empty($v->getDescription()) ? $v->getName() : ($v->getName().self::VALUE_SEPARATOR_LEFT.$v->getDescription().")");
-        }, $variables)));
+        $options = [];
+        foreach ($variables as $name => $variable) {
+            if (!in_array($variable->getValueType(), $variableTypes, true)) continue;
 
-        if ($this->findDefaultKey($default, $options) === -1) {
-            $options[] = $default;
+            $options[$name] = empty($variable->getDescription()) ? $name : ($name." §7(".$variable->getDescription().")");
         }
 
-        if ($this->isOptional()) $options[] = Language::get("form.element.variableDropdown.none");
-        $options[] = Language::get("form.element.variableDropdown.createVariable");
+        if ($default !== "" and !isset($options[$default])) {
+            $options[$default] = $default;
+        }
+
+        if ($this->isOptional()) {
+            array_unshift($options, Language::get("form.element.variableDropdown.none"));
+        }
+        if ($this->canSendCreateVariableForm()) {
+            $options[] = Language::get("form.element.variableDropdown.createVariable");
+            $this->createVariableOptionIndex = count($options) - 1;
+        }
         $options[] = Language::get("form.element.variableDropdown.inputManually");
-        $this->options = $options;
-        return $options;
+        $this->inputManuallyOptionIndex = count($options) - 1;
+
+        $this->variableNames = array_keys($options);
+        $this->options = array_values($options);
+        return $this->options;
     }
 
-    public function findDefaultKey(string $default, array $options = null): int {
-        if ($default === "" and !$this->isOptional()) return 0;
+    public function findDefaultKey(string $default): int {
+        if ($default === "") return 0;
 
-        $options = $options ?? $this->options;
-        if ($default === "") return count($options) - 3;
-
-        foreach ($options as $i => $option) {
-            if (strpos(explode(self::VALUE_SEPARATOR_LEFT, $option)[0], $default) !== false) return $i;
-        }
-        return -1;
+        $key = array_search($default, $this->variableNames, true);
+        return $key === false ? 0 : $key;
     }
 
     public function updateDefault(string $default): void {
@@ -94,22 +107,26 @@ abstract class VariableDropdown extends Dropdown {
         return $this->optional;
     }
 
+    public function canSendCreateVariableForm(): bool {
+       return count($this->actions) > 0;
+    }
+
     /**
-     * @param DummyVariable[] $variables
-     * @return DummyVariable[]
+     * @param array<string, DummyVariable> $variables
+     * @return array<string, DummyVariable>
      */
     public function flattenVariables(array $variables): array {
         $flat = [];
-        foreach ($variables as $variable) {
-            $flat[] = $variable;
-            foreach ($variable->getObjectValuesDummy() as $value) {
+        foreach ($variables as $baseName => $variable) {
+            $flat[$baseName] = $variable;
+            foreach ($variable->getObjectValuesDummy() as $propName => $value) {
                 if (!$value->isObjectVariableType()) {
-                    $flat[] = $value;
+                    $flat[$baseName.".".$propName] = $value;
                     continue;
                 }
 
-                foreach ($this->flattenVariables([$value]) as $flattenVariable) {
-                    $flat[] = $flattenVariable;
+                foreach ($this->flattenVariables([$baseName.".".$propName => $value]) as $name => $flattenVariable) {
+                    $flat[$name] = $flattenVariable;
                 }
             }
         }
@@ -151,12 +168,17 @@ abstract class VariableDropdown extends Dropdown {
                         $add = $action->getAddingVariables();
                         $variables = array_merge($recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION), $add);
 
-                        /** @var VariableDropdown $dropdown */
-                        $dropdown = $origin->getContent($index);
-                        $dropdown->updateOptions($variables);
-                        $dropdown->updateDefault($add[0]->getName());
+                        $indexes = [];
+                        foreach ($origin->getContents() as $i => $content) {
+                            if ($content instanceof VariableDropdown) {
+                                $tmp = $content->getDefaultText();
+                                $content->updateOptions($variables);
+                                $content->updateDefault($index === $i ? array_key_first($add) : $tmp);
+                                $indexes[$i] = $content->getDefault();
+                            }
+                        }
 
-                        $origin->resend([], ["@form.added"], [$index => $dropdown->getDefault()]);
+                        $origin->resend([], ["@form.added"], $indexes);
                     })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
                 });
             })->addButton(new Button("@form.cancelAndBack", function () use($origin) {
@@ -165,23 +187,28 @@ abstract class VariableDropdown extends Dropdown {
     }
 
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {
-        $options = $this->getOptions();
-        $maxIndex = count($options) - 1;
-        $data = $response->getDropdownResponse();
+        $selectedIndex = $response->getDropdownResponse();
 
-        if ($data === $maxIndex) { // 手動で入力する時
+        if ($this->isOptional() and $selectedIndex === 0) {
+            $response->overrideResponse("");
+            return;
+        }
+
+        if ($selectedIndex === $this->inputManuallyOptionIndex) {
             $response->setResend(true);
             $response->overrideElement(new ExampleInput($this->getText(), $this->getVariableType(), $this->getDefaultText(), !$this->isOptional()), $this->getDefaultText());
-        } elseif ($data === $maxIndex - 1) { // 変数を追加するとき
+            return;
+        }
+
+        if ($selectedIndex === $this->createVariableOptionIndex) {
             $index = $response->getCurrentIndex();
             $response->setInterruptCallback(function () use($response, $player, $index) {
                 $this->sendAddVariableForm($player, $response->getCustomForm(), $index);
                 return true;
             });
-        } elseif ($this->isOptional() and $data === $maxIndex - 2) {
-            $response->overrideResponse("");
-        } else { // 変数名を選択したとき
-            $response->overrideResponse(explode(VariableDropdown::VALUE_SEPARATOR_LEFT, $options[$data])[0]); // TODO: 文字列操作せずに変数名だけ取り出す
+            return;
         }
+
+        $response->overrideResponse($this->variableNames[$selectedIndex]);
     }
 }

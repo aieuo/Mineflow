@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use pocketmine\entity\Entity;
@@ -24,10 +24,10 @@ trait EntityFlowItemTrait {
         $this->entityVariableNames[$name] = $entity;
     }
 
-    public function getEntity(Recipe $origin, string $name = ""): Entity {
-        $entity = $origin->replaceVariables($rawName = $this->getEntityVariableName($name));
+    public function getEntity(FlowItemExecutor $source, string $name = ""): Entity {
+        $entity = $source->replaceVariables($rawName = $this->getEntityVariableName($name));
 
-        $variable = $origin->getVariable($entity);
+        $variable = $source->getVariable($entity);
         if ($variable instanceof EntityObjectVariable and ($entity = $variable->getEntity())) {
             return $entity;
         }

@@ -8,11 +8,12 @@ use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\object\LevelObjectVariable;
+use aieuo\mineflow\variable\object\WorldObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
 use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
+use aieuo\mineflow\variable\object\Vector3ObjectVariable;
 
 class DummyVariable extends Variable {
 
@@ -26,6 +27,7 @@ class DummyVariable extends Variable {
     public const UNKNOWN = "unknown";
     public const STRING = "string";
     public const NUMBER = "number";
+    public const BOOLEAN = "boolean";
     public const LIST = "list";
     public const MAP = "map";
     public const BLOCK = "block";
@@ -34,16 +36,17 @@ class DummyVariable extends Variable {
     public const EVENT = "event";
     public const HUMAN = "human";
     public const ITEM = "item";
-    public const LEVEL = "level";
+    public const WORLD = "world";
     public const LOCATION = "location";
     public const PLAYER = "player";
     public const POSITION = "position";
+    public const VECTOR3 = "vector3";
     public const SCOREBOARD = "scoreboard";
 
-    public function __construct(string $name = "", string $valueType = "", string $description = "") {
+    public function __construct(string $valueType = "", string $description = "") {
         $this->valueType = $valueType;
         $this->description = $description;
-        parent::__construct("", $name);
+        parent::__construct("");
     }
 
     public function getDescription(): string {
@@ -55,40 +58,38 @@ class DummyVariable extends Variable {
     }
 
     public function toStringVariable(): StringVariable {
-        return new StringVariable($this->getName(), $this->getValue());
-    }
-
-    public function isSavable(): bool {
-        return false;
+        return new StringVariable($this->getValue());
     }
 
     /**
-     * @return DummyVariable[]
+     * @return array<string, DummyVariable>
      */
     public function getObjectValuesDummy(): array {
         switch ($this->getValueType()) {
             case self::BLOCK:
-                return BlockObjectVariable::getValuesDummy($this->getName());
+                return BlockObjectVariable::getValuesDummy();
             case self::CONFIG:
-                return ConfigObjectVariable::getValuesDummy($this->getName());
+                return ConfigObjectVariable::getValuesDummy();
             case self::ENTITY:
-                return EntityObjectVariable::getValuesDummy($this->getName());
+                return EntityObjectVariable::getValuesDummy();
             case self::EVENT:
-                return EventObjectVariable::getValuesDummy($this->getName());
+                return EventObjectVariable::getValuesDummy();
             case self::HUMAN:
-                return HumanObjectVariable::getValuesDummy($this->getName());
+                return HumanObjectVariable::getValuesDummy();
             case self::ITEM:
-                return ItemObjectVariable::getValuesDummy($this->getName());
-            case self::LEVEL:
-                return LevelObjectVariable::getValuesDummy($this->getName());
+                return ItemObjectVariable::getValuesDummy();
+            case self::WORLD:
+                return WorldObjectVariable::getValuesDummy();
             case self::LOCATION:
-                return LocationObjectVariable::getValuesDummy($this->getName());
+                return LocationObjectVariable::getValuesDummy();
             case self::PLAYER:
-                return PlayerObjectVariable::getValuesDummy($this->getName());
+                return PlayerObjectVariable::getValuesDummy();
             case self::POSITION:
-                return PositionObjectVariable::getValuesDummy($this->getName());
+                return PositionObjectVariable::getValuesDummy();
+            case self::VECTOR3:
+                return Vector3ObjectVariable::getValuesDummy();
             case self::SCOREBOARD:
-                return ScoreboardObjectVariable::getValuesDummy($this->getName());
+                return ScoreboardObjectVariable::getValuesDummy();
             default:
                 return [];
         }
@@ -102,16 +103,12 @@ class DummyVariable extends Variable {
             self::EVENT,
             self::HUMAN,
             self::ITEM,
-            self::LEVEL,
+            self::WORLD,
             self::LOCATION,
             self::PLAYER,
             self::POSITION,
+            self::VECTOR3,
             self::SCOREBOARD,
         ], true);
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        return new self($data["value"], $data["name"] ?? "");
     }
 }

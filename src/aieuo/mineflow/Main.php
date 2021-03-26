@@ -7,12 +7,11 @@ use aieuo\mineflow\command\CommandManager;
 use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
-use aieuo\mineflow\event\EventManager;
-use aieuo\mineflow\event\EventTriggerListener;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\RecipeManager;
-use aieuo\mineflow\trigger\event\EventTriggerList;
+use aieuo\mineflow\trigger\event\EventManager;
+use aieuo\mineflow\trigger\time\CheckTimeTriggerTask;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\FormManager;
 use aieuo\mineflow\utils\Language;
@@ -25,6 +24,8 @@ class Main extends PluginBase {
 
     /** @var Main */
     private static $instance;
+    /** @var string */
+    private static $pluginVersion;
 
     /** @var Config */
     private $config;
@@ -36,18 +37,16 @@ class Main extends PluginBase {
 
     /** @var RecipeManager */
     private static $recipeManager;
-
     /** @var CommandManager */
     private static $commandManager;
+    /** @var EventManager */
+    private static $eventManager;
+    /** @var FormManager */
+    private static $formManager;
 
     /** @var VariableHelper */
     private static $variableHelper;
 
-    /** @var FormManager */
-    private static $formManager;
-
-    /** @var EventManager */
-    private static $eventManager;
 
     public static function getInstance(): self {
         return self::$instance;
@@ -56,6 +55,7 @@ class Main extends PluginBase {
     /** @noinspection ReturnTypeCanBeDeclaredInspection */
     public function onEnable() {
         self::$instance = $this;
+        self::$pluginVersion = $this->getDescription()->getVersion();
 
         $serverLanguage = $this->getServer()->getLanguage()->getLang();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
@@ -82,17 +82,13 @@ class Main extends PluginBase {
         (new Economy($this))->loadPlugin();
 
         EntityManager::init();
-        EventTriggerList::init();
         Triggers::init();
         FlowItemFactory::init();
 
 
         self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));
-
+        self::$eventManager = new EventManager(new Config($this->getDataFolder()."events.yml"));
         self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
-
-        $events = new Config($this->getDataFolder()."events.yml", Config::YAML);
-        self::$eventManager = new EventManager($events);
 
         self::$variableHelper = new VariableHelper(new Config($this->getDataFolder()."variables.json", Config::JSON));
 
@@ -100,9 +96,10 @@ class Main extends PluginBase {
         self::$recipeManager->loadRecipes();
 
         (new EventListener())->registerEvents();
-        (new EventTriggerListener())->registerEvents();
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
+
+        CheckTimeTriggerTask::start($this);
 
         $this->loaded = true;
         (new ServerStartEvent($this))->call();
@@ -142,5 +139,9 @@ class Main extends PluginBase {
 
     public static function getVariableHelper(): VariableHelper {
         return self::$variableHelper;
+    }
+
+    public static function getPluginVersion(): string {
+        return self::$pluginVersion;
     }
 }

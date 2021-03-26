@@ -8,6 +8,7 @@ interface FlowItemIds {
     public const DO_NOTHING = "doNothing";
     public const GET_DATE = "getDate";
     public const EVENT_CANCEL = "eventCancel";
+    public const CALL_CUSTOM_TRIGGER = "callTrigger";
     public const SEND_FORM = "sendForm";
 
     public const SEND_MESSAGE = "sendMessage";

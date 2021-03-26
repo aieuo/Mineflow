@@ -16,7 +16,7 @@ class PlayerEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
         ];
     }
 }

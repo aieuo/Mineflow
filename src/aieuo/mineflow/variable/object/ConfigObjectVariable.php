@@ -13,22 +13,22 @@ use pocketmine\utils\Config;
 
 class ConfigObjectVariable extends ObjectVariable {
 
-    public function __construct(Config $value, string $name = "", ?string $str = null) {
-        parent::__construct($value, $name, $str ?? "Config({$name}.yml)");
+    public function __construct(Config $value, ?string $str = null) {
+        parent::__construct($value, $str);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
         $config = $this->getConfig();
         $data = $config->get($index);
         if ($data === null) return null;
-        if (is_string($data)) return new StringVariable($data, $index);
-        if (is_numeric($data)) return new NumberVariable($data, $index);
+        if (is_string($data)) return new StringVariable($data);
+        if (is_numeric($data)) return new NumberVariable($data);
         if (!is_array($data)) return null;
 
         if (array_values($data) === $data) {
-            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($data), $index);
+            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($data));
         } else {
-            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($data), $index);
+            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($data));
         }
         return $variable;
     }
@@ -37,5 +37,9 @@ class ConfigObjectVariable extends ObjectVariable {
         /** @var Config $value */
         $value = $this->getValue();
         return $value;
+    }
+
+    public function __toString(): string {
+        return "Config(".$this->getConfig()->getPath().")";
     }
 }

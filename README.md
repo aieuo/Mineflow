@@ -64,12 +64,12 @@ Available Keys (Let the name of the variable be "item".)
 - {item.damage} -> damage value of item (number)
 - {item.count} -> number of items (number)
 - {item.lore} -> lore of item (list)
-#### level
+#### world
 A variable containing world data.  
-Available Keys (Let the name of the variable be "level".)  
-- {level.name} -> name of world
-- {level.folderName} -> folder name of world
-- {level.id} -> world id
+Available Keys (Let the name of the variable be "world".)  
+- {world.name} -> name of world
+- {world.folderName} -> folder name of world
+- {world.id} -> world id
 #### position
 A variable containing position data.  
 Available Keys (Let the name of the variable be "pos".)  
@@ -77,7 +77,7 @@ Available Keys (Let the name of the variable be "pos".)
 - {pos.y} -> y-coordinate value of the position (number)
 - {pos.z} -> z-coordinate value of the position (number)
 - {pos.xyz} -> x, y and z coordinate value of the position (string)
-- {pos.level} -> world name of the position (level)
+- {pos.world} -> world name of the position (world)
 - {pos.position} -> coordinates (position)
 #### entity
 A variable containing entity data.  
@@ -120,7 +120,7 @@ List of default variables.
     - {microtime} -> current microtime (number)
     - {time} -> current time (string)
     - {date} -> current date (string)
-    - {default_level} -> default world name (string)
+    - {default_world} -> default world name (string)
     - {onlines} ->  names of online players (array)
     - {ops} -> name of operators (array)
     - {event} -> event when the recipe executes (event)
@@ -151,8 +151,8 @@ List of default variables.
     - {inputs} -> input items. (array, item[])
     - {outputs} -> output items. (array, item[])
 - When a player switches to another world
-    - {origin_level} -> The name of the original world (level)
-    - {target_level} -> The name of the target world (level)
+    - {origin_world} -> The name of the original world (world)
+    - {target_world} -> The name of the target world (world)
         
         
 ## Tutorial
@@ -237,12 +237,12 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {item.damage} ->　アイテムのダメージ値 (number)
 - {item.count} -> アイテムの個数 (number)
 - {item.lore} -> アイテムの説明 (list)
-#### level
+#### world
 ワールドの情報を持っている変数  
-使用できるキー (変数名を「level」とします)  
-- {level.name} -> ワールド名
-- {level.folderName} -> ワールドのフォルダー名
-- {level.id} -> ワールドのID
+使用できるキー (変数名を「world」とします)  
+- {world.name} -> ワールド名
+- {world.folderName} -> ワールドのフォルダー名
+- {world.id} -> ワールドのID
 #### position
 座標の情報を持っている変数  
 使用できるキー (変数名を「pos」とします)  
@@ -250,7 +250,7 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
 - {pos.y} -> y座標の値 (number)
 - {pos.z} -> z座標の値 (number)
 - {pos.xyz} -> x座標とy座標とz座標の値 (string)
-- {pos.level} -> 座標のワールド (level)
+- {pos.world} -> 座標のワールド (world)
 - {pos.position} -> 座標 (position)
 #### entity
 エンティティの情報を持っている変数  
@@ -293,7 +293,7 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
     - {microtime} -> 現在のマイクロ秒 (number)
     - {time} -> 現在の時刻 (string)
     - {date} -> 現在の日付 (string)
-    - {default_level} -> デフォルトのワールド名 (string)
+    - {default_world} -> デフォルトのワールド名 (string)
     - {onlines} -> オンラインのプレイヤー名 (array)
     - {ops} -> opの名前 (array)
     - {event} -> レシピを実行したときのイベント (event)
@@ -324,8 +324,8 @@ List, Map 変数の場合{aiueo.oo}のように変数名の後に`.`で区切っ
     - {inputs} -> 入れたアイテムたち (array, item[])
     - {outputs} -> 出てきたアイテムたち (array, item[])
 - プレイヤーがワールドを移動したときに使用できる変数
-    - {origin_level} -> 移動元のワールド (level)
-    - {target_level} -> 移動先のワールド (level)
+    - {origin_world} -> 移動元のワールド (world)
+    - {target_world} -> 移動先のワールド (world)
         
         
 ## チュートリアル

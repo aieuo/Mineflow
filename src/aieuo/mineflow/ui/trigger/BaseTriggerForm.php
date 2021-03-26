@@ -20,7 +20,7 @@ class BaseTriggerForm {
             $form->sendAddedTriggerMenu($player, $recipe, $trigger);
             return;
         }
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), (string)$trigger])))
             ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
@@ -39,8 +39,8 @@ class BaseTriggerForm {
     }
 
     public function sendConfirmDelete(Player $player, Recipe $recipe, Trigger $trigger): void {
-        (new ModalForm(Language::get("form.items.delete.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent(Language::get("form.delete.confirm", [$trigger->getType().": ".$trigger->getKey()]))
+        (new ModalForm(Language::get("form.items.delete.title", [$recipe->getName(), (string)$trigger])))
+            ->setContent(Language::get("form.delete.confirm", [(string)$trigger]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data) use($recipe, $trigger) {

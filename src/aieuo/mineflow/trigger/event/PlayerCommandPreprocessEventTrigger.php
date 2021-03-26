@@ -16,16 +16,16 @@ class PlayerCommandPreprocessEventTrigger extends EventTrigger {
         /** @var PlayerCommandPreprocessEvent $event */
         $target = $event->getPlayer();
         $variables = array_merge(DefaultVariables::getCommandVariables(substr($event->getMessage(), 1)), DefaultVariables::getPlayerVariables($target));
-        $variables["message"] = new StringVariable($event->getMessage(), "message");
+        $variables["message"] = new StringVariable($event->getMessage());
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable("target", DummyVariable::PLAYER),
-            "message" => new DummyVariable("message", DummyVariable::STRING),
-            "cmd" => new DummyVariable("cmd", DummyVariable::STRING),
-            "args" => new DummyVariable("args", DummyVariable::LIST),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "message" => new DummyVariable(DummyVariable::STRING),
+            "cmd" => new DummyVariable(DummyVariable::STRING),
+            "args" => new DummyVariable(DummyVariable::LIST),
         ];
     }
 }

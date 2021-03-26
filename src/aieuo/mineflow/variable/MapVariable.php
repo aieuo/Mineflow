@@ -6,26 +6,20 @@ class MapVariable extends ListVariable {
 
     public $type = Variable::MAP;
 
-    public function addValue(Variable $value): void {
-        $this->value[$value->getName()] = $value;
+    /**
+     * @param int|string $key
+     * @param Variable $value
+     */
+    public function setValueAt($key, Variable $value): void {
+        $this->value[$key] = $value;
     }
 
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
         foreach ($this->getValue() as $key => $value) {
-            $values[$key] = $value->__toString();
+            $values[] = $key.":".$value;
         }
-        return str_replace(["{", "}", "\""] ,["<", ">", ""], json_encode($values, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-    }
-
-    public static function fromArray(array $data): ?Variable {
-        if (!isset($data["value"])) return null;
-        $values = [];
-        foreach ($data["value"] as $name => $value) {
-            if (!isset($value["type"])) return null;
-            $values[$name] = Variable::create($value["value"], $value["name"] ?? "", $value["type"]);
-        }
-        return new self($values, $data["name"] ?? "");
+        return "<".implode(",", $values).">";
     }
 }

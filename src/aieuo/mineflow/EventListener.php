@@ -1,14 +1,14 @@
-<?php /** @noinspection PhpUnused */
+<?php
 
 namespace aieuo\mineflow;
 
 use aieuo\mineflow\event\EntityAttackEvent;
-use aieuo\mineflow\flowItem\action\SetSitting;
+use aieuo\mineflow\flowItem\action\player\SetSitting;
 use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
-use aieuo\mineflow\ui\trigger\BaseTriggerForm;
+use aieuo\mineflow\ui\trigger\BlockTriggerForm;
 use aieuo\mineflow\utils\Session;
 use pocketmine\command\Command;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -54,11 +54,11 @@ class EventListener implements Listener {
                     $recipe = $session->get("blockTriggerRecipe");
                     $trigger = BlockTrigger::create($position);
                     if ($recipe->existsTrigger($trigger)) {
-                        (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
+                        (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                         return;
                     }
                     $recipe->addTrigger($trigger);
-                    (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+                    (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
                     break;
             }
             $session->remove("blockTriggerAction");
@@ -123,7 +123,6 @@ class EventListener implements Listener {
     }
 
     public function onEntityDamageByEntity(EntityDamageByEntityEvent $event): void {
-        if ($event instanceof EntityAttackEvent) return;
         ($ev = new EntityAttackEvent(Main::getInstance(), $event))->call();
         if ($ev->isCancelled()) {
             $event->setCancelled();

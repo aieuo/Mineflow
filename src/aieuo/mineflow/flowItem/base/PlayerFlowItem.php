@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\Player;
 
 interface PlayerFlowItem {
@@ -15,12 +15,12 @@ interface PlayerFlowItem {
     public function setPlayerVariableName(string $player, string $name = ""): void;
 
     /**
-     * @param Recipe $origin
+     * @param FlowItemExecutor $source
      * @param string $name
      * @return Player
      * @throws InvalidFlowValueException
      */
-    public function getPlayer(Recipe $origin, string $name): Player;
+    public function getPlayer(FlowItemExecutor $source, string $name): Player;
 
     public function throwIfInvalidPlayer(Player $player): void;
 }

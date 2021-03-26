@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Category;
 use pocketmine\Player;
 
@@ -15,10 +15,10 @@ class IsPlayerVariable extends IsActiveEntityVariable {
 
     protected $category = Category::PLAYER;
 
-    public function execute(Recipe $origin): \Generator {
+    public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($origin);
+        $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
         yield true;
