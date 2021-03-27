@@ -87,6 +87,22 @@ class MineflowCommand extends Command implements PluginIdentifiableCommand {
                 $config->save();
                 $sender->sendMessage(Language::get("form.changed"));
                 break;
+            case "seerecipe":
+                if (!isset($args[0])) {
+                    $sender->sendMessage("Usage: /mineflow seerecipe <name> [group]");
+                    return;
+                }
+                $path = (isset($args[1]) ? ($args[1]."/") : "").$args[0];
+                [$name, $group] = Main::getRecipeManager()->parseName($path);
+
+                $recipe = Main::getRecipeManager()->get($name, $group);
+                if ($recipe === null) {
+                    $sender->sendMessage(Language::get("action.executeRecipe.notFound"));
+                    return;
+                }
+
+                $sender->sendMessage($recipe->getDetail());
+                break;
             default:
                 if (!($sender instanceof Player)) {
                     $sender->sendMessage(Language::get("command.mineflow.usage.console"));
