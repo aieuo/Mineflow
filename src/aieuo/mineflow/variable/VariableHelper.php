@@ -92,7 +92,7 @@ class VariableHelper {
     public function findVariables(string $string): array {
         $variables = [];
         if (preg_match_all("/{(.+?)}/", $string, $matches)) {
-            foreach ($matches[0] as $name) {
+            foreach ($matches[1] as $name) {
                 $variables[] = $name;
             }
         }
