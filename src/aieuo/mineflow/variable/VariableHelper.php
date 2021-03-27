@@ -55,7 +55,7 @@ class VariableHelper {
 
         $variable = $this->get($name, $save);
         foreach ($names as $name1) {
-            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
+            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable) and !($variable instanceof DummyVariable)) return null;
             $variable = $variable->getValueFromIndex($name1);
         }
         return $variable;
@@ -287,7 +287,7 @@ class VariableHelper {
         $variable = $variables[$name] ?? $this->get($name, $save);
         $tmp = $name;
         foreach ($names as $name1) {
-            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) throw new UndefinedMineflowPropertyException($tmp, $name1);
+            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable) and !($variable instanceof DummyVariable)) throw new UndefinedMineflowPropertyException($tmp, $name1);
 
             $variable = $variable->getValueFromIndex($name1);
             $tmp .= ".".$name1;

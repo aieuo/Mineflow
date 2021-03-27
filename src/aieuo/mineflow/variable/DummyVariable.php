@@ -61,6 +61,11 @@ class DummyVariable extends Variable {
         return new StringVariable($this->getValue());
     }
 
+    public function getValueFromIndex(string $index): ?Variable {
+        $variables = $this->getObjectValuesDummy();
+        return $variables[$index] ?? null;
+    }
+
     /**
      * @return array<string, DummyVariable>
      */
