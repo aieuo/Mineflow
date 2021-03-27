@@ -54,7 +54,7 @@ class ItemObjectVariable extends ObjectVariable {
             "id" => new DummyVariable(DummyVariable::NUMBER),
             "damage" => new DummyVariable(DummyVariable::NUMBER),
             "count" => new DummyVariable(DummyVariable::NUMBER),
-            "lore" => new DummyVariable(DummyVariable::LIST),
+            "lore" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
         ]);
     }
 

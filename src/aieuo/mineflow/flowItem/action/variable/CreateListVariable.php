@@ -121,7 +121,7 @@ class CreateListVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::LIST)
+            $this->getVariableName() => new DummyVariable(DummyVariable::LIST, DummyVariable::UNKNOWN)
         ];
     }
 }

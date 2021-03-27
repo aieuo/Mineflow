@@ -25,7 +25,7 @@ class PlayerCommandPreprocessEventTrigger extends EventTrigger {
             "target" => new DummyVariable(DummyVariable::PLAYER),
             "message" => new DummyVariable(DummyVariable::STRING),
             "cmd" => new DummyVariable(DummyVariable::STRING),
-            "args" => new DummyVariable(DummyVariable::LIST),
+            "args" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
         ];
     }
 }

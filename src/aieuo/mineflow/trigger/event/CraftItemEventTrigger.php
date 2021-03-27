@@ -32,8 +32,8 @@ class CraftItemEventTrigger extends EventTrigger {
     public function getVariablesDummy(): array {
         return [
             "target" => new DummyVariable(DummyVariable::PLAYER),
-            "inputs" => new DummyVariable(DummyVariable::LIST),
-            "outputs" => new DummyVariable(DummyVariable::LIST),
+            "inputs" => new DummyVariable(DummyVariable::LIST, DummyVariable::ITEM),
+            "outputs" => new DummyVariable(DummyVariable::LIST, DummyVariable::ITEM),
         ];
     }
 }
