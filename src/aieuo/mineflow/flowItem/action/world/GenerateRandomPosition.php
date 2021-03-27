@@ -67,9 +67,9 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
         }
 
-        $x = mt_rand(min($pos1->x, $pos2->x), max($pos1->x, $pos2->x));
-        $y = mt_rand(min($pos1->y, $pos2->y), max($pos1->y, $pos2->y));
-        $z = mt_rand(min($pos1->z, $pos2->z), max($pos1->z, $pos2->z));
+        $x = mt_rand((int)min($pos1->x, $pos2->x), (int)max($pos1->x, $pos2->x));
+        $y = mt_rand((int)min($pos1->y, $pos2->y), (int)max($pos1->y, $pos2->y));
+        $z = mt_rand((int)min($pos1->z, $pos2->z), (int)max($pos1->z, $pos2->z));
         $rand = new Position($x, $y, $z, $pos1->getLevelNonNull());
         $source->addVariable($resultName, new PositionObjectVariable($rand));
         yield true;
