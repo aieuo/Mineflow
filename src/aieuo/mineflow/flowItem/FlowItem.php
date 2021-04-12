@@ -18,8 +18,6 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /** @var string */
     protected $id;
-    /** @var string */
-    protected $type;
 
     /** @var string */
     protected $name;
@@ -47,9 +45,6 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /** @var int */
     protected $permission = self::PERMISSION_LEVEL_0;
-
-    /* @var FlowItemContainer */
-    private $parent;
 
     public function getId(): string {
         return $this->id;

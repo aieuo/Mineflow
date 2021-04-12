@@ -24,17 +24,4 @@ class CallRecipe extends ExecuteRecipe {
         $recipe->executeAllTargets($source->getTarget(), [], $source->getEvent(), $args, $source);
         yield false;
     }
-
-    public function getEditFormElements(array $variables): array {
-        return [
-            new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
-            new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs())),
-        ];
-    }
-
-    public function loadSaveData(array $content): FlowItem {
-        $this->setRecipeName($content[0]);
-        $this->setArgs($content[1]);
-        return $this;
-    }
 }

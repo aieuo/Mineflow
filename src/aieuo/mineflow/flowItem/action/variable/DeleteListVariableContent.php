@@ -106,10 +106,4 @@ class DeleteListVariableContent extends FlowItem {
     public function serializeContents(): array {
         return [$this->getVariableName(), $this->getKey(), $this->isLocal];
     }
-
-    public function getAddingVariables(): array {
-        return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::LIST, DummyVariable::UNKNOWN)
-        ];
-    }
 }

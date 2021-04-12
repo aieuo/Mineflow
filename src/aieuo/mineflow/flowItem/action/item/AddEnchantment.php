@@ -105,10 +105,4 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
     }
-
-    public function getAddingVariables(): array {
-        return [
-            $this->getItemVariableName() => new DummyVariable(DummyVariable::ITEM)
-        ];
-    }
 }

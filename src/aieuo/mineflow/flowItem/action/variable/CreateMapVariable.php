@@ -66,7 +66,7 @@ class CreateMapVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and ($this->variableKey !== "");
+        return $this->variableName !== "";
     }
 
     public function getDetail(): string {

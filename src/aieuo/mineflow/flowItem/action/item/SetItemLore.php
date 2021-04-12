@@ -90,10 +90,4 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
     public function serializeContents(): array {
         return [$this->getItemVariableName(), $this->getLore()];
     }
-
-    public function getAddingVariables(): array {
-        return [
-            new DummyVariable($this->getItemVariableName(), DummyVariable::ITEM)
-        ];
-    }
 }

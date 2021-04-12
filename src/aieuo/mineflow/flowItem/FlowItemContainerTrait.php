@@ -7,9 +7,6 @@ trait FlowItemContainerTrait {
     /** @var FlowItem[][] */
     private $items = [];
 
-    /** @var mixed */
-    private $lastResult;
-
     /**
      * @param FlowItem $action
      * @param string $name
@@ -73,14 +70,6 @@ trait FlowItemContainerTrait {
      */
     public function getConditions(): array {
         return $this->getItems(self::CONDITION);
-    }
-
-    public function getLastResult() {
-        return $this->lastResult;
-    }
-
-    public function setLastResult($lastResult): void {
-        $this->lastResult = $lastResult;
     }
 
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {

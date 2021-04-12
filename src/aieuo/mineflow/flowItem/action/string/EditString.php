@@ -118,7 +118,7 @@ class EditString extends FlowItem {
             case self::TYPE_SPLIT:
                 $result = new ListVariable(array_map(function (string $str) {
                     return new StringVariable($str);
-                }, explode($value2, $value1)), $resultName);
+                }, explode($value2, $value1)));
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
