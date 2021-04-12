@@ -41,7 +41,7 @@ class EventObjectVariable extends ObjectVariable {
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "name" => new DummyVariable(DummyVariable::STRING),
-            "isCanceled" => new DummyVariable(DummyVariable::STRING),
+            "isCanceled" => new DummyVariable(DummyVariable::BOOLEAN),
         ]);
     }
 }
