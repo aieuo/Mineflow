@@ -10,6 +10,7 @@ mcpe-protocol:
   - 419
   - 422
   - 428
+  - 431
 load: POSTWORLD
 softdepend:
   - EconomyAPI
