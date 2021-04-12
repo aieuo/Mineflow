@@ -15,6 +15,9 @@ class PositionObjectVariable extends Vector3ObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
+        $variable = parent::getValueFromIndex($index);
+        if ($variable !== null) return $variable;
+
         $position = $this->getPosition();
         switch ($index) {
             case "position":

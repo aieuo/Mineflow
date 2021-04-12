@@ -134,7 +134,7 @@ class EditString extends FlowItem {
             new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
             new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
                 return Language::get("action.editString.".$type);
-            }, array_values($this->operators)), array_shift($keys) ?? 0),
+            }, $this->operators), array_search($this->operator, $this->operators, true)),
             new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
         ];

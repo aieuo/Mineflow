@@ -138,7 +138,7 @@ class FlowItemExecutor {
     public function getSourceRecipe(): ?Recipe {
         if ($this->parent !== null) return $this->sourceRecipe;
 
-        return $this->sourceRecipe;
+        return $this->parent->sourceRecipe;
     }
 
     public function replaceVariables(string $text): string {
