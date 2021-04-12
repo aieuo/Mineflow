@@ -31,7 +31,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     /** @var string */
     private $index;
 
-    private $places = [
+    private $slots = [
         "action.equipArmor.helmet",
         "action.equipArmor.chestplate",
         "action.equipArmor.leggings",
@@ -58,7 +58,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
 
     public function getDetail(): string {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->places[$this->getIndex()])]);
+        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->slots[$this->getIndex()])]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
@@ -85,7 +85,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new Dropdown("@action.equipArmor.form.index", array_map(function (string $text) {
                 return Language::get($text);
-            }, $this->places), (int)$this->getIndex()),
+            }, $this->slots), (int)$this->getIndex()),
         ];
     }
 

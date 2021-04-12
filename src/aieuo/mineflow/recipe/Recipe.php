@@ -202,13 +202,13 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }
     }
 
-    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = [], ?FlowItemExecutor $returnExecutor = null): ?bool {
+    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = [], ?FlowItemExecutor $callbackExecutor = null): ?bool {
         $targets = $this->getTargets($player);
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
 
         foreach ($targets as $target) {
             $recipe = clone $this;
-            $recipe->execute($target, $event, $variables, $args, $returnExecutor);
+            $recipe->execute($target, $event, $variables, $args, $callbackExecutor);
         }
         return true;
     }
@@ -217,7 +217,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->executor;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $args = [], ?FlowItemExecutor $returnExecutor = null): bool {
+    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $args = [], ?FlowItemExecutor $callbackExecutor = null): bool {
         $helper = Main::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (!isset($args[$i])) continue;
@@ -235,13 +235,13 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $variables["event"] = new EventObjectVariable($event);
         }
 
-        $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($returnExecutor) {
-            if ($returnExecutor !== null) {
+        $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
+            if ($callbackExecutor !== null) {
                 foreach ($this->getReturnValues() as $value) {
                     $variable = $executor->getVariable($value);
-                    if ($variable instanceof Variable) $returnExecutor->addVariable($value, $variable);
+                    if ($variable instanceof Variable) $callbackExecutor->addVariable($value, $variable);
                 }
-                $returnExecutor->resume();
+                $callbackExecutor->resume();
             }
         }, function (string $flowItemName, ?Entity $target) {
             Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $flowItemName]), $target);
