@@ -107,10 +107,18 @@ class VariableHelper {
      * @return string
      */
     public function replaceVariables(string $string, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
-        if (preg_match_all("/{(.+?)}/", $string, $matches)) {
-            foreach ($matches[1] as $value) {
-                $string = $this->replaceVariable($string, $value, $variables, $executor, $global);
+        $limit = 10;
+        while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
+            foreach ($matches[0] as $name) {
+                $name = substr($name, 1, -1);
+                if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
+                    $replaced = $this->replaceVariables($name, $variables, $executor, $global);
+                    $string = str_replace($name, $replaced, $string);
+                    $name = $replaced;
+                }
+                $string = $this->replaceVariable($string, $name, $variables, $executor, $global);
             }
+            if (--$limit < 0) break;
         }
         return $string;
     }
