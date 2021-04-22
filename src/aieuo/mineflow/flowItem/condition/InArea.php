@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
@@ -58,8 +59,8 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
     public function getEditFormElements(array $variables): array {
         return [
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new ExampleInput("@condition.inArea.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
-            new ExampleInput("@condition.inArea.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
+            new PositionVariableDropdown($variables, $this->getPositionVariableName("pos1"), "@condition.inArea.form.pos1"),
+            new PositionVariableDropdown($variables, $this->getPositionVariableName("pos2"), "@condition.inArea.form.pos2"),
         ];
     }
 
