@@ -24,12 +24,8 @@ abstract class Element implements \JsonSerializable {
     /** @var string|null */
     protected $highlight = "";
 
-    /** @var string|null */
-    private $uuid;
-
-    public function __construct(string $text, ?string $uuid = null) {
+    public function __construct(string $text) {
         $this->text = str_replace("\\n", "\n", $text);
-        $this->uuid = $uuid;
     }
 
     public function setText(string $text): self {
@@ -52,11 +48,6 @@ abstract class Element implements \JsonSerializable {
 
     public function setHighlight(?string $color): void {
         $this->highlight = $color;
-    }
-
-    public function getUUId(): string {
-        if (empty($this->uuid)) $this->uuid = UUID::fromRandom()->toString();
-        return $this->uuid;
     }
 
     public function reflectHighlight(string $text): string {
