@@ -41,4 +41,9 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "name" => new DummyVariable(DummyVariable::STRING),
         ]);
     }
+
+    public function __toString(): string {
+        $value = $this->getPlayer();
+        return $value->getName();
+    }
 }

@@ -48,4 +48,9 @@ class BlockObjectVariable extends PositionObjectVariable {
             "damage" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
+
+    public function __toString(): string {
+        $value = $this->getBlock();
+        return (string)$value;
+    }
 }

@@ -60,4 +60,9 @@ class EntityObjectVariable extends PositionObjectVariable {
             "direction" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
+
+    public function __toString(): string {
+        $value = $this->getEntity();
+        return $value->getNameTag();
+    }
 }
