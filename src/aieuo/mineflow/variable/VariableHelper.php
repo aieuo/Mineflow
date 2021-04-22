@@ -217,6 +217,15 @@ class VariableHelper {
     }
 
     public function run(array $ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+        if (!isset($ast["left"])) {
+            $result = "";
+            foreach ($ast as $value) {
+                if (is_array($value)) $result .= (",".$this->run($value, $executor, $variables, $global));
+                else $result .= (",".$value);
+            }
+            return $this->mustGetVariableNested(substr($result, 1), $variables, $global);
+        }
+
         $left = is_array($ast["left"]) ? $this->run($ast["left"], $executor, $variables, $global) : $ast["left"];
         $right = is_array($ast["right"]) ? $this->run($ast["right"], $executor, $variables, $global) : $ast["right"];
         $op = $ast["op"];
