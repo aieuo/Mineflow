@@ -40,9 +40,6 @@ class ForAction extends FlowItem implements FlowItemContainer {
     /** string */
     private $fluctuation = "1";
 
-    /** @var array */
-    private $counter;
-
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);

@@ -115,7 +115,7 @@ class CustomListFormForm {
                     $button->setImage($data[2] === "" ? null : new ButtonImage($data[2], ButtonImage::TYPE_PATH));
                 }
                 Main::getFormManager()->addForm($form->getName(), $form);
-                $this->sendButtonList($player, $form, [$data[2] ? "@form.deleted" : "@form.changed"]);
+                $this->sendButtonList($player, $form, [$data[4] ? "@form.deleted" : "@form.changed"]);
             })->show($player);
     }
 

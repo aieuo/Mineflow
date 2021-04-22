@@ -54,14 +54,14 @@ class FormTrigger extends Trigger {
                         "selected" => new BoolVariable(!$data),
                         "text" => new StringVariable($form->getButton2Text()),
                     ], $form->getButton2Text()),
-                ], "form");
+                ]);
                 break;
             case $form instanceof ListForm:
                 /** @var int $data */
                 $variable = new MapVariable([
                     "data" => new NumberVariable($data),
                     "button" => new StringVariable($form->getButton($data)->getText()),
-                ], "form");
+                ]);
                 break;
             case $form instanceof CustomForm:
                 /** @var array $data */
@@ -93,7 +93,7 @@ class FormTrigger extends Trigger {
                 $variable = new MapVariable([
                     "data" => new ListVariable($dataVariables),
                     "selected" => new ListVariable($dropdownVariables),
-                ], "form");
+                ]);
                 break;
             default:
                 return [];

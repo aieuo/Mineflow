@@ -102,7 +102,7 @@ class ExportForm {
                     return;
                 }
 
-                $pack = new RecipePack($name, $author, $detail, $recipes, $data[3] ? null : []);
+                $pack = new RecipePack($name, $author, $detail, $recipes, null, null, $data[3] ? null : []);
                 $pack->export(Main::getInstance()->getDataFolder()."/exports/");
 
                 $player->sendMessage(Language::get("form.export.success", [$name.".json"]));

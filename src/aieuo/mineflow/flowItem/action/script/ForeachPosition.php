@@ -35,8 +35,6 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     protected $permission = self::PERMISSION_LEVEL_1;
 
-    /* @var array */
-    private $counter;
     /* @var string */
     private $counterName = "pos";
 
@@ -84,7 +82,6 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
             }
         }
 
-        $source->resume();
         yield true;
     }
 

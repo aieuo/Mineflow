@@ -42,9 +42,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     /** @var string */
     private $valueVariableName = "value";
 
-    /** @var array */
-    private $counter;
-
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
@@ -110,7 +107,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
                 $valueName => $valueVariable
             ], $source))->executeGenerator();
         }
-        $source->resume();
         yield true;
     }
 
