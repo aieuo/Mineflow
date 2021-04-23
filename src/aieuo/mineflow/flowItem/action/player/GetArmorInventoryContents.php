@@ -29,7 +29,7 @@ class GetArmorInventoryContents extends GetInventoryContents {
 
         $variable = new ListVariable(array_map(function (Item $item) {
             return new ItemObjectVariable($item);
-        }, $entity->getArmorInventory()->getContents()), $resultName);
+        }, $entity->getArmorInventory()->getContents(true)));
 
         $source->addVariable($resultName, $variable);
         yield true;
