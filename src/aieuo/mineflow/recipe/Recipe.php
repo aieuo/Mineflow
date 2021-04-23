@@ -65,7 +65,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function __construct(string $name, string $group = "", string $author = "", string $version = null) {
         $this->name = $name;
         $this->author = $author;
-        $this->group = preg_replace("#/+#", "/", $group);
+        $this->group = preg_replace("#/+#u", "/", $group);
         $this->version = $version;
     }
 
@@ -86,7 +86,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function setGroup(string $group): void {
-        $this->group = preg_replace("#/+#", "/", $group);
+        $this->group = preg_replace("#/+#u", "/", $group);
     }
 
     public function getGroup(): string {
@@ -373,7 +373,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         foreach ($action->serializeContents() as $data) {
             if (is_string($data)) {
                 $data = str_replace(["origin_level", "target_level"], ["origin_world", "target_world"], $data);
-                $data = preg_replace("/({.+\.)level((\.?.+)*})/", "$1world$2", $data);
+                $data = preg_replace("/({.+\.)level((\.?.+)*})/u", "$1world$2", $data);
             }
             $newContents[] = $data;
         }

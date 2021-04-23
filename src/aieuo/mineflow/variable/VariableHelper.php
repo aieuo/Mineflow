@@ -91,7 +91,7 @@ class VariableHelper {
 
     public function findVariables(string $string): array {
         $variables = [];
-        if (preg_match_all("/{(.+?)}/", $string, $matches)) {
+        if (preg_match_all("/{(.+?)}/u", $string, $matches)) {
             foreach ($matches[1] as $name) {
                 $variables[] = $name;
             }
@@ -108,7 +108,7 @@ class VariableHelper {
      */
     public function replaceVariables(string $string, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
         $limit = 10;
-        while (preg_match_all("/({(?:[^{}]+|(?R))*})/", $string, $matches)) {
+        while (preg_match_all("/({(?:[^{}]+|(?R))*})/u", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
@@ -145,8 +145,8 @@ class VariableHelper {
     }
 
     public function lexer(string $source): array {
-        $source = preg_replace("/\[(.*?)]/", ".($1)", $source);
-        return preg_split("/(\d+(?:\.\d+)?|[^\s.,+-\/*()]+(?:\.[^\s.,+-\/*()]+)*)|\s|(.)/", $source, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $source = preg_replace("/\[(.*?)]/u", ".($1)", $source);
+        return preg_split("/(\d+(?:\.\d+)?|[^\s.,+-\/*()]+(?:\.[^\s.,+-\/*()]+)*)|\s|(.)/u", $source, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
     }
 
     /**
@@ -315,11 +315,11 @@ class VariableHelper {
     }
 
     public function isVariableString(string $variable): bool {
-        return (bool)preg_match("/^{[^{}\[\].]+}$/", $variable);
+        return (bool)preg_match("/^{[^{}\[\].]+}$/u", $variable);
     }
 
     public function containsVariable(string $variable): bool {
-        return (bool)preg_match("/{.+}/", $variable);
+        return (bool)preg_match("/{.+}/u", $variable);
     }
 
     public function getType(string $string): int {

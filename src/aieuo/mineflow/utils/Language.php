@@ -78,7 +78,7 @@ class Language {
     }
 
     public static function replace(string $text): string {
-        $text = preg_replace_callback("/@([a-zA-Z.0-9]+)/", function ($matches) {
+        $text = preg_replace_callback("/@([a-zA-Z.0-9]+)/u", function ($matches) {
             return Language::get($matches[1]);
         }, $text);
         return $text;
