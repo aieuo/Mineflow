@@ -22,54 +22,35 @@ class VariableHelper {
     public function __construct(Config $file) {
         $this->file = $file;
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+
+        foreach ($file->getAll() as $name => $data) {
+            $this->variables[$name] = Variable::create(is_array($data["value"]) ? $this->toVariableArray($data["value"]) : $data["value"], $data["type"]);
+        }
     }
 
-    /**
-     * @param string $name
-     * @param bool $save
-     * @return bool
-     */
-    public function exists(string $name, bool $save = false): bool {
-        if (isset($this->variables[$name]) and !$save) return true;
-
-        return $this->file->exists($name);
+    public function exists(string $name): bool {
+        return isset($this->variables[$name]);
     }
 
-    /**
-     * @param string $name
-     * @param bool $save
-     * @return null|Variable
-     */
-    public function get(string $name, bool $save = false): ?Variable {
-        if (isset($this->variables[$name]) and !$save) return $this->variables[$name];
-        if (!$this->exists($name)) return null;
-
-        $data = $this->file->get($name);
-        return $data instanceof Variable ? $data : Variable::create($data["value"], $data["type"]);
+    public function get(string $name): ?Variable {
+        return $this->variables[$name] ?? null;
     }
 
-    public function getNested(string $name, bool $save = false): ?Variable {
+    public function getNested(string $name): ?Variable {
         $names = explode(".", $name);
         $name = array_shift($names);
-        if (!$this->exists($name, $save)) return null;
+        if (!$this->exists($name)) return null;
 
-        $variable = $this->get($name, $save);
+        $variable = $this->get($name);
         foreach ($names as $name1) {
-            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable) and !($variable instanceof DummyVariable)) return null;
+            if (!($variable instanceof Variable)) return null;
             $variable = $variable->getValueFromIndex($name1);
         }
         return $variable;
     }
 
-    public function add(string $name, Variable $variable, bool $save = false): void {
-        if (!$save) {
-            $this->variables[$name] = $variable;
-            return;
-        }
-
-        if (!($variable instanceof \JsonSerializable) and $name !== "") return;
-        $this->file->set($name, $variable);
-        $this->file->save();
+    public function add(string $name, Variable $variable): void {
+        $this->variables[$name] = $variable;
     }
 
     /**
@@ -84,9 +65,10 @@ class VariableHelper {
 
     public function saveAll(): void {
         foreach ($this->variables as $name => $variable) {
-            $this->add($name, $variable, true);
+            if (!($variable instanceof \JsonSerializable) and $name !== "") continue;
+            $this->file->set($name, $variable);
         }
-        $this->variables = [];
+        $this->file->save();
     }
 
     public function findVariables(string $string): array {
@@ -139,7 +121,7 @@ class VariableHelper {
 
         if (is_string($ast)) $result = $this->mustGetVariableNested($ast, $variables, $global);
         elseif ($ast instanceof Variable) $result = (string)$ast;
-        else $result = $this->run($ast, $executor, $variables, $global);
+        else $result = (string)$this->run($ast, $executor, $variables, $global);
 
         return str_replace("{".$replace."}", $result, $string);
     }
@@ -296,21 +278,24 @@ class VariableHelper {
         return $generator->getReturn();
     }
 
-    public function mustGetVariableNested(string $name, array $variables = [], bool $save = false): Variable {
+    public function mustGetVariableNested(string $name, array $variables = [], bool $global = false): Variable {
         $names = explode(".", $name);
         $name = array_shift($names);
-        if (!isset($variables[$name]) and !$this->exists($name, $save)) throw new UndefinedMineflowVariableException($name);
+        if (!isset($variables[$name]) and !$this->exists($name)) throw new UndefinedMineflowVariableException($name);
 
-        $variable = $variables[$name] ?? $this->get($name, $save);
+        $variable = $variables[$name] ?? ($global ? $this->get($name) : null);
+        if ($variable === null) throw new UndefinedMineflowVariableException($name);
+
         $tmp = $name;
         foreach ($names as $name1) {
-            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable) and !($variable instanceof DummyVariable)) throw new UndefinedMineflowPropertyException($tmp, $name1);
-
             $variable = $variable->getValueFromIndex($name1);
+
+            if ($variable === null) {
+                throw new UndefinedMineflowPropertyException($tmp, $name1);
+            }
             $tmp .= ".".$name1;
         }
 
-        if ($variable === null) throw new UndefinedMineflowPropertyException($tmp, $name1 ?? "");
         return $variable;
     }
 
