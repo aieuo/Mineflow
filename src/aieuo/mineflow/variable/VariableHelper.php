@@ -24,7 +24,7 @@ class VariableHelper {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
         foreach ($file->getAll() as $name => $data) {
-            $this->variables[$name] = Variable::create(is_array($data["value"]) ? $this->toVariableArray($data["value"]) : $data["value"], $data["type"]);
+            $this->variables[$name] = Variable::fromArray($data);
         }
     }
 

@@ -40,6 +40,18 @@ abstract class Variable {
         return $variable;
     }
 
+    public static function fromArray(array $data): ?self {
+        if (!isset($data["value"]) or !isset($data["type"])) return null;
+
+        if (!is_array($data["value"])) return self::create($data["value"], $data["type"]);
+
+        $values = [];
+        foreach ($data["value"] as $key => $value) {
+            $values[$key] = self::fromArray($value);
+        }
+        return self::create($values, $data["type"]);
+    }
+
     /**
      * @param mixed $value
      */
