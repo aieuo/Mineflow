@@ -243,8 +243,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 }
                 $callbackExecutor->resume();
             }
-        }, function (string $flowItemName, ?Entity $target) {
-            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $flowItemName]), $target);
+        }, function (int $index, FlowItem $flowItem, ?Entity $target) {
+            Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $index, $flowItem->getName()]), $target);
         }, $this);
         $this->executor->execute();
         return true;

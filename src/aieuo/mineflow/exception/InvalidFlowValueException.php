@@ -11,7 +11,7 @@ class InvalidFlowValueException extends \RuntimeException {
     private $flowItemName;
 
     public function __construct(string $flowItemName = "", string $message = "", int $code = 0, Throwable $previous = null) {
-        parent::__construct(Language::get("action.error", [$flowItemName, $message]), $code, $previous);
+        parent::__construct($message, $code, $previous);
         $this->flowItemName = $flowItemName;
     }
 

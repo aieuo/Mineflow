@@ -9,6 +9,7 @@ use aieuo\mineflow\exception\UndefinedMineflowVariableException;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\ObjectVariable;
@@ -40,6 +41,8 @@ class FlowItemExecutor {
 
     /** @var FlowItem */
     private $currentFlowItem;
+    /** @var int */
+    private $currentIndex;
     /** @var \Generator */
     private $generator;
 
@@ -67,6 +70,7 @@ class FlowItemExecutor {
 
     public function executeGenerator(): \Generator {
         foreach ($this->items as $i => $item) {
+            $this->currentIndex = $i;
             $this->currentFlowItem = $item;
             $this->lastResult = yield from $item->execute($this);
         }
@@ -97,9 +101,12 @@ class FlowItemExecutor {
 
                 $this->generator->next();
             }
-        } catch (InvalidFlowValueException|UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|UnsupportedCalculationException $e) {
+        } catch (InvalidFlowValueException $e) {
+            Logger::warning(Language::get("action.error", [$this->currentFlowItem->getName(), $e->getMessage()]), $this->target);
+            if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
+        } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|UnsupportedCalculationException $e) {
             if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
-            if ($this->onError !== null) ($this->onError)($this->currentFlowItem->getName(), $this->target);
+            if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
         }
 
         if ($this->onComplete !== null) ($this->onComplete)($this);
