@@ -6,6 +6,11 @@ class MapVariable extends ListVariable {
 
     public $type = Variable::MAP;
 
+    public function getValueFromIndex(string $index): ?Variable {
+        if (!isset($this->value[$index])) return null;
+        return $this->value[$index];
+    }
+
     /**
      * @param int|string $key
      * @param Variable $value

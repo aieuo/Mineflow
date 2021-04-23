@@ -145,7 +145,7 @@ class VariableHelper {
     }
 
     public function lexer(string $source): array {
-        $source = preg_replace("/\[(.*?)]/u", ".($1)", $source);
+        $source = preg_replace("/\[(.*?)]/u", ".$1", $source);
         return preg_split("/(\d+(?:\.\d+)?|[^\s.,+-\/*()]+(?:\.[^\s.,+-\/*()]+)*)|\s|(.)/u", $source, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
     }
 
