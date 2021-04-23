@@ -21,6 +21,7 @@ class Category {
     public const STRING = "string";
     public const VARIABLE = "variable";
     public const SCRIPT = "script";
+    public const CONFIG = "config";
     public const SCOREBOARD = "scoreboard";
 
     /** @var string[]  */
@@ -37,6 +38,7 @@ class Category {
         self::SCRIPT,
         self::MATH,
         self::VARIABLE,
+        self::CONFIG,
         self::STRING,
         self::FORM,
         self::SCOREBOARD,

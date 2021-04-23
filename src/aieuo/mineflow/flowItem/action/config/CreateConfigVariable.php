@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\flowItem\action\script;
+namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -22,7 +22,7 @@ class CreateConfigVariable extends FlowItem {
     protected $detail = "action.createConfigVariable.detail";
     protected $detailDefaultReplace = ["config", "name"];
 
-    protected $category = Category::SCRIPT;
+    protected $category = Category::CONFIG;
     protected $returnValueType = self::RETURN_VARIABLE_NAME;
 
     /** @var string */

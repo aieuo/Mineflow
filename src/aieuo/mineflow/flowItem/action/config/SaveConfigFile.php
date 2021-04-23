@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\flowItem\action\script;
+namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
@@ -21,7 +21,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     protected $detail = "action.saveConfigFile.detail";
     protected $detailDefaultReplace = ["config"];
 
-    protected $category = Category::SCRIPT;
+    protected $category = Category::CONFIG;
 
     protected $permission = self::PERMISSION_LEVEL_2;
 
