@@ -9,6 +9,8 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
+use aieuo\mineflow\Main;
+use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Config;
 
 class VariableHelper {
@@ -24,7 +26,14 @@ class VariableHelper {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
         foreach ($file->getAll() as $name => $data) {
-            $this->variables[$name] = Variable::fromArray($data);
+            $variable = Variable::fromArray($data);
+
+            if ($variable === null) {
+                Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed"));
+                continue;
+            }
+            
+            $this->variables[$name] = $variable;
         }
     }
 

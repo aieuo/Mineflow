@@ -47,7 +47,12 @@ abstract class Variable {
 
         $values = [];
         foreach ($data["value"] as $key => $value) {
-            $values[$key] = self::fromArray($value);
+            if (!is_array($value)) continue;
+
+            $var = self::fromArray($value);
+            if ($var === null) continue;
+
+            $values[$key] = $var;
         }
         return self::create($values, $data["type"]);
     }
