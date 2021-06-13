@@ -11,23 +11,16 @@ class Button implements \JsonSerializable {
     public const TYPE_NORMAL = "button";
     public const TYPE_COMMAND = "commandButton";
 
-    /** @var string */
-    protected $type = self::TYPE_NORMAL;
-    /** @var string */
-    protected $text = "";
-    /** @var ButtonImage|null */
-    private $image;
-    /** @var string */
-    protected $extraText = "";
-    /** @var string */
-    protected $highlight = "";
-    /** @var string */
-    private $uuid = "";
+    protected string $type = self::TYPE_NORMAL;
+    protected string $text = "";
+    private ?ButtonImage $image;
+    protected string $extraText = "";
+    protected string $highlight = "";
+    private string $uuid = "";
     /** @var callable|null */
     private $onClick;
 
-    /** @var bool */
-    public $skipIfCallOnClick = true; // TODO: 名前...
+    public bool $skipIfCallOnClick = true; // TODO: 名前...
 
     public function __construct(string $text, ?callable $onClick = null, ?ButtonImage $image = null) {
         $this->text = str_replace("\\n", "\n", $text);

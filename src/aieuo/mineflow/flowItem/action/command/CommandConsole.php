@@ -14,18 +14,17 @@ use pocketmine\Server;
 
 class CommandConsole extends FlowItem {
 
-    protected $id = self::COMMAND_CONSOLE;
+    protected string $id = self::COMMAND_CONSOLE;
 
-    protected $name = "action.commandConsole.name";
-    protected $detail = "action.commandConsole.detail";
-    protected $detailDefaultReplace = ["command"];
+    protected string $name = "action.commandConsole.name";
+    protected string $detail = "action.commandConsole.detail";
+    protected array $detailDefaultReplace = ["command"];
 
-    protected $category = Category::COMMAND;
+    protected string $category = Category::COMMAND;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var string */
-    private $command;
+    private string $command;
 
     public function __construct(string $command = "") {
         $this->command = $command;

@@ -12,13 +12,13 @@ use aieuo\mineflow\utils\Language;
 
 class ComparisonString extends FlowItem implements Condition {
 
-    protected $id = self::COMPARISON_STRING;
+    protected string $id = self::COMPARISON_STRING;
 
-    protected $name = "condition.comparisonString.name";
-    protected $detail = "condition.comparisonString.detail";
-    protected $detailDefaultReplace = ["value1", "operator", "value2"];
+    protected string $name = "condition.comparisonString.name";
+    protected string $detail = "condition.comparisonString.detail";
+    protected array $detailDefaultReplace = ["value1", "operator", "value2"];
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
@@ -27,15 +27,11 @@ class ComparisonString extends FlowItem implements Condition {
     public const STARTS_WITH = 4;
     public const ENDS_WITH = 5;
 
-    /** @var string */
-    private $value1;
-    /** @var int */
-    private $operator;
-    /** @var string */
-    private $value2;
+    private string $value1;
+    private int $operator;
+    private string $value2;
 
-    /** @var array */
-    private $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
+    private array $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
     public function __construct(string $value1 = "", string $operator = null, string $value2 = "") {
         $this->value1 = $value1;

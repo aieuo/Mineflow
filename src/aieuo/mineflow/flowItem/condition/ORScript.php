@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ORScript extends AndScript {
 
-    protected $id = self::CONDITION_OR;
+    protected string $id = self::CONDITION_OR;
 
-    protected $name = "condition.or.name";
-    protected $detail = "condition.or.detail";
+    protected string $name = "condition.or.name";
+    protected string $detail = "condition.or.detail";
 
     public function getDetail(): string {
         $details = ["-----------or-----------"];

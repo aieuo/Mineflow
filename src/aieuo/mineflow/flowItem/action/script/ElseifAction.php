@@ -9,10 +9,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ElseifAction extends IFAction {
 
-    protected $id = self::ACTION_ELSEIF;
+    protected string $id = self::ACTION_ELSEIF;
 
-    protected $name = "action.elseif.name";
-    protected $detail = "action.elseif.description";
+    protected string $name = "action.elseif.name";
+    protected string $detail = "action.elseif.description";
 
     public function getDetail(): string {
         $details = ["§7=============§f elseif §7=============§f"];

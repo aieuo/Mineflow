@@ -6,17 +6,12 @@ use aieuo\mineflow\utils\Language;
 
 class Slider extends Element {
 
-    /** @var string */
-    protected $type = self::ELEMENT_SLIDER;
+    protected string $type = self::ELEMENT_SLIDER;
 
-    /** @var float */
-    private $min;
-    /** @var float */
-    private $max;
-    /** @var float */
-    private $step;
-    /** @var float */
-    private $default;
+    private float $min;
+    private float $max;
+    private float $step;
+    private float $default;
 
     public function __construct(string $text, float $min, float $max, float $step = 1.0, float $default = null) {
         parent::__construct($text);
@@ -26,66 +21,38 @@ class Slider extends Element {
         $this->default = $default ?? $min;
     }
 
-    /**
-     * @param float $min
-     * @return self
-     */
     public function setMin(float $min): self {
         $this->min = $min;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getMin(): float {
         return $this->min;
     }
 
-    /**
-     * @param float $max
-     * @return self
-     */
     public function setMax(float $max): self {
         $this->max = $max;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getMax(): float {
         return $this->max;
     }
 
-    /**
-     * @param float $step
-     * @return self
-     */
     public function setStep(float $step): self {
         $this->step = $step;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getStep(): float {
         return $this->step;
     }
 
-    /**
-     * @param float $default
-     * @return self
-     */
     public function setDefault(float $default): self {
         $this->default = $default;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getDefault(): float {
         return $this->default;
     }

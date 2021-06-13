@@ -12,16 +12,12 @@ use pocketmine\Player;
 
 class Bossbar {
     /** @var Bossbar[][] */
-    public static $bars = [];
+    public static array $bars = [];
 
-    /** @var float */
-    private $max;
-    /** @var float */
-    private $per;
-    /** @var string */
-    private $title;
-    /** @var int */
-    private $entityId;
+    private float $max;
+    private float $per;
+    private string $title;
+    private int $entityId;
 
     public function __construct(string $title, float $max = 1.0, float $per = 1.0) {
         $this->title = $title;

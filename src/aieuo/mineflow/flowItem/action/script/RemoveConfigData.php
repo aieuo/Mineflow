@@ -16,18 +16,17 @@ use aieuo\mineflow\utils\Language;
 class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected $id = self::REMOVE_CONFIG_VALUE;
+    protected string $id = self::REMOVE_CONFIG_VALUE;
 
-    protected $name = "action.removeConfigData.name";
-    protected $detail = "action.removeConfigData.detail";
-    protected $detailDefaultReplace = ["config", "key"];
+    protected string $name = "action.removeConfigData.name";
+    protected string $detail = "action.removeConfigData.detail";
+    protected array $detailDefaultReplace = ["config", "key"];
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
-    protected $permission = self::PERMISSION_LEVEL_2;
+    protected int $permission = self::PERMISSION_LEVEL_2;
 
-    /** @var string */
-    private $key;
+    private string $key;
 
     public function __construct(string $config = "", string $key = "") {
         $this->setConfigVariableName($config);

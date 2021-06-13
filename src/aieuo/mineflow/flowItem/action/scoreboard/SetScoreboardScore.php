@@ -17,18 +17,16 @@ use aieuo\mineflow\utils\Language;
 class SetScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
 
-    protected $id = self::SET_SCOREBOARD_SCORE;
+    protected string $id = self::SET_SCOREBOARD_SCORE;
 
-    protected $name = "action.setScore.name";
-    protected $detail = "action.setScore.detail";
-    protected $detailDefaultReplace = ["scoreboard", "name", "score"];
+    protected string $name = "action.setScore.name";
+    protected string $detail = "action.setScore.detail";
+    protected array $detailDefaultReplace = ["scoreboard", "name", "score"];
 
-    protected $category = Category::SCOREBOARD;
+    protected string $category = Category::SCOREBOARD;
 
-    /* @var string */
-    private $scoreName;
-    /* @var string */
-    private $score;
+    private string $scoreName;
+    private string $score;
 
     public function __construct(string $scoreboard = "", string $name = "", string $score = "") {
         $this->setScoreboardVariableName($scoreboard);

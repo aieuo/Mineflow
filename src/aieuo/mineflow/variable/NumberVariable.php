@@ -6,7 +6,7 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 
 class NumberVariable extends Variable implements \JsonSerializable {
 
-    public $type = Variable::NUMBER;
+    public int $type = Variable::NUMBER;
 
     public static function zero(): self {
         return new NumberVariable(0);

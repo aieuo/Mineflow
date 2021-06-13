@@ -15,23 +15,22 @@ use pocketmine\Player;
 class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::GAMEMODE;
+    protected string $id = self::GAMEMODE;
 
-    protected $name = "condition.gamemode.name";
-    protected $detail = "condition.gamemode.detail";
-    protected $detailDefaultReplace = ["player", "gamemode"];
+    protected string $name = "condition.gamemode.name";
+    protected string $detail = "condition.gamemode.detail";
+    protected array $detailDefaultReplace = ["player", "gamemode"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    private $gamemodes = [
+    private array $gamemodes = [
         "action.gamemode.survival",
         "action.gamemode.creative",
         "action.gamemode.adventure",
         "action.gamemode.spectator"
     ];
 
-    /** @var int */
-    private $gamemode;
+    private int $gamemode;
 
     public function __construct(string $player = "", int $mode = Player::SURVIVAL) {
         $this->setPlayerVariableName($player);

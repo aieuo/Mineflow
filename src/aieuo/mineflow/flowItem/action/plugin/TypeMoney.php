@@ -12,14 +12,12 @@ use aieuo\mineflow\utils\Language;
 
 abstract class TypeMoney extends FlowItem {
 
-    protected $detailDefaultReplace = ["target", "amount"];
+    protected array $detailDefaultReplace = ["target", "amount"];
 
-    protected $category = Category::PLUGIN;
+    protected string $category = Category::PLUGIN;
 
-    /** @var string */
-    private $playerName;
-    /** @var string */
-    private $amount;
+    private string $playerName;
+    private string $amount;
 
     public function __construct(string $name = "{target.name}", string $amount = null) {
         $this->playerName = $name;

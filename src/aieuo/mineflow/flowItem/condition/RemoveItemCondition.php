@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class RemoveItemCondition extends TypeItem {
 
-    protected $id = self::REMOVE_ITEM_CONDITION;
+    protected string $id = self::REMOVE_ITEM_CONDITION;
 
-    protected $name = "condition.removeItem.name";
-    protected $detail = "condition.removeItem.detail";
+    protected string $name = "condition.removeItem.name";
+    protected string $detail = "condition.removeItem.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

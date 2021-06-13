@@ -13,7 +13,7 @@ use pocketmine\math\Vector3;
 trait Vector3FlowItemTrait {
 
     /** @var string[] */
-    private $vector3VariableNames = [];
+    private array $vector3VariableNames = [];
 
     public function getVector3VariableName(string $name = ""): string {
         return $this->vector3VariableNames[$name] ?? "";

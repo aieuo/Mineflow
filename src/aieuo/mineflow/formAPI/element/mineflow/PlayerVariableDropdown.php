@@ -7,9 +7,9 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class PlayerVariableDropdown extends VariableDropdown {
 
-    protected $variableType = DummyVariable::PLAYER;
+    protected string $variableType = DummyVariable::PLAYER;
 
-    protected $actions = [
+    protected array $actions = [
         FlowItemIds::GET_PLAYER
     ];
 

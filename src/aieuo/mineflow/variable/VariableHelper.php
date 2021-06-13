@@ -16,10 +16,9 @@ use pocketmine\utils\Config;
 class VariableHelper {
 
     /** @var Variable[] */
-    private $variables = [];
+    private array $variables = [];
 
-    /** @var Config */
-    private $file;
+    private Config $file;
 
     public function __construct(Config $file) {
         $this->file = $file;

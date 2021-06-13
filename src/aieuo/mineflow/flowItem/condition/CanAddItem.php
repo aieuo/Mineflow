@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class CanAddItem extends TypeItem {
 
-    protected $id = self::CAN_ADD_ITEM;
+    protected string $id = self::CAN_ADD_ITEM;
 
-    protected $name = "condition.canAddItem.name";
-    protected $detail = "condition.canAddItem.detail";
+    protected string $name = "condition.canAddItem.name";
+    protected string $detail = "condition.canAddItem.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

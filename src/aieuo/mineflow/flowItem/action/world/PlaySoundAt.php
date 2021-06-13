@@ -19,20 +19,17 @@ use pocketmine\Server;
 class PlaySoundAt extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected $id = self::PLAY_SOUND_AT;
+    protected string $id = self::PLAY_SOUND_AT;
 
-    protected $name = "action.playSoundAt.name";
-    protected $detail = "action.playSoundAt.detail";
-    protected $detailDefaultReplace = ["position", "sound", "volume", "pitch"];
+    protected string $name = "action.playSoundAt.name";
+    protected string $detail = "action.playSoundAt.detail";
+    protected array $detailDefaultReplace = ["position", "sound", "volume", "pitch"];
 
-    protected $category = Category::WORLD;
+    protected string $category = Category::WORLD;
 
-    /** @var string */
-    private $sound;
-    /** @var string */
-    private $volume;
-    /** @var string */
-    private $pitch;
+    private string $sound;
+    private string $volume;
+    private string $pitch;
 
     public function __construct(string $position = "", string $sound = "", string $volume = "1", string $pitch = "1") {
         $this->setPositionVariableName($position);

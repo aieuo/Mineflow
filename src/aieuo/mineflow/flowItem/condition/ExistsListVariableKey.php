@@ -13,20 +13,17 @@ use aieuo\mineflow\variable\ListVariable;
 
 class ExistsListVariableKey extends FlowItem implements Condition {
 
-    protected $id = self::EXISTS_LIST_VARIABLE_KEY;
+    protected string $id = self::EXISTS_LIST_VARIABLE_KEY;
 
-    protected $name = "condition.existsListVariableKey.name";
-    protected $detail = "condition.existsListVariableKey.detail";
-    protected $detailDefaultReplace = ["scope", "name", "key"];
+    protected string $name = "condition.existsListVariableKey.name";
+    protected string $detail = "condition.existsListVariableKey.detail";
+    protected array $detailDefaultReplace = ["scope", "name", "key"];
 
-    protected $category = Category::VARIABLE;
+    protected string $category = Category::VARIABLE;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $variableKey;
-    /** @var bool */
-    private $isLocal;
+    private string $variableName;
+    private string $variableKey;
+    private bool $isLocal;
 
     public function __construct(string $name = "", string $key = "", bool $local = true) {
         $this->variableName = $name;

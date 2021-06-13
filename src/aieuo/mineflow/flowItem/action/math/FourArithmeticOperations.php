@@ -17,14 +17,14 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class FourArithmeticOperations extends FlowItem {
 
-    protected $id = self::FOUR_ARITHMETIC_OPERATIONS;
+    protected string $id = self::FOUR_ARITHMETIC_OPERATIONS;
 
-    protected $name = "action.fourArithmeticOperations.name";
-    protected $detail = "action.fourArithmeticOperations.detail";
-    protected $detailDefaultReplace = ["value1", "value2", "operator", "result"];
+    protected string $name = "action.fourArithmeticOperations.name";
+    protected string $detail = "action.fourArithmeticOperations.detail";
+    protected array $detailDefaultReplace = ["value1", "value2", "operator", "result"];
 
-    protected $category = Category::MATH;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::MATH;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const ADDITION = 0;
     public const SUBTRACTION = 1;
@@ -32,16 +32,12 @@ class FourArithmeticOperations extends FlowItem {
     public const DIVISION = 3;
     public const MODULO = 4;
 
-    /** @var string */
-    private $value1;
-    /** @var int */
-    private $operator;
-    /** @var string */
-    private $value2;
-    /** @var string */
-    private $resultName;
+    private string $value1;
+    private int $operator;
+    private string $value2;
+    private string $resultName;
 
-    private $operatorSymbols = ["+", "-", "*", "/", "％"];
+    private array $operatorSymbols = ["+", "-", "*", "/", "％"];
 
     public function __construct(string $value1 = "", int $operator = self::ADDITION, string $value2 = "", string $resultName = "result") {
         $this->value1 = $value1;

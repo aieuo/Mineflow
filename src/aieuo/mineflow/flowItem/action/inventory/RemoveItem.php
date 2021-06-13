@@ -8,10 +8,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class RemoveItem extends TypeItem {
 
-    protected $id = self::REMOVE_ITEM;
+    protected string $id = self::REMOVE_ITEM;
 
-    protected $name = "action.removeItem.name";
-    protected $detail = "action.removeItem.detail";
+    protected string $name = "action.removeItem.name";
+    protected string $detail = "action.removeItem.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

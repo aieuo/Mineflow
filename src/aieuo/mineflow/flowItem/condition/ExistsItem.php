@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ExistsItem extends TypeItem {
 
-    protected $id = self::EXISTS_ITEM;
+    protected string $id = self::EXISTS_ITEM;
 
-    protected $name = "condition.existsItem.name";
-    protected $detail = "condition.existsItem.detail";
+    protected string $name = "condition.existsItem.name";
+    protected string $detail = "condition.existsItem.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

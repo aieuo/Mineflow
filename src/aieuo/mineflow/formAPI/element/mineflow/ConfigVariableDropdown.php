@@ -7,9 +7,9 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class ConfigVariableDropdown extends VariableDropdown {
 
-    protected $variableType = DummyVariable::CONFIG;
+    protected string $variableType = DummyVariable::CONFIG;
 
-    protected $actions = [
+    protected array $actions = [
         FlowItemIds::CREATE_CONFIG_VARIABLE,
     ];
 

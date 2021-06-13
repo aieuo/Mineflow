@@ -26,9 +26,9 @@ class Triggers {
     public const CUSTOM = "custom";
 
     /** @var TriggerForm[] */
-    private static $forms = [];
+    private static array $forms = [];
     /** @var string[] */
-    private static $list = [];
+    private static array $list = [];
 
     public static function init(): void {
         self::add(self::BLOCK, BlockTrigger::class, new BlockTriggerForm());

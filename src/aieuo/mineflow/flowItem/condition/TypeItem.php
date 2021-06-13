@@ -15,9 +15,9 @@ use aieuo\mineflow\utils\Language;
 abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
 
-    protected $detailDefaultReplace = ["player", "item"];
+    protected array $detailDefaultReplace = ["player", "item"];
 
-    protected $category = Category::INVENTORY;
+    protected string $category = Category::INVENTORY;
 
     public function __construct(string $player = "", string $item = "") {
         $this->setPlayerVariableName($player);

@@ -16,24 +16,19 @@ use aieuo\mineflow\utils\Language;
 class SendTitle extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SEND_TITLE;
+    protected string $id = self::SEND_TITLE;
 
-    protected $name = "action.sendTitle.name";
-    protected $detail = "action.sendTitle.detail";
-    protected $detailDefaultReplace = ["player", "title", "subtitle", "fadein", "stay", "fadeout"];
+    protected string $name = "action.sendTitle.name";
+    protected string $detail = "action.sendTitle.detail";
+    protected array $detailDefaultReplace = ["player", "title", "subtitle", "fadein", "stay", "fadeout"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var string */
-    private $title;
-    /** @var string */
-    private $subtitle;
-    /** @var string */
-    private $fadein;
-    /** @var string */
-    private $stay;
-    /** @var string */
-    private $fadeout;
+    private string $title;
+    private string $subtitle;
+    private string $fadein;
+    private string $stay;
+    private string $fadeout;
 
     public function __construct(string $player = "", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
         $this->setPlayerVariableName($player);

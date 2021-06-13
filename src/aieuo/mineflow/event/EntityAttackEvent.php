@@ -9,8 +9,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\plugin\PluginEvent;
 
 class EntityAttackEvent extends PluginEvent implements Cancellable {
-    /** @var EntityDamageByEntityEvent */
-    private $event;
+    private EntityDamageByEntityEvent $event;
 
     public function __construct(Main $plugin, EntityDamageByEntityEvent $event) {
         parent::__construct($plugin);

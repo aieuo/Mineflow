@@ -20,21 +20,18 @@ use pocketmine\math\Vector3;
 class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
 
-    protected $id = self::MOVE_TO;
+    protected string $id = self::MOVE_TO;
 
-    protected $name = "action.moveTo.name";
-    protected $detail = "action.moveTo.detail";
-    protected $detailDefaultReplace = ["entity", "position", "speedX", "speedY", "speedZ"];
+    protected string $name = "action.moveTo.name";
+    protected string $detail = "action.moveTo.detail";
+    protected array $detailDefaultReplace = ["entity", "position", "speedX", "speedY", "speedZ"];
 
-    protected $category = Category::ENTITY;
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected string $category = Category::ENTITY;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var string */
-    private $speedX;
-    /** @var string */
-    private $speedY;
-    /** @var string */
-    private $speedZ;
+    private string $speedX;
+    private string $speedY;
+    private string $speedZ;
 
     public function __construct(string $entity = "", string $position = "", string $x = "0.1", string $y = "0", string $z = "0.1") {
         $this->setEntityVariableName($entity);

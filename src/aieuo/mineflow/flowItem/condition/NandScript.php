@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class NandScript extends AndScript {
 
-    protected $id = self::CONDITION_NAND;
+    protected string $id = self::CONDITION_NAND;
 
-    protected $name = "condition.nand.name";
-    protected $detail = "condition.nand.detail";
+    protected string $name = "condition.nand.name";
+    protected string $detail = "condition.nand.detail";
 
     public function getDetail(): string {
         $details = ["-----------nand-----------"];

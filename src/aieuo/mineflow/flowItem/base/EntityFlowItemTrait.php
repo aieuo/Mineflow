@@ -14,7 +14,7 @@ use pocketmine\Player;
 trait EntityFlowItemTrait {
 
     /* @var string[] */
-    private $entityVariableNames = [];
+    private array $entityVariableNames = [];
 
     public function getEntityVariableName(string $name = ""): string {
         return $this->entityVariableNames[$name] ?? "";

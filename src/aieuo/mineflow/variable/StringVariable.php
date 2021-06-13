@@ -6,7 +6,7 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 
 class StringVariable extends Variable implements \JsonSerializable {
 
-    public $type = Variable::STRING;
+    public int $type = Variable::STRING;
 
     public function getValue(): string {
         return parent::getValue();

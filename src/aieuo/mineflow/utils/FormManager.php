@@ -10,8 +10,7 @@ use pocketmine\utils\Config;
 
 class FormManager {
 
-    /** @var Config */
-    private $config;
+    private Config $config;
 
     public function __construct(Config $forms) {
         $this->config = $forms;

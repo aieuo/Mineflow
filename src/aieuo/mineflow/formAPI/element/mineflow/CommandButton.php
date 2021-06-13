@@ -10,11 +10,10 @@ use pocketmine\Server;
 
 class CommandButton extends Button {
 
-    protected $type = self::TYPE_COMMAND;
-    /** @var string */
-    private $command;
+    protected string $type = self::TYPE_COMMAND;
+    private string $command;
 
-    public $skipIfCallOnClick = false;
+    public bool $skipIfCallOnClick = false;
 
     public function __construct(string $command, string $text = null, ?ButtonImage $image = null) {
         $this->command = $command;

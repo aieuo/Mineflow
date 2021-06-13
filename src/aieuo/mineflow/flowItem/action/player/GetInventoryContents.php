@@ -20,18 +20,17 @@ use pocketmine\item\Item;
 class GetInventoryContents extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::GET_INVENTORY_CONTENTS;
+    protected string $id = self::GET_INVENTORY_CONTENTS;
 
-    protected $name = "action.getInventory.name";
-    protected $detail = "action.getInventory.detail";
-    protected $detailDefaultReplace = ["player", "inventory"];
+    protected string $name = "action.getInventory.name";
+    protected string $detail = "action.getInventory.detail";
+    protected array $detailDefaultReplace = ["player", "inventory"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $resultName;
+    private string $resultName;
 
     public function __construct(string $player = "", string $resultName = "inventory") {
         $this->setPlayerVariableName($player);

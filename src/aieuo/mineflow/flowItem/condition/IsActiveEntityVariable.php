@@ -14,13 +14,13 @@ use pocketmine\Player;
 class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::IS_ACTIVE_ENTITY_VARIABLE;
+    protected string $id = self::IS_ACTIVE_ENTITY_VARIABLE;
 
-    protected $name = "condition.isActiveEntityVariable.name";
-    protected $detail = "condition.isActiveEntityVariable.detail";
-    protected $detailDefaultReplace = ["entity"];
+    protected string $name = "condition.isActiveEntityVariable.name";
+    protected string $detail = "condition.isActiveEntityVariable.detail";
+    protected array $detailDefaultReplace = ["entity"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
     public function __construct(string $entity = "") {
         $this->setEntityVariableName($entity);

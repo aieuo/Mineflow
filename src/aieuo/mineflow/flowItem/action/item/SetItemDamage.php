@@ -16,17 +16,16 @@ use aieuo\mineflow\utils\Language;
 class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected $id = self::SET_ITEM_DAMAGE;
+    protected string $id = self::SET_ITEM_DAMAGE;
 
-    protected $name = "action.setItemDamage.name";
-    protected $detail = "action.setItemDamage.detail";
-    protected $detailDefaultReplace = ["item", "damage"];
+    protected string $name = "action.setItemDamage.name";
+    protected string $detail = "action.setItemDamage.detail";
+    protected array $detailDefaultReplace = ["item", "damage"];
 
-    protected $category = Category::ITEM;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::ITEM;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $damage;
+    private string $damage;
 
     public function __construct(string $item = "", string $damage = "") {
         $this->setItemVariableName($item);

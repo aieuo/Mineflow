@@ -14,19 +14,17 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class StringLength extends FlowItem {
 
-    protected $id = self::STRING_LENGTH;
+    protected string $id = self::STRING_LENGTH;
 
-    protected $name = "action.strlen.name";
-    protected $detail = "action.strlen.detail";
-    protected $detailDefaultReplace = ["string", "result"];
+    protected string $name = "action.strlen.name";
+    protected string $detail = "action.strlen.detail";
+    protected array $detailDefaultReplace = ["string", "result"];
 
-    protected $category = Category::STRING;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::STRING;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    /** @var string */
-    private $value;
-    /** @var string */
-    private $resultName;
+    private string $value;
+    private string $resultName;
 
     public function __construct(string $value = "", string $resultName = "length") {
         $this->value = $value;

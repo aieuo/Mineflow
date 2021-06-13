@@ -3,13 +3,10 @@
 namespace aieuo\mineflow\formAPI\response;
 
 class FormResponse {
-    /** @var array */
-    private $errors = [];
+    private array $errors = [];
 
-    /** @var array */
-    protected $response;
-    /** @var int */
-    protected $currentIndex = 0;
+    protected array $response;
+    protected int $currentIndex = 0;
 
     public function __construct(array $data) {
         $this->response = $data;

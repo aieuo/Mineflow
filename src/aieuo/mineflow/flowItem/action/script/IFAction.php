@@ -16,12 +16,12 @@ use pocketmine\Player;
 class IFAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected $id = self::ACTION_IF;
+    protected string $id = self::ACTION_IF;
 
-    protected $name = "action.if.name";
-    protected $detail = "action.if.description";
+    protected string $name = "action.if.name";
+    protected string $detail = "action.if.description";
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         $this->setItems($conditions, FlowItemContainer::CONDITION);

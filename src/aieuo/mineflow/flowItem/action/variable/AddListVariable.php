@@ -18,20 +18,18 @@ use aieuo\mineflow\variable\Variable;
 
 class AddListVariable extends FlowItem {
 
-    protected $id = self::ADD_LIST_VARIABLE;
+    protected string $id = self::ADD_LIST_VARIABLE;
 
-    protected $name = "action.addListVariable.name";
-    protected $detail = "action.addListVariable.detail";
-    protected $detailDefaultReplace = ["name", "scope", "value"];
+    protected string $name = "action.addListVariable.name";
+    protected string $detail = "action.addListVariable.detail";
+    protected array $detailDefaultReplace = ["name", "scope", "value"];
 
-    protected $category = Category::VARIABLE;
+    protected string $category = Category::VARIABLE;
 
-    /** @var string */
-    private $variableName;
+    private string $variableName;
     /** @var string[] */
-    private $variableValue;
-    /** @var bool */
-    private $isLocal;
+    private array $variableValue;
+    private bool $isLocal;
 
     public function __construct(string $value = "", string $name = "", bool $local = true) {
         $this->variableName = $name;

@@ -6,8 +6,7 @@ use aieuo\mineflow\utils\Language;
 
 class StepSlider extends Dropdown {
 
-    /** @var string */
-    protected $type = self::ELEMENT_STEP_SLIDER;
+    protected string $type = self::ELEMENT_STEP_SLIDER;
 
     public function jsonSerialize(): array {
         return [

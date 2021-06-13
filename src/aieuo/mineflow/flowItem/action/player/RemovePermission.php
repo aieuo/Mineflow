@@ -17,18 +17,17 @@ use aieuo\mineflow\utils\Language;
 class RemovePermission extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::REMOVE_PERMISSION;
+    protected string $id = self::REMOVE_PERMISSION;
 
-    protected $name = "action.removePermission.name";
-    protected $detail = "action.removePermission.detail";
-    protected $detailDefaultReplace = ["player", "permission"];
+    protected string $name = "action.removePermission.name";
+    protected string $detail = "action.removePermission.detail";
+    protected array $detailDefaultReplace = ["player", "permission"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var string */
-    private $playerPermission;
+    private string $playerPermission;
 
     public function __construct(string $player = "", string $permission = "") {
         $this->setPlayerVariableName($player);

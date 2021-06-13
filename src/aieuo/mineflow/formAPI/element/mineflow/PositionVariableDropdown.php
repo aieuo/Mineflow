@@ -7,9 +7,9 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class PositionVariableDropdown extends VariableDropdown {
 
-    protected $variableType = DummyVariable::POSITION;
+    protected string $variableType = DummyVariable::POSITION;
 
-    protected $actions = [
+    protected array $actions = [
         FlowItemIds::CREATE_POSITION_VARIABLE,
         FlowItemIds::GET_ENTITY_SIDE,
     ];

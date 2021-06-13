@@ -16,35 +16,28 @@ use JsonSerializable;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
-    /** @var string */
-    protected $id;
+    protected string $id;
 
-    /** @var string */
-    protected $name;
-    /** @var string */
-    protected $detail;
+    protected string $name;
+    protected string $detail;
     /** @var string[] */
-    protected $detailDefaultReplace = [];
+    protected array $detailDefaultReplace = [];
 
-    /** @var string */
-    protected $category;
+    protected string $category;
 
-    /** @var string */
-    private $customName = "";
+    private string $customName = "";
 
     public const RETURN_NONE = "none";
     public const RETURN_VARIABLE_NAME = "variableName";
     public const RETURN_VARIABLE_VALUE = "variableValue";
 
-    /** @var string */
-    protected $returnValueType = self::RETURN_NONE;
+    protected string $returnValueType = self::RETURN_NONE;
 
     public const PERMISSION_LEVEL_0 = 0;
     public const PERMISSION_LEVEL_1 = 1;
     public const PERMISSION_LEVEL_2 = 2;
 
-    /** @var int */
-    protected $permission = self::PERMISSION_LEVEL_0;
+    protected int $permission = self::PERMISSION_LEVEL_0;
 
     public function getId(): string {
         return $this->id;

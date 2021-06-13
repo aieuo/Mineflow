@@ -15,12 +15,11 @@ use aieuo\mineflow\utils\Language;
 abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $detailDefaultReplace = ["player", "message"];
+    protected array $detailDefaultReplace = ["player", "message"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(string $player = "", string $message = "") {
         $this->setPlayerVariableName($player);

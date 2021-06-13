@@ -9,14 +9,11 @@ use aieuo\mineflow\variable\Variable;
 
 abstract class Trigger implements \JsonSerializable {
 
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var string */
-    private $key;
+    private string $key;
 
-    /** @var string */
-    private $subKey;
+    private string $subKey;
 
     abstract public static function create(string $key, string $subKey = ""): Trigger;
 

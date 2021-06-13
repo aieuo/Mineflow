@@ -9,7 +9,7 @@ use pocketmine\Server;
 class EntityHolder {
 
     /** @var Entity[]|null[] */
-    private static $entities = [];
+    private static array $entities = [];
 
     public static function getPlayerByName(string $name): ?Player {
         $player = Server::getInstance()->getPlayer($name);

@@ -18,22 +18,18 @@ use aieuo\mineflow\variable\Variable;
 
 class AddMapVariable extends FlowItem {
 
-    protected $id = self::ADD_MAP_VARIABLE;
+    protected string $id = self::ADD_MAP_VARIABLE;
 
-    protected $name = "action.addMapVariable.name";
-    protected $detail = "action.addMapVariable.detail";
-    protected $detailDefaultReplace = ["name", "scope", "key", "value"];
+    protected string $name = "action.addMapVariable.name";
+    protected string $detail = "action.addMapVariable.detail";
+    protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
 
-    protected $category = Category::VARIABLE;
+    protected string $category = Category::VARIABLE;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $variableKey;
-    /** @var string */
-    private $variableValue;
-    /** @var bool */
-    private $isLocal;
+    private string $variableName;
+    private string $variableKey;
+    private string $variableValue;
+    private bool $isLocal;
 
     public function __construct(string $name = "", string $key = "", string $value = "", bool $local = true) {
         $this->variableName = $name;

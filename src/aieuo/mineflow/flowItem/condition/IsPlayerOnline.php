@@ -13,13 +13,13 @@ use aieuo\mineflow\utils\Language;
 class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::IS_PLAYER_ONLINE;
+    protected string $id = self::IS_PLAYER_ONLINE;
 
-    protected $name = "condition.isPlayerOnline.name";
-    protected $detail = "condition.isPlayerOnline.detail";
-    protected $detailDefaultReplace = ["player"];
+    protected string $name = "condition.isPlayerOnline.name";
+    protected string $detail = "condition.isPlayerOnline.detail";
+    protected array $detailDefaultReplace = ["player"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
     public function __construct(string $player = "") {
         $this->setPlayerVariableName($player);

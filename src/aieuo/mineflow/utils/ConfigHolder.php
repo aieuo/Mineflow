@@ -8,7 +8,7 @@ use pocketmine\utils\Config;
 class ConfigHolder {
 
     /** @var Config[] */
-    private static $configs = [];
+    private static array $configs = [];
 
     public static function existsConfigFile(string $name): bool {
         $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));

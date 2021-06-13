@@ -13,10 +13,9 @@ use ErrorException;
 class RecipeManager {
 
     /** @var Recipe[][] */
-    protected $recipes = [];
+    protected array $recipes = [];
 
-    /** @var string */
-    private $saveDir;
+    private string $saveDir;
 
     public function __construct(string $saveDir) {
         $this->saveDir = $saveDir;

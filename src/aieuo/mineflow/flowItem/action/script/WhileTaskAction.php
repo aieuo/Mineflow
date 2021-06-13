@@ -22,22 +22,19 @@ use pocketmine\Player;
 class WhileTaskAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected $id = self::ACTION_WHILE_TASK;
+    protected string $id = self::ACTION_WHILE_TASK;
 
-    protected $name = "action.whileTask.name";
-    protected $detail = "action.whileTask.description";
+    protected string $name = "action.whileTask.name";
+    protected string $detail = "action.whileTask.description";
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var int */
-    private $interval;
-    /** @var int */
-    private $limit = -1;
+    private int $interval;
+    private int $limit = -1;
 
-    /** @var int */
-    private $loopCount = 0;
+    private int $loopCount = 0;
 
     public function __construct(array $conditions = [], array $actions = [], int $interval = 20, ?string $customName = null) {
         $this->setItems($conditions, FlowItemContainer::CONDITION);

@@ -19,20 +19,18 @@ use pocketmine\Server;
 class AddParticle extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected $id = self::ADD_PARTICLE;
+    protected string $id = self::ADD_PARTICLE;
 
-    protected $name = "action.addParticle.name";
-    protected $detail = "action.addParticle.detail";
-    protected $detailDefaultReplace = ["position", "particle", "amount", ""];
+    protected string $name = "action.addParticle.name";
+    protected string $detail = "action.addParticle.detail";
+    protected array $detailDefaultReplace = ["position", "particle", "amount", ""];
 
-    protected $category = Category::WORLD;
+    protected string $category = Category::WORLD;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var string */
-    private $particle;
-    /** @var string */
-    private $amount;
+    private string $particle;
+    private string $amount;
 
     public function __construct(string $position = "", string $particle = "", string $amount = "1") {
         $this->setPositionVariableName($position);

@@ -17,14 +17,14 @@ use aieuo\mineflow\variable\StringVariable;
 
 class EditString extends FlowItem {
 
-    protected $id = self::EDIT_STRING;
+    protected string $id = self::EDIT_STRING;
 
-    protected $name = "action.editString.name";
-    protected $detail = "action.editString.detail";
-    protected $detailDefaultReplace = ["value1", "operator", "value2", "result"];
+    protected string $name = "action.editString.name";
+    protected string $detail = "action.editString.detail";
+    protected array $detailDefaultReplace = ["value1", "operator", "value2", "result"];
 
-    protected $category = Category::STRING;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::STRING;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const TYPE_JOIN = "join";
     public const TYPE_DELETE = "delete";
@@ -32,21 +32,17 @@ class EditString extends FlowItem {
     public const TYPE_SPLIT = "split";
 
     /** @var string[] */
-    private $operators = [
+    private array $operators = [
         self::TYPE_JOIN,
         self::TYPE_DELETE,
         self::TYPE_REPEAT,
         self::TYPE_SPLIT,
     ];
 
-    /** @var string */
-    private $value1;
-    /** @var string */
-    private $operator;
-    /** @var string */
-    private $value2;
-    /** @var string */
-    private $resultName;
+    private string $value1;
+    private string $operator;
+    private string $value2;
+    private string $resultName;
 
     public function __construct(string $value1 = "", string $operator = self::TYPE_JOIN, string $value2 = "", string $resultName = "result") {
         $this->value1 = $value1;

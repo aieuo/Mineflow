@@ -21,25 +21,20 @@ use aieuo\mineflow\variable\Variable;
 
 class AddVariable extends FlowItem {
 
-    protected $id = self::ADD_VARIABLE;
+    protected string $id = self::ADD_VARIABLE;
 
-    protected $name = "action.addVariable.name";
-    protected $detail = "action.addVariable.detail";
-    protected $detailDefaultReplace = ["name", "value", "type", "scope"];
+    protected string $name = "action.addVariable.name";
+    protected string $detail = "action.addVariable.detail";
+    protected array $detailDefaultReplace = ["name", "value", "type", "scope"];
 
-    protected $category = Category::VARIABLE;
+    protected string $category = Category::VARIABLE;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $variableValue;
-    /** @var int */
-    private $variableType;
-    /** @var bool */
-    private $isLocal;
+    private string $variableName;
+    private string $variableValue;
+    private int $variableType;
+    private bool $isLocal;
 
-    /** @var array */
-    private $variableTypes = ["string", "number"];
+    private array $variableTypes = ["string", "number"];
 
     public function __construct(string $name = "", string $value = "", int $type = Variable::STRING, bool $local = true) {
         $this->variableName = $name;
@@ -111,7 +106,7 @@ class AddVariable extends FlowItem {
     public function parseFromFormData(array $data): array {
         $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
         if ($data[2] === Variable::NUMBER and !$containsVariable and !is_numeric($data[1])) {
-            throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
+            throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[1]]), 1);
         }
 
         return [$data[0], $data[1], $data[2], !$data[3]];

@@ -7,9 +7,9 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class EntityVariableDropdown extends VariableDropdown {
 
-    protected $variableType = DummyVariable::ENTITY;
+    protected string $variableType = DummyVariable::ENTITY;
 
-    protected $actions = [
+    protected array $actions = [
         FlowItemIds::GET_ENTITY,
         FlowItemIds::CREATE_HUMAN_ENTITY,
     ];

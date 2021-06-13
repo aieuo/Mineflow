@@ -16,16 +16,15 @@ use aieuo\mineflow\utils\Language;
 class AddXpProgress extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::ADD_XP_PROGRESS;
+    protected string $id = self::ADD_XP_PROGRESS;
 
-    protected $name = "action.addXp.name";
-    protected $detail = "action.addXp.detail";
-    protected $detailDefaultReplace = ["player", "value"];
+    protected string $name = "action.addXp.name";
+    protected string $detail = "action.addXp.detail";
+    protected array $detailDefaultReplace = ["player", "value"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var string */
-    private $xp;
+    private string $xp;
 
     public function __construct(string $player = "", string $damage = "") {
         $this->setPlayerVariableName($player);

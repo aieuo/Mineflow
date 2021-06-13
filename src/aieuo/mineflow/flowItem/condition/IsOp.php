@@ -13,13 +13,13 @@ use aieuo\mineflow\utils\Language;
 class IsOp extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::IS_OP;
+    protected string $id = self::IS_OP;
 
-    protected $name = "condition.isOp.name";
-    protected $detail = "condition.isOp.detail";
-    protected $detailDefaultReplace = ["player"];
+    protected string $name = "condition.isOp.name";
+    protected string $detail = "condition.isOp.detail";
+    protected array $detailDefaultReplace = ["player"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
     public function __construct(string $player = "") {
         $this->setPlayerVariableName($player);

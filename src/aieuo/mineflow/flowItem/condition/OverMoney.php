@@ -10,10 +10,10 @@ use pocketmine\utils\TextFormat;
 
 class OverMoney extends TypeMoney {
 
-    protected $id = self::OVER_MONEY;
+    protected string $id = self::OVER_MONEY;
 
-    protected $name = "condition.overMoney.name";
-    protected $detail = "condition.overMoney.detail";
+    protected string $name = "condition.overMoney.name";
+    protected string $detail = "condition.overMoney.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

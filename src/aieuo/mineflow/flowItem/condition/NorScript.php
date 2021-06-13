@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class NorScript extends ORScript {
 
-    protected $id = self::CONDITION_NOR;
+    protected string $id = self::CONDITION_NOR;
 
-    protected $name = "condition.nor.name";
-    protected $detail = "condition.nor.detail";
+    protected string $name = "condition.nor.name";
+    protected string $detail = "condition.nor.detail";
 
     public function getDetail(): string {
         $details = ["-----------nor-----------"];

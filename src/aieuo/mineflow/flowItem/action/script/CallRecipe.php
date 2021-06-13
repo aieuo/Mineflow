@@ -10,10 +10,10 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 
 class CallRecipe extends ExecuteRecipe {
 
-    protected $id = self::CALL_RECIPE;
+    protected string $id = self::CALL_RECIPE;
 
-    protected $name = "action.callRecipe.name";
-    protected $detail = "action.callRecipe.detail";
+    protected string $name = "action.callRecipe.name";
+    protected string $detail = "action.callRecipe.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

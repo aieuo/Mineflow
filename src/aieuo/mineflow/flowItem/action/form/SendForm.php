@@ -26,16 +26,15 @@ use aieuo\mineflow\variable\ListVariable;
 class SendForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SEND_FORM;
+    protected string $id = self::SEND_FORM;
 
-    protected $name = "action.sendForm.name";
-    protected $detail = "action.sendForm.detail";
-    protected $detailDefaultReplace = ["player", "form"];
+    protected string $name = "action.sendForm.name";
+    protected string $detail = "action.sendForm.detail";
+    protected array $detailDefaultReplace = ["player", "form"];
 
-    protected $category = Category::FORM;
+    protected string $category = Category::FORM;
 
-    /** @var string */
-    private $formName;
+    private string $formName;
 
     public function __construct(string $player = "", string $formName = "") {
         $this->setPlayerVariableName($player);

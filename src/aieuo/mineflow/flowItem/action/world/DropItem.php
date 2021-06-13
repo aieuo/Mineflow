@@ -18,13 +18,13 @@ use aieuo\mineflow\utils\Language;
 class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
     use PositionFlowItemTrait, ItemFlowItemTrait;
 
-    protected $id = self::DROP_ITEM;
+    protected string $id = self::DROP_ITEM;
 
-    protected $name = "action.dropItem.name";
-    protected $detail = "action.dropItem.detail";
-    protected $detailDefaultReplace = ["position", "item"];
+    protected string $name = "action.dropItem.name";
+    protected string $detail = "action.dropItem.detail";
+    protected array $detailDefaultReplace = ["position", "item"];
 
-    protected $category = Category::WORLD;
+    protected string $category = Category::WORLD;
 
     public function __construct(string $position = "", string $item = "") {
         $this->setPositionVariableName($position);

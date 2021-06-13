@@ -16,16 +16,15 @@ use aieuo\mineflow\utils\Language;
 class SetScale extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::SET_SCALE;
+    protected string $id = self::SET_SCALE;
 
-    protected $name = "action.setScale.name";
-    protected $detail = "action.setScale.detail";
-    protected $detailDefaultReplace = ["entity", "scale"];
+    protected string $name = "action.setScale.name";
+    protected string $detail = "action.setScale.detail";
+    protected array $detailDefaultReplace = ["entity", "scale"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
-    /** @var string */
-    private $scale;
+    private string $scale;
 
     public function __construct(string $entity = "", string $scale = "") {
         $this->setEntityVariableName($entity);

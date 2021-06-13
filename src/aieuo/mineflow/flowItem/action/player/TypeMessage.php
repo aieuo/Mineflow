@@ -11,12 +11,11 @@ use aieuo\mineflow\utils\Language;
 
 abstract class TypeMessage extends FlowItem {
 
-    protected $detailDefaultReplace = ["message"];
+    protected array $detailDefaultReplace = ["message"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(string $message = "") {
         $this->message = $message;

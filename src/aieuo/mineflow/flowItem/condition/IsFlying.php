@@ -13,13 +13,13 @@ use aieuo\mineflow\utils\Language;
 class IsFlying extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::IS_FLYING;
+    protected string $id = self::IS_FLYING;
 
-    protected $name = "condition.isFlying.name";
-    protected $detail = "condition.isFlying.detail";
-    protected $detailDefaultReplace = ["player"];
+    protected string $name = "condition.isFlying.name";
+    protected string $detail = "condition.isFlying.detail";
+    protected array $detailDefaultReplace = ["player"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
     public function __construct(string $player = "") {
         $this->setPlayerVariableName($player);

@@ -22,23 +22,19 @@ use pocketmine\entity\Living;
 class AddEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::ADD_EFFECT;
+    protected string $id = self::ADD_EFFECT;
 
-    protected $name = "action.addEffect.name";
-    protected $detail = "action.addEffect.detail";
-    protected $detailDefaultReplace = ["entity", "id", "power", "time"];
+    protected string $name = "action.addEffect.name";
+    protected string $detail = "action.addEffect.detail";
+    protected array $detailDefaultReplace = ["entity", "id", "power", "time"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
-    /** @var string */
-    private $effectId;
-    /** @var string */
-    private $power;
-    /** @var string */
-    private $time;
+    private string $effectId;
+    private string $power;
+    private string $time;
 
-    /** @var bool */
-    private $visible = false;
+    private bool $visible = false;
 
     public function __construct(string $entity = "", string $id = "", string $time = "300", string $power = "1") {
         $this->setEntityVariableName($entity);

@@ -15,9 +15,8 @@ abstract class Variable {
     public const BOOLEAN = 5;
 
     /** @var string|int|Variable[]|object */
-    protected $value;
-    /** @var int */
-    public $type;
+    protected array $value;
+    public int $type;
 
     public static function create($value, int $type = self::STRING): ?self {
         $variable = null;

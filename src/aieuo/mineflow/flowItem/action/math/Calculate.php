@@ -16,14 +16,14 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate extends FlowItem {
 
-    protected $id = self::CALCULATE;
+    protected string $id = self::CALCULATE;
 
-    protected $name = "action.calculate.name";
-    protected $detail = "action.calculate.detail";
-    protected $detailDefaultReplace = ["value", "operator", "result"];
+    protected string $name = "action.calculate.name";
+    protected string $detail = "action.calculate.detail";
+    protected array $detailDefaultReplace = ["value", "operator", "result"];
 
-    protected $category = Category::MATH;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::MATH;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const SQUARE = 0;
     public const SQUARE_ROOT = 1;
@@ -42,14 +42,11 @@ class Calculate extends FlowItem {
     public const CALC_ROUND = 14;
     public const CALC_CEIL = 15;
 
-    /** @var string */
-    private $value;
-    /** @var int */
-    private $operator;
-    /** @var string */
-    private $resultName;
+    private string $value;
+    private int $operator;
+    private string $resultName;
 
-    private $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
+    private array $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
     public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
         $this->value = $value;

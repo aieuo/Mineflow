@@ -18,24 +18,19 @@ use pocketmine\Player;
 
 abstract class VariableDropdown extends Dropdown {
 
-    /** @var string */
-    protected $variableType;
+    protected string $variableType;
 
-    /** @var string */
-    private $defaultText;
+    private string $defaultText;
 
     /** @var string[] */
-    protected $actions = [];
-    /* @var array */
-    private $variableTypes;
-    /** @var array */
-    private $variableNames = [];
+    protected array $actions = [];
+    private array $variableTypes;
+    private array $variableNames = [];
 
-    /* @var bool */
-    private $optional;
+    private bool $optional;
 
-    private $createVariableOptionIndex = -1;
-    private $inputManuallyOptionIndex = -1;
+    private int $createVariableOptionIndex = -1;
+    private int $inputManuallyOptionIndex = -1;
 
     /**
      * @param string $text

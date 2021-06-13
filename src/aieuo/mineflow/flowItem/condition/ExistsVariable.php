@@ -11,16 +11,15 @@ use aieuo\mineflow\utils\Language;
 
 class ExistsVariable extends FlowItem implements Condition {
 
-    protected $id = self::EXISTS_VARIABLE;
+    protected string $id = self::EXISTS_VARIABLE;
 
-    protected $name = "condition.existsVariable.name";
-    protected $detail = "condition.existsVariable.detail";
-    protected $detailDefaultReplace = ["name"];
+    protected string $name = "condition.existsVariable.name";
+    protected string $detail = "condition.existsVariable.detail";
+    protected array $detailDefaultReplace = ["name"];
 
-    protected $category = Category::VARIABLE;
+    protected string $category = Category::VARIABLE;
 
-    /** @var string */
-    private $variableName;
+    private string $variableName;
 
     public function __construct(string $name = "") {
         $this->variableName = $name;

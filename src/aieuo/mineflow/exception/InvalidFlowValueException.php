@@ -7,8 +7,7 @@ use aieuo\mineflow\utils\Language;
 use Throwable;
 
 class InvalidFlowValueException extends \RuntimeException {
-    /** @var string */
-    private $flowItemName;
+    private string $flowItemName;
 
     public function __construct(string $flowItemName = "", string $message = "", int $code = 0, Throwable $previous = null) {
         parent::__construct($message, $code, $previous);

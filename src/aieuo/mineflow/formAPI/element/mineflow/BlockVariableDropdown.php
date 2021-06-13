@@ -7,9 +7,9 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class BlockVariableDropdown extends VariableDropdown {
 
-    protected $variableType = DummyVariable::BLOCK;
+    protected string $variableType = DummyVariable::BLOCK;
 
-    protected $actions = [
+    protected array $actions = [
         FlowItemIds::CREATE_BLOCK_VARIABLE,
         FlowItemIds::GET_BLOCK,
         FlowItemIds::GET_TARGET_BLOCK,

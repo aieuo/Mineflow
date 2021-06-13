@@ -6,8 +6,7 @@ use aieuo\mineflow\utils\Language;
 
 class Label extends Element {
 
-    /** @var string */
-    protected $type = self::ELEMENT_LABEL;
+    protected string $type = self::ELEMENT_LABEL;
 
     public function jsonSerialize(): array {
         return [

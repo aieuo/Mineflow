@@ -5,13 +5,10 @@ namespace aieuo\mineflow\formAPI\element;
 use aieuo\mineflow\utils\Language;
 
 class Dropdown extends Element {
-    /** @var string */
-    protected $type = self::ELEMENT_DROPDOWN;
+    protected string $type = self::ELEMENT_DROPDOWN;
 
-    /** @var array */
-    protected $options = [];
-    /** @var int */
-    protected $default = 0;
+    protected array $options = [];
+    protected int $default = 0;
 
     public function __construct(string $text, array $options = [], int $default = 0) {
         parent::__construct($text);
@@ -19,43 +16,25 @@ class Dropdown extends Element {
         $this->default = $default;
     }
 
-    /**
-     * @param string $option
-     * @return self
-     */
     public function addOption(string $option): self {
         $this->options[] = $option;
         return $this;
     }
 
-    /**
-     * @param array $options
-     * @return self
-     */
     public function setOptions(array $options): self {
         $this->options = $options;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array {
         return $this->options;
     }
 
-    /**
-     * @param int $default
-     * @return self
-     */
     public function setDefault(int $default): self {
         $this->default = $default >= 0 ? $default : 0;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDefault(): int {
         return $this->default;
     }

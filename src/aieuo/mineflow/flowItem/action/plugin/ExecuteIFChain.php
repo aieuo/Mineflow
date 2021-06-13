@@ -20,21 +20,20 @@ use pocketmine\Server;
 class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::EXECUTE_IF_CHAIN;
+    protected string $id = self::EXECUTE_IF_CHAIN;
 
-    protected $name = "action.executeIFChain.name";
-    protected $detail = "action.executeIFChain.detail";
-    protected $detailDefaultReplace = ["chain", "player"];
+    protected string $name = "action.executeIFChain.name";
+    protected string $detail = "action.executeIFChain.detail";
+    protected array $detailDefaultReplace = ["chain", "player"];
 
-    protected $category = Category::PLUGIN;
+    protected string $category = Category::PLUGIN;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var string */
-    private $chainName;
+    private string $chainName;
 
     /** @var string[] */
-    private $args = [];
+    private array $args = [];
 
     public function __construct(string $chain = "", string $player = "") {
         $this->setPlayerVariableName($player);

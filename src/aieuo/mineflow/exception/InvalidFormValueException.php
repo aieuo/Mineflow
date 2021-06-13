@@ -7,10 +7,8 @@ use Throwable;
 
 class InvalidFormValueException extends \RuntimeException {
 
-    /* @var string */
-    private $errorMessage;
-    /* @var int */
-    private $index;
+    private string $errorMessage;
+    private int $index;
 
     public function __construct(string $errorMessage, int $index, string $message = "", int $code = 0, Throwable $previous = null) {
         parent::__construct($message, $code, $previous);

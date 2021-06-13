@@ -14,16 +14,15 @@ use pocketmine\scheduler\ClosureTask;
 
 class Wait extends FlowItem {
 
-    protected $id = self::ACTION_WAIT;
+    protected string $id = self::ACTION_WAIT;
 
-    protected $name = "action.wait.name";
-    protected $detail = "action.wait.detail";
-    protected $detailDefaultReplace = ["time"];
+    protected string $name = "action.wait.name";
+    protected string $detail = "action.wait.detail";
+    protected array $detailDefaultReplace = ["time"];
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
-    /** @var string */
-    private $time;
+    private string $time;
 
     public function __construct(string $time = "") {
         $this->time = $time;
