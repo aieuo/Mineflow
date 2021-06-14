@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMissingFieldTypeInspection */
 
 namespace aieuo\mineflow\variable;
 
@@ -8,7 +8,8 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     private ?string $showString;
 
-    protected array $value = [];
+    /** @var array */
+    protected $value = [];
 
     /**
      * @return Variable[]
