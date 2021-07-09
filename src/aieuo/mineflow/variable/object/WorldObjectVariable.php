@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\level\Level;
+use pocketmine\Player;
 
 class WorldObjectVariable extends ObjectVariable {
 
@@ -28,6 +30,11 @@ class WorldObjectVariable extends ObjectVariable {
                 break;
             case "id":
                 $variable = new NumberVariable($level->getId());
+                break;
+            case "players":
+                $variable = new ListVariable(array_map(function (Player $player) {
+                    return new PlayerObjectVariable($player);
+                    }, $level->getPlayers()));
                 break;
             default:
                 return null;

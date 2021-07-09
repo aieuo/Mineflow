@@ -25,6 +25,15 @@ class HumanObjectVariable extends EntityObjectVariable {
             case "food":
                 $variable = new NumberVariable($human->getFood());
                 break;
+            case "xp":
+                $variable = new NumberVariable($human->getCurrentTotalXp());
+                break;
+            case "xp_level":
+                $variable = new NumberVariable($human->getXpLevel());
+                break;
+            case "xp_progress":
+                $variable = new NumberVariable($human->getXpProgress());
+                break;
             default:
                 return null;
         }
