@@ -1,6 +1,6 @@
 name: Mineflow
 main: aieuo\mineflow\Main
-version: 2.1.1
+version: 2.2.0
 api: 3.13.0
 mcpe-protocol:
   - 408
