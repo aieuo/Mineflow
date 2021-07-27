@@ -32,6 +32,8 @@ interface FlowItemIds {
     public const SET_NAME = "setName";
     public const SET_SCALE = "setScale";
     public const ADD_EFFECT = "addEffect";
+    public const CLEAR_EFFECT = "clearEffect";
+    public const CLEAR_ALL_EFFECT = "clearAllEffect";
     public const ADD_XP_PROGRESS = "addXp";
     public const ADD_XP_LEVEL = "addXpLevel";
     public const GET_TARGET_BLOCK = "getTargetBlock";
@@ -39,6 +41,7 @@ interface FlowItemIds {
     public const GET_ENTITY_SIDE = "getEntitySide";
     public const LOOK_AT = "lookAt";
     public const MOVE_TO = "moveTo";
+    public const TELEPORT_TO_WORLD = "teleportToWorld";
 
     public const GET_PLAYER = "getPlayer";
     public const SET_SLEEPING = "setSleeping";

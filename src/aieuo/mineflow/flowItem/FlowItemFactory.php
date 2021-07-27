@@ -16,6 +16,8 @@ use aieuo\mineflow\flowItem\action\config\SaveConfigFile;
 use aieuo\mineflow\flowItem\action\config\SetConfigData;
 use aieuo\mineflow\flowItem\action\entity\AddDamage;
 use aieuo\mineflow\flowItem\action\entity\AddEffect;
+use aieuo\mineflow\flowItem\action\entity\ClearAllEffect;
+use aieuo\mineflow\flowItem\action\entity\ClearEffect;
 use aieuo\mineflow\flowItem\action\entity\CreateHumanEntity;
 use aieuo\mineflow\flowItem\action\entity\GetEntity;
 use aieuo\mineflow\flowItem\action\entity\LookAt;
@@ -29,6 +31,7 @@ use aieuo\mineflow\flowItem\action\entity\SetPitch;
 use aieuo\mineflow\flowItem\action\entity\SetScale;
 use aieuo\mineflow\flowItem\action\entity\SetYaw;
 use aieuo\mineflow\flowItem\action\entity\Teleport;
+use aieuo\mineflow\flowItem\action\entity\TeleportToWorld;
 use aieuo\mineflow\flowItem\action\entity\UnsetImmobile;
 use aieuo\mineflow\flowItem\action\event\CallCustomTrigger;
 use aieuo\mineflow\flowItem\action\event\EventCancel;
@@ -194,6 +197,7 @@ class FlowItemFactory {
         self::register(new SetNameTag);
         self::register(new GetEntity);
         self::register(new Teleport);
+        self::register(new TeleportToWorld);
         self::register(new Motion);
         self::register(new MoveTo);
         self::register(new SetYaw);
@@ -206,6 +210,8 @@ class FlowItemFactory {
         self::register(new SetMaxHealth);
         self::register(new SetScale);
         self::register(new AddEffect);
+        self::register(new ClearEffect);
+        self::register(new ClearAllEffect);
         self::register(new CreateHumanEntity);
         /* player */
         self::register(new GetPlayerByName);
