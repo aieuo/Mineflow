@@ -80,18 +80,18 @@ class FlowItemForm {
         (new ListForm($action->getName()))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButton(
-                new Button("@form.back", function () use($player, $session, $parent) {
+                new Button("@form.back", function () use($player, $session, $parent, $type) {
                     $session->pop("parents");
-                    (new FlowItemContainerForm)->sendActionList($player, $parent, FlowItemContainer::ACTION);
+                    (new FlowItemContainerForm)->sendActionList($player, $parent, $type);
                 }))
             ->addButtons($action->getCustomMenuButtons())
             ->addButton(
-                new Button("@form.home.rename.title", function () use($player, $action, $parent) {
-                    $this->sendChangeName($player, $action, $parent, FlowItemContainer::ACTION);
+                new Button("@form.home.rename.title", function () use($player, $action, $parent, $type) {
+                    $this->sendChangeName($player, $action, $parent, $type);
                 }))
             ->addButton(
-                new Button("@form.move", function () use($player, $action, $parent) {
-                    (new FlowItemContainerForm)->sendMoveAction($player, $parent, FlowItemContainer::ACTION, array_search($action, $parent->getActions(), true));
+                new Button("@form.move", function () use($player, $action, $parent, $type) {
+                    (new FlowItemContainerForm)->sendMoveAction($player, $parent, $type, array_search($action, $parent->getActions(), true));
                 }))
             ->addButton(
                 new Button("@form.duplicate", function () use($player, $action, $parent, $type) {
@@ -101,8 +101,8 @@ class FlowItemForm {
                     (new FlowItemContainerForm)->sendActionList($player, $parent, $type, ["@form.duplicate.success"]);
                 }))
             ->addButton(
-                new Button("@form.delete", function () use($player, $action, $parent) {
-                    $this->sendConfirmDelete($player, $action, $parent, FlowItemContainer::ACTION);
+                new Button("@form.delete", function () use($player, $action, $parent, $type) {
+                    $this->sendConfirmDelete($player, $action, $parent, $type);
                 }))
             ->addMessages($messages)
             ->show($player);
