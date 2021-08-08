@@ -254,9 +254,13 @@ class VariableHelper {
             return $this->mustGetVariableNested(substr($result, 1), $variables, $global);
         }
 
-        $left = is_array($ast["left"]) ? $this->run($ast["left"], $executor, $variables, $global) : $ast["left"];
-        $right = is_array($ast["right"]) ? $this->run($ast["right"], $executor, $variables, $global) : $ast["right"];
         $op = $ast["op"];
+        $left = is_array($ast["left"]) ? $this->run($ast["left"], $executor, $variables, $global) : $ast["left"];
+        if (is_array($ast["right"]) and ($op !== "()" or isset($ast["right"]["op"]))) {
+            $right = $this->run($ast["right"], $executor, $variables, $global);
+        } else {
+            $right = $ast["right"];
+        }
 
         if (is_string($left)) {
             if ($op === "()") {
