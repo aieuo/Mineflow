@@ -137,7 +137,45 @@ class VariableHelper {
 
     public function lexer(string $source): array {
         $source = preg_replace("/\[(.*?)]/u", ".$1", $source);
-        return preg_split("/(\d+(?:\.\d+)?|[^\s.,+-\/*()]+(?:\.[^\s.,+-\/*()]+)*)|\s|(.)/u", $source, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+        $tokens = [];
+        $token = "";
+        $brackets = 0;
+
+        foreach (preg_split("//u", $source, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+            switch ($char) {
+                case "+":
+                case "-":
+                case "*":
+                case "/":
+                case "(":
+                case ")":
+                    $tokens[] = trim($token);
+                    $tokens[] = $char;
+                    $token = "";
+
+                    if ($char === "(") {
+                        $brackets ++;
+                    } elseif ($char === ")") {
+                        $brackets --;
+                    }
+                    break;
+                case ",":
+                    if ($brackets > 0) {
+                        $tokens[] = trim($token);
+                        $tokens[] = $char;
+                        $token = "";
+                    } else {
+                        $token .= $char;
+                    }
+                    break;
+                default:
+                    $token .= $char;
+                    break;
+            }
+        }
+        $tokens[] = trim($token);
+        return $tokens;
     }
 
     /**
@@ -187,8 +225,8 @@ class VariableHelper {
             return $right;
         }
 
+        $left = $this->parse($tokens, $priority + 1);
         if ($type === 3) {
-            $left = $this->parse($tokens, $priority + 1);
             while (isset($tokens[0]) and in_array($tokens[0], $ops, true)) {
                 array_shift($tokens); // (
                 $right = $tokens[0] === ")" ? "" : $this->parse($tokens, 0);
@@ -199,7 +237,6 @@ class VariableHelper {
             return $left;
         }
 
-        $left = $this->parse($tokens, $priority + 1);
         while (isset($tokens[0]) and in_array($tokens[0], $ops, true)) {
             $tmp = $left;
             $left = ["left" => $tmp, "op" => array_shift($tokens), "right" => $this->parse($tokens, $priority + 1)];
