@@ -12,7 +12,7 @@ class Logger {
     public static function warning(string $message, ?Entity $player = null): void {
         if ($player instanceof Player) {
             $player->sendMessage(TextFormat::YELLOW.$message);
-        } else {
+        } elseif (Main::getInstance()->isEnabledRecipeErrorInConsole()) {
             Main::getInstance()->getLogger()->warning($message);
         }
     }
@@ -20,7 +20,7 @@ class Logger {
     public static function info(string $message, ?Entity $player = null): void {
         if ($player instanceof Player) {
             $player->sendMessage(TextFormat::WHITE.$message);
-        } else {
+        } elseif (Main::getInstance()->isEnabledRecipeErrorInConsole()) {
             Main::getInstance()->getLogger()->info($message);
         }
     }

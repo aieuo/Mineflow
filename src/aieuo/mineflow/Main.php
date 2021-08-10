@@ -34,6 +34,8 @@ class Main extends PluginBase {
 
     /** @var bool */
     private $loaded = false;
+    /* @var bool */
+    private $enabledRecipeErrorInConsole;
 
     /** @var RecipeManager */
     private static $recipeManager;
@@ -60,8 +62,11 @@ class Main extends PluginBase {
         $serverLanguage = $this->getServer()->getLanguage()->getLang();
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "language" => in_array($serverLanguage, Language::getAvailableLanguages(), true) ? $serverLanguage : "eng",
+            "show_recipe_errors_in_console" => true,
         ]);
         $this->config->save();
+
+        $this->enabledRecipeErrorInConsole = $this->config->get("show_recipe_errors_in_console", true);
 
         Language::setLanguage($this->config->get("language", "eng"));
         foreach (Language::getAvailableLanguages() as $language) {
@@ -136,5 +141,14 @@ class Main extends PluginBase {
 
     public static function getPluginVersion(): string {
         return self::$pluginVersion;
+    }
+
+    public function isEnabledRecipeErrorInConsole(): bool {
+        return $this->enabledRecipeErrorInConsole;
+    }
+
+    public function setEnabledRecipeErrorInConsole(bool $enabledRecipeErrorInConsole): void {
+        $this->enabledRecipeErrorInConsole = $enabledRecipeErrorInConsole;
+        $this->config->set("show_recipe_errors_in_console", $enabledRecipeErrorInConsole);
     }
 }
