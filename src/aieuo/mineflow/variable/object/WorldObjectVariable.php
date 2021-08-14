@@ -34,7 +34,12 @@ class WorldObjectVariable extends ObjectVariable {
             case "players":
                 $variable = new ListVariable(array_map(function (Player $player) {
                     return new PlayerObjectVariable($player);
-                    }, $level->getPlayers()));
+                }, $level->getPlayers()));
+                break;
+            case "entities":
+                $variable = new ListVariable(array_map(function (Player $player) {
+                    return new PlayerObjectVariable($player);
+                }, $level->getEntities()));
                 break;
             default:
                 return null;
