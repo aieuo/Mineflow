@@ -19,7 +19,7 @@ class ProjectileHitEntityEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::ENTITY),
+            "target" => new DummyVariable(DummyVariable::PLAYER),
             "projective" => new DummyVariable(DummyVariable::ENTITY),
         ];
     }

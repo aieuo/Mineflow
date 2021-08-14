@@ -11,6 +11,7 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
+use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\Server;
 
@@ -33,10 +34,15 @@ class ServerObjectVariable extends ObjectVariable {
                 $variable = new NumberVariable($server->getTick());
                 break;
             case "default_world":
-                $variable = new StringVariable($server->getDefaultLevel()->getFolderName());
+                $world = $server->getDefaultLevel();
+                if ($world === null) return null;
+                $variable = new WorldObjectVariable($world);
+                break;
+            case "worlds":
+                $variable = new ListVariable(array_map(function (Level $world) { return new WorldObjectVariable($world); }, $server->getLevels()));
                 break;
             case "players":
-                $variable = new ListVariable(array_map(function (Player $player) { return new StringVariable($player->getName()); }, array_values($server->getOnlinePlayers())));
+                $variable = new ListVariable(array_map(function (Player $player) { return new PlayerObjectVariable($player); }, array_values($server->getOnlinePlayers())));
                 break;
             case "entities":
                 $entities = [];
@@ -90,7 +96,8 @@ class ServerObjectVariable extends ObjectVariable {
         return array_merge(parent::getValuesDummy(), [
             "name" => new DummyVariable(DummyVariable::STRING),
             "tick" => new DummyVariable(DummyVariable::NUMBER),
-            "default_world" => new DummyVariable(DummyVariable::STRING),
+            "default_world" => new DummyVariable(DummyVariable::WORLD),
+            "worlds" => new DummyVariable(DummyVariable::LIST, DummyVariable::WORLD),
             "players" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
             "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
             "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
