@@ -5,6 +5,7 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
+use aieuo\mineflow\variable\object\ServerObjectVariable;
 use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\Player;
@@ -26,6 +27,7 @@ class DefaultVariables {
             "default_world" => new StringVariable($server->getDefaultLevel()->getFolderName()),
             "onlines" => new ListVariable($onlines),
             "ops" => new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true))),
+            "server" => new ServerObjectVariable($server),
         ];
     }
 
