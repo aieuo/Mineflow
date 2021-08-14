@@ -44,6 +44,7 @@ class EventManager {
         $this->addTrigger(new PlayerInteractEventTrigger(), true);
         $this->addTrigger(new PlayerItemConsumeEventTrigger(), true);
         $this->addTrigger(new PlayerJoinEventTrigger(), true);
+        $this->addTrigger(new PlayerJumpEventTrigger(), true);
         $this->addTrigger(new PlayerMoveEventTrigger(), false);
         $this->addTrigger(new PlayerQuitEventTrigger(), true);
         $this->addTrigger(new PlayerToggleFlightEventTrigger(), true);
@@ -53,6 +54,7 @@ class EventManager {
         $this->addTrigger(new SignChangeEventTrigger(), false);
         $this->addTrigger(new ServerStartEventTrigger(), true);
         $this->addTrigger(new InventoryPickupItemEventTrigger(), false);
+        $this->addTrigger(new PlayerChangeSkinEventTrigger(), false);
     }
 
     public function addTrigger(EventTrigger $trigger, bool $defaultEnabled): void {
