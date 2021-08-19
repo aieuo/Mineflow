@@ -7,6 +7,7 @@ use aieuo\mineflow\variable\object\ConfigObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
+use aieuo\mineflow\variable\object\InventoryObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\WorldObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
@@ -42,6 +43,7 @@ class DummyVariable extends Variable {
     public const POSITION = "position";
     public const VECTOR3 = "vector3";
     public const SCOREBOARD = "scoreboard";
+    public const INVENTORY = "inventory";
 
     public function __construct(string $valueType = "", string $description = "") {
         $this->valueType = $valueType;
@@ -95,6 +97,8 @@ class DummyVariable extends Variable {
                 return Vector3ObjectVariable::getValuesDummy();
             case self::SCOREBOARD:
                 return ScoreboardObjectVariable::getValuesDummy();
+            case self::INVENTORY:
+                return InventoryObjectVariable::getValuesDummy();
             default:
                 return [];
         }
@@ -114,6 +118,7 @@ class DummyVariable extends Variable {
             self::POSITION,
             self::VECTOR3,
             self::SCOREBOARD,
+            self::INVENTORY,
         ], true);
     }
 }
