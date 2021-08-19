@@ -43,9 +43,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
     public function __construct(string $player = "", string $text = "", string $options = "", string $resultName = "menu") {
         $this->setPlayerVariableName($player);
         $this->formText = $text;
-        $this->options = array_filter(array_map("trim", explode(";", $options)), function (string $o) {
-            return $o !== "";
-        });
+        $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
         $this->resultName = $resultName;
     }
 
@@ -103,7 +101,8 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         (new ListForm($text))
             ->setContent($text)
-            ->setButtons($buttons)->onReceive(function (Player $player, int $data) use ($source, $resultName) {
+            ->setButtons($buttons)
+            ->onReceive(function (Player $player, int $data) use ($source, $resultName) {
                 $variable = new MapVariable([
                     "id" => new NumberVariable($data),
                     "text" => new StringVariable($this->options[$data]),
@@ -134,13 +133,9 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         $resultName = array_shift($data);
         $text = array_shift($data);
         $resendOnClose = array_pop($data);
-        $add = array_filter(array_map("trim", explode(";", array_pop($data))), function (string $o) {
-            return $o !== "";
-        });
+        $add = array_filter(array_map("trim", explode(";", array_pop($data))), fn(string $o) => $o !== "");
 
-        $options = array_filter($data, function (string $o) {
-            return $o !== "";
-        });
+        $options = array_filter($data, fn(string $o) => $o !== "");
         $options = array_merge($options, $add);
         return [$target, $resultName, $text, $options, $resendOnClose];
     }

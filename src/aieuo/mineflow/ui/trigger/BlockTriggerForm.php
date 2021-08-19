@@ -20,8 +20,8 @@ class BlockTriggerForm extends TriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent((string)$trigger)
             ->addButtons([
-                new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
-                new Button("@form.delete", function () use($player, $recipe, $trigger) { (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger); }),
+                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
+                new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
                 new Button("@trigger.block.warp", function () use($player, $recipe, $trigger) {
                     $pos = explode(",", $trigger->getKey());
                     $level = Server::getInstance()->getLevelByName($pos[3]);
@@ -37,7 +37,7 @@ class BlockTriggerForm extends TriggerForm {
     public function sendMenu(Player $player, Recipe $recipe): void {
         (new ListForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), Triggers::BLOCK])))
             ->addButtons([
-                new Button("@form.back", function () use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }),
+                new Button("@form.back", fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
                 new Button("@form.add", function () use($player, $recipe) {
                     Session::getSession($player)->set("blockTriggerAction", "add")->set("blockTriggerRecipe", $recipe);
                     $player->sendMessage(Language::get("trigger.block.add.touch"));

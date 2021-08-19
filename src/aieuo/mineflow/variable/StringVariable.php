@@ -28,9 +28,7 @@ class StringVariable extends Variable implements \JsonSerializable {
     }
 
     public function split(StringVariable $var): ListVariable {
-        $result = array_map(function (string $text) {
-            return new StringVariable(trim($text));
-        }, explode($var->getValue(), $this->getValue()));
+        $result = array_map(fn(string $text) => new StringVariable(trim($text)), explode($var->getValue(), $this->getValue()));
         return new ListVariable($result);
     }
 

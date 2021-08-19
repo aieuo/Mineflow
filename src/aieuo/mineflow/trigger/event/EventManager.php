@@ -84,7 +84,7 @@ class EventManager {
     }
 
     public function getEnabledEvents(): array {
-        return array_filter($this->events, function (bool $v) { return $v; });
+        return array_filter($this->events, fn(bool $v) => $v);
     }
 
     public function enableEvent(string $event): void {

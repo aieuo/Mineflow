@@ -21,33 +21,30 @@ class ExportForm {
         $this->sendRecipeList($player, $recipes);
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     public function sendRecipeList(Player $player, array $recipes, array $messages = []): void {
         $recipes = array_values($recipes);
 
-        $buttons = [
-            new Button("@form.export.execution", function () use($player, $recipes) { $this->sendExportMenu($player, $recipes); }),
-            new Button("@form.add")
-        ];
+        $buttons = [];
         foreach ($recipes as $i => $recipe) {
-            $buttons[] = new Button($recipe->getGroup()."/".$recipe->getName(), function () use($player, $recipes, $i) {
-                $this->sendRecipeMenu($player, array_values($recipes), $i);
-            });
+            $buttons[] = new Button($recipe->getGroup()."/".$recipe->getName(), fn() => $this->sendRecipeMenu($player, array_values($recipes), $i));
         }
 
         (new ListForm("@form.export.recipeList.title"))
-            ->setButtons($buttons)
-            ->onReceive(function (Player $player, int $data, array $recipes) {
-                (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
-                    function (Recipe $recipe) use ($player, $recipes) {
-                        $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
-                        $this->sendRecipeList($player, $recipes, ["@form.added"]);
-                    },
-                    function () use ($player, $recipes) {
-                        $this->sendRecipeList($player, $recipes, ["@form.cancelled"]);
-                    }
-                );
-            })->addMessages($messages)->addArgs($recipes)->show($player);
+            ->addButton(new Button("@form.export.execution", fn() => $this->sendExportMenu($player, $recipes)))
+            ->addButton(new Button("@form.add", fn() => $this->sendSelectRecipe($player, $recipes)))
+            ->addButtons($buttons)
+            ->addMessages($messages)
+            ->show($player);
+    }
+
+    public function sendSelectRecipe(Player $player, array $recipes): void {
+        (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
+            function (Recipe $recipe) use ($player, $recipes) {
+                $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
+                $this->sendRecipeList($player, $recipes, ["@form.added"]);
+            },
+            fn() => $this->sendRecipeList($player, $recipes, ["@form.cancelled"])
+        );
     }
 
     public function sendRecipeMenu(Player $player, array $recipes, int $index): void {

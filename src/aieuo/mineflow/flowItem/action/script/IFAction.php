@@ -65,12 +65,8 @@ class IFAction extends FlowItem implements FlowItemContainer {
 
     public function getCustomMenuButtons(): array {
         return [
-            new Button("@condition.edit", function (Player $player) {
-                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
-            }),
-            new Button("@action.edit", function (Player $player) {
-                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
-            }),
+            new Button("@condition.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION)),
+            new Button("@action.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION)),
         ];
     }
 

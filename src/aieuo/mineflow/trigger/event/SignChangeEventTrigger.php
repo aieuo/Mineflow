@@ -18,7 +18,7 @@ class SignChangeEventTrigger extends PlayerEventTrigger {
         $lines = $event->getLines();
         $target = $event->getPlayer();
         $block = $event->getBlock();
-        $variables = ["sign_lines" => new ListVariable(array_map(function (string $line) { return new StringVariable($line); }, $lines), "sign_lines")];
+        $variables = ["sign_lines" => new ListVariable(array_map(fn(string $line) => new StringVariable($line), $lines), "sign_lines")];
         return array_merge($variables, DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($block));
     }
 

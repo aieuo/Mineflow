@@ -32,9 +32,7 @@ class ExecuteRecipe extends FlowItem {
 
     public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;
-        $this->args = array_filter(array_map("trim", explode(",", $args)), function (string $t) {
-            return $t !== "";
-        });
+        $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
     }
 
     public function setRecipeName(string $name): self {

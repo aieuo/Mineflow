@@ -48,7 +48,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     }
 
     public function getDescription(): string {
-        $replaces = array_map(function ($replace) { return "§7<".$replace.">§f"; }, $this->detailDefaultReplace);
+        $replaces = array_map(fn($replace) => "§7<".$replace.">§f", $this->detailDefaultReplace);
         return Language::get($this->detail, $replaces);
     }
 

@@ -82,9 +82,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         return [
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new Dropdown("@action.equipArmor.form.index", array_map(function (string $text) {
-                return Language::get($text);
-            }, $this->slots), (int)$this->getIndex()),
+            new Dropdown("@action.equipArmor.form.index", array_map(fn(string $text) => Language::get($text), $this->slots), (int)$this->getIndex()),
         ];
     }
 

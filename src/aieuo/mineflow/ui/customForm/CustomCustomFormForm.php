@@ -38,15 +38,15 @@ class CustomCustomFormForm {
                         is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
                         return;
                     case 1:
-                        (clone $form)->onReceive(function (Player $player) use ($form) {
-                            $this->sendMenu($player, $form);
-                        })->onClose(function (Player $player) use ($form) {
-                            $this->sendMenu($player, $form);
-                        })->show($player);
+                        (clone $form)
+                            ->onReceive(fn(Player $player) => $this->sendMenu($player, $form))
+                            ->onClose(fn(Player $player) => $this->sendMenu($player, $form))
+                            ->show($player);
                         return;
                     case 2:
-                        (clone $form)->onReceive([new CustomFormForm(), "onReceive"])
-                            ->onClose([new CustomFormForm(), "onClose"])
+                        (clone $form)
+                            ->onReceive(fn(Player $player) => (new CustomFormForm())->onReceive($player))
+                            ->onClose(fn(Player $player) => (new CustomFormForm())->onClose($player))
                             ->addArgs($form)->show($player);
                         return;
                     case 3:
@@ -70,13 +70,14 @@ class CustomCustomFormForm {
 
     public function sendElementList(Player $player, CustomForm $form, array $messages = []): void {
         (new ListForm("@customForm.custom.element.edit"))
-            ->addButton(new Button("@form.back", function () use ($player, $form) { $this->sendMenu($player, $form); }))
-            ->addButton(new Button("@customForm.custom.element.add", function () use ($player, $form) { $this->sendAddElement($player, $form); }))
-            ->addButtonsEach($form->getContents(), function (Element $element) use($player, $form) {
-                return new Button(Language::get("customForm.custom.element", [["customForm.".$element->getType(), [""]], $element->getText()]), function() use($player, $form, $element) {
-                    $this->sendEditElement($player, $form, $element);
-                });
-            })->addMessages($messages)->show($player);
+            ->addButton(new Button("@form.back", fn() => $this->sendMenu($player, $form)))
+            ->addButton(new Button("@customForm.custom.element.add", fn() => $this->sendAddElement($player, $form)))
+            ->addButtonsEach($form->getContents(), fn(Element $element) =>
+                new Button(
+                    Language::get("customForm.custom.element", [["customForm.".$element->getType(), [""]], $element->getText()]),
+                    fn() => $this->sendEditElement($player, $form, $element)
+                )
+            )->addMessages($messages)->show($player);
     }
 
     public function sendAddElement(Player $player, CustomForm $form): void {
@@ -93,7 +94,7 @@ class CustomCustomFormForm {
                     Language::get("customForm.cancelToggle", [" (cancel toggle)"]),
                 ]),
                 new Input("@customForm.text"),
-                new CancelToggle(function() use($player, $form) { $this->sendElementList($player, $form); })
+                new CancelToggle(fn() => $this->sendElementList($player, $form))
             ])->onReceive(function (Player $player, array $data, CustomForm $form) {
                 switch ($data[0]) {
                     case 0:

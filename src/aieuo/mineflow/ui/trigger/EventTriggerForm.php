@@ -22,21 +22,12 @@ class EventTriggerForm extends TriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
             ->setContent((string)$trigger)
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(Main::getEventManager()->getTrigger($trigger->getKey())->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            ->forEach($trigger->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
                 $form->appendContent("{".$name."} (type=".$var->getValueType().")");
             })->addButtons([
-                new Button("@form.back"),
-                new Button("@form.delete"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
-                switch ($data) {
-                    case 0:
-                        (new RecipeForm)->sendTriggerList($player, $recipe);
-                        break;
-                    case 1:
-                        (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
-                        break;
-                }
-            })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
+                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
+                new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
+            ])->addMessages($messages)->show($player);
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
@@ -67,7 +58,7 @@ class EventTriggerForm extends TriggerForm {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
             ->setContent((string)EventTrigger::create($eventName))
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(Main::getEventManager()->getTrigger($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            ->forEach(EventTrigger::create($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
                 $form->appendContent("{".$name."} (type = ".$var->getValueType().")");
             })->addButtons([
                 new Button("@form.back"),
@@ -90,13 +81,12 @@ class EventTriggerForm extends TriggerForm {
 
     public function sendSelectEvent(Player $player): void {
         $events = Main::getEventManager()->getEnabledEvents();
-        $buttons = [new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); })];
+        $buttons = [];
         foreach ($events as $event => $value) {
-            $buttons[] = new Button((string)EventTrigger::create($event), function () use($player, $event) {
-                $this->sendRecipeList($player, $event);
-            });
+            $buttons[] = new Button((string)EventTrigger::create($event), fn() => $this->sendRecipeList($player, $event));
         }
         (new ListForm("@form.event.list.title"))
+            ->addButton(new Button("@form.back", fn() => (new HomeForm)->sendMenu($player)))
             ->addButtons($buttons)
             ->show($player);
     }
@@ -126,9 +116,7 @@ class EventTriggerForm extends TriggerForm {
                                 $recipe->addTrigger($trigger);
                                 $this->sendRecipeList($player, $event, ["@form.added"]);
                             },
-                            function () use ($player, $event) {
-                                $this->sendRecipeList($player, $event);
-                            }
+                            fn() => $this->sendRecipeList($player, $event)
                         );
                         return;
                 }

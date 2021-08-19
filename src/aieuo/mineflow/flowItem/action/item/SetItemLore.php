@@ -30,9 +30,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
 
     public function __construct(string $item = "", string $lore = "") {
         $this->setItemVariableName($item);
-        $this->lore = array_filter(array_map("trim", explode(";", $lore)), function (string $t) {
-            return $t !== "";
-        });
+        $this->lore = array_filter(array_map("trim", explode(";", $lore)), fn(string $t) => $t !== "");
     }
 
     public function setLore(array $lore): void {
@@ -57,9 +55,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
 
         $item = $this->getItem($source);
 
-        $lore = array_map(function (string $lore) use ($source) {
-            return $source->replaceVariables($lore);
-        }, $this->getLore());
+        $lore = array_map(fn(string $lore) => $source->replaceVariables($lore), $this->getLore());
 
         $item->setLore($lore);
         yield true;
@@ -74,9 +70,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        $lore = array_filter(array_map("trim", explode(";", $data[1])), function (string $t) {
-            return $t !== "";
-        });
+        $lore = array_filter(array_map("trim", explode(";", $data[1])), fn(string $t) => $t !== "");
         return [$data[0], $lore];
     }
 

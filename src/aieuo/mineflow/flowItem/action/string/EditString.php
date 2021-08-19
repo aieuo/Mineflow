@@ -112,9 +112,7 @@ class EditString extends FlowItem {
                 $result = new StringVariable(str_repeat($value1, (int)$value2));
                 break;
             case self::TYPE_SPLIT:
-                $result = new ListVariable(array_map(function (string $str) {
-                    return new StringVariable($str);
-                }, explode($value2, $value1)));
+                $result = new ListVariable(array_map(fn(string $str) => new StringVariable($str), explode($value2, $value1)));
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
@@ -128,9 +126,10 @@ class EditString extends FlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
-            new Dropdown("@action.fourArithmeticOperations.form.operator", array_map(function (string $type) {
-                return Language::get("action.editString.".$type);
-            }, $this->operators), array_search($this->operator, $this->operators, true)),
+            new Dropdown("@action.fourArithmeticOperations.form.operator",
+                array_map(fn(string $type) => Language::get("action.editString.".$type), $this->operators),
+                array_search($this->operator, $this->operators, true)
+            ),
             new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
         ];

@@ -58,7 +58,7 @@ class CustomFormForm {
                     Language::get("customForm.form"),
                     Language::get("customForm.custom_form"),
                 ]),
-                new CancelToggle(function () use($player) { $this->sendMenu($player); }),
+                new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data) {
                 switch ($data[1]) {
                     case 0:
@@ -86,9 +86,8 @@ class CustomFormForm {
                             Session::getSession($player)->set("form_menu_prev", [$this, "sendMenu"]);
                             $this->sendFormMenu($player, $form);
                         },
-                        function (string $name) use ($player, $data) {
-                            $this->sendAddForm($player, $data, [[Language::get("form.form.exists", [$name]), 0]]);
-                        });
+                        fn(string $name) => $this->sendAddForm($player, $data, [[Language::get("form.form.exists", [$name]), 0]])
+                    );
                     return;
                 }
                 $manager->addForm($data[0], $form);
@@ -124,12 +123,13 @@ class CustomFormForm {
     public function sendFormList(Player $player): void {
         $manager = Main::getFormManager();
         $forms = $manager->getAllFormData();
-        $buttons = [new Button("@form.back", function() use($player) { $this->sendMenu($player); })];
+        $buttons = [];
         foreach ($forms as $form) {
             $buttons[] = new Button($form["name"].": ".Language::get("customForm.".$form["type"]));
         }
 
         (new ListForm("@form.form.menu.formList"))
+            ->addButton(new Button("@form.back", fn() => $this->sendMenu($player)))
             ->addButtons($buttons)
             ->onReceive(function (Player $player, int $data, array $forms) {
                 $data--;
@@ -159,7 +159,7 @@ class CustomFormForm {
         (new CustomForm("@form.form.formMenu.changeTitle"))
             ->setContents([
                 new Input("@customForm.title", "", $form->getTitle()),
-                new CancelToggle(function() use($player, $form) { $this->sendFormMenu($player, $form, ["@form.cancelled"]); }),
+                new CancelToggle(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data, Form $form) {
                 $form->setTitle($data[0]);
                 Main::getFormManager()->addForm($form->getName(), $form);
@@ -172,7 +172,7 @@ class CustomFormForm {
         (new CustomForm("@form.form.formMenu.editContent"))
             ->setContents([
                 new Input("@customForm.content", "", $form->getContent()),
-                new CancelToggle(function() use($player, $form) { $this->sendFormMenu($player, $form, ["@form.cancelled"]); }),
+                new CancelToggle(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data) use($form) {
                 $form->setContent($data[0]);
                 Main::getFormManager()->addForm($form->getName(), $form);
@@ -184,7 +184,7 @@ class CustomFormForm {
         ($it = new CustomForm("@form.form.formMenu.changeName"))
             ->setContents([
                 new Input("@customForm.name", "", $default[0] ?? $form->getName(), true),
-                new CancelToggle(function () use($player, $form) { $this->sendFormMenu($player, $form, ["@form.cancelled"]); }),
+                new CancelToggle(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data) use($form, $it) {
                 $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {
@@ -197,9 +197,8 @@ class CustomFormForm {
                             $manager->addForm($name, $form);
                             $this->sendFormMenu($player, $form, ["@form.changed"]);
                         },
-                        function (string $name) use ($it) {
-                            $it->resend([[Language::get("customForm.exists", [$name]), 0]]);
-                        });
+                        fn(string $name) => $it->resend([[Language::get("customForm.exists", [$name]), 0]])
+                    );
                     return;
                 }
 
@@ -213,12 +212,10 @@ class CustomFormForm {
     public function sendRecipeList(Player $player, Form $form, array $messages = []): void {
         $recipes = Main::getFormManager()->getAssignedRecipes($form->getName());
         (new ListForm(Language::get("form.recipes.title", [$form->getName()])))
-            ->addButton(new Button("@form.back", function() use($player, $form) { $this->sendFormMenu($player, $form); }))
-            ->addButton(new Button("@form.add", function() use($player, $form) { $this->sendSelectRecipe($player, $form); }))
+            ->addButton(new Button("@form.back", fn() => $this->sendFormMenu($player, $form)))
+            ->addButton(new Button("@form.add", fn() => $this->sendSelectRecipe($player, $form)))
             ->addButtonsEach($recipes, function ($keys, $name) use($player, $form) {
-                return new Button($name." | ".count($keys), function() use($player, $form, $name, $keys) {
-                    $this->sendRecipeMenu($player, $form, $name, $keys);
-                });
+                return new Button($name." | ".count($keys), fn() => $this->sendRecipeMenu($player, $form, $name, $keys));
             })->addMessages($messages)->show($player);
     }
 
@@ -292,7 +289,7 @@ class CustomFormForm {
             ->onYes(function() use($player, $form) {
                 Main::getFormManager()->removeForm($form->getName());
                 $this->sendMenu($player, ["@form.deleted"]);
-            })->onNo(function () use($player ,$form) { $this->sendFormMenu($player, $form, ["@form.cancelled"]); })
+            })->onNo(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"]))
             ->setButton2("@form.no")
             ->show($player);
     }

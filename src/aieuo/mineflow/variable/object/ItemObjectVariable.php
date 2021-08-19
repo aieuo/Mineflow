@@ -28,9 +28,7 @@ class ItemObjectVariable extends ObjectVariable {
             case "count":
                 return new NumberVariable($item->getCount());
             case "lore":
-                return new ListVariable(array_map(function (string $lore) {
-                    return new StringVariable($lore);
-                }, $item->getLore()));
+                return new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore()));
             default:
                 return null;
         }

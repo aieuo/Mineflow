@@ -56,9 +56,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function getCustomMenuButtons(): array {
         return [
-            new Button("@action.edit", function (Player $player) {
-                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
-            }),
+            new Button("@action.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION)),
         ];
     }
 

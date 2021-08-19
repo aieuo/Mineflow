@@ -47,9 +47,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
 
     public function getCustomMenuButtons(): array {
         return [
-            new Button("@condition.edit", function (Player $player) {
-                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION);
-            }),
+            new Button("@condition.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION)),
         ];
     }
 

@@ -16,9 +16,7 @@ class DefaultVariables {
 
     public static function getServerVariables(): array {
         $server = Server::getInstance();
-        $onlines = array_map(function (Player $player) {
-            return new StringVariable($player->getName());
-        }, array_values($server->getOnlinePlayers()));
+        $onlines = array_map(fn(Player $player) => new StringVariable($player->getName()), array_values($server->getOnlinePlayers()));
         return [
             "server_name" => new StringVariable($server->getName()),
             "microtime" => new NumberVariable(microtime(true)),
@@ -26,7 +24,7 @@ class DefaultVariables {
             "date" => new StringVariable(date("m/d")),
             "default_world" => new StringVariable($server->getDefaultLevel()->getFolderName()),
             "onlines" => new ListVariable($onlines),
-            "ops" => new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true))),
+            "ops" => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true))),
             "server" => new ServerObjectVariable($server),
         ];
     }
@@ -44,9 +42,7 @@ class DefaultVariables {
         $variables = [$name => new BlockObjectVariable($block, $block->getId().":".$block->getDamage())];
         $tile = $block->level->getTile($block);
         if ($tile instanceof Sign) {
-            $variables["sign_lines"] = new ListVariable(array_map(function (string $text) {
-                return new StringVariable($text);
-            }, $tile->getText()));
+            $variables["sign_lines"] = new ListVariable(array_map(fn(string $text) => new StringVariable($text), $tile->getText()));
         }
         return $variables;
     }
@@ -55,7 +51,7 @@ class DefaultVariables {
         $commands = explode(" ", $command);
         return [
             "cmd" => new StringVariable(array_shift($commands)),
-            "args" => new ListVariable(array_map(function (string $cmd) { return new StringVariable($cmd); }, $commands)),
+            "args" => new ListVariable(array_map(fn(string $cmd) => new StringVariable($cmd), $commands)),
         ];
     }
 }

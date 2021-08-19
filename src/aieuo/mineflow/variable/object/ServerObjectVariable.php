@@ -36,9 +36,9 @@ class ServerObjectVariable extends ObjectVariable {
                 if ($world === null) return null;
                 return new WorldObjectVariable($world);
             case "worlds":
-                return new ListVariable(array_map(function (Level $world) { return new WorldObjectVariable($world); }, $server->getLevels()));
+                return new ListVariable(array_map(fn(Level $world) => new WorldObjectVariable($world), $server->getLevels()));
             case "players":
-                return new ListVariable(array_map(function (Player $player) { return new PlayerObjectVariable($player); }, array_values($server->getOnlinePlayers())));
+                return new ListVariable(array_map(fn(Player $player) => new PlayerObjectVariable($player), array_values($server->getOnlinePlayers())));
             case "entities":
                 $entities = [];
                 foreach ($server->getLevels() as $level) {
@@ -72,7 +72,7 @@ class ServerObjectVariable extends ObjectVariable {
                 }
                 return new ListVariable($entities);
             case "ops":
-                return new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true)));
+                return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)));
             default:
                 return null;
         }

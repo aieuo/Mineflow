@@ -85,14 +85,8 @@ class FlowItemForm {
                     (new FlowItemContainerForm)->sendActionList($player, $parent, $type);
                 }))
             ->addButtons($action->getCustomMenuButtons())
-            ->addButton(
-                new Button("@form.home.rename.title", function () use($player, $action, $parent, $type) {
-                    $this->sendChangeName($player, $action, $parent, $type);
-                }))
-            ->addButton(
-                new Button("@form.move", function () use($player, $action, $parent, $type) {
-                    (new FlowItemContainerForm)->sendMoveAction($player, $parent, $type, array_search($action, $parent->getActions(), true));
-                }))
+            ->addButton(new Button("@form.home.rename.title", fn() => $this->sendChangeName($player, $action, $parent, $type)))
+            ->addButton(new Button("@form.move", fn() => (new FlowItemContainerForm)->sendMoveAction($player, $parent, $type, array_search($action, $parent->getActions(), true))))
             ->addButton(
                 new Button("@form.duplicate", function () use($player, $action, $parent, $type) {
                     $newItem = clone $action;
@@ -100,10 +94,7 @@ class FlowItemForm {
                     Session::getSession($player)->pop("parents");
                     (new FlowItemContainerForm)->sendActionList($player, $parent, $type, ["@form.duplicate.success"]);
                 }))
-            ->addButton(
-                new Button("@form.delete", function () use($player, $action, $parent, $type) {
-                    $this->sendConfirmDelete($player, $action, $parent, $type);
-                }))
+            ->addButton(new Button("@form.delete", fn() => $this->sendConfirmDelete($player, $action, $parent, $type)))
             ->addMessages($messages)
             ->show($player);
     }
@@ -166,9 +157,7 @@ class FlowItemForm {
             });
         }
 
-        $buttons[] = new Button("@form.search", function () use($player, $container, $type) {
-            $this->sendSearchAction($player, $container, $type);
-        });
+        $buttons[] = new Button("@form.search", fn() => $this->sendSearchAction($player, $container, $type));
 
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.category.title", [$container->getContainerName()])))
@@ -180,7 +169,7 @@ class FlowItemForm {
         (new CustomForm(Language::get("form.{$type}.search.title", [$container->getContainerName()])))
             ->setContents([
                 new Input("@form.items.search.keyword", "", Session::getSession($player)->get("flowItem_search", ""), true),
-                new CancelToggle(function () use($player, $container, $type) { $this->selectActionCategory($player, $container, $type); })
+                new CancelToggle(fn() => $this->selectActionCategory($player, $container, $type))
             ])->onReceive(function (Player  $player, array $data) use($container, $type) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
                 $permission = Main::getInstance()->getPlayerSettings()->getNested($player->getName().".permission", 0);
@@ -196,7 +185,7 @@ class FlowItemForm {
 
     public function sendSelectAction(Player $player, FlowItemContainer $container, string $type, array $items): void {
         $buttons = [
-            new Button("@form.back", function () use($player, $container, $type) { $this->selectActionCategory($player, $container, $type); })
+            new Button("@form.back", fn() => $this->selectActionCategory($player, $container, $type))
         ];
         foreach ($items as $item) {
             $buttons[] = new Button($item->getName());

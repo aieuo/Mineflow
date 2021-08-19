@@ -60,9 +60,7 @@ class FlowItemContainerForm {
         $parent = array_pop($parents);
 
         $buttons = [
-            new Button("@form.back", function (Player $player) use($container, $type, $selected, $actions, $count) {
-                (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $actions[$selected], [$count === 0 ? "@form.cancelled" : "@form.moved"]);
-            }),
+            new Button("@form.back", fn() => (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $actions[$selected], [$count === 0 ? "@form.cancelled" : "@form.moved"])),
         ];
 
         if ($parent instanceof FlowItemContainer) {
@@ -78,9 +76,7 @@ class FlowItemContainerForm {
         $i = 0;
         foreach ($actions as $i => $action) {
             if ($i !== $selected and $i !== $selected + 1) {
-                $buttons[] = new Button("@form.move.to.here", function (Player $player) use($actions, $container, $type, $selected, $count, $i) {
-                    $this->moveContent($player, $container, $type, $actions, $selected, $i, $count);
-                });
+                $buttons[] = new Button("@form.move.to.here", fn() => $this->moveContent($player, $container, $type, $actions, $selected, $i, $count));
             }
 
             $color = ($i === $selected ? TextFormat::AQUA : "");
@@ -97,9 +93,7 @@ class FlowItemContainerForm {
             });
         }
         if ($selected !== count($actions) - 1) {
-            $buttons[] = new Button("@form.move.to.here", function (Player $player) use($actions, $container, $type, $selected, $count, $i) {
-                $this->moveContent($player, $container, $type, $actions, $selected, $i + 1, $count);
-            });
+            $buttons[] = new Button("@form.move.to.here", fn() => $this->moveContent($player, $container, $type, $actions, $selected, $i + 1, $count));
         }
 
         (new ListForm(Language::get("form.{$type}Container.move.title", [$container->getContainerName(), $selectedAction->getName()])))

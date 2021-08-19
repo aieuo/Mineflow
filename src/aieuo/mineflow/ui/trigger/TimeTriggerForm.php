@@ -21,8 +21,8 @@ class TimeTriggerForm extends TriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey().":".$trigger->getSubKey()])))
             ->setContent((string)$trigger)
             ->addButtons([
-                new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
-                new Button("@form.delete", function () use($player, $recipe, $trigger) { (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger); }),
+                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
+                new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
             ])->addMessages($messages)->show($player);
     }
 
@@ -31,7 +31,7 @@ class TimeTriggerForm extends TriggerForm {
             ->addContents([
                 new ExampleNumberInput("@trigger.time.hours", "12", "", true, 0, 23),
                 new ExampleNumberInput("@trigger.time.minutes", "0", "", true, 0, 59),
-                new CancelToggle(function () use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }),
+                new CancelToggle(fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
             ])->onReceive(function (Player $player, array $data) use($recipe) {
                 $trigger = TimeTrigger::create((string)((int)$data[0]), (string)((int)$data[1]));
                 if ($recipe->existsTrigger($trigger)) {

@@ -75,9 +75,7 @@ class CreateMapVariable extends FlowItem {
 
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
-        $keys = array_map(function (string $key) use ($source): string {
-            return $source->replaceVariables($key);
-        }, $this->getKey());
+        $keys = array_map(fn(string $key) => $source->replaceVariables($key), $this->getKey());
         $values = $this->getVariableValue();
 
         $variable = new MapVariable([]);

@@ -18,17 +18,14 @@ class ImportForm {
     public function sendSelectImportFile(Player $player, array $messages = []): void {
         $files = glob(Main::getInstance()->getDataFolder()."imports/*.json");
 
-        $buttons = [
-            new Button("@form.back", function () use($player) { (new RecipeForm)->sendMenu($player); })
-        ];
+        $buttons = [];
         foreach ($files as $file) {
-            $buttons[] = new Button(basename($file, ".json"), function () use($player, $file) {
-                $this->sendFileMenu($player, $file);
-            });
+            $buttons[] = new Button(basename($file, ".json"), fn() => $this->sendFileMenu($player, $file));
         }
 
         (new ListForm("@form.import.selectFile.title"))
-            ->setButtons($buttons)
+            ->addButton(new Button("@form.back", fn() => (new RecipeForm)->sendMenu($player)))
+            ->addButtons($buttons)
             ->addMessages($messages)
             ->show($player);
     }

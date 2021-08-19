@@ -35,11 +35,9 @@ class CustomModalFormForm {
                         is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
                         break;
                     case 1:
-                        $form->onReceive(function (Player $player) use ($form) {
-                            $this->sendMenu($player, $form);
-                        })->onClose(function (Player $player) use ($form) {
-                            $this->sendMenu($player, $form);
-                        })->show($player);
+                        $form->onReceive(fn() => $this->sendMenu($player, $form))
+                            ->onClose(fn() => $this->sendMenu($player, $form))
+                            ->show($player);
                         break;
                     case 2:
                         $form->onReceive([new CustomFormForm(), "onReceive"])
@@ -78,7 +76,7 @@ class CustomModalFormForm {
                     Language::get("customForm.receive.modal.button", [$index])."\n".
                     Language::get("customForm.receive.modal.button.text", [$index, $form->getButtonText($index)])),
                 new Input("@customForm.text", "", $form->getButtonText($index)),
-                new CancelToggle(function () use($player, $form) { $this->sendMenu($player, $form, ["@form.cancelled"]);}),
+                new CancelToggle(fn() => $this->sendMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data) use($form, $index) {
                 $form->setButton($index, $data[1]);
                 Main::getFormManager()->addForm($form->getName(), $form);

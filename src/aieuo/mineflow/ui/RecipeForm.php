@@ -25,16 +25,16 @@ class RecipeForm {
     public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@mineflow.recipe"))
             ->addButtons([
-                new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
-                new Button("@form.add", function () use($player) { $this->sendAddRecipe($player); }),
-                new Button("@form.edit", function () use($player) { $this->sendSelectRecipe($player); }),
-                new Button("@form.recipe.menu.recipeList", function () use($player) { $this->sendRecipeList($player); }),
+                new Button("@form.back", fn() => (new HomeForm)->sendMenu($player)),
+                new Button("@form.add", fn() => $this->sendAddRecipe($player)),
+                new Button("@form.edit", fn() => $this->sendSelectRecipe($player)),
+                new Button("@form.recipe.menu.recipeList", fn() => $this->sendRecipeList($player)),
                 new Button("@mineflow.export", function () use($player) {
                     (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title", function(Recipe $recipe) use($player) {
                         (new ExportForm())->sendRecipeListByRecipe($player, $recipe);
                     });
                 }),
-                new Button("@mineflow.import", function () use($player) { (new ImportForm)->sendSelectImportFile($player); }),
+                new Button("@mineflow.import", fn() => (new ImportForm)->sendSelectImportFile($player)),
             ])->addMessages($messages)->show($player);
     }
 
@@ -45,7 +45,7 @@ class RecipeForm {
         ($it = new CustomForm("@form.recipe.addRecipe.title"))->setContents([
                 new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
-                new CancelToggle(function () use($player) { $this->sendMenu($player); }),
+                new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data, string $defaultName) use($it) {
                 $manager = Main::getRecipeManager();
                 $name = $data[0] === "" ? $defaultName : $data[0];
@@ -71,9 +71,8 @@ class RecipeForm {
                             });
                             $this->sendRecipeMenu($player, $recipe);
                         },
-                        function (string $name) use ($it) {
-                            $it->resend([[Language::get("form.recipe.exists", [$name]), 0]]);
-                        });
+                        fn(string $name) => $it->resend([[Language::get("form.recipe.exists", [$name]), 0]])
+                    );
                     return;
                 }
 
@@ -99,9 +98,9 @@ class RecipeForm {
                 });
                 $this->sendRecipeMenu($player, $recipe);
             },
-            function () use($player) {
-                $this->sendMenu($player);
-            }, $default);
+            fn() => $this->sendMenu($player),
+            $default
+        );
     }
 
     public function sendRecipeList(Player $player, string $path = "", array $messages = []): void {
@@ -257,7 +256,7 @@ class RecipeForm {
         $form->setContents([
                 new Label("@form.recipe.changeName.content0"),
                 new Input("@form.recipe.changeName.content1", "", $recipe->getName(), true),
-                new CancelToggle(function () use($player, $recipe) { $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]); })
+                new CancelToggle(fn() => $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]))
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) use($form) {
                 $manager = Main::getRecipeManager();
                 if ($manager->exists($data[1], $recipe->getGroup())) {
@@ -268,9 +267,8 @@ class RecipeForm {
                             $manager->rename($recipe->getName(), $name, $recipe->getGroup());
                             $this->sendRecipeMenu($player, $recipe);
                         },
-                        function (string $name) use ($form) {
-                            $form->resend([[Language::get("form.recipe.exists", [$name]), 1]]);
-                        });
+                        fn(string $name) => $form->resend([[Language::get("form.recipe.exists", [$name]), 1]])
+                    );
                     return;
                 }
                 $manager->rename($recipe->getName(), $data[1], $recipe->getGroup());
@@ -281,12 +279,10 @@ class RecipeForm {
     public function sendTriggerList(Player $player, Recipe $recipe, array $messages = []): void {
         $triggers = $recipe->getTriggers();
         (new ListForm(Language::get("form.recipe.triggerList.title", [$recipe->getName()])))
-            ->addButton(new Button("@form.back", function() use($player, $recipe) { $this->sendRecipeMenu($player, $recipe); }))
-            ->addButton(new Button("@form.add", function() use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }))
+            ->addButton(new Button("@form.back", fn() => $this->sendRecipeMenu($player, $recipe)))
+            ->addButton(new Button("@form.add", fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)))
             ->addButtonsEach($triggers, function (Trigger $trigger) use($player, $recipe) {
-                return new Button((string)$trigger, function () use($player, $recipe, $trigger) {
-                    (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger);
-                });
+                return new Button((string)$trigger, fn() => (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger));
             })->addMessages($messages)->show($player);
     }
 
@@ -298,7 +294,7 @@ class RecipeForm {
         $contents[] = new Input("@form.recipe.args.add");
         (new CustomForm("@form.recipe.args.set"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, array $data, Recipe $recipe) {
+            ->onReceive(function (Player $player, array $data) use($recipe) {
                 if ($data[0]) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;
@@ -310,9 +306,9 @@ class RecipeForm {
                 }
                 $recipe->setArguments($arguments);
                 $this->sendSetArgs($player, $recipe, ["@form.changed"]);
-            })->onClose(function (Player $player, Recipe $recipe) {
-                $this->sendRecipeMenu($player, $recipe);
-            })->addMessages($messages)->addArgs($recipe)->show($player);
+            })->onClose(fn() => $this->sendRecipeMenu($player, $recipe))
+            ->addMessages($messages)
+            ->show($player);
     }
 
     public function sendSetReturns(Player $player, Recipe $recipe, array $messages = []): void {
@@ -323,7 +319,7 @@ class RecipeForm {
         $contents[] = new Input("@form.recipe.returnValue.add");
         (new CustomForm("@form.recipe.returnValue.set"))
             ->setContents($contents)
-            ->onReceive(function (Player $player, array $data, Recipe $recipe) {
+            ->onReceive(function (Player $player, array $data) use($recipe) {
                 if ($data[0]) {
                     $this->sendRecipeMenu($player, $recipe);
                     return;
@@ -335,9 +331,9 @@ class RecipeForm {
                 }
                 $recipe->setReturnValues($returnValues);
                 $this->sendSetReturns($player, $recipe, ["@form.changed"]);
-            })->onClose(function (Player $player, Recipe $recipe) {
-                $this->sendRecipeMenu($player, $recipe);
-            })->addMessages($messages)->addArgs($recipe)->show($player);
+            })->onClose(fn() => $this->sendRecipeMenu($player, $recipe))
+            ->addMessages($messages)
+            ->show($player);
     }
 
     public function sendChangeTarget(Player $player, Recipe $recipe, array $default = [], array $errors = []): void {

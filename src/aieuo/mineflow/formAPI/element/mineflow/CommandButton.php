@@ -17,9 +17,7 @@ class CommandButton extends Button {
 
     public function __construct(string $command, string $text = null, ?ButtonImage $image = null) {
         $this->command = $command;
-        parent::__construct($text ?? "/".$command, function (Player $player) {
-            Server::getInstance()->dispatchCommand($player, $this->command);
-        }, $image);
+        parent::__construct($text ?? "/".$command, fn(Player $player) => Server::getInstance()->dispatchCommand($player, $this->command), $image);
     }
 
     public function setCommand(string $command): self {

@@ -69,9 +69,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new Dropdown("@condition.gamemode.form.gamemode", array_map(function (string $mode) {
-                return Language::get($mode);
-            }, $this->gamemodes), $this->getGamemode()),
+            new Dropdown("@condition.gamemode.form.gamemode", array_map(fn(string $mode) => Language::get($mode), $this->gamemodes), $this->getGamemode()),
         ];
     }
 

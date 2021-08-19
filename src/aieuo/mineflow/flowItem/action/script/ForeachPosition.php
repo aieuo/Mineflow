@@ -90,9 +90,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     public function getCustomMenuButtons(): array {
         return [
-            new Button("@action.edit", function (Player $player) {
-                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
-            }),
+            new Button("@action.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION)),
             new Button("@action.for.setting", function (Player $player) {
                 $parents = Session::getSession($player)->get("parents");
                 $recipe = array_shift($parents);

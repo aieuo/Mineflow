@@ -71,9 +71,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new Dropdown("@action.setGamemode.form.gamemode", array_map(function (string $mode) {
-                return Language::get($mode);
-            }, $this->gamemodes), (int)$this->getGamemode()),
+            new Dropdown("@action.setGamemode.form.gamemode", array_map(fn(string $mode) => Language::get($mode), $this->gamemodes), (int)$this->getGamemode()),
         ];
     }
 

@@ -23,18 +23,16 @@ class BaseTriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), (string)$trigger])))
             ->setContent((string)$trigger)
             ->addButtons([
-                new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
-                new Button("@form.delete", function () use($player, $recipe, $trigger) { $this->sendConfirmDelete($player, $recipe, $trigger); }),
+                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
+                new Button("@form.delete", fn() => $this->sendConfirmDelete($player, $recipe, $trigger)),
             ])->addMessages($messages)->show($player);
     }
 
     public function sendSelectTriggerType(Player $player, Recipe $recipe): void {
         (new ListForm(Language::get("form.trigger.selectTriggerType", [$recipe->getName()])))
-            ->addButton(new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }))
+            ->addButton(new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)))
             ->addButtonsEach(Triggers::getAllForm(), function (TriggerForm $form, string $type) use($player, $recipe) {
-                return new Button("@trigger.type.".$type, function () use($player, $recipe, $form) {
-                    $form->sendMenu($player, $recipe);
-                });
+                return new Button("@trigger.type.".$type, fn() => $form->sendMenu($player, $recipe));
             })->show($player);
     }
 

@@ -13,11 +13,11 @@ class HomeForm {
     public function sendMenu(Player $player): void {
         (new ListForm("@form.home.title"))
             ->addButtons([
-                new Button("@mineflow.recipe", function () use($player) { (new RecipeForm)->sendMenu($player); }),
-                new Button("@mineflow.command", function () use($player) { (new CommandForm)->sendMenu($player); }),
-                new Button("@mineflow.event", function () use($player) { (new EventTriggerForm)->sendSelectEvent($player); }),
-                new Button("@mineflow.form", function () use($player) { (new CustomFormForm)->sendMenu($player); }),
-                new Button("@mineflow.settings", function () use($player) { (new SettingForm)->sendMenu($player); }),
+                new Button("@mineflow.recipe", fn() => (new RecipeForm)->sendMenu($player)),
+                new Button("@mineflow.command", fn() => (new CommandForm)->sendMenu($player)),
+                new Button("@mineflow.event", fn() => (new EventTriggerForm)->sendSelectEvent($player)),
+                new Button("@mineflow.form", fn() => (new CustomFormForm)->sendMenu($player)),
+                new Button("@mineflow.settings", fn() => (new SettingForm)->sendMenu($player)),
                 new Button("@form.exit"),
             ])->show($player);
     }

@@ -176,9 +176,8 @@ abstract class VariableDropdown extends Dropdown {
                         $origin->resend([], ["@form.added"], $indexes);
                     })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
                 });
-            })->addButton(new Button("@form.cancelAndBack", function () use($origin) {
-                $origin->resend();
-            }))->show($player);
+            })->addButton(new Button("@form.cancelAndBack", fn() => $origin->resend()))
+            ->show($player);
     }
 
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {

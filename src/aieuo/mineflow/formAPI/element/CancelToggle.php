@@ -25,7 +25,7 @@ class CancelToggle extends Toggle {
             $response->ignoreResponse();
             if (is_callable($this->getOnCancel())) {
                 ($this->getOnCancel())();
-                $response->setInterruptCallback(function () { return true; });
+                $response->setInterruptCallback(fn() => true);
             }
         }
     }

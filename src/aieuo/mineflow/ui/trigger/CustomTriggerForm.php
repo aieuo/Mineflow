@@ -21,8 +21,8 @@ class CustomTriggerForm extends TriggerForm {
         (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), (string)$trigger])))
             ->setContent((string)$trigger)
             ->addButtons([
-                new Button("@form.back", function () use($player, $recipe) { (new RecipeForm)->sendTriggerList($player, $recipe); }),
-                new Button("@form.delete", function () use($player, $recipe, $trigger) { (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger); }),
+                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
+                new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
             ])->addMessages($messages)->show($player);
     }
 
@@ -30,7 +30,7 @@ class CustomTriggerForm extends TriggerForm {
         (new CustomForm(Language::get("form.trigger.triggerMenu.title", [$recipe->getName(), Triggers::CUSTOM])))
             ->addContents([
                 new ExampleInput("@trigger.custom.name", "aieuo", "", true),
-                new CancelToggle(function () use($player, $recipe) { (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe); }),
+                new CancelToggle(fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
             ])->onReceive(function (Player $player, array $data) use($recipe) {
                 $trigger = CustomTrigger::create($data[0]);
                 if ($recipe->existsTrigger($trigger)) {

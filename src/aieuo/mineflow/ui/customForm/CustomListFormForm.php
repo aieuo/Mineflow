@@ -23,32 +23,23 @@ class CustomListFormForm {
                 $prev = Session::getSession($player)->get("form_menu_prev");
                 is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
             }))->addButton(new Button("@form.form.formMenu.preview", function () use ($player, $form) {
-                $form->onReceive(function (Player $player) use ($form) {
-                    $this->sendMenu($player, $form);
-                })->onClose(function (Player $player) use ($form) {
-                    $this->sendMenu($player, $form);
-                })->show($player);
+                $form->onReceive(fn() => $this->sendMenu($player, $form))->onClose(fn() => $this->sendMenu($player, $form))->show($player);
             }))->addButton(new Button("@form.recipe.recipeMenu.execute", function () use ($player, $form) {
                 $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
-            }))->addButton(new Button("@form.form.formMenu.changeTitle", function () use ($player, $form) {
-                (new CustomFormForm())->sendChangeFormTitle($player, $form);
-            }))->addButton(new Button("@form.form.formMenu.editContent", function () use ($player, $form) {
-                (new CustomFormForm())->sendChangeFormContent($player, $form);
-            }))->addButton(new Button("@customForm.list.editButton", function () use ($player, $form) {
-                $this->sendButtonList($player, $form);
-            }))->addButton(new Button("@form.form.formMenu.changeName", function () use ($player, $form) {
-                (new CustomFormForm())->sendChangeFormName($player, $form);
-            }))->addButton(new Button("@form.form.recipes", function () use ($player, $form) {
-                (new CustomFormForm())->sendRecipeList($player, $form);
-            }))->addButton(new Button("@form.delete", function () use ($player, $form) {
-                (new CustomFormForm())->sendConfirmDelete($player, $form);
-            }))->addMessages($messages)->show($player);
+            }))->addButton(new Button("@form.form.formMenu.changeTitle", fn() => (new CustomFormForm())->sendChangeFormTitle($player, $form)))
+            ->addButton(new Button("@form.form.formMenu.editContent", fn() => (new CustomFormForm())->sendChangeFormContent($player, $form)))
+            ->addButton(new Button("@customForm.list.editButton", fn() => $this->sendButtonList($player, $form)))
+            ->addButton(new Button("@form.form.formMenu.changeName", fn() => (new CustomFormForm())->sendChangeFormName($player, $form)))
+            ->addButton(new Button("@form.form.recipes", fn() => (new CustomFormForm())->sendRecipeList($player, $form)))
+            ->addButton(new Button("@form.delete", fn() => (new CustomFormForm())->sendConfirmDelete($player, $form)))
+            ->addMessages($messages)
+            ->show($player);
     }
 
     public function sendButtonList(Player $player, ListForm $form, array $messages = []): void {
         (new ListForm("@customForm.list.editButton"))
-            ->addButton(new Button("@form.back", function () use ($player, $form) { $this->sendMenu($player, $form); }))
-            ->addButton(new Button("@customForm.list.addButton", function () use ($player, $form) { $this->sendSelectButtonType($player, $form); }))
+            ->addButton(new Button("@form.back", fn() => $this->sendMenu($player, $form)))
+            ->addButton(new Button("@customForm.list.addButton", fn() => $this->sendSelectButtonType($player, $form)))
             ->addButtonsEach($form->getButtons(), function(Button $button, int $i) use($player, $form) {
                 return new Button((string)$button, function () use ($player, $form, $i, $button) {
                     $this->sendEditButton($player, $form, $button, $i);
@@ -60,9 +51,9 @@ class CustomListFormForm {
     public function sendSelectButtonType(Player $player, ListForm $form): void {
         (new ListForm("@customForm.list.addButton"))
             ->setButtons([
-                new Button("@form.back", function () use($player, $form) { $this->sendMenu($player, $form); }),
-                new Button("@customForm.list.button.type.normal", function () use($player, $form) { $this->sendAddButton($player, $form);}),
-                new Button("@customForm.list.button.type.command", function () use($player, $form) { $this->sendAddCommandButton($player, $form);}),
+                new Button("@form.back", fn() => $this->sendMenu($player, $form)),
+                new Button("@customForm.list.button.type.normal", fn() => $this->sendAddButton($player, $form)),
+                new Button("@customForm.list.button.type.command", fn() => $this->sendAddCommandButton($player, $form)),
             ])->show($player);
     }
 
@@ -71,7 +62,7 @@ class CustomListFormForm {
             ->setContents([
                 new Input("@customForm.text", "", "", true),
                 new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), ""),
-                new CancelToggle(function() use($player, $form) { $this->sendButtonList($player, $form, ["@form.canceled"]); }),
+                new CancelToggle(fn() => $this->sendButtonList($player, $form, ["@form.canceled"])),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
                 $image = $data[1] === "" ? null : new ButtonImage($data[1], ButtonImage::TYPE_PATH);
                 $form->addButton(new Button($data[0], null, $image));
@@ -86,7 +77,7 @@ class CustomListFormForm {
                 new Input("@customForm.text", "", "", true),
                 new Input("@customForm.list.commandButton.command", "", "", true),
                 new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), ""),
-                new CancelToggle(function() use($player, $form) { $this->sendButtonList($player, $form, ["@form.canceled"]); }),
+                new CancelToggle(fn() => $this->sendButtonList($player, $form, ["@form.canceled"])),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
                 $image = $data[2] === "" ? null : new ButtonImage($data[2], ButtonImage::TYPE_PATH);
                 $form->addButton(new CommandButton($data[1], $data[0], $image));

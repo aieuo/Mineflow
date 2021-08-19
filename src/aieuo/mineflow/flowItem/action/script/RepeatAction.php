@@ -110,12 +110,8 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
     public function getCustomMenuButtons(): array {
         return [
-            new Button("@action.edit", function (Player $player) {
-                (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION);
-            }),
-            new Button("@action.for.setting", function (Player $player) {
-                $this->sendSetRepeatCountForm($player);
-            }),
+            new Button("@action.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::ACTION)),
+            new Button("@action.for.setting", fn(Player $player) => $this->sendSetRepeatCountForm($player)),
         ];
     }
 

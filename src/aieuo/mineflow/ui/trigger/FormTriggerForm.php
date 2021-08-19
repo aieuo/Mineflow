@@ -168,14 +168,12 @@ class FormTriggerForm extends TriggerForm {
         }
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     public function sendConfirmCreate(Player $player, string $name, callable $callback): void {
         (new ModalForm("@trigger.command.confirmCreate.title"))
             ->setContent(Language::get("trigger.command.confirmCreate.content", [$name]))
             ->setButton1("@form.yes")
             ->setButton2("@form.no")
-            ->onReceive(function (Player $player, ?bool $data, callable $callback) {
-                $callback($data);
-            })->addArgs($callback)->show($player);
+            ->onReceive(fn(Player $player, ?bool $data) => $callback($data))
+            ->show($player);
     }
 }

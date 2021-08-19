@@ -30,7 +30,7 @@ class MineflowForm {
         ($it = new CustomForm($title))->setContents([
                 new Input("@form.recipe.recipeName", "", $default[0] ?? "", true),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
-                new CancelToggle(function () use($player, $onCancel) { is_callable($onCancel) ? $onCancel() : (new HomeForm)->sendMenu($player); }),
+                new CancelToggle(fn() => is_callable($onCancel) ? $onCancel() : (new HomeForm)->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data, callable $callback) use($it) {
                 $manager = Main::getRecipeManager();
 

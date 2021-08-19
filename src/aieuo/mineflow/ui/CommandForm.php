@@ -21,10 +21,10 @@ class CommandForm {
     public function sendMenu(Player $player, array $messages = []): void {
         (new ListForm("@form.command.menu.title"))
             ->addButtons([
-                new Button("@form.back", function () use($player) { (new HomeForm)->sendMenu($player); }),
-                new Button("@form.add", function () use($player) { $this->sendAddCommand($player); }),
-                new Button("@form.edit", function () use($player) { $this->sendSelectCommand($player); }),
-                new Button("@form.command.menu.commandList", function () use($player) { $this->sendCommandList($player); }),
+                new Button("@form.back", fn() => (new HomeForm)->sendMenu($player)),
+                new Button("@form.add", fn() => $this->sendAddCommand($player)),
+                new Button("@form.edit", fn() => $this->sendSelectCommand($player)),
+                new Button("@form.command.menu.commandList", fn() => $this->sendCommandList($player)),
             ])->addMessages($messages)->show($player);
     }
 
@@ -97,11 +97,10 @@ class CommandForm {
     public function sendCommandList(Player $player): void {
         $manager = Main::getCommandManager();
         $commands = $manager->getCommandAll();
-        $buttons = [new Button("@form.back", function () use($player) { $this->sendMenu($player); })];
+        $buttons = [new Button("@form.back", fn() => $this->sendMenu($player))];
         foreach ($commands as $command) {
             $buttons[] = new Button("/".$command["command"], function () use($player, $command) {
-                Session::getSession($player)
-                    ->set("command_menu_prev", [$this, "sendCommandList"]);
+                Session::getSession($player)->set("command_menu_prev", [$this, "sendCommandList"]);
                 $this->sendCommandMenu($player, $command);
             });
         }
@@ -266,9 +265,7 @@ class CommandForm {
                                 $recipe->addTrigger($trigger);
                                 $this->sendRecipeList($player, $command, ["@form.added"]);
                             },
-                            function () use ($player, $command) {
-                                $this->sendRecipeList($player, $command);
-                            }
+                            fn() => $this->sendRecipeList($player, $command)
                         );
                         return;
                 }
@@ -287,7 +284,7 @@ class CommandForm {
         (new ListForm(Language::get("form.recipes.title", ["/".$command["command"]])))
             ->setContent($content)
             ->setButtons([
-                new Button("@form.back", function () use($player, $command) { $this->sendRecipeList($player, $command); }),
+                new Button("@form.back", fn() => $this->sendRecipeList($player, $command)),
                 new Button("@form.edit", function () use($player, $command, $recipes, $index) {
                     Session::getSession($player)->set("recipe_menu_prev", function() use($player, $command, $index, $recipes) {
                         $this->sendRecipeMenu($player, $command, $index, $recipes);
