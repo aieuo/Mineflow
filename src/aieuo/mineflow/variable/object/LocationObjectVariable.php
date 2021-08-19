@@ -22,21 +22,17 @@ class LocationObjectVariable extends PositionObjectVariable {
         $location = $this->getLocation();
         switch ($index) {
             case "yaw":
-                $variable = new NumberVariable($location->yaw);
-                break;
+                return new NumberVariable($location->yaw);
             case "pitch":
-                $variable = new NumberVariable($location->pitch);
-                break;
+                return new NumberVariable($location->pitch);
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getLocation(): Location {
-        /** @var Location $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

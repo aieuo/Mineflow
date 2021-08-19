@@ -19,27 +19,21 @@ class Vector3ObjectVariable extends ObjectVariable {
         $position = $this->getVector3();
         switch ($index) {
             case "x":
-                $variable = new NumberVariable($position->x);
-                break;
+                return new NumberVariable($position->x);
             case "y":
-                $variable = new NumberVariable($position->y);
-                break;
+                return new NumberVariable($position->y);
             case "z":
-                $variable = new NumberVariable($position->z);
-                break;
+                return new NumberVariable($position->z);
             case "xyz":
-                $variable = new StringVariable($position->x.",".$position->y.",".$position->z);
-                break;
+                return new StringVariable($position->x.",".$position->y.",".$position->z);
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getVector3(): Vector3 {
-        /** @var Vector3 $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

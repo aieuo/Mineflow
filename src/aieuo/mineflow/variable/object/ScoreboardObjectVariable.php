@@ -17,9 +17,8 @@ class ScoreboardObjectVariable extends ObjectVariable {
         return new NumberVariable($scores[$index]);
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getScoreboard(): Scoreboard {
-        /** @var Scoreboard $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 }

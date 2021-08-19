@@ -21,21 +21,17 @@ class EventObjectVariable extends ObjectVariable {
         switch ($index) {
             case "name":
                 $names = explode("\\", $event->getEventName());
-                $variable = new StringVariable(end($names));
-                break;
+                return new StringVariable(end($names));
             case "isCanceled":
-                $variable = new BoolVariable($event->isCancelled());
-                break;
+                return new BoolVariable($event->isCancelled());
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getEvent(): Event {
-        /** @var Event $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

@@ -21,24 +21,19 @@ class BlockObjectVariable extends PositionObjectVariable {
         $block = $this->getBlock();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($block->getName());
-                break;
+                return new StringVariable($block->getName());
             case "id":
-                $variable = new NumberVariable($block->getId());
-                break;
+                return new NumberVariable($block->getId());
             case "damage":
-                $variable = new NumberVariable($block->getDamage());
-                break;
+                return new NumberVariable($block->getDamage());
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getBlock(): Block {
-        /** @var Block $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

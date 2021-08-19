@@ -17,36 +17,27 @@ class EntityObjectVariable extends PositionObjectVariable {
         $entity = $this->getEntity();
         switch ($index) {
             case "id":
-                $variable = new NumberVariable($entity->getId());
-                break;
+                return new NumberVariable($entity->getId());
             case "nameTag":
-                $variable = new StringVariable($entity->getNameTag());
-                break;
+                return new StringVariable($entity->getNameTag());
             case "health":
-                $variable = new NumberVariable($entity->getHealth());
-                break;
+                return new NumberVariable($entity->getHealth());
             case "maxHealth":
-                $variable = new NumberVariable($entity->getMaxHealth());
-                break;
+                return new NumberVariable($entity->getMaxHealth());
             case "yaw":
-                $variable = new NumberVariable($entity->getYaw());
-                break;
+                return new NumberVariable($entity->getYaw());
             case "pitch":
-                $variable = new NumberVariable($entity->getPitch());
-                break;
+                return new NumberVariable($entity->getPitch());
             case "direction":
-                $variable = new NumberVariable($entity->getDirection());
-                break;
+                return new NumberVariable($entity->getDirection());
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getEntity(): Entity {
-        /** @var Entity $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

@@ -20,32 +20,25 @@ class ItemObjectVariable extends ObjectVariable {
         $item = $this->getItem();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($item->getName());
-                break;
+                return new StringVariable($item->getName());
             case "id":
-                $variable = new NumberVariable($item->getId());
-                break;
+                return new NumberVariable($item->getId());
             case "damage":
-                $variable = new NumberVariable($item->getDamage());
-                break;
+                return new NumberVariable($item->getDamage());
             case "count":
-                $variable = new NumberVariable($item->getCount());
-                break;
+                return new NumberVariable($item->getCount());
             case "lore":
-                $variable = new ListVariable(array_map(function (string $lore) {
+                return new ListVariable(array_map(function (string $lore) {
                     return new StringVariable($lore);
                 }, $item->getLore()));
-                break;
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getItem(): Item {
-        /** @var Item $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

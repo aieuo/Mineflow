@@ -21,21 +21,17 @@ class PositionObjectVariable extends Vector3ObjectVariable {
         $position = $this->getPosition();
         switch ($index) {
             case "position":
-                $variable = new PositionObjectVariable($position);
-                break;
+                return new PositionObjectVariable($position);
             case "world":
-                $variable = new WorldObjectVariable($position->level, $position->level->getFolderName());
-                break;
+                return new WorldObjectVariable($position->level, $position->level->getFolderName());
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getPosition(): Position {
-        /** @var Position $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

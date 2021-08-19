@@ -33,10 +33,9 @@ class ConfigObjectVariable extends ObjectVariable {
         return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getConfig(): Config {
-        /** @var Config $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public function __toString(): string {

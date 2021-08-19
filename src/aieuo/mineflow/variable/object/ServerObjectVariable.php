@@ -28,22 +28,17 @@ class ServerObjectVariable extends ObjectVariable {
         $server = $this->getServer();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($server->getName());
-                break;
+                return new StringVariable($server->getName());
             case "tick":
-                $variable = new NumberVariable($server->getTick());
-                break;
+                return new NumberVariable($server->getTick());
             case "default_world":
                 $world = $server->getDefaultLevel();
                 if ($world === null) return null;
-                $variable = new WorldObjectVariable($world);
-                break;
+                return new WorldObjectVariable($world);
             case "worlds":
-                $variable = new ListVariable(array_map(function (Level $world) { return new WorldObjectVariable($world); }, $server->getLevels()));
-                break;
+                return new ListVariable(array_map(function (Level $world) { return new WorldObjectVariable($world); }, $server->getLevels()));
             case "players":
-                $variable = new ListVariable(array_map(function (Player $player) { return new PlayerObjectVariable($player); }, array_values($server->getOnlinePlayers())));
-                break;
+                return new ListVariable(array_map(function (Player $player) { return new PlayerObjectVariable($player); }, array_values($server->getOnlinePlayers())));
             case "entities":
                 $entities = [];
                 foreach ($server->getLevels() as $level) {
@@ -58,8 +53,7 @@ class ServerObjectVariable extends ObjectVariable {
                         $entities[] = $v;
                     }
                 }
-                $variable = new ListVariable($entities);
-                break;
+                return new ListVariable($entities);
             case "livings":
                 $entities = [];
                 foreach ($server->getLevels() as $level) {
@@ -76,19 +70,16 @@ class ServerObjectVariable extends ObjectVariable {
                         $entities[] = $v;
                     }
                 }
-                $variable = new ListVariable($entities);
-                break;
+                return new ListVariable($entities);
             case "ops":
-                $variable = new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true)));
-                break;
+                return new ListVariable(array_map(function (string $name) { return new StringVariable($name); }, $server->getOps()->getAll(true)));
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getServer(): Server {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->getValue();
     }
 

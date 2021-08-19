@@ -23,34 +23,27 @@ class WorldObjectVariable extends ObjectVariable {
         $level = $this->getWorld();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($level->getName());
-                break;
+                return new StringVariable($level->getName());
             case "folderName":
-                $variable = new StringVariable($level->getFolderName());
-                break;
+                return new StringVariable($level->getFolderName());
             case "id":
-                $variable = new NumberVariable($level->getId());
-                break;
+                return new NumberVariable($level->getId());
             case "players":
-                $variable = new ListVariable(array_map(function (Player $player) {
+                return new ListVariable(array_map(function (Player $player) {
                     return new PlayerObjectVariable($player);
                 }, $level->getPlayers()));
-                break;
             case "entities":
-                $variable = new ListVariable(array_map(function (Player $player) {
+                return new ListVariable(array_map(function (Player $player) {
                     return new PlayerObjectVariable($player);
                 }, $level->getEntities()));
-                break;
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getWorld(): Level {
-        /** @var Level $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

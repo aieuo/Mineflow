@@ -23,27 +23,21 @@ class PlayerObjectVariable extends HumanObjectVariable {
         $player = $this->getPlayer();
         switch ($index) {
             case "name":
-                $variable = new StringVariable($player->getName());
-                break;
+                return new StringVariable($player->getName());
             case "display_name":
-                $variable = new StringVariable($player->getDisplayName());
-                break;
+                return new StringVariable($player->getDisplayName());
             case "locale":
-                $variable = new StringVariable($player->getLocale());
-                break;
+                return new StringVariable($player->getLocale());
             case "ping":
-                $variable = new NumberVariable($player->getPing());
-                break;
+                return new NumberVariable($player->getPing());
             default:
                 return null;
         }
-        return $variable;
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getPlayer(): Player {
-        /** @var Player $value */
-        $value = $this->getValue();
-        return $value;
+        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {
