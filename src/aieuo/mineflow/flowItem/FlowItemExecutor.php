@@ -20,38 +20,26 @@ use pocketmine\event\Event;
 class FlowItemExecutor {
 
     /* @var FlowItem[] */
-    private $items;
-    /* @var Entity|null */
-    private $target;
+    private array $items;
+    private ?Entity $target;
     /* @var Variable[] */
-    private $variables;
-    /* @var self|null */
-    private $parent;
-    /* @var Event|null */
-    private $event;
-    /** @var \Closure|null */
-    private $onComplete;
-    /** @var \Closure|null */
-    private $onError;
-    /* @var Recipe|null */
-    private $sourceRecipe;
+    private array $variables;
+    private ?FlowItemExecutor $parent;
+    private ?Event $event;
+    private ?\Closure $onComplete;
+    private ?\Closure $onError;
+    private ?Recipe $sourceRecipe;
 
     /** @var mixed */
     private $lastResult;
 
-    /** @var FlowItem */
-    private $currentFlowItem;
-    /** @var int */
-    private $currentIndex;
-    /** @var \Generator */
-    private $generator;
+    private FlowItem $currentFlowItem;
+    private int $currentIndex;
+    private \Generator $generator;
 
-    /** @var bool */
-    private $waiting = false;
-    /* @var bool */
-    private $exit = false;
-    /* @var bool */
-    private $resuming = false;
+    private bool $waiting = false;
+    private bool $exit = false;
+    private bool $resuming = false;
 
     public function __construct(array $items, ?Entity $target, array $variables = [], ?self $parent = null, ?Event $event = null, \Closure $onComplete = null, \Closure $onError = null, ?Recipe $sourceRecipe = null) {
         $this->items = $items;

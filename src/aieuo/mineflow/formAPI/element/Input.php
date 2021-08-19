@@ -8,16 +8,12 @@ use pocketmine\Player;
 
 class Input extends Element {
 
-    /** @var string */
-    protected $type = self::ELEMENT_INPUT;
+    protected string $type = self::ELEMENT_INPUT;
 
-    /** @var string */
-    private $placeholder;
-    /** @var string */
-    private $default;
+    private string $placeholder;
+    private string $default;
 
-    /** @var bool */
-    private $required;
+    private bool $required;
 
     public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false) {
         parent::__construct($text);

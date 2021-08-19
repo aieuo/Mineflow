@@ -4,10 +4,9 @@ namespace aieuo\mineflow\variable;
 
 class ListVariable extends Variable implements \JsonSerializable {
 
-    public $type = Variable::LIST;
+    public int $type = Variable::LIST;
 
-    /** @var string */
-    private $showString;
+    private ?string $showString;
 
     protected $value = [];
 

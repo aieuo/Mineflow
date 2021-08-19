@@ -12,16 +12,15 @@ use pocketmine\Server;
 
 class IsPlayerOnlineByName extends FlowItem implements Condition {
 
-    protected $id = self::IS_PLAYER_ONLINE_BY_NAME;
+    protected string $id = self::IS_PLAYER_ONLINE_BY_NAME;
 
-    protected $name = "condition.isPlayerOnlineByName.name";
-    protected $detail = "condition.isPlayerOnlineByName.detail";
-    protected $detailDefaultReplace = ["player"];
+    protected string $name = "condition.isPlayerOnlineByName.name";
+    protected string $detail = "condition.isPlayerOnlineByName.detail";
+    protected array $detailDefaultReplace = ["player"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /* @var string */
-    private $playerName;
+    private string $playerName;
 
     public function __construct(string $playerName = "target") {
         $this->playerName = $playerName;

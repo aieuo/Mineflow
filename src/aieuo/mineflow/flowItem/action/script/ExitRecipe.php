@@ -10,12 +10,12 @@ use aieuo\mineflow\utils\Category;
 
 class ExitRecipe extends FlowItem {
 
-    protected $id = self::EXIT_RECIPE;
+    protected string $id = self::EXIT_RECIPE;
 
-    protected $name = "action.exit.name";
-    protected $detail = "action.exit.detail";
+    protected string $name = "action.exit.name";
+    protected string $detail = "action.exit.detail";
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
     public function execute(FlowItemExecutor $source): \Generator {
         $source->exit();

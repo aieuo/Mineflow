@@ -19,20 +19,18 @@ use aieuo\mineflow\variable\NumberVariable;
 class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected $id = self::SET_CONFIG_VALUE;
+    protected string $id = self::SET_CONFIG_VALUE;
 
-    protected $name = "action.setConfigData.name";
-    protected $detail = "action.setConfigData.detail";
-    protected $detailDefaultReplace = ["config", "key", "value"];
+    protected string $name = "action.setConfigData.name";
+    protected string $detail = "action.setConfigData.detail";
+    protected array $detailDefaultReplace = ["config", "key", "value"];
 
-    protected $category = Category::CONFIG;
+    protected string $category = Category::CONFIG;
 
-    protected $permission = self::PERMISSION_LEVEL_2;
+    protected int $permission = self::PERMISSION_LEVEL_2;
 
-    /** @var string */
-    private $key;
-    /* @var string */
-    private $value;
+    private string $key;
+    private string $value;
 
     public function __construct(string $config = "", string $key = "", string $value = "") {
         $this->setConfigVariableName($config);

@@ -6,10 +6,8 @@ use Throwable;
 
 class UndefinedMineflowPropertyException extends \InvalidStateException {
 
-    /* @var string */
-    private $variableName;
-    /** @var string */
-    private $propertyName;
+    private string $variableName;
+    private string $propertyName;
 
     public function __construct(string $variableName, string $propertyName, string $message = null, int $code = 0, Throwable $previous = null) {
         $this->variableName = $variableName;

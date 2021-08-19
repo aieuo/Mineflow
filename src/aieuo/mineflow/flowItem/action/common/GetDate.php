@@ -12,19 +12,17 @@ use aieuo\mineflow\variable\StringVariable;
 
 class GetDate extends FlowItem {
 
-    protected $id = self::GET_DATE;
+    protected string $id = self::GET_DATE;
 
-    protected $name = "action.getDate.name";
-    protected $detail = "action.getDate.detail";
-    protected $detailDefaultReplace = ["format", "result"];
+    protected string $name = "action.getDate.name";
+    protected string $detail = "action.getDate.detail";
+    protected array $detailDefaultReplace = ["format", "result"];
 
-    protected $category = Category::COMMON;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::COMMON;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    /** @var string */
-    private $format;
-    /** @var string */
-    private $resultName;
+    private string $format;
+    private string $resultName;
 
     public function __construct(string $format = "H:i:s", string $resultName = "date") {
         $this->setFormat($format);

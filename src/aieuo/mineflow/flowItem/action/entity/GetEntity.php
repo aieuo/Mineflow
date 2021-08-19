@@ -20,19 +20,17 @@ use pocketmine\Player;
 
 class GetEntity extends FlowItem {
 
-    protected $id = self::GET_ENTITY;
+    protected string $id = self::GET_ENTITY;
 
-    protected $name = "action.getEntity.name";
-    protected $detail = "action.getEntity.detail";
-    protected $detailDefaultReplace = ["id", "result"];
+    protected string $name = "action.getEntity.name";
+    protected string $detail = "action.getEntity.detail";
+    protected array $detailDefaultReplace = ["id", "result"];
 
-    protected $category = Category::ENTITY;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::ENTITY;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $entityId;
-    /** @var string */
-    private $resultName;
+    private string $entityId;
+    private string $resultName;
 
     public function __construct(string $name = "", string $result = "entity") {
         $this->entityId = $name;

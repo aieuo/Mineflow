@@ -17,17 +17,16 @@ use aieuo\mineflow\variable\DummyVariable;
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected $id = self::SET_ITEM_LORE;
+    protected string $id = self::SET_ITEM_LORE;
 
-    protected $name = "action.setLore.name";
-    protected $detail = "action.setLore.detail";
-    protected $detailDefaultReplace = ["item", "lore"];
+    protected string $name = "action.setLore.name";
+    protected string $detail = "action.setLore.detail";
+    protected array $detailDefaultReplace = ["item", "lore"];
 
-    protected $category = Category::ITEM;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::ITEM;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var array */
-    private $lore;
+    private array $lore;
 
     public function __construct(string $item = "", string $lore = "") {
         $this->setItemVariableName($item);

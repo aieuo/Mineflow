@@ -15,19 +15,17 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class GetVariableNested extends FlowItem {
 
-    protected $id = self::GET_VARIABLE_NESTED;
+    protected string $id = self::GET_VARIABLE_NESTED;
 
-    protected $name = "action.getVariableNested.name";
-    protected $detail = "action.getVariableNested.detail";
-    protected $detailDefaultReplace = ["name", "result"];
+    protected string $name = "action.getVariableNested.name";
+    protected string $detail = "action.getVariableNested.detail";
+    protected array $detailDefaultReplace = ["name", "result"];
 
-    protected $category = Category::VARIABLE;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::VARIABLE;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $resultName;
+    private string $variableName;
+    private string $resultName;
 
     public function __construct(string $name = "", string $result = "var") {
         $this->variableName = $name;

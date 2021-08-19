@@ -16,28 +16,22 @@ abstract class Variable {
 
     /** @var string|int|Variable[]|object */
     protected $value;
-    /** @var int */
-    public $type;
+
+    public int $type;
 
     public static function create($value, int $type = self::STRING): ?self {
-        $variable = null;
         switch ($type) {
             case self::STRING:
-                $variable = new StringVariable((string)$value);
-                break;
+                return new StringVariable((string)$value);
             case self::NUMBER:
-                $variable = new NumberVariable((float)$value);
-                break;
+                return new NumberVariable((float)$value);
             case self::LIST:
-                $variable = new ListVariable($value);
-                break;
+                return new ListVariable($value);
             case self::MAP:
-                $variable = new MapVariable($value);
-                break;
+                return new MapVariable($value);
             default:
                 return null;
         }
-        return $variable;
     }
 
     public static function fromArray(array $data): ?self {

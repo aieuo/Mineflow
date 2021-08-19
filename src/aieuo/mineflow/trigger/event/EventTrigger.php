@@ -18,8 +18,7 @@ use pocketmine\Player;
 
 class EventTrigger extends Trigger {
 
-    /** @var bool */
-    private $enabled = true;
+    private bool $enabled = true;
 
     /**
      * @param string $eventName

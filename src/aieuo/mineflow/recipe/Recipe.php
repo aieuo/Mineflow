@@ -34,33 +34,23 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public const TARGET_BROADCAST = 4;
     public const TARGET_RANDOM = 5;
 
-    /** @var string */
-    private $name;
-    /* @var string */
-    private $author;
-    /* @var string */
-    private $group;
-    /* @var string */
-    private $version;
+    private string $name;
+    private string $author;
+    private string $group;
+    private ?string $version;
 
-    /** @var int */
-    private $targetType = self::TARGET_DEFAULT;
-    /** @var array */
-    private $targetOptions = [];
+    private int $targetType = self::TARGET_DEFAULT;
+    private array $targetOptions = [];
 
     /** @var Trigger[] */
-    private $triggers = [];
+    private array $triggers = [];
 
-    /* @var array */
-    private $arguments = [];
-    /* @var array */
-    private $returnValues = [];
+    private array $arguments = [];
+    private array $returnValues = [];
 
-    /** @var null|FlowItemExecutor */
-    private $executor;
+    private ?FlowItemExecutor $executor;
 
-    /** @var string */
-    private $rawData = "";
+    private string $rawData = "";
 
     public function __construct(string $name, string $group = "", string $author = "", string $version = null) {
         $this->name = $name;

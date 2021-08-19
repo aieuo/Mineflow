@@ -25,7 +25,7 @@ class Category {
     public const SCOREBOARD = "scoreboard";
 
     /** @var string[]  */
-    private static $categories = [
+    private static array $categories = [
         self::COMMON,
         self::PLAYER,
         self::ENTITY,

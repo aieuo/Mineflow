@@ -7,11 +7,11 @@ use pocketmine\Player;
 
 class ModalForm extends Form {
 
-    protected $type = self::MODAL_FORM;
+    protected string $type = self::MODAL_FORM;
 
-    private $content = "";
-    private $button1 = "@form.yes";
-    private $button2 = "@form.no";
+    private string $content = "";
+    private string $button1 = "@form.yes";
+    private string $button2 = "@form.no";
 
     /** @var callable|null */
     private $button1Click;

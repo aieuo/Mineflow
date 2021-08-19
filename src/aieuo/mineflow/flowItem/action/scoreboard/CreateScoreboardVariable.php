@@ -16,25 +16,21 @@ use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
 
 class CreateScoreboardVariable extends FlowItem {
 
-    protected $id = self::CREATE_SCOREBOARD_VARIABLE;
+    protected string $id = self::CREATE_SCOREBOARD_VARIABLE;
 
-    protected $name = "action.createScoreboardVariable.name";
-    protected $detail = "action.createScoreboardVariable.detail";
-    protected $detailDefaultReplace = ["result", "id", "displayName", "type"];
+    protected string $name = "action.createScoreboardVariable.name";
+    protected string $detail = "action.createScoreboardVariable.detail";
+    protected array $detailDefaultReplace = ["result", "id", "displayName", "type"];
 
-    protected $category = Category::SCOREBOARD;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::SCOREBOARD;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $boardId;
-    /** @var string */
-    private $displayName;
-    /* @var string */
-    private $displayType;
+    private string $variableName;
+    private string $boardId;
+    private string $displayName;
+    private string $displayType;
 
-    private $displayTypes = [Scoreboard::DISPLAY_SIDEBAR, Scoreboard::DISPLAY_LIST, Scoreboard::DISPLAY_BELOWNAME];
+    private array $displayTypes = [Scoreboard::DISPLAY_SIDEBAR, Scoreboard::DISPLAY_LIST, Scoreboard::DISPLAY_BELOWNAME];
 
     public function __construct(string $id = "", string $displayName = "", string $type = Scoreboard::DISPLAY_SIDEBAR, string $name = "board") {
         $this->boardId = $id;

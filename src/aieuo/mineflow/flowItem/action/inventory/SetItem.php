@@ -19,16 +19,15 @@ use aieuo\mineflow\utils\Language;
 class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
 
-    protected $id = self::SET_ITEM;
+    protected string $id = self::SET_ITEM;
 
-    protected $name = "action.setItem.name";
-    protected $detail = "action.setItem.detail";
-    protected $detailDefaultReplace = ["player", "item", "index"];
+    protected string $name = "action.setItem.name";
+    protected string $detail = "action.setItem.detail";
+    protected array $detailDefaultReplace = ["player", "item", "index"];
 
-    protected $category = Category::INVENTORY;
+    protected string $category = Category::INVENTORY;
 
-    /** @var string */
-    private $index;
+    private string $index;
 
     public function __construct(string $player = "", string $item = "", string $index = "") {
         $this->setPlayerVariableName($player);

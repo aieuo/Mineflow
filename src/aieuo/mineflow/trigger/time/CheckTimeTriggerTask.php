@@ -8,8 +8,7 @@ use pocketmine\scheduler\Task;
 
 class CheckTimeTriggerTask extends Task {
 
-    /* @var TriggerHolder */
-    private $triggerHolder;
+    private TriggerHolder $triggerHolder;
 
     public function __construct() {
         $this->triggerHolder = TriggerHolder::getInstance();

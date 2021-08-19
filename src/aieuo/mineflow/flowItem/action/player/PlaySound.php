@@ -18,20 +18,17 @@ use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 class PlaySound extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::PLAY_SOUND;
+    protected string $id = self::PLAY_SOUND;
 
-    protected $name = "action.playSound.name";
-    protected $detail = "action.playSound.detail";
-    protected $detailDefaultReplace = ["player", "sound", "volume", "pitch"];
+    protected string $name = "action.playSound.name";
+    protected string $detail = "action.playSound.detail";
+    protected array $detailDefaultReplace = ["player", "sound", "volume", "pitch"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var string */
-    private $sound;
-    /** @var string */
-    private $volume;
-    /** @var string */
-    private $pitch;
+    private string $sound;
+    private string $volume;
+    private string $pitch;
 
     public function __construct(string $player = "", string $sound = "", string $volume = "1", string $pitch = "1") {
         $this->setPlayerVariableName($player);

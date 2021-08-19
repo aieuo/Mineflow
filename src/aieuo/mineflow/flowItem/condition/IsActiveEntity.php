@@ -11,16 +11,15 @@ use aieuo\mineflow\utils\Language;
 
 class IsActiveEntity extends FlowItem implements Condition {
 
-    protected $id = self::IS_ACTIVE_ENTITY;
+    protected string $id = self::IS_ACTIVE_ENTITY;
 
-    protected $name = "condition.isActiveEntity.name";
-    protected $detail = "condition.isActiveEntity.detail";
-    protected $detailDefaultReplace = ["id"];
+    protected string $name = "condition.isActiveEntity.name";
+    protected string $detail = "condition.isActiveEntity.detail";
+    protected array $detailDefaultReplace = ["id"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
-    /** @var string */
-    private $entityId;
+    private string $entityId;
 
     public function __construct(string $id = "") {
         $this->entityId = $id;

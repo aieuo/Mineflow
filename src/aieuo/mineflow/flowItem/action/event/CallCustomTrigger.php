@@ -14,16 +14,15 @@ use aieuo\mineflow\utils\Language;
 
 class CallCustomTrigger extends FlowItem {
 
-    protected $id = self::CALL_CUSTOM_TRIGGER;
+    protected string $id = self::CALL_CUSTOM_TRIGGER;
 
-    protected $name = "action.callTrigger.name";
-    protected $detail = "action.callTrigger.detail";
-    protected $detailDefaultReplace = ["identifier"];
+    protected string $name = "action.callTrigger.name";
+    protected string $detail = "action.callTrigger.detail";
+    protected array $detailDefaultReplace = ["identifier"];
 
-    protected $category = Category::EVENT;
+    protected string $category = Category::EVENT;
 
-    /** @var string */
-    private $triggerName;
+    private string $triggerName;
 
     public function __construct(string $triggerName = "") {
         $this->triggerName = $triggerName;

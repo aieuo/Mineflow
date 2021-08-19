@@ -15,14 +15,11 @@ abstract class Element implements \JsonSerializable {
     public const ELEMENT_DROPDOWN = "dropdown";
     public const ELEMENT_TOGGLE = "toggle";
 
-    /** @var string */
-    protected $type;
+    protected string $type;
     /** @var string */
     protected $text = "";
-    /** @var string */
-    protected $extraText = "";
-    /** @var string|null */
-    protected $highlight = "";
+    protected string $extraText = "";
+    protected ?string $highlight = "";
 
     public function __construct(string $text) {
         $this->text = str_replace("\\n", "\n", $text);

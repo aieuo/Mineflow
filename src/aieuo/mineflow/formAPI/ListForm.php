@@ -8,11 +8,11 @@ use pocketmine\Player;
 
 class ListForm extends Form {
 
-    protected $type = self::LIST_FORM;
+    protected string $type = self::LIST_FORM;
 
-    private $content = "@form.selectButton";
+    private string $content = "@form.selectButton";
     /** @var Button[] */
-    private $buttons = [];
+    private array $buttons = [];
 
     public function setContent(string $content): self {
         $this->content = $content;

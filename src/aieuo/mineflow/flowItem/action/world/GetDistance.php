@@ -17,17 +17,16 @@ use aieuo\mineflow\variable\NumberVariable;
 class GetDistance extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected $id = self::GET_DISTANCE;
+    protected string $id = self::GET_DISTANCE;
 
-    protected $name = "action.getDistance.name";
-    protected $detail = "action.getDistance.detail";
-    protected $detailDefaultReplace = ["pos1", "pos2", "result"];
+    protected string $name = "action.getDistance.name";
+    protected string $detail = "action.getDistance.detail";
+    protected array $detailDefaultReplace = ["pos1", "pos2", "result"];
 
-    protected $category = Category::WORLD;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::WORLD;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    /** @var string */
-    private $resultName;
+    private string $resultName;
 
     public function __construct(string $pos1 = "", string $pos2 = "", string $result = "distance") {
         $this->setPositionVariableName($pos1, "pos1");

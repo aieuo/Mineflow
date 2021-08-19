@@ -14,18 +14,16 @@ use aieuo\mineflow\utils\Language;
 
 class DeleteVariable extends FlowItem {
 
-    protected $id = self::DELETE_VARIABLE;
+    protected string $id = self::DELETE_VARIABLE;
 
-    protected $name = "action.deleteVariable.name";
-    protected $detail = "action.deleteVariable.detail";
-    protected $detailDefaultReplace = ["name", "scope"];
+    protected string $name = "action.deleteVariable.name";
+    protected string $detail = "action.deleteVariable.detail";
+    protected array $detailDefaultReplace = ["name", "scope"];
 
-    protected $category = Category::VARIABLE;
+    protected string $category = Category::VARIABLE;
 
-    /** @var string */
-    private $variableName;
-    /** @var bool */
-    private $isLocal;
+    private string $variableName;
+    private bool $isLocal;
 
     public function __construct(string $name = "", bool $local = true) {
         $this->variableName = $name;

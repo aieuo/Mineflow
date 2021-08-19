@@ -16,16 +16,15 @@ use aieuo\mineflow\utils\Language;
 class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
 
-    protected $id = self::REMOVE_SCOREBOARD_SCORE;
+    protected string $id = self::REMOVE_SCOREBOARD_SCORE;
 
-    protected $name = "action.removeScore.name";
-    protected $detail = "action.removeScore.detail";
-    protected $detailDefaultReplace = ["scoreboard", "name"];
+    protected string $name = "action.removeScore.name";
+    protected string $detail = "action.removeScore.detail";
+    protected array $detailDefaultReplace = ["scoreboard", "name"];
 
-    protected $category = Category::SCOREBOARD;
+    protected string $category = Category::SCOREBOARD;
 
-    /* @var string */
-    private $scoreName;
+    private string $scoreName;
 
     public function __construct(string $scoreboard = "", string $name = "") {
         $this->setScoreboardVariableName($scoreboard);

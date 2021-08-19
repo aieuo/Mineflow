@@ -20,23 +20,19 @@ use pocketmine\level\Position;
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected $id = self::POSITION_VARIABLE_ADDITION;
+    protected string $id = self::POSITION_VARIABLE_ADDITION;
 
-    protected $name = "action.positionAddition.name";
-    protected $detail = "action.positionAddition.detail";
-    protected $detailDefaultReplace = ["position", "x", "y", "z", "result"];
+    protected string $name = "action.positionAddition.name";
+    protected string $detail = "action.positionAddition.detail";
+    protected array $detailDefaultReplace = ["position", "x", "y", "z", "result"];
 
-    protected $category = Category::WORLD;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::WORLD;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $x;
-    /** @var string */
-    private $y;
-    /* @var string */
-    private $z;
-    /** @var string */
-    private $resultName;
+    private string $x;
+    private string $y;
+    private string $z;
+    private string $resultName;
 
     public function __construct(string $name = "pos", string $x = "", string $y = "", string $z = "", string $result = "pos") {
         $this->setPositionVariableName($name);

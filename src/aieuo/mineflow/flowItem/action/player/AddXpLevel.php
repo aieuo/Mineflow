@@ -8,10 +8,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class AddXpLevel extends AddXpProgress {
 
-    protected $id = self::ADD_XP_LEVEL;
+    protected string $id = self::ADD_XP_LEVEL;
 
-    protected $name = "action.addXpLevel.name";
-    protected $detail = "action.addXpLevel.detail";
+    protected string $name = "action.addXpLevel.name";
+    protected string $detail = "action.addXpLevel.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

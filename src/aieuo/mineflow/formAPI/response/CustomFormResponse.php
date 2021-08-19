@@ -6,20 +6,14 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Element;
 
 class CustomFormResponse extends FormResponse {
-    /** @var array */
-    private $responseOverrides = [];
-    /** @var array */
-    private $defaultOverrides = [];
-    /** @var array */
-    private $elementOverrides = [];
-    /** @var bool */
-    private $ignoreResponse = false;
-    /** @var bool */
-    private $resend = false;
+    private array $responseOverrides = [];
+    private array $defaultOverrides = [];
+    private array $elementOverrides = [];
+    private bool $ignoreResponse = false;
+    private bool $resend = false;
     /* @var callable|null */
     private $interruptCallback;
-    /* @var CustomForm */
-    private $form;
+    private CustomForm $form;
 
     public function __construct(CustomForm $form, array $data) {
         $this->form = $form;

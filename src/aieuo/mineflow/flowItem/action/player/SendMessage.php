@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SendMessage extends TypePlayerMessage {
 
-    protected $id = self::SEND_MESSAGE;
+    protected string $id = self::SEND_MESSAGE;
 
-    protected $name = "action.sendMessage.name";
-    protected $detail = "action.sendMessage.detail";
+    protected string $name = "action.sendMessage.name";
+    protected string $detail = "action.sendMessage.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -23,22 +23,19 @@ use pocketmine\math\Vector3;
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::GET_ENTITY_SIDE;
+    protected string $id = self::GET_ENTITY_SIDE;
 
-    protected $name = "action.getEntitySide.name";
-    protected $detail = "action.getEntitySide.detail";
-    protected $detailDefaultReplace = ["entity", "direction", "step", "result"];
+    protected string $name = "action.getEntitySide.name";
+    protected string $detail = "action.getEntitySide.detail";
+    protected array $detailDefaultReplace = ["entity", "direction", "step", "result"];
 
-    protected $category = Category::WORLD;
+    protected string $category = Category::WORLD;
 
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $direction;
-    /** @var string */
-    private $steps;
-    /** @var string */
-    private $resultName;
+    private string $direction;
+    private string $steps;
+    private string $resultName;
 
     public const SIDE_DOWN = "down";
     public const SIDE_UP = "up";
@@ -52,7 +49,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     public const SIDE_RIGHT = "right";
 
     /** @var string[] */
-    private $directions = [
+    private array $directions = [
         self::SIDE_DOWN,
         self::SIDE_UP,
         self::SIDE_NORTH,
@@ -65,8 +62,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         self::SIDE_RIGHT,
     ];
 
-    /** @var array */
-    private $vector3SideMap = [
+    private array $vector3SideMap = [
         self::SIDE_DOWN => Vector3::SIDE_DOWN,
         self::SIDE_UP => Vector3::SIDE_UP,
         self::SIDE_NORTH => Vector3::SIDE_NORTH,
@@ -75,8 +71,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         self::SIDE_EAST => Vector3::SIDE_EAST,
     ];
 
-    /** @var array */
-    private $directionSideMap = [
+    private array $directionSideMap = [
         Vector3::SIDE_EAST,
         Vector3::SIDE_SOUTH,
         Vector3::SIDE_WEST,

@@ -17,14 +17,14 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate2 extends FlowItem {
 
-    protected $id = self::CALCULATE2;
+    protected string $id = self::CALCULATE2;
 
-    protected $name = "action.calculate2.name";
-    protected $detail = "action.calculate2.detail";
-    protected $detailDefaultReplace = ["value1", "value2", "operator", "result"];
+    protected string $name = "action.calculate2.name";
+    protected string $detail = "action.calculate2.detail";
+    protected array $detailDefaultReplace = ["value1", "value2", "operator", "result"];
 
-    protected $category = Category::MATH;
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $category = Category::MATH;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const CALC_MIN = 0;
     public const CALC_MAX = 1;
@@ -34,16 +34,12 @@ class Calculate2 extends FlowItem {
     public const CALC_ATAN2 = 5;
     public const CALC_ROUND = 6;
 
-    /** @var string */
-    private $value1;
-    /** @var string */
-    private $value2;
-    /** @var int */
-    private $operator;
-    /** @var string */
-    private $resultName;
+    private string $value1;
+    private string $value2;
+    private int $operator;
+    private string $resultName;
 
-    private $operatorSymbols = [
+    private array $operatorSymbols = [
         "min(x, y)",
         "max(x, y)",
         "x^y",

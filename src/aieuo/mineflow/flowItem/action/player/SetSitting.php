@@ -23,16 +23,15 @@ use pocketmine\Player;
 class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
 
-    protected $id = self::SET_SITTING;
+    protected string $id = self::SET_SITTING;
 
-    protected $name = "action.setSitting.name";
-    protected $detail = "action.setSitting.detail";
-    protected $detailDefaultReplace = ["player", "position"];
+    protected string $name = "action.setSitting.name";
+    protected string $detail = "action.setSitting.detail";
+    protected array $detailDefaultReplace = ["player", "position"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var array */
-    private static $entityIds = [];
+    private static array $entityIds = [];
 
     public function __construct(string $player = "", string $position = "") {
         $this->setPlayerVariableName($player);

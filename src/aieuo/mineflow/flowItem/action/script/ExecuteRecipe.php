@@ -15,21 +15,20 @@ use aieuo\mineflow\utils\Language;
 
 class ExecuteRecipe extends FlowItem {
 
-    protected $id = self::EXECUTE_RECIPE;
+    protected string $id = self::EXECUTE_RECIPE;
 
-    protected $name = "action.executeRecipe.name";
-    protected $detail = "action.executeRecipe.detail";
-    protected $detailDefaultReplace = ["name"];
+    protected string $name = "action.executeRecipe.name";
+    protected string $detail = "action.executeRecipe.detail";
+    protected array $detailDefaultReplace = ["name"];
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /** @var string */
-    private $recipeName;
+    private string $recipeName;
 
     /** @var string[] */
-    private $args;
+    private array $args;
 
     public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;

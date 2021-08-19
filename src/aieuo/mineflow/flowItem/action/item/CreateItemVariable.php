@@ -17,23 +17,19 @@ use pocketmine\item\ItemFactory;
 
 class CreateItemVariable extends FlowItem {
 
-    protected $id = self::CREATE_ITEM_VARIABLE;
+    protected string $id = self::CREATE_ITEM_VARIABLE;
 
-    protected $name = "action.createItemVariable.name";
-    protected $detail = "action.createItemVariable.detail";
-    protected $detailDefaultReplace = ["item", "id", "count", "name"];
+    protected string $name = "action.createItemVariable.name";
+    protected string $detail = "action.createItemVariable.detail";
+    protected array $detailDefaultReplace = ["item", "id", "count", "name"];
 
-    protected $category = Category::ITEM;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::ITEM;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $itemId;
-    /** @var string */
-    private $itemCount;
-    /** @var string */
-    private $itemName;
+    private string $variableName;
+    private string $itemId;
+    private string $itemCount;
+    private string $itemName;
 
     public function __construct(string $id = "", string $count = "", string $itemName = "", string $variableName = "item") {
         $this->itemId = $id;

@@ -12,16 +12,15 @@ use aieuo\mineflow\utils\Language;
 
 class ExistsConfigFile extends FlowItem implements Condition {
 
-    protected $id = self::EXISTS_CONFIG_FILE;
+    protected string $id = self::EXISTS_CONFIG_FILE;
 
-    protected $name = "condition.existsConfigFile.name";
-    protected $detail = "condition.existsConfigFile.detail";
-    protected $detailDefaultReplace = ["name"];
+    protected string $name = "condition.existsConfigFile.name";
+    protected string $detail = "condition.existsConfigFile.detail";
+    protected array $detailDefaultReplace = ["name"];
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
-    /** @var string */
-    private $fileName;
+    private string $fileName;
 
     public function __construct(string $name = "") {
         $this->fileName = $name;

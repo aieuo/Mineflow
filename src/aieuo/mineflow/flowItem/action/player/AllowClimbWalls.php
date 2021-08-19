@@ -16,16 +16,15 @@ use aieuo\mineflow\utils\Language;
 class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::ALLOW_CLIMB_WALLS;
+    protected string $id = self::ALLOW_CLIMB_WALLS;
 
-    protected $name = "action.canClimbWalls.name";
-    protected $detail = "action.canClimbWalls.detail";
-    protected $detailDefaultReplace = ["player", "allow"];
+    protected string $name = "action.canClimbWalls.name";
+    protected string $detail = "action.canClimbWalls.detail";
+    protected array $detailDefaultReplace = ["player", "allow"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var bool */
-    private $allow;
+    private bool $allow;
 
     public function __construct(string $player = "", string $allow = "true") {
         $this->setPlayerVariableName($player);

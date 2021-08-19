@@ -4,10 +4,10 @@ namespace aieuo\mineflow\flowItem\condition;
 
 class NotScript extends NandScript {
 
-    protected $id = self::CONDITION_NOT;
+    protected string $id = self::CONDITION_NOT;
 
-    protected $name = "condition.not.name";
-    protected $detail = "condition.not.detail";
+    protected string $name = "condition.not.name";
+    protected string $detail = "condition.not.detail";
 
     public function getDetail(): string {
         $details = ["-----------not-----------"];

@@ -13,10 +13,10 @@ use pocketmine\item\Item;
 class GetArmorInventoryContents extends GetInventoryContents {
     use PlayerFlowItemTrait;
 
-    protected $id = self::GET_ARMOR_INVENTORY_CONTENTS;
+    protected string $id = self::GET_ARMOR_INVENTORY_CONTENTS;
 
-    protected $name = "action.getArmorInventory.name";
-    protected $detail = "action.getArmorInventory.detail";
+    protected string $name = "action.getArmorInventory.name";
+    protected string $detail = "action.getArmorInventory.detail";
 
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -4,7 +4,7 @@ namespace aieuo\mineflow\variable;
 
 class BoolVariable extends Variable implements \JsonSerializable {
 
-    public $type = Variable::BOOLEAN;
+    public int $type = Variable::BOOLEAN;
 
     public function __construct(bool $value) {
         parent::__construct($value);

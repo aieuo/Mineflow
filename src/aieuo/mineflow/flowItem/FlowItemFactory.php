@@ -175,8 +175,8 @@ use pocketmine\Server;
 class FlowItemFactory {
 
     /** @var FlowItem[] */
-    private static $list = [];
-    private static $aliases = [];
+    private static array $list = [];
+    private static array $aliases = [];
 
     public static function init(): void {
         /* actions */
@@ -379,72 +379,67 @@ class FlowItemFactory {
 
     public static function registerAliases(): void {
         self::registerAlias(new class extends FourArithmeticOperations {
-            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_ADD;
+            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_ADD;
             public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
                 parent::__construct($value1, self::ADDITION, $value2, $resultName);
             }
         });
         self::registerAlias(new class extends FourArithmeticOperations {
-            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_SUB;
+            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_SUB;
             public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
                 parent::__construct($value1, self::SUBTRACTION, $value2, $resultName);
             }
         });
         self::registerAlias(new class extends FourArithmeticOperations {
-            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_MUL;
+            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_MUL;
             public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
                 parent::__construct($value1, self::MULTIPLICATION, $value2, $resultName);
             }
         });
         self::registerAlias(new class extends FourArithmeticOperations {
-            protected $id = self::FOUR_ARITHMETIC_OPERATIONS_DIV;
+            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_DIV;
             public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
                 parent::__construct($value1, self::DIVISION, $value2, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {
-            protected $id = self::CALCULATE_SIN;
+            protected string $id = self::CALCULATE_SIN;
             public function __construct(string $value = "", string $resultName = "result") {
                 parent::__construct($value, (string)self::CALC_SIN, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {
-            protected $id = self::CALCULATE_COS;
+            protected string $id = self::CALCULATE_COS;
             public function __construct(string $value = "", string $resultName = "result") {
                 parent::__construct($value, (string)self::CALC_COS, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {
-            protected $id = self::CALCULATE_TAN;
+            protected string $id = self::CALCULATE_TAN;
             public function __construct(string $value = "", string $resultName = "result") {
                 parent::__construct($value, (string)self::CALC_TAN, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {
-            protected $id = self::CALCULATE_FLOOR;
+            protected string $id = self::CALCULATE_FLOOR;
             public function __construct(string $value = "", string $resultName = "result") {
                 parent::__construct($value, (string)self::CALC_FLOOR, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate {
-            protected $id = self::CALCULATE_CEIL;
+            protected string $id = self::CALCULATE_CEIL;
             public function __construct(string $value = "", string $resultName = "result") {
                 parent::__construct($value, (string)self::CALC_CEIL, $resultName);
             }
         });
         self::registerAlias(new class extends Calculate2 {
-            protected $id = self::CALCULATE2_ROUND;
+            protected string $id = self::CALCULATE2_ROUND;
             public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
                 parent::__construct($value1, $value2, (string)self::CALC_ROUND, $resultName);
             }
         });
     }
 
-    /**
-     * @param string $id
-     * @param bool $alias
-     * @return FlowItem|null
-     */
     public static function get(string $id, bool $alias = false): ?FlowItem {
         if (isset(self::$list[$id])) {
             return clone self::$list[$id];
@@ -474,23 +469,14 @@ class FlowItemFactory {
         return $items;
     }
 
-    /**
-     * @return array
-     */
     public static function getAll(): array {
         return self::$list;
     }
 
-    /**
-     * @param FlowItem $action
-     */
     public static function register(FlowItem $action): void {
         self::$list[$action->getId()] = clone $action;
     }
 
-    /**
-     * @param FlowItem $action
-     */
     public static function registerAlias(FlowItem $action): void {
         self::$aliases[$action->getId()] = clone $action;
     }

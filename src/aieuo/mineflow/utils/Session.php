@@ -6,47 +6,29 @@ use pocketmine\Player;
 
 class Session {
 
-    /** @var array */
-    private static $sessions = [];
+    private static array $sessions = [];
 
     public static function existsSession(Player $player): bool {
         return isset(self::$sessions[$player->getName()]);
     }
 
-    /**
-     * @param Player $player
-     * @return Session
-     */
     public static function getSession(Player $player): Session {
         if (!self::existsSession($player)) self::createSession($player);
         return self::$sessions[$player->getName()];
     }
 
-    /**
-     * @param Player $player
-     * @return void
-     */
     public static function createSession(Player $player): void {
         self::$sessions[$player->getName()] = new Session();
     }
 
-    /**
-     * @param Player $player
-     * @return void
-     */
     public static function destroySession(Player $player): void {
         unset(self::$sessions[$player->getName()]);
     }
 
 ////////////////////////////////////////////////////////////////////////
 
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
-    /**
-     * @param string $key
-     * @return boolean
-     */
     public function exists(string $key): bool {
         return isset($this->data[$key]);
     }
@@ -99,18 +81,11 @@ class Session {
         return $value;
     }
 
-    /**
-     * @param string $key
-     * @return self
-     */
     public function remove(string $key): self {
         unset($this->data[$key]);
         return $this;
     }
 
-    /**
-     * @return self
-     */
     public function removeAll(): self {
         $this->data = [];
         return $this;

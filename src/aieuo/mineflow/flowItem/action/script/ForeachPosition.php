@@ -26,17 +26,16 @@ use pocketmine\Player;
 class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlowItem {
     use FlowItemContainerTrait, PositionFlowItemTrait;
 
-    protected $id = self::FOREACH_POSITION;
+    protected string $id = self::FOREACH_POSITION;
 
-    protected $name = "action.foreachPosition.name";
-    protected $detail = "action.foreachPosition.description";
+    protected string $name = "action.foreachPosition.name";
+    protected string $detail = "action.foreachPosition.description";
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
-    protected $permission = self::PERMISSION_LEVEL_1;
+    protected int $permission = self::PERMISSION_LEVEL_1;
 
-    /* @var string */
-    private $counterName = "pos";
+    private string $counterName = "pos";
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
         $this->setPositionVariableName($pos1, "pos1");

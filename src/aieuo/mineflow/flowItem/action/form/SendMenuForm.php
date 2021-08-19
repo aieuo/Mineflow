@@ -25,24 +25,20 @@ use pocketmine\Player;
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SEND_MENU;
+    protected string $id = self::SEND_MENU;
 
-    protected $name = "action.sendMenu.name";
-    protected $detail = "action.sendMenu.detail";
-    protected $detailDefaultReplace = ["player", "text", "options", "result"];
+    protected string $name = "action.sendMenu.name";
+    protected string $detail = "action.sendMenu.detail";
+    protected array $detailDefaultReplace = ["player", "text", "options", "result"];
 
-    protected $category = Category::FORM;
+    protected string $category = Category::FORM;
 
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    /** @var string */
-    private $formText;
-    /** @var string */
-    private $resultName;
-    /** @var array */
-    private $options;
-    /** @var bool */
-    private $resendOnClose = false;
+    private string $formText;
+    private string $resultName;
+    private array $options;
+    private bool $resendOnClose = false;
 
     public function __construct(string $player = "", string $text = "", string $options = "", string $resultName = "menu") {
         $this->setPlayerVariableName($player);

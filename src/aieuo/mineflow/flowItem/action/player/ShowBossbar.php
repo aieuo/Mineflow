@@ -18,19 +18,18 @@ use aieuo\mineflow\utils\Language;
 class ShowBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SHOW_BOSSBAR;
+    protected string $id = self::SHOW_BOSSBAR;
 
-    protected $name = "action.showBossbar.name";
-    protected $detail = "action.showBossbar.detail";
-    protected $detailDefaultReplace = ["player", "title", "max", "value", "id"];
+    protected string $name = "action.showBossbar.name";
+    protected string $detail = "action.showBossbar.detail";
+    protected array $detailDefaultReplace = ["player", "title", "max", "value", "id"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    /** @var string */
-    private $title;
-    private $max;
-    private $value;
-    private $barId;
+    private string $title;
+    private string $max;
+    private string $value;
+    private string $barId;
 
     public function __construct(string $player = "", string $title = "", string $max = "", string $value = "", string $barId = "") {
         $this->setPlayerVariableName($player);

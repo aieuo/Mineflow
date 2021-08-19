@@ -22,22 +22,19 @@ use pocketmine\Player;
 class SendInputForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SEND_INPUT;
+    protected string $id = self::SEND_INPUT;
 
-    protected $name = "action.sendInput.name";
-    protected $detail = "action.sendInput.detail";
-    protected $detailDefaultReplace = ["player", "text", "result"];
+    protected string $name = "action.sendInput.name";
+    protected string $detail = "action.sendInput.detail";
+    protected array $detailDefaultReplace = ["player", "text", "result"];
 
-    protected $category = Category::FORM;
+    protected string $category = Category::FORM;
 
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    /** @var string */
-    private $formText;
-    /** @var string */
-    private $resultName;
-    /** @var bool */
-    private $resendOnClose = false;
+    private string $formText;
+    private string $resultName;
+    private bool $resendOnClose = false;
 
     public function __construct(string $player = "", string $text = "", string $resultName = "input") {
         $this->setPlayerVariableName($player);

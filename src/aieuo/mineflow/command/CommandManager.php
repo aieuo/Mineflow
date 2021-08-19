@@ -10,14 +10,11 @@ use pocketmine\utils\Config;
 
 class CommandManager {
 
-    /** @var Main */
-    private $owner;
+    private Main $owner;
 
-    /** @var Config */
-    private $config;
+    private Config $config;
 
-    /** @var array */
-    private $commandList = [];
+    private array $commandList = [];
 
     public function __construct(Main $owner, Config $commands) {
         $this->owner = $owner;

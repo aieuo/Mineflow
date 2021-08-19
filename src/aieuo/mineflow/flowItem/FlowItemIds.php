@@ -152,6 +152,8 @@ interface FlowItemIds {
     public const SET_CONFIG_VALUE = "setConfig";
     public const SAVE_CONFIG_FILE = "saveConfig";
     public const REMOVE_CONFIG_VALUE = "removeConfig";
+    public const GET_CONFIG_VALUE = "getConfig";
+    public const GET_CONFIG_VALUE_OR_SET = "getConfigOrSet";
     public const EXIT_RECIPE = "exit";
     public const EXIT_CONTAINER = "break";
 

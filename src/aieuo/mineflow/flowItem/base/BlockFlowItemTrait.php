@@ -13,7 +13,7 @@ use pocketmine\block\Block;
 trait BlockFlowItemTrait {
 
     /* @var string[] */
-    private $blockVariableNames = [];
+    private array $blockVariableNames = [];
 
     public function getBlockVariableName(string $name = ""): string {
         return $this->blockVariableNames[$name] ?? "";

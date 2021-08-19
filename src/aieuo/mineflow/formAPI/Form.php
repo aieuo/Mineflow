@@ -26,66 +26,42 @@ abstract class Form implements PMForm {
     public const LIST_FORM = "form";
     public const CUSTOM_FORM = "custom_form";
 
-    /** @var string */
-    protected $type;
-    /** @var string */
-    protected $title = "";
+    protected string $type;
+    protected string $title = "";
 
-    /** @var string */
-    private $name;
+    private string $name;
 
     /** @var callable|null */
     private $onReceive;
     /* @var callable|null */
     private $onClose;
-    /** @var array */
-    private $args = [];
-    /** @var array */
-    protected $messages = [];
-    /** @var array */
-    protected $highlights = [];
-    /** @var array */
-    protected $lastResponse = [];
+    private array $args = [];
+    protected array $messages = [];
+    protected array $highlights = [];
+    protected array $lastResponse = [];
 
     public function __construct(string $title = "") {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string {
         return $this->type;
     }
 
-    /**
-     * @param string $title
-     * @return self
-     */
     public function setTitle(string $title): self {
         $this->title = $title;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return $this->title;
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
     public function setName(string $name): self {
         $this->name = $name;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string {
         return $this->name ?? $this->getTitle();
     }
@@ -97,38 +73,21 @@ abstract class Form implements PMForm {
         return $this;
     }
 
-    /**
-     * @param callable $callable
-     * @return self
-     */
     public function onReceive(callable $callable): self {
         $this->onReceive = $callable;
         return $this;
     }
 
-    /**
-     * @param callable $callable
-     * @return self
-     */
     public function onClose(callable $callable): self {
         $this->onClose = $callable;
         return $this;
     }
 
-    /**
-     * @param mixed ...$args
-     * @return self
-     */
     public function addArgs(...$args): self {
         $this->args = array_merge($this->args, $args);
         return $this;
     }
 
-    /**
-     * @param string $error
-     * @param integer $index
-     * @return self
-     */
     public function addError(string $error, int $index): self {
         $error = Language::replace($error);
         $this->messages[TextFormat::RED.$error.TextFormat::WHITE] = true;
@@ -136,10 +95,6 @@ abstract class Form implements PMForm {
         return $this;
     }
 
-    /**
-     * @param array $errors
-     * @return self
-     */
     public function addErrors(array $errors): self {
         foreach ($errors as $error) {
             $this->addError($error[0], $error[1]);
@@ -147,10 +102,6 @@ abstract class Form implements PMForm {
         return $this;
     }
 
-    /**
-     * @param string $message
-     * @return self
-     */
     public function addMessage(string $message): self {
         $message = Language::replace($message);
         $this->messages[TextFormat::AQUA.$message.TextFormat::WHITE] = true;
@@ -168,33 +119,19 @@ abstract class Form implements PMForm {
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function resetErrors(): self {
         $this->messages = [];
         $this->highlights = [];
         return $this;
     }
 
-    /**
-     * @param Player $player
-     * @return self
-     */
     public function show(Player $player): self {
         $player->sendForm($this);
         return $this;
     }
 
-    /**
-     * @return array
-     */
     abstract public function jsonSerialize(): array;
 
-    /**
-     * @param array $form
-     * @return array
-     */
     abstract public function reflectErrors(array $form): array;
 
     public function resend(array $errors = [], array $messages = []): void {

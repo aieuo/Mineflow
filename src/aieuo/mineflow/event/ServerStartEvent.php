@@ -8,11 +8,9 @@ use pocketmine\event\plugin\PluginEvent;
 
 class ServerStartEvent extends PluginEvent {
 
-    /** @var float */
-    private $microtime;
+    private float $microtime;
 
-    /** @var string */
-    private $date;
+    private string $date;
 
     public function __construct(Main $owner) {
         parent::__construct($owner);

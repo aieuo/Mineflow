@@ -17,13 +17,13 @@ use aieuo\mineflow\utils\Language;
 class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
 
-    protected $id = self::IN_AREA;
+    protected string $id = self::IN_AREA;
 
-    protected $name = "condition.inArea.name";
-    protected $detail = "condition.inArea.detail";
-    protected $detailDefaultReplace = ["target", "pos1", "pos2"];
+    protected string $name = "condition.inArea.name";
+    protected string $detail = "condition.inArea.detail";
+    protected array $detailDefaultReplace = ["target", "pos1", "pos2"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
     public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         $this->setEntityVariableName($entity);

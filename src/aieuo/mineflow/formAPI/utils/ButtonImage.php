@@ -7,8 +7,8 @@ class ButtonImage implements \JsonSerializable {
 	public const TYPE_PATH = "path";
 	public const TYPE_URL = "url";
 
-	private $type;
-	private $data;
+	private string $type;
+	private string $data;
 
 	public function __construct(string $image, string $type = self::TYPE_PATH) {
 		$this->data = $image;

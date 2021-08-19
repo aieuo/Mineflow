@@ -12,10 +12,10 @@ use pocketmine\utils\TextFormat;
 
 class SetMoney extends TypeMoney {
 
-    protected $id = self::SET_MONEY;
+    protected string $id = self::SET_MONEY;
 
-    protected $name = "action.setMoney.name";
-    protected $detail = "action.setMoney.detail";
+    protected string $name = "action.setMoney.name";
+    protected string $detail = "action.setMoney.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SendPopup extends TypePlayerMessage {
 
-    protected $id = self::SEND_POPUP;
+    protected string $id = self::SEND_POPUP;
 
-    protected $name = "action.sendPopup.name";
-    protected $detail = "action.sendPopup.detail";
+    protected string $name = "action.sendPopup.name";
+    protected string $detail = "action.sendPopup.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -13,7 +13,7 @@ use pocketmine\level\Position;
 trait PositionFlowItemTrait {
 
     /* @var string[] */
-    private $positionVariableNames = [];
+    private array $positionVariableNames = [];
 
     public function getPositionVariableName(string $name = ""): string {
         return $this->positionVariableNames[$name] ?? "";

@@ -8,10 +8,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SetItemInHand extends TypeItem {
 
-    protected $id = self::SET_ITEM_IN_HAND;
+    protected string $id = self::SET_ITEM_IN_HAND;
 
-    protected $name = "action.setItemInHand.name";
-    protected $detail = "action.setItemInHand.detail";
+    protected string $name = "action.setItemInHand.name";
+    protected string $detail = "action.setItemInHand.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

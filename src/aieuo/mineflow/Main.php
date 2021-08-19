@@ -22,32 +22,21 @@ use pocketmine\utils\Config;
 
 class Main extends PluginBase {
 
-    /** @var Main */
-    private static $instance;
-    /** @var string */
-    private static $pluginVersion;
+    private static Main $instance;
+    private static string $pluginVersion;
 
-    /** @var Config */
-    private $config;
-    /** @var PlayerConfig */
-    private $playerSettings;
+    private Config $config;
+    private PlayerConfig $playerSettings;
 
-    /** @var bool */
-    private $loaded = false;
-    /* @var bool */
-    private $enabledRecipeErrorInConsole;
+    private bool $loaded = false;
+    private bool $enabledRecipeErrorInConsole;
 
-    /** @var RecipeManager */
-    private static $recipeManager;
-    /** @var CommandManager */
-    private static $commandManager;
-    /** @var EventManager */
-    private static $eventManager;
-    /** @var FormManager */
-    private static $formManager;
+    private static RecipeManager $recipeManager;
+    private static CommandManager $commandManager;
+    private static EventManager $eventManager;
+    private static FormManager $formManager;
 
-    /** @var VariableHelper */
-    private static $variableHelper;
+    private static VariableHelper $variableHelper;
 
 
     public static function getInstance(): self {

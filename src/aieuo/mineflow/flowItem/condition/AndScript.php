@@ -14,12 +14,12 @@ use pocketmine\Player;
 class AndScript extends FlowItem implements Condition, FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected $id = self::CONDITION_AND;
+    protected string $id = self::CONDITION_AND;
 
-    protected $name = "condition.and.name";
-    protected $detail = "condition.and.detail";
+    protected string $name = "condition.and.name";
+    protected string $detail = "condition.and.detail";
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
     public function getDetail(): string {
         $details = ["----------and-----------"];

@@ -15,11 +15,11 @@ use aieuo\mineflow\utils\Language;
 class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::EXECUTE_RECIPE_WITH_ENTITY;
+    protected string $id = self::EXECUTE_RECIPE_WITH_ENTITY;
 
-    protected $name = "action.executeRecipeWithEntity.name";
-    protected $detail = "action.executeRecipeWithEntity.detail";
-    protected $detailDefaultReplace = ["name", "target"];
+    protected string $name = "action.executeRecipeWithEntity.name";
+    protected string $detail = "action.executeRecipeWithEntity.detail";
+    protected array $detailDefaultReplace = ["name", "target"];
 
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct($name);

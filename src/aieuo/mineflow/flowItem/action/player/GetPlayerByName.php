@@ -15,19 +15,17 @@ use pocketmine\Server;
 
 class GetPlayerByName extends FlowItem {
 
-    protected $id = self::GET_PLAYER;
+    protected string $id = self::GET_PLAYER;
 
-    protected $name = "action.getPlayerByName.name";
-    protected $detail = "action.getPlayerByName.detail";
-    protected $detailDefaultReplace = ["name", "result"];
+    protected string $name = "action.getPlayerByName.name";
+    protected string $detail = "action.getPlayerByName.detail";
+    protected array $detailDefaultReplace = ["name", "result"];
 
-    protected $category = Category::PLAYER;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::PLAYER;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $playerName;
-    /** @var string */
-    private $resultName;
+    private string $playerName;
+    private string $resultName;
 
     public function __construct(string $name = "", string $result = "player") {
         $this->playerName = $name;

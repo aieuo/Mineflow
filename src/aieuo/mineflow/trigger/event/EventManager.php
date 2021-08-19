@@ -8,15 +8,13 @@ use pocketmine\utils\Config;
 
 class EventManager {
 
-    /* @var Config */
-    private $setting;
+    private Config $setting;
 
     /** @var EventTrigger[][] */
-    private $triggers = [];
+    private array $triggers = [];
     /** @var array<string, bool> */
-    private $events = [];
-    /* @var EventTriggerListener */
-    private $eventListener;
+    private array $events = [];
+    private EventTriggerListener $eventListener;
 
     public function __construct(Config $setting) {
         $this->setting = $setting;

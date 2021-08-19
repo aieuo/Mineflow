@@ -13,7 +13,7 @@ use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
 trait ScoreboardFlowItemTrait {
 
     /* @var string[] */
-    private $scoreboardVariableNames = [];
+    private array $scoreboardVariableNames = [];
 
     public function getScoreboardVariableName(string $name = ""): string {
         return $this->scoreboardVariableNames[$name] ?? "";

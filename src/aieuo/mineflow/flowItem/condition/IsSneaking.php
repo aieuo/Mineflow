@@ -13,13 +13,13 @@ use aieuo\mineflow\utils\Language;
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::IS_SNEAKING;
+    protected string $id = self::IS_SNEAKING;
 
-    protected $name = "condition.isSneaking.name";
-    protected $detail = "condition.isSneaking.detail";
-    protected $detailDefaultReplace = ["target"];
+    protected string $name = "condition.isSneaking.name";
+    protected string $detail = "condition.isSneaking.detail";
+    protected array $detailDefaultReplace = ["target"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
     public function __construct(string $entity = "") {
         $this->setEntityVariableName($entity);

@@ -8,12 +8,12 @@ use pocketmine\Player;
 
 class IsPlayerVariable extends IsActiveEntityVariable {
 
-    protected $id = self::IS_PLAYER_VARIABLE;
+    protected string $id = self::IS_PLAYER_VARIABLE;
 
-    protected $name = "condition.isPlayerVariable.name";
-    protected $detail = "condition.isPlayerVariable.detail";
+    protected string $name = "condition.isPlayerVariable.name";
+    protected string $detail = "condition.isPlayerVariable.detail";
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -15,21 +15,17 @@ class Scoreboard {
     public const DISPLAY_LIST = "list";
     public const DISPLAY_BELOWNAME = "belowname";
 
-    /* @var string */
-    private $type;
-    /* @var string */
-    private $id;
-    /* @var string */
-    private $displayName;
+    private string $type;
+    private string $id;
+    private string $displayName;
 
     /** @var array<string, int> */
-    private $scores = [];
+    private array $scores = [];
     /** @var array<string, int> */
-    private $scoreIds = [];
-    /** @var int */
-    private $scoreId = 0;
+    private array $scoreIds = [];
+    private int $scoreId = 0;
 
-    private $show = [];
+    private array $show = [];
 
     public function __construct(string $type = self::DISPLAY_SIDEBAR, string $id = "objective", string $displayName = "") {
         $this->type = $type;

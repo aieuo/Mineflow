@@ -15,7 +15,7 @@ use pocketmine\Server;
 class EventTriggerListener implements Listener {
 
     /** @var string[] */
-    private $registeredEvents = [];
+    private array $registeredEvents = [];
 
     public function registerEvent(string $event): void {
         if (in_array($event, $this->registeredEvents, true)) return;

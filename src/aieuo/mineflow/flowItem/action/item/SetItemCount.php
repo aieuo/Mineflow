@@ -16,17 +16,16 @@ use aieuo\mineflow\utils\Language;
 class SetItemCount extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected $id = self::SET_ITEM_COUNT;
+    protected string $id = self::SET_ITEM_COUNT;
 
-    protected $name = "action.setItemCount.name";
-    protected $detail = "action.setItemCount.detail";
-    protected $detailDefaultReplace = ["item", "count"];
+    protected string $name = "action.setItemCount.name";
+    protected string $detail = "action.setItemCount.detail";
+    protected array $detailDefaultReplace = ["item", "count"];
 
-    protected $category = Category::ITEM;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::ITEM;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $count;
+    private string $count;
 
     public function __construct(string $item = "", string $count = "") {
         $this->setItemVariableName($item);

@@ -18,13 +18,13 @@ use aieuo\mineflow\utils\Language;
 class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {
     use PlayerFlowItemTrait, ScoreboardFlowItemTrait;
 
-    protected $id = self::HIDE_SCOREBOARD;
+    protected string $id = self::HIDE_SCOREBOARD;
 
-    protected $name = "action.hideScoreboard.name";
-    protected $detail = "action.hideScoreboard.detail";
-    protected $detailDefaultReplace = ["player", "scoreboard"];
+    protected string $name = "action.hideScoreboard.name";
+    protected string $detail = "action.hideScoreboard.detail";
+    protected array $detailDefaultReplace = ["player", "scoreboard"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         $this->setPlayerVariableName($player);

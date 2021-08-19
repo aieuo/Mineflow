@@ -16,16 +16,15 @@ use aieuo\mineflow\utils\Language;
 class SetHealth extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::SET_HEALTH;
+    protected string $id = self::SET_HEALTH;
 
-    protected $name = "action.setHealth.name";
-    protected $detail = "action.setHealth.detail";
-    protected $detailDefaultReplace = ["entity", "health"];
+    protected string $name = "action.setHealth.name";
+    protected string $detail = "action.setHealth.detail";
+    protected array $detailDefaultReplace = ["entity", "health"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
-    /** @var string */
-    private $health;
+    private string $health;
 
     public function __construct(string $entity = "", string $health = "") {
         $this->setEntityVariableName($entity);

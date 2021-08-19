@@ -8,12 +8,12 @@ use aieuo\mineflow\utils\EntityHolder;
 
 class IsPlayer extends IsActiveEntity {
 
-    protected $id = self::IS_PLAYER;
+    protected string $id = self::IS_PLAYER;
 
-    protected $name = "condition.isPlayer.name";
-    protected $detail = "condition.isPlayer.detail";
+    protected string $name = "condition.isPlayer.name";
+    protected string $detail = "condition.isPlayer.detail";
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -18,12 +18,10 @@ use aieuo\mineflow\variable\object\Vector3ObjectVariable;
 
 class DummyVariable extends Variable {
 
-    public $type = Variable::DUMMY;
+    public int $type = Variable::DUMMY;
 
-    /* @var string */
-    private $description;
-    /* @var string */
-    private $valueType;
+    private string $description;
+    private string $valueType;
 
     public const UNKNOWN = "unknown";
     public const STRING = "string";

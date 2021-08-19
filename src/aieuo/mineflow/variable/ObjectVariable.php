@@ -4,15 +4,10 @@ namespace aieuo\mineflow\variable;
 
 class ObjectVariable extends Variable {
 
-    public $type = Variable::OBJECT;
+    public int $type = Variable::OBJECT;
 
-    /* @var string|null $showString */
-    private $showString;
+    private ?string $showString;
 
-    /**
-     * @param object $value
-     * @param string|null $str
-     */
     public function __construct(object $value, ?string $str = null) {
         parent::__construct($value);
         $this->showString = $str;

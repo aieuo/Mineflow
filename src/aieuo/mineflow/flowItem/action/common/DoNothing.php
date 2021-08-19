@@ -8,12 +8,12 @@ use aieuo\mineflow\utils\Category;
 
 class DoNothing extends FlowItem {
 
-    protected $id = self::DO_NOTHING;
+    protected string $id = self::DO_NOTHING;
 
-    protected $name = "action.doNothing.name";
-    protected $detail = "action.doNothing.detail";
+    protected string $name = "action.doNothing.name";
+    protected string $detail = "action.doNothing.detail";
 
-    protected $category = Category::COMMON;
+    protected string $category = Category::COMMON;
 
     public function execute(FlowItemExecutor $source): \Generator {
         yield true;

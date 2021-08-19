@@ -9,12 +9,12 @@ use aieuo\mineflow\utils\Category;
 
 class SendMessageToConsole extends TypeMessage {
 
-    protected $id = self::SEND_MESSAGE_TO_CONSOLE;
+    protected string $id = self::SEND_MESSAGE_TO_CONSOLE;
 
-    protected $category = Category::COMMON;
+    protected string $category = Category::COMMON;
 
-    protected $name = "action.sendMessageToConsole.name";
-    protected $detail = "action.sendMessageToConsole.detail";
+    protected string $name = "action.sendMessageToConsole.name";
+    protected string $detail = "action.sendMessageToConsole.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

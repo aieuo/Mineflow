@@ -10,24 +10,17 @@ use aieuo\mineflow\utils\ConfigHolder;
 
 class RecipePack implements \JsonSerializable {
 
-    /* @var string */
-    private $name;
-    /* @var string */
-    private $author;
-    /* @var string */
-    private $detail;
+    private string $name;
+    private string $author;
+    private string $detail;
     /* @var Recipe[] */
-    private $recipes;
-    /* @var array */
-    private $configs;
+    private array $recipes;
+    private array $configs;
 
-    /* @var array */
-    private $commands;
-    /* @var array */
-    private $forms;
+    private array $commands;
+    private array $forms;
 
-    /* @var string */
-    private $version;
+    private string $version;
 
     public function __construct(string $name, string $author, string $detail, array $recipes, ?array $commands = null, ?array $forms = null, ?array $configs = null, string $version = null) {
         $this->name = $name;

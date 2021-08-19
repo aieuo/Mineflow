@@ -22,17 +22,16 @@ use pocketmine\entity\Entity;
 class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
 
-    protected $id = self::CREATE_HUMAN_ENTITY;
+    protected string $id = self::CREATE_HUMAN_ENTITY;
 
-    protected $name = "action.createHuman.name";
-    protected $detail = "action.createHuman.detail";
-    protected $detailDefaultReplace = ["skin", "pos", "result"];
+    protected string $name = "action.createHuman.name";
+    protected string $detail = "action.createHuman.detail";
+    protected array $detailDefaultReplace = ["skin", "pos", "result"];
 
-    protected $category = Category::ENTITY;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::ENTITY;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $resultName;
+    private string $resultName;
 
     public function __construct(string $name = "", string $pos = "", string $result = "human") {
         $this->setPlayerVariableName($name);

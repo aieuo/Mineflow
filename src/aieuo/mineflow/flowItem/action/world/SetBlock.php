@@ -18,13 +18,13 @@ use aieuo\mineflow\utils\Language;
 class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     use PositionFlowItemTrait, BlockFlowItemTrait;
 
-    protected $id = self::SET_BLOCK;
+    protected string $id = self::SET_BLOCK;
 
-    protected $name = "action.setBlock.name";
-    protected $detail = "action.setBlock.detail";
-    protected $detailDefaultReplace = ["position", "block"];
+    protected string $name = "action.setBlock.name";
+    protected string $detail = "action.setBlock.detail";
+    protected array $detailDefaultReplace = ["position", "block"];
 
-    protected $category = Category::WORLD;
+    protected string $category = Category::WORLD;
 
     public function __construct(string $position = "", string $block = "") {
         $this->setPositionVariableName($position);

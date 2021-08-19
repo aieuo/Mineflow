@@ -17,16 +17,15 @@ use pocketmine\Server;
 class Command extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::COMMAND;
+    protected string $id = self::COMMAND;
 
-    protected $name = "action.command.name";
-    protected $detail = "action.command.detail";
-    protected $detailDefaultReplace = ["player", "command"];
+    protected string $name = "action.command.name";
+    protected string $detail = "action.command.detail";
+    protected array $detailDefaultReplace = ["player", "command"];
 
-    protected $category = Category::COMMAND;
+    protected string $category = Category::COMMAND;
 
-    /** @var string */
-    private $command;
+    private string $command;
 
     public function __construct(string $player = "", string $command = "") {
         $this->setPlayerVariableName($player);

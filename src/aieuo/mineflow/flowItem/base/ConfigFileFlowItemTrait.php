@@ -13,7 +13,7 @@ use pocketmine\utils\Config;
 trait ConfigFileFlowItemTrait {
 
     /* @var string[] */
-    private $configVariableNames = [];
+    private array $configVariableNames = [];
 
     public function getConfigVariableName(string $name = ""): string {
         return $this->configVariableNames[$name] ?? "";

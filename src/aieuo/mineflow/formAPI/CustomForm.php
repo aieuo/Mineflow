@@ -14,25 +14,16 @@ use pocketmine\utils\TextFormat;
 
 class CustomForm extends Form {
 
-    protected $type = self::CUSTOM_FORM;
+    protected string $type = self::CUSTOM_FORM;
 
     /** @var Element[] */
-    private $contents = [];
+    private array $contents = [];
 
-    /**
-     * @param array $contents
-     * @return self
-     */
     public function setContents(array $contents): self {
         $this->contents = $contents;
         return $this;
     }
 
-    /**
-     * @param Element $content
-     * @param bool $add
-     * @return self
-     */
     public function addContent(Element $content, bool $add = true): self {
         if ($add) $this->contents[] = $content;
         return $this;

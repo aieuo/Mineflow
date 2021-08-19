@@ -18,13 +18,13 @@ use aieuo\mineflow\utils\Language;
 class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
 
-    protected $id = self::TELEPORT;
+    protected string $id = self::TELEPORT;
 
-    protected $name = "action.teleport.name";
-    protected $detail = "action.teleport.detail";
-    protected $detailDefaultReplace = ["entity", "position"];
+    protected string $name = "action.teleport.name";
+    protected string $detail = "action.teleport.detail";
+    protected array $detailDefaultReplace = ["entity", "position"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
     public function __construct(string $entity = "", string $position = "") {
         $this->setEntityVariableName($entity);

@@ -8,10 +8,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class AddItem extends TypeItem {
 
-    protected $id = self::ADD_ITEM;
+    protected string $id = self::ADD_ITEM;
 
-    protected $name = "action.addItem.name";
-    protected $detail = "action.addItem.detail";
+    protected string $name = "action.addItem.name";
+    protected string $detail = "action.addItem.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

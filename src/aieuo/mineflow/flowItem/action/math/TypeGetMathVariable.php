@@ -12,13 +12,12 @@ use aieuo\mineflow\variable\DummyVariable;
 
 abstract class TypeGetMathVariable extends FlowItem {
 
-    protected $detailDefaultReplace = ["result"];
+    protected array $detailDefaultReplace = ["result"];
 
-    protected $category = Category::MATH;
+    protected string $category = Category::MATH;
 
-    /** @var string */
-    protected $resultName = "result";
-    protected $returnValueType = self::RETURN_VARIABLE_VALUE;
+    protected string $resultName = "result";
+    protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public function __construct(?string $result = "") {
         $this->resultName = empty($result) ? $this->resultName : $result;

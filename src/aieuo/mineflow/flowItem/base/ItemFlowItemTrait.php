@@ -13,7 +13,7 @@ use pocketmine\item\Item;
 trait ItemFlowItemTrait {
 
     /* @var string[] */
-    private $itemVariableNames = [];
+    private array $itemVariableNames = [];
 
     public function getItemVariableName(string $name = ""): string {
         return $this->itemVariableNames[$name] ?? "";

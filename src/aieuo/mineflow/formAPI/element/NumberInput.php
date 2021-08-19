@@ -9,12 +9,9 @@ use pocketmine\Player;
 
 class NumberInput extends Input {
 
-    /* @var float|null */
-    private $min;
-    /* @var float|null */
-    private $max;
-    /** @var array */
-    private $excludes;
+    private ?float $min;
+    private ?float $max;
+    private array $excludes;
 
     public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false, ?float $min = null, ?float $max = null, array $excludes = []) {
         parent::__construct($text, $placeholder, $default, $required);

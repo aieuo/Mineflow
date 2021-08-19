@@ -7,10 +7,8 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 
 class Economy {
-    /** @var EconomyLoader|null */
-    private static $economy;
-    /* @var Main */
-    private $owner;
+    private static ?EconomyLoader $economy;
+    private Main $owner;
 
     public function __construct(Main $owner) {
         $this->owner = $owner;

@@ -16,13 +16,13 @@ use pocketmine\entity\Living;
 class ClearAllEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected $id = self::CLEAR_ALL_EFFECT;
+    protected string $id = self::CLEAR_ALL_EFFECT;
 
-    protected $name = "action.clearAllEffect.name";
-    protected $detail = "action.clearAllEffect.detail";
-    protected $detailDefaultReplace = ["entity"];
+    protected string $name = "action.clearAllEffect.name";
+    protected string $detail = "action.clearAllEffect.detail";
+    protected array $detailDefaultReplace = ["entity"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
     public function __construct(string $entity = "") {
         $this->setEntityVariableName($entity);

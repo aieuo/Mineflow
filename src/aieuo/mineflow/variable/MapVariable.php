@@ -4,7 +4,7 @@ namespace aieuo\mineflow\variable;
 
 class MapVariable extends ListVariable {
 
-    public $type = Variable::MAP;
+    public int $type = Variable::MAP;
 
     public function getValueFromIndex(string $index): ?Variable {
         if (!isset($this->value[$index])) return null;

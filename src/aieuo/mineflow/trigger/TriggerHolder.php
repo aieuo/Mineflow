@@ -8,10 +8,9 @@ use aieuo\mineflow\recipe\RecipeContainer;
 class TriggerHolder {
 
     /** @var RecipeContainer[][][] */
-    private $recipes = [];
+    private array $recipes = [];
 
-    /** @var TriggerHolder */
-    private static $instance;
+    private static ?TriggerHolder $instance = null;
 
     public static function getInstance(): self {
         if (self::$instance === null) self::$instance = new self();

@@ -18,25 +18,20 @@ use pocketmine\Server;
 
 class CreatePositionVariable extends FlowItem {
 
-    protected $id = self::CREATE_POSITION_VARIABLE;
+    protected string $id = self::CREATE_POSITION_VARIABLE;
 
-    protected $name = "action.createPositionVariable.name";
-    protected $detail = "action.createPositionVariable.detail";
-    protected $detailDefaultReplace = ["position", "x", "y", "z", "world"];
+    protected string $name = "action.createPositionVariable.name";
+    protected string $detail = "action.createPositionVariable.detail";
+    protected array $detailDefaultReplace = ["position", "x", "y", "z", "world"];
 
-    protected $category = Category::WORLD;
-    protected $returnValueType = self::RETURN_VARIABLE_NAME;
+    protected string $category = Category::WORLD;
+    protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    /** @var string */
-    private $variableName;
-    /** @var string */
-    private $x;
-    /** @var string */
-    private $y;
-    /* @var string */
-    private $z;
-    /* @var string */
-    private $level;
+    private string $variableName;
+    private string $x;
+    private string $y;
+    private string $z;
+    private string $level;
 
     public function __construct(string $x = "", string $y = "", string $z = "", string $level = "{target.world.name}", string $name = "pos") {
         $this->x = $x;

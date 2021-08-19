@@ -8,12 +8,12 @@ use aieuo\mineflow\utils\Category;
 
 class CheckNothing extends FlowItem implements Condition {
 
-    protected $id = self::CHECK_NOTHING;
+    protected string $id = self::CHECK_NOTHING;
 
-    protected $name = "condition.noCheck.name";
-    protected $detail = "condition.noCheck.detail";
+    protected string $name = "condition.noCheck.name";
+    protected string $detail = "condition.noCheck.detail";
 
-    protected $category = Category::COMMON;
+    protected string $category = Category::COMMON;
 
     public function execute(FlowItemExecutor $source): \Generator {
         yield true;

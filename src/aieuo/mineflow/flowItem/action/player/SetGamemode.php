@@ -16,23 +16,22 @@ use aieuo\mineflow\utils\Language;
 class SetGamemode extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected $id = self::SET_GAMEMODE;
+    protected string $id = self::SET_GAMEMODE;
 
-    protected $name = "action.setGamemode.name";
-    protected $detail = "action.setGamemode.detail";
-    protected $detailDefaultReplace = ["player", "gamemode"];
+    protected string $name = "action.setGamemode.name";
+    protected string $detail = "action.setGamemode.detail";
+    protected array $detailDefaultReplace = ["player", "gamemode"];
 
-    protected $category = Category::PLAYER;
+    protected string $category = Category::PLAYER;
 
-    private $gamemodes = [
+    private array $gamemodes = [
         "action.gamemode.survival",
         "action.gamemode.creative",
         "action.gamemode.adventure",
         "action.gamemode.spectator"
     ];
 
-    /** @var string */
-    private $gamemode;
+    private string $gamemode;
 
     public function __construct(string $player = "", string $gamemode = "") {
         $this->setPlayerVariableName($player);

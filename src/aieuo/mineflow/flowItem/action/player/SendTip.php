@@ -6,10 +6,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SendTip extends TypePlayerMessage {
 
-    protected $id = self::SEND_TIP;
+    protected string $id = self::SEND_TIP;
 
-    protected $name = "action.sendTip.name";
-    protected $detail = "action.sendTip.detail";
+    protected string $name = "action.sendTip.name";
+    protected string $detail = "action.sendTip.detail";
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

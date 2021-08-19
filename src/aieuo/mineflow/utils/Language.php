@@ -7,14 +7,12 @@ use aieuo\mineflow\Main;
 class Language {
 
     /** @var string[][] */
-    private static $messages = [
+    private static array $messages = [
         "jpn" => [],
         "eng" => [],
     ];
-    /** @var string */
-    private static $language = "eng";
-    /** @var string */
-    private static $fallbackLanguage = "eng";
+    private static string $language = "eng";
+    private static string $fallbackLanguage = "eng";
 
     public static function getLanguage(): string {
         return self::$language;

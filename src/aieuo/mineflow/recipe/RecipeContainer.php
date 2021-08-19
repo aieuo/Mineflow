@@ -8,10 +8,9 @@ use pocketmine\event\Event;
 class RecipeContainer {
 
     /** @var Recipe[] */
-    private $recipes;
+    private array $recipes;
 
-    /** @var boolean */
-    protected $changed = false;
+    protected bool $changed = false;
 
     public function __construct(array $recipes = []) {
         $this->recipes = $recipes;

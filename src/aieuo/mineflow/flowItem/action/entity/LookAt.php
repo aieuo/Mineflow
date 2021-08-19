@@ -19,13 +19,13 @@ use pocketmine\entity\Living;
 class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
 
-    protected $id = self::LOOK_AT;
+    protected string $id = self::LOOK_AT;
 
-    protected $name = "action.lookAt.name";
-    protected $detail = "action.lookAt.detail";
-    protected $detailDefaultReplace = ["entity", "position"];
+    protected string $name = "action.lookAt.name";
+    protected string $detail = "action.lookAt.detail";
+    protected array $detailDefaultReplace = ["entity", "position"];
 
-    protected $category = Category::ENTITY;
+    protected string $category = Category::ENTITY;
 
     public function __construct(string $entity = "", string $position = "") {
         $this->setEntityVariableName($entity);

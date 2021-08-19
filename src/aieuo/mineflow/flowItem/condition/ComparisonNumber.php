@@ -12,13 +12,13 @@ use aieuo\mineflow\utils\Language;
 
 class ComparisonNumber extends FlowItem implements Condition {
 
-    protected $id = self::COMPARISON_NUMBER;
+    protected string $id = self::COMPARISON_NUMBER;
 
-    protected $name = "condition.comparisonNumber.name";
-    protected $detail = "condition.comparisonNumber.detail";
-    protected $detailDefaultReplace = ["value1", "operator", "value2"];
+    protected string $name = "condition.comparisonNumber.name";
+    protected string $detail = "condition.comparisonNumber.detail";
+    protected array $detailDefaultReplace = ["value1", "operator", "value2"];
 
-    protected $category = Category::SCRIPT;
+    protected string $category = Category::SCRIPT;
 
     public const EQUAL = 0;
     public const NOT_EQUAL = 1;
@@ -27,15 +27,11 @@ class ComparisonNumber extends FlowItem implements Condition {
     public const GREATER_EQUAL = 4;
     public const LESS_EQUAL = 5;
 
-    /** @var string */
-    private $value1;
-    /** @var int */
-    private $operator;
-    /** @var string */
-    private $value2;
+    private string $value1;
+    private int $operator;
+    private string $value2;
 
-    /** @var array */
-    private $operatorSymbols = ["==", "!=", ">", "<", ">=", "<="];
+    private array $operatorSymbols = ["==", "!=", ">", "<", ">=", "<="];
 
     public function __construct(string $value1 = "", int $operator = self::EQUAL, string $value2 = "") {
         $this->value1 = $value1;
