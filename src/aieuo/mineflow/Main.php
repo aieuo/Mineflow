@@ -30,6 +30,7 @@ class Main extends PluginBase {
 
     private bool $loaded = false;
     private bool $enabledRecipeErrorInConsole;
+    private ?\DateTimeZone $timeTriggerTimeZone = null;
 
     private static RecipeManager $recipeManager;
     private static CommandManager $commandManager;
@@ -52,10 +53,14 @@ class Main extends PluginBase {
         $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
             "language" => in_array($serverLanguage, Language::getAvailableLanguages(), true) ? $serverLanguage : "eng",
             "show_recipe_errors_in_console" => true,
+            "time_trigger_timezone" => ""
         ]);
         $this->config->save();
 
         $this->enabledRecipeErrorInConsole = $this->config->get("show_recipe_errors_in_console", true);
+        if (!empty($timezone = $this->config->get("time_trigger_timezone"))) {
+            $this->timeTriggerTimeZone = new \DateTimeZone($timezone);
+        }
 
         Language::setLanguage($this->config->get("language", "eng"));
         foreach (Language::getAvailableLanguages() as $language) {
@@ -134,6 +139,10 @@ class Main extends PluginBase {
 
     public function isEnabledRecipeErrorInConsole(): bool {
         return $this->enabledRecipeErrorInConsole;
+    }
+
+    public function getTimeTriggerTimeZone(): ?\DateTimeZone {
+        return $this->timeTriggerTimeZone;
     }
 
     public function setEnabledRecipeErrorInConsole(bool $enabledRecipeErrorInConsole): void {
