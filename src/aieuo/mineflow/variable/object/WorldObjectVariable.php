@@ -10,6 +10,9 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
+use pocketmine\entity\Entity;
+use pocketmine\entity\Human;
+use pocketmine\entity\Living;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
@@ -29,9 +32,35 @@ class WorldObjectVariable extends ObjectVariable {
             case "id":
                 return new NumberVariable($level->getId());
             case "players":
-                return new ListVariable(array_map(fn(Player $player) => new PlayerObjectVariable($player), $level->getPlayers()));
+                return new ListVariable(array_values(array_map(fn(Player $player) => new PlayerObjectVariable($player), $level->getPlayers())));
             case "entities":
-                return new ListVariable(array_map(fn(Player $player) => new PlayerObjectVariable($player), $level->getEntities()));
+                $entities = [];
+                foreach ($level->getEntities() as $entity) {
+                    if ($entity instanceof Player) {
+                        $v = new PlayerObjectVariable($entity);
+                    } elseif ($entity instanceof Human) {
+                        $v = new HumanObjectVariable($entity);
+                    } else {
+                        $v = new EntityObjectVariable($entity);
+                    }
+                    $entities[] = $v;
+                }
+                return new ListVariable($entities);
+            case "livings":
+                $entities = [];
+                foreach ($level->getEntities() as $entity) {
+                    if ($entity instanceof Player) {
+                        $v = new PlayerObjectVariable($entity);
+                    } elseif ($entity instanceof Human) {
+                        $v = new HumanObjectVariable($entity);
+                    } elseif ($entity instanceof Living) {
+                        $v = new EntityObjectVariable($entity);
+                    } else {
+                        continue;
+                    }
+                    $entities[] = $v;
+                }
+                return new ListVariable($entities);
             default:
                 return null;
         }

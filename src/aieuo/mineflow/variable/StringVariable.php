@@ -9,38 +9,18 @@ class StringVariable extends Variable implements \JsonSerializable {
     public int $type = Variable::STRING;
 
     public function getValue(): string {
-        return parent::getValue();
+        return (string)parent::getValue();
     }
 
-    public function append(StringVariable $var): StringVariable {
-        $result = $this->getValue().$var->getValue();
-        return new StringVariable($result);
-    }
-
-    public function replace(StringVariable $var): StringVariable {
-        $result = str_replace($var->getValue(), "", $this->getValue());
-        return new StringVariable($result);
-    }
-
-    public function repeat(StringVariable $var): StringVariable {
-        $result = str_repeat($this->getValue(), (int)$var->getValue());
-        return new StringVariable($result);
-    }
-
-    public function split(StringVariable $var): ListVariable {
-        $result = array_map(fn(string $text) => new StringVariable(trim($text)), explode($var->getValue(), $this->getValue()));
-        return new ListVariable($result);
-    }
-
-    public function add($target): Variable {
+    public function add($target): StringVariable {
         return new StringVariable($this->getValue().$target);
     }
 
-    public function sub($target): Variable {
+    public function sub($target): StringVariable {
         return new StringVariable(str_replace((string)$target, "", $this->getValue()));
     }
 
-    public function mul($target): Variable {
+    public function mul($target): StringVariable {
         if ($target instanceof NumberVariable) $target = $target->getValue();
         if(is_numeric($target)) return new StringVariable(str_repeat($this->getValue(), (int)$target));
 

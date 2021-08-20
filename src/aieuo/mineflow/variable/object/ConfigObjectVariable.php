@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -36,6 +37,16 @@ class ConfigObjectVariable extends ObjectVariable {
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getConfig(): Config {
         return $this->getValue();
+    }
+
+    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+        $variableHelper = Main::getVariableHelper();
+        $values = [];
+        foreach ($this->getConfig()->getAll() as $key => $value) {
+            $variables["it"] = $value;
+            $values[$key] = $variableHelper->run($target, $executor, $variables, $global);
+        }
+        return new MapVariable($values);
     }
 
     public function __toString(): string {

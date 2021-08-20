@@ -28,54 +28,34 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return parent::getValue();
     }
 
-    public function addition(NumberVariable $var): NumberVariable {
-        $result = $this->getValue() + $var->getValue();
-        return new NumberVariable($result);
-    }
-
-    public function subtraction(NumberVariable $var): NumberVariable {
-        $result = $this->getValue() - $var->getValue();
-        return new NumberVariable($result);
-    }
-
-    public function multiplication(NumberVariable $var): NumberVariable {
-        $result = $this->getValue() * $var->getValue();
-        return new NumberVariable($result);
-    }
-
-    public function division(NumberVariable $var): NumberVariable {
-        $result = $this->getValue() / $var->getValue();
-        return new NumberVariable($result);
-    }
-
     public function modulo(NumberVariable $var): NumberVariable {
         $result = $this->getValue() % $var->getValue();
         return new NumberVariable($result);
     }
 
-    public function add($target): Variable {
-        if ($target instanceof NumberVariable) return $this->addition($target);
+    public function add($target): NumberVariable {
+        if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() + $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() + $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function sub($target): Variable {
-        if ($target instanceof NumberVariable) return $this->subtraction($target);
+    public function sub($target): NumberVariable {
+        if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() - $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() - $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function mul($target): Variable {
-        if ($target instanceof NumberVariable) return $this->multiplication($target);
+    public function mul($target): NumberVariable {
+        if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() * $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() * $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function div($target): Variable {
-        if ($target instanceof NumberVariable) return $this->division($target);
+    public function div($target): NumberVariable {
+        if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() / $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() / $target);
 
         throw new UnsupportedCalculationException();

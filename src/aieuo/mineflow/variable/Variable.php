@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 abstract class Variable {
 
@@ -101,6 +102,17 @@ abstract class Variable {
     }
 
     public function div($target): Variable {
+        throw new UnsupportedCalculationException();
+    }
+
+    /**
+     * @param string|Variable|array $target
+     * @param FlowItemExecutor|null $executor
+     * @param array $variables
+     * @param bool $global
+     * @return ListVariable
+     */
+    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
         throw new UnsupportedCalculationException();
     }
 }

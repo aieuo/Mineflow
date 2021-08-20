@@ -2,6 +2,10 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\exception\UnsupportedCalculationException;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\Main;
+
 class ListVariable extends Variable implements \JsonSerializable {
 
     public int $type = Variable::LIST;
@@ -49,6 +53,56 @@ class ListVariable extends Variable implements \JsonSerializable {
     public function getValueFromIndex(string $index): ?Variable {
         if (!isset($this->value[(int)$index])) return null;
         return $this->value[(int)$index];
+    }
+
+    public function add($target): ListVariable {
+        if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
+
+        $values = [];
+        foreach ($this->getValue() as $value) {
+            $values[] = $value->add($target);
+        }
+        return new ListVariable($values);
+    }
+
+    public function sub($target): ListVariable {
+        if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
+
+        $values = [];
+        foreach ($this->getValue() as $value) {
+            $values[] = $value->sub($target);
+        }
+        return new ListVariable($values);
+    }
+
+    public function mul($target): ListVariable {
+        if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
+
+        $values = [];
+        foreach ($this->getValue() as $value) {
+            $values[] = $value->mul($target);
+        }
+        return new ListVariable($values);
+    }
+
+    public function div($target): ListVariable {
+        if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
+
+        $values = [];
+        foreach ($this->getValue() as $value) {
+            $values[] = $value->div($target);
+        }
+        return new ListVariable($values);
+    }
+
+    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
+        $variableHelper = Main::getVariableHelper();
+        $values = [];
+        foreach ($this->getValue() as $value) {
+            $variables["it"] = $value;
+            $values[] = $variableHelper->run($target, $executor, $variables, $global);
+        }
+        return new ListVariable($values);
     }
 
     public function callMethod(string $name, array $parameters = []): ?Variable {

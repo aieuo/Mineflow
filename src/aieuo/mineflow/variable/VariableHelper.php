@@ -122,10 +122,7 @@ class VariableHelper {
 
         $tokens = $this->lexer($replace);
         $ast = $this->parse($tokens);
-
-        if (is_string($ast)) $result = $this->mustGetVariableNested($ast, $variables, $global);
-        elseif ($ast instanceof Variable) $result = (string)$ast;
-        else $result = (string)$this->run($ast, $executor, $variables, $global);
+        $result = (string)$this->run($ast, $executor, $variables, $global);
 
         return str_replace("{".$replace."}", $result, $string);
     }
@@ -136,13 +133,24 @@ class VariableHelper {
         $tokens = [];
         $token = "";
         $brackets = 0;
+        $escape = false;
 
         foreach (preg_split("//u", $source, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+            if ($escape) {
+                $token .= $char;
+                $escape = false;
+                continue;
+            }
+
             switch ($char) {
+                case "\\":
+                    $escape = true;
+                    break;
                 case "+":
                 case "-":
                 case "*":
                 case "/":
+                case ">":
                 case "(":
                 case ")":
                     $tokens[] = trim($token);
@@ -170,7 +178,7 @@ class VariableHelper {
             }
         }
         $tokens[] = trim($token);
-        return $tokens;
+        return array_values(array_filter($tokens, fn($token) => $token !== ""));
     }
 
     /**
@@ -181,6 +189,7 @@ class VariableHelper {
     public function parse(array &$tokens, int $priority = 0) {
         $rules = [
             ["type" => 1, "ops" => [","]],
+            ["type" => 0, "ops" => [">"]],
             ["type" => 0, "ops" => ["+", "-"]], // 1 + 2, 1 - 2
             ["type" => 0, "ops" => ["*", "/"]], // 1 * 2, 1 / 2
             ["type" => 2, "ops" => ["+", "-"]], // +1, -1
@@ -239,7 +248,17 @@ class VariableHelper {
         return $left;
     }
 
-    public function run(array $ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+    /**
+     * @param string|Variable|array $ast
+     * @param FlowItemExecutor|null $executor
+     * @param array $variables
+     * @param bool $global
+     * @return Variable
+     */
+    public function run($ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+        if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
+        if ($ast instanceof Variable) return $ast;
+
         if (!isset($ast["left"])) {
             $result = "";
             foreach ($ast as $value) {
@@ -251,7 +270,7 @@ class VariableHelper {
 
         $op = $ast["op"];
         $left = is_array($ast["left"]) ? $this->run($ast["left"], $executor, $variables, $global) : $ast["left"];
-        if (is_array($ast["right"]) and ($op !== "()" or isset($ast["right"]["op"]))) {
+        if (is_array($ast["right"]) and $op !== ">" and ($op !== "()" or isset($ast["right"]["op"]))) {
             $right = $this->run($ast["right"], $executor, $variables, $global);
         } else {
             $right = $ast["right"];
@@ -265,6 +284,11 @@ class VariableHelper {
 
             $left = $this->mustGetVariableNested($left, $variables, $global);
         }
+
+        if ($op === ">") {
+            return $left->map($right, $executor, $variables, $global);
+        }
+
         if (is_string($right)) {
             $right = $this->mustGetVariableNested($right, $variables, $global);
         }
