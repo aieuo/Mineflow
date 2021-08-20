@@ -81,7 +81,7 @@ class CustomListFormForm {
                 new Input("@customForm.list.commandButton.command", "", "", true, $command),
                 new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), "", false, $imagePath),
                 new CancelToggle(fn() => $this->sendButtonList($player, $form, ["@form.canceled"])),
-            ])->onReceive(function (Player $player, array $data) use($form, $consoleCommandButton, &$buttonText, &$command, &$imagePath) {
+            ])->onReceive(function () use($player, $form, $consoleCommandButton, &$buttonText, &$command, &$imagePath) {
                 $image = $imagePath === "" ? null : new ButtonImage($imagePath, ButtonImage::TYPE_PATH);
                 $button = $consoleCommandButton
                     ? new CommandConsoleButton($command, $buttonText, null, $image)
@@ -102,18 +102,18 @@ class CustomListFormForm {
         (new CustomForm($button->getText()))
             ->setContents([
                 new Label(Language::get("customForm.receive", [$index])."\n".Language::get("customForm.receive.list.button", [$button->getText()])),
-                new Input("@customForm.text", "", $button->getText(), true),
-                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), $button->getImage() === null ? "" : $button->getImage()->getData()),
-                new CancelToggle(null, "@form.delete"),
-            ])->onReceive(function (Player $player, array $data) use($form, $index, $button) {
-                if ($data[3]) {
+                new Input("@customForm.text", "", $button->getText(), true, $buttonText),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), $button->getImage() === null ? "" : $button->getImage()->getData(), false, $iconPath),
+                new CancelToggle(null, "@form.delete", false, $delete),
+            ])->onReceive(function () use($player, $form, $index, $button, &$buttonText, &$iconPath, &$delete) {
+                if ($delete) {
                     $form->removeButton($index);
                 } else {
-                    $button->setText($data[1]);
-                    $button->setImage($data[2] === "" ? null : new ButtonImage($data[2], ButtonImage::TYPE_PATH));
+                    $button->setText($buttonText);
+                    $button->setImage($iconPath === "" ? null : new ButtonImage($iconPath, ButtonImage::TYPE_PATH));
                 }
                 Main::getFormManager()->addForm($form->getName(), $form);
-                $this->sendButtonList($player, $form, [$data[4] ? "@form.deleted" : "@form.changed"]);
+                $this->sendButtonList($player, $form, [$delete ? "@form.deleted" : "@form.changed"]);
             })->show($player);
     }
 
