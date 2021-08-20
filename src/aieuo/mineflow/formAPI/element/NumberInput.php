@@ -71,4 +71,18 @@ class NumberInput extends Input {
             "excludes" => $this->getExcludes(),
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"]) or !isset($data["mineflow"])) return null;
+
+        if (isset($data["mineflow"]["placeholder"])) {
+            return NumberInputPlaceholder::fromSerializedArray($data);
+        }
+
+        $required = $data["mineflow"]["required"] ?? false;
+        $min = $data["mineflow"]["min"] ?? null;
+        $max = $data["mineflow"]["max"] ?? null;
+        $excludes = $data["mineflow"]["excludes"] ?? [];
+        return new NumberInput($data["text"], $data["placeholder"], $data["default"] ?? "", $required, $min, $max, $excludes);
+    }
 }

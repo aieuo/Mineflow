@@ -59,7 +59,7 @@ class Slider extends Element {
 
     public function jsonSerialize(): array {
         if ($this->min > $this->max) {
-            [$this->min, $this->max] = [$this->max, $this->min]; // 入れ替える
+            [$this->min, $this->max] = [$this->max, $this->min];
         }
         if ($this->default === null or $this->default < $this->min) {
             $this->default = $this->min;
@@ -72,5 +72,16 @@ class Slider extends Element {
             "step" => $this->step,
             "default" => $this->default,
         ];
+    }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"]) or !isset($data["min"]) or !isset($data["max"])) return null;
+
+        if (isset($data["mineflow"]["placeholder"])) {
+            return SliderPlaceholder::fromSerializedArray($data);
+        }
+
+        if (!isset($data["min"]) or !isset($data["max"])) return null;
+        return new Slider($data["text"], $data["min"], $data["max"], $data["step"] ?? 1, $data["default"] ?? null);
     }
 }

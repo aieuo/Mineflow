@@ -31,4 +31,14 @@ class Toggle extends Element {
             "default" => $this->default,
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"])) return null;
+
+        if (isset($data["mineflow"]["type"]) and $data["mineflow"]["type"] === "cancelToggle") {
+            return CancelToggle::fromSerializedArray($data);
+        }
+
+        return new Toggle($data["text"], $data["default"] ?? false);
+    }
 }

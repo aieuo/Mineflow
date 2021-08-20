@@ -47,4 +47,10 @@ class Dropdown extends Element {
             "default" => $this->default,
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"]) or !isset($data["options"])) return null;
+
+        return new Dropdown($data["text"], $data["options"], $data["default"] ?? 0);
+    }
 }

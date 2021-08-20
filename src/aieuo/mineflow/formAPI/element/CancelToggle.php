@@ -40,4 +40,10 @@ class CancelToggle extends Toggle {
             ]
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"])) return null;
+
+        return new CancelToggle(null, $data["text"], $data["default"] ?? false);
+    }
 }

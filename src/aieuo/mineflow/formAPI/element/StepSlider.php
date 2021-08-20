@@ -16,4 +16,10 @@ class StepSlider extends Dropdown {
             "default" => $this->default,
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"]) or !isset($data["steps"])) return null;
+
+        return new StepSlider($data["text"], $data["steps"], $data["default"] ?? 0);
+    }
 }

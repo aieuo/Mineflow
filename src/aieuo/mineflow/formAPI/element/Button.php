@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\UUID;
@@ -10,6 +11,7 @@ class Button implements \JsonSerializable {
 
     public const TYPE_NORMAL = "button";
     public const TYPE_COMMAND = "commandButton";
+    public const TYPE_COMMAND_CONSOLE = "commandConsoleButton";
 
     protected string $type = self::TYPE_NORMAL;
     /** @var string */
@@ -74,5 +76,20 @@ class Button implements \JsonSerializable {
             "id" => $this->getUUID(),
             "image" => $this->getImage(),
         ];
+    }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"])) return null;
+
+        if (isset($data["mineflow"]["command"])) {
+            return CommandButton::fromSerializedArray($data);
+        }
+
+        $button = new Button($data["text"]);
+        if (!empty($data["image"])) {
+            $button->setImage(new ButtonImage($data["image"]["data"], $data["image"]["type"]));
+        }
+
+        return $button->uuid($buttonData["id"] ?? "");
     }
 }

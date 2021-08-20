@@ -76,4 +76,14 @@ class Input extends Element {
             "required" => $this->isRequired(),
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"])) return null;
+
+        if (isset($data["mineflow"]["type"]) and $data["mineflow"]["type"] === "number") {
+            return NumberInput::fromSerializedArray($data);
+        }
+
+        return new Input($data["text"], $data["placeholder"], $data["default"] ?? "", $data["mineflow"]["required"] ?? false);
+    }
 }

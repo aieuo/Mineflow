@@ -56,4 +56,25 @@ abstract class Element implements \JsonSerializable {
     }
 
     abstract public function jsonSerialize(): array;
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["type"]) or !isset($data["text"])) return null;
+
+        switch ($data["type"]) {
+            case self::ELEMENT_LABEL:
+                return Label::fromSerializedArray($data);
+            case self::ELEMENT_TOGGLE:
+                return Toggle::fromSerializedArray($data);
+            case self::ELEMENT_INPUT:
+                return Input::fromSerializedArray($data);
+            case self::ELEMENT_SLIDER:
+                return Slider::fromSerializedArray($data);
+            case self::ELEMENT_STEP_SLIDER:
+                return StepSlider::fromSerializedArray($data);
+            case self::ELEMENT_DROPDOWN:
+                return Dropdown::fromSerializedArray($data);
+            default:
+                return null;
+        }
+    }
 }

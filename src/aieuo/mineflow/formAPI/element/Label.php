@@ -14,4 +14,10 @@ class Label extends Element {
             "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
         ];
     }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"])) return null;
+
+        return new Label($data["text"]);
+    }
 }

@@ -162,72 +162,27 @@ abstract class Form implements PMForm {
                 if (!isset($data["content"]) or !isset($data["button1"]) or !isset($data["button2"])) return null;
                 $form = new ModalForm($data["title"]);
                 $form->setContent($data["content"]);
-                $form->setButton1($data["button1"])->setButton2($data["button2"]);
+                $form->setButton1($data["button1"]);
+                $form->setButton2($data["button2"]);
                 break;
             case self::LIST_FORM:
                 if (!isset($data["content"]) or !isset($data["buttons"])) return null;
                 $form = new ListForm($data["title"]);
                 $form->setContent($data["content"]);
                 foreach ($data["buttons"] as $buttonData) {
-                    if (!isset($buttonData["text"])) return null;
-                    if (isset($buttonData["mineflow"]["command"])) {
-                        $button = new CommandButton($buttonData["mineflow"]["command"], $buttonData["text"]);
-                    } else {
-                        $button = new Button($buttonData["text"]);
-                    }
-                    if (!empty($buttonData["image"])) {
-                        $button->setImage(new ButtonImage($buttonData["image"]["data"], $buttonData["image"]["type"]));
-                    }
-                    $form->addButton($button->uuid($buttonData["id"] ?? ""));
+                    $button = Button::fromSerializedArray($buttonData);
+                    if ($button === null) return null;
+
+                    $form->addButton($button);
                 }
                 break;
             case self::CUSTOM_FORM:
                 if (!isset($data["content"])) return null;
                 $form = new CustomForm($data["title"]);
                 foreach ($data["content"] as $content) {
-                    if (!isset($content["type"]) or !isset($content["text"])) return null;
+                    $element = Element::fromSerializedArray($content);
+                    if ($element === null) return null;
 
-                    $text = $content["text"];
-                    switch ($content["type"]) {
-                        case Element::ELEMENT_LABEL:
-                            $element = new Label($text);
-                            break;
-                        case Element::ELEMENT_TOGGLE:
-                            $default = $content["default"] ?? false;
-                            if (isset($content["mineflow"]["type"]) and $content["mineflow"]["type"] === "cancelToggle") {
-                                $element = new CancelToggle(null, $text, $default);
-                            } else {
-                                $element = new Toggle($text, $default);
-                            }
-                            break;
-                        case Element::ELEMENT_INPUT:
-                            $placeholder = $content["placeholder"] ?? "";
-                            $default = $content["default"] ?? "";
-                            $required = $content["mineflow"]["required"] ?? false;
-                            if (isset($content["mineflow"]["type"]) and $content["mineflow"]["type"] === "number") {
-                                $min = $content["mineflow"]["min"] ?? null;
-                                $max = $content["mineflow"]["max"] ?? null;
-                                $excludes = $content["mineflow"]["excludes"] ?? [];
-                                $element = new NumberInput($text, $placeholder, $default, $required, $min, $max, $excludes);
-                            } else {
-                                $element = new Input($text, $placeholder, $default, $required);
-                            }
-                            break;
-                        case Element::ELEMENT_SLIDER:
-                            if (!isset($content["min"]) or !isset($content["max"])) return null;
-                            $element = new Slider($text, $content["min"], $content["max"], $content["step"] ?? 1, $content["default"] ?? null);
-                            break;
-                        case Element::ELEMENT_STEP_SLIDER:
-                            if (!isset($content["steps"])) return null;
-                            $element = new StepSlider($text, $content["steps"], $content["default"] ?? 0);
-                            break;
-                        case Element::ELEMENT_DROPDOWN:
-                            if (!isset($content["options"])) return null;
-                            $element = new Dropdown($text, $content["options"], $content["default"] ?? 0);
-                            break;
-                        default:
-                            return null;
-                    }
                     $form->addContent($element);
                 }
                 break;

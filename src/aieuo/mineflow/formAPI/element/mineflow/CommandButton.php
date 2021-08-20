@@ -15,9 +15,9 @@ class CommandButton extends Button {
 
     public bool $skipIfCallOnClick = false;
 
-    public function __construct(string $command, string $text = null, ?ButtonImage $image = null) {
+    public function __construct(string $command, string $text = null, ?callable $onClick = null, ?ButtonImage $image = null) {
         $this->command = $command;
-        parent::__construct($text ?? "/".$command, fn(Player $player) => Server::getInstance()->dispatchCommand($player, $this->command), $image);
+        parent::__construct($text ?? "/".$command, $onClick ?? fn(Player $player) => Server::getInstance()->dispatchCommand($player, $this->command), $image);
     }
 
     public function setCommand(string $command): self {
@@ -30,7 +30,7 @@ class CommandButton extends Button {
     }
 
     public function __toString(): string {
-        return Language::get("form.form.formMenu.list.commandButton", [$this->getText(), $this->getCommand()]);
+        return Language::get("form.form.formMenu.list.".$this->getType(), [$this->getText(), $this->getCommand()]);
     }
 
     public function jsonSerialize(): array {
@@ -39,8 +39,24 @@ class CommandButton extends Button {
             "id" => $this->getUUID(),
             "image" => $this->getImage(),
             "mineflow" => [
-                "command" => $this->command
+                "command" => $this->command,
+                "type" => $this->getType(),
             ],
         ];
+    }
+
+    public static function fromSerializedArray(array $data): ?self {
+        if (!isset($data["text"]) or !isset($data["mineflow"]["command"])) return null;
+
+        if (isset($data["mineflow"]["type"]) and $data["mineflow"]["type"] === self::TYPE_COMMAND_CONSOLE) {
+            return CommandConsoleButton::fromSerializedArray($data);
+        }
+
+        $button = new CommandButton($data["mineflow"]["command"], $data["text"]);
+        if (!empty($data["image"])) {
+            $button->setImage(new ButtonImage($data["image"]["data"], $data["image"]["type"]));
+        }
+
+        return $button->uuid($data["id"] ?? "");
     }
 }
