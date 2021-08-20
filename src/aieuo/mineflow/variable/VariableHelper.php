@@ -120,11 +120,21 @@ class VariableHelper {
     public function replaceVariable(string $string, string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
         if (strpos($string, "{".$replace."}") === false) return $string;
 
+        $result = (string)$this->runVariableStatement($replace, $variables, $executor, $global);
+        return str_replace("{".$replace."}", $result, $string);
+    }
+
+    /**
+     * @param string $replace
+     * @param Variable[] $variables
+     * @param FlowItemExecutor|null $executor
+     * @param bool $global
+     * @return Variable
+     */
+    public function runVariableStatement(string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): Variable {
         $tokens = $this->lexer($replace);
         $ast = $this->parse($tokens);
-        $result = (string)$this->run($ast, $executor, $variables, $global);
-
-        return str_replace("{".$replace."}", $result, $string);
+        return $this->runAST($ast, $executor, $variables, $global);
     }
 
     public function lexer(string $source): array {
@@ -255,23 +265,23 @@ class VariableHelper {
      * @param bool $global
      * @return Variable
      */
-    public function run($ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+    public function runAST($ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
         if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
         if ($ast instanceof Variable) return $ast;
 
         if (!isset($ast["left"])) {
             $result = "";
             foreach ($ast as $value) {
-                if (is_array($value)) $result .= (",".$this->run($value, $executor, $variables, $global));
+                if (is_array($value)) $result .= (",".$this->runAST($value, $executor, $variables, $global));
                 else $result .= (",".$value);
             }
             return $this->mustGetVariableNested(substr($result, 1), $variables, $global);
         }
 
         $op = $ast["op"];
-        $left = is_array($ast["left"]) ? $this->run($ast["left"], $executor, $variables, $global) : $ast["left"];
+        $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $executor, $variables, $global) : $ast["left"];
         if (is_array($ast["right"]) and $op !== ">" and ($op !== "()" or isset($ast["right"]["op"]))) {
-            $right = $this->run($ast["right"], $executor, $variables, $global);
+            $right = $this->runAST($ast["right"], $executor, $variables, $global);
         } else {
             $right = $ast["right"];
         }
@@ -368,8 +378,12 @@ class VariableHelper {
         return $variable;
     }
 
-    public function isVariableString(string $variable): bool {
+    public function isSimpleVariableString(string $variable): bool {
         return (bool)preg_match("/^{[^{}\[\].]+}$/u", $variable);
+    }
+
+    public function isVariableString(string $variable): bool {
+        return (bool)preg_match("/^{[^{}]+}$/u", $variable);
     }
 
     public function containsVariable(string $variable): bool {

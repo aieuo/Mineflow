@@ -1,8 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\mineflow\formAPI\element\mineflow;
 
-use aieuo\mineflow\formAPI\element\mineflow\ElementPlaceholder;
+use aieuo\mineflow\formAPI\element\NumberInput;
 
 class NumberInputPlaceholder extends NumberInput implements ElementPlaceholder {
 
@@ -20,8 +20,18 @@ class NumberInputPlaceholder extends NumberInput implements ElementPlaceholder {
         return $this->minStr;
     }
 
+    public function setMinStr(?string $minStr): void {
+        $this->minStr = $minStr;
+        $this->setMin($minStr === null ? null : (float)$minStr);
+    }
+
     public function getMaxStr(): ?string {
         return $this->maxStr;
+    }
+
+    public function setMaxStr(?string $maxStr): void {
+        $this->maxStr = $maxStr;
+        $this->setMax($maxStr === null ? null : (float)$maxStr);
     }
 
     public function forceConvert(): NumberInput {

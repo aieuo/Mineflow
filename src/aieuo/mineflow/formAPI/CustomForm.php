@@ -2,13 +2,18 @@
 
 namespace aieuo\mineflow\formAPI;
 
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
+use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
 use aieuo\mineflow\formAPI\element\Slider;
+use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\ListVariable;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -66,8 +71,7 @@ class CustomForm extends Form {
             "title" => Language::replace($this->title),
             "content" => $this->contents
         ];
-        $form = $this->reflectErrors($form);
-        return $form;
+        return $this->reflectErrors($form);
     }
 
     public function resetErrors(): Form {
@@ -89,6 +93,46 @@ class CustomForm extends Form {
             $form["content"][0]->setExtraText(implode("\n", array_keys($this->messages))."\n");
         }
         return $form;
+    }
+
+    public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
+        $helper = Main::getVariableHelper();
+
+        $this->setTitle($executor->replaceVariables($this->getTitle()));
+        foreach ($this->getContents() as $content) {
+            $content->setText($executor->replaceVariables($content->getText()));
+            if ($content instanceof SliderPlaceholder) {
+                $content->setDefaultStr($executor->replaceVariables($content->getDefaultStr()));
+                $content->setMinStr($executor->replaceVariables($content->getMinStr()));
+                $content->setMaxStr($executor->replaceVariables($content->getMaxStr()));
+                $content->setStepStr($executor->replaceVariables($content->getStepStr()));
+            } elseif ($content instanceof NumberInputPlaceholder) {
+                $content->setPlaceholder($executor->replaceVariables($content->getPlaceholder()));
+                $content->setDefault($executor->replaceVariables($content->getDefault()));
+                $content->setMaxStr($executor->replaceVariables($content->getMinStr()));
+                $content->setMaxStr($executor->replaceVariables($content->getMaxStr()));
+            } elseif ($content instanceof Input) {
+                $content->setPlaceholder($executor->replaceVariables($content->getPlaceholder()));
+                $content->setDefault($executor->replaceVariables($content->getDefault()));
+            } elseif ($content instanceof Dropdown) {
+                $options = [];
+                foreach ($content->getOptions() as $option) {
+                    if ($helper->isVariableString($option)) {
+                        $variableName = substr($option, 1, -1);
+                        $variable = $helper->runVariableStatement($variableName, $executor->getVariables(), $executor);
+                        if ($variable instanceof ListVariable) {
+                            foreach ($variable->getValue() as $value) {
+                                $options[] = $executor->replaceVariables((string)$value);
+                            }
+                        }
+                    } else {
+                        $options[] = $executor->replaceVariables($option);
+                    }
+                }
+                $content->setOptions($options);
+            }
+        }
+        return $this;
     }
 
     public function resend(array $errors = [], array $messages = [], array $responseOverrides = [], array $elementOverrides = []): void {

@@ -4,6 +4,11 @@
 namespace aieuo\mineflow\ui\customForm;
 
 
+use aieuo\mineflow\exception\UndefinedMineflowMethodException;
+use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
+use aieuo\mineflow\exception\UndefinedMineflowVariableException;
+use aieuo\mineflow\exception\UnsupportedCalculationException;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -20,6 +25,8 @@ use aieuo\mineflow\ui\MineflowForm;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\variable\DefaultVariables;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\Player;
 
 class CustomFormForm {
@@ -332,5 +339,25 @@ class CustomFormForm {
             $recipes->executeAll($player);
         }
         $form->resetErrors();
+    }
+
+    public function previewForm(Player $player, Form $form): void {
+        (clone $form)->onReceive(fn(Player $player) => $this->sendFormMenu($player, $form))
+            ->onClose(fn(Player $player) => $this->sendFormMenu($player, $form))
+            ->show($player);
+    }
+
+    public function executeForm(Player $player, Form $form): void {
+        $variables = array_merge(DefaultVariables::getServerVariables(), ["target" => new PlayerObjectVariable($player)]);
+        $form = clone $form;
+        try {
+            $form->replaceVariablesFromExecutor(new FlowItemExecutor([], null, $variables));
+        } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|UnsupportedCalculationException $e) {
+            $this->sendFormMenu($player, $form, [$e->getMessage()]);
+            return;
+        }
+        $form->onReceive([new CustomFormForm(), "onReceive"])
+            ->onClose([new CustomFormForm(), "onClose"])
+            ->addArgs($form)->show($player);
     }
 }

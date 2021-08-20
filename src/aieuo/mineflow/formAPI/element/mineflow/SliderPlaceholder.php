@@ -1,9 +1,8 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element;
+namespace aieuo\mineflow\formAPI\element\mineflow;
 
-use aieuo\mineflow\formAPI\element\mineflow\ElementPlaceholder;
-use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\formAPI\element\Slider;
 
 class SliderPlaceholder extends Slider implements ElementPlaceholder {
 
@@ -24,16 +23,36 @@ class SliderPlaceholder extends Slider implements ElementPlaceholder {
         return $this->minStr;
     }
 
+    public function setMinStr(string $minStr): void {
+        $this->minStr = $minStr;
+        $this->setMin((float)$minStr);
+    }
+
     public function getMaxStr(): string {
         return $this->maxStr;
+    }
+
+    public function setMaxStr(string $maxStr): void {
+        $this->maxStr = $maxStr;
+        $this->setMax((float)$maxStr);
     }
 
     public function getStepStr(): string {
         return $this->stepStr;
     }
 
+    public function setStepStr(string $stepStr): void {
+        $this->stepStr = $stepStr;
+        $this->setStep((float)$stepStr);
+    }
+
     public function getDefaultStr(): string {
         return $this->defaultStr;
+    }
+
+    public function setDefaultStr(string $defaultStr): void {
+        $this->defaultStr = $defaultStr;
+        $this->setDefault((float)$defaultStr);
     }
 
     public function forceConvert(): Slider {

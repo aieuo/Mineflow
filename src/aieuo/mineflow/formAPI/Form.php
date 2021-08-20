@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Dropdown;
@@ -133,6 +134,8 @@ abstract class Form implements PMForm {
     abstract public function jsonSerialize(): array;
 
     abstract public function reflectErrors(array $form): array;
+
+    abstract public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self;
 
     public function resend(array $errors = [], array $messages = []): void {
         if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;

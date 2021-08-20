@@ -100,7 +100,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         $values = [];
         foreach ($this->getValue() as $value) {
             $variables["it"] = $value;
-            $values[] = $variableHelper->run($target, $executor, $variables, $global);
+            $values[] = $variableHelper->runAST($target, $executor, $variables, $global);
         }
         return new ListVariable($values);
     }

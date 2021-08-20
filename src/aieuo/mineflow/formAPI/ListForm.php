@@ -2,8 +2,11 @@
 
 namespace aieuo\mineflow\formAPI;
 
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\ListVariable;
 use pocketmine\Player;
 
 class ListForm extends Form {
@@ -89,8 +92,7 @@ class ListForm extends Form {
             "content" => str_replace("\\n", "\n", Language::replace($this->content)),
             "buttons" => $this->buttons
         ];
-        $form = $this->reflectErrors($form);
-        return $form;
+        return $this->reflectErrors($form);
     }
 
     public function reflectErrors(array $form): array {
@@ -98,6 +100,30 @@ class ListForm extends Form {
             $form["content"] = implode("\n", array_keys($this->messages))."\n".$form["content"];
         }
         return $form;
+    }
+
+    public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
+        $helper = Main::getVariableHelper();
+
+        $this->setTitle($executor->replaceVariables($this->getTitle()));
+        $this->setContent($executor->replaceVariables($this->getContent()));
+        $buttons = [];
+        foreach ($this->getButtons() as $button) {
+            if ($helper->isVariableString($button->getText())) {
+                $variableName = substr($button->getText(), 1, -1);
+                $variable = $helper->runVariableStatement($variableName, $executor->getVariables(), $executor);
+                if ($variable instanceof ListVariable) {
+                    foreach ($variable->getValue() as $value) {
+                        $buttons[] = new Button((string)$value);
+                    }
+                    continue;
+                }
+            }
+
+            $buttons[] = $button->setText($executor->replaceVariables($button->getText()));
+        }
+        $this->setButtons($buttons);
+        return $this;
     }
 
     public function handleResponse(Player $player, $data): void {

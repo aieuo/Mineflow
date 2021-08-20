@@ -24,11 +24,9 @@ class CustomListFormForm {
             ->addButton(new Button("@form.back", function () use($player) {
                 $prev = Session::getSession($player)->get("form_menu_prev");
                 is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
-            }))->addButton(new Button("@form.form.formMenu.preview", function () use ($player, $form) {
-                $form->onReceive(fn() => $this->sendMenu($player, $form))->onClose(fn() => $this->sendMenu($player, $form))->show($player);
-            }))->addButton(new Button("@form.recipe.recipeMenu.execute", function () use ($player, $form) {
-                $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
-            }))->addButton(new Button("@form.form.formMenu.changeTitle", fn() => (new CustomFormForm())->sendChangeFormTitle($player, $form)))
+            }))->addButton(new Button("@form.form.formMenu.preview", fn() => (new CustomFormForm())->previewForm($player, $form)))
+            ->addButton(new Button("@form.recipe.recipeMenu.execute", fn() => (new CustomFormForm())->executeForm($player, $form)))
+            ->addButton(new Button("@form.form.formMenu.changeTitle", fn() => (new CustomFormForm())->sendChangeFormTitle($player, $form)))
             ->addButton(new Button("@form.form.formMenu.editContent", fn() => (new CustomFormForm())->sendChangeFormContent($player, $form)))
             ->addButton(new Button("@customForm.list.editButton", fn() => $this->sendButtonList($player, $form)))
             ->addButton(new Button("@form.form.formMenu.changeName", fn() => (new CustomFormForm())->sendChangeFormName($player, $form)))

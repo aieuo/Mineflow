@@ -2,17 +2,22 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\utils\Language;
+use pocketmine\Player;
 
 class Toggle extends Element {
 
     protected string $type = self::ELEMENT_TOGGLE;
 
     private bool $default;
+    private ?bool $result;
 
-    public function __construct(string $text, bool $default = false) {
+    public function __construct(string $text, bool $default = false, bool &$result = null) {
         parent::__construct($text);
         $this->default = $default;
+
+        $this->result = &$result;
     }
 
     public function setDefault(bool $default): self {
@@ -22,6 +27,10 @@ class Toggle extends Element {
 
     public function getDefault(): bool {
         return $this->default;
+    }
+
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        $this->result = $response->getToggleResponse();
     }
 
     public function jsonSerialize(): array {

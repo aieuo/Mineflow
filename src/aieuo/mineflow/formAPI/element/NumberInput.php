@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;

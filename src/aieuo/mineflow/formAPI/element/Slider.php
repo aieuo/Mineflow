@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
+use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\utils\Language;
 
 class Slider extends Element {

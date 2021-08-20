@@ -38,7 +38,6 @@ class FormTrigger extends Trigger {
      * @param Form $form
      * @param array|int|bool $data
      * @return array
-     * @noinspection PhpMissingParamTypeInspection
      */
     public function getVariables($form, $data = []): array {
         switch ($form) {

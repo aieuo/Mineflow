@@ -5,6 +5,8 @@ namespace aieuo\mineflow\ui\customForm;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
+use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
@@ -38,16 +40,10 @@ class CustomCustomFormForm {
                         is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
                         return;
                     case 1:
-                        (clone $form)
-                            ->onReceive(fn(Player $player) => $this->sendMenu($player, $form))
-                            ->onClose(fn(Player $player) => $this->sendMenu($player, $form))
-                            ->show($player);
+                        (new CustomFormForm())->previewForm($player, $form);
                         return;
                     case 2:
-                        (clone $form)
-                            ->onReceive(fn(Player $player) => (new CustomFormForm())->onReceive($player))
-                            ->onClose(fn(Player $player) => (new CustomFormForm())->onClose($player))
-                            ->addArgs($form)->show($player);
+                        (new CustomFormForm())->executeForm($player, $form);
                         return;
                     case 3:
                         (new CustomFormForm())->sendChangeFormTitle($player, $form);
@@ -104,10 +100,10 @@ class CustomCustomFormForm {
                         $element = new Input($data[1]);
                         break;
                     case 2:
-                        $element = new NumberInput($data[1]);
+                        $element = new NumberInputPlaceholder($data[1]);
                         break;
                     case 3:
-                        $element = new Slider($data[1], 0, 0);
+                        $element = new SliderPlaceholder($data[1], "0", "0");
                         break;
                     case 4:
                         $element = new StepSlider($data[1]);
@@ -146,13 +142,21 @@ class CustomCustomFormForm {
             case $element instanceof Label:
                 array_unshift($messages, Language::get("customForm.receive.custom", [$index, ""]));
                 break;
+            case $element instanceof NumberInputPlaceholder:
+                array_unshift($messages, Language::get("customForm.receive.custom.input", [$index]));
+                $contents[] = new Input("@customForm.input.placeholder", "", $element->getPlaceholder());
+                $contents[] = new Input("@customForm.default", "", $element->getDefault());
+                $contents[] = new Toggle("@customForm.input.required", $element->isRequired());
+                $contents[] = new Input("@customForm.numberInput.min", "", $element->getMinStr() ?? "");
+                $contents[] = new Input("@customForm.numberInput.max", "", $element->getMaxStr() ?? "");
+                break;
             case $element instanceof NumberInput:
                 array_unshift($messages, Language::get("customForm.receive.custom.input", [$index]));
                 $contents[] = new Input("@customForm.input.placeholder", "", $element->getPlaceholder());
-                $contents[] = new NumberInput("@customForm.default", "", $element->getDefault());
+                $contents[] = new Input("@customForm.default", "", $element->getDefault());
                 $contents[] = new Toggle("@customForm.input.required", $element->isRequired());
-                $contents[] = new NumberInput("@customForm.numberInput.min", "", (string)$element->getMin());
-                $contents[] = new NumberInput("@customForm.numberInput.max", "", (string)$element->getMax());
+                $contents[] = new Input("@customForm.numberInput.min", "", (string)$element->getMin());
+                $contents[] = new Input("@customForm.numberInput.max", "", (string)$element->getMax());
                 break;
             case $element instanceof Input:
                 array_unshift($messages, Language::get("customForm.receive.custom.input", [$index]));
@@ -160,18 +164,23 @@ class CustomCustomFormForm {
                 $contents[] = new Input("@customForm.default", "", $element->getDefault());
                 $contents[] = new Toggle("@customForm.input.required", $element->isRequired());
                 break;
+            case $element instanceof SliderPlaceholder:
+                array_unshift($messages, Language::get("customForm.receive.custom.slider", [$index]));
+                $contents[] = new Input("@customForm.slider.min", "", $element->getMinStr(), true);
+                $contents[] = new Input("@customForm.slider.max", "", $element->getMaxStr(), true);
+                $contents[] = new Input("@customForm.slider.step", "", $element->getStepStr(), true);
+                $contents[] = new Input("@customForm.default", "", $element->getDefaultStr(), true);
+                break;
             case $element instanceof Slider:
                 array_unshift($messages, Language::get("customForm.receive.custom.slider", [$index]));
-                $contents[] = new NumberInput("@customForm.slider.min", "", (string)$element->getMin());
-                $contents[] = new NumberInput("@customForm.slider.max", "", (string)$element->getMax());
-                $contents[] = new NumberInput("@customForm.slider.step", "", (string)$element->getStep());
-                $contents[] = new NumberInput("@customForm.default", "", (string)$element->getDefault());
+                $contents[] = new Input("@customForm.slider.min", "", $element->getMin(), true);
+                $contents[] = new Input("@customForm.slider.max", "", $element->getMax(), true);
+                $contents[] = new Input("@customForm.slider.step", "", $element->getStep(), true);
+                $contents[] = new Input("@customForm.default", "", $element->getDefault(), true);
                 break;
             case $element instanceof Dropdown:
             case $element instanceof StepSlider:
-                $dropdown = array_search($element, array_values(array_filter($form->getContents(), function (Element $element) {
-                    return $element instanceof Dropdown;
-                })), true);
+                $dropdown = array_search($element, array_values(array_filter($form->getContents(), fn(Element $element) => $element instanceof Dropdown)), true);
                 array_unshift($messages, Language::get("customForm.receive.custom.dropdown.text", [$dropdown]));
                 array_unshift($messages, Language::get("customForm.receive.custom.dropdown", [$index]));
                 foreach ($element->getOptions() as $i => $option) {
@@ -201,11 +210,17 @@ class CustomCustomFormForm {
                         $element->setDefault($data[0]);
                         break;
                     case $element instanceof NumberInput:
+                        if (!($element instanceof NumberInputPlaceholder)) {
+                            $element = new NumberInputPlaceholder(
+                                $element->getText(), $element->getPlaceholder(), $element->getDefault(),
+                                (string)$element->getMin(), (string)$element->getMax(), $element->getExcludes()
+                            );
+                        }
                         $element->setPlaceholder($data[0]);
                         $element->setDefault($data[1]);
                         $element->setRequired($data[2]);
-                        $element->setMin($data[3] === "" ? null : (float)$data[3]);
-                        $element->setMax($data[4] === "" ? null : (float)$data[4]);
+                        $element->setMinStr($data[3] === "" ? null : $data[3]);
+                        $element->setMaxStr($data[4] === "" ? null : $data[4]);
                         break;
                     case $element instanceof Input:
                         $element->setPlaceholder($data[0]);
@@ -213,10 +228,15 @@ class CustomCustomFormForm {
                         $element->setRequired($data[2]);
                         break;
                     case $element instanceof Slider:
-                        $element->setMin((float)$data[0]);
-                        $element->setMax((float)$data[1]);
-                        $element->setStep((float)$data[2]);
-                        $element->setDefault((float)$data[3]);
+                        if (!($element instanceof SliderPlaceholder)) {
+                            $element = new SliderPlaceholder(
+                                $element->getText(), (string)$element->getMin(), (string)$element->getMax(), (string)$element->getStep(), (string)$element->getDefault()
+                            );
+                        }
+                        $element->setMinStr($data[0]);
+                        $element->setMaxStr($data[1]);
+                        $element->setStepStr($data[2]);
+                        $element->setDefaultStr($data[3]);
                         break;
                     case $element instanceof Dropdown:
                     case $element instanceof StepSlider:

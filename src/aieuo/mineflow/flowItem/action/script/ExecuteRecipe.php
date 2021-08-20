@@ -93,7 +93,7 @@ class ExecuteRecipe extends FlowItem {
         $helper = Main::getVariableHelper();
         $args = [];
         foreach ($this->getArgs() as $arg) {
-            if (!$helper->isVariableString($arg)) {
+            if (!$helper->isSimpleVariableString($arg)) {
                 $args[] = $helper->replaceVariables($arg, $source->getVariables());
                 continue;
             }

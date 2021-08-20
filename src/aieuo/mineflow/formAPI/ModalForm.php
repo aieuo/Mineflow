@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI;
 
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Player;
 
@@ -78,8 +79,7 @@ class ModalForm extends Form {
             "button1" => str_replace("\\n", "\n", Language::replace($this->button1)),
             "button2" => str_replace("\\n", "\n", Language::replace($this->button2))
         ];
-        $form = $this->reflectErrors($form);
-        return $form;
+        return $this->reflectErrors($form);
     }
 
     public function reflectErrors(array $form): array {
@@ -87,6 +87,14 @@ class ModalForm extends Form {
             $form["content"] = implode("\n", array_keys($this->messages))."\n".$form["content"];
         }
         return $form;
+    }
+
+    public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
+        $this->setTitle($executor->replaceVariables($this->getTitle()));
+        $this->setContent($executor->replaceVariables($this->getContent()));
+        $this->setButton1($executor->replaceVariables($this->getButton1Text()));
+        $this->setButton2($executor->replaceVariables($this->getButton2Text()));
+        return $this;
     }
 
     public function handleResponse(Player $player, $data): void {

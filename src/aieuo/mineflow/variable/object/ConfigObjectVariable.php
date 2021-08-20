@@ -44,7 +44,7 @@ class ConfigObjectVariable extends ObjectVariable {
         $values = [];
         foreach ($this->getConfig()->getAll() as $key => $value) {
             $variables["it"] = $value;
-            $values[$key] = $variableHelper->run($target, $executor, $variables, $global);
+            $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
         }
         return new MapVariable($values);
     }

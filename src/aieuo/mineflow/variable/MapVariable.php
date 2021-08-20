@@ -68,7 +68,7 @@ class MapVariable extends ListVariable {
         $values = [];
         foreach ($this->getValue() as $key => $value) {
             $variables["it"] = $value;
-            $values[$key] = $variableHelper->run($target, $executor, $variables, $global);
+            $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
         }
         return new MapVariable($values);
     }

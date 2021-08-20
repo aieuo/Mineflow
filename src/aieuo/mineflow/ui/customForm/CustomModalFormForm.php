@@ -35,14 +35,10 @@ class CustomModalFormForm {
                         is_callable($prev) ? $prev($player) : (new CustomFormForm())->sendMenu($player);
                         break;
                     case 1:
-                        $form->onReceive(fn() => $this->sendMenu($player, $form))
-                            ->onClose(fn() => $this->sendMenu($player, $form))
-                            ->show($player);
+                        (new CustomFormForm())->previewForm($player, $form);
                         break;
                     case 2:
-                        $form->onReceive([new CustomFormForm(), "onReceive"])
-                            ->onClose([new CustomFormForm(), "onClose"])
-                            ->addArgs($form)->show($player);
+                        (new CustomFormForm())->executeForm($player, $form);
                         break;
                     case 3:
                         (new CustomFormForm())->sendChangeFormTitle($player, $form);

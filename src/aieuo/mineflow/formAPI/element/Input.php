@@ -14,13 +14,15 @@ class Input extends Element {
     private string $default;
 
     private bool $required;
+    private ?string $result;
 
-    public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false) {
+    public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false, string &$result = null) {
         parent::__construct($text);
         $this->placeholder = $placeholder;
         $this->default = $default;
 
         $this->required = $required;
+        $this->result = &$result;
     }
 
     public function setPlaceholder(string $placeholder): self {
@@ -52,6 +54,7 @@ class Input extends Element {
 
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {
         $data = str_replace("\\n", "\n", $response->getInputResponse());
+        $this->result = $data;
 
         if ($this->isRequired() and $data === "") {
             $response->addError("@form.insufficient");

@@ -10,10 +10,13 @@ use pocketmine\Player;
 class CancelToggle extends Toggle {
 
     private $onCancel;
+    private ?bool $result;
 
-    public function __construct(?callable $callback = null, string $text = "@form.cancelAndBack", bool $default = false) {
-        $this->onCancel = $callback;
+    public function __construct(?callable $callback = null, string $text = "@form.cancelAndBack", bool $default = false, bool &$result = null) {
         parent::__construct($text, $default);
+
+        $this->onCancel = $callback;
+        $this->result = &$result;
     }
 
     public function getOnCancel(): ?callable {
@@ -21,6 +24,7 @@ class CancelToggle extends Toggle {
     }
 
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        $this->result = $response->getToggleResponse();
         if ($response->getToggleResponse()) {
             $response->ignoreResponse();
             if (is_callable($this->getOnCancel())) {
