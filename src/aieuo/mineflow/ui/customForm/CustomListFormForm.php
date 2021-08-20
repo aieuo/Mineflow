@@ -2,12 +2,14 @@
 
 namespace aieuo\mineflow\ui\customForm;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
+use aieuo\mineflow\formAPI\element\mineflow\CommandConsoleButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\Main;
@@ -49,12 +51,13 @@ class CustomListFormForm {
     }
 
     public function sendSelectButtonType(Player $player, ListForm $form): void {
+        $hasConsoleCommandPermission = Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName()) >= FlowItem::PERMISSION_LEVEL_1;
         (new ListForm("@customForm.list.addButton"))
-            ->setButtons([
-                new Button("@form.back", fn() => $this->sendMenu($player, $form)),
-                new Button("@customForm.list.button.type.normal", fn() => $this->sendAddButton($player, $form)),
-                new Button("@customForm.list.button.type.command", fn() => $this->sendAddCommandButton($player, $form)),
-            ])->show($player);
+            ->addButton(new Button("@form.back", fn() => $this->sendMenu($player, $form)))
+            ->addButton(new Button("@customForm.list.button.type.normal", fn() => $this->sendAddButton($player, $form)))
+            ->addButton(new Button("@customForm.list.button.type.command", fn() => $this->sendAddCommandButton($player, $form, false)))
+            ->addButton(new Button("@customForm.list.button.type.commandConsole", fn() => $this->sendAddCommandButton($player, $form, true)), $hasConsoleCommandPermission)
+            ->show($player);
     }
 
     public function sendAddButton(Player $player, ListForm $form): void {
@@ -71,19 +74,23 @@ class CustomListFormForm {
             })->addArgs($form)->show($player);
     }
 
-    public function sendAddCommandButton(Player $player, ListForm $form): void {
+    public function sendAddCommandButton(Player $player, ListForm $form, bool $consoleCommandButton): void {
         (new CustomForm("@customForm.list.addButton"))
             ->setContents([
-                new Input("@customForm.text", "", "", true),
-                new Input("@customForm.list.commandButton.command", "", "", true),
-                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), ""),
+                new Input("@customForm.text", "", "", true, $buttonText),
+                new Input("@customForm.list.commandButton.command", "", "", true, $command),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), "", false, $imagePath),
                 new CancelToggle(fn() => $this->sendButtonList($player, $form, ["@form.canceled"])),
-            ])->onReceive(function (Player $player, array $data, ListForm $form) {
-                $image = $data[2] === "" ? null : new ButtonImage($data[2], ButtonImage::TYPE_PATH);
-                $form->addButton(new CommandButton($data[1], $data[0], $image));
+            ])->onReceive(function (Player $player, array $data) use($form, $consoleCommandButton, &$buttonText, &$command, &$imagePath) {
+                $image = $imagePath === "" ? null : new ButtonImage($imagePath, ButtonImage::TYPE_PATH);
+                $button = $consoleCommandButton
+                    ? new CommandConsoleButton($command, $buttonText, null, $image)
+                    : new CommandButton($command, $buttonText, null, $image);
+
+                $form->addButton($button);
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, ["@form.added"]);
-            })->addArgs($form)->show($player);
+            })->show($player);
     }
 
     public function sendEditButton(Player $player, ListForm $form, Button $button, int $index): void {

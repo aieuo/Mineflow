@@ -28,8 +28,8 @@ class ListForm extends Form {
         return $this->content;
     }
 
-    public function addButton(Button $button): self {
-        $this->buttons[] = $button;
+    public function addButton(Button $button, bool $if = true): self {
+        if ($if) $this->buttons[] = $button;
         return $this;
     }
 
