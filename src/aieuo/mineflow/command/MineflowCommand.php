@@ -78,12 +78,12 @@ class MineflowCommand extends Command implements PluginIdentifiableCommand {
                     return;
                 }
                 $config = Main::getInstance()->getPlayerSettings();
-                $permission = $sender instanceof Player ? $config->getNested($sender->getName().".permission", 0) : 2;
+                $permission = $sender instanceof Player ? $config->getPlayerActionPermission($sender->getName()) : 2;
                 if ($permission < (int)$args[1]) {
                     $sender->sendMessage(Language::get("command.permission.permission.notEnough"));
                     return;
                 }
-                $config->setNested($args[0].".permission", (int)$args[1]);
+                $config->setPlayerActionPermission($args[0], (int)$args[1]);
                 $config->save();
                 $sender->sendMessage(Language::get("form.changed"));
                 break;

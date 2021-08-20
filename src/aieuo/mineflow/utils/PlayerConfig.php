@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\utils;
 
+use pocketmine\Player;
 use pocketmine\utils\Config;
 
 class PlayerConfig extends Config {
@@ -36,6 +37,14 @@ class PlayerConfig extends Config {
         } else {
             $this->addFavorite($name, $type, $favorite);
         }
+    }
+
+    public function getPlayerActionPermission(string $player): int {
+        return (int)$this->getNested($player.".permission", 0);
+    }
+
+    public function setPlayerActionPermission(string $player, int $permission): void {
+        $this->setNested($player.".permission", $permission);
     }
 
 }

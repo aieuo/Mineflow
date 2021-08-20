@@ -150,7 +150,7 @@ class FlowItemForm {
         foreach (Category::getCategories() as $category) {
             $buttons[] = new Button("@category.".$category, function () use($player, $container, $type, $category) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
-                $actions = FlowItemFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getNested($player->getName().".permission", 0), !$isCondition, $isCondition);
+                $actions = FlowItemFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName()), !$isCondition, $isCondition);
 
                 Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
                 $this->sendSelectAction($player, $container, $type, $actions);
@@ -172,7 +172,7 @@ class FlowItemForm {
                 new CancelToggle(fn() => $this->selectActionCategory($player, $container, $type))
             ])->onReceive(function (Player  $player, array $data) use($container, $type) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
-                $permission = Main::getInstance()->getPlayerSettings()->getNested($player->getName().".permission", 0);
+                $permission = Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName());
                 $actions = array_values(array_filter(FlowItemFactory::getByFilter(null, $permission, !$isCondition, $isCondition), function (FlowItem  $item) use($data) {
                     return stripos($item->getName(), $data[0]) !== false;
                 }));
