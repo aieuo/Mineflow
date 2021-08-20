@@ -1,14 +1,8 @@
 name: Mineflow
 main: aieuo\mineflow\Main
-version: 2.2.1
-api: 3.13.0
+version: 2.3.0
+api: 3.21.0
 mcpe-protocol:
-  - 408
-  - 419
-  - 422
-  - 428
-  - 431
-  - 440
   - 448
 load: POSTWORLD
 softdepend:
