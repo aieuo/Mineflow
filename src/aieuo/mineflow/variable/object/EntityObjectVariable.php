@@ -18,6 +18,12 @@ class EntityObjectVariable extends PositionObjectVariable {
         switch ($index) {
             case "id":
                 return new NumberVariable($entity->getId());
+            case "saveId":
+                try {
+                    return new StringVariable($entity->getSaveId());
+                } catch (\InvalidStateException $e) {
+                    return new StringVariable("");
+                }
             case "nameTag":
                 return new StringVariable($entity->getNameTag());
             case "health":
@@ -43,6 +49,7 @@ class EntityObjectVariable extends PositionObjectVariable {
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "id" => new DummyVariable(DummyVariable::NUMBER),
+            "saveId" => new DummyVariable(DummyVariable::STRING),
             "nameTag" => new DummyVariable(DummyVariable::STRING),
             "health" => new DummyVariable(DummyVariable::NUMBER),
             "maxHealth" => new DummyVariable(DummyVariable::NUMBER),
