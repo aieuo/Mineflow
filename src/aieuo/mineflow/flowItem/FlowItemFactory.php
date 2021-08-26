@@ -65,6 +65,7 @@ use aieuo\mineflow\flowItem\action\player\AddXpProgress;
 use aieuo\mineflow\flowItem\action\player\AllowClimbWalls;
 use aieuo\mineflow\flowItem\action\player\AllowFlight;
 use aieuo\mineflow\flowItem\action\player\BroadcastMessage;
+use aieuo\mineflow\flowItem\action\player\Chat;
 use aieuo\mineflow\flowItem\action\player\GetArmorInventoryContents;
 use aieuo\mineflow\flowItem\action\player\GetInventoryContents;
 use aieuo\mineflow\flowItem\action\player\GetPlayerByName;
@@ -193,6 +194,7 @@ class FlowItemFactory {
         self::register(new BroadcastMessage);
         self::register(new SendMessageToOp);
         self::register(new SendTitle);
+        self::register(new Chat);
         /* entity */
         self::register(new SetNameTag);
         self::register(new GetEntity);

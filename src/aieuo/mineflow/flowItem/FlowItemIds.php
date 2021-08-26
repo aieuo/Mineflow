@@ -18,6 +18,7 @@ interface FlowItemIds {
     public const SEND_MESSAGE_TO_OP = "sendMessageToOp";
     public const SEND_MESSAGE_TO_CONSOLE = "sendMessageToConsole";
     public const SEND_TITLE = "sendTitle";
+    public const CHAT = "chat";
 
     public const GET_ENTITY = "getEntity";
     public const TELEPORT = "teleport";
