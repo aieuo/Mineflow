@@ -60,8 +60,7 @@ class Language {
                 if (is_array($value)) $value = self::get($value[0], $value[1] ?? [], $language);
                 $message = str_replace("{%".$cnt."}", $value, $message);
             }
-            $message = str_replace(["\\n", "\\q", "\\dq"], ["\n", "'", "\""], $message);
-            return $message;
+            return str_replace(["\\n", "\\q", "\\dq"], ["\n", "'", "\""], $message);
         }
 
         if ($language !== self::$fallbackLanguage) {

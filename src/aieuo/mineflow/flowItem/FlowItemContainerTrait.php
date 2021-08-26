@@ -65,7 +65,6 @@ trait FlowItemContainerTrait {
             if ($item === $target) break;
             $variablesMerge[] = $item->getAddingVariables();
         }
-        $variables = array_merge($variables, ...$variablesMerge);
-        return $variables;
+        return array_merge($variables, ...$variablesMerge);
     }
 }
