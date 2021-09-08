@@ -5,25 +5,33 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use function array_search;
 
 class MapVariable extends ListVariable {
 
-    public int $type = Variable::MAP;
+    public static function getTypeName(): string {
+       return "map";
+    }
+
+    public function setValueAt(int|string $key, Variable $value): void {
+        $this->values[$key] = $value;
+    }
+
+    public function removeValue(Variable $value): void {
+        $index = array_search($value, $this->values, true);
+        if ($index === false) return;
+        unset($this->values[$index]);
+    }
+
+    public function removeValueAt(int|string $index): void {
+        unset($this->values[$index]);
+    }
 
     public function getValueFromIndex(string $index): ?Variable {
-        if (!isset($this->value[$index])) return null;
-        return $this->value[$index];
+        return $this->values[$index] ?? null;
     }
 
-    /**
-     * @param int|string $key
-     * @param Variable $value
-     */
-    public function setValueAt($key, Variable $value): void {
-        $this->value[$key] = $value;
-    }
-
-    public function add($target): MapVariable {
+    public function add(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -33,7 +41,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function sub($target): MapVariable {
+    public function sub(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -43,7 +51,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function mul($target): MapVariable {
+    public function mul(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -53,7 +61,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function div($target): MapVariable {
+    public function div(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -63,7 +71,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $key => $value) {

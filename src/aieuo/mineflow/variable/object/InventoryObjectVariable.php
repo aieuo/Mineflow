@@ -12,15 +12,23 @@ class InventoryObjectVariable extends ObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $inventory = $this->getInventory();
-        $item = $inventory->getItem((int)$index);
+        $item = $inventory->getItem((int)$name);
         return new ItemObjectVariable($item);
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getInventory(): Inventory {
         return $this->getValue();
+    }
+
+    public static function getTypeName(): string {
+        return "inventory";
+    }
+
+    public static function getValuesDummy(): array {
+        return [];
     }
 
     public function __toString(): string {

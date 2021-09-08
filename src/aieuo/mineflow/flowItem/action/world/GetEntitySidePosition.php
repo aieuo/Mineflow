@@ -190,7 +190,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::POSITION)
+            $this->getResultName() => new DummyVariable(PositionObjectVariable::class)
         ];
     }
 }

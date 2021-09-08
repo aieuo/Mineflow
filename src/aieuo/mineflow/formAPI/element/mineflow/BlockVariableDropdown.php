@@ -4,10 +4,11 @@ namespace aieuo\mineflow\formAPI\element\mineflow;
 
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\BlockObjectVariable;
 
 class BlockVariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::BLOCK;
+    protected string $variableClass = BlockObjectVariable::class;
 
     protected array $actions = [
         FlowItemIds::CREATE_BLOCK_VARIABLE,
@@ -22,6 +23,6 @@ class BlockVariableDropdown extends VariableDropdown {
      * @param bool $optional
      */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
-        parent::__construct($text ?? "@action.form.target.block", $variables, [DummyVariable::BLOCK], $default, $optional);
+        parent::__construct($text ?? "@action.form.target.block", $variables, [BlockObjectVariable::class], $default, $optional);
     }
 }

@@ -2,23 +2,34 @@
 
 namespace aieuo\mineflow\variable;
 
-class ObjectVariable extends Variable {
+use aieuo\mineflow\Main;
 
-    public int $type = Variable::OBJECT;
+abstract class ObjectVariable extends Variable {
 
     private ?string $showString;
 
-    public function __construct(object $value, ?string $str = null) {
-        parent::__construct($value);
+    public function __construct(private object $value, ?string $str = null) {
         $this->showString = $str;
     }
 
     public function getValue(): object {
-        return parent::getValue();
+        return $this->value;
     }
+
+    abstract public function getProperty(string $name): ?Variable;
 
     public function getShowString(): ?string {
         return $this->showString;
+    }
+
+    public function getValueFromIndex(string $index): ?Variable {
+        $property = $this->getProperty($index);
+        if ($property !== null) return $property;
+
+        $property = $this->getAdditionalProperty($index);
+        if ($property !== null) $property($this->getValue());
+
+        return null;
     }
 
     public function __toString(): string {
@@ -26,7 +37,7 @@ class ObjectVariable extends Variable {
         if (method_exists($this->getValue(), "__toString")) {
             $str = (string)$this->getValue();
         } else {
-            $str = (string)get_class($this->getValue());
+            $str = get_class($this->getValue());
         }
         return $str;
     }
@@ -34,7 +45,21 @@ class ObjectVariable extends Variable {
     /**
      * @return array<string, DummyVariable>
      */
-    public static function getValuesDummy(): array {
-        return [];
+    abstract public static function getValuesDummy(): array;
+
+    public static function addAdditionalProperties(string $name, callable $property, DummyVariable $dummyVariable): void {
+        Main::getVariableHelper()->addObjectVariableProperty(static::class, $name, $property, $dummyVariable);
+    }
+
+    public static function getAdditionalProperties(): array {
+        return Main::getVariableHelper()->getAdditionalObjectVariableProperties(static::class);
+    }
+
+    public static function getDummyAdditionalProperties(): array {
+        return Main::getVariableHelper()->getDummyAdditionalObjectVariableProperties(static::class);
+    }
+
+    public function getAdditionalProperty(string $name): ?callable {
+        return self::getAdditionalProperties()[$name] ?? null;
     }
 }

@@ -12,6 +12,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\UnknownObjectVariable;
 
 class GetVariableNested extends FlowItem {
 
@@ -94,7 +95,7 @@ class GetVariableNested extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::UNKNOWN)
+            $this->getResultName() => new DummyVariable(UnknownObjectVariable::class)
         ];
     }
 }

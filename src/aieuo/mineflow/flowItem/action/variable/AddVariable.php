@@ -17,7 +17,8 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
+use function array_search;
+use function is_int;
 
 class AddVariable extends FlowItem {
 
@@ -31,15 +32,16 @@ class AddVariable extends FlowItem {
 
     private string $variableName;
     private string $variableValue;
-    private int $variableType;
+    private string $variableType;
     private bool $isLocal;
 
     private array $variableTypes = ["string", "number"];
+    private array $variableClasses = ["string" => StringVariable::class, "number" => NumberVariable::class];
 
-    public function __construct(string $name = "", string $value = "", int $type = Variable::STRING, bool $local = true) {
+    public function __construct(string $name = "", string $value = "", string $type = null, bool $local = true) {
         $this->variableName = $name;
         $this->variableValue = $value;
-        $this->variableType = $type;
+        $this->variableType = $type ?? StringVariable::getTypeName();
         $this->isLocal = $local;
     }
 
@@ -75,10 +77,12 @@ class AddVariable extends FlowItem {
         $value = $source->replaceVariables($this->getVariableValue());
 
         switch ($this->variableType) {
-            case Variable::STRING:
+            case 0:
+            case StringVariable::getTypeName():
                 $variable = new StringVariable($value);
                 break;
-            case Variable::NUMBER:
+            case 1:
+            case NumberVariable::getTypeName():
                 $this->throwIfInvalidNumber($value);
                 $variable = new NumberVariable((float)$value);
                 break;
@@ -95,27 +99,28 @@ class AddVariable extends FlowItem {
     }
 
     public function getEditFormElements(array $variables): array {
+        $index = array_search($this->variableType, $this->variableTypes, true);
         return [
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.value", "aeiuo", $this->getVariableValue(), true),
-            new Dropdown("@action.variable.form.type", $this->variableTypes, $this->variableType),
+            new Dropdown("@action.variable.form.type", $this->variableTypes, $index === false ? 0 : $index),
             new Toggle("@action.variable.form.global", !$this->isLocal),
         ];
     }
 
     public function parseFromFormData(array $data): array {
         $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
-        if ($data[2] === Variable::NUMBER and !$containsVariable and !is_numeric($data[1])) {
+        if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
             throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
         }
 
-        return [$data[0], $data[1], $data[2], !$data[3]];
+        return [$data[0], $data[1], $this->variableTypes[$data[2]], !$data[3]];
     }
 
     public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
-        $this->variableType = $content[2];
+        $this->variableType = is_int($content[2]) ? $this->variableTypes[$content[2]] : $content[2];
         $this->isLocal = $content[3];
         return $this;
     }
@@ -125,7 +130,7 @@ class AddVariable extends FlowItem {
     }
 
     public function getAddingVariables(): array {
-        $type = $this->variableTypes[$this->variableType];
+        $type = $this->variableClasses[$this->variableType] ?? StringVariable::class;
         return [
             $this->getVariableName() => new DummyVariable($type, $this->getVariableValue())
         ];

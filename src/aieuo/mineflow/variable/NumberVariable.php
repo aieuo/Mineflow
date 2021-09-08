@@ -6,26 +6,19 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 
 class NumberVariable extends Variable implements \JsonSerializable {
 
-    public int $type = Variable::NUMBER;
-
     public static function zero(): self {
         return new NumberVariable(0);
     }
 
-    /**
-     * @param int|float $value
-     * @noinspection SenselessProxyMethodInspection
-     */
-    public function __construct($value) {
-        parent::__construct($value);
+    public static function getTypeName(): string {
+        return "number";
     }
 
-    /**
-     * @return int|float
-     * @noinspection SenselessProxyMethodInspection
-     */
-    public function getValue() {
-        return parent::getValue();
+    public function __construct(private int|float $value) {
+    }
+
+    public function getValue(): int|float {
+        return $this->value;
     }
 
     public function modulo(NumberVariable $var): NumberVariable {
@@ -33,28 +26,28 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return new NumberVariable($result);
     }
 
-    public function add($target): NumberVariable {
+    public function add(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() + $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() + $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function sub($target): NumberVariable {
+    public function sub(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() - $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() - $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function mul($target): NumberVariable {
+    public function mul(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() * $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() * $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function div($target): NumberVariable {
+    public function div(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() / $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() / $target);
 
@@ -67,7 +60,7 @@ class NumberVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "type" => $this->getType(),
+            "type" => static::getTypeName(),
             "value" => $this->getValue(),
         ];
     }

@@ -5,6 +5,7 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\event\player\PlayerMoveEvent;
 
 class PlayerMoveEventTrigger extends PlayerEventTrigger {
@@ -24,9 +25,9 @@ class PlayerMoveEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "move_from" => new DummyVariable(DummyVariable::LOCATION),
-            "move_to" => new DummyVariable(DummyVariable::LOCATION),
-            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "move_from" => new DummyVariable(LocationObjectVariable::class),
+            "move_to" => new DummyVariable(LocationObjectVariable::class),
+            "target" => new DummyVariable(PlayerObjectVariable::class),
         ];
     }
 }

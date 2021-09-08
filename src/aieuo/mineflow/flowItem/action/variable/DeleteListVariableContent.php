@@ -12,7 +12,6 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 
 class DeleteListVariableContent extends FlowItem {
@@ -75,9 +74,7 @@ class DeleteListVariableContent extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 
-        $values = $variable->getValue();
-        unset($values[$key]);
-        $variable->setValue($values);
+        $variable->removeValueAt($key);
         yield true;
     }
 

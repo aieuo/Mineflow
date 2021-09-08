@@ -27,7 +27,6 @@ class TimeTrigger extends Trigger {
     /**
      * @param int $timestamp
      * @return Variable[]
-     * @noinspection PhpMissingParamTypeInspection
      */
     public function getVariables($timestamp): array {
         return [
@@ -39,9 +38,9 @@ class TimeTrigger extends Trigger {
 
     public function getVariablesDummy(): array {
         return [
-            "hour" => new DummyVariable(DummyVariable::NUMBER),
-            "minutes" => new DummyVariable(DummyVariable::NUMBER),
-            "seconds" => new DummyVariable(DummyVariable::NUMBER),
+            "hour" => new DummyVariable(NumberVariable::class),
+            "minutes" => new DummyVariable(NumberVariable::class),
+            "seconds" => new DummyVariable(NumberVariable::class),
         ];
     }
 

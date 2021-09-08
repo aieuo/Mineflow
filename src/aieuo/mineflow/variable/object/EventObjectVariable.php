@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -16,14 +16,14 @@ class EventObjectVariable extends ObjectVariable {
         parent::__construct($value, $str ?? end($names));
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $event = $this->getEvent();
-        switch ($index) {
+        switch ($name) {
             case "name":
                 $names = explode("\\", $event->getEventName());
                 return new StringVariable(end($names));
             case "isCanceled":
-                return new BoolVariable($event->isCancelled());
+                return new BooleanVariable($event->isCancelled());
             default:
                 return null;
         }
@@ -34,10 +34,14 @@ class EventObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "event";
+    }
+
     public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "isCanceled" => new DummyVariable(DummyVariable::BOOLEAN),
-        ]);
+        return [
+            "name" => new DummyVariable(StringVariable::class),
+            "isCanceled" => new DummyVariable(BooleanVariable::class),
+        ];
     }
 }

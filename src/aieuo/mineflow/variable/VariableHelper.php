@@ -17,6 +17,10 @@ class VariableHelper {
 
     /** @var Variable[] */
     private array $variables = [];
+    /** @var array<class-string, <string, callable>> */
+    private array $additionalObjectVariableProperties = [];
+    /** @var array<class-string, <string, DummyVariable>> */
+    private array $dummyAdditionalObjectVariableProperties = [];
 
     private Config $file;
 
@@ -191,12 +195,7 @@ class VariableHelper {
         return array_values(array_filter($tokens, fn($token) => $token !== ""));
     }
 
-    /**
-     * @param array $tokens
-     * @param int $priority
-     * @return array|Variable|string
-     */
-    public function parse(array &$tokens, int $priority = 0) {
+    public function parse(array &$tokens, int $priority = 0): string|array|Variable {
         $rules = [
             ["type" => 1, "ops" => [","]],
             ["type" => 0, "ops" => [">"]],
@@ -234,7 +233,7 @@ class VariableHelper {
         }
         if ($type === 4) {
             array_shift($tokens); // (
-            $right = $this->parse($tokens, 0);
+            $right = $this->parse($tokens);
             array_shift($tokens); // )
             return $right;
         }
@@ -243,7 +242,7 @@ class VariableHelper {
         if ($type === 3) {
             while (isset($tokens[0]) and in_array($tokens[0], $ops, true)) {
                 array_shift($tokens); // (
-                $right = $tokens[0] === ")" ? "" : $this->parse($tokens, 0);
+                $right = $tokens[0] === ")" ? "" : $this->parse($tokens);
                 array_shift($tokens); // )
                 $tmp = $left;
                 $left = ["left" => $tmp, "op" => "()", "right" => $right];
@@ -259,13 +258,13 @@ class VariableHelper {
     }
 
     /**
-     * @param string|Variable|array $ast
+     * @param string|array|Variable $ast
      * @param FlowItemExecutor|null $executor
-     * @param array $variables
+     * @param array<string, Variable> $variables
      * @param bool $global
      * @return Variable
      */
-    public function runAST($ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+    public function runAST(string|array|Variable $ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
         if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
         if ($ast instanceof Variable) return $ast;
 
@@ -325,7 +324,7 @@ class VariableHelper {
         if ($target === "") {
             try {
                 $result = $this->runAction($name, $right, $executor);
-                if (is_bool($result)) return new BoolVariable($result);
+                if (is_bool($result)) return new BooleanVariable($result);
                 if (is_numeric($result)) return new NumberVariable($result);
                 return new StringVariable($result);
             } catch (\UnexpectedValueException $e) {
@@ -392,13 +391,13 @@ class VariableHelper {
 
     public function getType(string $string): int {
         if (strpos($string, "(str)") === 0) {
-            $type = Variable::STRING;
+            $type = StringVariable::getTypeName();
         } elseif (strpos($string, "(num)") === 0) {
-            $type = Variable::NUMBER;
+            $type = NumberVariable::getTypeName();
         } elseif (is_numeric($string)) {
-            $type = Variable::NUMBER;
+            $type = NumberVariable::getTypeName();
         } else {
-            $type = Variable::STRING;
+            $type = StringVariable::getTypeName();
         }
         return $type;
     }
@@ -433,5 +432,26 @@ class VariableHelper {
             }
         }
         return $result;
+    }
+
+    public function addObjectVariableProperty(string $class, string $name, callable $property, DummyVariable $dummyVariable): void {
+        $this->additionalObjectVariableProperties[$class][$name] = $property;
+        $this->dummyAdditionalObjectVariableProperties[$class][$name] = $dummyVariable;
+    }
+
+    /**
+     * @param class-string $class
+     * @return array<string, callable>
+     */
+    public function getAdditionalObjectVariableProperties(string $class): array {
+        return $this->additionalObjectVariableProperties[$class] ?? [];
+    }
+
+    /**
+     * @param class-string $class
+     * @return array<string, DummyVariable>
+     */
+    public function getDummyAdditionalObjectVariableProperties(string $class): array {
+        return $this->dummyAdditionalObjectVariableProperties[$class] ?? [];
     }
 }

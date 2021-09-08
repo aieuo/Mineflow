@@ -14,12 +14,16 @@ class BlockObjectVariable extends PositionObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
+    public static function getTypeName(): string {
+        return "block";
+    }
+
+    public function getProperty(string $name): ?Variable {
+        $variable = parent::getProperty($name);
         if ($variable !== null) return $variable;
 
         $block = $this->getBlock();
-        switch ($index) {
+        switch ($name) {
             case "name":
                 return new StringVariable($block->getName());
             case "id":
@@ -38,9 +42,9 @@ class BlockObjectVariable extends PositionObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "damage" => new DummyVariable(DummyVariable::NUMBER),
+            "name" => new DummyVariable(StringVariable::class),
+            "id" => new DummyVariable(NumberVariable::class),
+            "damage" => new DummyVariable(NumberVariable::class),
         ]);
     }
 

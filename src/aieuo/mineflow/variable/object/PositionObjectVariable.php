@@ -14,12 +14,12 @@ class PositionObjectVariable extends Vector3ObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
+    public function getProperty(string $name): ?Variable {
+        $variable = parent::getProperty($name);
         if ($variable !== null) return $variable;
 
         $position = $this->getPosition();
-        switch ($index) {
+        switch ($name) {
             case "position":
                 return new PositionObjectVariable($position);
             case "world":
@@ -34,9 +34,13 @@ class PositionObjectVariable extends Vector3ObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "position";
+    }
+
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "world" => new DummyVariable(DummyVariable::WORLD),
+            "world" => new DummyVariable(WorldObjectVariable::class),
         ]);
     }
 

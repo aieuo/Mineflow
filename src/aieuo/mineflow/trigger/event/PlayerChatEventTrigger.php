@@ -4,6 +4,7 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\event\player\PlayerChatEvent;
 
@@ -22,8 +23,8 @@ class PlayerChatEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "message" => new DummyVariable(DummyVariable::STRING),
+            "target" => new DummyVariable(PlayerObjectVariable::class),
+            "message" => new DummyVariable(StringVariable::class),
         ];
     }
 }

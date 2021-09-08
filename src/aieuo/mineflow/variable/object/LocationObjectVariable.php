@@ -15,12 +15,12 @@ class LocationObjectVariable extends PositionObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
+    public function getProperty(string $name): ?Variable {
+        $variable = parent::getProperty($name);
         if ($variable !== null) return $variable;
 
         $location = $this->getLocation();
-        switch ($index) {
+        switch ($name) {
             case "yaw":
                 return new NumberVariable($location->yaw);
             case "pitch":
@@ -35,10 +35,14 @@ class LocationObjectVariable extends PositionObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "location";
+    }
+
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "yaw" => new DummyVariable(DummyVariable::NUMBER),
-            "pitch" => new DummyVariable(DummyVariable::NUMBER),
+            "yaw" => new DummyVariable(NumberVariable::class),
+            "pitch" => new DummyVariable(NumberVariable::class),
         ]);
     }
 

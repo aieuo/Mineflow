@@ -10,7 +10,6 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
 use pocketmine\level\Level;
@@ -22,9 +21,9 @@ class WorldObjectVariable extends ObjectVariable {
         parent::__construct($value, $str ?? $value->getFolderName());
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $level = $this->getWorld();
-        switch ($index) {
+        switch ($name) {
             case "name":
                 return new StringVariable($level->getName());
             case "folderName":
@@ -71,11 +70,15 @@ class WorldObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "world";
+    }
+
     public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "folderName" => new DummyVariable(DummyVariable::STRING),
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-        ]);
+        return [
+            "name" => new DummyVariable(StringVariable::class),
+            "folderName" => new DummyVariable(StringVariable::class),
+            "id" => new DummyVariable(NumberVariable::class),
+        ];
     }
 }

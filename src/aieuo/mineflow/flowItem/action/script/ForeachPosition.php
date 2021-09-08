@@ -137,7 +137,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     public function getAddingVariables(): array {
         return [
-            $this->counterName => new DummyVariable(DummyVariable::POSITION),
+            $this->counterName => new DummyVariable(PositionObjectVariable::class),
         ];
     }
 

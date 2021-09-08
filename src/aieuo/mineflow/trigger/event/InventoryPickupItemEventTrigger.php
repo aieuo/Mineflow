@@ -5,6 +5,7 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\inventory\PlayerInventory;
 
@@ -28,8 +29,8 @@ class InventoryPickupItemEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "item" => new DummyVariable(DummyVariable::ITEM),
+            "target" => new DummyVariable(PlayerObjectVariable::class),
+            "item" => new DummyVariable(ItemObjectVariable::class),
         ];
     }
 }

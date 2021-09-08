@@ -13,12 +13,12 @@ class HumanObjectVariable extends EntityObjectVariable {
         parent::__construct($value, $str ?? $value->getName());
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
+    public function getProperty(string $name): ?Variable {
+        $variable = parent::getProperty($name);
         if ($variable !== null) return $variable;
 
         $human = $this->getHuman();
-        switch ($index) {
+        switch ($name) {
             case "hand":
                 $variable = new ItemObjectVariable($human->getInventory()->getItemInHand());
                 break;
@@ -45,10 +45,14 @@ class HumanObjectVariable extends EntityObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "human";
+    }
+
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "hand" => new DummyVariable(DummyVariable::ITEM),
-            "food" => new DummyVariable(DummyVariable::NUMBER),
+            "hand" => new DummyVariable(ItemObjectVariable::class),
+            "food" => new DummyVariable(NumberVariable::class),
         ]);
     }
 }

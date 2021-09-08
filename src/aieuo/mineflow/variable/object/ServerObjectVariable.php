@@ -17,16 +17,17 @@ use pocketmine\Server;
 
 class ServerObjectVariable extends ObjectVariable {
 
+    public static function getTypeName(): string {
+        return "server";
+    }
+
     public function __construct(Server $value, ?string $str = null) {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
+    public function getProperty(string $name): ?Variable {
         $server = $this->getServer();
-        switch ($index) {
+        switch ($name) {
             case "name":
                 return new StringVariable($server->getName());
             case "tick":
@@ -84,16 +85,16 @@ class ServerObjectVariable extends ObjectVariable {
     }
 
     public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "tick" => new DummyVariable(DummyVariable::NUMBER),
-            "default_world" => new DummyVariable(DummyVariable::WORLD),
-            "worlds" => new DummyVariable(DummyVariable::LIST, DummyVariable::WORLD),
-            "players" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
-            "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
-            "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
-            "ops" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
-        ]);
+        return [
+            "name" => new DummyVariable(StringVariable::class),
+            "tick" => new DummyVariable(NumberVariable::class),
+            "default_world" => new DummyVariable(WorldObjectVariable::class),
+            "worlds" => new DummyVariable(ListVariable::class, WorldObjectVariable::getTypeName()),
+            "players" => new DummyVariable(ListVariable::class, PlayerObjectVariable::getTypeName()),
+            "entities" => new DummyVariable(ListVariable::class, EntityObjectVariable::getTypeName()),
+            "livings" => new DummyVariable(ListVariable::class, EntityObjectVariable::getTypeName()),
+            "ops" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+        ];
     }
 
     public function __toString(): string {

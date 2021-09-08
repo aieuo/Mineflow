@@ -15,9 +15,9 @@ class Vector3ObjectVariable extends ObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $position = $this->getVector3();
-        switch ($index) {
+        switch ($name) {
             case "x":
                 return new NumberVariable($position->x);
             case "y":
@@ -36,13 +36,17 @@ class Vector3ObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "vector3";
+    }
+
     public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "x" => new DummyVariable(DummyVariable::NUMBER),
-            "y" => new DummyVariable(DummyVariable::NUMBER),
-            "z" => new DummyVariable(DummyVariable::NUMBER),
-            "xyz" => new DummyVariable(DummyVariable::STRING),
-        ]);
+        return [
+            "x" => new DummyVariable(NumberVariable::class),
+            "y" => new DummyVariable(NumberVariable::class),
+            "z" => new DummyVariable(NumberVariable::class),
+            "xyz" => new DummyVariable(StringVariable::class),
+        ];
     }
 
     public function __toString(): string {

@@ -16,9 +16,9 @@ class ItemObjectVariable extends ObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $item = $this->getItem();
-        switch ($index) {
+        switch ($name) {
             case "name":
                 return new StringVariable($item->getName());
             case "id":
@@ -39,14 +39,18 @@ class ItemObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "item";
+    }
+
     public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "damage" => new DummyVariable(DummyVariable::NUMBER),
-            "count" => new DummyVariable(DummyVariable::NUMBER),
-            "lore" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
-        ]);
+        return [
+            "name" => new DummyVariable(StringVariable::class),
+            "id" => new DummyVariable(NumberVariable::class),
+            "damage" => new DummyVariable(NumberVariable::class),
+            "count" => new DummyVariable(NumberVariable::class),
+            "lore" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+        ];
     }
 
     public function __toString(): string {

@@ -7,6 +7,8 @@ use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\StringVariable;
 
 class CommandTrigger extends Trigger {
 
@@ -26,7 +28,6 @@ class CommandTrigger extends Trigger {
     /**
      * @param string $command
      * @return array
-     * @noinspection PhpMissingParamTypeInspection
      */
     public function getVariables($command): array {
         return DefaultVariables::getCommandVariables($command);
@@ -34,8 +35,8 @@ class CommandTrigger extends Trigger {
 
     public function getVariablesDummy(): array {
         return [
-            "cmd" => new DummyVariable(DummyVariable::STRING),
-            "args" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
+            "cmd" => new DummyVariable(StringVariable::class),
+            "args" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
         ];
     }
 

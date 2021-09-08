@@ -18,9 +18,9 @@ class ConfigObjectVariable extends ObjectVariable {
         parent::__construct($value, $str);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $config = $this->getConfig();
-        $data = $config->get($index);
+        $data = $config->get($name);
         if ($data === null) return null;
         if (is_string($data)) return new StringVariable($data);
         if (is_numeric($data)) return new NumberVariable($data);
@@ -39,7 +39,15 @@ class ConfigObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+    public static function getTypeName(): string {
+        return "config";
+    }
+
+    public static function getValuesDummy(): array {
+        return [];
+    }
+
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getConfig()->getAll() as $key => $value) {

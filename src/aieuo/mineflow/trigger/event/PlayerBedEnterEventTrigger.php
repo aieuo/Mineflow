@@ -4,6 +4,8 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\BlockObjectVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\event\player\PlayerBedEnterEvent;
 
 class PlayerBedEnterEventTrigger extends EventTrigger {
@@ -20,8 +22,8 @@ class PlayerBedEnterEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "block" => new DummyVariable(DummyVariable::BLOCK),
+            "target" => new DummyVariable(PlayerObjectVariable::class),
+            "block" => new DummyVariable(BlockObjectVariable::class),
         ];
     }
 }

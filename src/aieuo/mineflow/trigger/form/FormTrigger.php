@@ -13,7 +13,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -44,13 +44,13 @@ class FormTrigger extends Trigger {
             case $form instanceof ModalForm:
                 /** @var bool $data */
                 $variable = new MapVariable([
-                    "data" => new BoolVariable($data),
+                    "data" => new BooleanVariable($data),
                     "button1" => new MapVariable([
-                        "selected" => new BoolVariable($data),
+                        "selected" => new BooleanVariable($data),
                         "text" => new StringVariable($form->getButton1Text()),
                     ],  $form->getButton1Text()),
                     "button2" => new MapVariable([
-                        "selected" => new BoolVariable(!$data),
+                        "selected" => new BooleanVariable(!$data),
                         "text" => new StringVariable($form->getButton2Text()),
                     ], $form->getButton2Text()),
                 ]);
@@ -72,7 +72,7 @@ class FormTrigger extends Trigger {
                             $var = new StringVariable($data[$i]);
                             break;
                         case Element::ELEMENT_TOGGLE:
-                            $var = new BoolVariable($data[$i]);
+                            $var = new BooleanVariable($data[$i]);
                             break;
                         case Element::ELEMENT_SLIDER:
                         case Element::ELEMENT_STEP_SLIDER:

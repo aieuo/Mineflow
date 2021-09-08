@@ -5,6 +5,8 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\object\BlockObjectVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\event\block\SignChangeEvent;
 
@@ -24,9 +26,9 @@ class SignChangeEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "sign_lines" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "block" => new DummyVariable(DummyVariable::BLOCK),
+            "sign_lines" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            "target" => new DummyVariable(PlayerObjectVariable::getTypeName()),
+            "block" => new DummyVariable(BlockObjectVariable::class),
         ];
     }
 }

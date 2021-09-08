@@ -10,12 +10,12 @@ use pocketmine\entity\Entity;
 
 class EntityObjectVariable extends PositionObjectVariable {
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
+    public function getProperty(string $name): ?Variable {
+        $variable = parent::getProperty($name);
         if ($variable !== null) return $variable;
 
         $entity = $this->getEntity();
-        switch ($index) {
+        switch ($name) {
             case "id":
                 return new NumberVariable($entity->getId());
             case "saveId":
@@ -46,16 +46,20 @@ class EntityObjectVariable extends PositionObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "entity";
+    }
+
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "saveId" => new DummyVariable(DummyVariable::STRING),
-            "nameTag" => new DummyVariable(DummyVariable::STRING),
-            "health" => new DummyVariable(DummyVariable::NUMBER),
-            "maxHealth" => new DummyVariable(DummyVariable::NUMBER),
-            "yaw" => new DummyVariable(DummyVariable::NUMBER),
-            "pitch" => new DummyVariable(DummyVariable::NUMBER),
-            "direction" => new DummyVariable(DummyVariable::NUMBER),
+            "id" => new DummyVariable(NumberVariable::class),
+            "saveId" => new DummyVariable(StringVariable::class),
+            "nameTag" => new DummyVariable(StringVariable::class),
+            "health" => new DummyVariable(NumberVariable::class),
+            "maxHealth" => new DummyVariable(NumberVariable::class),
+            "yaw" => new DummyVariable(NumberVariable::class),
+            "pitch" => new DummyVariable(NumberVariable::class),
+            "direction" => new DummyVariable(NumberVariable::class),
         ]);
     }
 

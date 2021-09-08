@@ -4,6 +4,7 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\event\player\PlayerEvent;
 
 class PlayerEventTrigger extends EventTrigger {
@@ -16,7 +17,7 @@ class PlayerEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
+            "target" => new DummyVariable(PlayerObjectVariable::class),
         ];
     }
 }

@@ -5,57 +5,54 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use function array_values;
 
 class ListVariable extends Variable implements \JsonSerializable {
 
-    public int $type = Variable::LIST;
-
     private ?string $showString;
 
-    protected $value = [];
-
-    /**
-     * @return Variable[]
-     */
-    public function getValue(): array {
-        return parent::getValue();
+    public static function getTypeName(): string {
+        return "list";
     }
 
     /**
-     * @param Variable[] $value
+     * @param Variable[] $values
      * @param string|null $str
      */
-    public function __construct(array $value, ?string $str = "") {
-        parent::__construct($value);
+    public function __construct(protected array $values, ?string $str = "") {
         $this->showString = $str;
     }
 
-    public function appendValue(Variable $value): void {
-        $this->value[] = $value;
+    public function getValue(): array {
+        return $this->values;
     }
 
-    /**
-     * @param int|string $key
-     * @param Variable $value
-     */
-    public function setValueAt($key, Variable $value): void {
-        $this->value[(int)$key] = $value;
-        $this->value = array_values($this->value);
+    public function appendValue(Variable $value): void {
+        $this->values[] = $value;
+    }
+
+    public function setValueAt(int|string $key, Variable $value): void {
+        $this->values[(int)$key] = $value;
+        $this->values = array_values($this->values);
     }
 
     public function removeValue(Variable $value): void {
-        $index = array_search($value, $this->value, true);
+        $index = array_search($value, $this->values, true);
         if ($index === false) return;
-        unset($this->value[$index]);
-        $this->value = array_merge($this->value);
+        unset($this->values[$index]);
+        $this->values = array_values($this->values);
+    }
+
+    public function removeValueAt(int|string $index): void {
+        unset($this->values[(int)$index]);
+        $this->values = array_values($this->values);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        if (!isset($this->value[(int)$index])) return null;
-        return $this->value[(int)$index];
+        return $this->values[(int)$index] ?? null;
     }
 
-    public function add($target): ListVariable {
+    public function add(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -65,7 +62,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function sub($target): ListVariable {
+    public function sub(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -75,7 +72,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function mul($target): ListVariable {
+    public function mul(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -85,7 +82,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function div($target): ListVariable {
+    public function div(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -95,7 +92,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $value) {
@@ -108,13 +105,13 @@ class ListVariable extends Variable implements \JsonSerializable {
     public function callMethod(string $name, array $parameters = []): ?Variable {
         switch ($name) {
             case "count":
-                return new NumberVariable(count($this->value));
+                return new NumberVariable(count($this->values));
         }
         return null;
     }
 
     public function getCount(): int {
-        return count($this->value);
+        return count($this->values);
     }
 
     public function __toString(): string {
@@ -133,7 +130,7 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "type" => $this->getType(),
+            "type" => static::getTypeName(),
             "value" => $this->getValue(),
         ];
     }

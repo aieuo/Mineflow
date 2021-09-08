@@ -9,12 +9,20 @@ use aieuo\mineflow\variable\Variable;
 
 class ScoreboardObjectVariable extends ObjectVariable {
 
-    public function getValueFromIndex(string $index): ?Variable {
+    public function getProperty(string $name): ?Variable {
         $board = $this->getScoreboard();
         $scores = $board->getScores();
 
-        if (!isset($scores[$index])) return null;
-        return new NumberVariable($scores[$index]);
+        if (!isset($scores[$name])) return null;
+        return new NumberVariable($scores[$name]);
+    }
+
+    public static function getTypeName(): string {
+        return "scoreboard";
+    }
+
+    public static function getValuesDummy(): array {
+        return [];
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

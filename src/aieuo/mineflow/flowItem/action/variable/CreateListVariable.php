@@ -13,6 +13,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\object\UnknownObjectVariable;
 use aieuo\mineflow\variable\Variable;
 
 class CreateListVariable extends FlowItem {
@@ -119,7 +120,7 @@ class CreateListVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::LIST, DummyVariable::UNKNOWN)
+            $this->getVariableName() => new DummyVariable(ListVariable::class, UnknownObjectVariable::getTypeName())
         ];
     }
 }

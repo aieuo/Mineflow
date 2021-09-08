@@ -16,12 +16,12 @@ class PlayerObjectVariable extends HumanObjectVariable {
         parent::__construct($value, $str ?? $value->getName());
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
+    public function getProperty(string $name): ?Variable {
+        $variable = parent::getProperty($name);
         if ($variable !== null) return $variable;
 
         $player = $this->getPlayer();
-        switch ($index) {
+        switch ($name) {
             case "name":
                 return new StringVariable($player->getName());
             case "display_name":
@@ -40,9 +40,13 @@ class PlayerObjectVariable extends HumanObjectVariable {
         return $this->getValue();
     }
 
+    public static function getTypeName(): string {
+        return "player";
+    }
+
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
+            "name" => new DummyVariable(StringVariable::class),
         ]);
     }
 

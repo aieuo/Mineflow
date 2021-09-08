@@ -20,7 +20,7 @@ class LevelLoadEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "world" => new DummyVariable(DummyVariable::WORLD),
+            "world" => new DummyVariable(WorldObjectVariable::class),
         ];
     }
 }

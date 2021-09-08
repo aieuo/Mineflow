@@ -20,6 +20,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\object\UnknownObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\Player;
 
@@ -146,8 +147,8 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     public function getAddingVariables(): array {
         return [
-            $this->getKeyVariableName() => new DummyVariable(DummyVariable::UNKNOWN),
-            $this->getValueVariableName() => new DummyVariable(DummyVariable::UNKNOWN),
+            $this->getKeyVariableName() => new DummyVariable(UnknownObjectVariable::class),
+            $this->getValueVariableName() => new DummyVariable(UnknownObjectVariable::class),
         ];
     }
 
