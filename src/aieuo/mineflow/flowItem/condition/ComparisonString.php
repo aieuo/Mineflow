@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
 
@@ -85,17 +86,16 @@ class ComparisonString extends FlowItem implements Condition {
                 $result = $value1 !== $value2;
                 break;
             case self::CONTAINS:
-                $result = strpos($value1, $value2) !== false;
+                $result = str_contains($value1, $value2);
                 break;
             case self::NOT_CONTAINS:
-                $result = strpos($value1, $value2) === false;
+                $result = !str_contains($value1, $value2);
                 break;
             case self::STARTS_WITH:
-                $result = strpos($value1, $value2) === 0;
+                $result = str_starts_with($value1, $value2);
                 break;
             case self::ENDS_WITH:
-                $lenDiff = strlen($value1) - strlen($value2);
-                $result = ($lenDiff < 0) ? false : strpos($value1, $value2, $lenDiff) !== false;
+                $result = str_ends_with($value1, $value2);
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));

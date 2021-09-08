@@ -135,7 +135,7 @@ class CommandManager {
     }
 
     public function isSubcommand(string $command): bool {
-        return strpos($command, " ") !== false;
+        return str_contains($command, " ");
     }
 
     public function getSubcommandsFromCommand(string $command): array {

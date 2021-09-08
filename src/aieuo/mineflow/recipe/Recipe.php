@@ -279,7 +279,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             try {
                 $action = FlowItem::loadEachSaveData($content);
             } catch (\ErrorException $e) {
-                if (strpos($e->getMessage(), "Undefined offset:") !== 0) throw $e;
+                if (!str_starts_with($e->getMessage(), "Undefined offset:")) throw $e;
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
 

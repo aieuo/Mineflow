@@ -101,7 +101,7 @@ class VariableHelper {
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/u", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
-                if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
+                if (str_contains($name, "{") and str_contains($name, "}")) {
                     $replaced = $this->replaceVariables($name, $variables, $executor, $global);
                     $string = str_replace($name, $replaced, $string);
                     $name = $replaced;
@@ -122,7 +122,7 @@ class VariableHelper {
      * @return string
      */
     public function replaceVariable(string $string, string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
-        if (strpos($string, "{".$replace."}") === false) return $string;
+        if (!str_contains($string, "{".$replace."}")) return $string;
 
         $result = (string)$this->runVariableStatement($replace, $variables, $executor, $global);
         return str_replace("{".$replace."}", $result, $string);
@@ -390,9 +390,9 @@ class VariableHelper {
     }
 
     public function getType(string $string): int {
-        if (strpos($string, "(str)") === 0) {
+        if (str_starts_with($string, "(str)")) {
             $type = StringVariable::getTypeName();
-        } elseif (strpos($string, "(num)") === 0) {
+        } elseif (str_starts_with($string, "(num)")) {
             $type = NumberVariable::getTypeName();
         } elseif (is_numeric($string)) {
             $type = NumberVariable::getTypeName();
