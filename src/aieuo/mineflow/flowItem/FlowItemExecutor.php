@@ -102,7 +102,7 @@ class FlowItemExecutor {
     }
 
     public function resume(): void {
-        if ($this->parent !== null) $this->parent->resume();
+        $this->parent?->resume();
 
         $this->resuming = true;
         if (!$this->waiting) return;
@@ -113,7 +113,7 @@ class FlowItemExecutor {
     }
 
     public function exit(): void {
-        if ($this->parent !== null) $this->parent->exit();
+        $this->parent?->exit();
 
         $this->exit = true;
     }
@@ -144,7 +144,7 @@ class FlowItemExecutor {
         $names = explode(".", $name);
         $name = array_shift($names);
 
-        $variable = $this->variables[$name] ?? ($this->parent === null ? null : $this->parent->getVariable($name));
+        $variable = $this->variables[$name] ?? ($this->parent?->getVariable($name));
 
         if ($variable === null) return null;
 
@@ -173,6 +173,6 @@ class FlowItemExecutor {
 
     public function removeVariable(string $name): void {
         unset($this->variables[$name]);
-        if ($this->parent !== null) $this->parent->removeVariable($name);
+        $this->parent?->removeVariable($name);
     }
 }
