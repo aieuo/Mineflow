@@ -74,25 +74,14 @@ class CalculateReversePolishNotation extends FlowItem {
 
             $value2 = array_pop($stack);
             $value1 = array_pop($stack);
-            switch ($token) {
-                case '+':
-                    $res = $value1 + $value2;
-                    break;
-                case '-':
-                    $res = $value1 - $value2;
-                    break;
-                case '*':
-                    $res = $value1 * $value2;
-                    break;
-                case '/':
-                    $res = $value1 / $value2;
-                    break;
-                case '%':
-                    $res = $value1 % $value2;
-                    break;
-                default:
-                    throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$token]));
-            }
+            $res = match ($token) {
+                '+' => $value1 + $value2,
+                '-' => $value1 - $value2,
+                '*' => $value1 * $value2,
+                '/' => $value1 / $value2,
+                '%' => $value1 % $value2,
+                default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$token])),
+            };
             $stack[] = $res;
         }
         $result = $stack[0];

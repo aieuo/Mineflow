@@ -32,17 +32,13 @@ class StringVariable extends Variable implements \JsonSerializable {
     }
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
-        switch ($name) {
-            case "length":
-                return new NumberVariable(mb_strlen($this->getValue()));
-            case "toLowerCase":
-                return new StringVariable(mb_strtolower($this->getValue()));
-            case "toUpperCase":
-                return new StringVariable(mb_strtoupper($this->getValue()));
-            case "substring":
-                return new StringVariable(mb_substr($this->getValue(), $parameters[0], $parameters[1] ?? null));
-        }
-        return null;
+        return match ($name) {
+            "length" => new NumberVariable(mb_strlen($this->getValue())),
+            "toLowerCase" => new StringVariable(mb_strtolower($this->getValue())),
+            "toUpperCase" => new StringVariable(mb_strtoupper($this->getValue())),
+            "substring" => new StringVariable(mb_substr($this->getValue(), $parameters[0], $parameters[1] ?? null)),
+            default => null,
+        };
     }
 
     public function jsonSerialize(): array {

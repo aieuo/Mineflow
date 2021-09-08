@@ -20,14 +20,11 @@ class LocationObjectVariable extends PositionObjectVariable {
         if ($variable !== null) return $variable;
 
         $location = $this->getLocation();
-        switch ($name) {
-            case "yaw":
-                return new NumberVariable($location->yaw);
-            case "pitch":
-                return new NumberVariable($location->pitch);
-            default:
-                return null;
-        }
+        return match ($name) {
+            "yaw" => new NumberVariable($location->yaw),
+            "pitch" => new NumberVariable($location->pitch),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

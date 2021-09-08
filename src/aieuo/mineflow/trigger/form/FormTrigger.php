@@ -67,22 +67,12 @@ class FormTrigger extends Trigger {
                 $dataVariables = [];
                 $dropdownVariables = [];
                 foreach ($form->getContents() as $i => $content) {
-                    switch ($content->getType()) {
-                        case Element::ELEMENT_INPUT:
-                            $var = new StringVariable($data[$i]);
-                            break;
-                        case Element::ELEMENT_TOGGLE:
-                            $var = new BooleanVariable($data[$i]);
-                            break;
-                        case Element::ELEMENT_SLIDER:
-                        case Element::ELEMENT_STEP_SLIDER:
-                        case Element::ELEMENT_DROPDOWN:
-                            $var = new NumberVariable($data[$i]);
-                            break;
-                        default:
-                            $var = new StringVariable("");
-                            break;
-                    }
+                    $var = match ($content->getType()) {
+                        Element::ELEMENT_INPUT => new StringVariable($data[$i]),
+                        Element::ELEMENT_TOGGLE => new BooleanVariable($data[$i]),
+                        Element::ELEMENT_SLIDER, Element::ELEMENT_STEP_SLIDER, Element::ELEMENT_DROPDOWN => new NumberVariable($data[$i]),
+                        default => new StringVariable(""),
+                    };
                     $dataVariables[$i] = $var;
                     if ($content instanceof Dropdown) {
                         $selected = $content->getOptions()[$data[$i]];

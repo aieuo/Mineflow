@@ -21,18 +21,13 @@ class PlayerObjectVariable extends HumanObjectVariable {
         if ($variable !== null) return $variable;
 
         $player = $this->getPlayer();
-        switch ($name) {
-            case "name":
-                return new StringVariable($player->getName());
-            case "display_name":
-                return new StringVariable($player->getDisplayName());
-            case "locale":
-                return new StringVariable($player->getLocale());
-            case "ping":
-                return new NumberVariable($player->getPing());
-            default:
-                return null;
-        }
+        return match ($name) {
+            "name" => new StringVariable($player->getName()),
+            "display_name" => new StringVariable($player->getDisplayName()),
+            "locale" => new StringVariable($player->getLocale()),
+            "ping" => new NumberVariable($player->getPing()),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

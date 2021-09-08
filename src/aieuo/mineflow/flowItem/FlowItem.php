@@ -110,6 +110,16 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         }
     }
 
+    protected function getInt(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): int {
+        $this->throwIfInvalidNumber($numberStr, $min, $max, $exclude);
+        return (int)$numberStr;
+    }
+
+    protected function getFloat(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): float {
+        $this->throwIfInvalidNumber($numberStr, $min, $max, $exclude);
+        return (float)$numberStr;
+    }
+
     /**
      * @param array<string, DummyVariable> $variables
      * @return CustomForm

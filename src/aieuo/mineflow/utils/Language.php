@@ -79,17 +79,15 @@ class Language {
     }
 
     public static function getLoadErrorMessage(string $language): array {
-        switch ($language) {
-            case "jpn":
-                $errors = ["言語ファイルの読み込みに失敗しました", "[".implode(", ", self::getAvailableLanguages())."]が使用できます"];
-                break;
-            case "eng":
-            default:
-                $errors = [
-                    "Failed to load language file.",
-                    "Available languages are: [".implode(", ", self::getAvailableLanguages())."]"
-                ];
-        }
-        return $errors;
+        return match ($language) {
+            "jpn" => [
+                "言語ファイルの読み込みに失敗しました",
+                "[".implode(", ", self::getAvailableLanguages())."]が使用できます"
+            ],
+            default => [
+                "Failed to load language file.",
+                "Available languages are: [".implode(", ", self::getAvailableLanguages())."]"
+            ],
+        };
     }
 }

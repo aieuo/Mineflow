@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui\customForm;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -92,34 +93,17 @@ class CustomCustomFormForm {
                 new Input("@customForm.text"),
                 new CancelToggle(fn() => $this->sendElementList($player, $form))
             ])->onReceive(function (Player $player, array $data, CustomForm $form) {
-                switch ($data[0]) {
-                    case 0:
-                        $element = new Label($data[1]);
-                        break;
-                    case 1:
-                        $element = new Input($data[1]);
-                        break;
-                    case 2:
-                        $element = new NumberInputPlaceholder($data[1]);
-                        break;
-                    case 3:
-                        $element = new SliderPlaceholder($data[1], "0", "0");
-                        break;
-                    case 4:
-                        $element = new StepSlider($data[1]);
-                        break;
-                    case 5:
-                        $element = new Dropdown($data[1]);
-                        break;
-                    case 6:
-                        $element = new Toggle($data[1]);
-                        break;
-                    case 7:
-                        $element = new CancelToggle(null, $data[1]);
-                        break;
-                    default:
-                        return;
-                }
+                $element = match ($data[0]) {
+                    0 => new Label($data[1]),
+                    1 => new Input($data[1]),
+                    2 => new NumberInputPlaceholder($data[1]),
+                    3 => new SliderPlaceholder($data[1], "0", "0"),
+                    4 => new StepSlider($data[1]),
+                    5 => new Dropdown($data[1]),
+                    6 => new Toggle($data[1]),
+                    7 => new CancelToggle(null, $data[1]),
+                    default => throw new InvalidFormValueException("@form.insufficient", 0),
+                };
                 $form->addContent($element);
                 Main::getFormManager()->addForm($form->getName(), $form);
                 $this->sendEditElement($player, $form, $element, ["@form.added"]);

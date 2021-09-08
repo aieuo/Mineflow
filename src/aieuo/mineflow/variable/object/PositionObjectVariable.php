@@ -19,14 +19,11 @@ class PositionObjectVariable extends Vector3ObjectVariable {
         if ($variable !== null) return $variable;
 
         $position = $this->getPosition();
-        switch ($name) {
-            case "position":
-                return new PositionObjectVariable($position);
-            case "world":
-                return new WorldObjectVariable($position->level, $position->level->getFolderName());
-            default:
-                return null;
-        }
+        return match ($name) {
+            "position" => new PositionObjectVariable($position),
+            "world" => new WorldObjectVariable($position->level, $position->level->getFolderName()),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

@@ -302,18 +302,13 @@ class VariableHelper {
             $right = $this->mustGetVariableNested($right, $variables, $global);
         }
 
-        switch ($op) {
-            case "+":
-                return $left->add($right);
-            case "-":
-                return $left->sub($right);
-            case "*":
-                return $left->mul($right);
-            case "/":
-                return $left->div($right);
-        }
-
-        throw new UnsupportedCalculationException();
+        return match ($op) {
+            "+" => $left->add($right),
+            "-" => $left->sub($right),
+            "*" => $left->mul($right),
+            "/" => $left->div($right),
+            default => throw new UnsupportedCalculationException(),
+        };
     }
 
     public function runMethodCall(string $left, array $right, FlowItemExecutor $executor, array $variables, bool $global): Variable {

@@ -103,11 +103,10 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
-        switch ($name) {
-            case "count":
-                return new NumberVariable(count($this->values));
-        }
-        return null;
+        return match ($name) {
+            "count" => new NumberVariable(count($this->values)),
+            default => null,
+        };
     }
 
     public function getCount(): int {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\exception;
 
+use aieuo\mineflow\utils\Language;
 use Throwable;
 
 class InvalidFormValueException extends \RuntimeException {
@@ -12,7 +13,7 @@ class InvalidFormValueException extends \RuntimeException {
 
     public function __construct(string $errorMessage, int $index, string $message = "", int $code = 0, Throwable $previous = null) {
         parent::__construct($message, $code, $previous);
-        $this->errorMessage = $errorMessage;
+        $this->errorMessage = Language::replace($errorMessage);
         $this->index = $index;
     }
 

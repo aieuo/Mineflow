@@ -8,30 +8,32 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\event\Event;
+use function end;
+use function explode;
 
 class EventObjectVariable extends ObjectVariable {
 
     public function __construct(Event $value, ?string $str = null) {
-        $names = explode("\\", $value->getEventName());
-        parent::__construct($value, $str ?? end($names));
+        parent::__construct($value, $str ?? $this->getEventName($value));
     }
 
     public function getProperty(string $name): ?Variable {
         $event = $this->getEvent();
-        switch ($name) {
-            case "name":
-                $names = explode("\\", $event->getEventName());
-                return new StringVariable(end($names));
-            case "isCanceled":
-                return new BooleanVariable($event->isCancelled());
-            default:
-                return null;
-        }
+        return match ($name) {
+            "name" => new StringVariable($this->getEventName($this->getEvent())),
+            "isCanceled" => new BooleanVariable($event->isCancelled()),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getEvent(): Event {
         return $this->getValue();
+    }
+
+    public function getEventName(Event $event): string {
+        $names = explode("\\", $event->getEventName());
+        return end($names);
     }
 
     public static function getTypeName(): string {

@@ -17,18 +17,13 @@ class Vector3ObjectVariable extends ObjectVariable {
 
     public function getProperty(string $name): ?Variable {
         $position = $this->getVector3();
-        switch ($name) {
-            case "x":
-                return new NumberVariable($position->x);
-            case "y":
-                return new NumberVariable($position->y);
-            case "z":
-                return new NumberVariable($position->z);
-            case "xyz":
-                return new StringVariable($position->x.",".$position->y.",".$position->z);
-            default:
-                return null;
-        }
+        return match ($name) {
+            "x" => new NumberVariable($position->x),
+            "y" => new NumberVariable($position->y),
+            "z" => new NumberVariable($position->z),
+            "xyz" => new StringVariable($position->x.",".$position->y.",".$position->z),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

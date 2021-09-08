@@ -18,20 +18,14 @@ class ItemObjectVariable extends ObjectVariable {
 
     public function getProperty(string $name): ?Variable {
         $item = $this->getItem();
-        switch ($name) {
-            case "name":
-                return new StringVariable($item->getName());
-            case "id":
-                return new NumberVariable($item->getId());
-            case "damage":
-                return new NumberVariable($item->getDamage());
-            case "count":
-                return new NumberVariable($item->getCount());
-            case "lore":
-                return new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore()));
-            default:
-                return null;
-        }
+        return match ($name) {
+            "name" => new StringVariable($item->getName()),
+            "id" => new NumberVariable($item->getId()),
+            "damage" => new NumberVariable($item->getDamage()),
+            "count" => new NumberVariable($item->getCount()),
+            "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

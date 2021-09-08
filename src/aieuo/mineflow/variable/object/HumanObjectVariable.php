@@ -18,26 +18,14 @@ class HumanObjectVariable extends EntityObjectVariable {
         if ($variable !== null) return $variable;
 
         $human = $this->getHuman();
-        switch ($name) {
-            case "hand":
-                $variable = new ItemObjectVariable($human->getInventory()->getItemInHand());
-                break;
-            case "food":
-                $variable = new NumberVariable($human->getFood());
-                break;
-            case "xp":
-                $variable = new NumberVariable($human->getCurrentTotalXp());
-                break;
-            case "xp_level":
-                $variable = new NumberVariable($human->getXpLevel());
-                break;
-            case "xp_progress":
-                $variable = new NumberVariable($human->getXpProgress());
-                break;
-            default:
-                return null;
-        }
-        return $variable;
+        return match ($name) {
+            "hand" => new ItemObjectVariable($human->getInventory()->getItemInHand()),
+            "food" => new NumberVariable($human->getFood()),
+            "xp" => new NumberVariable($human->getCurrentTotalXp()),
+            "xp_level" => new NumberVariable($human->getXpLevel()),
+            "xp_progress" => new NumberVariable($human->getXpProgress()),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
