@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\exception;
 
-use aieuo\mineflow\utils\Language;
 use Throwable;
 
 class InvalidFlowValueException extends \RuntimeException {

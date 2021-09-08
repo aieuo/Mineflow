@@ -4,7 +4,6 @@ namespace aieuo\mineflow\formAPI\element;
 
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use pocketmine\Player;
-use pocketmine\utils\UUID;
 
 abstract class Element implements \JsonSerializable {
 
