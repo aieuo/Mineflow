@@ -14,7 +14,7 @@ class EntityDeathEventTrigger extends EntityEventTrigger {
         parent::__construct(EntityDeathEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var EntityDeathEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target);

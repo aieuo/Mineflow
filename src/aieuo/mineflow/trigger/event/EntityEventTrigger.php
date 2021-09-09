@@ -9,7 +9,7 @@ use pocketmine\event\entity\EntityEvent;
 
 class EntityEventTrigger extends EventTrigger {
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var EntityEvent $event */
         $target = $event->getEntity();
         return array_merge(DefaultVariables::getEntityVariables($target));

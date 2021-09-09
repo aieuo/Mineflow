@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerEvent;
 
 class PlayerEventTrigger extends EventTrigger {
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerEvent $event */
         $target = $event->getPlayer();
         return array_merge(DefaultVariables::getPlayerVariables($target));

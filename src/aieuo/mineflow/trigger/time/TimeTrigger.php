@@ -11,12 +11,7 @@ use aieuo\mineflow\variable\Variable;
 
 class TimeTrigger extends Trigger {
 
-    /**
-     * @param string $hour
-     * @param string $minutes
-     * @return self
-     */
-    public static function create(string $hour, string $minutes = ""): Trigger {
+    public static function create(string $hour, string $minutes = ""): TimeTrigger {
         return new TimeTrigger($hour, $minutes);
     }
 
@@ -28,7 +23,7 @@ class TimeTrigger extends Trigger {
      * @param int $timestamp
      * @return Variable[]
      */
-    public function getVariables($timestamp): array {
+    public function getVariables(mixed $timestamp): array {
         return [
             "hour" => new NumberVariable((int)date("H", $timestamp)),
             "minutes" => new NumberVariable((int)date("i", $timestamp)),

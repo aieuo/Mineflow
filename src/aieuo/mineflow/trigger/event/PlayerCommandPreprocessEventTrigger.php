@@ -14,7 +14,7 @@ class PlayerCommandPreprocessEventTrigger extends EventTrigger {
         parent::__construct(PlayerCommandPreprocessEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerCommandPreprocessEvent $event */
         $target = $event->getPlayer();
         $variables = array_merge(DefaultVariables::getCommandVariables(substr($event->getMessage(), 1)), DefaultVariables::getPlayerVariables($target));

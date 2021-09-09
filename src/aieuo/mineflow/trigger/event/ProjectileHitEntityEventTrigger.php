@@ -13,7 +13,7 @@ class ProjectileHitEntityEventTrigger extends EventTrigger {
         parent::__construct(ProjectileHitEntityEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var ProjectileHitEntityEvent $event */
         $variables = DefaultVariables::getEntityVariables($event->getEntityHit());
         return array_merge($variables, DefaultVariables::getEntityVariables($event->getEntity(), "projective"));

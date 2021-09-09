@@ -8,12 +8,7 @@ use aieuo\mineflow\utils\Language;
 
 class CustomTrigger extends Trigger {
 
-    /**
-     * @param string $identifier
-     * @param string $subKey
-     * @return self
-     */
-    public static function create(string $identifier, string $subKey = ""): Trigger {
+    public static function create(string $identifier, string $subKey = ""): CustomTrigger {
         return new CustomTrigger($identifier, $subKey);
     }
 

@@ -14,7 +14,7 @@ class InventoryPickupItemEventTrigger extends EventTrigger {
         parent::__construct(InventoryPickupItemEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         $variables = [];
         /** @var InventoryPickupItemEvent $event */
         $inventory = $event->getInventory();

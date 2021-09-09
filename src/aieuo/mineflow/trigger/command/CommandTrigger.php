@@ -12,12 +12,7 @@ use aieuo\mineflow\variable\StringVariable;
 
 class CommandTrigger extends Trigger {
 
-    /**
-     * @param string $key
-     * @param string $subKey
-     * @return self
-     */
-    public static function create(string $key, string $subKey = ""): Trigger {
+    public static function create(string $key, string $subKey = ""): CommandTrigger {
         return new CommandTrigger($key, $subKey);
     }
 
@@ -29,7 +24,7 @@ class CommandTrigger extends Trigger {
      * @param string $command
      * @return array
      */
-    public function getVariables($command): array {
+    public function getVariables(mixed $command): array {
         return DefaultVariables::getCommandVariables($command);
     }
 

@@ -12,12 +12,7 @@ use pocketmine\block\Block;
 
 class BlockTrigger extends Trigger {
 
-    /**
-     * @param string $key
-     * @param string $subKey
-     * @return self
-     */
-    public static function create(string $key, string $subKey = ""): Trigger {
+    public static function create(string $key, string $subKey = ""): BlockTrigger {
         return new BlockTrigger($key, $subKey);
     }
 
@@ -29,7 +24,7 @@ class BlockTrigger extends Trigger {
      * @param Block $block
      * @return array
      */
-    public function getVariables($block): array {
+    public function getVariables(mixed $block): array {
         return DefaultVariables::getBlockVariables($block);
     }
 

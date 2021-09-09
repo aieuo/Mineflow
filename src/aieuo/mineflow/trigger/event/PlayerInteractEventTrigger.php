@@ -13,7 +13,7 @@ class PlayerInteractEventTrigger extends PlayerEventTrigger {
         parent::__construct(PlayerInteractEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerInteractEvent $event */
         $target = $event->getPlayer();
         $block = $event->getBlock();

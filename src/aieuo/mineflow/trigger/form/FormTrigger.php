@@ -21,12 +21,7 @@ use aieuo\mineflow\variable\StringVariable;
 
 class FormTrigger extends Trigger {
 
-    /**
-     * @param string $key
-     * @param string $subKey
-     * @return self
-     */
-    public static function create(string $key, string $subKey = ""): Trigger {
+    public static function create(string $key, string $subKey = ""): FormTrigger {
         return new FormTrigger($key, $subKey);
     }
 
@@ -39,7 +34,7 @@ class FormTrigger extends Trigger {
      * @param array|int|bool $data
      * @return array
      */
-    public function getVariables($form, $data = []): array {
+    public function getVariables(mixed $form, array|int|bool $data = []): array {
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */

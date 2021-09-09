@@ -47,7 +47,7 @@ abstract class Trigger implements \JsonSerializable {
      * @param mixed $data
      * @return array<string, Variable>
      */
-    public function getVariables($data): array {
+    public function getVariables(mixed $data): array {
         return []; // ["variable name" => $variable]
     }
 
