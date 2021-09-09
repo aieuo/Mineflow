@@ -11,6 +11,8 @@ use pocketmine\event\Listener;
 use pocketmine\event\EventPriority;
 use pocketmine\event\Event;
 use pocketmine\Server;
+use function get_parent_class;
+use function in_array;
 
 class EventTriggerListener implements Listener {
 
@@ -26,14 +28,15 @@ class EventTriggerListener implements Listener {
     }
 
     public function onEvent(Event $event): void {
-        $eventName = $event->getEventName();
-
         $holder = TriggerHolder::getInstance();
-        if ($holder->existsRecipeByString(Triggers::EVENT, $eventName)) {
-            $trigger = EventTrigger::create($eventName);
-            $recipes = $holder->getRecipes($trigger);
-            $variables = $trigger->getVariables($event);
-            $recipes->executeAll($trigger->getTargetEntity($event), $variables, $event);
-        }
+        $class = $event::class;
+        do {
+            if ($holder->existsRecipeByString(Triggers::EVENT, $class)) {
+                $trigger = EventTrigger::create($class);
+                $recipes = $holder->getRecipes($trigger);
+                $variables = $trigger->getVariables($event);
+                $recipes?->executeAll($trigger->getTargetEntity($event), $variables, $event);
+            }
+        } while (($class = get_parent_class($class)) !== false);
     }
 }
