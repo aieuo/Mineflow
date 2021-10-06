@@ -17,7 +17,7 @@ use aieuo\mineflow\utils\Language;
 class InWorld extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::IN_AREA;
+    protected string $id = self::IN_WORLD;
 
     protected string $name = "condition.inWorld.name";
     protected string $detail = "condition.inWorld.detail";
