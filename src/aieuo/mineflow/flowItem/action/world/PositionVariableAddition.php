@@ -79,7 +79,6 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()]);
     }
 

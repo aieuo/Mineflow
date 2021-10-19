@@ -66,7 +66,6 @@ class AddVariable extends FlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"]);
     }
 

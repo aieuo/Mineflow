@@ -39,7 +39,6 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getPlayerName()]);
     }
 

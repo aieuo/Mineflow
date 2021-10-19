@@ -56,7 +56,6 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->slots[$this->getIndex()])]);
     }
 

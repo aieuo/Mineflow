@@ -42,7 +42,6 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 

@@ -44,7 +44,6 @@ class GetBlock extends FlowItem implements PositionFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getResultName()]);
     }
 

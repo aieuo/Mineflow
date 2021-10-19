@@ -36,7 +36,6 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
 
         $shape = ["", "", ""];
         $ingredients = [];

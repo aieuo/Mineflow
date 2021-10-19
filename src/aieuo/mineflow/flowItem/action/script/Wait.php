@@ -42,7 +42,6 @@ class Wait extends FlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getTime()]);
     }
 

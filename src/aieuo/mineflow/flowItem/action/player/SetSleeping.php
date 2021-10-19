@@ -30,7 +30,6 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPositionVariableName()]);
     }
 

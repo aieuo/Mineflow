@@ -51,7 +51,6 @@ class SetScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()]);
     }
 

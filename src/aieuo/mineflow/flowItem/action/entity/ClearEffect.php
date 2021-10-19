@@ -47,7 +47,6 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getEffectId()]);
     }
 

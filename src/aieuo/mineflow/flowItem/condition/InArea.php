@@ -35,7 +35,6 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")]);
     }
 

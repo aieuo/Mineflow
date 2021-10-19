@@ -31,7 +31,6 @@ class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowIt
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getEntityVariableName()]);
     }
 

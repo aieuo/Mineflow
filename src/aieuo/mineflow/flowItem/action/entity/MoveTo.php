@@ -42,7 +42,6 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()]);
     }
 

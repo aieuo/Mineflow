@@ -36,7 +36,6 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getItemVariableName()]);
     }
 

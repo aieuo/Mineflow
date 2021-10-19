@@ -52,7 +52,6 @@ class ExistsListVariableKey extends FlowItem implements Condition {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()]);
     }
 

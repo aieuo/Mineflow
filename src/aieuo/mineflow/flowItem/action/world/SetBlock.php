@@ -32,7 +32,6 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getPositionVariableName(), $this->getBlockVariableName()]);
     }
 
