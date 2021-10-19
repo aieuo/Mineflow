@@ -90,7 +90,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $this->sendForm($source, $player, $text, $resultName);
-        yield false;
+        yield FlowItemExecutor::AWAIT;
     }
 
     private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName): void {

@@ -20,6 +20,6 @@ class Chat extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->chat($message);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

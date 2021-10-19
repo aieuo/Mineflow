@@ -43,7 +43,7 @@ class SetImmobile extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setImmobile(true);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

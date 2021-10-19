@@ -20,6 +20,6 @@ class SendPopup extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendPopup($message);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

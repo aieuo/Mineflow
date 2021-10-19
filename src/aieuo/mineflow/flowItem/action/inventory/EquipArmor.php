@@ -75,7 +75,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem((int)$index, $item);
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

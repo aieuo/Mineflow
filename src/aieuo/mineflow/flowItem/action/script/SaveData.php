@@ -26,7 +26,7 @@ class SaveData extends FlowItem {
         Main::getRecipeManager()->saveAll();
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function loadSaveData(array $content): FlowItem {

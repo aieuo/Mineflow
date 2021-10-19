@@ -25,6 +25,6 @@ class AddXpLevel extends AddXpProgress {
         $new = $player->getXpLevel() + (int)$xp;
         if ($new < 0) $xp = -$player->getXpLevel();
         $player->addXpLevels((int)$xp);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

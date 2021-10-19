@@ -20,6 +20,6 @@ class CallRecipe extends ExecuteRecipe {
         $args = $this->getArguments($source);
 
         $recipe->executeAllTargets($source->getTarget(), [], $source->getEvent(), $args, $source);
-        yield false;
+        yield FlowItemExecutor::AWAIT;
     }
 }

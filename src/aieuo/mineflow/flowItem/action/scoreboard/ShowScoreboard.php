@@ -49,7 +49,7 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         $board = $this->getScoreboard($source);
 
         $board->show($player);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

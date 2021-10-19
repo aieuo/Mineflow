@@ -16,7 +16,7 @@ class CheckNothing extends FlowItem implements Condition {
     protected string $category = Category::COMMON;
 
     public function execute(FlowItemExecutor $source): \Generator {
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return true;
     }
 

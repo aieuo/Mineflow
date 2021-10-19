@@ -47,7 +47,7 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $position = $this->getPosition($source);
 
         $player->sleepOn($position);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

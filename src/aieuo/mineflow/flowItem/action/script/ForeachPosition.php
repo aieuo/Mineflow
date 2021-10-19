@@ -81,7 +81,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
             }
         }
 
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function hasCustomMenu(): bool {

@@ -108,7 +108,7 @@ class FourArithmeticOperations extends FlowItem {
         };
 
         $source->addVariable($resultName, new NumberVariable($result));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $result;
     }
 

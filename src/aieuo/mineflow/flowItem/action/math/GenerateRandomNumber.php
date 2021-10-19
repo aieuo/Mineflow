@@ -67,7 +67,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
 
         $rand = mt_rand((int)$min, (int)$max);
         $source->addVariable($resultName, new NumberVariable($rand));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $rand;
     }
 

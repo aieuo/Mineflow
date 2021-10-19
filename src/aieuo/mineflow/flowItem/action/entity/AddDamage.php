@@ -72,7 +72,7 @@ class AddDamage extends FlowItem implements EntityFlowItem {
 
         $event = new EntityDamageEvent($entity, $cause, (float)$damage);
         $entity->attack($event);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

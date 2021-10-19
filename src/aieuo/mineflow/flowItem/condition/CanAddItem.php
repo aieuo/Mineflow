@@ -19,7 +19,7 @@ class CanAddItem extends TypeItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $player->getInventory()->canAddItem($item);
     }
 }

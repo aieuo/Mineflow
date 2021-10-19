@@ -44,7 +44,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $recipe->execute($entity, $source->getEvent(), $source->getVariables());
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

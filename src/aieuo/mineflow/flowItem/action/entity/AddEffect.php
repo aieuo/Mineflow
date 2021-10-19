@@ -95,7 +95,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         if ($entity instanceof Living) {
             $entity->addEffect(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, $this->visible));
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

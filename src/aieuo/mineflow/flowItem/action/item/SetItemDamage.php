@@ -58,7 +58,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $item = $this->getItem($source);
 
         $item->setDamage((int)$damage);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getItemVariableName();
     }
 

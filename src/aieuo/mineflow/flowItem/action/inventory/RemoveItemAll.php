@@ -22,6 +22,6 @@ class RemoveItemAll extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->remove($item);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

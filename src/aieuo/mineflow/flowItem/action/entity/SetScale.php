@@ -59,7 +59,7 @@ class SetScale extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setScale((float)$health);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

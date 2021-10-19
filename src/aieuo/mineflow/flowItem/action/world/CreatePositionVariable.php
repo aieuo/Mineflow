@@ -111,7 +111,7 @@ class CreatePositionVariable extends FlowItem {
 
         $variable = new PositionObjectVariable($position);
         $source->addVariable($name, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getVariableName();
     }
 

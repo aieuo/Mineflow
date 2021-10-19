@@ -63,7 +63,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
 
         $variable = new BlockObjectVariable($block);
         $source->addVariable($result, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

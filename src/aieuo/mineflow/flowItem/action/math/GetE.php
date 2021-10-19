@@ -21,7 +21,7 @@ class GetE extends TypeGetMathVariable {
 
         $resultName = $source->replaceVariables($this->getResultName());
         $source->addVariable($resultName, new NumberVariable(M_E));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return M_E;
     }
 }

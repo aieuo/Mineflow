@@ -28,7 +28,7 @@ class EventCancel extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));
         }
         $event->setCancelled();
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function isDataValid(): bool {

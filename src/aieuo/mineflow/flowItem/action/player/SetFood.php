@@ -57,7 +57,7 @@ class SetFood extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($entity);
 
         $entity->setFood((float)$health);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

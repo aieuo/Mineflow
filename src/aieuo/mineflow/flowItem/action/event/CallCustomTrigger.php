@@ -52,7 +52,7 @@ class CallCustomTrigger extends FlowItem {
         $trigger = CustomTrigger::create($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
         $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

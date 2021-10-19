@@ -49,7 +49,7 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         $board = $this->getScoreboard($source);
 
         $board->hide($player);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

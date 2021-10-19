@@ -91,7 +91,7 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
         Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -84,7 +84,7 @@ class GetEntity extends FlowItem {
             $variable = new EntityObjectVariable($entity, $entity->getNameTag());
         }
         $source->addVariable($resultName, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

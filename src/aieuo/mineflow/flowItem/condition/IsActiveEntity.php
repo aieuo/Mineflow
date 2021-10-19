@@ -49,7 +49,7 @@ class IsActiveEntity extends FlowItem implements Condition {
         $id = $source->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return EntityHolder::isActive((int)$id);
     }
 

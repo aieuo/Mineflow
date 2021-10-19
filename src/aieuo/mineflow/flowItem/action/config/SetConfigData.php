@@ -88,7 +88,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $config = $this->getConfig($source);
 
         $config->setNested($key, $value);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

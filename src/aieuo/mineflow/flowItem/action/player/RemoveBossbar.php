@@ -58,7 +58,7 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::remove($player, $id);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

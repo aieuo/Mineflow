@@ -59,7 +59,7 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
 
         $entity->setNameTag($name);
         if ($entity instanceof Player) $entity->setDisplayName($name);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

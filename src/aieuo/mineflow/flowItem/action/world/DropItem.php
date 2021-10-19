@@ -48,7 +48,7 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
         $item = $this->getItem($source);
 
         $position->getLevelNonNull()->dropItem($position, $item);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

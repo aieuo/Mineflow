@@ -30,7 +30,7 @@ class GetArmorInventoryContents extends GetInventoryContents {
         $variable = new ListVariable(array_map(fn(Item $item) => new ItemObjectVariable($item), $entity->getArmorInventory()->getContents(true)));
 
         $source->addVariable($resultName, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 }

@@ -53,7 +53,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
 
         $key = $source->replaceVariables($this->getKey());
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $config->getNested($key) !== null;
     }
 

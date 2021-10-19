@@ -29,7 +29,7 @@ class OverMoney extends TypeMoney {
 
         $myMoney = Economy::getPlugin()->getMoney($name);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $myMoney >= (int)$amount;
     }
 }

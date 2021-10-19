@@ -59,7 +59,7 @@ class SetHealth extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setHealth((float)$health);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

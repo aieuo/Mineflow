@@ -124,7 +124,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
 
         $recipe = new ShapedRecipe($shape, $ingredients, [$output]);
         Server::getInstance()->getCraftingManager()->registerShapedRecipe($recipe);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function trimShape(array $shape): array {

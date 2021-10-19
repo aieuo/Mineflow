@@ -57,7 +57,7 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->setAllowFlight($this->isAllow());
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

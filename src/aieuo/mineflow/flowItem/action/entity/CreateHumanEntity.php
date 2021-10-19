@@ -76,7 +76,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
         $variable = new HumanObjectVariable($entity);
         $source->addVariable($resultName, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

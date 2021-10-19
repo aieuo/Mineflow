@@ -53,7 +53,7 @@ class CommandConsole extends FlowItem {
         $command = $source->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(), $command);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

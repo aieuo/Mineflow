@@ -112,7 +112,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
             ], $source))->executeGenerator();
         }
         $source->resume();
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function hasCustomMenu(): bool {

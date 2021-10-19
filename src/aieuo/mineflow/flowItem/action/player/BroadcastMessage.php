@@ -17,6 +17,6 @@ class BroadcastMessage extends TypeMessage {
 
         $message = $source->replaceVariables($this->getMessage());
         Server::getInstance()->broadcastMessage($message);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

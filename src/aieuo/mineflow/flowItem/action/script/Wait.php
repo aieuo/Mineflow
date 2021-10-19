@@ -58,7 +58,7 @@ class Wait extends FlowItem {
                 $source->resume();
             }
         ), (int)((float)$time * 20));
-        yield false;
+        yield FlowItemExecutor::AWAIT;
     }
 
     public function getEditFormElements(array $variables): array {

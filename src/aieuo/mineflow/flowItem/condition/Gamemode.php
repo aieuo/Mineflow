@@ -62,7 +62,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
 
         $gamemode = $this->getGamemode();
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $player->getGamemode() === $gamemode;
     }
 

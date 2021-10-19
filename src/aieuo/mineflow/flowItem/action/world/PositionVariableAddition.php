@@ -101,7 +101,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
         $variable = new PositionObjectVariable($position);
         $source->addVariable($name, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

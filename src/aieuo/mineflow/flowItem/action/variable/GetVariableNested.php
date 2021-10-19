@@ -72,7 +72,7 @@ class GetVariableNested extends FlowItem {
         }
 
         $source->addVariable($resultName, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

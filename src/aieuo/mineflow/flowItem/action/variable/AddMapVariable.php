@@ -101,7 +101,7 @@ class AddMapVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
         $variable->setValueAt($key, $addVariable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

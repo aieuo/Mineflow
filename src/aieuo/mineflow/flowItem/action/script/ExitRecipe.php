@@ -19,7 +19,7 @@ class ExitRecipe extends FlowItem {
 
     public function execute(FlowItemExecutor $source): \Generator {
         $source->exit();
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function isDataValid(): bool {

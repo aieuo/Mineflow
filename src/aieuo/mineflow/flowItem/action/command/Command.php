@@ -58,7 +58,7 @@ class Command extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Server::getInstance()->dispatchCommand($player, $command);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

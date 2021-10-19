@@ -66,7 +66,7 @@ class StringLength extends FlowItem {
 
         $length = mb_strlen($value);
         $source->addVariable($resultName, new NumberVariable($length));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $length;
     }
 

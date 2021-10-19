@@ -105,7 +105,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
                 $valueName => $valueVariable
             ], $source))->executeGenerator();
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function hasCustomMenu(): bool {

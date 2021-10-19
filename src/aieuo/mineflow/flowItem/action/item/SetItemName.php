@@ -57,7 +57,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         $item = $this->getItem($source);
 
         $item->setCustomName($name);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getItemVariableName();
     }
 

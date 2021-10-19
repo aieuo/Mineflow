@@ -72,7 +72,7 @@ class GetPlayerByName extends FlowItem {
 
         $result = new PlayerObjectVariable($player, $player->getName());
         $source->addVariable($resultName, $result);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

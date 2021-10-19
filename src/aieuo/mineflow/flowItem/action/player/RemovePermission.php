@@ -60,7 +60,7 @@ class RemovePermission extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->addAttachment(Main::getInstance(), $permission, false);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

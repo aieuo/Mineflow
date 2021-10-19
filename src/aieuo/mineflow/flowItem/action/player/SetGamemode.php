@@ -65,7 +65,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->setGamemode((int)$gamemode);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

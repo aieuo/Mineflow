@@ -72,7 +72,7 @@ class RandomNumber extends FlowItem implements Condition {
         $this->throwIfInvalidNumber($max);
         $this->throwIfInvalidNumber($value);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;
     }
 

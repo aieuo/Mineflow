@@ -22,6 +22,6 @@ class SendMessageToOp extends TypeMessage {
                 $player->sendMessage($message);
             }
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

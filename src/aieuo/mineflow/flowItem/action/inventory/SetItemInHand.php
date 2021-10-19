@@ -22,6 +22,6 @@ class SetItemInHand extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->setItemInHand($item);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

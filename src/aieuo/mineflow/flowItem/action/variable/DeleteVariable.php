@@ -56,7 +56,7 @@ class DeleteVariable extends FlowItem {
         } else {
             Main::getVariableHelper()->delete($name);
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -69,7 +69,7 @@ class CreateConfigVariable extends FlowItem {
 
         $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file));
         $source->addVariable($name, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getVariableName();
     }
 

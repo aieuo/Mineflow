@@ -22,6 +22,6 @@ class AddItem extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->addItem($item);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

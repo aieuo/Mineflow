@@ -19,6 +19,9 @@ use pocketmine\event\Event;
 
 class FlowItemExecutor {
 
+    public const CONTINUE = true;
+    public const AWAIT = false;
+
     /* @var FlowItem[] */
     private array $items;
     private ?Entity $target;

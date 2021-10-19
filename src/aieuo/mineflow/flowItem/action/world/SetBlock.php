@@ -48,7 +48,7 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
         $block = $this->getBlock($source);
 
         $position->level->setBlock($position, $block);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

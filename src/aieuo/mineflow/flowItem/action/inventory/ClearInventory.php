@@ -43,7 +43,7 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->clearAll(true);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

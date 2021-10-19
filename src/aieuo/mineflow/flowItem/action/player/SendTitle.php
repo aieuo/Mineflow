@@ -88,7 +88,7 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendTitle($title, $subtitle, ...$times);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

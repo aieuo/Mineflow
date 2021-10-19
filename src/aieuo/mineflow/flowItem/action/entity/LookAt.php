@@ -52,7 +52,7 @@ class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
         if ($entity instanceof Living) {
             $entity->lookAt($position);
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -67,7 +67,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         $form = clone $form;
         $form->replaceVariablesFromExecutor($source);
         $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

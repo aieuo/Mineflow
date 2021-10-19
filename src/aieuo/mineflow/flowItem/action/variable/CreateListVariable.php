@@ -92,7 +92,7 @@ class CreateListVariable extends FlowItem {
         } else {
             $helper->add($name, $variable);
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

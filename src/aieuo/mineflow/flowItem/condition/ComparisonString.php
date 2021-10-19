@@ -87,7 +87,7 @@ class ComparisonString extends FlowItem implements Condition {
             self::ENDS_WITH => str_ends_with($value1, $value2),
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $result;
     }
 

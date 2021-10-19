@@ -89,7 +89,7 @@ class JoinListVariableToString extends FlowItem {
             $strings[] = (string)$value;
         }
         $source->addVariable($result, new StringVariable(implode($separator, $strings)));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

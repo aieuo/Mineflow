@@ -62,7 +62,7 @@ class GetDate extends FlowItem {
 
         $date = date($format);
         $source->addVariable($resultName, new StringVariable($date));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $date;
     }
 

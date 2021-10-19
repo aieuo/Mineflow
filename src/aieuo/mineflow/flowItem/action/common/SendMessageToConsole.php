@@ -21,6 +21,6 @@ class SendMessageToConsole extends TypeMessage {
 
         $message = $source->replaceVariables($this->getMessage());
         Main::getInstance()->getLogger()->info($message);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

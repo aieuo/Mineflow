@@ -49,7 +49,7 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         $pos2 = $this->getPosition($source, "pos2");
         $pos = $entity->floor();
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $pos->x >= min($pos1->x, $pos2->x) and $pos->x <= max($pos1->x, $pos2->x)
             and $pos->y >= min($pos1->y, $pos2->y) and $pos->y <= max($pos1->y, $pos2->y)
             and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);

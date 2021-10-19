@@ -74,7 +74,7 @@ class GetMoney extends FlowItem {
 
         $money = Economy::getPlugin()->getMoney($targetName);
         $source->addVariable($resultName, new NumberVariable($money));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $money;
     }
 

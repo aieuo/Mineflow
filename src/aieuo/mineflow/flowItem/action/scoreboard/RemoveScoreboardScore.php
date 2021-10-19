@@ -56,7 +56,7 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $board = $this->getScoreboard($source);
 
         $board->removeScore($name);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

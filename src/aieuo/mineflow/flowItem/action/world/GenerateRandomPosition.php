@@ -71,7 +71,7 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $z = mt_rand((int)min($pos1->z, $pos2->z), (int)max($pos1->z, $pos2->z));
         $rand = new Position($x, $y, $z, $pos1->getLevelNonNull());
         $source->addVariable($resultName, new PositionObjectVariable($rand));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

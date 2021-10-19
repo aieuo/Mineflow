@@ -21,7 +21,7 @@ class GetPi extends TypeGetMathVariable {
 
         $resultName = $source->replaceVariables($this->getResultName());
         $source->addVariable($resultName, new NumberVariable(M_PI));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return M_PI;
     }
 }

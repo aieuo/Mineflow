@@ -67,7 +67,7 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return isset($value[$key]);
     }
 

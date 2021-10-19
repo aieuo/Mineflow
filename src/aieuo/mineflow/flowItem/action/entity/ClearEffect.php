@@ -66,7 +66,7 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
         if ($entity instanceof Living) {
             $entity->removeEffect($effect->getId());
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

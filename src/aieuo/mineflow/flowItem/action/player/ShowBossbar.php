@@ -95,7 +95,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::add($player, $id, $title, (float)$max, (float)$value / (float)$max);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

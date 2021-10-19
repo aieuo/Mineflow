@@ -16,7 +16,7 @@ class DoNothing extends FlowItem {
     protected string $category = Category::COMMON;
 
     public function execute(FlowItemExecutor $source): \Generator {
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function isDataValid(): bool {

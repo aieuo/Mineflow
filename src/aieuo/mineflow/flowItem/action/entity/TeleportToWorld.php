@@ -77,7 +77,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
 
         $pos = $this->safeSpawn ? $world->getSafeSpawn() : $world->getSpawnLocation();
         $entity->teleport($pos);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

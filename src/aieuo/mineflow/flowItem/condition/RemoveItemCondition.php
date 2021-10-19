@@ -22,7 +22,7 @@ class RemoveItemCondition extends TypeItem {
         if (!$player->getInventory()->contains($item)) return false;
         $player->getInventory()->removeItem($item);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return true;
     }
 }

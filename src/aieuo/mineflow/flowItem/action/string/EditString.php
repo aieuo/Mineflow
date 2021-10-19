@@ -109,7 +109,7 @@ class EditString extends FlowItem {
         };
 
         $source->addVariable($resultName, $result);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $result;
     }
 

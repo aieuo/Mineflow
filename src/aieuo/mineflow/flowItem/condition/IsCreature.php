@@ -21,7 +21,7 @@ class IsCreature extends IsActiveEntity {
 
         $entity = EntityHolder::findEntity((int)$id);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $entity instanceof Creature;
     }
 }

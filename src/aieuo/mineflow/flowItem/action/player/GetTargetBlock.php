@@ -74,7 +74,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
 
         $block = $player->getTargetBlock((int)$max);
         $source->addVariable($result, new BlockObjectVariable($block));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

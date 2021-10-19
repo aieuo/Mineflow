@@ -159,7 +159,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         }
 
         $source->addVariable($resultName, new PositionObjectVariable(Position::fromObject($pos, $entity->getLevelNonNull())));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();
     }
 

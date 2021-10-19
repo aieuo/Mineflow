@@ -49,7 +49,7 @@ class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $position = $this->getPosition($source);
 
         $entity->teleport($position);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

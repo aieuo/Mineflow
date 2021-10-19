@@ -40,7 +40,7 @@ class IsOp extends FlowItem implements Condition, PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $player->isOp();
     }
 

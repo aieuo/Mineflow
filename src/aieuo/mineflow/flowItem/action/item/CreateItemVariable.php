@@ -103,7 +103,7 @@ class CreateItemVariable extends FlowItem {
 
         $variable = new ItemObjectVariable($item);
         $source->addVariable($name, $variable);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getVariableName();
     }
 

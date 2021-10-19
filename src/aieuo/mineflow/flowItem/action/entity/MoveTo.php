@@ -99,7 +99,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
 
             $entity->setMotion(new Vector3($x, $y, $z));
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

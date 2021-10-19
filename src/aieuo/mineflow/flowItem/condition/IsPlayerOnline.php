@@ -40,7 +40,7 @@ class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player, false);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $player->isOnline();
     }
 

@@ -75,7 +75,7 @@ class CountListVariable extends FlowItem {
 
         $count = count($variable->getValue());
         $source->addVariable($resultName, new NumberVariable($count));
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $count;
     }
 

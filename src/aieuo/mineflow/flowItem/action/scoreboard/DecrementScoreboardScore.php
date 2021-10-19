@@ -70,7 +70,7 @@ class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $board = $this->getScoreboard($source);
 
         $board->setScore($name, ($board->getScore($name) ?? 0) - (int)$score);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

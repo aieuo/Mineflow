@@ -46,7 +46,7 @@ class ClearAllEffect extends FlowItem implements EntityFlowItem {
         if ($entity instanceof Living) {
             $entity->removeAllEffects();
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

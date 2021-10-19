@@ -20,6 +20,6 @@ class SendTip extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendTip($message);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

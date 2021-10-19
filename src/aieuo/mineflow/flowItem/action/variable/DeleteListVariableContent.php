@@ -75,7 +75,7 @@ class DeleteListVariableContent extends FlowItem {
         }
 
         $variable->removeValueAt($key);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

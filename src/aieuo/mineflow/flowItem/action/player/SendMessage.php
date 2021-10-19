@@ -20,6 +20,6 @@ class SendMessage extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->sendMessage($message);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

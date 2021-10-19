@@ -57,7 +57,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         $lore = array_map(fn(string $lore) => $source->replaceVariables($lore), $this->getLore());
 
         $item->setLore($lore);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getItemVariableName();
     }
 

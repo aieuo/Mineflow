@@ -91,7 +91,7 @@ class ComparisonNumber extends FlowItem implements Condition {
             self::LESS_EQUAL => $value1 <= $value2,
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $result;
     }
 

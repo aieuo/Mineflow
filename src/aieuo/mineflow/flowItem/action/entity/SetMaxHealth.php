@@ -24,6 +24,6 @@ class SetMaxHealth extends SetHealth {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setMaxHealth((int)$health);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 }

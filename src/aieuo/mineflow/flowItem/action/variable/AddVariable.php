@@ -95,7 +95,7 @@ class AddVariable extends FlowItem {
         } else {
             Main::getVariableHelper()->add($name, $variable);
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

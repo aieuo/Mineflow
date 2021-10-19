@@ -41,7 +41,7 @@ class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowIt
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        yield true;
+        FlowItemExexutor::CONTINUE;
         return $entity->isAlive() and !$entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());
     }
 

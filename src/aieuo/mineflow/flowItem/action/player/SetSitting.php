@@ -68,7 +68,7 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $player->dataPacket($pk);
 
         self::$entityIds[$player->getName()] = $pk->entityRuntimeId;
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -79,7 +79,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
             $pk->particleName = $particleName;
             Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
         }
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

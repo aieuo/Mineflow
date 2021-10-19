@@ -86,7 +86,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
             $data["else"],
             $options
         );
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {

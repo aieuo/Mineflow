@@ -58,7 +58,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         $item = $this->getItem($source);
 
         $item->setCount((int)$count);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
         return $this->getItemVariableName();
     }
 
