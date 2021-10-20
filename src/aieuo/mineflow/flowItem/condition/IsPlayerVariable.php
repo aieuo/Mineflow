@@ -21,7 +21,7 @@ class IsPlayerVariable extends IsActiveEntityVariable {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return $entity instanceof Player;
     }
 }

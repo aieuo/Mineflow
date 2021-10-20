@@ -21,7 +21,7 @@ class InHand extends TypeItem {
 
         $hand = $player->getInventory()->getItemInHand();
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return ($hand->getId() === $item->getId()
             and $hand->getDamage() === $item->getDamage()
             and $hand->getCount() >= $item->getCount()

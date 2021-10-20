@@ -49,7 +49,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
         $name = $source->replaceVariables($this->getFileName());
         $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
     }
 

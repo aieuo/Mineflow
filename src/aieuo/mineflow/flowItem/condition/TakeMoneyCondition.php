@@ -34,7 +34,7 @@ class TakeMoneyCondition extends TypeMoney {
             return true;
         }
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return false;
     }
 }

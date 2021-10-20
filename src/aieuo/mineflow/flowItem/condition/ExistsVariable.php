@@ -47,7 +47,7 @@ class ExistsVariable extends FlowItem implements Condition {
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return $source->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 

@@ -29,7 +29,7 @@ class LessMoney extends TypeMoney {
 
         $myMoney = Economy::getPlugin()->getMoney($name);
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return $myMoney <= (int)$amount;
     }
 }

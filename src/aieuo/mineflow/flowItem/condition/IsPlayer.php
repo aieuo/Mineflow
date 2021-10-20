@@ -21,7 +21,7 @@ class IsPlayer extends IsActiveEntity {
         $id = $source->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return EntityHolder::isPlayer((int)$id);
     }
 }

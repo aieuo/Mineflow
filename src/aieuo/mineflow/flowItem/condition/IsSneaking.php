@@ -39,7 +39,7 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return $entity->isSneaking();
     }
 

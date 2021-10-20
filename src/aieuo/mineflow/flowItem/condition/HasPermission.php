@@ -53,7 +53,7 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
 
         $permission = $this->getPlayerPermission();
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return $player->hasPermission($permission);
     }
 

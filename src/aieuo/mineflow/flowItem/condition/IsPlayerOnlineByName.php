@@ -49,7 +49,7 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
 
         $player = Server::getInstance()->getPlayerExact($name);
 
-        FlowItemExexutor::CONTINUE;
+        yield FlowItemExecutor::CONTINUE;
         return $player instanceof Player;
     }
 
