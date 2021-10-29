@@ -67,7 +67,7 @@ class ExecuteRecipe extends FlowItem {
         $args = $this->getArguments($source);
 
         $recipe->executeAllTargets($source->getTarget(), $source->getVariables(), $source->getEvent(), $args);
-        yield true;
+        yield FlowItemExecutor::CONTINUE;
     }
 
     public function getRecipe(FlowItemExecutor $source): Recipe {

@@ -14,11 +14,6 @@ interface BlockFlowItem {
 
     public function setBlockVariableName(string $block, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Block
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getBlock(FlowItemExecutor $source, string $name = ""): Block;
 }

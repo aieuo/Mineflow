@@ -15,9 +15,7 @@ class SendMessage extends TypePlayerMessage {
         $this->throwIfCannotExecute();
 
         $message = $source->replaceVariables($this->getMessage());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $player->sendMessage($message);
         yield FlowItemExecutor::CONTINUE;

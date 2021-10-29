@@ -54,16 +54,12 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $index = $source->replaceVariables($this->getIndex());
-
-        $this->throwIfInvalidNumber($index, 0);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $index = $this->getInt($source->replaceVariables($this->getIndex()), 0);
+        $player = $this->getOnlinePlayer($source);
 
         $item = $this->getItem($source);
 
-        $player->getInventory()->setItem((int)$index, $item);
+        $player->getInventory()->setItem($index, $item);
         yield FlowItemExecutor::CONTINUE;
     }
 

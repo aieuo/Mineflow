@@ -50,21 +50,17 @@ class SetScale extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $source->replaceVariables($this->getScale());
+        $scale = $this->getFloat($source->replaceVariables($this->getScale()), min: 0, exclude: [0]);
+        $entity = $this->getOnlineEntity($source);
 
-        $this->throwIfInvalidNumber($health, 0, null);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setScale((float)$health);
+        $entity->setScale($scale);
         yield FlowItemExecutor::CONTINUE;
     }
 
     public function getEditFormElements(array $variables): array {
         return [
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new ExampleNumberInput("@action.setScale.form.scale", "1", $this->getScale(), true, 0, null, [0]),
+            new ExampleNumberInput("@action.setScale.form.scale", "1", $this->getScale(), true, 0, excludes: [0]),
         ];
     }
 

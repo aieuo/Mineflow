@@ -15,9 +15,7 @@ class CanAddItem extends TypeItem {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         yield FlowItemExecutor::CONTINUE;
         return $player->getInventory()->canAddItem($item);

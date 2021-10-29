@@ -14,11 +14,6 @@ interface ScoreboardFlowItem {
 
     public function setScoreboardVariableName(string $scoreboard, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Scoreboard
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getScoreboard(FlowItemExecutor $source, string $name = ""): Scoreboard;
 }

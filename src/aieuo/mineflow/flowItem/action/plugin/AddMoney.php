@@ -25,12 +25,10 @@ class AddMoney extends TypeMoney {
         }
 
         $name = $source->replaceVariables($this->getPlayerName());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount, 1);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()), 1);
 
         $economy = Economy::getPlugin();
-        $economy->addMoney($name, (int)$amount);
+        $economy->addMoney($name, $amount);
         yield FlowItemExecutor::CONTINUE;
     }
 }

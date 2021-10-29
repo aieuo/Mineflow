@@ -72,15 +72,10 @@ class ComparisonNumber extends FlowItem implements Condition {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
+        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
+        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value1);
-        $this->throwIfInvalidNumber($value2);
-
-        $value1 = (float)$value1;
-        $value2 = (float)$value2;
         $result = match ($operator) {
             self::EQUAL => $value1 === $value2,
             self::NOT_EQUAL => $value1 !== $value2,

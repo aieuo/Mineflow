@@ -52,14 +52,11 @@ class SetYaw extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $yaw = $source->replaceVariables($this->getYaw());
-        $this->throwIfInvalidNumber($yaw);
+        $yaw = $this->getFloat($source->replaceVariables($this->getYaw()));
+        $entity = $this->getOnlineEntity($source);
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setRotation((float)$yaw, $entity->getPitch());
-        if ($entity instanceof Player) $entity->teleport($entity, (float)$yaw, $entity->getPitch());
+        $entity->setRotation($yaw, $entity->getPitch());
+        if ($entity instanceof Player) $entity->teleport($entity, $yaw, $entity->getPitch());
         yield FlowItemExecutor::CONTINUE;
     }
 

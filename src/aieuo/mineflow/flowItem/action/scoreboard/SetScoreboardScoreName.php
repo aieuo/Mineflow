@@ -61,13 +61,10 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getScoreName());
-        $score = $source->replaceVariables($this->getScore());
-
-        $this->throwIfInvalidNumber($score);
-
+        $score = $this->getInt($source->replaceVariables($this->getScore()));
         $board = $this->getScoreboard($source);
 
-        $board->setScoreName($name, (int)$score);
+        $board->setScoreName($name, $score);
         yield FlowItemExecutor::CONTINUE;
     }
 

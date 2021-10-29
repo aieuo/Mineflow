@@ -64,14 +64,11 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $max = $source->replaceVariables($this->getMax());
-        $this->throwIfInvalidNumber($max, 1);
+        $max = $this->getInt($source->replaceVariables($this->getMax()), 1);
         $result = $source->replaceVariables($this->getResultName());
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $block = $player->getTargetBlock((int)$max);
+        $block = $player->getTargetBlock($max);
         $source->addVariable($result, new BlockObjectVariable($block));
         yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();

@@ -77,14 +77,8 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
 
         $title = $source->replaceVariables($this->getTitle());
         $subtitle = $source->replaceVariables($this->getSubTitle());
-        $times = array_map(function ($time) use ($source) {
-            $time = $source->replaceVariables($time);
-            $this->throwIfInvalidNumber($time);
-            return (int)$time;
-        }, $this->getTime());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $times = array_map(fn($time) => $this->getInt($source->replaceVariables($time)), $this->getTime());
+        $player = $this->getOnlinePlayer($source);
 
         $player->sendTitle($title, $subtitle, ...$times);
         yield FlowItemExecutor::CONTINUE;

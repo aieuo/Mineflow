@@ -52,9 +52,7 @@ class Command extends FlowItem implements PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $command = $source->replaceVariables($this->getCommand());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         Server::getInstance()->dispatchCommand($player, $command);
         yield FlowItemExecutor::CONTINUE;

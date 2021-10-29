@@ -56,9 +56,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+        $player = $this->getOnlinePlayer($source);
         $gamemode = $this->getGamemode();
 
         yield FlowItemExecutor::CONTINUE;

@@ -60,8 +60,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));
         }
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $form = clone $form;
         $form->replaceVariablesFromExecutor($source);

@@ -89,20 +89,17 @@ class FourArithmeticOperations extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
+        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
+        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value1);
-        $this->throwIfInvalidNumber($value2);
-
         $result = match ($operator) {
-            self::ADDITION => (float)$value1 + (float)$value2,
-            self::SUBTRACTION => (float)$value1 - (float)$value2,
-            self::MULTIPLICATION => (float)$value1 * (float)$value2,
-            self::DIVISION => (float)$value1 / $this->getFloat($value2, exclude: [0.0]),
-            self::MODULO => (float)$value1 % $this->getFloat($value2, exclude: [0.0]),
+            self::ADDITION => $value1 + $value2,
+            self::SUBTRACTION => $value1 - $value2,
+            self::MULTIPLICATION => $value1 * $value2,
+            self::DIVISION => $value1 / $this->getFloat($value2, exclude: [0.0]),
+            self::MODULO => $value1 % $this->getFloat($value2, exclude: [0.0]),
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
 

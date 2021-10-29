@@ -50,14 +50,10 @@ class SetHealth extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $source->replaceVariables($this->getHealth());
+        $health = $this->getFloat($source->replaceVariables($this->getHealth()), min: 0);
+        $entity = $this->getOnlineEntity($source);
 
-        $this->throwIfInvalidNumber($health, 1, null);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setHealth((float)$health);
+        $entity->setHealth($health);
         yield FlowItemExecutor::CONTINUE;
     }
 

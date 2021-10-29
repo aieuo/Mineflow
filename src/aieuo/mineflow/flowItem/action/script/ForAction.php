@@ -96,15 +96,9 @@ class ForAction extends FlowItem implements FlowItemContainer {
     public function execute(FlowItemExecutor $source): \Generator {
         $counterName = $source->replaceVariables($this->counterName);
 
-        $start = $source->replaceVariables($this->startIndex);
-        $this->throwIfInvalidNumber($start);
-
-        $end = $source->replaceVariables($this->endIndex);
-        $this->throwIfInvalidNumber($end);
-
-        $fluctuation = $source->replaceVariables($this->fluctuation);
-        $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
-        $fluctuation = (float)$fluctuation;
+        $start = $this->getFloat($source->replaceVariables($this->startIndex));
+        $end = $this->getFloat($source->replaceVariables($this->endIndex));
+        $fluctuation = $this->getFloat($source->replaceVariables($this->fluctuation), exclude: [0.0]);
 
         for ($i = $start; $i <= $end; $i += $fluctuation) {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [

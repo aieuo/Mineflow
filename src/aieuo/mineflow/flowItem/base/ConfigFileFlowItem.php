@@ -14,11 +14,6 @@ interface ConfigFileFlowItem {
 
     public function setConfigVariableName(string $config, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Config
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getConfig(FlowItemExecutor $source, string $name = ""): Config;
 }

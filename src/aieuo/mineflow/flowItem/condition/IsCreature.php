@@ -16,10 +16,8 @@ class IsCreature extends IsActiveEntity {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
-
-        $entity = EntityHolder::findEntity((int)$id);
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
+        $entity = EntityHolder::findEntity($id);
 
         yield FlowItemExecutor::CONTINUE;
         return $entity instanceof Creature;

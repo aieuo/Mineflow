@@ -71,9 +71,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
 
         $text = $source->replaceVariables($this->getFormText());
         $resultName = $source->replaceVariables($this->getResultName());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $this->sendForm($source, $player, $text, $resultName);
         yield FlowItemExecutor::AWAIT;

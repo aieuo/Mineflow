@@ -48,12 +48,8 @@ class SetFood extends FlowItem implements PlayerFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $source->replaceVariables($this->getFood());
-
-        $this->throwIfInvalidNumber($health, 0, 20);
-
-        $entity = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($entity);
+        $health = $this->getInt($source->replaceVariables($this->getFood()), 0, 20);
+        $entity = $this->getOnlinePlayer($source);
 
         $entity->setFood((float)$health);
         yield FlowItemExecutor::CONTINUE;

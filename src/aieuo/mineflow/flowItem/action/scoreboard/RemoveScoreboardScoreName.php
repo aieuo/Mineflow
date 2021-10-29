@@ -50,13 +50,10 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $score = $source->replaceVariables($this->getScore());
-
-        $this->throwIfInvalidNumber($score);
-
+        $score = $this->getInt($source->replaceVariables($this->getScore()));
         $board = $this->getScoreboard($source);
 
-        $board->removeScoreName((int)$score);
+        $board->removeScoreName($score);
         yield FlowItemExecutor::CONTINUE;
     }
 

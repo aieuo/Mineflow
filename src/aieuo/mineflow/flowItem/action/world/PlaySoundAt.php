@@ -74,12 +74,8 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $this->throwIfCannotExecute();
 
         $sound = $source->replaceVariables($this->getSound());
-        $volume = $source->replaceVariables($this->getVolume());
-        $pitch = $source->replaceVariables($this->getPitch());
-
-        $this->throwIfInvalidNumber($volume);
-        $this->throwIfInvalidNumber($pitch);
-
+        $volume = $this->getFloat($source->replaceVariables($this->getVolume()));
+        $pitch = $this->getFloat($source->replaceVariables($this->getPitch()));
         $position = $this->getPosition($source);
 
         $pk = new PlaySoundPacket();
@@ -87,8 +83,8 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $pk->x = $position->x;
         $pk->y = $position->y;
         $pk->z = $position->z;
-        $pk->volume = (float)$volume;
-        $pk->pitch = (float)$pitch;
+        $pk->volume = $volume;
+        $pk->pitch = $pitch;
         Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
         yield FlowItemExecutor::CONTINUE;
     }

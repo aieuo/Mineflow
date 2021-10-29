@@ -39,8 +39,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
 
         $recipe = clone $this->getRecipe($source);
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         $recipe->execute($entity, $source->getEvent(), $source->getVariables());
         yield FlowItemExecutor::CONTINUE;

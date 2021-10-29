@@ -14,12 +14,7 @@ interface Vector3FlowItem {
 
     public function setVector3VariableName(string $vector3, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Vector3
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getVector3(FlowItemExecutor $source, string $name = ""): Vector3;
 
 }

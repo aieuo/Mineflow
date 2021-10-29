@@ -73,14 +73,9 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $sound = $source->replaceVariables($this->getSound());
-        $volume = $source->replaceVariables($this->getVolume());
-        $pitch = $source->replaceVariables($this->getPitch());
-
-        $this->throwIfInvalidNumber($volume);
-        $this->throwIfInvalidNumber($pitch);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $volume = $this->getInt($source->replaceVariables($this->getVolume()));
+        $pitch = $this->getInt($source->replaceVariables($this->getPitch()));
+        $player = $this->getOnlinePlayer($source);
 
         $pk = new PlaySoundPacket();
         $pk->soundName = $sound;

@@ -16,13 +16,10 @@ class AddXpLevel extends AddXpProgress {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $xp = $source->replaceVariables($this->getXp());
-        $this->throwIfInvalidNumber($xp);
+        $xp = $this->getInt($source->replaceVariables($this->getXp()));
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $new = $player->getXpLevel() + (int)$xp;
+        $new = $player->getXpLevel() + $xp;
         if ($new < 0) $xp = -$player->getXpLevel();
         $player->addXpLevels((int)$xp);
         yield FlowItemExecutor::CONTINUE;

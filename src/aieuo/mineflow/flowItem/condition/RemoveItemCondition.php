@@ -15,9 +15,7 @@ class RemoveItemCondition extends TypeItem {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         if (!$player->getInventory()->contains($item)) return false;
         $player->getInventory()->removeItem($item);

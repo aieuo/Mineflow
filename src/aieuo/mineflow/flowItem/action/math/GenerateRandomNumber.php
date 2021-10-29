@@ -57,14 +57,11 @@ class GenerateRandomNumber extends TypeGetMathVariable {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $min = $source->replaceVariables($this->getMin());
-        $max = $source->replaceVariables($this->getMax());
+        $min = $this->getInt($source->replaceVariables($this->getMin()));
+        $max = $this->getInt($source->replaceVariables($this->getMax()));
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $this->throwIfInvalidNumber($min);
-        $this->throwIfInvalidNumber($max);
-
-        $rand = mt_rand((int)$min, (int)$max);
+        $rand = mt_rand($min, $max);
         $source->addVariable($resultName, new NumberVariable($rand));
         yield FlowItemExecutor::CONTINUE;
         return $rand;

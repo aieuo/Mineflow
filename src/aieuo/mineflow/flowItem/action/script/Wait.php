@@ -49,14 +49,13 @@ class Wait extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $time = $source->replaceVariables($this->getTime());
-        $this->throwIfInvalidNumber($time, 1 / 20);
+        $time = $this->getFloat($source->replaceVariables($this->getTime()), 1 / 20);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
             function (int $currentTick) use ($source): void {
                 $source->resume();
             }
-        ), (int)((float)$time * 20));
+        ), (int)($time * 20));
         yield FlowItemExecutor::AWAIT;
     }
 

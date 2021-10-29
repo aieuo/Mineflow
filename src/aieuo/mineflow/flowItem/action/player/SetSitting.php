@@ -49,9 +49,7 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+        $player = $this->getOnlinePlayer($source);
         $position = $this->getPosition($source);
 
         self::leave($player);

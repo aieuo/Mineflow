@@ -56,16 +56,10 @@ class Motion extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $motions = array_map(function ($value) use ($source) {
-            $v = $source->replaceVariables($value);
-            $this->throwIfInvalidNumber($v);
-            return $v;
-        }, $this->getPosition());
+        $motions = array_map(fn($value) => $this->getFloat($source->replaceVariables($value)), $this->getPosition());
+        $entity = $this->getOnlineEntity($source);
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $motion = new Vector3((float)$motions[0], (float)$motions[1], (float)$motions[2]);
+        $motion = new Vector3($motions[0], $motions[1], $motions[2]);
         $entity->setMotion($motion);
         yield FlowItemExecutor::CONTINUE;
     }

@@ -16,14 +16,10 @@ class SetMaxHealth extends SetHealth {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $source->replaceVariables($this->getHealth());
+        $health = $this->getInt($source->replaceVariables($this->getHealth()), min: 1);
+        $entity = $this->getOnlineEntity($source);
 
-        $this->throwIfInvalidNumber($health, 1, null);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setMaxHealth((int)$health);
+        $entity->setMaxHealth($health);
         yield FlowItemExecutor::CONTINUE;
     }
 }

@@ -23,14 +23,12 @@ class TakeMoneyCondition extends TypeMoney {
         }
 
         $name = $source->replaceVariables($this->getPlayerName());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount, 1);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()), 1);
 
         $economy = Economy::getPlugin();
         $myMoney = $economy->getMoney($name);
         if ($myMoney >= $this->getAmount()) {
-            $economy->takeMoney($name, (int)$amount);
+            $economy->takeMoney($name, $amount);
             return true;
         }
 

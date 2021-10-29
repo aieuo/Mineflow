@@ -14,11 +14,6 @@ interface PositionFlowItem {
 
     public function setPositionVariableName(string $position, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Position
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getPosition(FlowItemExecutor $source, string $name = ""): Position;
 }

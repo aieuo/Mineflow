@@ -14,13 +14,9 @@ interface PlayerFlowItem {
 
     public function setPlayerVariableName(string $player, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Player
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getPlayer(FlowItemExecutor $source, string $name): Player;
 
-    public function throwIfInvalidPlayer(Player $player): void;
+    /** @throws InvalidFlowValueException */
+    public function getOnlinePlayer(FlowItemExecutor $source, string $name = ""): Player;
 }

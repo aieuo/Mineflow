@@ -35,9 +35,11 @@ trait EntityFlowItemTrait {
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.entity"], $rawName]));
     }
 
-    public function throwIfInvalidEntity(Entity $entity, bool $checkOnline = true): void {
-        if ($entity instanceof Player and $checkOnline and !$entity->isOnline()) {
+    public function getOnlineEntity(FlowItemExecutor $source, string $name = ""): Entity {
+        $entity = $this->getEntity($source, $name);
+        if ($entity instanceof Player and !$entity->isOnline()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.player.offline"));
         }
+        return $entity;
     }
 }

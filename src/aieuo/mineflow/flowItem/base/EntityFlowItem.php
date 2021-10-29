@@ -14,13 +14,10 @@ interface EntityFlowItem {
 
     public function setEntityVariableName(string $entity, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Entity
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getEntity(FlowItemExecutor $source, string $name = ""): Entity;
 
-    public function throwIfInvalidEntity(Entity $entity): void;
+    /** @throws InvalidFlowValueException */
+    public function getOnlineEntity(FlowItemExecutor $source, string $name = ""): Entity;
+
 }

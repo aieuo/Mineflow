@@ -76,25 +76,18 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+        $entity = $this->getOnlineEntity($source);
         $position = $this->getPosition($source);
 
-        $speedX = $source->replaceVariables($this->getSpeedX());
-        $this->throwIfInvalidNumber($speedX, 0, null);
-
-        $speedY = $source->replaceVariables($this->getSpeedY());
-        $this->throwIfInvalidNumber($speedY, 0, null);
-
-        $speedZ = $source->replaceVariables($this->getSpeedZ());
-        $this->throwIfInvalidNumber($speedZ, 0, null);
+        $speedX = $this->getFloat($source->replaceVariables($this->getSpeedX()), min: 0);
+        $speedY = $this->getFloat($source->replaceVariables($this->getSpeedY()), min: 0);
+        $speedZ = $this->getFloat($source->replaceVariables($this->getSpeedZ()), min: 0);
 
         $dis = $entity->distance($position);
         if ($dis > 1) {
-            $x = (float)$speedX * (($position->x - $entity->x) / $dis);
-            $y = (float)$speedY * (($position->y - $entity->y) / $dis);
-            $z = (float)$speedZ * (($position->z - $entity->z) / $dis);
+            $x = $speedX * (($position->x - $entity->x) / $dis);
+            $y = $speedY * (($position->y - $entity->y) / $dis);
+            $z = $speedZ * (($position->z - $entity->z) / $dis);
 
             $entity->setMotion(new Vector3($x, $y, $z));
         }

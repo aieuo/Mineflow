@@ -94,30 +94,31 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         }
     }
 
-    public function throwIfInvalidNumber(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): void {
-        if (!is_numeric($numberStr)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$numberStr]));
+    public function throwIfInvalidNumber(string|float|int $number, float|int|null $min = null, float|int|null $max = null, array $exclude = []): void {
+        if (!is_numeric($number)) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$number]));
         }
-        $number = (float)$numberStr;
+        $number = (float)$number;
         if ($min !== null and $number < $min) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.lessValue", [$min, $number]));
         }
         if ($max !== null and $number > $max) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.overValue", [$max, $number]));
         }
-        if (!empty($exclude) and in_array($number, $exclude, true)) {
+        /** @noinspection TypeUnsafeArraySearchInspection */
+        if (!empty($exclude) and in_array($number, $exclude)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
         }
     }
 
-    protected function getInt(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): int {
-        $this->throwIfInvalidNumber($numberStr, $min, $max, $exclude);
-        return (int)$numberStr;
+    protected function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
+        $this->throwIfInvalidNumber($number, $min, $max, $exclude);
+        return (int)$number;
     }
 
-    protected function getFloat(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): float {
-        $this->throwIfInvalidNumber($numberStr, $min, $max, $exclude);
-        return (float)$numberStr;
+    protected function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
+        $this->throwIfInvalidNumber($number, $min, $max, $exclude);
+        return (float)$number;
     }
 
     /**

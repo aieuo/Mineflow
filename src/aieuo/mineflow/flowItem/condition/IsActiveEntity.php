@@ -45,11 +45,10 @@ class IsActiveEntity extends FlowItem implements Condition {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
 
         yield FlowItemExecutor::CONTINUE;
-        return EntityHolder::isActive((int)$id);
+        return EntityHolder::isActive($id);
     }
 
     public function getEditFormElements(array $variables): array {

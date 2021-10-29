@@ -18,8 +18,7 @@ class IsPlayerVariable extends IsActiveEntityVariable {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         yield FlowItemExecutor::CONTINUE;
         return $entity instanceof Player;

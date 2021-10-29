@@ -54,9 +54,7 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $permission = $source->replaceVariables($this->getPlayerPermission());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $player->addAttachment(Main::getInstance(), $permission, true);
         yield FlowItemExecutor::CONTINUE;

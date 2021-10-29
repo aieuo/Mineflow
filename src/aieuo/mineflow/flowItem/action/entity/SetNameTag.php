@@ -52,9 +52,7 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getNewName());
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         $entity->setNameTag($name);
         if ($entity instanceof Player) $entity->setDisplayName($name);

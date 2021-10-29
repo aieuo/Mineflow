@@ -42,9 +42,7 @@ class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+        $entity = $this->getOnlineEntity($source);
         $position = $this->getPosition($source);
 
         $entity->teleport($position);

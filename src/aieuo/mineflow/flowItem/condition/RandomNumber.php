@@ -63,16 +63,12 @@ class RandomNumber extends FlowItem implements Condition {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $min = $source->replaceVariables($this->getMin());
-        $max = $source->replaceVariables($this->getMax());
-        $value = $source->replaceVariables($this->getValue());
-
-        $this->throwIfInvalidNumber($min);
-        $this->throwIfInvalidNumber($max);
-        $this->throwIfInvalidNumber($value);
+        $min = $this->getInt($source->replaceVariables($this->getMin()));
+        $max = $this->getInt($source->replaceVariables($this->getMax()));
+        $value = $this->getInt($source->replaceVariables($this->getValue()));
 
         yield FlowItemExecutor::CONTINUE;
-        return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;
+        return mt_rand(min($min, $max), max($min, $max)) === $value;
     }
 
     public function getEditFormElements(array $variables): array {
