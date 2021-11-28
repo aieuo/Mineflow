@@ -144,11 +144,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $data;
     }
 
-    /**
-     * @param array $content
-     * @return self
-     * @throws FlowItemLoadException|\ErrorException
-     */
+    /** @throws FlowItemLoadException|\ErrorException */
     public static function loadEachSaveData(array $content): self {
         $action = FlowItemFactory::get($content["id"]);
         if ($action === null) {
@@ -182,16 +178,8 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     abstract public function serializeContents(): array;
 
-    /**
-     * @param array $content
-     * @return FlowItem
-     * @throws FlowItemLoadException|\ErrorException
-     */
+    /** @throws FlowItemLoadException|\ErrorException */
     abstract public function loadSaveData(array $content): FlowItem;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @return bool|string|int|\Generator
-     */
-    abstract public function execute(FlowItemExecutor $source);
+    abstract public function execute(FlowItemExecutor $source): \Generator;
 }

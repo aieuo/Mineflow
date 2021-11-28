@@ -52,6 +52,12 @@ class Language {
         self::$messages[$language] = array_merge(self::$messages[$language], $messages);
     }
 
+    /**
+     * @param string $key
+     * @param string[] $replaces
+     * @param string|null $language
+     * @return string
+     */
     public static function get(string $key, array $replaces = [], string $language = null): string {
         $language = $language ?? self::$language;
         if (isset(self::$messages[$language][$key])) {

@@ -15,8 +15,7 @@ abstract class Element implements \JsonSerializable {
     public const ELEMENT_TOGGLE = "toggle";
 
     protected string $type;
-    /** @var string */
-    protected $text = "";
+    protected string $text = "";
     protected string $extraText = "";
     protected ?string $highlight = "";
 

@@ -33,8 +33,7 @@ class FlowItemExecutor {
     private ?\Closure $onError;
     private ?Recipe $sourceRecipe;
 
-    /** @var mixed */
-    private $lastResult;
+    private mixed $lastResult;
 
     private FlowItem $currentFlowItem;
     private int $currentIndex;

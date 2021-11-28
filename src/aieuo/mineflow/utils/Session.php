@@ -33,32 +33,17 @@ class Session {
         return isset($this->data[$key]);
     }
 
-    /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function get(string $key, $default = null) {
+    public function get(string $key, mixed $default = null): mixed {
         if (!isset($this->data[$key])) return $default;
         return $this->data[$key];
     }
 
-    /**
-     * @param string $key
-     * @param mixed $data
-     * @return self
-     */
-    public function set(string $key, $data): self {
+    public function set(string $key, mixed $data): self {
         $this->data[$key] = $data;
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @return bool
-     */
-    public function push(string $key, $value): bool {
+    public function push(string $key, mixed $value): bool {
         $data = $this->get($key);
         if ($data === null) $data = [];
         if (!is_array($data)) return false;
@@ -68,11 +53,7 @@ class Session {
         return true;
     }
 
-    /**
-     * @param string $key
-     * @return mixed
-     */
-    public function pop(string $key) {
+    public function pop(string $key): mixed {
         $data = $this->get($key);
         if (!is_array($data)) return null;
 
