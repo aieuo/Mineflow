@@ -10,7 +10,7 @@ use pocketmine\event\player\PlayerBedEnterEvent;
 
 class PlayerBedEnterEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerBedEnterEvent::class, $subKey);
+        parent::__construct("PlayerBedEnterEvent", $subKey, PlayerBedEnterEvent::class);
     }
 
     public function getVariables(mixed $event): array {

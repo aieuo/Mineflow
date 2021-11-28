@@ -6,6 +6,6 @@ use pocketmine\event\player\PlayerJumpEvent;
 
 class PlayerJumpEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerJumpEvent::class, $subKey);
+        parent::__construct("PlayerJumpEvent", $subKey, PlayerJumpEvent::class);
     }
 }

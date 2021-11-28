@@ -4,6 +4,7 @@ namespace aieuo\mineflow\trigger\event;
 
 
 use aieuo\mineflow\trigger\TriggerHolder;
+use pocketmine\event\Event;
 use pocketmine\utils\Config;
 
 class EventManager {
@@ -14,6 +15,8 @@ class EventManager {
     private array $triggers = [];
     /** @var array<string, bool> */
     private array $events = [];
+    /** @var array<class-string<Event>, string[]> */
+    private array $keys = [];
     private EventTriggerListener $eventListener;
 
     public function __construct(Config $setting) {
@@ -56,15 +59,21 @@ class EventManager {
     }
 
     public function addTrigger(EventTrigger $trigger, bool $defaultEnabled): void {
-        $eventClass = $trigger->getKey();
-        $trigger->setEnabled((bool)$this->setting->get($eventClass, $defaultEnabled));
+        $key = $trigger->getKey();
+        $eventClass = $trigger->getEventClass();
+        $trigger->setEnabled((bool)$this->setting->get($key, $this->setting->get($eventClass, $defaultEnabled)));
 
         if ($trigger->isEnabled()) {
             $this->eventListener->registerEvent($eventClass);
         }
 
-        $this->triggers[$trigger->getKey()][$trigger->getSubKey()] = $trigger;
-        $this->events[$eventClass] = $trigger->isEnabled();
+        $this->triggers[$key][$trigger->getSubKey()] = $trigger;
+        $this->events[$key] = $trigger->isEnabled();
+        $this->keys[$eventClass][] = $key;
+    }
+
+    public function getKeysFromEventClass(string $class): array {
+        return $this->keys[$class] ?? [];
     }
 
     public function getTrigger(string $key, string $subKey = ""): ?EventTrigger {

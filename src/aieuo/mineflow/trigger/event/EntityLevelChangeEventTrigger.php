@@ -10,7 +10,7 @@ use pocketmine\event\entity\EntityLevelChangeEvent;
 
 class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(EntityLevelChangeEvent::class, $subKey);
+        parent::__construct("EntityLevelChangeEvent", $subKey, EntityLevelChangeEvent::class);
     }
 
     public function getVariables(mixed $event): array {

@@ -8,6 +8,8 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\trigger\event\EventManager;
+use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
@@ -22,6 +24,10 @@ use pocketmine\entity\Entity;
 use pocketmine\event\Event;
 use pocketmine\Player;
 use pocketmine\Server;
+use function array_key_last;
+use function explode;
+use function str_replace;
+use function version_compare;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
     use FlowItemContainerTrait {
@@ -334,7 +340,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function upgrade(?string $from, string $to): void {
-        if (version_compare("2.0.0", $to, "<=") and ($from === null or version_compare($from, "2.0.0", "<"))) {
+        if ($this->needUpgrade($from, $to, "2.0.0")) {
             $oldToNewTargetMap = [
                 4 => self::TARGET_NONE,
                 0 => self::TARGET_DEFAULT,
@@ -355,7 +361,25 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $from = "2.0.0";
         }
 
+        if ($this->needUpgrade($from, $to, "3.0.0")) {
+            $eventTriggers = Main::getEventManager();
+            foreach ($this->getTriggers() as $trigger) {
+                if ($trigger instanceof EventTrigger) {
+                    $this->removeTrigger($trigger);
+                    $tmp = explode("\\", str_replace("/", "\\", $trigger->getKey()));
+                    $key = $tmp[array_key_last($tmp)];
+                    $this->addTrigger($eventTriggers->getTrigger($key, $trigger->getSubKey()));
+                }
+            }
+
+            $from = "3.0.0";
+        }
+
         $this->version = $from;
+    }
+
+    private function needUpgrade(?string $from, string $current, string $target): bool {
+        return version_compare($target, $current, "<=") and ($from === null or version_compare($from, $target, "<"));
     }
 
     private function replaceLevelToWorld(FlowItem $action): void {

@@ -6,6 +6,6 @@ use pocketmine\event\player\PlayerChangeSkinEvent;
 
 class PlayerChangeSkinEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerChangeSkinEvent::class, $subKey);
+        parent::__construct("PlayerChangeSkinEvent", $subKey, PlayerChangeSkinEvent::class);
     }
 }

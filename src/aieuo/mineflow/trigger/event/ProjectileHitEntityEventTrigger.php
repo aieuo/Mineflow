@@ -10,7 +10,7 @@ use pocketmine\event\entity\ProjectileHitEntityEvent;
 
 class ProjectileHitEntityEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(ProjectileHitEntityEvent::class, $subKey);
+        parent::__construct("ProjectileHitEntityEvent", $subKey, ProjectileHitEntityEvent::class);
     }
 
     public function getVariables(mixed $event): array {

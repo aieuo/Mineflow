@@ -14,17 +14,16 @@ use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\Event;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\player\PlayerEvent;
-use pocketmine\Player;
 
 class EventTrigger extends Trigger {
 
     private bool $enabled = true;
 
-    public static function create(string $eventName, string $subKey = ""): EventTrigger {
-        return Main::getEventManager()->getTrigger($eventName) ?? new EventTrigger($eventName, $subKey);
+    public static function create(string $key, string $subKey = ""): EventTrigger {
+        return Main::getEventManager()->getTrigger($key) ?? new EventTrigger($key, $subKey, "");
     }
 
-    public function __construct(string $key, string $subKey = "") {
+    public function __construct(string $key, string $subKey, private string $eventClass) {
         parent::__construct(Triggers::EVENT, $key, $subKey);
     }
 
@@ -51,12 +50,20 @@ class EventTrigger extends Trigger {
         return DefaultVariables::getEntityVariables($this->getTargetEntity($event));
     }
 
+    public function filter(Event $event): bool  {
+        return true;
+    }
+
     public function setEnabled(bool $enabled): void {
         $this->enabled = $enabled;
     }
 
     public function isEnabled(): bool {
         return $this->enabled;
+    }
+
+    public function getEventClass(): string {
+        return $this->eventClass;
     }
 
     public function __toString(): string {
