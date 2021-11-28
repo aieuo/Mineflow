@@ -146,6 +146,9 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /** @throws FlowItemLoadException|\ErrorException */
     public static function loadEachSaveData(array $content): self {
+        if ($content["id"] === FlowItemIds::IN_AREA and !isset($content["contents"][2])) {
+            $content["id"] = FlowItemIds::IN_WORLD;
+        }
         $action = FlowItemFactory::get($content["id"]);
         if ($action === null) {
             throw new FlowItemLoadException(Language::get("action.not.found", [$content["id"]]));

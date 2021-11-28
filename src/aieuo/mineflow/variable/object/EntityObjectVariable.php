@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -36,6 +37,8 @@ class EntityObjectVariable extends PositionObjectVariable {
                 return new NumberVariable($entity->getPitch());
             case "direction":
                 return new NumberVariable($entity->getDirection());
+            case "onGround":
+                return new BooleanVariable($entity->isOnGround());
             default:
                 return null;
         }
