@@ -37,12 +37,11 @@ class GetEntity extends FlowItem {
         $this->resultName = $result;
     }
 
-    public function setKey(string $name): self {
+    public function setEntityId(string $name): void {
         $this->entityId = $name;
-        return $this;
     }
 
-    public function getKey(): string {
+    public function getEntityId(): string {
         return $this->entityId;
     }
 
@@ -54,20 +53,19 @@ class GetEntity extends FlowItem {
     public function getResultName(): string {
         return $this->resultName;
     }
-
     public function isDataValid(): bool {
-        return $this->getKey() !== "" and !empty($this->getResultName());
+        return $this->getEntityId() !== "" and $this->getResultName() !== "";
     }
 
     public function getDetail(): string {
-        return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
+        return Language::get($this->detail, [$this->getEntityId(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $id = $this->getInt($source->replaceVariables($this->getEntityId()), min: 0);
-        $resultName = $source->replaceVariables($this->getReturnName());
+        $resultName = $source->replaceVariables($this->getResultName());
 
         $entity = EntityHolder::findEntity($id);
         if ($entity === null) {
@@ -87,24 +85,24 @@ class GetEntity extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getKey(), true),
+            new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getEntityId(), true),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
         ];
     }
 
     public function loadSaveData(array $content): FlowItem {
-        $this->setKey($content[0]);
+        $this->setEntityId($content[0]);
         $this->setResultName($content[1]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getKey(), $this->getResultName()];
+        return [$this->getEntityId(), $this->getResultName()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(PlayerObjectVariable::class, $this->getKey())
+            $this->getResultName() => new DummyVariable(PlayerObjectVariable::class, $this->getEntityId())
         ];
     }
 }
