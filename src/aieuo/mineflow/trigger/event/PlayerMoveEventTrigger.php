@@ -10,7 +10,7 @@ use pocketmine\event\player\PlayerMoveEvent;
 
 class PlayerMoveEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerMoveEvent::class, $subKey);
+        parent::__construct("PlayerMoveEvent", $subKey, PlayerMoveEvent::class);
     }
 
     public function getVariables(mixed $event): array {

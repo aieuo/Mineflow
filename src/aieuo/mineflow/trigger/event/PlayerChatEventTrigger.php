@@ -10,7 +10,7 @@ use pocketmine\event\player\PlayerChatEvent;
 
 class PlayerChatEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerChatEvent::class, $subKey);
+        parent::__construct("PlayerChatEvent", $subKey, PlayerChatEvent::class);
     }
 
     public function getVariables(mixed $event): array {

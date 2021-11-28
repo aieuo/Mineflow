@@ -29,13 +29,19 @@ class EventTriggerListener implements Listener {
 
     public function onEvent(Event $event): void {
         $holder = TriggerHolder::getInstance();
+        $manager = Main::getEventManager();
         $class = $event::class;
         do {
-            if ($holder->existsRecipeByString(Triggers::EVENT, $class)) {
-                $trigger = EventTrigger::create($class);
-                $recipes = $holder->getRecipes($trigger);
-                $variables = $trigger->getVariables($event);
-                $recipes?->executeAll($trigger->getTargetEntity($event), $variables, $event);
+            $keys = $manager->getKeysFromEventClass($class);
+            foreach ($keys as $key) {
+                $trigger = $manager->getTrigger($key);
+                if ($trigger === null or !$trigger->filter($event)) continue;
+
+                if ($holder->existsRecipeByString(Triggers::EVENT, $key)) {
+                    $recipes = $holder->getRecipes($trigger);
+                    $variables = $trigger->getVariables($event);
+                    $recipes?->executeAll($trigger->getTargetEntity($event), $variables, $event);
+                }
             }
         } while (($class = get_parent_class($class)) !== false);
     }

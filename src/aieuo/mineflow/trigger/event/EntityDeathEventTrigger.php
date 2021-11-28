@@ -11,7 +11,7 @@ use pocketmine\Player;
 
 class EntityDeathEventTrigger extends EntityEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(EntityDeathEvent::class, $subKey);
+        parent::__construct("EntityDeathEvent", $subKey, EntityDeathEvent::class);
     }
 
     public function getVariables(mixed $event): array {

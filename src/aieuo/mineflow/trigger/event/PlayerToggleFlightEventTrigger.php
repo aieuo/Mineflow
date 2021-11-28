@@ -10,7 +10,7 @@ use pocketmine\event\player\PlayerToggleFlightEvent;
 
 class PlayerToggleFlightEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerToggleFlightEvent::class, $subKey);
+        parent::__construct("PlayerToggleFlightEvent", $subKey, PlayerToggleFlightEvent::class);
     }
 
     public function getVariables(mixed $event): array {

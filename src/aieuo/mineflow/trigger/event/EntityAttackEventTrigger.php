@@ -12,7 +12,7 @@ use pocketmine\event\Event;
 
 class EntityAttackEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(EntityAttackEvent::class, $subKey);
+        parent::__construct("EntityAttackEvent", $subKey, EntityAttackEvent::class);
     }
 
     public function getTargetEntity(Event $event): ?Entity {
