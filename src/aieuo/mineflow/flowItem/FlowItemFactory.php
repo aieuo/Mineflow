@@ -172,6 +172,7 @@ use aieuo\mineflow\flowItem\condition\RandomNumber;
 use aieuo\mineflow\flowItem\condition\RemoveItemCondition;
 use aieuo\mineflow\flowItem\condition\TakeMoneyCondition;
 use pocketmine\Server;
+use function get_class;
 
 class FlowItemFactory {
 
@@ -475,7 +476,11 @@ class FlowItemFactory {
         return self::$list;
     }
 
-    public static function register(FlowItem $action): void {
+    public static function register(FlowItem $action, bool $override = false): void {
+        if (!$override and isset(self::$list[$action->getId()])) {
+            throw new \InvalidArgumentException("FlowItem id ".$action->getId()." is already used by ".self::$list[$action->getId()]::class);
+        }
+
         self::$list[$action->getId()] = clone $action;
     }
 
