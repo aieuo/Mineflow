@@ -17,8 +17,11 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Entity;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
-use pocketmine\network\mcpe\protocol\types\EntityLink;
-use pocketmine\Player;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
+use pocketmine\network\mcpe\protocol\types\entity\LongMetadataProperty;
+use pocketmine\player\Player;
 
 class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
@@ -55,16 +58,17 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         self::leave($player);
 
         $pk = new AddActorPacket();
-        $pk->entityRuntimeId = Entity::$entityCount++;
-        $pk->type = "minecraft:minecart";
+        $pk->actorUniqueId = Entity::nextRuntimeId();
+        $pk->actorRuntimeId = $pk->actorUniqueId;
+        $pk->type = EntityIds::MINECART;
         $pk->position = $position;
-        $pk->links = [new EntityLink($pk->entityRuntimeId, $player->getId(), EntityLink::TYPE_RIDER, false, true)];
+        $pk->links = [new EntityLink($pk->actorRuntimeId, $player->getId(), EntityLink::TYPE_RIDER, false, true)];
         $pk->metadata = [
-            Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_INVISIBLE]
+            new LongMetadataProperty(EntityMetadataFlags::INVISIBLE),
         ];
-        $player->dataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
 
-        self::$entityIds[$player->getName()] = $pk->entityRuntimeId;
+        self::$entityIds[$player->getName()] = $pk->actorRuntimeId;
         yield FlowItemExecutor::CONTINUE;
     }
 
@@ -88,8 +92,8 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     public static function leave(Player $player): void {
         if (isset(self::$entityIds[$player->getName()])) {
             $pk = new RemoveActorPacket();
-            $pk->entityUniqueId = self::$entityIds[$player->getName()];
-            if ($player->isOnline()) $player->dataPacket($pk);
+            $pk->actorUniqueId = self::$entityIds[$player->getName()];
+            if ($player->isOnline()) $player->getNetworkSession()->sendDataPacket($pk);
             unset(self::$entityIds[$player->getName()]);
         }
     }

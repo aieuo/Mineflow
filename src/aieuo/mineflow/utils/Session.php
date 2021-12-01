@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\utils;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class Session {
 

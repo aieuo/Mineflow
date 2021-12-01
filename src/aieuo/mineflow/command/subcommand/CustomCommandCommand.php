@@ -5,7 +5,7 @@ namespace aieuo\mineflow\command\subcommand;
 use aieuo\mineflow\ui\CommandForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class CustomCommandCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {

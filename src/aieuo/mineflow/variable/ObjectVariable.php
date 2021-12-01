@@ -16,6 +16,10 @@ abstract class ObjectVariable extends Variable {
         return $this->value;
     }
 
+    protected function setValue(object $value): void {
+        $this->value = $value;
+    }
+
     abstract public function getProperty(string $name): ?Variable;
 
     public function getShowString(): ?string {

@@ -16,7 +16,7 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class FormTriggerForm extends TriggerForm {
 

@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\inventory\ShapedRecipe;
+use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
 
 class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
@@ -101,7 +101,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         for ($i = 0; $i < 9; $i++) {
             try {
                 $input = $this->getItem($source, "input".$i);
-                $itemId = $input->getId().":".$input->getDamage();
+                $itemId = $input->getId().":".$input->getMeta();
                 if (isset($items[$itemId])) {
                     $key = $keys[$items[$itemId]];
                 } else {

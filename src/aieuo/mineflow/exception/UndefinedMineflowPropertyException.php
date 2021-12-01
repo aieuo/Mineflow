@@ -4,7 +4,7 @@ namespace aieuo\mineflow\exception;
 
 use Throwable;
 
-class UndefinedMineflowPropertyException extends \InvalidStateException {
+class UndefinedMineflowPropertyException extends \InvalidArgumentException {
 
     private string $variableName;
     private string $propertyName;

@@ -18,7 +18,7 @@ class SendMessageToOp extends TypeMessage {
         $message = $source->replaceVariables($this->getMessage());
         $players = Server::getInstance()->getOnlinePlayers();
         foreach ($players as $player) {
-            if ($player->isOp()) {
+            if (Server::getInstance()->isOp($player->getName())) {
                 $player->sendMessage($message);
             }
         }

@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Category;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class IsPlayerVariable extends IsActiveEntityVariable {
 

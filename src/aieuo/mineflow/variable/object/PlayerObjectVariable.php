@@ -8,7 +8,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class PlayerObjectVariable extends HumanObjectVariable {
 
@@ -25,14 +25,14 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "name" => new StringVariable($player->getName()),
             "display_name" => new StringVariable($player->getDisplayName()),
             "locale" => new StringVariable($player->getLocale()),
-            "ping" => new NumberVariable($player->getPing()),
+            "ping" => new NumberVariable($player->getNetworkSession()->getPing()),
             default => null,
         };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getPlayer(): Player {
-        return $this->getValue();
+        return $this->getEntity();
     }
 
     public static function getTypeName(): string {

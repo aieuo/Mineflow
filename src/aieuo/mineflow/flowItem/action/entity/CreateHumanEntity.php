@@ -18,7 +18,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
-use pocketmine\entity\Entity;
+use pocketmine\entity\Location;
 
 class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
@@ -65,10 +65,8 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $nbt = Entity::createBaseNBT($pos);
-        $nbt->setTag($player->namedtag->getCompoundTag("Skin"));
-
-        $entity = new MineflowHuman($pos->getLevel(), $nbt);
+        if (!($pos instanceof Location)) $pos = Location::fromObject($pos, $pos->getWorld());
+        $entity = new MineflowHuman($pos, $player->getSkin());
         $entity->spawnToAll();
 
         $variable = new HumanObjectVariable($entity);

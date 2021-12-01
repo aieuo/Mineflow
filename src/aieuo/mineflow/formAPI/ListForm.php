@@ -7,7 +7,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class ListForm extends Form {
 

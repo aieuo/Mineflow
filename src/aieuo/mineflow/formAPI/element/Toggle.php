@@ -4,7 +4,7 @@ namespace aieuo\mineflow\formAPI\element;
 
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class Toggle extends Element {
 

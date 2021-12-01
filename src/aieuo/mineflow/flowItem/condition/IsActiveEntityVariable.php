@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
@@ -37,7 +37,7 @@ class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowIt
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->getEntity($source);
 
         yield FlowItemExecutor::CONTINUE;
         return $entity->isAlive() and !$entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());

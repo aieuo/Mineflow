@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use pocketmine\entity\Creature;
+use pocketmine\entity\Living;
 
 class IsCreatureVariable extends IsActiveEntityVariable {
 
@@ -18,6 +18,6 @@ class IsCreatureVariable extends IsActiveEntityVariable {
         $entity = $this->getOnlineEntity($source);
 
         yield FlowItemExecutor::CONTINUE;
-        return $entity instanceof Creature;
+        return $entity instanceof Living;
     }
 }

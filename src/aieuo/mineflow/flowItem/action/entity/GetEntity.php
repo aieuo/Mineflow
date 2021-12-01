@@ -16,7 +16,7 @@ use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
 use pocketmine\entity\Human;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class GetEntity extends FlowItem {
 

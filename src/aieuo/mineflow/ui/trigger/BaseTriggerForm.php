@@ -10,7 +10,7 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class BaseTriggerForm {
 

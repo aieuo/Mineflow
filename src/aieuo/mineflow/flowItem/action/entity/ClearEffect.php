@@ -13,7 +13,8 @@ use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\entity\Effect;
+use pocketmine\data\bedrock\EffectIdMap;
+use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
 
 class ClearEffect extends FlowItem implements EntityFlowItem {
@@ -55,14 +56,14 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
 
         $effectId = $source->replaceVariables($this->getEffectId());
 
-        $effect = Effect::getEffectByName($effectId);
-        if ($effect === null) $effect = Effect::getEffect((int)$effectId);
+        $effect = StringToEffectParser::getInstance()->parse($effectId);
+        if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
         $entity = $this->getOnlineEntity($source);
 
         if ($entity instanceof Living) {
-            $entity->removeEffect($effect->getId());
+            $entity->getEffects()->remove($effect);
         }
         yield FlowItemExecutor::CONTINUE;
     }

@@ -46,7 +46,7 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
 
         $block = $this->getBlock($source);
 
-        $position->level->setBlock($position, $block);
+        $position->world->setBlock($position, $block);
         yield FlowItemExecutor::CONTINUE;
     }
 

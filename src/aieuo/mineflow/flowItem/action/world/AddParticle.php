@@ -74,7 +74,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
             $pk = new SpawnParticleEffectPacket();
             $pk->position = $position;
             $pk->particleName = $particleName;
-            Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
+            Server::getInstance()->broadcastPackets($position->world->getPlayers(), [$pk]);
         }
         yield FlowItemExecutor::CONTINUE;
     }

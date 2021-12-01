@@ -14,7 +14,7 @@ use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class EventTriggerForm extends TriggerForm {
 

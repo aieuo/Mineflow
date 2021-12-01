@@ -21,7 +21,7 @@ class InHand extends TypeItem {
 
         yield FlowItemExecutor::CONTINUE;
         return ($hand->getId() === $item->getId()
-            and $hand->getDamage() === $item->getDamage()
+            and $hand->getMeta() === $item->getMeta()
             and $hand->getCount() >= $item->getCount()
             and (!$item->hasCustomName() or $hand->getName() === $item->getName())
             and (empty($item->getLore()) or $item->getLore() === $hand->getLore())

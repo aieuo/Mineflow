@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\command;
 
-use pocketmine\command\ConsoleCommandSender;
+use pocketmine\console\ConsoleCommandSender;
 
 class MineflowConsoleCommandSender extends ConsoleCommandSender {
 }

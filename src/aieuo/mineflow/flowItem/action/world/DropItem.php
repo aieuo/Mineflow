@@ -46,7 +46,7 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
 
         $item = $this->getItem($source);
 
-        $position->getLevelNonNull()->dropItem($position, $item);
+        $position->getWorld()->dropItem($position, $item);
         yield FlowItemExecutor::CONTINUE;
     }
 

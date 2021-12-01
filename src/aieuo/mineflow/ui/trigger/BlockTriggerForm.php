@@ -10,8 +10,8 @@ use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use pocketmine\level\Position;
-use pocketmine\Player;
+use pocketmine\world\Position;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class BlockTriggerForm extends TriggerForm {
@@ -24,7 +24,7 @@ class BlockTriggerForm extends TriggerForm {
                 new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
                 new Button("@trigger.block.warp", function () use($player, $recipe, $trigger) {
                     $pos = explode(",", $trigger->getKey());
-                    $level = Server::getInstance()->getLevelByName($pos[3]);
+                    $level = Server::getInstance()->getWorldManager()->getWorldByName($pos[3]);
                     if ($level === null) {
                         $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.block.world.notfound"]);
                         return;

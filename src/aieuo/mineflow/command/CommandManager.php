@@ -42,7 +42,7 @@ class CommandManager {
         if ($this->isSubcommand($commandStr)) $commandStr = $this->getOriginCommand($commandStr);
 
         if (!$this->isRegistered($commandStr)) {
-            $command = new PluginCommand($commandStr, $this->owner);
+            $command = new PluginCommand($commandStr, $this->owner, $this->owner);
             $command->setDescription($description);
             $command->setPermission($permission);
             $this->commandList[$commandStr] = $command;

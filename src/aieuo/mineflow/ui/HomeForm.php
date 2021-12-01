@@ -6,7 +6,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\ui\trigger\EventTriggerForm;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class HomeForm {
 

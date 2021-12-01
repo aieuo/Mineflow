@@ -4,7 +4,7 @@ namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 abstract class TriggerForm {
 

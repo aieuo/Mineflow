@@ -20,7 +20,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;

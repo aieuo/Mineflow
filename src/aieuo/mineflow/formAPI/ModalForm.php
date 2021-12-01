@@ -4,7 +4,7 @@ namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class ModalForm extends Form {
 

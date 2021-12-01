@@ -21,7 +21,7 @@ class ItemObjectVariable extends ObjectVariable {
         return match ($name) {
             "name" => new StringVariable($item->getName()),
             "id" => new NumberVariable($item->getId()),
-            "damage" => new NumberVariable($item->getDamage()),
+            "damage" => new NumberVariable($item->getMeta()),
             "count" => new NumberVariable($item->getCount()),
             "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
             default => null,
@@ -31,6 +31,10 @@ class ItemObjectVariable extends ObjectVariable {
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getItem(): Item {
         return $this->getValue();
+    }
+
+    public function setItem(Item $item): void  {
+        $this->setValue($item);
     }
 
     public static function getTypeName(): string {
@@ -49,6 +53,6 @@ class ItemObjectVariable extends ObjectVariable {
 
     public function __toString(): string {
         $item = $this->getItem();
-        return "Item[".$item->getName()."] (".$item->getId().":".($item->hasAnyDamageValue() ? "?" : $item->getDamage()).")x".$item->getCount();
+        return "Item[".$item->getName()."] (".$item->getId().":".($item->hasAnyDamageValue() ? "?" : $item->getMeta()).")x".$item->getCount();
     }
 }

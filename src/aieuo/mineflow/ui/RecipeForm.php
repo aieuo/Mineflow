@@ -18,7 +18,7 @@ use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class RecipeForm {
 

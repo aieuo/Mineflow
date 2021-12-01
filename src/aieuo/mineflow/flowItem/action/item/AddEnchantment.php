@@ -13,8 +13,10 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use pocketmine\data\bedrock\EnchantmentIdMap;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\StringToEnchantmentParser;
 
 class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -68,9 +70,9 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
 
         $id = $source->replaceVariables($this->getEnchantId());
         if (is_numeric($id)) {
-            $enchant = Enchantment::getEnchantment((int)$id);
+            $enchant = EnchantmentIdMap::getInstance()->fromId((int)$id);
         } else {
-            $enchant = Enchantment::getEnchantmentByName($id);
+            $enchant = StringToEnchantmentParser::getInstance()->parse($id);
         }
         if (!($enchant instanceof Enchantment)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound", [$id]));

@@ -10,7 +10,6 @@ use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\trigger\BlockTriggerForm;
 use aieuo\mineflow\utils\Session;
 use pocketmine\command\Command;
-use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
@@ -38,15 +37,16 @@ class EventListener implements Listener {
     }
 
     public function onInteract(PlayerInteractEvent $event): void {
-        if ($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK and $event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_AIR) return;
+        if ($event->getAction() !== PlayerInteractEvent::RIGHT_CLICK_BLOCK) return;
 
         $player = $event->getPlayer();
         $block = $event->getBlock();
         $session = Session::getSession($player);
         $holder = TriggerHolder::getInstance();
-        $position = $block->x.",".$block->y.",".$block->z.",".$block->level->getFolderName();
+        $pos = $block->getPosition();
+        $position = $pos->x.",".$pos->y.",".$pos->z.",".$pos->world->getFolderName();
 
-        if ($player->isOp() and $session->exists("blockTriggerAction")) {
+        if (Server::getInstance()->isOp($player->getName()) and $session->exists("blockTriggerAction")) {
             switch ($session->get("blockTriggerAction")) {
                 case "add":
                     $recipe = $session->get("blockTriggerRecipe");
@@ -102,15 +102,10 @@ class EventListener implements Listener {
         if ($player instanceof Player) SetSitting::leave($player);
     }
 
-    public function onLevelChange(EntityLevelChangeEvent $event): void {
-        $player = $event->getEntity();
-        if ($player instanceof Player) SetSitting::leave($player);
-    }
-
     public function receive(DataPacketReceiveEvent $event): void {
         $pk = $event->getPacket();
-        $player = $event->getPlayer();
-        if (($pk instanceof InteractPacket) and $pk->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
+        $player = $event->getOrigin()->getPlayer();
+        if ($player !== null and ($pk instanceof InteractPacket) and $pk->action === InteractPacket::ACTION_LEAVE_VEHICLE) {
             SetSitting::leave($player);
         }
     }

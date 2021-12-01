@@ -13,7 +13,8 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
-use pocketmine\item\ItemFactory;
+use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\item\StringToItemParser;
 
 class CreateItemVariable extends FlowItem {
 
@@ -86,7 +87,7 @@ class CreateItemVariable extends FlowItem {
         $count = $source->replaceVariables($this->getItemCount());
         $itemName = $source->replaceVariables($this->getItemName());
         try {
-            $item = ItemFactory::fromString($id);
+            $item = StringToItemParser::getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
         } catch (\InvalidArgumentException) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createItemVariable.item.notFound"));
         }

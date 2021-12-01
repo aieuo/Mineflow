@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 
 class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -61,14 +61,14 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $pos2 = $this->getPosition($source, "pos2");
         $resultName = $source->replaceVariables($this->getResultName());
 
-        if ($pos1->getLevelNonNull()->getFolderName() !== $pos2->getLevelNonNull()->getFolderName()) {
+        if ($pos1->getWorld()->getFolderName() !== $pos2->getWorld()->getFolderName()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
         }
 
         $x = mt_rand((int)min($pos1->x, $pos2->x), (int)max($pos1->x, $pos2->x));
         $y = mt_rand((int)min($pos1->y, $pos2->y), (int)max($pos1->y, $pos2->y));
         $z = mt_rand((int)min($pos1->z, $pos2->z), (int)max($pos1->z, $pos2->z));
-        $rand = new Position($x, $y, $z, $pos1->getLevelNonNull());
+        $rand = new Position($x, $y, $z, $pos1->getWorld());
         $source->addVariable($resultName, new PositionObjectVariable($rand));
         yield FlowItemExecutor::CONTINUE;
         return $this->getResultName();

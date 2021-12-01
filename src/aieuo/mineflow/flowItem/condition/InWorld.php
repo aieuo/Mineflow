@@ -4,13 +4,10 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
@@ -56,7 +53,7 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
         $world = $source->replaceVariables($this->getWorld());
 
         yield true;
-        return $entity->getPosition()->getLevel()->getFolderName() === $world;
+        return $entity->getPosition()->getWorld()->getFolderName() === $world;
     }
 
     public function getEditFormElements(array $variables): array {

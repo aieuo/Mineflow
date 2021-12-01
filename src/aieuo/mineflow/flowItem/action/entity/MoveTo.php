@@ -78,16 +78,17 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
 
         $entity = $this->getOnlineEntity($source);
         $position = $this->getPosition($source);
+        $entityPosition = $entity->getLocation();
 
         $speedX = $this->getFloat($source->replaceVariables($this->getSpeedX()), min: 0);
         $speedY = $this->getFloat($source->replaceVariables($this->getSpeedY()), min: 0);
         $speedZ = $this->getFloat($source->replaceVariables($this->getSpeedZ()), min: 0);
 
-        $dis = $entity->distance($position);
+        $dis = $entityPosition->distance($position);
         if ($dis > 1) {
-            $x = $speedX * (($position->x - $entity->x) / $dis);
-            $y = $speedY * (($position->y - $entity->y) / $dis);
-            $z = $speedZ * (($position->z - $entity->z) / $dis);
+            $x = $speedX * (($position->x - $entityPosition->x) / $dis);
+            $y = $speedY * (($position->y - $entityPosition->y) / $dis);
+            $z = $speedZ * (($position->z - $entityPosition->z) / $dis);
 
             $entity->setMotion(new Vector3($x, $y, $z));
         }

@@ -21,12 +21,10 @@ class GetDate extends FlowItem {
     protected string $category = Category::COMMON;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $format;
-    private string $resultName;
-
-    public function __construct(string $format = "H:i:s", string $resultName = "date") {
-        $this->setFormat($format);
-        $this->setResultName($resultName);
+    public function __construct(
+        private string $format = "H:i:s",
+        private string $resultName = "date"
+    ) {
     }
 
     public function setFormat(string $format): void {

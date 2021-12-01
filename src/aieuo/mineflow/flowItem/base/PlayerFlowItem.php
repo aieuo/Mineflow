@@ -6,7 +6,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 interface PlayerFlowItem {
 

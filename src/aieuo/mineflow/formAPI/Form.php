@@ -7,7 +7,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\utils\Language;
 use pocketmine\form\Form as PMForm;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 abstract class Form implements PMForm {

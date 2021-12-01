@@ -51,7 +51,7 @@ class SetFood extends FlowItem implements PlayerFlowItem {
         $health = $this->getInt($source->replaceVariables($this->getFood()), 0, 20);
         $entity = $this->getOnlinePlayer($source);
 
-        $entity->setFood((float)$health);
+        $entity->getHungerManager()->setFood((float)$health);
         yield FlowItemExecutor::CONTINUE;
     }
 

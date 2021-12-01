@@ -13,7 +13,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 use pocketmine\Server;
 
 class CreatePositionVariable extends FlowItem {
@@ -31,13 +31,13 @@ class CreatePositionVariable extends FlowItem {
     private string $x;
     private string $y;
     private string $z;
-    private string $level;
+    private string $world;
 
-    public function __construct(string $x = "", string $y = "", string $z = "", string $level = "{target.world.name}", string $name = "pos") {
+    public function __construct(string $x = "", string $y = "", string $z = "", string $world = "{target.world.name}", string $name = "pos") {
         $this->x = $x;
         $this->y = $y;
         $this->z = $z;
-        $this->level = $level;
+        $this->world = $world;
         $this->variableName = $name;
     }
 
@@ -73,12 +73,12 @@ class CreatePositionVariable extends FlowItem {
         return $this->z;
     }
 
-    public function setLevel(string $level): void {
-        $this->level = $level;
+    public function setWorld(string $world): void {
+        $this->world = $world;
     }
 
-    public function getLevel(): string {
-        return $this->level;
+    public function getWorld(): string {
+        return $this->world;
     }
 
     public function isDataValid(): bool {
@@ -86,7 +86,7 @@ class CreatePositionVariable extends FlowItem {
     }
 
     public function getDetail(): string {
-        return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()]);
+        return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getWorld()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
@@ -96,8 +96,8 @@ class CreatePositionVariable extends FlowItem {
         $x = $this->getFloat($source->replaceVariables($this->getX()));
         $y = $this->getFloat($source->replaceVariables($this->getY()));
         $z = $this->getFloat($source->replaceVariables($this->getZ()));
-        $levelName = $source->replaceVariables($this->getLevel());
-        $level = Server::getInstance()->getLevelByName($levelName);
+        $levelName = $source->replaceVariables($this->getWorld());
+        $level = Server::getInstance()->getWorldManager()->getWorldByName($levelName);
 
         if ($level === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.world.notFound"));
@@ -116,7 +116,7 @@ class CreatePositionVariable extends FlowItem {
             new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $this->getX(), true),
             new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
             new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
-            new ExampleInput("@action.createPositionVariable.form.world", "{target.level}", $this->getLevel(), true),
+            new ExampleInput("@action.createPositionVariable.form.world", "{target.level}", $this->getWorld(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
         ];
     }
@@ -130,16 +130,16 @@ class CreatePositionVariable extends FlowItem {
         $this->setX($content[1]);
         $this->setY($content[2]);
         $this->setZ($content[3]);
-        $this->setLevel($content[4]);
+        $this->setWorld($content[4]);
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getLevel()];
+        return [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getWorld()];
     }
 
     public function getAddingVariables(): array {
-        $pos = $this->getX().", ".$this->getY().", ".$this->getZ().", ".$this->getLevel();
+        $pos = $this->getX().", ".$this->getY().", ".$this->getZ().", ".$this->getWorld();
         return [
             $this->getVariableName() => new DummyVariable(PositionObjectVariable::class, $pos)
         ];

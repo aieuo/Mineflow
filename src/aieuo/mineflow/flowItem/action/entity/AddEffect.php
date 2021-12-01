@@ -15,8 +15,9 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\entity\Effect;
-use pocketmine\entity\EffectInstance;
+use pocketmine\data\bedrock\EffectIdMap;
+use pocketmine\entity\effect\EffectInstance;
+use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
 
 class AddEffect extends FlowItem implements EntityFlowItem {
@@ -83,12 +84,12 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         $power = $this->getInt($source->replaceVariables($this->getPower()));
         $entity = $this->getOnlineEntity($source);
 
-        $effect = Effect::getEffectByName($effectId);
-        if ($effect === null) $effect = Effect::getEffect((int)$effectId);
+        $effect = StringToEffectParser::getInstance()->parse($effectId);
+        if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
         if ($entity instanceof Living) {
-            $entity->addEffect(new EffectInstance($effect, $time * 20, $power - 1, $this->visible));
+            $entity->getEffects()->add(new EffectInstance($effect, $time * 20, $power - 1, $this->visible));
         }
         yield FlowItemExecutor::CONTINUE;
     }

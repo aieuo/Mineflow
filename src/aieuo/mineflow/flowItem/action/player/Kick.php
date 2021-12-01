@@ -56,7 +56,7 @@ class Kick extends FlowItem implements PlayerFlowItem {
         $reason = $source->replaceVariables($this->getReason());
         $player = $this->getOnlinePlayer($source);
 
-        Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($player, $reason): void {
+        Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
             $player->kick($reason, $this->isAdmin);
         }), 1);
         yield FlowItemExecutor::CONTINUE;

@@ -19,7 +19,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class FlowItemForm {
 

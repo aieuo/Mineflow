@@ -12,6 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use pocketmine\item\ItemFactory;
 
 class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -54,7 +55,9 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $damage = $this->getInt($source->replaceVariables($this->getDamage()), 0);
         $item = $this->getItem($source);
 
-        $item->setDamage($damage);
+        $newItem = ItemFactory::getInstance()->get($item->getId(), $damage, $item->getCount(), $item->getNamedTag());
+        $this->getItemVariable($source)->setItem($newItem);
+
         yield FlowItemExecutor::CONTINUE;
         return $this->getItemVariableName();
     }

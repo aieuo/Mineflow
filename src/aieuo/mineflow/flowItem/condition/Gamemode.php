@@ -10,7 +10,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\data\java\GameModeIdMap;
 
 class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -32,7 +32,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
 
     private int $gamemode;
 
-    public function __construct(string $player = "", int $mode = Player::SURVIVAL) {
+    public function __construct(string $player = "", int $mode = 0) {
         $this->setPlayerVariableName($player);
         $this->gamemode = $mode;
     }
@@ -57,7 +57,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $player = $this->getOnlinePlayer($source);
-        $gamemode = $this->getGamemode();
+        $gamemode = GameModeIdMap::getInstance()->fromId($this->getGamemode());
 
         yield FlowItemExecutor::CONTINUE;
         return $player->getGamemode() === $gamemode;

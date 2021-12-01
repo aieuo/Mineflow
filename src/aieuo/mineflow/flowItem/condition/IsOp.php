@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use pocketmine\Server;
 
 class IsOp extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -39,7 +40,7 @@ class IsOp extends FlowItem implements Condition, PlayerFlowItem {
         $player = $this->getOnlinePlayer($source);
 
         yield FlowItemExecutor::CONTINUE;
-        return $player->isOp();
+        return Server::getInstance()->isOp($player->getName());
     }
 
     public function getEditFormElements(array $variables): array {

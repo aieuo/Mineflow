@@ -5,7 +5,7 @@ namespace aieuo\mineflow\formAPI\element;
 use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
-use pocketmine\utils\UUID;
+use Ramsey\Uuid\Uuid;
 
 class Button implements \JsonSerializable {
 
@@ -57,7 +57,7 @@ class Button implements \JsonSerializable {
     }
 
     public function getUUID(): string {
-        if (empty($this->uuid)) $this->uuid = UUID::fromRandom()->toString();
+        if (empty($this->uuid)) $this->uuid = Uuid::uuid4()->toString();
         return $this->uuid;
     }
 

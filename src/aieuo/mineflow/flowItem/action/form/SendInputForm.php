@@ -17,7 +17,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class SendInputForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;

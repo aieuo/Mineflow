@@ -6,16 +6,16 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\WorldObjectVariable;
-use pocketmine\event\level\LevelLoadEvent;
+use pocketmine\event\world\WorldLoadEvent;
 
 class LevelLoadEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct("LevelLoadEvent", $subKey, LevelLoadEvent::class);
+        parent::__construct("LevelLoadEvent", $subKey, WorldLoadEvent::class);
     }
 
     public function getVariables(mixed $event): array {
-        /** @var LevelLoadEvent $event */
-        return ["world" => new WorldObjectVariable($event->getLevel())];
+        /** @var WorldLoadEvent $event */
+        return ["world" => new WorldObjectVariable($event->getWorld())];
     }
 
     public function getVariablesDummy(): array {

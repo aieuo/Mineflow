@@ -11,7 +11,7 @@ class CommandConsoleButton extends CommandButton {
     protected string $type = self::TYPE_COMMAND_CONSOLE;
 
     public function __construct(string $command, string $text = null, ?callable $onClick = null, ?ButtonImage $image = null) {
-        parent::__construct($command, $text, $onClick ?? fn() => Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(), $command), $image);
+        parent::__construct($command, $text, $onClick ?? fn() => Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage()), $command), $image);
     }
 
     public static function fromSerializedArray(array $data): ?self {

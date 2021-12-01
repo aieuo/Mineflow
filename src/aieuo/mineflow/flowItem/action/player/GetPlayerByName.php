@@ -10,7 +10,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class GetPlayerByName extends FlowItem {
@@ -64,7 +64,7 @@ class GetPlayerByName extends FlowItem {
         $name = $source->replaceVariables($this->getPlayerName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $player = Server::getInstance()->getPlayer($name);
+        $player = Server::getInstance()->getPlayerExact($name);
         if (!($player instanceof Player)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.getPlayerByName.player.notFound"));
         }

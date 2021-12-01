@@ -45,14 +45,13 @@ class Wait extends FlowItem {
         return Language::get($this->detail, [$this->getTime()]);
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
         $time = $this->getFloat($source->replaceVariables($this->getTime()), 1 / 20);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function (int $currentTick) use ($source): void {
+            function () use ($source): void {
                 $source->resume();
             }
         ), (int)($time * 20));

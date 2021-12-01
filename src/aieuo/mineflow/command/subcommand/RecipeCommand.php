@@ -6,7 +6,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class RecipeCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {

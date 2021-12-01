@@ -5,6 +5,8 @@ namespace aieuo\mineflow\variable\object;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\inventory\Inventory;
+use function array_key_last;
+use function explode;
 
 class InventoryObjectVariable extends ObjectVariable {
 
@@ -33,6 +35,7 @@ class InventoryObjectVariable extends ObjectVariable {
 
     public function __toString(): string {
         $value = $this->getInventory();
-        return "Inventory ({$value->getName()})";
+        $names = explode("\\", $value::class);
+        return "Inventory (size={$names[array_key_last($names)]})";
     }
 }

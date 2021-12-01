@@ -11,7 +11,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipePack;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class ImportForm {
 

@@ -22,7 +22,7 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\UnknownObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class ForeachAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;

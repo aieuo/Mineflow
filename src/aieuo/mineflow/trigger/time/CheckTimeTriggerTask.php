@@ -14,8 +14,7 @@ class CheckTimeTriggerTask extends Task {
         $this->triggerHolder = TriggerHolder::getInstance();
     }
 
-    /** @noinspection ReturnTypeCanBeDeclaredInspection */
-    public function onRun(int $currentTick) {
+    public function onRun(): void {
         $date = new \DateTime("now", Main::getInstance()->getTimeTriggerTimeZone());
         $trigger = TimeTrigger::create($date->format("H"), $date->format("i"));
         if ($this->triggerHolder->existsRecipe($trigger)) {
