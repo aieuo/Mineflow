@@ -58,14 +58,7 @@ class RecipeManager {
             $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? null);
             $recipe->setRawData($json);
             try {
-                $recipe->loadSaveData($data["actions"]);
-                $recipe->setTargetSetting(
-                    $data["target"]["type"] ?? Recipe::TARGET_DEFAULT,
-                    $data["target"]["options"] ?? []
-                );
-                $recipe->setTriggersFromArray($data["triggers"] ?? []);
-                $recipe->setArguments($data["arguments"] ?? []);
-                $recipe->setReturnValues($data["returnValues"] ?? []);
+                $recipe->loadSaveData($data);
             } catch (\ErrorException|\UnexpectedValueException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
