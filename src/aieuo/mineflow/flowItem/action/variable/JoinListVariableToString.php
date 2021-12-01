@@ -84,7 +84,7 @@ class JoinListVariableToString extends FlowItem {
         }
 
         $strings = [];
-        foreach ($variable->getValue() as $key => $value) {
+        foreach ($variable->getValue() as $value) {
             $strings[] = (string)$value;
         }
         $source->addVariable($result, new StringVariable(implode($separator, $strings)));

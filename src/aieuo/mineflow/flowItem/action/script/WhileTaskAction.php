@@ -80,7 +80,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         $wait = new Wait((string)($this->getInterval() / 20));
         while (true) {
             $source->addVariable("i", new NumberVariable($this->loopCount)); // TODO: i を変更できるようにする
-            foreach ($this->getConditions() as $i => $condition) {
+            foreach ($this->getConditions() as $condition) {
                 if (!(yield from $condition->execute($source))) {
                     $source->resume();
                     return true;

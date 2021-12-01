@@ -64,7 +64,7 @@ class CreateBlockVariable extends FlowItem {
         $id = $source->replaceVariables($this->getBlockId());
         try {
             $item = ItemFactory::fromString($id);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlockVariable.block.notFound"));
         }
 

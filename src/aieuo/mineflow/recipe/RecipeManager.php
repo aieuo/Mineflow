@@ -125,7 +125,7 @@ class RecipeManager {
                 unset($this->recipes[$group]);
             }
             return $deleted;
-        } catch (ErrorException $e) {
+        } catch (ErrorException) {
             return false;
         }
     }
