@@ -81,7 +81,7 @@ abstract class Form implements PMForm {
     public function addError(string $error, int $index): self {
         $error = Language::replace($error);
         $this->messages[TextFormat::RED.$error.TextFormat::WHITE] = true;
-        if ($index !== null) $this->highlights[$index] = TextFormat::YELLOW;
+        $this->highlights[$index] = TextFormat::YELLOW;
         return $this;
     }
 

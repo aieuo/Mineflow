@@ -175,7 +175,6 @@ use aieuo\mineflow\flowItem\condition\RandomNumber;
 use aieuo\mineflow\flowItem\condition\RemoveItemCondition;
 use aieuo\mineflow\flowItem\condition\TakeMoneyCondition;
 use pocketmine\Server;
-use function get_class;
 
 class FlowItemFactory {
 

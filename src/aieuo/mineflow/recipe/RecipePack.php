@@ -115,8 +115,6 @@ class RecipePack implements \JsonSerializable {
     }
 
     /**
-     * @param string $path
-     * @return RecipePack|null
      * @throws FlowItemLoadException|\ErrorException
      */
     public static function import(string $path): ?RecipePack {
@@ -131,15 +129,7 @@ class RecipePack implements \JsonSerializable {
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
             $recipe = new Recipe($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? null);
-            $recipe->loadSaveData($data["actions"]);
-
-            $recipe->setTargetSetting(
-                $data["target"]["type"] ?? Recipe::TARGET_DEFAULT,
-                $data["target"]["options"] ?? []
-            );
-            $recipe->setTriggersFromArray($data["triggers"] ?? []);
-            $recipe->setArguments($data["arguments"] ?? []);
-            $recipe->setReturnValues($data["returnValues"] ?? []);
+            $recipe->loadSaveData($data);
             $recipe->checkVersion();
 
             $recipes[] = $recipe;

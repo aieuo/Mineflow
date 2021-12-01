@@ -27,7 +27,7 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "saveId":
                 try {
                     return new StringVariable(EntityFactory::getInstance()->getSaveId($entity::class));
-                } catch (\InvalidArgumentException $e) {
+                } catch (\InvalidArgumentException) {
                     return new StringVariable("");
                 }
             case "nameTag":

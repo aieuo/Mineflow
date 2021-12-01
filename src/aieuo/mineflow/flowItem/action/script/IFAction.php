@@ -71,12 +71,12 @@ class IFAction extends FlowItem implements FlowItemContainer {
     }
 
     public function loadSaveData(array $contents): FlowItem {
-        foreach ($contents[0] as $i => $content) {
+        foreach ($contents[0] as $content) {
             $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
         }
 
-        foreach ($contents[1] as $i => $content) {
+        foreach ($contents[1] as $content) {
             $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
