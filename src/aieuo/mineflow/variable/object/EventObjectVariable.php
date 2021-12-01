@@ -13,8 +13,14 @@ use function explode;
 
 class EventObjectVariable extends ObjectVariable {
 
+    private array $properties = [];
+
     public function __construct(Event $value, ?string $str = null) {
         parent::__construct($value, $str ?? $this->getEventName($value));
+    }
+
+    public function setProperties(array $properties): void {
+        $this->properties = $properties;
     }
 
     public function getProperty(string $name): ?Variable {
@@ -22,7 +28,7 @@ class EventObjectVariable extends ObjectVariable {
         return match ($name) {
             "name" => new StringVariable($this->getEventName($this->getEvent())),
             "isCanceled" => new BooleanVariable($event->isCancelled()),
-            default => null,
+            default => $this->properties[$name] ?? null,
         };
     }
 
