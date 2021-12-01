@@ -193,7 +193,6 @@ class RecipeManager {
                 $recipes[] = $this->getWithLinkedRecipes($recipe, $recipe);
             }
         }
-        $recipes = array_merge([], ...$recipes);
-        return $recipes;
+        return array_merge([], ...$recipes);
     }
 }

@@ -25,12 +25,10 @@ class CreateBlockVariable extends FlowItem {
     protected string $category = Category::BLOCK;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $variableName;
-    private string $blockId;
-
-    public function __construct(string $id = "", string $name = "block") {
-        $this->blockId = $id;
-        $this->variableName = $name;
+    public function __construct(
+        private string $blockId = "",
+        private string $variableName = "block"
+    ) {
     }
 
     public function setVariableName(string $variableName): void {
