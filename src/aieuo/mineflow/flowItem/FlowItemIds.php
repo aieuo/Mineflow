@@ -18,6 +18,7 @@ interface FlowItemIds {
     public const SEND_MESSAGE_TO_OP = "sendMessageToOp";
     public const SEND_MESSAGE_TO_CONSOLE = "sendMessageToConsole";
     public const SEND_TITLE = "sendTitle";
+    public const CHAT = "chat";
 
     public const GET_ENTITY = "getEntity";
     public const TELEPORT = "teleport";
@@ -178,6 +179,7 @@ interface FlowItemIds {
     public const IS_SNEAKING = "isSneaking";
     public const IS_FLYING = "isFlying";
     public const IN_AREA = "inArea";
+    public const IN_WORLD = "inWorld";
     public const GAMEMODE = "gamemode";
     public const HAS_PERMISSION = "hasPermission";
 
@@ -214,4 +216,7 @@ interface FlowItemIds {
     public const EXISTS_CONFIG_DATA = "existsConfig";
 
     public const RANDOM_NUMBER = "randomNumber";
+
+    public const ONLINE_PLAYER_LESS_THAN = "onlinePlayerLessThan";
+    public const ONLINE_PLAYER_MORE_THAN = "onlinePlayerMoreThan";
 }

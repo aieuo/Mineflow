@@ -26,6 +26,8 @@ class BlockObjectVariable extends PositionObjectVariable {
                 return new NumberVariable($block->getId());
             case "damage":
                 return new NumberVariable($block->getDamage());
+            case "item":
+                return new ItemObjectVariable($block->getPickedItem());
             default:
                 return null;
         }

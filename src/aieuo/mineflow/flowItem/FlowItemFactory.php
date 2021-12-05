@@ -65,6 +65,7 @@ use aieuo\mineflow\flowItem\action\player\AddXpProgress;
 use aieuo\mineflow\flowItem\action\player\AllowClimbWalls;
 use aieuo\mineflow\flowItem\action\player\AllowFlight;
 use aieuo\mineflow\flowItem\action\player\BroadcastMessage;
+use aieuo\mineflow\flowItem\action\player\Chat;
 use aieuo\mineflow\flowItem\action\player\GetArmorInventoryContents;
 use aieuo\mineflow\flowItem\action\player\GetInventoryContents;
 use aieuo\mineflow\flowItem\action\player\GetPlayerByName;
@@ -150,6 +151,7 @@ use aieuo\mineflow\flowItem\condition\Gamemode;
 use aieuo\mineflow\flowItem\condition\HasPermission;
 use aieuo\mineflow\flowItem\condition\InArea;
 use aieuo\mineflow\flowItem\condition\InHand;
+use aieuo\mineflow\flowItem\condition\InWorld;
 use aieuo\mineflow\flowItem\condition\IsActiveEntity;
 use aieuo\mineflow\flowItem\condition\IsActiveEntityVariable;
 use aieuo\mineflow\flowItem\condition\IsCreature;
@@ -165,6 +167,8 @@ use aieuo\mineflow\flowItem\condition\LessMoney;
 use aieuo\mineflow\flowItem\condition\NandScript;
 use aieuo\mineflow\flowItem\condition\NorScript;
 use aieuo\mineflow\flowItem\condition\NotScript;
+use aieuo\mineflow\flowItem\condition\OnlinePlayerLessThan;
+use aieuo\mineflow\flowItem\condition\OnlinePlayerMoreThan;
 use aieuo\mineflow\flowItem\condition\ORScript;
 use aieuo\mineflow\flowItem\condition\OverMoney;
 use aieuo\mineflow\flowItem\condition\RandomNumber;
@@ -193,6 +197,7 @@ class FlowItemFactory {
         self::register(new BroadcastMessage);
         self::register(new SendMessageToOp);
         self::register(new SendTitle);
+        self::register(new Chat);
         /* entity */
         self::register(new SetNameTag);
         self::register(new GetEntity);
@@ -364,11 +369,14 @@ class FlowItemFactory {
         self::register(new IsPlayerVariable);
         self::register(new IsCreatureVariable);
         self::register(new InArea);
+        self::register(new InWorld);
         /* player */
         self::register(new Gamemode);
         self::register(new HasPermission);
         self::register(new IsPlayerOnline);
         self::register(new IsPlayerOnlineByName);
+        self::register(new OnlinePlayerLessThan);
+        self::register(new OnlinePlayerMoreThan);
         /* variable */
         self::register(new ExistsVariable);
         self::register(new ExistsListVariableKey);
