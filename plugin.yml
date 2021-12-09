@@ -1,11 +1,11 @@
 name: Mineflow
 main: aieuo\mineflow\Main
-version: 2.5.2
-api: 3.21.0
+version: 2.5.3
+api: 4.0.1
 mcpe-protocol:
+  - 475
   - 471
   - 465
-load: POSTWORLD
 softdepend:
   - EconomyAPI
   - MoneySystem
