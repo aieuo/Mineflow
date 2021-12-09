@@ -19,6 +19,10 @@ Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flat
 
 ### [English](/README.md)
 
+---
+
+### [Indonesia](/.github/readme/ind.md)
+
 # 日本語
 
 アクションを組み合わせてプラグインのようなものを作れます。
