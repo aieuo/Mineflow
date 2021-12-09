@@ -18,6 +18,10 @@
 
 ### [日本語](/.github/readme/jpn.md)
 
+---
+
+### [Indonesia](/.github/readme/ind.md)
+
 # English
 
 You can combine actions and create something like a plugin without any coding knowledge.  
