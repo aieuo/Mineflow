@@ -8,7 +8,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 
 class PlayerInteractEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerInteractEvent::class, $subKey);
+        parent::__construct("PlayerInteractEvent", $subKey, PlayerInteractEvent::class);
     }
 
     public function getVariables(mixed $event): array {

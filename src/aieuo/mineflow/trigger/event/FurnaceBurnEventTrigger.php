@@ -8,7 +8,7 @@ use pocketmine\event\inventory\FurnaceBurnEvent;
 
 class FurnaceBurnEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(FurnaceBurnEvent::class, $subKey);
+        parent::__construct("FurnaceBurnEvent", $subKey, FurnaceBurnEvent::class);
     }
 
     public function getVariables(mixed $event): array {

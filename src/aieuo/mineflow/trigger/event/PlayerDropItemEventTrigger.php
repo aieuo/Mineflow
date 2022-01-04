@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerDropItemEvent;
 
 class PlayerDropItemEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerDropItemEvent::class, $subKey);
+        parent::__construct("PlayerDropItemEvent", $subKey, PlayerDropItemEvent::class);
     }
 
     public function getVariables(mixed $event): array {

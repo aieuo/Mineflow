@@ -10,7 +10,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 
 class EntityDamageEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(EntityDamageEvent::class, $subKey);
+        parent::__construct("EntityDamageEvent", $subKey, EntityDamageEvent::class);
     }
 
     public function getVariables(mixed $event): array {

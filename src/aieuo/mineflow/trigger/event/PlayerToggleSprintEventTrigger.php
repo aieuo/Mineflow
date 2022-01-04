@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerToggleSprintEvent;
 
 class PlayerToggleSprintEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerToggleSprintEvent::class, $subKey);
+        parent::__construct("PlayerToggleSprintEvent", $subKey, PlayerToggleSprintEvent::class);
     }
 
     public function getVariables(mixed $event): array {

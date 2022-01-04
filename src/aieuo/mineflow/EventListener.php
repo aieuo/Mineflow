@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow;
 
-use aieuo\mineflow\event\EntityAttackEvent;
 use aieuo\mineflow\flowItem\action\player\SetSitting;
 use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
@@ -120,12 +119,5 @@ class EventListener implements Listener {
     public function teleport(EntityTeleportEvent $event): void {
         $player = $event->getEntity();
         if ($player instanceof Player) SetSitting::leave($player);
-    }
-
-    public function onEntityDamageByEntity(EntityDamageByEntityEvent $event): void {
-        ($ev = new EntityAttackEvent(Main::getInstance(), $event))->call();
-        if ($ev->isCancelled()) {
-            $event->setCancelled();
-        }
     }
 }

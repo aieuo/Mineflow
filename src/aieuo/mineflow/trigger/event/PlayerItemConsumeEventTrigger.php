@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerItemConsumeEvent;
 
 class PlayerItemConsumeEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerItemConsumeEvent::class, $subKey);
+        parent::__construct("PlayerItemConsumeEvent", $subKey, PlayerItemConsumeEvent::class);
     }
 
     public function getVariables(mixed $event): array {

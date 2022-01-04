@@ -10,7 +10,7 @@ use pocketmine\event\Event;
 
 class BlockBreakEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(BlockBreakEvent::class, $subKey);
+        parent::__construct("BlockBreakEvent", $subKey, BlockBreakEvent::class);
     }
 
     public function getTargetEntity(Event $event): ?Entity {

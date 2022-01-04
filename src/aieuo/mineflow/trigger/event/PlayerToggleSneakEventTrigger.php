@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerToggleSneakEvent;
 
 class PlayerToggleSneakEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerToggleSneakEvent::class, $subKey);
+        parent::__construct("PlayerToggleSneakEvent", $subKey, PlayerToggleSneakEvent::class);
     }
 
     public function getVariables(mixed $event): array {

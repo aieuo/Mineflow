@@ -10,7 +10,7 @@ use pocketmine\event\block\SignChangeEvent;
 
 class SignChangeEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(SignChangeEvent::class, $subKey);
+        parent::__construct("SignChangeEvent", $subKey, SignChangeEvent::class);
     }
 
     public function getVariables(mixed $event): array {

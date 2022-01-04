@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerCommandPreprocessEvent;
 
 class PlayerCommandPreprocessEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerCommandPreprocessEvent::class, $subKey);
+        parent::__construct("PlayerCommandPreprocessEvent", $subKey, PlayerCommandPreprocessEvent::class);
     }
 
     public function getVariables(mixed $event): array {

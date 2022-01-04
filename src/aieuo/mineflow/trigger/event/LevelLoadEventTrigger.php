@@ -10,7 +10,7 @@ use pocketmine\event\level\LevelLoadEvent;
 
 class LevelLoadEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(LevelLoadEvent::class, $subKey);
+        parent::__construct("LevelLoadEvent", $subKey, LevelLoadEvent::class);
     }
 
     public function getVariables(mixed $event): array {

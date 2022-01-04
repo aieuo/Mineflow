@@ -9,7 +9,7 @@ use pocketmine\event\player\PlayerExhaustEvent;
 
 class PlayerExhaustEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
-        parent::__construct(PlayerExhaustEvent::class, $subKey);
+        parent::__construct("PlayerExhaustEvent", $subKey, PlayerExhaustEvent::class);
     }
 
     public function getVariables(mixed $event): array {
