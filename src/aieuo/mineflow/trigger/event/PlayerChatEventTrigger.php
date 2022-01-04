@@ -12,7 +12,7 @@ class PlayerChatEventTrigger extends EventTrigger {
         parent::__construct(PlayerChatEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerChatEvent $event */
         $target = $event->getPlayer();
         $variables =  DefaultVariables::getPlayerVariables($target);

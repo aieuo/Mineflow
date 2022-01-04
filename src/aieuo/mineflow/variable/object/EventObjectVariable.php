@@ -12,26 +12,26 @@ use pocketmine\event\Event;
 class EventObjectVariable extends ObjectVariable {
 
     public function __construct(Event $value, ?string $str = null) {
-        $names = explode("\\", $value->getEventName());
-        parent::__construct($value, $str ?? end($names));
+        parent::__construct($value, $str ?? $this->getEventName($value));
     }
 
     public function getValueFromIndex(string $index): ?Variable {
         $event = $this->getEvent();
-        switch ($index) {
-            case "name":
-                $names = explode("\\", $event->getEventName());
-                return new StringVariable(end($names));
-            case "isCanceled":
-                return new BoolVariable($event->isCancelled());
-            default:
-                return null;
-        }
+        return match ($index) {
+            "name" => new StringVariable($this->getEventName($event)),
+            "isCanceled" => new BoolVariable($event->isCancelled()),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getEvent(): Event {
         return $this->getValue();
+    }
+
+    public function getEventName(Event $event): string {
+        $names = explode("\\", $event->getEventName());
+        return end($names);
     }
 
     public static function getValuesDummy(): array {

@@ -2,20 +2,9 @@
 
 namespace aieuo\mineflow\formAPI;
 
-use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\Label;
-use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
-use aieuo\mineflow\formAPI\element\NumberInput;
-use aieuo\mineflow\formAPI\element\Slider;
-use aieuo\mineflow\formAPI\element\StepSlider;
-use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
 use pocketmine\form\Form as PMForm;
 use pocketmine\Player;
@@ -92,7 +81,7 @@ abstract class Form implements PMForm {
     public function addError(string $error, int $index): self {
         $error = Language::replace($error);
         $this->messages[TextFormat::RED.$error.TextFormat::WHITE] = true;
-        if ($index !== null) $this->highlights[$index] = TextFormat::YELLOW;
+        $this->highlights[$index] = TextFormat::YELLOW;
         return $this;
     }
 

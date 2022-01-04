@@ -12,7 +12,7 @@ class PlayerToggleSprintEventTrigger extends EventTrigger {
         parent::__construct(PlayerToggleSprintEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerToggleSprintEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);

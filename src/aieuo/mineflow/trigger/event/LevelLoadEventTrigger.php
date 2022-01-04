@@ -13,7 +13,7 @@ class LevelLoadEventTrigger extends EventTrigger {
         parent::__construct(LevelLoadEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var LevelLoadEvent $event */
         return ["world" => new WorldObjectVariable($event->getLevel())];
     }

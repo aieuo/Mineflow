@@ -19,18 +19,13 @@ class BlockObjectVariable extends PositionObjectVariable {
         if ($variable !== null) return $variable;
 
         $block = $this->getBlock();
-        switch ($index) {
-            case "name":
-                return new StringVariable($block->getName());
-            case "id":
-                return new NumberVariable($block->getId());
-            case "damage":
-                return new NumberVariable($block->getDamage());
-            case "item":
-                return new ItemObjectVariable($block->getPickedItem());
-            default:
-                return null;
-        }
+        return match ($index) {
+            "name" => new StringVariable($block->getName()),
+            "id" => new NumberVariable($block->getId()),
+            "damage" => new NumberVariable($block->getDamage()),
+            "item" => new ItemObjectVariable($block->getPickedItem()),
+            default => null,
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */

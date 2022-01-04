@@ -82,28 +82,15 @@ class ComparisonNumber extends FlowItem implements Condition {
 
         $value1 = (float)$value1;
         $value2 = (float)$value2;
-        switch ($operator) {
-            case self::EQUAL:
-                $result = $value1 === $value2;
-                break;
-            case self::NOT_EQUAL:
-                $result = $value1 !== $value2;
-                break;
-            case self::GREATER:
-                $result = $value1 > $value2;
-                break;
-            case self::LESS:
-                $result = $value1 < $value2;
-                break;
-            case self::GREATER_EQUAL:
-                $result = $value1 >= $value2;
-                break;
-            case self::LESS_EQUAL:
-                $result = $value1 <= $value2;
-                break;
-            default:
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
-        }
+        $result = match ($operator) {
+            self::EQUAL => $value1 === $value2,
+            self::NOT_EQUAL => $value1 !== $value2,
+            self::GREATER => $value1 > $value2,
+            self::LESS => $value1 < $value2,
+            self::GREATER_EQUAL => $value1 >= $value2,
+            self::LESS_EQUAL => $value1 <= $value2,
+            default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
+        };
         yield true;
         return $result;
     }

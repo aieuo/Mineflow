@@ -13,7 +13,7 @@ class PlayerDeathEventTrigger extends PlayerEventTrigger {
         parent::__construct(PlayerDeathEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerDeathEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);

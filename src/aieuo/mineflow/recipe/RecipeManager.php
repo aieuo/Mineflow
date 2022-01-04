@@ -100,7 +100,7 @@ class RecipeManager {
 
         $result = [];
         foreach ($this->getAll() as $group => $item) {
-            if (strpos($group."/", $name."/") === 0) $result[$group] = $item;
+            if (str_starts_with($group."/", $name."/")) $result[$group] = $item;
         }
         return $result;
     }
@@ -125,7 +125,7 @@ class RecipeManager {
                 unset($this->recipes[$group]);
             }
             return $deleted;
-        } catch (ErrorException $e) {
+        } catch (ErrorException) {
             return false;
         }
     }

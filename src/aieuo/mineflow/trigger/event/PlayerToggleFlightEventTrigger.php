@@ -12,7 +12,7 @@ class PlayerToggleFlightEventTrigger extends EventTrigger {
         parent::__construct(PlayerToggleFlightEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerToggleFlightEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);

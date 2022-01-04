@@ -20,12 +20,7 @@ class EventTrigger extends Trigger {
 
     private bool $enabled = true;
 
-    /**
-     * @param string $eventName
-     * @param string $subKey
-     * @return self
-     */
-    public static function create(string $eventName, string $subKey = ""): Trigger {
+    public static function create(string $eventName, string $subKey = ""): EventTrigger {
         return Main::getEventManager()->getTrigger($eventName) ?? new EventTrigger($eventName, $subKey);
     }
 
@@ -33,10 +28,6 @@ class EventTrigger extends Trigger {
         parent::__construct(Triggers::EVENT, $key, $subKey);
     }
 
-    /**
-     * @param Event $event
-     * @return Player|Entity|null
-     */
     public function getTargetEntity(Event $event): ?Entity {
         if ($event instanceof PlayerEvent or $event instanceof CraftItemEvent) {
             $target = $event->getPlayer();
@@ -53,9 +44,8 @@ class EventTrigger extends Trigger {
     /**
      * @param Event $event
      * @return array<string, Variable>
-     * @noinspection PhpMissingParamTypeInspection
      */
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         $target = $this->getTargetEntity($event);
         if ($target === null) return [];
         return DefaultVariables::getEntityVariables($this->getTargetEntity($event));

@@ -4,6 +4,7 @@
 namespace aieuo\mineflow\ui\customForm;
 
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
@@ -67,20 +68,12 @@ class CustomFormForm {
                 ]),
                 new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data) {
-                switch ($data[1]) {
-                    case 0:
-                        $form = new ModalForm($data[0]);
-                        break;
-                    case 1:
-                        $form = new ListForm($data[0]);
-                        break;
-                    case 2:
-                        $form = new CustomForm($data[0]);
-                        break;
-                    default:
-                        $this->sendAddForm($player, $data, [["@form.insufficient", 1]]);
-                        return;
-                }
+                $form = match ($data[1]) {
+                    0 => new ModalForm($data[0]),
+                    1 => new ListForm($data[0]),
+                    2 => new CustomForm($data[0]),
+                    default => throw new InvalidFormValueException("@form.insufficient", 1),
+                };
 
                 $manager = Main::getFormManager();
                 if ($manager->existsForm($data[0])) {

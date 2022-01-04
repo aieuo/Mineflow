@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
 
@@ -77,29 +78,15 @@ class ComparisonString extends FlowItem implements Condition {
         $value2 = $source->replaceVariables($this->getValue2());
         $operator = $this->getOperator();
 
-        switch ($operator) {
-            case self::EQUALS:
-                $result = $value1 === $value2;
-                break;
-            case self::NOT_EQUALS:
-                $result = $value1 !== $value2;
-                break;
-            case self::CONTAINS:
-                $result = strpos($value1, $value2) !== false;
-                break;
-            case self::NOT_CONTAINS:
-                $result = strpos($value1, $value2) === false;
-                break;
-            case self::STARTS_WITH:
-                $result = strpos($value1, $value2) === 0;
-                break;
-            case self::ENDS_WITH:
-                $lenDiff = strlen($value1) - strlen($value2);
-                $result = ($lenDiff < 0) ? false : strpos($value1, $value2, $lenDiff) !== false;
-                break;
-            default:
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
-        }
+        $result = match ($operator) {
+            self::EQUALS => $value1 === $value2,
+            self::NOT_EQUALS => $value1 !== $value2,
+            self::CONTAINS => str_contains($value1, $value2),
+            self::NOT_CONTAINS => !str_contains($value1, $value2),
+            self::STARTS_WITH => str_starts_with($value1, $value2),
+            self::ENDS_WITH => str_ends_with($value1, $value2),
+            default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
+        };
         yield true;
         return $result;
     }

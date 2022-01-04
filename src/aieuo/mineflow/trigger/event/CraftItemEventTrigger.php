@@ -14,7 +14,7 @@ class CraftItemEventTrigger extends EventTrigger {
         parent::__construct(CraftItemEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var CraftItemEvent $event */
         $target = $event->getPlayer();
         $inputs = array_map(fn(Item $input) => new ItemObjectVariable($input), array_values($event->getInputs()));

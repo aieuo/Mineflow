@@ -97,7 +97,7 @@ class VariableHelper {
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/u", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
-                if (strpos($name, "{") !== false and strpos($name, "}") !== false) {
+                if (str_contains($name, "{") and str_contains($name, "}")) {
                     $replaced = $this->replaceVariables($name, $variables, $executor, $global);
                     $string = str_replace($name, $replaced, $string);
                     $name = $replaced;
@@ -118,7 +118,7 @@ class VariableHelper {
      * @return string
      */
     public function replaceVariable(string $string, string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
-        if (strpos($string, "{".$replace."}") === false) return $string;
+        if (!str_contains($string, "{".$replace."}")) return $string;
 
         $result = (string)$this->runVariableStatement($replace, $variables, $executor, $global);
         return str_replace("{".$replace."}", $result, $string);
@@ -191,12 +191,7 @@ class VariableHelper {
         return array_values(array_filter($tokens, fn($token) => $token !== ""));
     }
 
-    /**
-     * @param array $tokens
-     * @param int $priority
-     * @return array|Variable|string
-     */
-    public function parse(array &$tokens, int $priority = 0) {
+    public function parse(array &$tokens, int $priority = 0): string|array|Variable {
         $rules = [
             ["type" => 1, "ops" => [","]],
             ["type" => 0, "ops" => [">"]],
@@ -234,7 +229,7 @@ class VariableHelper {
         }
         if ($type === 4) {
             array_shift($tokens); // (
-            $right = $this->parse($tokens, 0);
+            $right = $this->parse($tokens);
             array_shift($tokens); // )
             return $right;
         }
@@ -243,7 +238,7 @@ class VariableHelper {
         if ($type === 3) {
             while (isset($tokens[0]) and in_array($tokens[0], $ops, true)) {
                 array_shift($tokens); // (
-                $right = $tokens[0] === ")" ? "" : $this->parse($tokens, 0);
+                $right = $tokens[0] === ")" ? "" : $this->parse($tokens);
                 array_shift($tokens); // )
                 $tmp = $left;
                 $left = ["left" => $tmp, "op" => "()", "right" => $right];
@@ -259,13 +254,13 @@ class VariableHelper {
     }
 
     /**
-     * @param string|Variable|array $ast
+     * @param string|array|Variable $ast
      * @param FlowItemExecutor|null $executor
-     * @param array $variables
+     * @param array<string, Variable> $variables
      * @param bool $global
      * @return Variable
      */
-    public function runAST($ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+    public function runAST(string|array|Variable $ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
         if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
         if ($ast instanceof Variable) return $ast;
 
@@ -303,18 +298,13 @@ class VariableHelper {
             $right = $this->mustGetVariableNested($right, $variables, $global);
         }
 
-        switch ($op) {
-            case "+":
-                return $left->add($right);
-            case "-":
-                return $left->sub($right);
-            case "*":
-                return $left->mul($right);
-            case "/":
-                return $left->div($right);
-        }
-
-        throw new UnsupportedCalculationException();
+        return match ($op) {
+            "+" => $left->add($right),
+            "-" => $left->sub($right),
+            "*" => $left->mul($right),
+            "/" => $left->div($right),
+            default => throw new UnsupportedCalculationException(),
+        };
     }
 
     public function runMethodCall(string $left, array $right, FlowItemExecutor $executor, array $variables, bool $global): Variable {
@@ -391,9 +381,9 @@ class VariableHelper {
     }
 
     public function getType(string $string): int {
-        if (strpos($string, "(str)") === 0) {
+        if (str_starts_with($string, "(str)")) {
             $type = Variable::STRING;
-        } elseif (strpos($string, "(num)") === 0) {
+        } elseif (str_starts_with($string, "(num)")) {
             $type = Variable::NUMBER;
         } elseif (is_numeric($string)) {
             $type = Variable::NUMBER;
@@ -404,9 +394,9 @@ class VariableHelper {
     }
 
     public function currentType(string $value) {
-        if (mb_strpos($value, "(str)") === 0) {
+        if (str_starts_with($value, "(str)")) {
             $newValue = mb_substr($value, 5);
-        } elseif (mb_strpos($value, "(num)") === 0) {
+        } elseif (str_starts_with($value, "(num)")) {
             $newValue = mb_substr($value, 5);
             if (!$this->containsVariable($value)) $newValue = (float)$value;
         } elseif (is_numeric($value)) {

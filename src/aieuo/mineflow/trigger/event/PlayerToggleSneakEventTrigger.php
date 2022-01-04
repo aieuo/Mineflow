@@ -12,7 +12,7 @@ class PlayerToggleSneakEventTrigger extends EventTrigger {
         parent::__construct(PlayerToggleSneakEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerToggleSneakEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);

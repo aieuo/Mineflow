@@ -21,18 +21,13 @@ abstract class Variable {
     public int $type;
 
     public static function create($value, int $type = self::STRING): ?self {
-        switch ($type) {
-            case self::STRING:
-                return new StringVariable((string)$value);
-            case self::NUMBER:
-                return new NumberVariable((float)$value);
-            case self::LIST:
-                return new ListVariable($value);
-            case self::MAP:
-                return new MapVariable($value);
-            default:
-                return null;
-        }
+        return match ($type) {
+            self::STRING => new StringVariable((string)$value),
+            self::NUMBER => new NumberVariable((float)$value),
+            self::LIST => new ListVariable($value),
+            self::MAP => new MapVariable($value),
+            default => null,
+        };
     }
 
     public static function fromArray(array $data): ?self {
@@ -105,14 +100,7 @@ abstract class Variable {
         throw new UnsupportedCalculationException();
     }
 
-    /**
-     * @param string|Variable|array $target
-     * @param FlowItemExecutor|null $executor
-     * @param array $variables
-     * @param bool $global
-     * @return ListVariable
-     */
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
         throw new UnsupportedCalculationException();
     }
 }

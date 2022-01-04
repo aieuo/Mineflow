@@ -12,7 +12,7 @@ class PlayerItemConsumeEventTrigger extends EventTrigger {
         parent::__construct(PlayerItemConsumeEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerItemConsumeEvent $event */
         $target = $event->getPlayer();
         $item = $event->getItem();

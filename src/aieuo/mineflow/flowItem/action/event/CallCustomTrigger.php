@@ -51,9 +51,7 @@ class CallCustomTrigger extends FlowItem {
         $name = $source->replaceVariables($this->getTriggerName());
         $trigger = CustomTrigger::create($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
-        if ($recipes !== null) {
-            $recipes->executeAll($source->getTarget(), [], $source->getEvent());
-        }
+        $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
         yield true;
     }
 

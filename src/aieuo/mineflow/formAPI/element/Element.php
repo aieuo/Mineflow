@@ -16,8 +16,7 @@ abstract class Element implements \JsonSerializable {
     public const ELEMENT_TOGGLE = "toggle";
 
     protected string $type;
-    /** @var string */
-    protected $text = "";
+    protected string $text = "";
     protected string $extraText = "";
     protected ?string $highlight = "";
 
@@ -60,21 +59,14 @@ abstract class Element implements \JsonSerializable {
     public static function fromSerializedArray(array $data): ?self {
         if (!isset($data["type"]) or !isset($data["text"])) return null;
 
-        switch ($data["type"]) {
-            case self::ELEMENT_LABEL:
-                return Label::fromSerializedArray($data);
-            case self::ELEMENT_TOGGLE:
-                return Toggle::fromSerializedArray($data);
-            case self::ELEMENT_INPUT:
-                return Input::fromSerializedArray($data);
-            case self::ELEMENT_SLIDER:
-                return Slider::fromSerializedArray($data);
-            case self::ELEMENT_STEP_SLIDER:
-                return StepSlider::fromSerializedArray($data);
-            case self::ELEMENT_DROPDOWN:
-                return Dropdown::fromSerializedArray($data);
-            default:
-                return null;
-        }
+        return match ($data["type"]) {
+            self::ELEMENT_LABEL => Label::fromSerializedArray($data),
+            self::ELEMENT_TOGGLE => Toggle::fromSerializedArray($data),
+            self::ELEMENT_INPUT => Input::fromSerializedArray($data),
+            self::ELEMENT_SLIDER => Slider::fromSerializedArray($data),
+            self::ELEMENT_STEP_SLIDER => StepSlider::fromSerializedArray($data),
+            self::ELEMENT_DROPDOWN => Dropdown::fromSerializedArray($data),
+            default => null,
+        };
     }
 }

@@ -12,7 +12,7 @@ class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
         parent::__construct(EntityLevelChangeEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var EntityLevelChangeEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target);

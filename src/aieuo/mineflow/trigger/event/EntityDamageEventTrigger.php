@@ -13,7 +13,7 @@ class EntityDamageEventTrigger extends PlayerEventTrigger {
         parent::__construct(EntityDamageEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var EntityDamageEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target, "target");

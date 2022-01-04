@@ -88,7 +88,7 @@ class CreateItemVariable extends FlowItem {
         $itemName = $source->replaceVariables($this->getItemName());
         try {
             $item = ItemFactory::fromString($id);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createItemVariable.item.notFound"));
         }
         if (!empty($count)) {

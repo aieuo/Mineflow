@@ -12,19 +12,11 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return new NumberVariable(0);
     }
 
-    /**
-     * @param int|float $value
-     * @noinspection SenselessProxyMethodInspection
-     */
-    public function __construct($value) {
+    public function __construct(int|float $value) {
         parent::__construct($value);
     }
 
-    /**
-     * @return int|float
-     * @noinspection SenselessProxyMethodInspection
-     */
-    public function getValue() {
+    public function getValue(): int|float {
         return parent::getValue();
     }
 

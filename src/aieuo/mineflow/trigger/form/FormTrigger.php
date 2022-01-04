@@ -21,12 +21,7 @@ use aieuo\mineflow\variable\StringVariable;
 
 class FormTrigger extends Trigger {
 
-    /**
-     * @param string $key
-     * @param string $subKey
-     * @return self
-     */
-    public static function create(string $key, string $subKey = ""): Trigger {
+    public static function create(string $key, string $subKey = ""): FormTrigger {
         return new FormTrigger($key, $subKey);
     }
 
@@ -39,7 +34,7 @@ class FormTrigger extends Trigger {
      * @param array|int|bool $data
      * @return array
      */
-    public function getVariables($form, $data = []): array {
+    public function getVariables(mixed $form, array|int|bool $data = []): array {
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */
@@ -67,22 +62,12 @@ class FormTrigger extends Trigger {
                 $dataVariables = [];
                 $dropdownVariables = [];
                 foreach ($form->getContents() as $i => $content) {
-                    switch ($content->getType()) {
-                        case Element::ELEMENT_INPUT:
-                            $var = new StringVariable($data[$i]);
-                            break;
-                        case Element::ELEMENT_TOGGLE:
-                            $var = new BoolVariable($data[$i]);
-                            break;
-                        case Element::ELEMENT_SLIDER:
-                        case Element::ELEMENT_STEP_SLIDER:
-                        case Element::ELEMENT_DROPDOWN:
-                            $var = new NumberVariable($data[$i]);
-                            break;
-                        default:
-                            $var = new StringVariable("");
-                            break;
-                    }
+                    $var = match ($content->getType()) {
+                        Element::ELEMENT_INPUT => new StringVariable($data[$i]),
+                        Element::ELEMENT_TOGGLE => new BoolVariable($data[$i]),
+                        Element::ELEMENT_SLIDER, Element::ELEMENT_STEP_SLIDER, Element::ELEMENT_DROPDOWN => new NumberVariable($data[$i]),
+                        default => new StringVariable(""),
+                    };
                     $dataVariables[$i] = $var;
                     if ($content instanceof Dropdown) {
                         $selected = $content->getOptions()[$data[$i]];

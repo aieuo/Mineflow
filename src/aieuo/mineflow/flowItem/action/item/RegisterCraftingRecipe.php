@@ -111,7 +111,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
                     $key = $keys[$index];
                     $ingredients[$key] = $input;
                 }
-            } catch (InvalidFlowValueException $e) {
+            } catch (InvalidFlowValueException) {
                 $key = " ";
             }
             $shape[floor($i / 3)] .= $key;

@@ -34,11 +34,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         $this->value[] = $value;
     }
 
-    /**
-     * @param int|string $key
-     * @param Variable $value
-     */
-    public function setValueAt($key, Variable $value): void {
+    public function setValueAt(int|string $key, Variable $value): void {
         $this->value[(int)$key] = $value;
         $this->value = array_values($this->value);
     }
@@ -95,7 +91,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $value) {
@@ -106,11 +102,10 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
-        switch ($name) {
-            case "count":
-                return new NumberVariable(count($this->value));
-        }
-        return null;
+        return match ($name) {
+            "count" => new NumberVariable(count($this->value)),
+            default => null,
+        };
     }
 
     public function getCount(): int {

@@ -15,11 +15,7 @@ class MapVariable extends ListVariable {
         return $this->value[$index];
     }
 
-    /**
-     * @param int|string $key
-     * @param Variable $value
-     */
-    public function setValueAt($key, Variable $value): void {
+    public function setValueAt(int|string $key, Variable $value): void {
         $this->value[$key] = $value;
     }
 
@@ -63,7 +59,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $key => $value) {

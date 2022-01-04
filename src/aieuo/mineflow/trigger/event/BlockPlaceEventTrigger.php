@@ -18,7 +18,7 @@ class BlockPlaceEventTrigger extends EventTrigger {
         return $event->getPlayer();
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var BlockPlaceEvent $event */
         $target = $event->getPlayer();
         $block = $event->getBlock();

@@ -12,7 +12,7 @@ class PlayerMoveEventTrigger extends PlayerEventTrigger {
         parent::__construct(PlayerMoveEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerMoveEvent $event */
         $variables = [
             "move_from" => new LocationObjectVariable($event->getFrom()),

@@ -100,64 +100,36 @@ class Calculate extends FlowItem {
         $this->throwIfInvalidNumber($value);
 
         $value = (float)$value;
-        switch ($operator) {
-            case self::SQUARE:
-                $result = $value * $value;
-                break;
-            case self::SQUARE_ROOT:
-                $result = sqrt($value);
-                break;
-            case self::FACTORIAL:
-                $result = 1;
-                for ($i = abs($value); $i > 1; $i--) {
-                    $result *= $i;
-                }
-                break;
-            case self::CALC_ABS:
-                $result = abs($value);
-                break;
-            case self::CALC_LOG:
-                $result = log10($value);
-                break;
-            case self::CALC_SIN:
-                $result = sin($value);
-                break;
-            case self::CALC_COS:
-                $result = cos($value);
-                break;
-            case self::CALC_TAN:
-                $result = tan($value);
-                break;
-            case self::CALC_ASIN:
-                $result = asin($value);
-                break;
-            case self::CALC_ACOS:
-                $result = acos($value);
-                break;
-            case self::CALC_ATAN:
-                $result = atan($value);
-                break;
-            case self::CALC_DEG2RAD:
-                $result = deg2rad($value);
-                break;
-            case self::CALC_RAD2DEG:
-                $result = rad2deg($value);
-                break;
-            case self::CALC_FLOOR:
-                $result = floor($value);
-                break;
-            case self::CALC_ROUND:
-                $result = round($value);
-                break;
-            case self::CALC_CEIL:
-                $result = ceil($value);
-                break;
-            default:
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
-        }
+        $result = match ($operator) {
+            self::SQUARE => $value * $value,
+            self::SQUARE_ROOT => sqrt($value),
+            self::FACTORIAL => $this->factorial((int)$value),
+            self::CALC_ABS => abs($value),
+            self::CALC_LOG => log10($value),
+            self::CALC_SIN => sin($value),
+            self::CALC_COS => cos($value),
+            self::CALC_TAN => tan($value),
+            self::CALC_ASIN => asin($value),
+            self::CALC_ACOS => acos($value),
+            self::CALC_ATAN => atan($value),
+            self::CALC_DEG2RAD => deg2rad($value),
+            self::CALC_RAD2DEG => rad2deg($value),
+            self::CALC_FLOOR => floor($value),
+            self::CALC_ROUND => round($value),
+            self::CALC_CEIL => ceil($value),
+            default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
+        };
 
         $source->addVariable($resultName, new NumberVariable($result));
         yield true;
+        return $result;
+    }
+
+    private function factorial(int $value): int {
+        $result = 1;
+        for ($i = abs($value); $i > 1; $i--) {
+            $result *= $i;
+        }
         return $result;
     }
 

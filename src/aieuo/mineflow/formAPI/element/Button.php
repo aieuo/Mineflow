@@ -14,8 +14,7 @@ class Button implements \JsonSerializable {
     public const TYPE_COMMAND_CONSOLE = "commandConsoleButton";
 
     protected string $type = self::TYPE_NORMAL;
-    /** @var string */
-    protected $text = "";
+    protected string $text = "";
     private ?ButtonImage $image;
     protected string $extraText = "";
     protected string $highlight = "";

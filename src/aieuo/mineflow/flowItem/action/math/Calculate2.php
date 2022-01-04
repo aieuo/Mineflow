@@ -114,31 +114,16 @@ class Calculate2 extends FlowItem {
 
         $value1 = (float)$value1;
         $value2 = (float)$value2;
-        switch ($operator) {
-            case self::CALC_MIN:
-                $result = min($value1, $value2);
-                break;
-            case self::CALC_MAX:
-                $result = max($value1, $value2);
-                break;
-            case self::CALC_POW:
-                $result = $value1 ** $value2;
-                break;
-            case self::CALC_LOG:
-                $result = log($value1, $value2);
-                break;
-            case self::CALC_HYPOT:
-                $result = hypot($value1, $value2);
-                break;
-            case self::CALC_ATAN2:
-                $result = atan2($value1, $value2);
-                break;
-            case self::CALC_ROUND:
-                $result = round($value1, (int)$value2);
-                break;
-            default:
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
-        }
+        $result = match ($operator) {
+            self::CALC_MIN => min($value1, $value2),
+            self::CALC_MAX => max($value1, $value2),
+            self::CALC_POW => $value1 ** $value2,
+            self::CALC_LOG => log($value1, $value2),
+            self::CALC_HYPOT => hypot($value1, $value2),
+            self::CALC_ATAN2 => atan2($value1, $value2),
+            self::CALC_ROUND => round($value1, (int)$value2),
+            default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
+        };
 
         $source->addVariable($resultName, new NumberVariable($result));
         yield true;

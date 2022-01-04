@@ -22,7 +22,7 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "saveId":
                 try {
                     return new StringVariable($entity->getSaveId());
-                } catch (\InvalidStateException $e) {
+                } catch (\InvalidStateException) {
                     return new StringVariable("");
                 }
             case "nameTag":

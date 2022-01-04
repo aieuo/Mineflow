@@ -25,12 +25,10 @@ class CreateConfigVariable extends FlowItem {
     protected string $category = Category::CONFIG;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $variableName;
-    private string $fileName;
-
-    public function __construct(string $file = "", string $name = "config") {
-        $this->fileName = $file;
-        $this->variableName = $name;
+    public function __construct(
+        private string $fileName = "",
+        private string $variableName = "config"
+    ) {
     }
 
     public function setVariableName(string $variableName): void {

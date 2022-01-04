@@ -12,7 +12,7 @@ class PlayerExhaustEventTrigger extends EventTrigger {
         parent::__construct(PlayerExhaustEvent::class, $subKey);
     }
 
-    public function getVariables($event): array {
+    public function getVariables(mixed $event): array {
         /** @var PlayerExhaustEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getEntityVariables($target);

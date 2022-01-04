@@ -39,7 +39,7 @@ class ConfigObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
-    public function map($target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getConfig()->getAll() as $key => $value) {

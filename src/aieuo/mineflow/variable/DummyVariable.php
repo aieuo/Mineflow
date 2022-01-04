@@ -70,36 +70,22 @@ class DummyVariable extends Variable {
      * @return array<string, DummyVariable>
      */
     public function getObjectValuesDummy(): array {
-        switch ($this->getValueType()) {
-            case self::BLOCK:
-                return BlockObjectVariable::getValuesDummy();
-            case self::CONFIG:
-                return ConfigObjectVariable::getValuesDummy();
-            case self::ENTITY:
-                return EntityObjectVariable::getValuesDummy();
-            case self::EVENT:
-                return EventObjectVariable::getValuesDummy();
-            case self::HUMAN:
-                return HumanObjectVariable::getValuesDummy();
-            case self::ITEM:
-                return ItemObjectVariable::getValuesDummy();
-            case self::WORLD:
-                return WorldObjectVariable::getValuesDummy();
-            case self::LOCATION:
-                return LocationObjectVariable::getValuesDummy();
-            case self::PLAYER:
-                return PlayerObjectVariable::getValuesDummy();
-            case self::POSITION:
-                return PositionObjectVariable::getValuesDummy();
-            case self::VECTOR3:
-                return Vector3ObjectVariable::getValuesDummy();
-            case self::SCOREBOARD:
-                return ScoreboardObjectVariable::getValuesDummy();
-            case self::INVENTORY:
-                return InventoryObjectVariable::getValuesDummy();
-            default:
-                return [];
-        }
+        return match ($this->getValueType()) {
+            self::BLOCK => BlockObjectVariable::getValuesDummy(),
+            self::CONFIG => ConfigObjectVariable::getValuesDummy(),
+            self::ENTITY => EntityObjectVariable::getValuesDummy(),
+            self::EVENT => EventObjectVariable::getValuesDummy(),
+            self::HUMAN => HumanObjectVariable::getValuesDummy(),
+            self::ITEM => ItemObjectVariable::getValuesDummy(),
+            self::WORLD => WorldObjectVariable::getValuesDummy(),
+            self::LOCATION => LocationObjectVariable::getValuesDummy(),
+            self::PLAYER => PlayerObjectVariable::getValuesDummy(),
+            self::POSITION => PositionObjectVariable::getValuesDummy(),
+            self::VECTOR3 => Vector3ObjectVariable::getValuesDummy(),
+            self::SCOREBOARD => ScoreboardObjectVariable::getValuesDummy(),
+            self::INVENTORY => InventoryObjectVariable::getValuesDummy(),
+            default => [],
+        };
     }
 
     public function isObjectVariableType(): bool {
