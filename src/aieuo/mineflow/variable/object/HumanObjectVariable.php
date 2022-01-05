@@ -20,10 +20,10 @@ class HumanObjectVariable extends EntityObjectVariable {
         $human = $this->getHuman();
         return match ($index) {
             "hand" => new ItemObjectVariable($human->getInventory()->getItemInHand()),
-            "food" => new NumberVariable($human->getFood()),
-            "xp" => new NumberVariable($human->getCurrentTotalXp()),
-            "xp_level" => new NumberVariable($human->getXpLevel()),
-            "xp_progress" => new NumberVariable($human->getXpProgress()),
+            "food" => new NumberVariable($human->getHungerManager()->getFood()),
+            "xp" => new NumberVariable($human->getXpManager()->getCurrentTotalXp()),
+            "xp_level" => new NumberVariable($human->getXpManager()->getXpLevel()),
+            "xp_progress" => new NumberVariable($human->getXpManager()->getXpProgress()),
             default => null,
         };
     }
@@ -31,7 +31,6 @@ class HumanObjectVariable extends EntityObjectVariable {
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getHuman(): Human {
         return $this->getEntity();
-    }
     }
 
     public static function getValuesDummy(): array {

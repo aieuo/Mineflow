@@ -25,7 +25,7 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "name" => new StringVariable($player->getName()),
             "display_name" => new StringVariable($player->getDisplayName()),
             "locale" => new StringVariable($player->getLocale()),
-            "ping" => new NumberVariable($player->getPing()),
+            "ping" => new NumberVariable($player->getNetworkSession()->getPing()),
             default => null,
         };
     }
@@ -33,7 +33,6 @@ class PlayerObjectVariable extends HumanObjectVariable {
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getPlayer(): Player {
         return $this->getEntity();
-    }
     }
 
     public static function getValuesDummy(): array {
