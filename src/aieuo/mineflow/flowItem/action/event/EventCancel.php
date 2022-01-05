@@ -27,7 +27,7 @@ class EventCancel extends FlowItem {
         if (!($event instanceof Cancellable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));
         }
-        $event->setCancelled();
+        $event->cancel();
         yield FlowItemExecutor::CONTINUE;
     }
 

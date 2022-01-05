@@ -40,7 +40,7 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
 
         $player = $this->getOnlinePlayer($source);
 
-        $player->getInventory()->clearAll(true);
+        $player->getInventory()->clearAll();
         yield FlowItemExecutor::CONTINUE;
     }
 

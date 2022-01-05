@@ -42,7 +42,7 @@ class ClearAllEffect extends FlowItem implements EntityFlowItem {
         $entity = $this->getOnlineEntity($source);
 
         if ($entity instanceof Living) {
-            $entity->getEffects()->clear();;
+            $entity->getEffects()->clear();
         }
         yield FlowItemExecutor::CONTINUE;
     }
