@@ -7,7 +7,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 
 class Economy {
-    private static ?EconomyLoader $economy;
+    private static ?EconomyLoader $economy = null;
     private Main $owner;
 
     public function __construct(Main $owner) {
