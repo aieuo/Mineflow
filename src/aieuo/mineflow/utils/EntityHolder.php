@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\utils;
 
 use pocketmine\entity\Entity;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class EntityHolder {
@@ -12,13 +12,12 @@ class EntityHolder {
     private static array $entities = [];
 
     public static function getPlayerByName(string $name): ?Player {
-        $player = Server::getInstance()->getPlayer($name);
+        $player = Server::getInstance()->getPlayerExact($name);
         if ($player instanceof Player) self::$entities[$player->getId()] = $player;
         return $player;
     }
 
     public static function findEntity(int $id): ?Entity {
-        if ($id > Entity::$entityCount) return null;
         $entity = null;
         if (isset(self::$entities[$id])) {
             $entity = self::$entities[$id];
@@ -28,8 +27,8 @@ class EntityHolder {
             }
             return $entity;
         }
-        $levels = Server::getInstance()->getLevels();
-        foreach ($levels as $level) {
+        $worlds = Server::getInstance()->getWorldManager()->getWorlds();
+        foreach ($worlds as $level) {
             $entity = $level->getEntity($id);
             if ($entity instanceof Entity) break;
         }

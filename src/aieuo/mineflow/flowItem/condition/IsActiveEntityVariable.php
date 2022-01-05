@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class IsActiveEntityVariable extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;

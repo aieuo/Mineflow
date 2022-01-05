@@ -7,7 +7,7 @@ namespace aieuo\mineflow\variable\object;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\level\Location;
+use pocketmine\entity\Location;
 
 class LocationObjectVariable extends PositionObjectVariable {
 
@@ -41,6 +41,6 @@ class LocationObjectVariable extends PositionObjectVariable {
 
     public function __toString(): string {
         $value = $this->getLocation();
-        return $value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName()." (".$value->getYaw().",".$value->getPitch().")";
+        return $value->x.",".$value->y.",".$value->z.",".$value->world->getFolderName()." (".$value->getYaw().",".$value->getPitch().")";
     }
 }

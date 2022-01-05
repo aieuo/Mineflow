@@ -15,7 +15,7 @@ use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class CustomListFormForm {
 

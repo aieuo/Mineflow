@@ -10,7 +10,7 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class SettingForm {

@@ -12,11 +12,10 @@ use aieuo\mineflow\ui\SettingForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 
-class MineflowCommand extends Command implements PluginIdentifiableCommand {
+class MineflowCommand extends Command {
 
     public function __construct() {
         parent::__construct("mineflow", Language::get("command.mineflow.description"), Language::get("command.mineflow.usage"), ["mf"]);

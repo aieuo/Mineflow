@@ -56,7 +56,7 @@ class SetFood extends FlowItem implements PlayerFlowItem {
         $entity = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($entity);
 
-        $entity->setFood((float)$health);
+        $entity->getHungerManager()->setFood((float)$health);
         yield true;
     }
 

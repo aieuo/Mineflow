@@ -4,7 +4,7 @@ namespace aieuo\mineflow\utils;
 
 use aieuo\mineflow\Main;
 use pocketmine\entity\Entity;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 class Logger {

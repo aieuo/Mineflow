@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 
 class GetBlock extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -59,7 +59,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         $result = $source->replaceVariables($this->getResultName());
 
         /** @var Position $position */
-        $block = $position->level->getBlock($position);
+        $block = $position->world->getBlock($position);
 
         $variable = new BlockObjectVariable($block);
         $source->addVariable($result, $variable);

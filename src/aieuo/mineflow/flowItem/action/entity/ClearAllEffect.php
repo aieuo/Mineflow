@@ -44,7 +44,7 @@ class ClearAllEffect extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         if ($entity instanceof Living) {
-            $entity->removeAllEffects();
+            $entity->getEffects()->clear();
         }
         yield true;
     }

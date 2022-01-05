@@ -6,7 +6,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 
 class PositionObjectVariable extends Vector3ObjectVariable {
 
@@ -39,6 +39,6 @@ class PositionObjectVariable extends Vector3ObjectVariable {
 
     public function __toString(): string {
         $value = $this->getPosition();
-        return $value->x.",".$value->y.",".$value->z.",".$value->level->getFolderName();
+        return $value->x.",".$value->y.",".$value->z.",".$value->world->getFolderName();
     }
 }

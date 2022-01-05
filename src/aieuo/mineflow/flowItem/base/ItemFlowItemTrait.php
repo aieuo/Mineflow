@@ -23,14 +23,23 @@ trait ItemFlowItemTrait {
         $this->itemVariableNames[$name] = $item;
     }
 
-    public function getItem(FlowItemExecutor $source, string $name = ""): Item {
+    public function getItemVariable(FlowItemExecutor $source, string $name = ""): ItemObjectVariable {
         $item = $source->replaceVariables($rawName = $this->getItemVariableName($name));
 
         $variable = $source->getVariable($item);
-        if ($variable instanceof ItemObjectVariable and ($item = $variable->getItem()) instanceof Item) {
-            return $item;
+        if (!($variable instanceof ItemObjectVariable)) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $rawName]));
         }
 
-        throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $rawName]));
+        return $variable;
+    }
+
+    public function getItem(FlowItemExecutor $source, string $name = ""): Item {
+        $variable = $this->getItemVariable($source, $name);
+        if (!(($item = $variable->getItem()) instanceof Item)) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $this->getItemVariableName($name)]));
+        }
+
+        return $item;
     }
 }

@@ -8,8 +8,13 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
+use pocketmine\entity\EntityFactory;
 
 class EntityObjectVariable extends PositionObjectVariable {
+
+    public function __construct(private Entity $entity, ?string $str = null) {
+        parent::__construct($this->entity->getPosition(), $str);
+    }
 
     public function getValueFromIndex(string $index): ?Variable {
         $variable = parent::getValueFromIndex($index);
@@ -21,8 +26,8 @@ class EntityObjectVariable extends PositionObjectVariable {
                 return new NumberVariable($entity->getId());
             case "saveId":
                 try {
-                    return new StringVariable($entity->getSaveId());
-                } catch (\InvalidStateException) {
+                    return new StringVariable(EntityFactory::getInstance()->getSaveId($entity::class));
+                } catch (\InvalidArgumentException) {
                     return new StringVariable("");
                 }
             case "nameTag":
@@ -32,11 +37,11 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "maxHealth":
                 return new NumberVariable($entity->getMaxHealth());
             case "yaw":
-                return new NumberVariable($entity->getYaw());
+                return new NumberVariable($entity->getLocation()->getYaw());
             case "pitch":
-                return new NumberVariable($entity->getPitch());
+                return new NumberVariable($entity->getLocation()->getPitch());
             case "direction":
-                return new NumberVariable($entity->getDirection());
+                return new NumberVariable($entity->getHorizontalFacing());
             case "onGround":
                 return new BoolVariable($entity->isOnGround());
             default:
@@ -44,9 +49,8 @@ class EntityObjectVariable extends PositionObjectVariable {
         }
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getEntity(): Entity {
-        return $this->getValue();
+        return $this->entity;
     }
 
     public static function getValuesDummy(): array {

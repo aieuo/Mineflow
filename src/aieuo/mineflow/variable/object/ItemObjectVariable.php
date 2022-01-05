@@ -33,6 +33,10 @@ class ItemObjectVariable extends ObjectVariable {
         return $this->getValue();
     }
 
+    public function setItem(Item $item): void  {
+        $this->setValue($item);
+    }
+
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "name" => new DummyVariable(DummyVariable::STRING),
@@ -45,6 +49,6 @@ class ItemObjectVariable extends ObjectVariable {
 
     public function __toString(): string {
         $item = $this->getItem();
-        return "Item[".$item->getName()."] (".$item->getId().":".($item->hasAnyDamageValue() ? "?" : $item->getDamage()).")x".$item->getCount();
+        return "Item[".$item->getName()."] (".$item->getId().":".($item->hasAnyDamageValue() ? "?" : $item->getMeta()).")x".$item->getCount();
     }
 }

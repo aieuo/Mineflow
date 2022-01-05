@@ -13,12 +13,12 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
-use pocketmine\level\Level;
-use pocketmine\Player;
+use pocketmine\world\World;
+use pocketmine\player\Player;
 
 class WorldObjectVariable extends ObjectVariable {
 
-    public function __construct(Level $value, ?string $str = null) {
+    public function __construct(World $value, ?string $str = null) {
         parent::__construct($value, $str ?? $value->getFolderName());
     }
 
@@ -26,7 +26,7 @@ class WorldObjectVariable extends ObjectVariable {
         $level = $this->getWorld();
         switch ($index) {
             case "name":
-                return new StringVariable($level->getName());
+                return new StringVariable($level->getDisplayName());
             case "folderName":
                 return new StringVariable($level->getFolderName());
             case "id":
@@ -67,7 +67,7 @@ class WorldObjectVariable extends ObjectVariable {
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getWorld(): Level {
+    public function getWorld(): World {
         return $this->getValue();
     }
 

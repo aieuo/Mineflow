@@ -10,8 +10,8 @@ use pocketmine\block\Block;
 
 class BlockObjectVariable extends PositionObjectVariable {
 
-    public function __construct(Block $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Block $block, ?string $str = null) {
+        parent::__construct($block->getPosition(), $str);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -22,15 +22,14 @@ class BlockObjectVariable extends PositionObjectVariable {
         return match ($index) {
             "name" => new StringVariable($block->getName()),
             "id" => new NumberVariable($block->getId()),
-            "damage" => new NumberVariable($block->getDamage()),
+            "damage" => new NumberVariable($block->getMeta()),
             "item" => new ItemObjectVariable($block->getPickedItem()),
             default => null,
         };
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getBlock(): Block {
-        return $this->getValue();
+        return $this->block;
     }
 
     public static function getValuesDummy(): array {

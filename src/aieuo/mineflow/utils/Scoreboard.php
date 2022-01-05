@@ -6,7 +6,7 @@ use pocketmine\network\mcpe\protocol\RemoveObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class Scoreboard {
@@ -99,7 +99,7 @@ class Scoreboard {
         $pk->displayName = $this->displayName;
         $pk->criteriaName = "dummy";
         $pk->sortOrder = 0;
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
 
         $pk = new SetScorePacket();
         $pk->type = SetScorePacket::TYPE_CHANGE;
@@ -116,7 +116,7 @@ class Scoreboard {
             $pk->entries[] = $entry;
         }
 
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
 
         $this->show[$player->getName()] = true;
     }
@@ -124,7 +124,7 @@ class Scoreboard {
     public function hide(Player $player): void {
         $pk = new RemoveObjectivePacket();
         $pk->objectiveName = $this->id;
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
 
         unset($this->show[$player->getName()]);
     }
@@ -148,7 +148,7 @@ class Scoreboard {
         $pk = new SetScorePacket();
         $pk->type = $pk::TYPE_REMOVE;
         $pk->entries[] = $entry;
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
     }
 
     public function updateScoreToAllPlayer(string $scoreName, int $score, int $id): void {
@@ -170,6 +170,6 @@ class Scoreboard {
         $pk = new SetScorePacket();
         $pk->type = $pk::TYPE_CHANGE;
         $pk->entries[] = $entry;
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
     }
 }

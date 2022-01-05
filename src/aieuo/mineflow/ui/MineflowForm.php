@@ -8,7 +8,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class MineflowForm {
 

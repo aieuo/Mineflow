@@ -14,7 +14,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class CommandForm {
 

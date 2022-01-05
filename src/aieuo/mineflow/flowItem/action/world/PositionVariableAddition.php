@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -97,7 +97,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         $this->throwIfInvalidNumber($y);
         $this->throwIfInvalidNumber($z);
 
-        $position = Position::fromObject($pos->add($x, $y, $z), $pos->getLevel());
+        $position = Position::fromObject($pos->add((float)$x, (float)$y, (float)$z), $pos->getWorld());
 
         $variable = new PositionObjectVariable($position);
         $source->addVariable($name, $variable);

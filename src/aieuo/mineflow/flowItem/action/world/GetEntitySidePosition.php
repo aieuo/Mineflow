@@ -17,8 +17,8 @@ use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use pocketmine\level\Position;
-use pocketmine\math\Vector3;
+use pocketmine\math\Facing;
+use pocketmine\world\Position;
 
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -63,19 +63,19 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     ];
 
     private array $vector3SideMap = [
-        self::SIDE_DOWN => Vector3::SIDE_DOWN,
-        self::SIDE_UP => Vector3::SIDE_UP,
-        self::SIDE_NORTH => Vector3::SIDE_NORTH,
-        self::SIDE_SOUTH => Vector3::SIDE_SOUTH,
-        self::SIDE_WEST => Vector3::SIDE_WEST,
-        self::SIDE_EAST => Vector3::SIDE_EAST,
+        self::SIDE_DOWN => Facing::DOWN,
+        self::SIDE_UP => Facing::UP,
+        self::SIDE_NORTH => Facing::NORTH,
+        self::SIDE_SOUTH => Facing::SOUTH,
+        self::SIDE_WEST => Facing::WEST,
+        self::SIDE_EAST => Facing::EAST,
     ];
 
     private array $directionSideMap = [
-        Vector3::SIDE_EAST,
-        Vector3::SIDE_SOUTH,
-        Vector3::SIDE_WEST,
-        Vector3::SIDE_NORTH,
+        Facing::EAST,
+        Facing::SOUTH,
+        Facing::WEST,
+        Facing::NORTH,
     ];
 
     public function __construct(string $entity = "", string $direction = "", string $step = "1", string $result = "pos") {
@@ -131,7 +131,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
         $this->throwIfInvalidNumber($step);
 
-        $direction = $entity->getDirection();
+        $direction = $entity->getHorizontalFacing();
         $pos = $entity->getPosition()->floor()->add(0.5, 0.5, 0.5);
         switch ($side) {
             case self::SIDE_DOWN:
@@ -158,7 +158,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntitySide.direction.notFound", [$side]));
         }
 
-        $source->addVariable($resultName, new PositionObjectVariable(Position::fromObject($pos, $entity->getLevelNonNull())));
+        $source->addVariable($resultName, new PositionObjectVariable(Position::fromObject($pos, $entity->getWorld())));
         yield true;
         return $this->getResultName();
     }

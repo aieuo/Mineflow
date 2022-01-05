@@ -17,7 +17,7 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class RepeatAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;

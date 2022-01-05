@@ -20,8 +20,12 @@ use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
+use function array_key_last;
+use function explode;
+use function str_replace;
+use function version_compare;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
     use FlowItemContainerTrait {
@@ -133,14 +137,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             case self::TARGET_SPECIFIED:
                 $server = Server::getInstance();
                 foreach ($this->targetOptions["specified"] as $targetName) {
-                    $target = $server->getPlayer($targetName);
+                    $target = $server->getPlayerExact($targetName);
                     if (!($target instanceof Player)) continue;
                     $targets[] = $target;
                 }
                 break;
             case self::TARGET_ON_WORLD:
                 if ($player === null) return [];
-                $targets = $player->getLevelNonNull()->getPlayers();
+                $targets = $player->getWorld()->getPlayers();
                 break;
             case self::TARGET_BROADCAST:
                 $targets = Server::getInstance()->getOnlinePlayers();

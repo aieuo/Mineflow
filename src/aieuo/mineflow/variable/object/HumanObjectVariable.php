@@ -30,7 +30,8 @@ class HumanObjectVariable extends EntityObjectVariable {
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getHuman(): Human {
-        return $this->getValue();
+        return $this->getEntity();
+    }
     }
 
     public static function getValuesDummy(): array {

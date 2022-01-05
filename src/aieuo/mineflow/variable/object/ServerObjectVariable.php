@@ -11,8 +11,8 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
-use pocketmine\level\Level;
-use pocketmine\Player;
+use pocketmine\world\World;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class ServerObjectVariable extends ObjectVariable {
@@ -32,17 +32,17 @@ class ServerObjectVariable extends ObjectVariable {
             case "tick":
                 return new NumberVariable($server->getTick());
             case "default_world":
-                $world = $server->getDefaultLevel();
+                $world = $server->getWorldManager()->getDefaultWorld();
                 if ($world === null) return null;
                 return new WorldObjectVariable($world);
             case "worlds":
-                return new ListVariable(array_map(fn(Level $world) => new WorldObjectVariable($world), $server->getLevels()));
+                return new ListVariable(array_map(fn(World $world) => new WorldObjectVariable($world), $server->getWorldManager()->getWorlds()));
             case "players":
                 return new ListVariable(array_map(fn(Player $player) => new PlayerObjectVariable($player), array_values($server->getOnlinePlayers())));
             case "entities":
                 $entities = [];
-                foreach ($server->getLevels() as $level) {
-                    foreach ($level->getEntities() as $entity) {
+                foreach ($server->getWorldManager()->getWorlds() as $world) {
+                    foreach ($world->getEntities() as $entity) {
                         if ($entity instanceof Player) {
                             $v = new PlayerObjectVariable($entity);
                         } elseif ($entity instanceof Human) {
@@ -56,8 +56,8 @@ class ServerObjectVariable extends ObjectVariable {
                 return new ListVariable($entities);
             case "livings":
                 $entities = [];
-                foreach ($server->getLevels() as $level) {
-                    foreach ($level->getEntities() as $entity) {
+                foreach ($server->getWorldManager()->getWorlds() as $world) {
+                    foreach ($world->getEntities() as $entity) {
                         if ($entity instanceof Player) {
                             $v = new PlayerObjectVariable($entity);
                         } elseif ($entity instanceof Human) {

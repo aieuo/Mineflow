@@ -6,7 +6,7 @@ use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\player\PlayerDeathEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class PlayerDeathEventTrigger extends PlayerEventTrigger {
     public function __construct(string $subKey = "") {

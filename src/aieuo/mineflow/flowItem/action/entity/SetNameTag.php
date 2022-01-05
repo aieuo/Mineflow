@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;

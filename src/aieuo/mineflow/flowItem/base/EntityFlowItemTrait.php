@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use pocketmine\entity\Entity;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 trait EntityFlowItemTrait {
 

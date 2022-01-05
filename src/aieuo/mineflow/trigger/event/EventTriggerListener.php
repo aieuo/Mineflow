@@ -6,7 +6,6 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
-use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\event\Listener;
 use pocketmine\event\EventPriority;
 use pocketmine\event\Event;
@@ -23,7 +22,8 @@ class EventTriggerListener implements Listener {
         if (in_array($event, $this->registeredEvents, true)) return;
 
         $pluginManager = Server::getInstance()->getPluginManager();
-        $pluginManager->registerEvent($event, $this, EventPriority::NORMAL, new MethodEventExecutor("onEvent"), Main::getInstance());
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $pluginManager->registerEvent($event, \Closure::fromCallable([$this, "onEvent"]), EventPriority::NORMAL, Main::getInstance(), true);
         $this->registeredEvents[] = $event;
     }
 

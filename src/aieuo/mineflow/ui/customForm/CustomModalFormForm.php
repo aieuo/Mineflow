@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class CustomModalFormForm {
     public function sendMenu(Player $player, ModalForm $form, array $messages = []): void {

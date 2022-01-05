@@ -3,12 +3,16 @@
 namespace aieuo\mineflow\utils;
 
 use pocketmine\entity\Entity;
-use pocketmine\entity\EntityIds;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
-use pocketmine\Player;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
+use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
+use pocketmine\network\mcpe\protocol\types\entity\LongMetadataProperty;
+use pocketmine\network\mcpe\protocol\types\entity\StringMetadataProperty;
+use pocketmine\player\Player;
 
 class Bossbar {
     /** @var Bossbar[][] */
@@ -23,7 +27,7 @@ class Bossbar {
         $this->title = $title;
         $this->max = $max;
         $this->per = $per;
-        $this->entityId = Entity::$entityCount++;
+        $this->entityId = Entity::nextRuntimeId();
     }
 
     public function setTitle(string $title): void {
@@ -61,40 +65,39 @@ class Bossbar {
         self::$bars[$player->getName()][$id] = $bar;
 
         $pk = new AddActorPacket();
-        $pk->entityRuntimeId = $bar->getEntityId();
-        $pk->type = AddActorPacket::LEGACY_ID_MAP_BC[EntityIds::SHULKER];
+        $pk->actorRuntimeId = $bar->getEntityId();
+        $pk->type = EntityIds::SHULKER;
         $pk->metadata = [
-            Entity::DATA_FLAGS => [
-                Entity::DATA_TYPE_LONG,
-                (1 << Entity::DATA_FLAG_INVISIBLE) | (1 << Entity::DATA_FLAG_IMMOBILE)
-            ],
-            Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $title]
+            EntityMetadataProperties::FLAGS => new LongMetadataProperty(
+                (1 << EntityMetadataFlags::INVISIBLE) | (1 << EntityMetadataFlags::IMMOBILE)
+            ),
+            EntityMetadataProperties::NAMETAG => new StringMetadataProperty($title)
         ];
         $pk->position = new Vector3(0, 0, 0);
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
 
         $pk2 = new BossEventPacket();
-        $pk2->bossEid = $bar->getEntityId();
+        $pk2->bossActorUniqueId = $bar->getEntityId();
         $pk2->eventType = BossEventPacket::TYPE_SHOW;
         $pk2->title = $title;
         $pk2->healthPercent = $per;
         $pk2->color = 0;
         $pk2->overlay = 0;
         $pk2->unknownShort = 0;
-        $player->sendDataPacket($pk2);
+        $player->getNetworkSession()->sendDataPacket($pk2);
     }
 
     public static function remove(Player $player, string $id): bool {
         if (!isset(self::$bars[$player->getName()][$id])) return false;
         $bar = self::$bars[$player->getName()][$id];
         $pk = new BossEventPacket();
-        $pk->bossEid = $bar->getEntityId();
+        $pk->bossActorUniqueId = $bar->getEntityId();
         $pk->eventType = BossEventPacket::TYPE_HIDE;
-        $player->sendDataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
 
         $pk2 = new RemoveActorPacket();
-        $pk2->entityUniqueId = $bar->getEntityId();
-        $player->sendDataPacket($pk2);
+        $pk2->actorUniqueId = $bar->getEntityId();
+        $player->getNetworkSession()->sendDataPacket($pk2);
 
         unset(self::$bars[$player->getName()][$id]);
         return true;

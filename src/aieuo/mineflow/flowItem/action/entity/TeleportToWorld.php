@@ -66,8 +66,9 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
 
         $worldName = $source->replaceVariables($this->getWorldName());
 
-        Server::getInstance()->loadLevel($worldName);
-        $world = Server::getInstance()->getLevelByName($worldName);
+        $worldManager = Server::getInstance()->getWorldManager();
+        $worldManager->loadWorld($worldName);
+        $world = $worldManager->getWorldByName($worldName);
         if ($world === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.world.notFound"));
         }

@@ -90,7 +90,7 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $pk->z = $position->z;
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
-        Server::getInstance()->broadcastPacket($position->level->getPlayers(), $pk);
+        Server::getInstance()->broadcastPackets($position->world->getPlayers(), [$pk]);
         yield true;
     }
 

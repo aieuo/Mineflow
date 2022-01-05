@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use pocketmine\entity\Human;
 
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
@@ -41,7 +42,7 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         yield true;
-        return $entity->isSneaking();
+        return $entity instanceof Human and $entity->isSneaking();
     }
 
     public function getEditFormElements(array $variables): array {

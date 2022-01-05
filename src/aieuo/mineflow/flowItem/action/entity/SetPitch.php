@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class SetPitch extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -59,8 +59,8 @@ class SetPitch extends FlowItem implements EntityFlowItem {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        $entity->setRotation($entity->getYaw(), (float)$pitch);
-        if ($entity instanceof Player) $entity->teleport($entity, $entity->getYaw(), (float)$pitch);
+        $entity->setRotation($entity->getLocation()->getYaw(), (float)$pitch);
+        if ($entity instanceof Player) $entity->teleport($entity->getPosition(), $entity->getLocation()->getYaw(), (float)$pitch);
         yield true;
     }
 

@@ -8,7 +8,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class PlayerObjectVariable extends HumanObjectVariable {
 
@@ -32,7 +32,8 @@ class PlayerObjectVariable extends HumanObjectVariable {
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     public function getPlayer(): Player {
-        return $this->getValue();
+        return $this->getEntity();
+    }
     }
 
     public static function getValuesDummy(): array {

@@ -12,6 +12,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
+use pocketmine\data\java\GameModeIdMap;
 
 class SetGamemode extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -64,7 +65,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $player->setGamemode((int)$gamemode);
+        $player->setGamemode(GameModeIdMap::getInstance()->fromId((int)$gamemode));
         yield true;
     }
 

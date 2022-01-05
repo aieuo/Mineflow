@@ -85,12 +85,12 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
 
         $pk = new PlaySoundPacket();
         $pk->soundName = $sound;
-        $pk->x = $player->x;
-        $pk->y = $player->y;
-        $pk->z = $player->z;
+        $pk->x = $player->getLocation()->getX();
+        $pk->y = $player->getLocation()->getY();
+        $pk->z = $player->getLocation()->getZ();
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
-        $player->dataPacket($pk);
+        $player->getNetworkSession()->sendDataPacket($pk);
         yield true;
     }
 

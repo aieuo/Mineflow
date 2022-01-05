@@ -5,7 +5,7 @@ namespace aieuo\mineflow\formAPI\element\mineflow;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 
 class CommandButton extends Button {

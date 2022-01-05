@@ -44,8 +44,7 @@ class Main extends PluginBase {
         return self::$instance;
     }
 
-    /** @noinspection ReturnTypeCanBeDeclaredInspection */
-    public function onEnable() {
+    public function onEnable(): void {
         self::$instance = $this;
         self::$pluginVersion = $this->getDescription()->getVersion();
 
@@ -97,8 +96,7 @@ class Main extends PluginBase {
         (new ServerStartEvent($this))->call();
     }
 
-    /** @noinspection ReturnTypeCanBeDeclaredInspection */
-    public function onDisable() {
+    public function onDisable(): void {
         if (!$this->loaded) return;
         self::$recipeManager->saveAll();
         self::$formManager->saveAll();

@@ -58,7 +58,7 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
         $world = $source->replaceVariables($this->getWorld());
 
         yield true;
-        return $entity->getPosition()->getLevel()->getFolderName() === $world;
+        return $entity->getPosition()->getWorld()->getFolderName() === $world;
     }
 
     public function getEditFormElements(array $variables): array {

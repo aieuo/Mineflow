@@ -28,7 +28,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class CustomFormForm {
 

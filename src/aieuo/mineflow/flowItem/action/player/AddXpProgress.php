@@ -57,9 +57,9 @@ class AddXpProgress extends FlowItem implements PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $new = $player->getCurrentTotalXp() + (int)$xp;
-        if ($new < 0) $xp = -$player->getCurrentTotalXp();
-        $player->addXp((int)$xp);
+        $new = $player->getXpManager()->getCurrentTotalXp() + (int)$xp;
+        if ($new < 0) $xp = -$player->getXpManager()->getCurrentTotalXp();
+        $player->getXpManager()->addXp((int)$xp);
         yield true;
     }
 

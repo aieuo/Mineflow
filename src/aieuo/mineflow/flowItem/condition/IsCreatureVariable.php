@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use pocketmine\entity\Creature;
+use pocketmine\entity\Living;
 
 class IsCreatureVariable extends IsActiveEntityVariable {
 
@@ -19,6 +19,6 @@ class IsCreatureVariable extends IsActiveEntityVariable {
         $this->throwIfInvalidEntity($entity);
 
         yield true;
-        return $entity instanceof Creature;
+        return $entity instanceof Living;
     }
 }

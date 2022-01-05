@@ -4,7 +4,7 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
-use pocketmine\entity\Creature;
+use pocketmine\entity\Living;
 
 class IsCreature extends IsActiveEntity {
 
@@ -22,6 +22,6 @@ class IsCreature extends IsActiveEntity {
         $entity = EntityHolder::findEntity((int)$id);
 
         yield true;
-        return $entity instanceof Creature;
+        return $entity instanceof Living;
     }
 }

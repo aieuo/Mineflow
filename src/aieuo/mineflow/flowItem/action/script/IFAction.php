@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\utils\Category;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class IFAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;

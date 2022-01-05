@@ -14,7 +14,7 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 abstract class VariableDropdown extends Dropdown {
 

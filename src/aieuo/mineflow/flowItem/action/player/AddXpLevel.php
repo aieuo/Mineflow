@@ -22,9 +22,9 @@ class AddXpLevel extends AddXpProgress {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $new = $player->getXpLevel() + (int)$xp;
-        if ($new < 0) $xp = -$player->getXpLevel();
-        $player->addXpLevels((int)$xp);
+        $new = $player->getXpManager()->getXpLevel() + (int)$xp;
+        if ($new < 0) $xp = -$player->getXpManager()->getXpLevel();
+        $player->getXpManager()->addXpLevels((int)$xp);
         yield true;
     }
 }

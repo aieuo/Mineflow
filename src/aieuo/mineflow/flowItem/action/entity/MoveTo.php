@@ -81,6 +81,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $position = $this->getPosition($source);
+        $entityPosition = $entity->getLocation();
 
         $speedX = $source->replaceVariables($this->getSpeedX());
         $this->throwIfInvalidNumber($speedX, 0, null);
@@ -91,11 +92,11 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $speedZ = $source->replaceVariables($this->getSpeedZ());
         $this->throwIfInvalidNumber($speedZ, 0, null);
 
-        $dis = $entity->distance($position);
+        $dis = $entityPosition->distance($position);
         if ($dis > 1) {
-            $x = (float)$speedX * (($position->x - $entity->x) / $dis);
-            $y = (float)$speedY * (($position->y - $entity->y) / $dis);
-            $z = (float)$speedZ * (($position->z - $entity->z) / $dis);
+            $x = (float)$speedX * (($position->x - $entityPosition->x) / $dis);
+            $y = (float)$speedY * (($position->y - $entityPosition->y) / $dis);
+            $z = (float)$speedZ * (($position->z - $entityPosition->z) / $dis);
 
             $entity->setMotion(new Vector3($x, $y, $z));
         }
