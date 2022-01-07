@@ -21,7 +21,7 @@ class PositionObjectVariable extends Vector3ObjectVariable {
         $position = $this->getPosition();
         return match ($index) {
             "position" => new PositionObjectVariable($position),
-            "world" => new WorldObjectVariable($position->level, $position->level->getFolderName()),
+            "world" => new WorldObjectVariable($position->world, $position->world->getFolderName()),
             default => null,
         };
     }

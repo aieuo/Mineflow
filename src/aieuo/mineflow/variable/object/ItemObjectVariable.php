@@ -21,7 +21,7 @@ class ItemObjectVariable extends ObjectVariable {
         return match ($index) {
             "name" => new StringVariable($item->getName()),
             "id" => new NumberVariable($item->getId()),
-            "damage" => new NumberVariable($item->getDamage()),
+            "damage" => new NumberVariable($item->getMeta()),
             "count" => new NumberVariable($item->getCount()),
             "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
             default => null,

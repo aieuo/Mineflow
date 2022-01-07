@@ -7,6 +7,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
+use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
 
 class EventObjectVariable extends ObjectVariable {
@@ -19,7 +20,7 @@ class EventObjectVariable extends ObjectVariable {
         $event = $this->getEvent();
         return match ($index) {
             "name" => new StringVariable($this->getEventName($event)),
-            "isCanceled" => new BoolVariable($event->isCancelled()),
+            "isCanceled" => new BoolVariable($event instanceof Cancellable ? $event->isCancelled() : false),
             default => null,
         };
     }
