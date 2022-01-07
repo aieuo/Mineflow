@@ -40,15 +40,9 @@ Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flat
 
 ## アクション権限
 
-|  レベル  |  使用できるようになるアクションの種類  |
-| ---- | ---- |
-|  0  |  -  | - |
-|  1  |  コンソールからコマンド, 権限操作, 飛行状態変更, ループ  |
-|  2  |  設定ファイル  |  
-
-`/mineflow permission <name> <level>` で権限を変更できます。  
-与えることができる権限レベルは自分のレベル以下だけです。  
-コンソールからは最大レベルを与えることができます。
+`/mineflow permission <add|remove|list> <player> <permission>` で権限を変更できます。
+`権限`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。
+コンソールからは全ての権限を与えることができます。
 
 ## 変数
 

@@ -34,8 +34,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     protected string $category = FlowItemCategory::SCRIPT;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $listVariableName = "list";
     private string $keyVariableName = "key";
     private string $valueVariableName = "value";
@@ -43,6 +41,10 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function setValueVariableName(string $count): void {

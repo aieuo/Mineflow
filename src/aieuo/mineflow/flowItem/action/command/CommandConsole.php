@@ -22,12 +22,14 @@ class CommandConsole extends FlowItem {
 
     protected string $category = FlowItemCategory::COMMAND;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $command;
 
     public function __construct(string $command = "") {
         $this->command = $command;
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_CONSOLE];
     }
 
     public function setCommand(string $health): void {

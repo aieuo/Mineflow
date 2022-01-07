@@ -28,8 +28,6 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
 
     protected string $category = FlowItemCategory::PLUGIN;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $chainName;
 
     /** @var string[] */
@@ -38,6 +36,10 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     public function __construct(string $chain = "", string $player = "") {
         $this->setPlayerVariableName($player);
         $this->chainName = $chain;
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function setChainName(string $name): self {

@@ -49,7 +49,7 @@ class CustomListFormForm {
     }
 
     public function sendSelectButtonType(Player $player, ListForm $form): void {
-        $hasConsoleCommandPermission = Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName()) >= FlowItem::PERMISSION_LEVEL_1;
+        $hasConsoleCommandPermission = Main::getInstance()->getPlayerSettings()->hasPlayerActionPermission($player->getName(), FlowItem::PERMISSION_CONSOLE);
         (new ListForm("@customForm.list.addButton"))
             ->addButton(new Button("@form.back", fn() => $this->sendMenu($player, $form)))
             ->addButton(new Button("@customForm.list.button.type.normal", fn() => $this->sendAddButton($player, $form)))

@@ -4,6 +4,7 @@ namespace aieuo\mineflow\command;
 
 use aieuo\mineflow\command\subcommand\CustomCommandCommand;
 use aieuo\mineflow\command\subcommand\LanguageCommand;
+use aieuo\mineflow\command\subcommand\PermissionCommand;
 use aieuo\mineflow\command\subcommand\RecipeCommand;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
@@ -72,19 +73,7 @@ class MineflowCommand extends Command {
                 (new SettingForm)->sendMenu($sender);
                 break;
             case "permission":
-                if (!isset($args[1])) {
-                    $sender->sendMessage(Language::get("command.permission.usage"));
-                    return;
-                }
-                $config = Main::getInstance()->getPlayerSettings();
-                $permission = $sender instanceof Player ? $config->getPlayerActionPermission($sender->getName()) : 2;
-                if ($permission < (int)$args[1]) {
-                    $sender->sendMessage(Language::get("command.permission.permission.notEnough"));
-                    return;
-                }
-                $config->setPlayerActionPermission($args[0], (int)$args[1]);
-                $config->save();
-                $sender->sendMessage(Language::get("form.changed"));
+                (new PermissionCommand)->execute($sender, $args);
                 break;
             case "seerecipe":
                 if (!isset($args[0])) {

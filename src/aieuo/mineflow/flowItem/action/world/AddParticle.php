@@ -27,8 +27,6 @@ class AddParticle extends FlowItem implements PositionFlowItem {
 
     protected string $category = FlowItemCategory::WORLD;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $particle;
     private string $amount;
 
@@ -36,6 +34,10 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         $this->setPositionVariableName($position);
         $this->particle = $particle;
         $this->amount = $amount;
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function setParticle(string $particle): void {

@@ -26,7 +26,7 @@
 
 You can combine actions and create something like a plugin without any coding knowledge.  
 
-\* Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.
+\* Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.
 
 
 ## Command
@@ -41,13 +41,8 @@ You can combine actions and create something like a plugin without any coding kn
 
 
 ## ActionPermission
-|  level  |  types of actions that will be available  |
-| ---- | ---- |
-|  0  |  -  | - |
-|  1  |  command from console, manage permission, (dis)allow fly, loop  |
-|  2  |  configuration file  |  
 
-To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console.
+To change the permission, run `/mineflow permission <name> <level>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
 
 
 ## Variable

@@ -23,8 +23,6 @@ class ExecuteRecipe extends FlowItem {
 
     protected string $category = FlowItemCategory::SCRIPT;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $recipeName;
 
     /** @var string[] */
@@ -33,6 +31,10 @@ class ExecuteRecipe extends FlowItem {
     public function __construct(string $name = "", string $args = "") {
         $this->recipeName = $name;
         $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function setRecipeName(string $name): self {

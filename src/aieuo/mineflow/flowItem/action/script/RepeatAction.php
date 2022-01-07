@@ -29,8 +29,6 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
     protected string $category = FlowItemCategory::SCRIPT;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $repeatCount;
 
     private string $startIndex = "0";
@@ -40,6 +38,10 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->repeatCount = (string)$count;
         $this->setCustomName($customName);
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function setRepeatCount(string $count): void {

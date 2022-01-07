@@ -2,7 +2,10 @@
 
 namespace aieuo\mineflow\utils;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use pocketmine\utils\Config;
+use function array_diff;
+use function in_array;
 
 class PlayerConfig extends Config {
 
@@ -38,12 +41,52 @@ class PlayerConfig extends Config {
         }
     }
 
-    public function getPlayerActionPermission(string $player): int {
-        return (int)$this->getNested($player.".permission", 0);
+    public function getPlayerActionPermissions(string $player): array {
+        return $this->getNested(
+            $player.".permissions",
+            $this->getPermissionsByLegacyPermissionLevel($this->getNested($player.".permission", 0))
+        );
     }
 
-    public function setPlayerActionPermission(string $player, int $permission): void {
-        $this->setNested($player.".permission", $permission);
+    public function addPlayerActionPermission(string $player, string $permission): bool {
+        $permissions = $this->getPlayerActionPermissions($player);
+        if (in_array($permission, $permissions, true)) return false;
+
+        $permissions[] = $permission;
+        $this->setPlayerActionPermissions($player, $permissions);
+        return true;
+    }
+
+    public function removePlayerActionPermission(string $player, string $permission): bool {
+        $permissions = $this->getPlayerActionPermissions($player);
+        if (!in_array($permission, $permissions, true)) return false;
+
+        $permissions = array_values(array_diff($permissions, [$permission]));
+        $this->setPlayerActionPermissions($player, $permissions);
+        return true;
+    }
+
+    public function hasPlayerActionPermission(string $player, string $permission): bool {
+        $permissions = $this->getPlayerActionPermissions($player);
+        return in_array($permission, $permissions, true);
+    }
+
+    public function setPlayerActionPermissions(string $player, array $permission): void {
+        $this->setNested($player.".permissions", $permission);
+    }
+
+    public function getPermissionsByLegacyPermissionLevel(int $level): array {
+        $permissions = [];
+        if ($level >= 1) {
+            $permissions[] = FlowItem::PERMISSION_CONSOLE;
+            $permissions[] = FlowItem::PERMISSION_CHEAT;
+            $permissions[] = FlowItem::PERMISSION_LOOP;
+            $permissions[] = FlowItem::PERMISSION_PERMISSION;
+        }
+        if ($level >= 2) {
+            $permissions[] = FlowItem::PERMISSION_CONFIG;
+        }
+        return $permissions;
     }
 
 }

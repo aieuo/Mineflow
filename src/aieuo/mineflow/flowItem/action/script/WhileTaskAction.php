@@ -29,8 +29,6 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
     protected string $category = FlowItemCategory::SCRIPT;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private int $interval;
     private int $limit = -1;
 
@@ -41,6 +39,10 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->interval = $interval;
         $this->setCustomName($customName);
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function setLimit(int $limit): void {

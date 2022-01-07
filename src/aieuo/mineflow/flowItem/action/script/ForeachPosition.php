@@ -33,8 +33,6 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     protected string $category = FlowItemCategory::SCRIPT;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $counterName = "pos";
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
@@ -42,6 +40,10 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         $this->setPositionVariableName($pos2, "pos2");
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function getDetail(): string {

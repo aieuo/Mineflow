@@ -150,7 +150,7 @@ class FlowItemForm {
         foreach (FlowItemCategory::all() as $category) {
             $buttons[] = new Button("@category.".$category, function () use($player, $container, $type, $category) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
-                $actions = FlowItemFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName()), !$isCondition, $isCondition);
+                $actions = FlowItemFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getPlayerActionPermissions($player->getName()), !$isCondition, $isCondition);
 
                 Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
                 $this->sendSelectAction($player, $container, $type, $actions);
@@ -172,10 +172,9 @@ class FlowItemForm {
                 new CancelToggle(fn() => $this->selectActionCategory($player, $container, $type))
             ])->onReceive(function (Player  $player, array $data) use($container, $type) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
-                $permission = Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName());
-                $actions = array_values(array_filter(FlowItemFactory::getByFilter(null, $permission, !$isCondition, $isCondition), function (FlowItem  $item) use($data) {
-                    return stripos($item->getName(), $data[0]) !== false;
-                }));
+                $permissions = Main::getInstance()->getPlayerSettings()->getPlayerActionPermissions($player->getName());
+                $actions = FlowItemFactory::getByFilter(null, $permissions, !$isCondition, $isCondition);
+                $actions = array_values(array_filter($actions, fn(FlowItem $item) => stripos($item->getName(), $data[0]) !== false));
 
                 Session::getSession($player)->set("flowItem_search", $data[0]);
                 Session::getSession($player)->set("flowItem_category", Language::get("form.items.category.search", [$data[0]]));

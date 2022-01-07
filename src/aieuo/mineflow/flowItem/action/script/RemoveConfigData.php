@@ -24,13 +24,15 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
 
     protected string $category = FlowItemCategory::CONFIG;
 
-    protected int $permission = self::PERMISSION_LEVEL_2;
-
     private string $key;
 
     public function __construct(string $config = "", string $key = "") {
         $this->setConfigVariableName($config);
         $this->key = $key;
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_CONFIG];
     }
 
     public function setKey(string $health): void {

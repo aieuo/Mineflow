@@ -27,8 +27,6 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
 
     protected string $category = FlowItemCategory::CONFIG;
 
-    protected int $permission = self::PERMISSION_LEVEL_2;
-
     private string $key;
     private string $value;
 
@@ -36,6 +34,10 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $this->setConfigVariableName($config);
         $this->key = $key;
         $this->value = $value;
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_CONFIG];
     }
 
     public function setKey(string $health): void {

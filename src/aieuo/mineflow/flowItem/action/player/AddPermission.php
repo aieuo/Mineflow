@@ -25,13 +25,15 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
 
     protected string $category = FlowItemCategory::PLAYER;
 
-    protected int $permission = self::PERMISSION_LEVEL_1;
-
     private string $playerPermission;
 
     public function __construct(string $player = "", string $permission = "") {
         $this->setPlayerVariableName($player);
         $this->playerPermission = $permission;
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_PERMISSION];
     }
 
     public function setPlayerPermission(string $playerPermission): void {

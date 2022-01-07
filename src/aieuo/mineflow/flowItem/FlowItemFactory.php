@@ -204,6 +204,7 @@ use aieuo\mineflow\flowItem\condition\RandomNumber;
 use aieuo\mineflow\flowItem\condition\RemoveItemCondition;
 use aieuo\mineflow\flowItem\condition\TakeMoneyCondition;
 use pocketmine\Server;
+use function in_array;
 
 class FlowItemFactory {
 
@@ -460,16 +461,18 @@ class FlowItemFactory {
 
     /**
      * @param string|null $category
-     * @param int|null $permission
+     * @param array $permissions
      * @param bool $getAction
      * @param bool $getCondition
      * @return FlowItem[]
      */
-    public static function getByFilter(string $category = null, int $permission = null, bool $getAction = true, bool $getCondition = true): array {
+    public static function getByFilter(string $category = null, array $permissions = [], bool $getAction = true, bool $getCondition = true): array {
         $items = [];
         foreach (self::$list as $item) {
             if ($category !== null and $item->getCategory() !== $category) continue;
-            if ($permission !== null and $item->getPermission() > $permission) continue;
+            foreach ($item->getPermissions() as $permission) {
+                if (!in_array($permission, $permissions, true)) continue 2;
+            }
             if (!$getAction and !($item instanceof Condition)) continue;
             if (!$getCondition and ($item instanceof Condition)) continue;
             $items[] = $item;
