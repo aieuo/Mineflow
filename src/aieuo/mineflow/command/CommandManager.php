@@ -6,6 +6,8 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\command\PluginCommand;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\utils\Config;
 
 class CommandManager {
@@ -42,6 +44,10 @@ class CommandManager {
         if ($this->isSubcommand($commandStr)) $commandStr = $this->getOriginCommand($commandStr);
 
         if (!$this->isRegistered($commandStr)) {
+            if (!PermissionManager::getInstance()->getPermission($permission) === null) {
+                PermissionManager::getInstance()->addPermission(new Permission($permission, "added by mineflow"));
+            }
+
             $command = new PluginCommand($commandStr, $this->owner, $this->owner);
             $command->setDescription($description);
             $command->setPermission($permission);
