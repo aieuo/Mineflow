@@ -1,0 +1,17 @@
+name: Bug Report
+description: File a bug report
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin Version
+      description: What version of mineflow are you running?
+      placeholder: 2.0.0
