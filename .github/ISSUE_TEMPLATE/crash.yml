@@ -1,4 +1,4 @@
-name: Bug Report
+name: Crash report
 description: File a crash dump
 title: "[Crash] "
 labels: ["bug"]
