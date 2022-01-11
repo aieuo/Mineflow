@@ -31,7 +31,7 @@ Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flat
 
 | コマンド | 説明 |
 | ---- | ---- |
-| /mineflow language <eng &#124; jpn> | 言語を変更する |
+| /mineflow language <eng &#124; jpn &#124; ind> | 言語を変更する |
 | /mineflow recipe [add &#124; edit &#124; list] | レシピを管理する |  
 | /mineflow command [add &#124; edit &#124; list] | コマンドトリガーを管理する |  
 | /mineflow form | フォームトリガーを管理する |  
