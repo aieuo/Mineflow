@@ -32,7 +32,7 @@ You can combine actions and create something like a plugin without any coding kn
 ## Command
 | command | description |
 | ---- | ---- |
-| /mineflow language <eng &#124; jpn> | Change language |
+| /mineflow language <eng &#124; jpn &#124; ind> | Change language |
 | /mineflow recipe [add &#124; edit &#124; list] | Manage recipes |  
 | /mineflow command [add &#124; edit &#124; list] | Manage command triggers |  
 | /mineflow form | Manage form triggers |  
