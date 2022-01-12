@@ -55,7 +55,7 @@ class WorldObjectVariable extends ObjectVariable {
             "spawn" => new DummyVariable(DummyVariable::POSITION),
             "safe_spawn" => new DummyVariable(DummyVariable::POSITION),
             "time" => new DummyVariable(DummyVariable::NUMBER),
-            "player" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
+            "players" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
             "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
             "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::LIVING),
         ]);
