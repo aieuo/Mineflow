@@ -15,14 +15,11 @@ class PositionObjectVariable extends Vector3ObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $position = $this->getPosition();
         return match ($index) {
             "position" => new PositionObjectVariable($position),
             "world" => new WorldObjectVariable($position->world, $position->world->getFolderName()),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

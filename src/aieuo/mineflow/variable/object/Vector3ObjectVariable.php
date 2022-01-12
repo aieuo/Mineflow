@@ -22,7 +22,7 @@ class Vector3ObjectVariable extends ObjectVariable {
             "y" => new NumberVariable($position->y),
             "z" => new NumberVariable($position->z),
             "xyz" => new StringVariable($position->x.",".$position->y.",".$position->z),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

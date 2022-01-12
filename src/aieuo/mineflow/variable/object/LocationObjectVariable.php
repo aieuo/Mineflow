@@ -16,14 +16,11 @@ class LocationObjectVariable extends PositionObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $location = $this->getLocation();
         return match ($index) {
             "yaw" => new NumberVariable($location->yaw),
             "pitch" => new NumberVariable($location->pitch),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

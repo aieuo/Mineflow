@@ -17,16 +17,13 @@ class PlayerObjectVariable extends HumanObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $player = $this->getPlayer();
         return match ($index) {
             "name" => new StringVariable($player->getName()),
             "display_name" => new StringVariable($player->getDisplayName()),
             "locale" => new StringVariable($player->getLocale()),
             "ping" => new NumberVariable($player->getNetworkSession()->getPing()),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

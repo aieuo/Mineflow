@@ -21,7 +21,7 @@ class EventObjectVariable extends ObjectVariable {
         return match ($index) {
             "name" => new StringVariable($this->getEventName($event)),
             "isCanceled" => new BoolVariable($event instanceof Cancellable ? $event->isCancelled() : false),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

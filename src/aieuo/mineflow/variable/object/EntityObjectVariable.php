@@ -17,9 +17,6 @@ class EntityObjectVariable extends PositionObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $entity = $this->getEntity();
         switch ($index) {
             case "id":
@@ -45,7 +42,7 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "onGround":
                 return new BoolVariable($entity->isOnGround());
             default:
-                return null;
+                return parent::getValueFromIndex($index);
         }
     }
 
@@ -67,7 +64,6 @@ class EntityObjectVariable extends PositionObjectVariable {
     }
 
     public function __toString(): string {
-        $value = $this->getEntity();
-        return $value->getNameTag();
+        return $this->getEntity()->getNameTag();
     }
 }

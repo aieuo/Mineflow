@@ -26,7 +26,7 @@ class ConfigObjectVariable extends ObjectVariable {
         if (is_numeric($data)) return new NumberVariable($data);
         if (!is_array($data)) return null;
 
-        if (array_values($data) === $data) {
+        if (array_is_list($data)) {
             $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($data));
         } else {
             $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($data));

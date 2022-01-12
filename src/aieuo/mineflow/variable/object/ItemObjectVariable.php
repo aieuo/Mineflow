@@ -24,7 +24,7 @@ class ItemObjectVariable extends ObjectVariable {
             "damage" => new NumberVariable($item->getMeta()),
             "count" => new NumberVariable($item->getCount()),
             "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

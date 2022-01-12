@@ -15,16 +15,13 @@ class BlockObjectVariable extends PositionObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $block = $this->getBlock();
         return match ($index) {
             "name" => new StringVariable($block->getName()),
             "id" => new NumberVariable($block->getId()),
             "damage" => new NumberVariable($block->getMeta()),
             "item" => new ItemObjectVariable($block->getPickedItem()),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 

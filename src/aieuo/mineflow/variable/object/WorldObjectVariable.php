@@ -62,7 +62,7 @@ class WorldObjectVariable extends ObjectVariable {
                 }
                 return new ListVariable($entities);
             default:
-                return null;
+                return parent::getValueFromIndex($index);
         }
     }
 

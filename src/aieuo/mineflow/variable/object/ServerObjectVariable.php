@@ -22,9 +22,6 @@ class ServerObjectVariable extends ObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $server = $this->getServer();
         switch ($index) {
             case "name":
@@ -74,7 +71,7 @@ class ServerObjectVariable extends ObjectVariable {
             case "ops":
                 return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)));
             default:
-                return null;
+                return parent::getValueFromIndex($index);
         }
     }
 

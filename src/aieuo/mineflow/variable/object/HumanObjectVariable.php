@@ -14,9 +14,6 @@ class HumanObjectVariable extends EntityObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $variable = parent::getValueFromIndex($index);
-        if ($variable !== null) return $variable;
-
         $human = $this->getHuman();
         return match ($index) {
             "hand" => new ItemObjectVariable($human->getInventory()->getItemInHand()),
@@ -24,7 +21,7 @@ class HumanObjectVariable extends EntityObjectVariable {
             "xp" => new NumberVariable($human->getXpManager()->getCurrentTotalXp()),
             "xp_level" => new NumberVariable($human->getXpManager()->getXpLevel()),
             "xp_progress" => new NumberVariable($human->getXpManager()->getXpProgress()),
-            default => null,
+            default => parent::getValueFromIndex($index),
         };
     }
 
