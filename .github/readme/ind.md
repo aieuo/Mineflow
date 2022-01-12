@@ -32,7 +32,7 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 ## Perintah
 | command | description |
 | ---- | ---- |
-| /mineflow language <eng &#124; jpn> | Ubah bahasa |
+| /mineflow language <eng &#124; jpn &#124; ind> | Ubah bahasa |
 | /mineflow recipe [add &#124; edit &#124; list] | Kelola resep |  
 | /mineflow command [add &#124; edit &#124; list] | Kelola pemicu perintah |  
 | /mineflow form | Kelola pemicu formulir |  
