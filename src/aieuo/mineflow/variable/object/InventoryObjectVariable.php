@@ -26,6 +26,6 @@ class InventoryObjectVariable extends ObjectVariable {
     public function __toString(): string {
         $value = $this->getInventory();
         $names = explode("\\", $value::class);
-        return "Inventory (size={$names[array_key_last($names)]})";
+        return $names[array_key_last($names)];
     }
 }
