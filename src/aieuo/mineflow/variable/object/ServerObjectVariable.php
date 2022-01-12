@@ -11,9 +11,11 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
+use pocketmine\permission\BanEntry;
 use pocketmine\world\World;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use function array_map;
 
 class ServerObjectVariable extends ObjectVariable {
 
@@ -40,14 +42,7 @@ class ServerObjectVariable extends ObjectVariable {
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
                     foreach ($world->getEntities() as $entity) {
-                        if ($entity instanceof Player) {
-                            $v = new PlayerObjectVariable($entity);
-                        } elseif ($entity instanceof Human) {
-                            $v = new HumanObjectVariable($entity);
-                        } else {
-                            $v = new EntityObjectVariable($entity);
-                        }
-                        $entities[] = $v;
+                        $entities[] = EntityObjectVariable::fromObject($entity);
                     }
                 }
                 return new ListVariable($entities);
@@ -55,21 +50,19 @@ class ServerObjectVariable extends ObjectVariable {
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
                     foreach ($world->getEntities() as $entity) {
-                        if ($entity instanceof Player) {
-                            $v = new PlayerObjectVariable($entity);
-                        } elseif ($entity instanceof Human) {
-                            $v = new HumanObjectVariable($entity);
-                        } elseif ($entity instanceof Living) {
-                            $v = new EntityObjectVariable($entity);
-                        } else {
+                        if (!($entity instanceof Living)) {
                             continue;
                         }
-                        $entities[] = $v;
+                        $entities[] = EntityObjectVariable::fromObject($entity);
                     }
                 }
                 return new ListVariable($entities);
             case "ops":
                 return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)));
+            case "bans":
+                return new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getNameBans()->getEntries()));
+            case "whitelist":
+                return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getWhitelisted()->getAll(true)));
             default:
                 return parent::getValueFromIndex($index);
         }
@@ -90,6 +83,8 @@ class ServerObjectVariable extends ObjectVariable {
             "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
             "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
             "ops" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
+            "bans" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
+            "whitelist" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
         ]);
     }
 

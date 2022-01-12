@@ -20,6 +20,12 @@ class LocationObjectVariable extends PositionObjectVariable {
         return match ($index) {
             "yaw" => new NumberVariable($location->yaw),
             "pitch" => new NumberVariable($location->pitch),
+            "down" => new LocationObjectVariable(Location::fromObject($location->down(1), $location->world, $location->yaw, $location->pitch)),
+            "up" => new LocationObjectVariable(Location::fromObject($location->up(1), $location->world, $location->yaw, $location->pitch)),
+            "north" => new LocationObjectVariable(Location::fromObject($location->north(1), $location->world, $location->yaw, $location->pitch)),
+            "south" => new LocationObjectVariable(Location::fromObject($location->south(1), $location->world, $location->yaw, $location->pitch)),
+            "west" => new LocationObjectVariable(Location::fromObject($location->west(1), $location->world, $location->yaw, $location->pitch)),
+            "east" => new LocationObjectVariable(Location::fromObject($location->east(1), $location->world, $location->yaw, $location->pitch)),
             default => parent::getValueFromIndex($index),
         };
     }
@@ -33,6 +39,12 @@ class LocationObjectVariable extends PositionObjectVariable {
         return array_merge(parent::getValuesDummy(), [
             "yaw" => new DummyVariable(DummyVariable::NUMBER),
             "pitch" => new DummyVariable(DummyVariable::NUMBER),
+            "down" => new DummyVariable(DummyVariable::LOCATION),
+            "up" => new DummyVariable(DummyVariable::LOCATION),
+            "north" => new DummyVariable(DummyVariable::LOCATION),
+            "south" => new DummyVariable(DummyVariable::LOCATION),
+            "west" => new DummyVariable(DummyVariable::LOCATION),
+            "east" => new DummyVariable(DummyVariable::LOCATION),
         ]);
     }
 

@@ -30,8 +30,7 @@ class DefaultVariables {
     }
 
     public static function getEntityVariables(Entity $target, string $name = "target"): array {
-        if ($target instanceof Player) return self::getPlayerVariables($target, $name);
-        return [$name => new EntityObjectVariable($target, $target->getNameTag())];
+        return [$name => EntityObjectVariable::fromObject($target)];
     }
 
     public static function getPlayerVariables(Player $target, string $name = "target"): array {

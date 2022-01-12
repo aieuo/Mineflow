@@ -22,6 +22,8 @@ class BlockVariableDropdown extends VariableDropdown {
      * @param bool $optional
      */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
-        parent::__construct($text ?? "@action.form.target.block", $variables, [DummyVariable::BLOCK], $default, $optional);
+        parent::__construct($text ?? "@action.form.target.block", $variables, [
+            DummyVariable::BLOCK,
+        ], $default, $optional);
     }
 }

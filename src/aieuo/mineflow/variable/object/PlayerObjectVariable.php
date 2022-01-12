@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -23,6 +24,11 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "display_name" => new StringVariable($player->getDisplayName()),
             "locale" => new StringVariable($player->getLocale()),
             "ping" => new NumberVariable($player->getNetworkSession()->getPing()),
+            "ip" => new StringVariable($player->getNetworkSession()->getIp()),
+            "port" => new NumberVariable($player->getNetworkSession()->getPort()),
+            "uuid" => new StringVariable($player->getUniqueId()->toString()),
+            "spawn_point" => new PositionObjectVariable($player->getSpawn()),
+            "flying" => new BoolVariable($player->isFlying()),
             default => parent::getValueFromIndex($index),
         };
     }
@@ -35,6 +41,14 @@ class PlayerObjectVariable extends HumanObjectVariable {
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "name" => new DummyVariable(DummyVariable::STRING),
+            "display_name" => new DummyVariable(DummyVariable::STRING),
+            "locale" => new DummyVariable(DummyVariable::STRING),
+            "ping" => new DummyVariable(DummyVariable::NUMBER),
+            "ip" => new DummyVariable(DummyVariable::STRING),
+            "port" => new DummyVariable(DummyVariable::NUMBER),
+            "uuid" => new DummyVariable(DummyVariable::STRING),
+            "spawn_point" => new DummyVariable(DummyVariable::POSITION),
+            "flying" => new DummyVariable(DummyVariable::BOOLEAN),
         ]);
     }
 

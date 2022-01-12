@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\variable\object\AxisAlignedBBObjectVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\ConfigObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
@@ -9,6 +10,7 @@ use aieuo\mineflow\variable\object\EventObjectVariable;
 use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\InventoryObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\LivingObjectVariable;
 use aieuo\mineflow\variable\object\WorldObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
@@ -34,6 +36,7 @@ class DummyVariable extends Variable {
     public const ENTITY = "entity";
     public const EVENT = "event";
     public const HUMAN = "human";
+    public const LIVING = "living";
     public const ITEM = "item";
     public const WORLD = "world";
     public const LOCATION = "location";
@@ -42,6 +45,7 @@ class DummyVariable extends Variable {
     public const VECTOR3 = "vector3";
     public const SCOREBOARD = "scoreboard";
     public const INVENTORY = "inventory";
+    public const AXIS_ALIGNED_BB = "axisAlignedBB";
 
     public function __construct(string $valueType = "", string $description = "") {
         $this->valueType = $valueType;
@@ -76,6 +80,7 @@ class DummyVariable extends Variable {
             self::ENTITY => EntityObjectVariable::getValuesDummy(),
             self::EVENT => EventObjectVariable::getValuesDummy(),
             self::HUMAN => HumanObjectVariable::getValuesDummy(),
+            self::LIVING => LivingObjectVariable::getValuesDummy(),
             self::ITEM => ItemObjectVariable::getValuesDummy(),
             self::WORLD => WorldObjectVariable::getValuesDummy(),
             self::LOCATION => LocationObjectVariable::getValuesDummy(),
@@ -84,6 +89,7 @@ class DummyVariable extends Variable {
             self::VECTOR3 => Vector3ObjectVariable::getValuesDummy(),
             self::SCOREBOARD => ScoreboardObjectVariable::getValuesDummy(),
             self::INVENTORY => InventoryObjectVariable::getValuesDummy(),
+            self::AXIS_ALIGNED_BB => AxisAlignedBBObjectVariable::getValuesDummy(),
             default => [],
         };
     }
@@ -95,6 +101,7 @@ class DummyVariable extends Variable {
             self::ENTITY,
             self::EVENT,
             self::HUMAN,
+            self::LIVING,
             self::ITEM,
             self::WORLD,
             self::LOCATION,
@@ -103,6 +110,7 @@ class DummyVariable extends Variable {
             self::VECTOR3,
             self::SCOREBOARD,
             self::INVENTORY,
+            self::AXIS_ALIGNED_BB,
         ], true);
     }
 }

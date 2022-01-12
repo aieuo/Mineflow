@@ -15,6 +15,8 @@ use pocketmine\entity\Human;
 use pocketmine\entity\Living;
 use pocketmine\world\World;
 use pocketmine\player\Player;
+use function array_filter;
+use function array_map;
 
 class WorldObjectVariable extends ObjectVariable {
 
@@ -24,46 +26,20 @@ class WorldObjectVariable extends ObjectVariable {
 
     public function getValueFromIndex(string $index): ?Variable {
         $level = $this->getWorld();
-        switch ($index) {
-            case "name":
-                return new StringVariable($level->getDisplayName());
-            case "folderName":
-                return new StringVariable($level->getFolderName());
-            case "id":
-                return new NumberVariable($level->getId());
-            case "players":
-                return new ListVariable(array_values(array_map(fn(Player $player) => new PlayerObjectVariable($player), $level->getPlayers())));
-            case "entities":
-                $entities = [];
-                foreach ($level->getEntities() as $entity) {
-                    if ($entity instanceof Player) {
-                        $v = new PlayerObjectVariable($entity);
-                    } elseif ($entity instanceof Human) {
-                        $v = new HumanObjectVariable($entity);
-                    } else {
-                        $v = new EntityObjectVariable($entity);
-                    }
-                    $entities[] = $v;
-                }
-                return new ListVariable($entities);
-            case "livings":
-                $entities = [];
-                foreach ($level->getEntities() as $entity) {
-                    if ($entity instanceof Player) {
-                        $v = new PlayerObjectVariable($entity);
-                    } elseif ($entity instanceof Human) {
-                        $v = new HumanObjectVariable($entity);
-                    } elseif ($entity instanceof Living) {
-                        $v = new EntityObjectVariable($entity);
-                    } else {
-                        continue;
-                    }
-                    $entities[] = $v;
-                }
-                return new ListVariable($entities);
-            default:
-                return parent::getValueFromIndex($index);
-        }
+        return match ($index) {
+            "name" => new StringVariable($level->getDisplayName()),
+            "folderName" => new StringVariable($level->getFolderName()),
+            "id" => new NumberVariable($level->getId()),
+            "spawn" => new PositionObjectVariable($level->getSpawnLocation()),
+            "safe_spawn" => new PositionObjectVariable($level->getSafeSpawn()),
+            "time" => new NumberVariable($level->getTime()),
+            "players" => new ListVariable(array_values(array_map(fn(Player $player) => new PlayerObjectVariable($player), $level->getPlayers()))),
+            "entities" => new ListVariable(array_values(array_map(fn(Entity $entity) => EntityObjectVariable::fromObject($entity), $level->getEntities()))),
+            "livings" => new ListVariable(array_values(array_map(fn(Living $living) => EntityObjectVariable::fromObject($living),
+                array_filter($level->getEntities(), fn(Entity $entity) => $entity instanceof Living)
+            ))),
+            default => parent::getValueFromIndex($index),
+        };
     }
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
@@ -76,6 +52,12 @@ class WorldObjectVariable extends ObjectVariable {
             "name" => new DummyVariable(DummyVariable::STRING),
             "folderName" => new DummyVariable(DummyVariable::STRING),
             "id" => new DummyVariable(DummyVariable::NUMBER),
+            "spawn" => new DummyVariable(DummyVariable::POSITION),
+            "safe_spawn" => new DummyVariable(DummyVariable::POSITION),
+            "time" => new DummyVariable(DummyVariable::NUMBER),
+            "player" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
+            "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
+            "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::LIVING),
         ]);
     }
 }
