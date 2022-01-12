@@ -10,6 +10,7 @@ class Language {
     private static array $messages = [
         "jpn" => [],
         "eng" => [],
+        "ind" => [],
     ];
     private static string $language = "eng";
     private static string $fallbackLanguage = "eng";
@@ -87,6 +88,10 @@ class Language {
             default => [
                 "Failed to load language file.",
                 "Available languages are: [".implode(", ", self::getAvailableLanguages())."]"
+            ],
+            "ind" => [
+                "Gagal memuat file bahasa.",
+                "Bahasa yang tersedia adalah: [".implode(", ", self::getAvailableLanguages())."]"
             ],
         };
     }
