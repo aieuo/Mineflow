@@ -110,17 +110,19 @@ abstract class VariableDropdown extends Dropdown {
      * @param array<string, DummyVariable> $variables
      * @return array<string, DummyVariable>
      */
-    public function flattenVariables(array $variables): array {
+    public function flattenVariables(array $variables, int $depth = 0): array {
         $flat = [];
         foreach ($variables as $baseName => $variable) {
             $flat[$baseName] = $variable;
             foreach ($variable->getObjectValuesDummy() as $propName => $value) {
-                if (!$value->isObjectVariableType()) {
+                if ($variable->getValueType() === $value->getValueType()) continue;
+
+                if (!$value->isObjectVariableType() or $depth >= 2) {
                     $flat[$baseName.".".$propName] = $value;
                     continue;
                 }
 
-                foreach ($this->flattenVariables([$baseName.".".$propName => $value]) as $name => $flattenVariable) {
+                foreach ($this->flattenVariables([$baseName.".".$propName => $value], $depth + 1) as $name => $flattenVariable) {
                     $flat[$name] = $flattenVariable;
                 }
             }
