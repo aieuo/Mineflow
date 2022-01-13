@@ -40,7 +40,8 @@ class BlockObjectVariable extends PositionObjectVariable {
         return array_merge(parent::getValuesDummy(), [
             "name" => new DummyVariable(DummyVariable::STRING),
             "id" => new DummyVariable(DummyVariable::NUMBER),
-            "damage", "meta" => new DummyVariable(DummyVariable::NUMBER),
+            "damage" => new DummyVariable(DummyVariable::NUMBER),
+            "meta" => new DummyVariable(DummyVariable::NUMBER),
             "item" => new DummyVariable(DummyVariable::ITEM),
             "down" => new DummyVariable(DummyVariable::BLOCK),
             "up" => new DummyVariable(DummyVariable::BLOCK),
