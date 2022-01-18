@@ -40,10 +40,10 @@ class AxisAlignedBBObjectVariable extends ObjectVariable {
         return array_merge(parent::getValuesDummy(), [
             "min_x" => new DummyVariable(DummyVariable::NUMBER),
             "min_y" => new DummyVariable(DummyVariable::NUMBER),
-            "min_Z" => new DummyVariable(DummyVariable::NUMBER),
+            "min_z" => new DummyVariable(DummyVariable::NUMBER),
             "max_x" => new DummyVariable(DummyVariable::NUMBER),
             "max_y" => new DummyVariable(DummyVariable::NUMBER),
-            "max_Z" => new DummyVariable(DummyVariable::NUMBER),
+            "max_z" => new DummyVariable(DummyVariable::NUMBER),
             "min" => new DummyVariable(DummyVariable::VECTOR3),
             "max" => new DummyVariable(DummyVariable::VECTOR3),
         ]);

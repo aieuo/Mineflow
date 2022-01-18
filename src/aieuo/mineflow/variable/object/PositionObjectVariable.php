@@ -36,7 +36,6 @@ class PositionObjectVariable extends Vector3ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "position" => new DummyVariable(DummyVariable::POSITION),
             "world" => new DummyVariable(DummyVariable::WORLD),
             "down" => new DummyVariable(DummyVariable::POSITION),
             "up" => new DummyVariable(DummyVariable::POSITION),
