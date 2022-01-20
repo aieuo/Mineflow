@@ -411,7 +411,7 @@ class VariableHelper {
         $result = [];
         foreach ($data as $key => $value) {
             if (is_array($value)) {
-                if (array_values($value) === $value) {
+                if (array_is_list($value)) {
                     $result[$key] = new ListVariable($this->toVariableArray($value));
                 } else {
                     $result[$key] = new MapVariable($this->toVariableArray($value));
