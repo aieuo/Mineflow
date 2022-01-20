@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\player\Player;
+use function in_array;
 
 abstract class VariableDropdown extends Dropdown {
 
@@ -116,8 +117,10 @@ abstract class VariableDropdown extends Dropdown {
             $flat[$baseName] = $variable;
             foreach ($variable->getObjectValuesDummy() as $propName => $value) {
                 if ($variable->getValueType() === $value->getValueType()) continue;
+                // HACK: Prevent useless variables from being listed.
+                if ($propName === "world" and $depth >= 1) continue;
 
-                if (!$value->isObjectVariableType() or $depth >= 2) {
+                if (!$value->isObjectVariableType() or $depth >= 3 or in_array($propName, ["up", "down", "south", "north", "west", "east"], true)) {
                     $flat[$baseName.".".$propName] = $value;
                     continue;
                 }
