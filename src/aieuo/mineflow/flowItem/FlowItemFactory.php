@@ -5,6 +5,16 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\economy\Economy;
+use aieuo\mineflow\flowItem\action\alias\Calculate2Round;
+use aieuo\mineflow\flowItem\action\alias\CalculateCeil;
+use aieuo\mineflow\flowItem\action\alias\CalculateCos;
+use aieuo\mineflow\flowItem\action\alias\CalculateFloor;
+use aieuo\mineflow\flowItem\action\alias\CalculateSin;
+use aieuo\mineflow\flowItem\action\alias\CalculateTan;
+use aieuo\mineflow\flowItem\action\alias\FourArithmeticOperationsAdd;
+use aieuo\mineflow\flowItem\action\alias\FourArithmeticOperationsDiv;
+use aieuo\mineflow\flowItem\action\alias\FourArithmeticOperationsMul;
+use aieuo\mineflow\flowItem\action\alias\FourArithmeticOperationsSub;
 use aieuo\mineflow\flowItem\action\block\CreateBlockVariable;
 use aieuo\mineflow\flowItem\action\command\Command;
 use aieuo\mineflow\flowItem\action\command\CommandConsole;
@@ -386,66 +396,16 @@ class FlowItemFactory {
     }
 
     public static function registerAliases(): void {
-        self::registerAlias(new class extends FourArithmeticOperations {
-            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_ADD;
-            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
-                parent::__construct($value1, self::ADDITION, $value2, $resultName);
-            }
-        });
-        self::registerAlias(new class extends FourArithmeticOperations {
-            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_SUB;
-            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
-                parent::__construct($value1, self::SUBTRACTION, $value2, $resultName);
-            }
-        });
-        self::registerAlias(new class extends FourArithmeticOperations {
-            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_MUL;
-            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
-                parent::__construct($value1, self::MULTIPLICATION, $value2, $resultName);
-            }
-        });
-        self::registerAlias(new class extends FourArithmeticOperations {
-            protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_DIV;
-            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
-                parent::__construct($value1, self::DIVISION, $value2, $resultName);
-            }
-        });
-        self::registerAlias(new class extends Calculate {
-            protected string $id = self::CALCULATE_SIN;
-            public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, (string)self::CALC_SIN, $resultName);
-            }
-        });
-        self::registerAlias(new class extends Calculate {
-            protected string $id = self::CALCULATE_COS;
-            public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, (string)self::CALC_COS, $resultName);
-            }
-        });
-        self::registerAlias(new class extends Calculate {
-            protected string $id = self::CALCULATE_TAN;
-            public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, (string)self::CALC_TAN, $resultName);
-            }
-        });
-        self::registerAlias(new class extends Calculate {
-            protected string $id = self::CALCULATE_FLOOR;
-            public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, (string)self::CALC_FLOOR, $resultName);
-            }
-        });
-        self::registerAlias(new class extends Calculate {
-            protected string $id = self::CALCULATE_CEIL;
-            public function __construct(string $value = "", string $resultName = "result") {
-                parent::__construct($value, (string)self::CALC_CEIL, $resultName);
-            }
-        });
-        self::registerAlias(new class extends Calculate2 {
-            protected string $id = self::CALCULATE2_ROUND;
-            public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
-                parent::__construct($value1, $value2, (string)self::CALC_ROUND, $resultName);
-            }
-        });
+        self::registerAlias(new FourArithmeticOperationsAdd());
+        self::registerAlias(new FourArithmeticOperationsSub());
+        self::registerAlias(new FourArithmeticOperationsMul());
+        self::registerAlias(new FourArithmeticOperationsDiv());
+        self::registerAlias(new CalculateSin());
+        self::registerAlias(new CalculateCos());
+        self::registerAlias(new CalculateTan());
+        self::registerAlias(new CalculateFloor());
+        self::registerAlias(new CalculateCeil());
+        self::registerAlias(new Calculate2Round());
     }
 
     public static function get(string $id, bool $alias = false): ?FlowItem {
