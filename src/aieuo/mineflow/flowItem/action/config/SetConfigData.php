@@ -67,8 +67,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $this->throwIfCannotExecute();
 
         $key = $source->replaceVariables($this->getKey());
-
-        $value = $this->getValue();
+        $value = $source->replaceVariables($this->getValue());
 
         $helper = Main::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
