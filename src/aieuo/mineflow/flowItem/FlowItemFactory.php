@@ -167,12 +167,15 @@ use aieuo\mineflow\flowItem\condition\IsActiveEntityVariable;
 use aieuo\mineflow\flowItem\condition\IsCreature;
 use aieuo\mineflow\flowItem\condition\IsCreatureVariable;
 use aieuo\mineflow\flowItem\condition\IsFlying;
+use aieuo\mineflow\flowItem\condition\IsGliding;
 use aieuo\mineflow\flowItem\condition\IsOp;
 use aieuo\mineflow\flowItem\condition\IsPlayer;
 use aieuo\mineflow\flowItem\condition\IsPlayerOnline;
 use aieuo\mineflow\flowItem\condition\IsPlayerOnlineByName;
 use aieuo\mineflow\flowItem\condition\IsPlayerVariable;
 use aieuo\mineflow\flowItem\condition\IsSneaking;
+use aieuo\mineflow\flowItem\condition\IsSprinting;
+use aieuo\mineflow\flowItem\condition\IsSwimming;
 use aieuo\mineflow\flowItem\condition\LessMoney;
 use aieuo\mineflow\flowItem\condition\NandScript;
 use aieuo\mineflow\flowItem\condition\NorScript;
@@ -351,6 +354,9 @@ class FlowItemFactory {
         self::register(new IsOp);
         self::register(new IsSneaking);
         self::register(new IsFlying);
+        self::register(new IsGliding);
+        self::register(new IsSwimming);
+        self::register(new IsSprinting);
         self::register(new RandomNumber);
         /* money */
         self::register(new OverMoney);

@@ -178,6 +178,9 @@ interface FlowItemIds {
     public const IS_OP = "isOp";
     public const IS_SNEAKING = "isSneaking";
     public const IS_FLYING = "isFlying";
+    public const IS_SPRINTING = "isSprinting";
+    public const IS_SWIMMING = "isSwimming";
+    public const IS_GLIDING = "isGliding";
     public const IN_AREA = "inArea";
     public const IN_WORLD = "inWorld";
     public const GAMEMODE = "gamemode";
