@@ -4,6 +4,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -11,6 +12,9 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\utils\Config;
+use function is_array;
+use function is_bool;
+use function is_numeric;
 
 class ConfigObjectVariable extends ObjectVariable {
 
@@ -43,7 +47,13 @@ class ConfigObjectVariable extends ObjectVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
         foreach ($this->getConfig()->getAll() as $key => $value) {
-            $variables["it"] = $value;
+            $variable = match (true) {
+                is_array($value) => $variableHelper->arrayToListVariable($value),
+                is_numeric($value) => new NumberVariable($value),
+                is_bool($value) => new BoolVariable($value),
+                default => new StringVariable($value),
+            };
+            $variables["it"] = $variable;
             $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
         }
         return new MapVariable($values);

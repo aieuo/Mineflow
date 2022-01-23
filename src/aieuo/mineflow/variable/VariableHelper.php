@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Config;
+use function array_is_list;
+use function is_bool;
 
 class VariableHelper {
 
@@ -418,10 +420,19 @@ class VariableHelper {
                 }
             } elseif (is_numeric($value)) {
                 $result[$key] = new NumberVariable((float)$value);
+            } elseif (is_bool($value)) {
+                $result[$key] = new BoolVariable($value);
             } else {
                 $result[$key] = new StringVariable($value);
             }
         }
         return $result;
+    }
+
+    public function arrayToListVariable(array $data): ListVariable {
+        $variableArray = $this->toVariableArray($data);
+
+        if (array_is_list($variableArray)) return new ListVariable($variableArray);
+        return new MapVariable($variableArray);
     }
 }
