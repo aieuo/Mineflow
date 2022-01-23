@@ -20,7 +20,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     protected string $detail = "condition.existsConfigData.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = Category::CONFIG;
 
     private string $key;
 

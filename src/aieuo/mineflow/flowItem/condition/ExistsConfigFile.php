@@ -18,7 +18,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
     protected string $detail = "condition.existsConfigFile.detail";
     protected array $detailDefaultReplace = ["name"];
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = Category::CONFIG;
 
     private string $fileName;
 
