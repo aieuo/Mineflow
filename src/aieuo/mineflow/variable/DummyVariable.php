@@ -11,6 +11,7 @@ use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\InventoryObjectVariable;
 use aieuo\mineflow\variable\object\ItemObjectVariable;
 use aieuo\mineflow\variable\object\LivingObjectVariable;
+use aieuo\mineflow\variable\object\RecipeObjectVariable;
 use aieuo\mineflow\variable\object\WorldObjectVariable;
 use aieuo\mineflow\variable\object\LocationObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
@@ -46,6 +47,7 @@ class DummyVariable extends Variable {
     public const SCOREBOARD = "scoreboard";
     public const INVENTORY = "inventory";
     public const AXIS_ALIGNED_BB = "axisAlignedBB";
+    public const RECIPE = "recipe";
 
     public function __construct(string $valueType = "", string $description = "") {
         $this->valueType = $valueType;
@@ -90,6 +92,7 @@ class DummyVariable extends Variable {
             self::SCOREBOARD => ScoreboardObjectVariable::getValuesDummy(),
             self::INVENTORY => InventoryObjectVariable::getValuesDummy(),
             self::AXIS_ALIGNED_BB => AxisAlignedBBObjectVariable::getValuesDummy(),
+            self::RECIPE => RecipeObjectVariable::getValuesDummy(),
             default => [],
         };
     }
@@ -111,6 +114,7 @@ class DummyVariable extends Variable {
             self::SCOREBOARD,
             self::INVENTORY,
             self::AXIS_ALIGNED_BB,
+            self::RECIPE,
         ], true);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\event\RecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -17,6 +18,7 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EventObjectVariable;
+use aieuo\mineflow\variable\object\RecipeObjectVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -86,6 +88,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getGroup(): string {
         return $this->group;
+    }
+
+    public function getAuthor(): string {
+        return $this->author;
     }
 
     public function getPluginVersion(): string {
@@ -229,6 +235,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         if ($event !== null) {
             $variables["event"] = new EventObjectVariable($event);
         }
+        $variables["this"] = new RecipeObjectVariable($this);
 
         $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
             if ($callbackExecutor !== null) {

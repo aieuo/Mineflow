@@ -21,7 +21,9 @@ class CallRecipe extends ExecuteRecipe {
         $recipe = clone $this->getRecipe($source);
         $args = $this->getArguments($source);
 
-        $recipe->executeAllTargets($source->getTarget(), [], $source->getEvent(), $args, $source);
+        $recipe->executeAllTargets($source->getTarget(), [
+            "parent" => $source->getVariable("this"),
+        ], $source->getEvent(), $args, $source);
         yield false;
     }
 }
