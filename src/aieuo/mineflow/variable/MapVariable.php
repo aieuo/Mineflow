@@ -5,6 +5,8 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use function array_reverse;
+use function count;
 
 class MapVariable extends ListVariable {
 
@@ -67,6 +69,17 @@ class MapVariable extends ListVariable {
             $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
         }
         return new MapVariable($values);
+    }
+
+    public function callMethod(string $name, array $parameters = []): ?Variable {
+        $helper = Main::getVariableHelper();
+        return match ($name) {
+            "count" => new NumberVariable(count($this->value)),
+            "reverse" => new MapVariable(array_reverse($this->value)),
+            "keys" => $helper->arrayToListVariable(array_keys($this->value)),
+            "values" => new ListVariable(array_values($this->value)),
+            default => null,
+        };
     }
 
     public function __toString(): string {

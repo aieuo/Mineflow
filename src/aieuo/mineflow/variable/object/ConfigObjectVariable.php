@@ -12,6 +12,10 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\utils\Config;
+use function array_keys;
+use function array_reverse;
+use function array_values;
+use function count;
 use function is_array;
 use function is_bool;
 use function is_numeric;
@@ -57,6 +61,19 @@ class ConfigObjectVariable extends ObjectVariable {
             $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
         }
         return new MapVariable($values);
+    }
+
+    public function callMethod(string $name, array $parameters = []): ?Variable {
+        $helper = Main::getVariableHelper();
+        $values = $this->getConfig()->getAll();
+        return match ($name) {
+            "count" => new NumberVariable(count($values)),
+            "reverse" => new MapVariable(array_reverse($values)),
+            "keys" => $helper->arrayToListVariable(array_keys($values)),
+            "values" => $helper->arrayToListVariable(array_values($values)),
+            "all" => $helper->arrayToListVariable($values),
+            default => null,
+        };
     }
 
     public function __toString(): string {

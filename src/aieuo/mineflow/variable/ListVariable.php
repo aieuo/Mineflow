@@ -5,6 +5,7 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use function array_reverse;
 
 class ListVariable extends Variable implements \JsonSerializable {
 
@@ -104,6 +105,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     public function callMethod(string $name, array $parameters = []): ?Variable {
         return match ($name) {
             "count" => new NumberVariable(count($this->value)),
+            "reverse" => new ListVariable(array_reverse($this->value)),
             default => null,
         };
     }
