@@ -89,6 +89,6 @@ class Button implements \JsonSerializable {
             $button->setImage(new ButtonImage($data["image"]["data"], $data["image"]["type"]));
         }
 
-        return $button->uuid($buttonData["id"] ?? "");
+        return $button->uuid($data["id"] ?? "");
     }
 }
