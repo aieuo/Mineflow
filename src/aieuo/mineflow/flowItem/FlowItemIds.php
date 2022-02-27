@@ -95,6 +95,8 @@ interface FlowItemIds {
     public const DROP_ITEM = "dropItem";
     public const GENERATE_RANDOM_POSITION = "randomPosition";
     public const POSITION_VARIABLE_ADDITION = "positionAddition";
+    public const GET_WORLD_BY_NAME = "getWorldByName";
+    public const SET_WORLD_TIME = "setWorldTime";
 
     public const EXECUTE_RECIPE = "executeRecipe";
     public const EXECUTE_IF_CHAIN = "executeIFChain";
