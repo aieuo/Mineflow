@@ -10,16 +10,21 @@ use pocketmine\player\Player;
 
 class NumberInput extends Input {
 
-    private ?float $min;
-    private ?float $max;
-    private array $excludes;
+    private ?float $result;
 
-    public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false, ?float $min = null, ?float $max = null, array $excludes = []) {
+    public function __construct(
+        string         $text,
+        string         $placeholder = "",
+        string         $default = "",
+        bool           $required = false,
+        private ?float $min = null,
+        private ?float $max = null,
+        private array  $excludes = [],
+        float         &$result = null
+    ) {
         parent::__construct($text, $placeholder, $default, $required);
 
-        $this->min = $min;
-        $this->max = $max;
-        $this->excludes = $excludes;
+        $this->result = &$result;
     }
 
     public function setMin(?float $min): void {
@@ -61,6 +66,8 @@ class NumberInput extends Input {
         } elseif (($excludes = $this->getExcludes()) !== null and in_array((float)$data, $excludes, true)) {
             $response->addError(Language::get("action.error.excludedNumber", [implode(",", $excludes), $data]));
         }
+
+        $this->result = (float)$data;
     }
 
     public function serializeExtraData(): array {

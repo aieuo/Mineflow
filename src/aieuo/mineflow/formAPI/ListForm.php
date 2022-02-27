@@ -8,6 +8,8 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use pocketmine\player\Player;
+use function call_user_func;
+use function is_callable;
 
 class ListForm extends Form {
 
@@ -126,10 +128,9 @@ class ListForm extends Form {
         return $this;
     }
 
-    public function handleResponse(Player $player, $data): void {
-        $this->lastResponse = [$player, $data];
+    public function onSubmit(Player $player, $data): void {
         if ($data === null) {
-            parent::handleResponse($player, $data);
+            parent::onSubmit($player, $data);
             return;
         }
 
@@ -139,7 +140,7 @@ class ListForm extends Form {
             if ($button->skipIfCallOnClick) return;
         }
 
-        parent::handleResponse($player, $data);
+        parent::onSubmit($player, $data);
     }
 
     public function __clone() {

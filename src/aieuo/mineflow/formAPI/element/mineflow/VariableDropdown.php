@@ -88,7 +88,7 @@ abstract class VariableDropdown extends Dropdown {
 
     public function updateDefault(string $default): void {
         $this->defaultText = $default;
-        $this->setDefault($this->findDefaultKey($default));
+        $this->setDefaultIndex($this->findDefaultKey($default));
     }
 
     public function getVariableType(): string {
@@ -174,7 +174,7 @@ abstract class VariableDropdown extends Dropdown {
                                 $tmp = $content->getDefaultText();
                                 $content->updateOptions($variables);
                                 $content->updateDefault($index === $i ? array_key_first($add) : $tmp);
-                                $indexes[$i] = $content->getDefault();
+                                $indexes[$i] = $content->getDefaultIndex();
                             }
                         }
 

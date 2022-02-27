@@ -5,6 +5,7 @@ namespace aieuo\mineflow\formAPI;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
+use function is_callable;
 
 class ModalForm extends Form {
 
@@ -97,10 +98,9 @@ class ModalForm extends Form {
         return $this;
     }
 
-    public function handleResponse(Player $player, $data): void {
-        $this->lastResponse = [$player, $data];
+    public function onSubmit(Player $player, $data): void {
         if ($data === null) {
-            parent::handleResponse($player, $data);
+            parent::onSubmit($player, $data);
             return;
         }
 
@@ -110,6 +110,6 @@ class ModalForm extends Form {
             return;
         }
 
-        parent::handleResponse($player, $data);
+        parent::onSubmit($player, $data);
     }
 }

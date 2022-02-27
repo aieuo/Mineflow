@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
+use aieuo\mineflow\formAPI\element\StringResponseDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\Main;
@@ -16,6 +17,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use function is_callable;
 
 class CustomForm extends Form {
 
@@ -135,6 +137,14 @@ class CustomForm extends Form {
         return $this;
     }
 
+    public function insufficient(int $index): void {
+        $this->error([["@form.insufficient", $index]]);
+    }
+
+    public function error(array $errors = []): void {
+        $this->resend($errors);
+    }
+
     public function resend(array $errors = [], array $messages = [], array $responseOverrides = [], array $elementOverrides = []): void {
         if (empty($this->lastResponse) or !($this->lastResponse[0] instanceof Player) or !$this->lastResponse[0]->isOnline()) return;
 
@@ -148,8 +158,7 @@ class CustomForm extends Form {
             ->show($this->lastResponse[0]);
     }
 
-    public function handleResponse(Player $player, $data): void {
-        $this->lastResponse = [$player, $data];
+    public function onSubmit(Player $player, $data): void {
         if ($data !== null) {
             $response = new CustomFormResponse($this, $data);
             foreach ($this->getContents() as $i => $content) {
@@ -172,13 +181,17 @@ class CustomForm extends Form {
             }
         }
 
-        parent::handleResponse($player, $data);
+        parent::onSubmit($player, $data);
     }
 
     private function setDefaultsFromResponse(array $data, array $overwrites): self {
         foreach ($this->getContents() as $i => $content) {
-            if ($content instanceof Input or $content instanceof Slider or $content instanceof Dropdown or $content instanceof Toggle) {
+            if ($content instanceof Input or $content instanceof Slider or $content instanceof Toggle) {
                 $content->setDefault($overwrites[$i] ?? $data[$i]);
+            } elseif ($content instanceof StringResponseDropdown) {
+                $content->setDefaultString($overwrites[$i] ?? $data[$i]);
+            } elseif ($content instanceof Dropdown) {
+                $content->setDefaultIndex($overwrites[$i] ?? $data[$i]);
             }
         }
         return $this;

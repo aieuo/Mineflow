@@ -3,23 +3,28 @@
 namespace aieuo\mineflow\formAPI\element;
 
 use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
+use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\utils\Language;
+use pocketmine\player\Player;
 
 class Slider extends Element {
 
     protected string $type = self::ELEMENT_SLIDER;
 
-    private float $min;
-    private float $max;
-    private float $step;
-    private float $default;
+    private ?float $result;
 
-    public function __construct(string $text, float $min, float $max, float $step = 1.0, float $default = null) {
+    public function __construct(
+        string        $text,
+        private float $min,
+        private float $max,
+        private float $step = 1.0,
+        private float $default = 0.0,
+        float         &$result = null
+    ) {
         parent::__construct($text);
-        $this->min = $min;
-        $this->max = $max;
-        $this->step = $step;
-        $this->default = $default ?? $min;
+
+        $this->default = max($default, min($min, $max));
+        $this->result = &$result;
     }
 
     public function setMin(float $min): self {
@@ -56,6 +61,10 @@ class Slider extends Element {
 
     public function getDefault(): float {
         return $this->default;
+    }
+
+    public function onFormSubmit(CustomFormResponse $response, Player $player): void {
+        $this->result = $response->getSliderResponse();
     }
 
     public function jsonSerialize(): array {

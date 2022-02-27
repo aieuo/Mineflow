@@ -36,6 +36,10 @@ class CustomFormResponse extends FormResponse {
         return $this->response[$this->currentIndex];
     }
 
+    public function getSliderResponse(): float {
+        return $this->response[$this->currentIndex];
+    }
+
     public function overrideResponse($response): void {
         $this->responseOverrides[$this->currentIndex] = $response;
     }

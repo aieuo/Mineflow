@@ -10,18 +10,17 @@ class Input extends Element {
 
     protected string $type = self::ELEMENT_INPUT;
 
-    private string $placeholder;
-    private string $default;
-
-    private bool $required;
     private ?string $result;
 
-    public function __construct(string $text, string $placeholder = "", string $default = "", bool $required = false, string &$result = null) {
+    public function __construct(
+        string         $text,
+        private string $placeholder = "",
+        private string $default = "",
+        private bool   $required = false,
+        string         &$result = null
+    ) {
         parent::__construct($text);
-        $this->placeholder = $placeholder;
-        $this->default = $default;
 
-        $this->required = $required;
         $this->result = &$result;
     }
 
@@ -68,7 +67,7 @@ class Input extends Element {
             "type" => $this->type,
             "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
             "placeholder" => Language::replace($this->placeholder),
-            "default" => str_replace("\n", "\\n", $this->default),
+            "default" => str_replace("\n", "\\n", Language::replace($this->default)),
             "mineflow" => $this->serializeExtraData(),
         ];
     }

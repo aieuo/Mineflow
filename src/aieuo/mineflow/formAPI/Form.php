@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Element;
@@ -9,6 +10,9 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\form\Form as PMForm;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use function array_merge;
+use function call_user_func_array;
+use function is_callable;
 
 abstract class Form implements PMForm {
 
@@ -23,6 +27,8 @@ abstract class Form implements PMForm {
 
     /** @var callable|null */
     private $onReceive;
+    /** @var callable|null */
+    private $onReceive2;
     /* @var callable|null */
     private $onClose;
     private array $args = [];
@@ -68,9 +74,22 @@ abstract class Form implements PMForm {
         return $this;
     }
 
+    public function onReceiveWithoutPlayer(callable $callable): self {
+        $this->onReceive2 = $callable;
+        return $this;
+    }
+
+    public function getOnReceive(): ?callable {
+        return $this->onReceive;
+    }
+
     public function onClose(callable $callable): self {
         $this->onClose = $callable;
         return $this;
+    }
+
+    public function getOnClose(): ?callable {
+        return $this->onClose;
     }
 
     public function addArgs(...$args): self {
@@ -137,12 +156,22 @@ abstract class Form implements PMForm {
 
     public function handleResponse(Player $player, $data): void {
         $this->lastResponse = [$player, $data];
+        try {
+            $this->onSubmit($player, $data);
+        } catch (InvalidFormValueException $e) {
+            $this->resend([[$e->getErrorMessage(), $e->getIndex()]]);
+        }
+    }
+
+    public function onSubmit(Player $player, $data): void {
         if ($data === null) {
-            if (!is_callable($this->onClose)) return;
-            call_user_func_array($this->onClose, array_merge([$player], $this->args));
-        } else {
-            if (!is_callable($this->onReceive)) return;
+            if (is_callable($this->onClose)) {
+                call_user_func_array($this->onClose, array_merge([$player], $this->args));
+            }
+        } elseif (is_callable($this->onReceive)) {
             call_user_func_array($this->onReceive, array_merge([$player, $data], $this->args));
+        } elseif (is_callable($this->onReceive2)) {
+            call_user_func_array($this->onReceive2, array_merge([$data, $this], $this->args));
         }
     }
 

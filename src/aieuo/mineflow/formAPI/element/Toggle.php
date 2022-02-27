@@ -10,12 +10,14 @@ class Toggle extends Element {
 
     protected string $type = self::ELEMENT_TOGGLE;
 
-    private bool $default;
     private ?bool $result;
 
-    public function __construct(string $text, bool $default = false, bool &$result = null) {
+    public function __construct(
+        string       $text,
+        private bool $default = false,
+        bool         &$result = null
+    ) {
         parent::__construct($text);
-        $this->default = $default;
 
         $this->result = &$result;
     }
