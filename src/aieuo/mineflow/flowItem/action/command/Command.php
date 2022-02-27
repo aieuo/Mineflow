@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\command;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 
@@ -23,7 +23,7 @@ class Command extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.command.detail";
     protected array $detailDefaultReplace = ["player", "command"];
 
-    protected string $category = Category::COMMAND;
+    protected string $category = FlowItemCategory::COMMAND;
 
     private string $command;
 

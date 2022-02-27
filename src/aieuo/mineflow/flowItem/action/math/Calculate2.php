@@ -6,11 +6,11 @@ namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -23,7 +23,7 @@ class Calculate2 extends FlowItem {
     protected string $detail = "action.calculate2.detail";
     protected array $detailDefaultReplace = ["value1", "value2", "operator", "result"];
 
-    protected string $category = Category::MATH;
+    protected string $category = FlowItemCategory::MATH;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const CALC_MIN = 0;

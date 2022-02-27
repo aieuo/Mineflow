@@ -4,10 +4,10 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class ExistsConfigFile extends FlowItem implements Condition {
@@ -18,7 +18,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
     protected string $detail = "condition.existsConfigFile.detail";
     protected array $detailDefaultReplace = ["name"];
 
-    protected string $category = Category::CONFIG;
+    protected string $category = FlowItemCategory::CONFIG;
 
     private string $fileName;
 

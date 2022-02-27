@@ -7,12 +7,12 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class ShowBossbar extends FlowItem implements PlayerFlowItem {
@@ -24,7 +24,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.showBossbar.detail";
     protected array $detailDefaultReplace = ["player", "title", "max", "value", "id"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private string $title;
     private string $max;

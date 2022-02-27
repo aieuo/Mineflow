@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\string;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -20,7 +20,7 @@ class StringLength extends FlowItem {
     protected string $detail = "action.strlen.detail";
     protected array $detailDefaultReplace = ["string", "result"];
 
-    protected string $category = Category::STRING;
+    protected string $category = FlowItemCategory::STRING;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     private string $value;

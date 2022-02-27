@@ -5,9 +5,9 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Human;
 
@@ -20,7 +20,7 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     protected string $detail = "condition.isSneaking.detail";
     protected array $detailDefaultReplace = ["target"];
 
-    protected string $category = Category::ENTITY;
+    protected string $category = FlowItemCategory::ENTITY;
 
     public function __construct(string $entity = "") {
         $this->setEntityVariableName($entity);

@@ -6,9 +6,9 @@ namespace aieuo\mineflow\flowItem\action\block;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
@@ -23,7 +23,7 @@ class CreateBlockVariable extends FlowItem {
     protected string $detail = "action.createBlockVariable.detail";
     protected array $detailDefaultReplace = ["block", "id"];
 
-    protected string $category = Category::BLOCK;
+    protected string $category = FlowItemCategory::BLOCK;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(

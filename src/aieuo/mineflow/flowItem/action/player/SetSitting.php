@@ -9,10 +9,10 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Entity;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
@@ -32,7 +32,7 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     protected string $detail = "action.setSitting.detail";
     protected array $detailDefaultReplace = ["player", "position"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private static array $entityIds = [];
 

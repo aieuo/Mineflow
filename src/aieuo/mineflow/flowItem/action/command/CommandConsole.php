@@ -6,9 +6,9 @@ namespace aieuo\mineflow\flowItem\action\command;
 
 use aieuo\mineflow\command\MineflowConsoleCommandSender;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 
@@ -20,7 +20,7 @@ class CommandConsole extends FlowItem {
     protected string $detail = "action.commandConsole.detail";
     protected array $detailDefaultReplace = ["command"];
 
-    protected string $category = Category::COMMAND;
+    protected string $category = FlowItemCategory::COMMAND;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

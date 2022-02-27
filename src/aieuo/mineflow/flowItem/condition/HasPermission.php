@@ -5,10 +5,10 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
@@ -20,7 +20,7 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
     protected string $detail = "condition.hasPermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private string $playerPermission;
 

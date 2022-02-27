@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\utils\Category;
 
 class ExitRecipe extends FlowItem {
 
@@ -15,7 +15,7 @@ class ExitRecipe extends FlowItem {
     protected string $name = "action.exit.name";
     protected string $detail = "action.exit.detail";
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     public function execute(FlowItemExecutor $source): \Generator {
         $source->exit();

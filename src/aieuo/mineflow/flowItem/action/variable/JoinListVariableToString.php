@@ -6,10 +6,10 @@ namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -23,7 +23,7 @@ class JoinListVariableToString extends FlowItem {
     protected string $detail = "action.joinToString.detail";
     protected array $detailDefaultReplace = ["name", "separator", "result"];
 
-    protected string $category = Category::VARIABLE;
+    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $separator;
     private string $variableName;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 
@@ -14,7 +14,7 @@ abstract class TypeGetMathVariable extends FlowItem {
 
     protected array $detailDefaultReplace = ["result"];
 
-    protected string $category = Category::MATH;
+    protected string $category = FlowItemCategory::MATH;
 
     protected string $resultName = "result";
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;

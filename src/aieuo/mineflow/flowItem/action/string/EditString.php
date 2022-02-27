@@ -6,10 +6,10 @@ namespace aieuo\mineflow\flowItem\action\string;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -23,7 +23,7 @@ class EditString extends FlowItem {
     protected string $detail = "action.editString.detail";
     protected array $detailDefaultReplace = ["value1", "operator", "value2", "result"];
 
-    protected string $category = Category::STRING;
+    protected string $category = FlowItemCategory::STRING;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const TYPE_JOIN = "join";

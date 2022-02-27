@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\utils\Category;
 use pocketmine\player\Player;
 
 class IsPlayerVariable extends IsActiveEntityVariable {
@@ -13,7 +13,7 @@ class IsPlayerVariable extends IsActiveEntityVariable {
     protected string $name = "condition.isPlayerVariable.name";
     protected string $detail = "condition.isPlayerVariable.detail";
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

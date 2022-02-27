@@ -5,9 +5,9 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
@@ -19,7 +19,7 @@ class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
     protected string $detail = "condition.isPlayerOnline.detail";
     protected array $detailDefaultReplace = ["player"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     public function __construct(string $player = "") {
         $this->setPlayerVariableName($player);

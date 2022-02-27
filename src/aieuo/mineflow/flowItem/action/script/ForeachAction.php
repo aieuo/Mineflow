@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -15,7 +16,6 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -31,7 +31,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     protected string $name = "action.foreach.name";
     protected string $detail = "action.foreach.description";
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

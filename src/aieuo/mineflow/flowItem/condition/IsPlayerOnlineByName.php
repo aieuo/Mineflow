@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 use pocketmine\Server;
@@ -18,7 +18,7 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
     protected string $detail = "condition.isPlayerOnlineByName.detail";
     protected array $detailDefaultReplace = ["player"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private string $playerName;
 

@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\EntityHolder;
 
 class IsPlayer extends IsActiveEntity {
@@ -13,7 +13,7 @@ class IsPlayer extends IsActiveEntity {
     protected string $name = "condition.isPlayer.name";
     protected string $detail = "condition.isPlayer.detail";
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

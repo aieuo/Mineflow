@@ -7,9 +7,9 @@ namespace aieuo\mineflow\flowItem\action\plugin;
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -23,7 +23,7 @@ class GetMoney extends FlowItem {
     protected string $detail = "action.getMoney.detail";
     protected array $detailDefaultReplace = ["target", "result"];
 
-    protected string $category = Category::PLUGIN;
+    protected string $category = FlowItemCategory::PLUGIN;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 

@@ -5,10 +5,10 @@ namespace aieuo\mineflow\flowItem\condition;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
@@ -20,7 +20,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     protected string $detail = "condition.existsConfigData.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    protected string $category = Category::CONFIG;
+    protected string $category = FlowItemCategory::CONFIG;
 
     private string $key;
 

@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\script;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
@@ -22,7 +22,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     protected string $detail = "action.removeConfigData.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     protected int $permission = self::PERMISSION_LEVEL_2;
 

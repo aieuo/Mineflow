@@ -9,10 +9,10 @@ use aieuo\mineflow\flowItem\base\BlockFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
@@ -24,7 +24,7 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     protected string $detail = "action.setBlock.detail";
     protected array $detailDefaultReplace = ["position", "block"];
 
-    protected string $category = Category::WORLD;
+    protected string $category = FlowItemCategory::WORLD;
 
     public function __construct(string $position = "", string $block = "") {
         $this->setPositionVariableName($position);

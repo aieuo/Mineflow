@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\utils\Category;
 
 class CheckNothing extends FlowItem implements Condition {
 
@@ -13,7 +13,7 @@ class CheckNothing extends FlowItem implements Condition {
     protected string $name = "condition.noCheck.name";
     protected string $detail = "condition.noCheck.detail";
 
-    protected string $category = Category::COMMON;
+    protected string $category = FlowItemCategory::COMMON;
 
     public function execute(FlowItemExecutor $source): \Generator {
         yield true;

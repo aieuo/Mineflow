@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 
 class SaveData extends FlowItem {
 
@@ -16,7 +16,7 @@ class SaveData extends FlowItem {
     protected string $name = "action.saveData.name";
     protected string $detail = "action.saveData.detail";
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     public function isDataValid(): bool {
         return true;

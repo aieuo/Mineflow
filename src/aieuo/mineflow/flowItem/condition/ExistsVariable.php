@@ -3,10 +3,10 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class ExistsVariable extends FlowItem implements Condition {
@@ -17,7 +17,7 @@ class ExistsVariable extends FlowItem implements Condition {
     protected string $detail = "condition.existsVariable.detail";
     protected array $detailDefaultReplace = ["name"];
 
-    protected string $category = Category::VARIABLE;
+    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
 

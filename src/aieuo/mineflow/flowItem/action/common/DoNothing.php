@@ -3,8 +3,8 @@
 namespace aieuo\mineflow\flowItem\action\common;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\utils\Category;
 
 class DoNothing extends FlowItem {
 
@@ -13,7 +13,7 @@ class DoNothing extends FlowItem {
     protected string $name = "action.doNothing.name";
     protected string $detail = "action.doNothing.detail";
 
-    protected string $category = Category::COMMON;
+    protected string $category = FlowItemCategory::COMMON;
 
     public function execute(FlowItemExecutor $source): \Generator {
         yield true;

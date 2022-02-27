@@ -4,10 +4,10 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use function str_ends_with;
 
@@ -19,7 +19,7 @@ class ComparisonString extends FlowItem implements Condition {
     protected string $detail = "condition.comparisonString.detail";
     protected array $detailDefaultReplace = ["value1", "operator", "value2"];
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;

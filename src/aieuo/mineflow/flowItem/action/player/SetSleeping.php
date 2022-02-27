@@ -7,10 +7,10 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
@@ -22,7 +22,7 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     protected string $detail = "action.setSleeping.detail";
     protected array $detailDefaultReplace = ["player", "position"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     public function __construct(string $player = "", string $position = "") {
         $this->setPlayerVariableName($player);

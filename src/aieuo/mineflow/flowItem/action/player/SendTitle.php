@@ -6,11 +6,11 @@ use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class SendTitle extends FlowItem implements PlayerFlowItem {
@@ -22,7 +22,7 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.sendTitle.detail";
     protected array $detailDefaultReplace = ["player", "title", "subtitle", "fadein", "stay", "fadeout"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private string $title;
     private string $subtitle;

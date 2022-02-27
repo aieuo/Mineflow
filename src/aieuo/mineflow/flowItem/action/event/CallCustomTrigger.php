@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\event;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class CallCustomTrigger extends FlowItem {
@@ -20,7 +20,7 @@ class CallCustomTrigger extends FlowItem {
     protected string $detail = "action.callTrigger.detail";
     protected array $detailDefaultReplace = ["identifier"];
 
-    protected string $category = Category::EVENT;
+    protected string $category = FlowItemCategory::EVENT;
 
     private string $triggerName;
 

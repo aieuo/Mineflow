@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\plugin;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 abstract class TypeMoney extends FlowItem {
 
     protected array $detailDefaultReplace = ["target", "amount"];
 
-    protected string $category = Category::PLUGIN;
+    protected string $category = FlowItemCategory::PLUGIN;
 
     private string $playerName;
     private string $amount;

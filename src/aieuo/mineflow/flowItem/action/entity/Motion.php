@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\entity;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\math\Vector3;
 
@@ -23,7 +23,7 @@ class Motion extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.motion.detail";
     protected array $detailDefaultReplace = ["entity", "x", "y", "z"];
 
-    protected string $category = Category::ENTITY;
+    protected string $category = FlowItemCategory::ENTITY;
 
     private string $x = "0";
     private string $y = "0";

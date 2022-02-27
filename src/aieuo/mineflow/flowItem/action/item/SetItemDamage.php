@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\item;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\item\ItemFactory;
 
@@ -23,7 +23,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
     protected string $detail = "action.setItemDamage.detail";
     protected array $detailDefaultReplace = ["item", "damage"];
 
-    protected string $category = Category::ITEM;
+    protected string $category = FlowItemCategory::ITEM;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $damage;

@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
@@ -22,7 +22,7 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.canClimbWalls.detail";
     protected array $detailDefaultReplace = ["player", "allow"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private bool $allow;
 

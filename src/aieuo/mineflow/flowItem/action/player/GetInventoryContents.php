@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -26,7 +26,7 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.getInventory.detail";
     protected array $detailDefaultReplace = ["player", "inventory"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 

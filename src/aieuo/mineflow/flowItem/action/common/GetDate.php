@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\action\common;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -18,7 +18,7 @@ class GetDate extends FlowItem {
     protected string $detail = "action.getDate.detail";
     protected array $detailDefaultReplace = ["format", "result"];
 
-    protected string $category = Category::COMMON;
+    protected string $category = FlowItemCategory::COMMON;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public function __construct(

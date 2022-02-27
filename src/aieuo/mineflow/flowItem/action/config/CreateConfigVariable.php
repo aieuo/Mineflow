@@ -6,9 +6,9 @@ namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -22,7 +22,7 @@ class CreateConfigVariable extends FlowItem {
     protected string $detail = "action.createConfigVariable.detail";
     protected array $detailDefaultReplace = ["config", "name"];
 
-    protected string $category = Category::CONFIG;
+    protected string $category = FlowItemCategory::CONFIG;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(

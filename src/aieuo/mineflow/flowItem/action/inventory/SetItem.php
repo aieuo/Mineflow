@@ -9,11 +9,11 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
@@ -25,7 +25,7 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     protected string $detail = "action.setItem.detail";
     protected array $detailDefaultReplace = ["player", "item", "index"];
 
-    protected string $category = Category::INVENTORY;
+    protected string $category = FlowItemCategory::INVENTORY;
 
     private string $index;
 

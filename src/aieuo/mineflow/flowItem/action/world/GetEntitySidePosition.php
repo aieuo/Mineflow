@@ -8,12 +8,12 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
@@ -29,7 +29,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.getEntitySide.detail";
     protected array $detailDefaultReplace = ["entity", "direction", "step", "result"];
 
-    protected string $category = Category::WORLD;
+    protected string $category = FlowItemCategory::WORLD;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 

@@ -7,11 +7,11 @@ namespace aieuo\mineflow\flowItem\action\config;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -25,7 +25,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     protected string $detail = "action.setConfigData.detail";
     protected array $detailDefaultReplace = ["config", "key", "value"];
 
-    protected string $category = Category::CONFIG;
+    protected string $category = FlowItemCategory::CONFIG;
 
     protected int $permission = self::PERMISSION_LEVEL_2;
 

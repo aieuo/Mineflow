@@ -7,13 +7,13 @@ namespace aieuo\mineflow\flowItem\action\form;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -28,7 +28,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.sendInput.detail";
     protected array $detailDefaultReplace = ["player", "text", "result"];
 
-    protected string $category = Category::FORM;
+    protected string $category = FlowItemCategory::FORM;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 

@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 
@@ -17,7 +17,7 @@ class IsActiveEntity extends FlowItem implements Condition {
     protected string $detail = "condition.isActiveEntity.detail";
     protected array $detailDefaultReplace = ["id"];
 
-    protected string $category = Category::ENTITY;
+    protected string $category = FlowItemCategory::ENTITY;
 
     private string $entityId;
 

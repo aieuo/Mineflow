@@ -3,12 +3,12 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\ui\FlowItemContainerForm;
-use aieuo\mineflow\utils\Category;
 use pocketmine\player\Player;
 
 class AndScript extends FlowItem implements Condition, FlowItemContainer {
@@ -19,7 +19,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
     protected string $name = "condition.and.name";
     protected string $detail = "condition.and.detail";
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     public function getDetail(): string {
         $details = ["----------and-----------"];

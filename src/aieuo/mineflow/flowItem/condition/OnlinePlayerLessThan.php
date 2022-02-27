@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 use function count;
@@ -18,7 +18,7 @@ class OnlinePlayerLessThan extends FlowItem implements Condition {
     protected string $detail = "condition.onlinePlayerLessThan.detail";
     protected array $detailDefaultReplace = ["value"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private string $value;
 

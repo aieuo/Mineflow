@@ -6,10 +6,10 @@ namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 
@@ -21,7 +21,7 @@ class GetVariableNested extends FlowItem {
     protected string $detail = "action.getVariableNested.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
-    protected string $category = Category::VARIABLE;
+    protected string $category = FlowItemCategory::VARIABLE;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $variableName;

@@ -8,6 +8,7 @@ use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\ServerStartEvent;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventManager;
@@ -42,6 +43,10 @@ class Main extends PluginBase {
 
     public static function getInstance(): self {
         return self::$instance;
+    }
+
+    protected function onLoad(): void {
+        FlowItemCategory::registerDefaults();
     }
 
     public function onEnable(): void {

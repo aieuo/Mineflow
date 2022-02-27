@@ -5,6 +5,7 @@ namespace aieuo\mineflow\ui;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -16,7 +17,6 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
@@ -147,7 +147,7 @@ class FlowItemForm {
             })
         ];
 
-        foreach (Category::getCategories() as $category) {
+        foreach (FlowItemCategory::all() as $category) {
             $buttons[] = new Button("@category.".$category, function () use($player, $container, $type, $category) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
                 $actions = FlowItemFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName()), !$isCondition, $isCondition);

@@ -7,9 +7,9 @@ namespace aieuo\mineflow\flowItem\action\config;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
@@ -21,7 +21,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     protected string $detail = "action.saveConfigFile.detail";
     protected array $detailDefaultReplace = ["config"];
 
-    protected string $category = Category::CONFIG;
+    protected string $category = FlowItemCategory::CONFIG;
 
     protected int $permission = self::PERMISSION_LEVEL_2;
 

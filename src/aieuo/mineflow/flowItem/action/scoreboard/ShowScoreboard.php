@@ -9,10 +9,10 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {
@@ -24,7 +24,7 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
     protected string $detail = "action.showScoreboard.detail";
     protected array $detailDefaultReplace = ["player", "scoreboard"];
 
-    protected string $category = Category::SCOREBOARD;
+    protected string $category = FlowItemCategory::SCOREBOARD;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         $this->setPlayerVariableName($player);

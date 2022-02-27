@@ -6,9 +6,9 @@ namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -26,7 +26,7 @@ class GetEntity extends FlowItem {
     protected string $detail = "action.getEntity.detail";
     protected array $detailDefaultReplace = ["id", "result"];
 
-    protected string $category = Category::ENTITY;
+    protected string $category = FlowItemCategory::ENTITY;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $entityId;

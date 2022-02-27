@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\scoreboard;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
@@ -22,7 +22,7 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     protected string $detail = "action.removeScoreName.detail";
     protected array $detailDefaultReplace = ["scoreboard", "score"];
 
-    protected string $category = Category::SCOREBOARD;
+    protected string $category = FlowItemCategory::SCOREBOARD;
 
     private string $score;
 

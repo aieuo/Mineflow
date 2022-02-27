@@ -4,59 +4,24 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\utils;
 
-class Category {
+use aieuo\mineflow\flowItem\FlowItemCategory;
+use JetBrains\PhpStorm\Deprecated;
 
-    public const COMMON = "common";
-    public const BLOCK = "block";
-    public const COMMAND = "command";
-    public const ENTITY = "entity";
-    public const EVENT = "event";
-    public const FORM = "form";
-    public const INVENTORY = "inventory";
-    public const ITEM = "item";
-    public const WORLD = "world";
-    public const PLAYER = "player";
-    public const PLUGIN = "plugin";
-    public const MATH = "math";
-    public const STRING = "string";
-    public const VARIABLE = "variable";
-    public const SCRIPT = "script";
-    public const CONFIG = "config";
-    public const SCOREBOARD = "scoreboard";
+#[Deprecated(replacement: FlowItemCategory::class)]
+class Category extends FlowItemCategory {
 
-    /** @var string[]  */
-    private static array $categories = [
-        self::COMMON,
-        self::PLAYER,
-        self::ENTITY,
-        self::INVENTORY,
-        self::ITEM,
-        self::COMMAND,
-        self::BLOCK,
-        self::WORLD,
-        self::EVENT,
-        self::SCRIPT,
-        self::MATH,
-        self::VARIABLE,
-        self::CONFIG,
-        self::STRING,
-        self::FORM,
-        self::SCOREBOARD,
-        self::PLUGIN,
-    ];
-
+    #[Deprecated(replacement: "%class%::all()")]
     public static function getCategories(): array {
-        return self::$categories;
+        return parent::all();
     }
 
+    #[Deprecated(replacement: "%class%::exists(%parameter0%%)")]
     public static function existsCategory(string $category): bool {
-        return in_array($category, self::$categories, true);
+        return parent::exists($category);
     }
 
+    #[Deprecated(replacement: "%class%::add(%parameter0%%)")]
     public static function addCategory(string $category): bool {
-        if (self::existsCategory($category)) return false;
-
-        self::$categories[] = $category;
-        return true;
+        return parent::add($category);
     }
 }

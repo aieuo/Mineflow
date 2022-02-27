@@ -7,10 +7,10 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\java\GameModeIdMap;
 
@@ -23,7 +23,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.setGamemode.detail";
     protected array $detailDefaultReplace = ["player", "gamemode"];
 
-    protected string $category = Category::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER;
 
     private array $gamemodes = [
         "action.gamemode.survival",

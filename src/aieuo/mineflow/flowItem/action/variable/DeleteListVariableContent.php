@@ -6,11 +6,11 @@ namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -23,7 +23,7 @@ class DeleteListVariableContent extends FlowItem {
     protected string $detail = "action.removeContent.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key"];
 
-    protected string $category = Category::VARIABLE;
+    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
     private string $variableKey;

@@ -8,10 +8,10 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
 use pocketmine\entity\effect\StringToEffectParser;
@@ -26,7 +26,7 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.clearEffect.detail";
     protected array $detailDefaultReplace = ["entity", "id"];
 
-    protected string $category = Category::ENTITY;
+    protected string $category = FlowItemCategory::ENTITY;
 
     private string $effectId;
 

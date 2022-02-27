@@ -9,11 +9,11 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Living;
 
@@ -26,7 +26,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     protected string $detail = "action.equipArmor.detail";
     protected array $detailDefaultReplace = ["entity", "item", "index"];
 
-    protected string $category = Category::INVENTORY;
+    protected string $category = FlowItemCategory::INVENTORY;
 
     private string $index;
 

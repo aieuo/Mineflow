@@ -6,11 +6,11 @@ namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class ExecuteRecipe extends FlowItem {
@@ -21,7 +21,7 @@ class ExecuteRecipe extends FlowItem {
     protected string $detail = "action.executeRecipe.detail";
     protected array $detailDefaultReplace = ["name"];
 
-    protected string $category = Category::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

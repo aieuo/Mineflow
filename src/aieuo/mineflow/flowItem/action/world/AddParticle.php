@@ -7,11 +7,11 @@ namespace aieuo\mineflow\flowItem\action\world;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
@@ -25,7 +25,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
     protected string $detail = "action.addParticle.detail";
     protected array $detailDefaultReplace = ["position", "particle", "amount", ""];
 
-    protected string $category = Category::WORLD;
+    protected string $category = FlowItemCategory::WORLD;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

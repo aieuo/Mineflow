@@ -7,9 +7,9 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, ItemFlowItem {
@@ -17,7 +17,7 @@ abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, I
 
     protected array $detailDefaultReplace = ["player", "item"];
 
-    protected string $category = Category::INVENTORY;
+    protected string $category = FlowItemCategory::INVENTORY;
 
     public function __construct(string $player = "", string $item = "") {
         $this->setPlayerVariableName($player);

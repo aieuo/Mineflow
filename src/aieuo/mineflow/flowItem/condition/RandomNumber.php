@@ -3,9 +3,9 @@
 namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 
 class RandomNumber extends FlowItem implements Condition {
@@ -16,7 +16,7 @@ class RandomNumber extends FlowItem implements Condition {
     protected string $detail = "condition.randomNumber.detail";
     protected array $detailDefaultReplace = ["min", "max", "value"];
 
-    protected string $category = Category::MATH;
+    protected string $category = FlowItemCategory::MATH;
 
     private string $min;
     private string $max;

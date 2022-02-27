@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
 use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Category;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
@@ -22,7 +22,7 @@ class CreateScoreboardVariable extends FlowItem {
     protected string $detail = "action.createScoreboardVariable.detail";
     protected array $detailDefaultReplace = ["result", "id", "displayName", "type"];
 
-    protected string $category = Category::SCOREBOARD;
+    protected string $category = FlowItemCategory::SCOREBOARD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $variableName;
