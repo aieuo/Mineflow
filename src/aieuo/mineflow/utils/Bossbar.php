@@ -7,6 +7,7 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
+use pocketmine\network\mcpe\protocol\types\BossBarColor;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
@@ -18,15 +19,14 @@ class Bossbar {
     /** @var Bossbar[][] */
     public static array $bars = [];
 
-    private float $max;
-    private float $per;
-    private string $title;
     private int $entityId;
 
-    public function __construct(string $title, float $max = 1.0, float $per = 1.0) {
-        $this->title = $title;
-        $this->max = $max;
-        $this->per = $per;
+    public function __construct(
+        private string $title,
+        private float $max = 1.0,
+        private float $per = 1.0,
+        private int $color = BossBarColor::PURPLE,
+    ) {
         $this->entityId = Entity::nextRuntimeId();
     }
 
@@ -59,44 +59,50 @@ class Bossbar {
         return $this->entityId;
     }
 
-    public static function add(Player $player, string $id, string $title, float $max, float $per): void {
+    public function getColor(): int {
+        return $this->color;
+    }
+
+    public function setColor(int $color): void {
+        $this->color = $color;
+    }
+
+    public static function add(Player $player, string $id, string $title, float $max, float $per, int $color): void {
         if (isset(self::$bars[$player->getName()][$id])) self::remove($player, $id);
-        $bar = new Bossbar($title, $max, $per);
+        $bar = new Bossbar($title, $max, $per, $color);
         self::$bars[$player->getName()][$id] = $bar;
 
-        $pk = new AddActorPacket();
-        $pk->actorRuntimeId = $bar->getEntityId();
-        $pk->type = EntityIds::SHULKER;
-        $pk->metadata = [
-            EntityMetadataProperties::FLAGS => new LongMetadataProperty(
-                (1 << EntityMetadataFlags::INVISIBLE) | (1 << EntityMetadataFlags::IMMOBILE)
-            ),
-            EntityMetadataProperties::NAMETAG => new StringMetadataProperty($title)
-        ];
-        $pk->position = new Vector3(0, 0, 0);
+        $pk = AddActorPacket::create(
+            $bar->getEntityId(),
+            $bar->getEntityId(),
+            EntityIds::SHULKER,
+            Vector3::zero(),
+            null,
+            0,
+            0,
+            0,
+            [],
+            [
+                EntityMetadataProperties::FLAGS => new LongMetadataProperty(
+                    (1 << EntityMetadataFlags::INVISIBLE) | (1 << EntityMetadataFlags::IMMOBILE)
+                ),
+                EntityMetadataProperties::NAMETAG => new StringMetadataProperty($title)
+            ],
+            []
+        );
         $player->getNetworkSession()->sendDataPacket($pk);
 
-        $pk2 = new BossEventPacket();
-        $pk2->bossActorUniqueId = $bar->getEntityId();
-        $pk2->eventType = BossEventPacket::TYPE_SHOW;
-        $pk2->title = $title;
-        $pk2->healthPercent = $per;
-        $pk2->color = 0;
-        $pk2->overlay = 0;
-        $pk2->unknownShort = 0;
+        $pk2 = BossEventPacket::show($bar->getEntityId(), $title, $per, color: $bar->getColor());
         $player->getNetworkSession()->sendDataPacket($pk2);
     }
 
     public static function remove(Player $player, string $id): bool {
         if (!isset(self::$bars[$player->getName()][$id])) return false;
         $bar = self::$bars[$player->getName()][$id];
-        $pk = new BossEventPacket();
-        $pk->bossActorUniqueId = $bar->getEntityId();
-        $pk->eventType = BossEventPacket::TYPE_HIDE;
+        $pk = BossEventPacket::hide($bar->getEntityId());
         $player->getNetworkSession()->sendDataPacket($pk);
 
-        $pk2 = new RemoveActorPacket();
-        $pk2->actorUniqueId = $bar->getEntityId();
+        $pk2 = RemoveActorPacket::create($bar->getEntityId());
         $player->getNetworkSession()->sendDataPacket($pk2);
 
         unset(self::$bars[$player->getName()][$id]);
