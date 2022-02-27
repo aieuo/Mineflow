@@ -172,6 +172,9 @@ interface FlowItemIds {
 
     public const REGISTER_SHAPED_RECIPE = "registerShapedRecipe";
 
+    public const ADD_SPECIFIC_LANGUAGE_MAPPING = "addSpecificLanguageMapping";
+    public const ADD_LANGUAGE_MAPPINGS = "addLanguageMappings";
+    public const GET_LANGUAGE_MESSAGE = "getLanguageMessage";
 
     /* condition */
     public const CHECK_NOTHING = "checkNothing";

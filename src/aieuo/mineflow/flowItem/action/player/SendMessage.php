@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\utils\Language;
 
 class SendMessage extends TypePlayerMessage {
 
@@ -14,7 +15,7 @@ class SendMessage extends TypePlayerMessage {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $source->replaceVariables($this->getMessage());
+        $message = Language::replace($source->replaceVariables($this->getMessage()));
 
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);

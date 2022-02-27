@@ -48,6 +48,9 @@ use aieuo\mineflow\flowItem\action\event\EventCancel;
 use aieuo\mineflow\flowItem\action\form\SendForm;
 use aieuo\mineflow\flowItem\action\form\SendInputForm;
 use aieuo\mineflow\flowItem\action\form\SendMenuForm;
+use aieuo\mineflow\flowItem\action\internal\AddLanguageMappings;
+use aieuo\mineflow\flowItem\action\internal\AddSpecificLanguageMapping;
+use aieuo\mineflow\flowItem\action\internal\GetLanguage;
 use aieuo\mineflow\flowItem\action\inventory\AddItem;
 use aieuo\mineflow\flowItem\action\inventory\ClearInventory;
 use aieuo\mineflow\flowItem\action\inventory\EquipArmor;
@@ -196,7 +199,8 @@ class FlowItemFactory {
     private static array $aliases = [];
 
     public static function init(): void {
-        /* actions */
+        /** actions **/
+        /* common */
         self::register(new DoNothing);
         self::register(new EventCancel);
         self::register(new CallCustomTrigger);
@@ -336,6 +340,10 @@ class FlowItemFactory {
         self::register(new DecrementScoreboardScore);
         self::register(new RemoveScoreboardScore);
         self::register(new RemoveScoreboardScoreName);
+        /* internal */
+        self::register(new AddLanguageMappings);
+        self::register(new AddSpecificLanguageMapping);
+        self::register(new GetLanguage);
         /* other plugins */
         if (Economy::isPluginLoaded()) {
             self::register(new AddMoney);
@@ -348,7 +356,7 @@ class FlowItemFactory {
         }
 
 
-        /** conditions */
+        /** conditions **/
         /* common */
         self::register(new CheckNothing);
         self::register(new IsOp);

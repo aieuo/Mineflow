@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 
 class BroadcastMessage extends TypeMessage {
@@ -15,7 +16,7 @@ class BroadcastMessage extends TypeMessage {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $source->replaceVariables($this->getMessage());
+        $message = Language::replace($source->replaceVariables($this->getMessage()));
         Server::getInstance()->broadcastMessage($message);
         yield true;
     }

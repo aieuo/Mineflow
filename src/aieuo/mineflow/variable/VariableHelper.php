@@ -14,6 +14,7 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Config;
 use function array_is_list;
 use function is_bool;
+use function preg_match;
 
 class VariableHelper {
 
@@ -120,7 +121,7 @@ class VariableHelper {
      * @return string
      */
     public function replaceVariable(string $string, string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
-        if (!str_contains($string, "{".$replace."}")) return $string;
+        if (!str_contains($string, "{".$replace."}") or preg_match("/%\d+/u", $replace)) return $string;
 
         $result = (string)$this->runVariableStatement($replace, $variables, $executor, $global);
         return str_replace("{".$replace."}", $result, $string);

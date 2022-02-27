@@ -47,8 +47,8 @@ class FlowItemCategory {
         self::add(self::STRING);
         self::add(self::FORM);
         self::add(self::SCOREBOARD);
-        self::add(self::PLUGIN);
         self::add(self::INTERNAL);
+        self::add(self::PLUGIN);
     }
 
     public static function all(): array {

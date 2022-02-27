@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 
 class SendMessageToOp extends TypeMessage {
@@ -15,7 +16,7 @@ class SendMessageToOp extends TypeMessage {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $source->replaceVariables($this->getMessage());
+        $message = Language::replace($source->replaceVariables($this->getMessage()));
         $players = Server::getInstance()->getOnlinePlayers();
         foreach ($players as $player) {
             if (Server::getInstance()->isOp($player->getName())) {

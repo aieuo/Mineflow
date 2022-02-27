@@ -6,6 +6,7 @@ use aieuo\mineflow\flowItem\action\player\TypeMessage;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\utils\Language;
 
 class SendMessageToConsole extends TypeMessage {
 
@@ -19,7 +20,7 @@ class SendMessageToConsole extends TypeMessage {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $message = $source->replaceVariables($this->getMessage());
+        $message = Language::replace($source->replaceVariables($this->getMessage()));
         Main::getInstance()->getLogger()->info($message);
         yield true;
     }
