@@ -6,6 +6,8 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use function array_reverse;
+use function array_search;
+use function array_values;
 
 class ListVariable extends Variable implements \JsonSerializable {
 
@@ -40,11 +42,29 @@ class ListVariable extends Variable implements \JsonSerializable {
         $this->value = array_values($this->value);
     }
 
-    public function removeValue(Variable $value): void {
-        $index = array_search($value, $this->value, true);
-        if ($index === false) return;
+    public function removeValueAt(int|string $index): void {
+        unset($this->value[(int)$index]);
+        $this->value = array_values($this->value);
+    }
+
+    public function removeValue(Variable $value, bool $strict = true): void {
+        $index = $this->indexOf($value, $strict);
+        if ($index === null) return;
         unset($this->value[$index]);
-        $this->value = array_merge($this->value);
+        $this->value = array_values($this->value);
+    }
+
+    public function indexOf(Variable $value, bool $strict = true): int|string|null {
+        if ($strict) {
+            $index = array_search($value, $this->value, true);
+            return $index === false ? null : $index;
+        }
+
+        $str = (string)$value;
+        foreach ($this->value as $index => $v) {
+            if ((string)$v === $str) return $index;
+        }
+        return null;
     }
 
     public function getValueFromIndex(string $index): ?Variable {

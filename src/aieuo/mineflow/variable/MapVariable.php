@@ -5,7 +5,9 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use function array_merge;
 use function array_reverse;
+use function array_values;
 use function count;
 
 class MapVariable extends ListVariable {
@@ -19,6 +21,16 @@ class MapVariable extends ListVariable {
 
     public function setValueAt(int|string $key, Variable $value): void {
         $this->value[$key] = $value;
+    }
+
+    public function removeValueAt(int|string $index): void {
+        unset($this->value[$index]);
+    }
+
+    public function removeValue(Variable $value, bool $strict = true): void {
+        $index = $this->indexOf($value, $strict);
+        if ($index === null) return;
+        unset($this->value[$index]);
     }
 
     public function add($target): MapVariable {

@@ -136,6 +136,7 @@ interface FlowItemIds {
     public const GET_LIST_VALUES = "values";
     public const SEARCH_LIST_KEY = "searchKey";
     public const DELETE_LIST_VARIABLE_CONTENT = "removeContent";
+    public const DELETE_LIST_VARIABLE_CONTENT_BY_VALUE = "removeContentByValue";
     public const CREATE_SCOREBOARD_VARIABLE = "createScoreboard";
 
     public const ACTION_IF = "if";

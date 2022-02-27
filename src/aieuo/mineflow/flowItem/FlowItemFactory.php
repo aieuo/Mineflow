@@ -136,6 +136,7 @@ use aieuo\mineflow\flowItem\action\variable\CreateListVariable;
 use aieuo\mineflow\flowItem\action\variable\CreateMapVariable;
 use aieuo\mineflow\flowItem\action\variable\CreateMapVariableFromJson;
 use aieuo\mineflow\flowItem\action\variable\DeleteListVariableContent;
+use aieuo\mineflow\flowItem\action\variable\DeleteListVariableContentByValue;
 use aieuo\mineflow\flowItem\action\variable\DeleteVariable;
 use aieuo\mineflow\flowItem\action\variable\GetVariableNested;
 use aieuo\mineflow\flowItem\action\variable\JoinListVariableToString;
@@ -309,6 +310,7 @@ class FlowItemFactory {
         self::register(new AddMapVariable);
         self::register(new CreateMapVariableFromJson);
         self::register(new DeleteListVariableContent);
+        self::register(new DeleteListVariableContentByValue);
         self::register(new CreatePositionVariable);
         self::register(new GetVariableNested);
         self::register(new CountListVariable);
