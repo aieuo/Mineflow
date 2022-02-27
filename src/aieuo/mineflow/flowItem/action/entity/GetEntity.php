@@ -13,10 +13,6 @@ use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
-use aieuo\mineflow\variable\object\HumanObjectVariable;
-use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use pocketmine\entity\Human;
-use pocketmine\player\Player;
 
 class GetEntity extends FlowItem {
 

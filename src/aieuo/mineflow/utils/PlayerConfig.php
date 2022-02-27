@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\utils;
 
-use pocketmine\player\Player;
 use pocketmine\utils\Config;
 
 class PlayerConfig extends Config {

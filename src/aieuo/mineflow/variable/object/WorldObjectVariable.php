@@ -11,7 +11,6 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
-use pocketmine\entity\Human;
 use pocketmine\entity\Living;
 use pocketmine\world\World;
 use pocketmine\player\Player;

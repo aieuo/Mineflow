@@ -12,7 +12,6 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 
 class DeleteListVariableContent extends FlowItem {

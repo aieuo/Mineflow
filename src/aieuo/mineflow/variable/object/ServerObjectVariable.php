@@ -9,7 +9,6 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\entity\Human;
 use pocketmine\entity\Living;
 use pocketmine\permission\BanEntry;
 use pocketmine\world\World;

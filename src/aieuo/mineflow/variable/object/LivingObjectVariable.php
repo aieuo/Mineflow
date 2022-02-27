@@ -4,14 +4,8 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
-use pocketmine\entity\Entity;
-use pocketmine\entity\EntityFactory;
-use pocketmine\entity\Human;
 use pocketmine\entity\Living;
-use pocketmine\player\Player;
 
 class LivingObjectVariable extends EntityObjectVariable {
 

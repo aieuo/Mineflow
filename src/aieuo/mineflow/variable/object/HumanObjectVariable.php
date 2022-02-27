@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\Variable;
