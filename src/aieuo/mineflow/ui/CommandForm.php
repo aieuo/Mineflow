@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -15,6 +16,7 @@ use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
+use function var_dump;
 
 class CommandForm {
 
@@ -28,7 +30,7 @@ class CommandForm {
             ])->addMessages($messages)->show($player);
     }
 
-    public function sendAddCommand(Player $player, array $defaults = [], array $errors = []): void {
+    public function sendAddCommand(Player $player, array $defaults = [], ?callable $callback = null): void {
         (new CustomForm("@form.command.addCommand.title"))
             ->setContents([
                 new Input("@form.command.menu.title", "@trigger.command.select.placeholder", $defaults[0] ?? "", true),
@@ -38,60 +40,51 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                     Language::get("form.command.addCommand.permission.custom"),
                 ], $defaults[2] ?? 0),
-                new CancelToggle(),
-            ])->onReceive(function (Player $player, array $data) {
-                if ($data[3]) {
-                    $this->sendMenu($player);
-                    return;
-                }
-
+                new CancelToggle(fn() => $callback === null ? $this->sendMenu($player) : $callback(false)),
+            ])->onReceive(function (Player $player, array $data) use($callback) {
                 $manager = Main::getCommandManager();
                 $original = $manager->getOriginCommand($data[0]);
                 if (!$manager->isSubcommand($data[0]) and $manager->existsCommand($original)) {
-                    $this->sendAddCommand($player, $data, [["@form.command.alreadyExists", 0]]);
-                    return;
+                    throw new InvalidFormValueException("@form.command.alreadyExists", 0);
                 }
                 if ($manager->isRegistered($original)) {
-                    $this->sendAddCommand($player, $data, [["@form.command.alreadyUsed", 0]]);
-                    return;
+                    throw new InvalidFormValueException("@form.command.alreadyUsed", 0);
                 }
 
-                $permission = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[2]] ?? "";
+                $permission = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[2]] ?? "mineflow.customcommand.op";
 
                 $manager->addCommand($data[0], $permission, $data[1]);
                 $command = $manager->getCommand($original);
                 Session::getSession($player)->set("command_menu_prev", [$this, "sendMenu"]);
 
                 if ($data[2] === 2) {
-                    $this->sendSelectPermissionName($player, $command);
+                    $this->sendSelectPermissionName($player, $command, $callback);
                     return;
                 }
-                $this->sendCommandMenu($player, $command);
-            })->addErrors($errors)->show($player);
+                if ($callback === null) {
+                    $this->sendCommandMenu($player, $command);
+                } else {
+                    $callback(true);
+                }
+            })->show($player);
     }
 
-    public function sendSelectCommand(Player $player, array $defaults = [], array $errors = []): void {
+    public function sendSelectCommand(Player $player, array $defaults = []): void {
         (new CustomForm("@form.command.select.title"))
             ->setContents([
                 new Input("@form.command.name", "", $defaults[0] ?? "", true),
-                new CancelToggle(),
+                new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data) {
-                if ($data[1]) {
-                    $this->sendMenu($player);
-                    return;
-                }
-
                 $manager = Main::getCommandManager();
                 if (!$manager->existsCommand($manager->getOriginCommand($data[0]))) {
-                    $this->sendSelectCommand($player, $data, [["@form.command.notFound", 0]]);
-                    return;
+                    throw new InvalidFormValueException("@form.command.notFound", 0);
                 }
 
                 $command = $manager->getCommand($manager->getOriginCommand($data[0]));
                 Session::getSession($player)
                     ->set("command_menu_prev", [$this, "sendSelectCommand"]);
                 $this->sendCommandMenu($player, $command);
-            })->addErrors($errors)->show($player);
+            })->show($player);
     }
 
     public function sendCommandList(Player $player): void {
@@ -193,22 +186,21 @@ class CommandForm {
             })->addArgs($command)->show($player);
     }
 
-    public function sendSelectPermissionName(Player $player, array $command, array $default = [], array $errors = []): void {
+    public function sendSelectPermissionName(Player $player, array $command, ?callable $callback = null): void {
         (new CustomForm(Language::get("form.command.changePermission.title", ["/".$command["command"]])))
             ->setContents([
-                new Input("@form.command.addCommand.permission.custom.input", "", $default[0] ?? $command["permission"], true),
-                new CancelToggle(),
-            ])->onReceive(function (Player $player, array $data, array $command) {
-                if ($data[1]) {
-                    $this->changePermission($player, $command);
-                    return;
-                }
-
+                new Input("@form.command.addCommand.permission.custom.input", "", $command["permission"], true),
+                new CancelToggle(fn() => $callback === null ? $this->changePermission($player, $command) : $callback(false)),
+            ])->onReceive(function (Player $player, array $data, array $command) use($callback) {
                 $manager = Main::getCommandManager();
                 $command["permission"] = $data[0];
                 $manager->updateCommand($command);
-                $this->sendCommandMenu($player, $command);
-            })->addErrors($errors)->addArgs($command)->show($player);
+                if ($callback === null) {
+                    $this->sendCommandMenu($player, $command);
+                } else {
+                    $callback(true);
+                }
+            })->addArgs($command)->show($player);
     }
 
     public function sendConfirmDelete(Player $player, array $command): void {
