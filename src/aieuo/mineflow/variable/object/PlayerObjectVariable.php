@@ -53,7 +53,6 @@ class PlayerObjectVariable extends HumanObjectVariable {
     }
 
     public function __toString(): string {
-        $value = $this->getPlayer();
-        return $value->getName();
+        return $this->getPlayer()->getName();
     }
 }

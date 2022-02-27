@@ -19,8 +19,8 @@ class EntityObjectVariable extends PositionObjectVariable {
         return match (true) {
             $entity instanceof Player => new PlayerObjectVariable($entity, $str ?? $entity->getName()),
             $entity instanceof Human => new HumanObjectVariable($entity, $str ?? $entity->getNameTag()),
-            $entity instanceof Living => new LivingObjectVariable($entity, $str ?? $entity->getNameTag()),
-            default => new EntityObjectVariable($entity, $str ?? $entity->getNameTag()),
+            $entity instanceof Living => new LivingObjectVariable($entity),
+            default => new EntityObjectVariable($entity),
         };
     }
 
@@ -80,6 +80,7 @@ class EntityObjectVariable extends PositionObjectVariable {
     }
 
     public function __toString(): string {
-        return $this->getEntity()->getNameTag();
+        $name = $this->getEntity()->getNameTag();
+        return empty($name) ? (string)$this->getEntity() : $name;
     }
 }

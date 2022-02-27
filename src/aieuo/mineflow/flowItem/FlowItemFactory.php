@@ -121,6 +121,7 @@ use aieuo\mineflow\flowItem\action\script\ForAction;
 use aieuo\mineflow\flowItem\action\script\ForeachAction;
 use aieuo\mineflow\flowItem\action\script\ForeachPosition;
 use aieuo\mineflow\flowItem\action\script\IFAction;
+use aieuo\mineflow\flowItem\action\script\IFNotAction;
 use aieuo\mineflow\flowItem\action\script\RemoveConfigData;
 use aieuo\mineflow\flowItem\action\script\RepeatAction;
 use aieuo\mineflow\flowItem\action\script\SaveData;
@@ -147,6 +148,9 @@ use aieuo\mineflow\flowItem\action\world\GenerateRandomPosition;
 use aieuo\mineflow\flowItem\action\world\GetBlock;
 use aieuo\mineflow\flowItem\action\world\GetDistance;
 use aieuo\mineflow\flowItem\action\world\GetEntitySidePosition;
+use aieuo\mineflow\flowItem\action\world\GetNearestEntity;
+use aieuo\mineflow\flowItem\action\world\GetNearestLiving;
+use aieuo\mineflow\flowItem\action\world\GetNearestPlayer;
 use aieuo\mineflow\flowItem\action\world\PlaySoundAt;
 use aieuo\mineflow\flowItem\action\world\PositionVariableAddition;
 use aieuo\mineflow\flowItem\action\world\SetBlock;
@@ -275,6 +279,7 @@ class FlowItemFactory {
         self::register(new IFAction);
         self::register(new ElseifAction);
         self::register(new ElseAction);
+        self::register(new IFNotAction);
         self::register(new RepeatAction);
         self::register(new ForAction);
         self::register(new ForeachAction);
@@ -324,7 +329,7 @@ class FlowItemFactory {
         self::register(new CommandConsole);
         /* block */
         self::register(new CreateBlockVariable);
-        /* level */
+        /* world */
         self::register(new SetBlock);
         self::register(new GetBlock);
         self::register(new AddParticle);
@@ -334,6 +339,9 @@ class FlowItemFactory {
         self::register(new GetEntitySidePosition);
         self::register(new GenerateRandomPosition);
         self::register(new PositionVariableAddition);
+        self::register(new GetNearestEntity);
+        self::register(new GetNearestLiving);
+        self::register(new GetNearestPlayer);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);

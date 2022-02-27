@@ -43,6 +43,9 @@ interface FlowItemIds {
     public const LOOK_AT = "lookAt";
     public const MOVE_TO = "moveTo";
     public const TELEPORT_TO_WORLD = "teleportToWorld";
+    public const GET_NEAREST_ENTITY = "getNearestEntity";
+    public const GET_NEAREST_LIVING = "getNearestLiving";
+    public const GET_NEAREST_PLAYER = "getNearestPlayer";
 
     public const GET_PLAYER = "getPlayer";
     public const SET_SLEEPING = "setSleeping";
@@ -146,6 +149,7 @@ interface FlowItemIds {
     public const ACTION_WHILE = "while";
     public const ACTION_WAIT = "wait";
     public const ACTION_FOR = "for";
+    public const ACTION_IF_NOT = "if_not";
     public const FOREACH_POSITION = "foreachPosition";
     public const ACTION_FOREACH = "foreach";
     public const SAVE_DATA = "save";

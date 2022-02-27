@@ -14,6 +14,7 @@ abstract class Variable {
     public const MAP = 3;
     public const OBJECT = 4;
     public const BOOLEAN = 5;
+    public const NULL = 6;
 
     /** @var string|int|Variable[]|object */
     protected $value;
