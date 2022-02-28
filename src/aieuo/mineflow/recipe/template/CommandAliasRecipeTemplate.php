@@ -1,0 +1,41 @@
+<?php
+
+namespace aieuo\mineflow\recipe\template;
+
+use aieuo\mineflow\flowItem\action\command\Command;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\trigger\command\CommandTrigger;
+use aieuo\mineflow\ui\CommandForm;
+use aieuo\mineflow\utils\Language;
+use pocketmine\player\Player;
+
+class CommandAliasRecipeTemplate extends RecipeTemplate {
+
+    private string $command = "";
+    private string $alias = "";
+
+    public static function getName(): string {
+        return Language::get("recipe.template.command.arias");
+    }
+
+    public function getSettingFormPart(): RecipeTemplateSettingFormPart {
+        return new RecipeTemplateSettingFormPart(
+            [
+                new ExampleInput("@recipe.template.command.arias.command", "mineflow", $this->command, true, result: $this->command),
+                new ExampleInput("@recipe.template.command.arias.alias", "m", $this->alias, true, result: $this->alias),
+            ],
+            function(Player $player, callable $onComplete) {
+                (new CommandForm())->sendAddCommand($player, [$this->alias], $onComplete);
+            }
+        );
+    }
+
+    public function build(): Recipe {
+        $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup());
+        $recipe->addItem(new Command("target", $this->command), FlowItemContainer::ACTION);
+        $recipe->addTrigger(CommandTrigger::create(explode(" ", $this->alias)[0], $this->alias));
+        return $recipe;
+    }
+}

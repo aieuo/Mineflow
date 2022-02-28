@@ -90,6 +90,7 @@ class Main extends PluginBase {
 
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();
+        self::$recipeManager->addTemplates();
 
         (new EventListener())->registerEvents();
 

@@ -6,14 +6,25 @@ use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
+use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use ErrorException;
+use RegexIterator;
+use function file_get_contents;
+use function json_decode;
+use function json_last_error_msg;
+use function str_replace;
+use function substr;
+use const PHP_EOL;
 
 class RecipeManager {
 
     /** @var Recipe[][] */
     protected array $recipes = [];
+
+    private array $templates = [];
 
     private string $saveDir;
 
@@ -33,7 +44,7 @@ class RecipeManager {
                 \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
             )
         );
-        $files = new \RegexIterator($files, '/\.json$/', \RecursiveRegexIterator::MATCH);
+        $files = new \RegexIterator($files, '/\.json$/', RegexIterator::MATCH);
 
         foreach ($files as $file) {
             /** @var \SplFileInfo $file */
@@ -193,7 +204,21 @@ class RecipeManager {
                 $recipes[] = $this->getWithLinkedRecipes($recipe, $recipe);
             }
         }
-        $recipes = array_merge([], ...$recipes);
-        return $recipes;
+        return array_merge([], ...$recipes);
+    }
+
+    public function addTemplates(): void {
+        $this->addTemplate(CommandAliasRecipeTemplate::class);
+    }
+
+    /**
+     * @param class-string<RecipeTemplate> $templateClass
+     */
+    public function addTemplate(string $templateClass): void {
+        $this->templates[] = $templateClass;
+    }
+
+    public function getTemplates(): array {
+        return $this->templates;
     }
 }

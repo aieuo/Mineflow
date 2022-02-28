@@ -14,11 +14,16 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
+use function array_map;
+use function array_merge;
+use function array_values;
+use function file_exists;
 
 class RecipeForm {
 
@@ -41,10 +46,15 @@ class RecipeForm {
     public function sendAddRecipe(Player $player, array $default = []): void {
         $manager = Main::getRecipeManager();
         $name = $manager->getNotDuplicatedName("recipe");
+        $templateDropdownOptions = array_values(array_merge(
+            [Language::get("form.element.variableDropdown.none")],
+            array_map(fn($template) => $template::getName(),  $manager->getTemplates())
+        ));
 
         ($it = new CustomForm("@form.recipe.addRecipe.title"))->setContents([
                 new Input("@form.recipe.recipeName", $name, $default[0] ?? ""),
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
+                new Dropdown("@recipe.template", $templateDropdownOptions),
                 new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data, string $defaultName) use($it) {
                 $manager = Main::getRecipeManager();
@@ -59,17 +69,18 @@ class RecipeForm {
                     return;
                 }
 
+                $templateClass = null;
+                if ($data[2] > 0) {
+                    $templateClass = $manager->getTemplates()[$data[2] - 1];
+                }
+
                 if ($manager->exists($name, $group)) {
                     $newName = $manager->getNotDuplicatedName($name, $group);
                     (new MineflowForm)->confirmRename($player, $name, $newName,
-                        function (string $name) use ($player, $data) {
-                            $manager = Main::getRecipeManager();
+                        function (string $name) use ($player, $data, $templateClass) {
                             $recipe = new Recipe($name, $data[1], $player->getName(), Main::getPluginVersion());
-                            $manager->add($recipe);
-                            Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
-                                $this->sendRecipeList($player, $recipe->getGroup());
-                            });
-                            $this->sendRecipeMenu($player, $recipe);
+
+                            $this->addRecipe($player, $recipe, $templateClass);
                         },
                         fn(string $name) => $it->resend([[Language::get("form.recipe.exists", [$name]), 0]])
                     );
@@ -82,12 +93,33 @@ class RecipeForm {
                     return;
                 }
 
-                $manager->add($recipe);
-                Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
-                    $this->sendRecipeList($player, $recipe->getGroup());
-                });
-                $this->sendRecipeMenu($player, $recipe);
+                $this->addRecipe($player, $recipe, $templateClass);
             })->addArgs($name)->show($player);
+    }
+
+    private function addRecipe(Player $player, Recipe $recipe, ?string $templateClass = null): void {
+        if ($templateClass !== null) {
+            /** @var RecipeTemplate $template */
+            $template = new $templateClass($recipe->getName(), $recipe->getGroup());
+            $this->sendTemplateCreationForm($player, $template);
+            return;
+        }
+
+        Main::getRecipeManager()->add($recipe);
+        Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
+            $this->sendRecipeList($player, $recipe->getGroup());
+        });
+        $this->sendRecipeMenu($player, $recipe);
+    }
+
+    public function sendTemplateCreationForm(Player $player, RecipeTemplate $template): void {
+        $template->createRecipe($player, function (?Recipe $recipe) use($player, $template) {
+            if ($recipe === null) {
+                $this->sendAddRecipe($player, [$template->getRecipeName(), $template->getRecipeGroup()]);
+            } else {
+                $this->addRecipe($player, $recipe);
+            }
+        });
     }
 
     public function sendSelectRecipe(Player $player, array $default = []): void {
