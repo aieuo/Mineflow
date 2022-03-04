@@ -19,6 +19,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\ui\HomeForm;
@@ -294,10 +295,10 @@ class CustomFormForm {
             ->show($player);
     }
 
-    public function onReceive(Player $player, $data, Form $form): void {
+    public function onReceive(Player $player, $data, Form $form, Recipe $from = null): void {
         $holder = TriggerHolder::getInstance();
         $trigger = FormTrigger::create($form->getName());
-        $variables = $trigger->getVariables($form, $data);
+        $variables = $trigger->getVariables($form, $data, $from);
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player, $variables);

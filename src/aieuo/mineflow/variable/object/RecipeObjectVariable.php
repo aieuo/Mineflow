@@ -4,6 +4,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
@@ -20,6 +21,7 @@ class RecipeObjectVariable extends ObjectVariable {
             "name" => new StringVariable($recipe->getName()),
             "group" => new StringVariable($recipe->getGroup()),
             "author" => new StringVariable($recipe->getAuthor()),
+            "variables" => new MapVariable($recipe->getExecutor()?->getVariables() ?? []),
             default => parent::getValueFromIndex($index),
         };
     }
@@ -34,6 +36,7 @@ class RecipeObjectVariable extends ObjectVariable {
             "name" => new DummyVariable(DummyVariable::STRING),
             "group" => new DummyVariable(DummyVariable::STRING),
             "author" => new DummyVariable(DummyVariable::STRING),
+            "variables" => new DummyVariable(DummyVariable::MAP),
         ]);
     }
 

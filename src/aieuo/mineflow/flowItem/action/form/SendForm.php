@@ -66,7 +66,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
 
         $form = clone $form;
         $form->replaceVariablesFromExecutor($source);
-        $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form)->show($player);
+        $form->onReceive([new CustomFormForm(), "onReceive"])->onClose([new CustomFormForm(), "onClose"])->addArgs($form, $source->getSourceRecipe())->show($player);
         yield true;
     }
 
