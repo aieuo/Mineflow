@@ -14,7 +14,6 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
-use function substr;
 
 class DeleteListVariableContentByValue extends FlowItem {
 

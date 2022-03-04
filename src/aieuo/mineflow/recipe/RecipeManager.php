@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\event\MineflowRecipeLoadEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -86,6 +87,8 @@ class RecipeManager {
                 continue;
             }
             $recipe->checkVersion();
+
+            (new MineflowRecipeLoadEvent(Main::getInstance(), $recipe))->call();
 
             $this->add($recipe, false);
         }

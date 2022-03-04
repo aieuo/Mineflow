@@ -56,6 +56,7 @@ class EventManager {
         $this->addTrigger(new ServerStartEventTrigger(), true);
         $this->addTrigger(new InventoryPickupItemEventTrigger(), false);
         $this->addTrigger(new PlayerChangeSkinEventTrigger(), false);
+        $this->addTrigger(new MineflowRecipeLoadEventTrigger(), true);
     }
 
     public function addTrigger(EventTrigger $trigger, bool $defaultEnabled): void {
