@@ -111,8 +111,8 @@ class CustomForm extends Form {
             } elseif ($content instanceof NumberInputPlaceholder) {
                 $content->setPlaceholder($executor->replaceVariables($content->getPlaceholder()));
                 $content->setDefault($executor->replaceVariables($content->getDefault()));
-                $content->setMinStr($executor->replaceVariables($content->getMinStr()));
-                $content->setMaxStr($executor->replaceVariables($content->getMaxStr()));
+                $content->setMinStr($content->getMinStr() === null ? null : $executor->replaceVariables($content->getMinStr()));
+                $content->setMaxStr($content->getMaxStr() === null ? null : $executor->replaceVariables($content->getMaxStr()));
             } elseif ($content instanceof Input) {
                 $content->setPlaceholder($executor->replaceVariables($content->getPlaceholder()));
                 $content->setDefault($executor->replaceVariables($content->getDefault()));
