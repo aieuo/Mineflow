@@ -22,7 +22,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     protected string $detail = "action.removeConfigData.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    protected string $category = FlowItemCategory::CONFIG;
 
     protected int $permission = self::PERMISSION_LEVEL_2;
 
