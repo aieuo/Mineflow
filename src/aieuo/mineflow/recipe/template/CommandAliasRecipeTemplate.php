@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\recipe\template;
 
 use aieuo\mineflow\flowItem\action\command\Command;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\ui\CommandForm;
@@ -33,7 +36,7 @@ class CommandAliasRecipeTemplate extends RecipeTemplate {
     }
 
     public function build(): Recipe {
-        $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup());
+        $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup(), version: Main::getPluginVersion());
         $recipe->addItem(new Command("target", $this->command), FlowItemContainer::ACTION);
         $recipe->addTrigger(CommandTrigger::create(explode(" ", $this->alias)[0], $this->alias));
         return $recipe;
