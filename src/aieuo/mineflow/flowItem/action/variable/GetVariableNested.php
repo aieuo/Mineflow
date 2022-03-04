@@ -24,12 +24,11 @@ class GetVariableNested extends FlowItem {
     protected string $category = FlowItemCategory::VARIABLE;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $variableName;
-    private string $resultName;
-
-    public function __construct(string $name = "", string $result = "var") {
-        $this->variableName = $name;
-        $this->resultName = $result;
+    public function __construct(
+        private string $variableName = "",
+        private string $resultName = "var",
+        private string $fallbackValue = "",
+    ) {
     }
 
     public function setVariableName(string $name): self {
@@ -50,6 +49,14 @@ class GetVariableNested extends FlowItem {
         return $this->resultName;
     }
 
+    public function setFallbackValue(string $fallbackValue): void {
+        $this->fallbackValue = $fallbackValue;
+    }
+
+    public function getFallbackValue(): string {
+        return $this->fallbackValue;
+    }
+
     public function isDataValid(): bool {
         return $this->getVariableName() !== "" and !empty($this->getResultName());
     }
@@ -66,6 +73,12 @@ class GetVariableNested extends FlowItem {
         $resultName = $source->replaceVariables($this->getResultName());
 
         $variable = $source->getVariable($variableName) ?? Main::getVariableHelper()->getNested($variableName);
+
+        $fallbackValue = $this->getFallbackValue();
+        if ($fallbackValue !== "" and $variable === null) {
+            $variable = Main::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
+        }
+
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$variableName]));
         }
@@ -79,17 +92,19 @@ class GetVariableNested extends FlowItem {
         return [
             new ExampleInput("@action.getVariableNested.form.target", "target.hand", $this->getVariableName(), true),
             new ExampleInput("@action.form.resultVariableName", "item", $this->getResultName(), true),
+            new ExampleInput("@action.getVariableNested.form.fallbackValue", "optional", $this->getFallbackValue(), false),
         ];
     }
 
     public function loadSaveData(array $content): FlowItem {
         $this->setVariableName($content[0]);
         $this->setResultName($content[1]);
+        $this->setFallbackValue($content[2] ?? "");
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getResultName()];
+        return [$this->getVariableName(), $this->getResultName(), $this->getFallbackValue()];
     }
 
     public function getAddingVariables(): array {

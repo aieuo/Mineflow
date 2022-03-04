@@ -77,22 +77,9 @@ class AddMapVariable extends FlowItem {
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
-        $value = $source->replaceVariables($this->getVariableValue());
-
-        $type = $helper->getType($value);
 
         $value = $this->getVariableValue();
-        if ($helper->isSimpleVariableString($value)) {
-            $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
-            if ($addVariable === null) {
-                $value = $helper->replaceVariables($value, $source->getVariables());
-                $addVariable = Variable::create($helper->currentType($value), $type);
-            }
-        } else {
-            $value = $helper->replaceVariables($value, $source->getVariables());
-            $addVariable = Variable::create($helper->currentType($value), $type);
-        }
-
+        $addVariable = $helper->copyOrCreateVariable($value, $source);
         $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));

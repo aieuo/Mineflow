@@ -84,17 +84,7 @@ class CreateMapVariable extends FlowItem {
             $value = $values[$i] ?? "";
             if ($key === "") continue;
 
-            if ($helper->isSimpleVariableString($value)) {
-                $addVariable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
-                if ($addVariable === null) {
-                    $value = $helper->replaceVariables($value, $source->getVariables());
-                    $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
-                }
-            } else {
-                $value = $helper->replaceVariables($value, $source->getVariables());
-                $addVariable = Variable::create($helper->currentType($value), $helper->getType($value));
-            }
-
+            $addVariable = $helper->copyOrCreateVariable($value, $source);
             $variable->setValueAt($key, $addVariable);
         }
 

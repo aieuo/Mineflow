@@ -15,6 +15,7 @@ use pocketmine\utils\Config;
 use function array_is_list;
 use function is_bool;
 use function preg_match;
+use function substr;
 
 class VariableHelper {
 
@@ -369,6 +370,18 @@ class VariableHelper {
         }
 
         return $variable;
+    }
+
+    public function copyOrCreateVariable(string $value, ?FlowItemExecutor $executor = null): Variable {
+        if ($this->isSimpleVariableString($value)) {
+            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? $this->get(substr($value, 1, -1));
+            if ($variable !== null) {
+                return $variable;
+            }
+        }
+
+        $value = $this->replaceVariables($value, $executor?->getVariables() ?? []);
+        return Variable::create($this->currentType($value), $this->getType($value));
     }
 
     public function isSimpleVariableString(string $variable): bool {
