@@ -13,7 +13,10 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Config;
 use function array_is_list;
+use function is_array;
 use function is_bool;
+use function is_null;
+use function is_numeric;
 use function preg_match;
 use function substr;
 
@@ -426,19 +429,13 @@ class VariableHelper {
     public function toVariableArray(array $data): array {
         $result = [];
         foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                if (array_is_list($value)) {
-                    $result[$key] = new ListVariable($this->toVariableArray($value));
-                } else {
-                    $result[$key] = new MapVariable($this->toVariableArray($value));
-                }
-            } elseif (is_numeric($value)) {
-                $result[$key] = new NumberVariable((float)$value);
-            } elseif (is_bool($value)) {
-                $result[$key] = new BoolVariable($value);
-            } else {
-                $result[$key] = new StringVariable($value);
-            }
+            $result[$key] = match (true) {
+                is_array($value) => array_is_list($value) ? new ListVariable($this->toVariableArray($value)) : new MapVariable($this->toVariableArray($value)),
+                is_numeric($value) => new NumberVariable((float)$value),
+                is_bool($value) => new BoolVariable($value),
+                is_null($value) => new NullVariable(),
+                default => new StringVariable($value),
+            };
         }
         return $result;
     }
