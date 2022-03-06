@@ -73,7 +73,7 @@ class GetWorldByName extends FlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ExampleInput("@action.getWorldByName.form.worldName", "world", $this->getWorldName(), true),
-            new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
+            new ExampleInput("@action.form.resultVariableName", "world", $this->getResultName(), true),
         ];
     }
 
@@ -89,7 +89,7 @@ class GetWorldByName extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::BLOCK)
+            $this->getResultName() => new DummyVariable(DummyVariable::WORLD)
         ];
     }
 }
