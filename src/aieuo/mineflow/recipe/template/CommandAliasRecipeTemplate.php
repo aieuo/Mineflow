@@ -20,14 +20,14 @@ class CommandAliasRecipeTemplate extends RecipeTemplate {
     private string $alias = "";
 
     public static function getName(): string {
-        return Language::get("recipe.template.command.arias");
+        return Language::get("recipe.template.command.alias");
     }
 
     public function getSettingFormPart(): RecipeTemplateSettingFormPart {
         return new RecipeTemplateSettingFormPart(
             [
-                new ExampleInput("@recipe.template.command.arias.command", "mineflow", $this->command, true, result: $this->command),
-                new ExampleInput("@recipe.template.command.arias.alias", "m", $this->alias, true, result: $this->alias),
+                new ExampleInput("@recipe.template.command.alias.command", "mineflow", $this->command, true, result: $this->command),
+                new ExampleInput("@recipe.template.command.alias.alias", "m", $this->alias, true, result: $this->alias),
             ],
             function(Player $player, callable $onComplete) {
                 (new CommandForm())->sendAddCommand($player, [$this->alias], $onComplete);
