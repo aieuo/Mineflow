@@ -40,17 +40,18 @@ class Main extends PluginBase {
 
     private static VariableHelper $variableHelper;
 
-
     public static function getInstance(): self {
         return self::$instance;
     }
 
     protected function onLoad(): void {
+        self::$instance = $this;
+
         FlowItemCategory::registerDefaults();
+        Language::init();
     }
 
     public function onEnable(): void {
-        self::$instance = $this;
         self::$pluginVersion = $this->getDescription()->getVersion();
 
         $serverLanguage = $this->getServer()->getLanguage()->getLang();
@@ -67,9 +68,6 @@ class Main extends PluginBase {
         }
 
         Language::setLanguage($this->config->get("language", "eng"));
-        foreach (Language::getAvailableLanguages() as $language) {
-            Language::loadBaseMessage($language);
-        }
 
         $this->playerSettings = new PlayerConfig($this->getDataFolder()."player.yml", Config::YAML);
 
@@ -80,7 +78,6 @@ class Main extends PluginBase {
         EntityManager::init();
         Triggers::init();
         FlowItemFactory::init();
-
 
         self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));
         self::$eventManager = new EventManager(new Config($this->getDataFolder()."events.yml"));

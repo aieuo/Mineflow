@@ -3,17 +3,30 @@
 namespace aieuo\mineflow\utils;
 
 use aieuo\mineflow\Main;
+use function array_key_last;
+use function implode;
+use function parse_ini_file;
 
 class Language {
 
     /** @var string[][] */
-    private static array $messages = [
-        "jpn" => [],
-        "eng" => [],
-        "ind" => [],
-    ];
+    private static array $messages = [];
     private static string $language = "eng";
     private static string $fallbackLanguage = "eng";
+
+    public static function init(): void {
+        $owner = Main::getInstance();
+
+        foreach ($owner->getResources() as $resource) {
+            $names = explode("/", str_replace("\\", "/", $resource->getPath()));
+            $folderName = $names[array_key_last($names)];
+
+            if ($folderName !== "language" or $resource->getExtension() !== "ini") continue;
+
+            $language = str_replace(".".$resource->getExtension(), "", $resource->getFilename());
+            self::loadBaseMessage($language);
+        }
+    }
 
     public static function getLanguage(): string {
         return self::$language;
@@ -85,13 +98,13 @@ class Language {
                 "言語ファイルの読み込みに失敗しました",
                 "[".implode(", ", self::getAvailableLanguages())."]が使用できます"
             ],
-            default => [
-                "Failed to load language file.",
-                "Available languages are: [".implode(", ", self::getAvailableLanguages())."]"
-            ],
             "ind" => [
                 "Gagal memuat file bahasa.",
                 "Bahasa yang tersedia adalah: [".implode(", ", self::getAvailableLanguages())."]"
+            ],
+            default => [
+                "Failed to load language file.",
+                "Available languages are: [".implode(", ", self::getAvailableLanguages())."]"
             ],
         };
     }
