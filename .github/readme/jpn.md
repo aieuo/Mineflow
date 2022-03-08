@@ -100,7 +100,7 @@ Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flat
 
 ##### 表示する情報を増やすには
 
-{target.hand}は[item変数](#item)です。`{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。
+{target.hand}は[item変数](https://github.com/aieuo/Mineflow/wiki/Variable#item)です。`{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。
 
 ##### op以外も使用できるようにするには
 

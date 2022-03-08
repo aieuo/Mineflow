@@ -85,7 +85,7 @@ Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`.
 ![tambahkanPemicu](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Untuk mengirim informasi lebih lanjut tentang barang
-{target.hand} adalah [item variable](#item). `{target.hand.name}` diganti dengan nama item dan `{target.hand.count}` dengan jumlah item.
+{target.hand} adalah [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` diganti dengan nama item dan `{target.hand.count}` dengan jumlah item.
 
 ##### Untuk dapat menggunakannya non-OP
 Setel izin perintah ke `siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
