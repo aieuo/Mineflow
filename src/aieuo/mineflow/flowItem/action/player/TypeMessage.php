@@ -13,12 +13,12 @@ abstract class TypeMessage extends FlowItem {
 
     protected array $detailDefaultReplace = ["message"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
-    private string $message;
-
-    public function __construct(string $message = "") {
-        $this->message = $message;
+    public function __construct(
+        string         $id,
+        string         $category = FlowItemCategory::PLAYER,
+        private string $message = ""
+    ) {
+        parent::__construct($id, $category);
     }
 
     public function setMessage(string $message): self {

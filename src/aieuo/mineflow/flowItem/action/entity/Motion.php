@@ -17,19 +17,17 @@ use pocketmine\math\Vector3;
 class Motion extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::MOTION;
-
     protected string $name = "action.motion.name";
     protected string $detail = "action.motion.detail";
     protected array $detailDefaultReplace = ["entity", "x", "y", "z"];
-
-    protected string $category = FlowItemCategory::ENTITY;
 
     private string $x = "0";
     private string $y = "0";
     private string $z = "0";
 
     public function __construct(string $entity = "", string $x = "0", string $y = "0", string $z = "0") {
+        parent::__construct(self::MOTION, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->setPosition($x, $y, $z);
     }

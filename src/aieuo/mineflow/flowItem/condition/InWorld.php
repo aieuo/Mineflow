@@ -14,17 +14,15 @@ use aieuo\mineflow\utils\Language;
 class InWorld extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::IN_WORLD;
-
     protected string $name = "condition.inWorld.name";
     protected string $detail = "condition.inWorld.detail";
     protected array $detailDefaultReplace = ["target", "world"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     private string $world = "";
 
     public function __construct(string $entity = "", string $world = "") {
+        parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->setWorld($world);
     }
@@ -42,7 +40,6 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
         return Language::get($this->detail, [$this->getEntityVariableName(), $this->getWorld()]);
     }
 

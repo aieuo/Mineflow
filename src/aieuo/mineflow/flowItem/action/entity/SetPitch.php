@@ -17,17 +17,15 @@ use pocketmine\player\Player;
 class SetPitch extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::SET_PITCH;
-
     protected string $name = "action.setPitch.name";
     protected string $detail = "action.setPitch.detail";
     protected array $detailDefaultReplace = ["entity", "pitch"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     private string $pitch;
 
     public function __construct(string $entity = "", string $pitch = "") {
+        parent::__construct(self::SET_PITCH, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->pitch = $pitch;
     }

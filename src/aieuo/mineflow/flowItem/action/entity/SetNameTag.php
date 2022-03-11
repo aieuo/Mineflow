@@ -17,17 +17,15 @@ use pocketmine\player\Player;
 class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::SET_NAME;
-
     protected string $name = "action.setNameTag.name";
     protected string $detail = "action.setNameTag.detail";
     protected array $detailDefaultReplace = ["entity", "name"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     private string $newName;
 
     public function __construct(string $entity = "", string $newName = "") {
+        parent::__construct(self::SET_NAME, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->newName = $newName;
     }

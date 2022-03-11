@@ -17,17 +17,15 @@ use aieuo\mineflow\utils\Language;
 class RemoveBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::REMOVE_BOSSBAR;
-
     protected string $name = "action.removeBossbar.name";
     protected string $detail = "action.removeBossbar.detail";
     protected array $detailDefaultReplace = ["player", "id"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     private string $barId;
 
     public function __construct(string $player = "", string $barId = "") {
+        parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->barId = $barId;
     }

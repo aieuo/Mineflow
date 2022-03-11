@@ -17,18 +17,16 @@ use pocketmine\world\World;
 class SetWorldTime extends FlowItem implements WorldFlowItem {
     use WorldFlowItemTrait;
 
-    protected string $id = self::SET_WORLD_TIME;
-
     protected string $name = "action.setWorldTime.name";
     protected string $detail = "action.setWorldTime.detail";
     protected array $detailDefaultReplace = ["world", "time"];
-
-    protected string $category = FlowItemCategory::WORLD;
 
     public function __construct(
         string         $worldName = "",
         private string $time = ""
     ) {
+        parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
+
         $this->setWorldVariableName($worldName);
     }
 

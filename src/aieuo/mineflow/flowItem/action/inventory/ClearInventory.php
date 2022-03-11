@@ -15,15 +15,13 @@ use aieuo\mineflow\utils\Language;
 class ClearInventory extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::CLEAR_INVENTORY;
-
     protected string $name = "action.clearInventory.name";
     protected string $detail = "action.clearInventory.detail";
     protected array $detailDefaultReplace = ["player"];
 
-    protected string $category = FlowItemCategory::INVENTORY;
-
     public function __construct(string $player = "") {
+        parent::__construct(self::CLEAR_INVENTORY, FlowItemCategory::INVENTORY);
+
         $this->setPlayerVariableName($player);
     }
 

@@ -19,13 +19,10 @@ use pocketmine\math\AxisAlignedBB;
 class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
     use Vector3FlowItemTrait;
 
-    protected string $id = self::CREATE_AABB_BY_VECTOR3_VARIABLE;
-
     protected string $name = "action.createAABBByPositionVariable.name";
     protected string $detail = "action.createAABBByPositionVariable.detail";
     protected array $detailDefaultReplace = ["pos1", "pos2", "result"];
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
@@ -33,6 +30,8 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         string         $pos2 = "",
         private string $variableName = "area"
     ) {
+        parent::__construct(self::CREATE_AABB_BY_VECTOR3_VARIABLE, FlowItemCategory::WORLD);
+
         $this->setVector3VariableName($pos1, "pos1");
         $this->setVector3VariableName($pos2, "pos2");
     }

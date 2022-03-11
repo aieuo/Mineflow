@@ -10,19 +10,17 @@ use aieuo\mineflow\utils\Language;
 
 class RandomNumber extends FlowItem implements Condition {
 
-    protected string $id = self::RANDOM_NUMBER;
-
     protected string $name = "condition.randomNumber.name";
     protected string $detail = "condition.randomNumber.detail";
     protected array $detailDefaultReplace = ["min", "max", "value"];
-
-    protected string $category = FlowItemCategory::MATH;
 
     private string $min;
     private string $max;
     private string $value;
 
     public function __construct(string $min = "", string $max = "", string $value = "") {
+        parent::__construct(self::RANDOM_NUMBER, FlowItemCategory::MATH);
+
         $this->min = $min;
         $this->max = $max;
         $this->value = $value;

@@ -4,23 +4,19 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class NorScript extends ORScript {
-
-    protected string $id = self::CONDITION_NOR;
+class NorScript extends LogicalOperation {
 
     protected string $name = "condition.nor.name";
     protected string $detail = "condition.nor.detail";
 
-    public function getDetail(): string {
-        $details = ["-----------nor-----------"];
-        foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
-        }
-        $details[] = "------------------------";
-        return implode("\n", $details);
+    public function __construct() {
+        parent::__construct(self::CONDITION_NOR);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        return !(yield from parent::execute($source));
+        foreach ($this->getConditions() as $condition) {
+            if (yield from $condition->execute($source)) return false;
+        }
+        return true;
     }
 }

@@ -11,12 +11,12 @@ use aieuo\mineflow\Main;
 
 class SaveData extends FlowItem {
 
-    protected string $id = self::SAVE_DATA;
-
     protected string $name = "action.saveData.name";
     protected string $detail = "action.saveData.detail";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    public function __construct() {
+        parent::__construct(self::SAVE_DATA, FlowItemCategory::SCRIPT);
+    }
 
     public function isDataValid(): bool {
         return true;

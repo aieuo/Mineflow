@@ -6,12 +6,14 @@ namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class AddXpLevel extends AddXpProgress {
-
-    protected string $id = self::ADD_XP_LEVEL;
+class AddXpLevel extends AddXpBase {
 
     protected string $name = "action.addXpLevel.name";
     protected string $detail = "action.addXpLevel.detail";
+
+    public function __construct(string $player = "", string $xp = "") {
+        parent::__construct(self::ADD_XP_LEVEL, player: $player, xp: $xp);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

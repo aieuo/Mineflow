@@ -23,13 +23,9 @@ use pocketmine\world\Position;
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::GET_ENTITY_SIDE;
-
     protected string $name = "action.getEntitySide.name";
     protected string $detail = "action.getEntitySide.detail";
     protected array $detailDefaultReplace = ["entity", "direction", "step", "result"];
-
-    protected string $category = FlowItemCategory::WORLD;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -79,6 +75,8 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     ];
 
     public function __construct(string $entity = "", string $direction = "", string $step = "1", string $result = "pos") {
+        parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
+
         $this->setEntityVariableName($entity);
         $this->direction = $direction;
         $this->steps = $step;

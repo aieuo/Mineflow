@@ -22,13 +22,9 @@ use function array_search;
 class ShowBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::SHOW_BOSSBAR;
-
     protected string $name = "action.showBossbar.name";
     protected string $detail = "action.showBossbar.detail";
     protected array $detailDefaultReplace = ["player", "title", "max", "value", "color", "id"];
-
-    protected string $category = FlowItemCategory::PLAYER;
 
     private array $colors = [
         "pink" => BossBarColor::PINK,
@@ -48,6 +44,8 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         private string $color = "purple",
         private string $barId = ""
     ) {
+        parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
     }
 

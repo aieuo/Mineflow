@@ -12,20 +12,18 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class GenerateRandomNumber extends TypeGetMathVariable {
 
-    protected string $id = self::GENERATE_RANDOM_NUMBER;
-
     protected string $name = "action.generateRandomNumber.name";
     protected string $detail = "action.generateRandomNumber.detail";
     protected array $detailDefaultReplace = ["min", "max", "result"];
 
     protected string $resultName = "random";
-    private string $min;
-    private string $max;
 
-    public function __construct(string $min = "", string $max = "", string $result = null) {
-        $this->min = $min;
-        $this->max = $max;
-        parent::__construct($result);
+    public function __construct(
+        private string $min = "",
+        private string $max = "",
+        string         $resultName = "random"
+    ) {
+        parent::__construct(self::GENERATE_RANDOM_NUMBER, resultName: $resultName);
     }
 
     public function setMin(string $min): self {

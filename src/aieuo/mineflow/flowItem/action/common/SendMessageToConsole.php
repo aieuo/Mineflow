@@ -10,12 +10,12 @@ use aieuo\mineflow\utils\Language;
 
 class SendMessageToConsole extends TypeMessage {
 
-    protected string $id = self::SEND_MESSAGE_TO_CONSOLE;
-
-    protected string $category = FlowItemCategory::COMMON;
-
     protected string $name = "action.sendMessageToConsole.name";
     protected string $detail = "action.sendMessageToConsole.detail";
+
+    public function __construct(string $message = "") {
+        parent::__construct(self::SEND_MESSAGE_TO_CONSOLE, FlowItemCategory::COMMON, $message);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

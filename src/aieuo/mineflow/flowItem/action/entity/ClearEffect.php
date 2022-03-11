@@ -20,17 +20,15 @@ use pocketmine\entity\Living;
 class ClearEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::CLEAR_EFFECT;
-
     protected string $name = "action.clearEffect.name";
     protected string $detail = "action.clearEffect.detail";
     protected array $detailDefaultReplace = ["entity", "id"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     private string $effectId;
 
     public function __construct(string $entity = "", string $id = "") {
+        parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->effectId = $id;
     }

@@ -17,13 +17,9 @@ use pocketmine\utils\TextFormat;
 
 class GetMoney extends FlowItem {
 
-    protected string $id = self::GET_MONEY;
-
     protected string $name = "action.getMoney.name";
     protected string $detail = "action.getMoney.detail";
     protected array $detailDefaultReplace = ["target", "result"];
-
-    protected string $category = FlowItemCategory::PLUGIN;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -31,6 +27,8 @@ class GetMoney extends FlowItem {
     private string $resultName;
 
     public function __construct(string $name = "{target.name}", string $result = "money") {
+        parent::__construct(self::GET_MONEY, FlowItemCategory::PLUGIN);
+
         $this->playerName = $name;
         $this->resultName = $result;
     }

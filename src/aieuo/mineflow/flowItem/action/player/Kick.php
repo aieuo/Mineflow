@@ -16,18 +16,16 @@ use pocketmine\scheduler\ClosureTask;
 class Kick extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::KICK;
-
     protected string $name = "action.kick.name";
     protected string $detail = "action.kick.detail";
     protected array $detailDefaultReplace = ["player", "reason"];
-
-    protected string $category = FlowItemCategory::PLAYER;
 
     private string $reason;
     private bool $isAdmin;
 
     public function __construct(string $player = "", string $reason = "", bool $isAdmin = false) {
+        parent::__construct(self::KICK, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->reason = $reason;
         $this->isAdmin = $isAdmin;

@@ -17,13 +17,10 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class FourArithmeticOperations extends FlowItem {
 
-    protected string $id = self::FOUR_ARITHMETIC_OPERATIONS;
-
     protected string $name = "action.fourArithmeticOperations.name";
     protected string $detail = "action.fourArithmeticOperations.detail";
     protected array $detailDefaultReplace = ["value1", "value2", "operator", "result"];
 
-    protected string $category = FlowItemCategory::MATH;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const ADDITION = 0;
@@ -40,6 +37,8 @@ class FourArithmeticOperations extends FlowItem {
     private array $operatorSymbols = ["+", "-", "*", "/", "％"];
 
     public function __construct(string $value1 = "", int $operator = self::ADDITION, string $value2 = "", string $resultName = "result") {
+        parent::__construct(self::FOUR_ARITHMETIC_OPERATIONS, FlowItemCategory::MATH);
+
         $this->value1 = $value1;
         $this->operator = $operator;
         $this->value2 = $value2;

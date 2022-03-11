@@ -13,18 +13,15 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
-use pocketmine\world\Position;
 use pocketmine\Server;
+use pocketmine\world\Position;
 
 class CreatePositionVariable extends FlowItem {
-
-    protected string $id = self::CREATE_POSITION_VARIABLE;
 
     protected string $name = "action.createPositionVariable.name";
     protected string $detail = "action.createPositionVariable.detail";
     protected array $detailDefaultReplace = ["position", "x", "y", "z", "world"];
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $variableName;
@@ -34,6 +31,8 @@ class CreatePositionVariable extends FlowItem {
     private string $world;
 
     public function __construct(string $x = "", string $y = "", string $z = "", string $world = "{target.world.name}", string $name = "pos") {
+        parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
+
         $this->x = $x;
         $this->y = $y;
         $this->z = $z;

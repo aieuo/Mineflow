@@ -17,18 +17,16 @@ use aieuo\mineflow\utils\Language;
 class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
 
-    protected string $id = self::DECREMENT_SCOREBOARD_SCORE;
-
     protected string $name = "action.decrementScore.name";
     protected string $detail = "action.decrementScore.detail";
     protected array $detailDefaultReplace = ["scoreboard", "name", "score"];
-
-    protected string $category = FlowItemCategory::SCOREBOARD;
 
     private string $scoreName;
     private string $score;
 
     public function __construct(string $scoreboard = "", string $name = "", string $score = "") {
+        parent::__construct(self::DECREMENT_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
+
         $this->setScoreboardVariableName($scoreboard);
         $this->scoreName = $name;
         $this->score = $score;

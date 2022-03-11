@@ -6,10 +6,12 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class InHand extends TypeItem {
 
-    protected string $id = self::IN_HAND;
-
     protected string $name = "condition.inHand.name";
     protected string $detail = "condition.inHand.detail";
+
+    public function __construct(string $player = "", string $item = "") {
+        parent::__construct(self::IN_HAND, player: $player, item: $item);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

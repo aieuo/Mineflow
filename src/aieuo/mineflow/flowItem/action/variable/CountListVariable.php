@@ -17,19 +17,18 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class CountListVariable extends FlowItem {
 
-    protected string $id = self::COUNT_LIST_VARIABLE;
-
     protected string $name = "action.countList.name";
     protected string $detail = "action.countList.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
-    protected string $category = FlowItemCategory::VARIABLE;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     private string $variableName;
     private string $resultName;
 
     public function __construct(string $name = "", string $result = "count") {
+        parent::__construct(self::COUNT_LIST_VARIABLE, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->resultName = $result;
     }

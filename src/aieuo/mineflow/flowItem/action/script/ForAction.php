@@ -22,12 +22,8 @@ use pocketmine\player\Player;
 class ForAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected string $id = self::ACTION_FOR;
-
     protected string $name = "action.for.name";
     protected string $detail = "action.for.description";
-
-    protected string $category = FlowItemCategory::SCRIPT;
 
     private string $counterName = "i";
     private string $startIndex = "0";
@@ -36,6 +32,8 @@ class ForAction extends FlowItem implements FlowItemContainer {
     private string $fluctuation = "1";
 
     public function __construct(array $actions = [], ?string $customName = null) {
+        parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT);
+
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
     }

@@ -17,17 +17,15 @@ use pocketmine\player\Player;
 class SetYaw extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::SET_YAW;
-
     protected string $name = "action.setYaw.name";
     protected string $detail = "action.setYaw.detail";
     protected array $detailDefaultReplace = ["entity", "yaw"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     private string $yaw;
 
     public function __construct(string $entity = "", string $pitch = "") {
+        parent::__construct(self::SET_YAW, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->yaw = $pitch;
     }

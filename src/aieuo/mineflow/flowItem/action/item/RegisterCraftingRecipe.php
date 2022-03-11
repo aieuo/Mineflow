@@ -18,15 +18,13 @@ use pocketmine\Server;
 class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected string $id = self::REGISTER_SHAPED_RECIPE;
-
     protected string $name = "action.registerRecipe.name";
     protected string $detail = "action.registerRecipe.detail";
     protected array $detailDefaultReplace = ["inputs", "outputs"];
 
-    protected string $category = FlowItemCategory::ITEM;
-
     public function __construct(string $i1 = "", string $i2 = "", string $i3 = "", string $i4 = "", string $i5 = "", string $i6 = "", string $i7 = "", string $i8 = "", string $i9 = "", string $o = "") {
+        parent::__construct(self::REGISTER_SHAPED_RECIPE, FlowItemCategory::ITEM);
+
         $this->setInputItemVariableNames([$i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9]);
         $this->setItemVariableName($o, "output");
     }

@@ -17,17 +17,15 @@ use aieuo\mineflow\utils\Language;
 class AddPermission extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::ADD_PERMISSION;
-
     protected string $name = "action.addPermission.name";
     protected string $detail = "action.addPermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     private string $playerPermission;
 
     public function __construct(string $player = "", string $permission = "") {
+        parent::__construct(self::ADD_PERMISSION, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->playerPermission = $permission;
     }

@@ -17,14 +17,12 @@ use pocketmine\player\Player;
 class ElseAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected string $id = self::ACTION_ELSE;
-
     protected string $name = "action.else.name";
     protected string $detail = "action.else.description";
 
-    protected string $category = FlowItemCategory::SCRIPT;
-
     public function __construct(array $actions = [], ?string $customName = null) {
+        parent::__construct(self::ACTION_ELSE, FlowItemCategory::SCRIPT);
+        
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
     }

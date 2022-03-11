@@ -12,14 +12,13 @@ abstract class TypeMoney extends FlowItem implements Condition {
 
     protected array $detailDefaultReplace = ["target", "amount"];
 
-    protected string $category = FlowItemCategory::PLUGIN;
-
-    private string $playerName;
-    private string $amount;
-
-    public function __construct(string $name = "{target.name}", string $amount = null) {
-        $this->playerName = $name;
-        $this->amount = (string)$amount;
+    public function __construct(
+        string         $id,
+        string         $category = FlowItemCategory::PLUGIN,
+        private string $playerName = "{target.name}",
+        private string $amount = "",
+    ) {
+        parent::__construct($id, $category);
     }
 
     public function setPlayerName(string $name): self {

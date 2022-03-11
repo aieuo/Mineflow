@@ -20,18 +20,17 @@ use pocketmine\world\Position;
 class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected string $id = self::GENERATE_RANDOM_POSITION;
-
     protected string $name = "action.generateRandomPosition.name";
     protected string $detail = "action.generateRandomPosition.detail";
     protected array $detailDefaultReplace = ["min", "max", "result"];
 
     private string $resultName;
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(string $min = "", string $max = "", string $result = "position") {
+        parent::__construct(self::GENERATE_RANDOM_POSITION, FlowItemCategory::WORLD);
+
         $this->setPositionVariableName($min, "pos1");
         $this->setPositionVariableName($max, "pos2");
         $this->resultName = $result;

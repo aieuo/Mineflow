@@ -7,10 +7,12 @@ use aieuo\mineflow\utils\Language;
 
 class SendPopup extends TypePlayerMessage {
 
-    protected string $id = self::SEND_POPUP;
-
     protected string $name = "action.sendPopup.name";
     protected string $detail = "action.sendPopup.detail";
+
+    public function __construct(string $player = "", string $message = "") {
+        parent::__construct(self::SEND_POPUP, player: $player, message: $message);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

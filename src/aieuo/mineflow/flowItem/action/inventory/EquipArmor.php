@@ -20,13 +20,9 @@ use pocketmine\entity\Living;
 class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
 
-    protected string $id = self::EQUIP_ARMOR;
-
     protected string $name = "action.equipArmor.name";
     protected string $detail = "action.equipArmor.detail";
     protected array $detailDefaultReplace = ["entity", "item", "index"];
-
-    protected string $category = FlowItemCategory::INVENTORY;
 
     private string $index;
 
@@ -38,6 +34,8 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     ];
 
     public function __construct(string $entity = "", string $item = "", string $index = "") {
+        parent::__construct(self::EQUIP_ARMOR, FlowItemCategory::INVENTORY);
+
         $this->setEntityVariableName($entity);
         $this->setItemVariableName($item);
         $this->index = $index;

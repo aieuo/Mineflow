@@ -9,12 +9,12 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class GetE extends TypeGetMathVariable {
 
-    protected string $id = self::GET_E;
-
     protected string $name = "action.getE.name";
     protected string $detail = "action.getE.detail";
 
-    protected string $resultName = "e";
+    public function __construct(string $resultName = "e") {
+        parent::__construct(self::GET_E, resultName: $resultName);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

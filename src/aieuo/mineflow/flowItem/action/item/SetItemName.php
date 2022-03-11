@@ -16,18 +16,17 @@ use aieuo\mineflow\utils\Language;
 class SetItemName extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected string $id = self::SET_ITEM_NAME;
-
     protected string $name = "action.setItemName.name";
     protected string $detail = "action.setItemName.detail";
     protected array $detailDefaultReplace = ["item", "name"];
 
-    protected string $category = FlowItemCategory::ITEM;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $itemName;
 
     public function __construct(string $item = "", string $itemName = "") {
+        parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
+
         $this->setItemVariableName($item);
         $this->itemName = $itemName;
     }

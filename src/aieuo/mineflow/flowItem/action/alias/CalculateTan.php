@@ -8,9 +8,11 @@ use aieuo\mineflow\flowItem\action\math\Calculate;
 
 class CalculateTan extends Calculate implements FlowItemAlias {
 
-    protected string $id = self::CALCULATE_TAN;
-
     public function __construct(string $value = "", string $resultName = "result") {
         parent::__construct($value, (string)self::CALC_TAN, $resultName);
+    }
+
+    public function getId(): string {
+        return self::CALCULATE_TAN;
     }
 }

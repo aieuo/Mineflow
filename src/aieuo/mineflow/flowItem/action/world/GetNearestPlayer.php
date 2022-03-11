@@ -10,16 +10,14 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 
-class GetNearestPlayer extends GetNearestEntity {
-
-    protected string $id = self::GET_NEAREST_PLAYER;
+class GetNearestPlayer extends GetNearestEntityBase {
 
     protected string $name = "action.getNearestPlayer.name";
     protected string $detail = "action.getNearestPlayer.detail";
     protected array $detailDefaultReplace = ["position", "distance", "player"];
 
-    public function __construct(string $position = "", string $maxDistance = "", string $resultName = "player") {
-        parent::__construct($position, $maxDistance, $resultName);
+    public function __construct(string $position = "", string $maxDistance = "100", string $resultName = "player") {
+        parent::__construct(self::GET_NEAREST_PLAYER, position: $position, maxDistance: $maxDistance, resultName: $resultName);
     }
 
     public function getTargetClass(): string {

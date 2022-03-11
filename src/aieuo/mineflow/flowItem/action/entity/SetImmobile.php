@@ -15,15 +15,13 @@ use aieuo\mineflow\utils\Language;
 class SetImmobile extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::SET_IMMOBILE;
-
     protected string $name = "action.setImmobile.name";
     protected string $detail = "action.setImmobile.detail";
     protected array $detailDefaultReplace = ["entity"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     public function __construct(string $entity = "") {
+        parent::__construct(self::SET_IMMOBILE, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
     }
 

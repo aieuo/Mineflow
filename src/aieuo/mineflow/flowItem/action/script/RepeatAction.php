@@ -22,12 +22,8 @@ use pocketmine\player\Player;
 class RepeatAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected string $id = self::ACTION_REPEAT;
-
     protected string $name = "action.repeat.name";
     protected string $detail = "action.repeat.description";
-
-    protected string $category = FlowItemCategory::SCRIPT;
 
     private string $repeatCount;
 
@@ -35,6 +31,8 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     private string $counterName = "i";
 
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
+        parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT);
+
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->repeatCount = (string)$count;
         $this->setCustomName($customName);

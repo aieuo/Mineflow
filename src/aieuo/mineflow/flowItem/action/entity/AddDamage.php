@@ -17,18 +17,16 @@ use pocketmine\event\entity\EntityDamageEvent;
 class AddDamage extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::ADD_DAMAGE;
-
     protected string $name = "action.addDamage.name";
     protected string $detail = "action.addDamage.detail";
     protected array $detailDefaultReplace = ["entity", "damage"];
-
-    protected string $category = FlowItemCategory::ENTITY;
 
     private string $damage;
     private int $cause;
 
     public function __construct(string $entity = "", string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
+        parent::__construct(self::ADD_DAMAGE, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->damage = $damage;
         $this->cause = $cause;

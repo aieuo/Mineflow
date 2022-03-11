@@ -15,13 +15,9 @@ use pocketmine\data\java\GameModeIdMap;
 class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::GAMEMODE;
-
     protected string $name = "condition.gamemode.name";
     protected string $detail = "condition.gamemode.detail";
     protected array $detailDefaultReplace = ["player", "gamemode"];
-
-    protected string $category = FlowItemCategory::PLAYER;
 
     private array $gamemodes = [
         "action.gamemode.survival",
@@ -33,6 +29,8 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     private int $gamemode;
 
     public function __construct(string $player = "", int $mode = 0) {
+        parent::__construct(self::GAMEMODE, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->gamemode = $mode;
     }

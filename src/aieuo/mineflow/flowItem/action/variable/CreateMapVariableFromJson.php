@@ -17,19 +17,17 @@ use aieuo\mineflow\variable\MapVariable;
 
 class CreateMapVariableFromJson extends FlowItem {
 
-    protected string $id = self::CREATE_MAP_VARIABLE_FROM_JSON;
-
     protected string $name = "action.createMapVariableFromJson.name";
     protected string $detail = "action.createMapVariableFromJson.detail";
     protected array $detailDefaultReplace = ["name", "scope", "json"];
-
-    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
     private string $json;
     private bool $isLocal;
 
     public function __construct(string $name = "", string $json = "", bool $local = true) {
+        parent::__construct(self::CREATE_MAP_VARIABLE_FROM_JSON, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->json = $json;
         $this->isLocal = $local;

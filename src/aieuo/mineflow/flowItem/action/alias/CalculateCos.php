@@ -8,9 +8,11 @@ use aieuo\mineflow\flowItem\action\math\Calculate;
 
 class CalculateCos extends Calculate implements FlowItemAlias {
 
-    protected string $id = self::CALCULATE_COS;
-
     public function __construct(string $value = "", string $resultName = "result") {
         parent::__construct($value, (string)self::CALC_COS, $resultName);
+    }
+
+    public function getId(): string {
+        return self::CALCULATE_COS;
     }
 }

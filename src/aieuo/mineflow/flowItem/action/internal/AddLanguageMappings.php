@@ -13,18 +13,15 @@ use function count;
 
 class AddLanguageMappings extends FlowItem {
 
-    protected string $id = self::ADD_LANGUAGE_MAPPINGS;
-
     protected string $name = "action.addLanguageMappings.name";
     protected string $detail = "action.addLanguageMappings.detail";
     protected array $detailDefaultReplace = ["key", "messages"];
-
-    protected string $category = FlowItemCategory::INTERNAL;
 
     public function __construct(
         private string $key = "",
         private array $mappings = [],
     ) {
+        parent::__construct(self::ADD_LANGUAGE_MAPPINGS, FlowItemCategory::INTERNAL);
     }
 
     public function getKey(): string {

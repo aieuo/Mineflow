@@ -18,15 +18,13 @@ use aieuo\mineflow\utils\Language;
 class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {
     use PlayerFlowItemTrait, ScoreboardFlowItemTrait;
 
-    protected string $id = self::SHOW_SCOREBOARD;
-
     protected string $name = "action.showScoreboard.name";
     protected string $detail = "action.showScoreboard.detail";
     protected array $detailDefaultReplace = ["player", "scoreboard"];
 
-    protected string $category = FlowItemCategory::SCOREBOARD;
-
     public function __construct(string $player = "", string $scoreboard = "") {
+        parent::__construct(self::SHOW_SCOREBOARD, FlowItemCategory::SCOREBOARD);
+
         $this->setPlayerVariableName($player);
         $this->setScoreboardVariableName($scoreboard);
     }

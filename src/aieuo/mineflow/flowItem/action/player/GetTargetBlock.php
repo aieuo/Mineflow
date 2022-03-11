@@ -19,19 +19,17 @@ use aieuo\mineflow\variable\object\BlockVariable;
 class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::GET_TARGET_BLOCK;
-
     protected string $name = "action.getTargetBlock.name";
     protected string $detail = "action.getTargetBlock.detail";
     protected array $detailDefaultReplace = ["player", "maxDistance", "result"];
-
-    protected string $category = FlowItemCategory::PLAYER;
 
     private string $max;
 
     private string $resultName;
 
     public function __construct(string $player = "", string $max = "100", string $result = "block") {
+        parent::__construct(self::GET_TARGET_BLOCK, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->max = $max;
         $this->resultName = $result;

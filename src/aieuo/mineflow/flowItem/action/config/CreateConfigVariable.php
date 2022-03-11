@@ -16,21 +16,21 @@ use aieuo\mineflow\variable\object\ConfigVariable;
 
 class CreateConfigVariable extends FlowItem {
 
-    protected string $id = self::CREATE_CONFIG_VARIABLE;
-
     protected string $name = "action.createConfigVariable.name";
     protected string $detail = "action.createConfigVariable.detail";
     protected array $detailDefaultReplace = ["config", "name"];
 
-    protected string $category = FlowItemCategory::CONFIG;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
-
-    protected int $permission = self::PERMISSION_LEVEL_2;
 
     public function __construct(
         private string $fileName = "",
         private string $variableName = "config"
     ) {
+        parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_CONFIG];
     }
 
     public function setVariableName(string $variableName): void {

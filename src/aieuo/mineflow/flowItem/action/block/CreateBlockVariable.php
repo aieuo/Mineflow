@@ -17,19 +17,17 @@ use pocketmine\item\StringToItemParser;
 
 class CreateBlockVariable extends FlowItem {
 
-    protected string $id = self::CREATE_BLOCK_VARIABLE;
-
     protected string $name = "action.createBlockVariable.name";
     protected string $detail = "action.createBlockVariable.detail";
     protected array $detailDefaultReplace = ["block", "id"];
 
-    protected string $category = FlowItemCategory::BLOCK;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
         private string $blockId = "",
         private string $variableName = "block"
     ) {
+        parent::__construct(self::CREATE_BLOCK_VARIABLE, FlowItemCategory::BLOCK);
     }
 
     public function setVariableName(string $variableName): void {

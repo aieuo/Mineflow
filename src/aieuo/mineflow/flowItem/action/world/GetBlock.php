@@ -19,18 +19,17 @@ use pocketmine\world\Position;
 class GetBlock extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected string $id = self::GET_BLOCK;
-
     protected string $name = "action.getBlock.name";
     protected string $detail = "action.getBlock.detail";
     protected array $detailDefaultReplace = ["position", "result"];
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $resultName;
 
     public function __construct(string $position = "", string $result = "block") {
+        parent::__construct(self::GET_BLOCK, FlowItemCategory::WORLD);
+
         $this->setPositionVariableName($position);
         $this->resultName = $result;
     }

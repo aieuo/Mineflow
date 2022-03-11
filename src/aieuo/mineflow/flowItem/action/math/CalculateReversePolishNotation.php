@@ -15,19 +15,18 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class CalculateReversePolishNotation extends FlowItem {
 
-    protected string $id = self::REVERSE_POLISH_NOTATION;
-
     protected string $name = "action.calculateRPN.name";
     protected string $detail = "action.calculateRPN.detail";
     protected array $detailDefaultReplace = ["formula", "result"];
 
-    protected string $category = FlowItemCategory::MATH;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     private string $formula;
     private string $resultName;
 
     public function __construct(string $formula = "", string $resultName = "result") {
+        parent::__construct(self::REVERSE_POLISH_NOTATION, FlowItemCategory::MATH);
+
         $this->formula = $formula;
         $this->resultName = $resultName;
     }

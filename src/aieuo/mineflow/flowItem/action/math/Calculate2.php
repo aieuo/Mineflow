@@ -17,13 +17,10 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate2 extends FlowItem {
 
-    protected string $id = self::CALCULATE2;
-
     protected string $name = "action.calculate2.name";
     protected string $detail = "action.calculate2.detail";
     protected array $detailDefaultReplace = ["value1", "value2", "operator", "result"];
 
-    protected string $category = FlowItemCategory::MATH;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const CALC_MIN = 0;
@@ -50,6 +47,8 @@ class Calculate2 extends FlowItem {
     ];
 
     public function __construct(string $value1 = "", string $value2 = "", string $operator = null, string $resultName = "result") {
+        parent::__construct(self::CALCULATE2, FlowItemCategory::MATH);
+
         $this->value1 = $value1;
         $this->value2 = $value2;
         $this->operator = (int)($operator ?? self::CALC_MIN);

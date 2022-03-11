@@ -14,17 +14,15 @@ use aieuo\mineflow\utils\Language;
 class SetFood extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::SET_FOOD;
-
     protected string $name = "action.setFood.name";
     protected string $detail = "action.setFood.detail";
     protected array $detailDefaultReplace = ["player", "food"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     private string $food;
 
     public function __construct(string $player = "", string $health = "") {
+        parent::__construct(self::SET_FOOD, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->food = $health;
     }

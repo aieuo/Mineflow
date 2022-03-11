@@ -14,17 +14,15 @@ use aieuo\mineflow\utils\Language;
 class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::HAS_PERMISSION;
-
     protected string $name = "condition.hasPermission.name";
     protected string $detail = "condition.hasPermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     private string $playerPermission;
 
     public function __construct(string $player = "", string $permission = "") {
+        parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->playerPermission = $permission;
     }

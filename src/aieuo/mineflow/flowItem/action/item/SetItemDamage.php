@@ -17,18 +17,17 @@ use pocketmine\item\ItemFactory;
 class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected string $id = self::SET_ITEM_DAMAGE;
-
     protected string $name = "action.setItemDamage.name";
     protected string $detail = "action.setItemDamage.detail";
     protected array $detailDefaultReplace = ["item", "damage"];
 
-    protected string $category = FlowItemCategory::ITEM;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $damage;
 
     public function __construct(string $item = "", string $damage = "") {
+        parent::__construct(self::SET_ITEM_DAMAGE, FlowItemCategory::ITEM);
+
         $this->setItemVariableName($item);
         $this->damage = $damage;
     }

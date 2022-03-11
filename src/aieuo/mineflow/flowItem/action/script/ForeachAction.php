@@ -27,18 +27,16 @@ use pocketmine\player\Player;
 class ForeachAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
 
-    protected string $id = self::ACTION_FOREACH;
-
     protected string $name = "action.foreach.name";
     protected string $detail = "action.foreach.description";
-
-    protected string $category = FlowItemCategory::SCRIPT;
 
     private string $listVariableName = "list";
     private string $keyVariableName = "key";
     private string $valueVariableName = "value";
 
     public function __construct(array $actions = [], ?string $customName = null) {
+        parent::__construct(self::ACTION_FOREACH, FlowItemCategory::SCRIPT);
+
         $this->setItems($actions, FlowItemContainer::ACTION);
         $this->setCustomName($customName);
     }

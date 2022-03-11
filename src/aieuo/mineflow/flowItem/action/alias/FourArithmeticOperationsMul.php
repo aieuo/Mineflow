@@ -8,9 +8,11 @@ use aieuo\mineflow\flowItem\action\math\FourArithmeticOperations;
 
 class FourArithmeticOperationsMul extends FourArithmeticOperations implements FlowItemAlias {
 
-    protected string $id = self::FOUR_ARITHMETIC_OPERATIONS_MUL;
-
     public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
         parent::__construct($value1, self::MULTIPLICATION, $value2, $resultName);
+    }
+
+    public function getId(): string {
+        return self::FOUR_ARITHMETIC_OPERATIONS_MUL;
     }
 }

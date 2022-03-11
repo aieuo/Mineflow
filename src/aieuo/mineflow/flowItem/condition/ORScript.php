@@ -4,20 +4,13 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class ORScript extends AndScript {
-
-    protected string $id = self::CONDITION_OR;
+class ORScript extends LogicalOperation {
 
     protected string $name = "condition.or.name";
     protected string $detail = "condition.or.detail";
 
-    public function getDetail(): string {
-        $details = ["-----------or-----------"];
-        foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
-        }
-        $details[] = "------------------------";
-        return implode("\n", $details);
+    public function __construct(string $id = self::CONDITION_OR) {
+        parent::__construct($id);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

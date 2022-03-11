@@ -7,10 +7,12 @@ use aieuo\mineflow\utils\Language;
 
 class SendTip extends TypePlayerMessage {
 
-    protected string $id = self::SEND_TIP;
-
     protected string $name = "action.sendTip.name";
     protected string $detail = "action.sendTip.detail";
+
+    public function __construct(string $player = "", string $message = "") {
+        parent::__construct(self::SEND_TIP, player: $player, message: $message);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

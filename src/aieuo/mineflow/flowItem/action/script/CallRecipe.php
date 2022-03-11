@@ -6,12 +6,14 @@ namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class CallRecipe extends ExecuteRecipe {
-
-    protected string $id = self::CALL_RECIPE;
+class CallRecipe extends ExecuteRecipeBase {
 
     protected string $name = "action.callRecipe.name";
     protected string $detail = "action.callRecipe.detail";
+
+    public function __construct(string $name = "", string $args = "") {
+        parent::__construct(self::CALL_RECIPE, name: $name, args: $args);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -21,19 +21,18 @@ use pocketmine\item\enchantment\StringToEnchantmentParser;
 class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected string $id = self::ADD_ENCHANTMENT;
-
     protected string $name = "action.addEnchant.name";
     protected string $detail = "action.addEnchant.detail";
     protected array $detailDefaultReplace = ["item", "id", "world"];
 
-    protected string $category = FlowItemCategory::ITEM;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $enchantId;
     private string $enchantLevel;
 
     public function __construct(string $item = "", string $id = "", string $level = "1") {
+        parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
+
         $this->setItemVariableName($item);
         $this->enchantId = $id;
         $this->enchantLevel = $level;

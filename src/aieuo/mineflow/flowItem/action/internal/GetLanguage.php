@@ -14,13 +14,10 @@ use function trim;
 
 class GetLanguage extends FlowItem {
 
-    protected string $id = self::GET_LANGUAGE_MESSAGE;
-
     protected string $name = "action.getLanguageMessage.name";
     protected string $detail = "action.getLanguageMessage.detail";
     protected array $detailDefaultReplace = ["language", "key", "parameters", "result"];
 
-    protected string $category = FlowItemCategory::INTERNAL;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public function __construct(
@@ -29,6 +26,7 @@ class GetLanguage extends FlowItem {
         private array  $parameters = [],
         private string $resultName = "message"
     ) {
+        parent::__construct(self::GET_LANGUAGE_MESSAGE, FlowItemCategory::INTERNAL);
     }
 
     public function getLanguage(): string {

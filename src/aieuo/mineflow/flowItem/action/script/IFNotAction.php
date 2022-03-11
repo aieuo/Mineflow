@@ -6,24 +6,13 @@ namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class IFNotAction extends IFAction {
-
-    protected string $id = self::ACTION_IF_NOT;
+class IFNotAction extends IFActionBase {
 
     protected string $name = "action.ifnot.name";
     protected string $detail = "action.ifnot.description";
 
-    public function getDetail(): string {
-        $details = ["", "§7===========§f if not §7=============§f"];
-        foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
-        }
-        $details[] = "§7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f";
-        foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
-        }
-        $details[] = "§7================================§f";
-        return implode("\n", $details);
+    public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
+        parent::__construct(self::ACTION_IF_NOT, conditions: $conditions, actions: $actions, customName: $customName);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

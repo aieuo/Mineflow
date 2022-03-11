@@ -16,15 +16,13 @@ use aieuo\mineflow\utils\Language;
 class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
 
-    protected string $id = self::SET_SLEEPING;
-
     protected string $name = "action.setSleeping.name";
     protected string $detail = "action.setSleeping.detail";
     protected array $detailDefaultReplace = ["player", "position"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     public function __construct(string $player = "", string $position = "") {
+        parent::__construct(self::SET_SLEEPING, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->setPositionVariableName($position);
     }

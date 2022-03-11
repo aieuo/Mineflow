@@ -19,9 +19,14 @@ abstract class TypeItem extends FlowItem implements PlayerFlowItem, ItemFlowItem
 
     protected array $detailDefaultReplace = ["player", "item"];
 
-    protected string $category = FlowItemCategory::INVENTORY;
+    public function __construct(
+        string $id,
+        string $category = FlowItemCategory::INVENTORY,
+        string $player = "",
+        string $item = ""
+    ) {
+        parent::__construct($id, $category);
 
-    public function __construct(string $player = "", string $item = "") {
         $this->setPlayerVariableName($player);
         $this->setItemVariableName($item);
     }

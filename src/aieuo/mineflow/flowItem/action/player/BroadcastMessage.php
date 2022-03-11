@@ -8,10 +8,12 @@ use pocketmine\Server;
 
 class BroadcastMessage extends TypeMessage {
 
-    protected string $id = self::BROADCAST_MESSAGE;
-
     protected string $name = "action.broadcastMessage.name";
     protected string $detail = "action.broadcastMessage.detail";
+
+    public function __construct(string $message = "") {
+        parent::__construct(self::BROADCAST_MESSAGE, message: $message);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

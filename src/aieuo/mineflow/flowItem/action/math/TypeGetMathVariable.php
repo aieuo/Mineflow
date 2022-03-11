@@ -15,13 +15,14 @@ abstract class TypeGetMathVariable extends FlowItem {
 
     protected array $detailDefaultReplace = ["result"];
 
-    protected string $category = FlowItemCategory::MATH;
-
-    protected string $resultName = "result";
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    public function __construct(?string $result = "") {
-        $this->resultName = empty($result) ? $this->resultName : $result;
+    public function __construct(
+        string         $id,
+        string         $category = FlowItemCategory::MATH,
+        private string $resultName = "result",
+    ) {
+        parent::__construct($id, $category);
     }
 
     public function setResultName(string $name): self {

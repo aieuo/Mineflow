@@ -10,10 +10,12 @@ use pocketmine\utils\TextFormat;
 
 class OverMoney extends TypeMoney {
 
-    protected string $id = self::OVER_MONEY;
-
     protected string $name = "condition.overMoney.name";
     protected string $detail = "condition.overMoney.detail";
+
+    public function __construct(string $playerName = "{target.name}", string $amount = "") {
+        parent::__construct(self::OVER_MONEY, playerName: $playerName, amount: $amount);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

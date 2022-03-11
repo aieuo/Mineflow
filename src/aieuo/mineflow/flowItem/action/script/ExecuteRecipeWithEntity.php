@@ -12,17 +12,16 @@ use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 
-class ExecuteRecipeWithEntity extends ExecuteRecipe implements EntityFlowItem {
+class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $id = self::EXECUTE_RECIPE_WITH_ENTITY;
 
     protected string $name = "action.executeRecipeWithEntity.name";
     protected string $detail = "action.executeRecipeWithEntity.detail";
     protected array $detailDefaultReplace = ["name", "target"];
 
     public function __construct(string $name = "", string $entity = "") {
-        parent::__construct($name);
+        parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, name: $name);
+
         $this->setEntityVariableName($entity);
     }
 

@@ -20,13 +20,9 @@ use aieuo\mineflow\variable\StringVariable;
 
 class AddVariable extends FlowItem {
 
-    protected string $id = self::ADD_VARIABLE;
-
     protected string $name = "action.addVariable.name";
     protected string $detail = "action.addVariable.detail";
     protected array $detailDefaultReplace = ["name", "value", "type", "scope"];
-
-    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
     private string $variableValue;
@@ -38,6 +34,8 @@ class AddVariable extends FlowItem {
     private array $variableClasses = ["string" => StringVariable::class, "number" => NumberVariable::class];
 
     public function __construct(string $name = "", string $value = "", string $type = null, bool $local = true) {
+        parent::__construct(self::ADD_VARIABLE, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->variableValue = $value;
         $this->variableType = $type ?? StringVariable::getTypeName();

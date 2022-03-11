@@ -16,13 +16,9 @@ use aieuo\mineflow\variable\MapVariable;
 
 class CreateMapVariable extends FlowItem {
 
-    protected string $id = self::CREATE_MAP_VARIABLE;
-
     protected string $name = "action.createMapVariable.name";
     protected string $detail = "action.createMapVariable.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
-
-    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
     private array $variableKey;
@@ -30,6 +26,8 @@ class CreateMapVariable extends FlowItem {
     private bool $isLocal;
 
     public function __construct(string $name = "", string $key = "", string $value = "", bool $local = true) {
+        parent::__construct(self::CREATE_MAP_VARIABLE, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->variableKey = array_map("trim", explode(",", $key));
         $this->variableValue = array_map("trim", explode(",", $value));

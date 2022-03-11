@@ -4,23 +4,19 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class NandScript extends AndScript {
-
-    protected string $id = self::CONDITION_NAND;
+class NandScript extends LogicalOperation {
 
     protected string $name = "condition.nand.name";
     protected string $detail = "condition.nand.detail";
 
-    public function getDetail(): string {
-        $details = ["-----------nand-----------"];
-        foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
-        }
-        $details[] = "------------------------";
-        return implode("\n", $details);
+    public function __construct() {
+        parent::__construct(self::CONDITION_NAND);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        return !(yield from parent::execute($source));
+        foreach ($this->getConditions() as $condition) {
+            if (!(yield from $condition->execute($source))) return true;
+        }
+        return false;
     }
 }

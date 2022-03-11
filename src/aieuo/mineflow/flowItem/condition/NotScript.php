@@ -2,19 +2,21 @@
 
 namespace aieuo\mineflow\flowItem\condition;
 
-class NotScript extends NandScript {
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-    protected string $id = self::CONDITION_NOT;
+class NotScript extends LogicalOperation {
 
     protected string $name = "condition.not.name";
     protected string $detail = "condition.not.detail";
 
-    public function getDetail(): string {
-        $details = ["-----------not-----------"];
+    public function __construct() {
+        parent::__construct(self::CONDITION_NOT);
+    }
+
+    public function execute(FlowItemExecutor $source): \Generator {
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            if (!(yield from $condition->execute($source))) return true;
         }
-        $details[] = "------------------------";
-        return implode("\n", $details);
+        return false;
     }
 }

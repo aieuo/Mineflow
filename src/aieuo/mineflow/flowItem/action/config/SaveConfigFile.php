@@ -15,15 +15,13 @@ use aieuo\mineflow\utils\Language;
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected string $id = self::SAVE_CONFIG_FILE;
-
     protected string $name = "action.saveConfigFile.name";
     protected string $detail = "action.saveConfigFile.detail";
     protected array $detailDefaultReplace = ["config"];
 
-    protected string $category = FlowItemCategory::CONFIG;
-
     public function __construct(string $config = "") {
+        parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
+
         $this->setConfigVariableName($config);
     }
 

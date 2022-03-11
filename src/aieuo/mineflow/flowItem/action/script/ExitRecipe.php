@@ -10,12 +10,12 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ExitRecipe extends FlowItem {
 
-    protected string $id = self::EXIT_RECIPE;
-
     protected string $name = "action.exit.name";
     protected string $detail = "action.exit.detail";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    public function __construct() {
+        parent::__construct(self::EXIT_RECIPE, FlowItemCategory::SCRIPT);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $source->exit();

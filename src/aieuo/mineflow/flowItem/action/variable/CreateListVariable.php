@@ -16,13 +16,9 @@ use aieuo\mineflow\variable\ListVariable;
 
 class CreateListVariable extends FlowItem {
 
-    protected string $id = self::CREATE_LIST_VARIABLE;
-
     protected string $name = "action.createListVariable.name";
     protected string $detail = "action.createListVariable.detail";
     protected array $detailDefaultReplace = ["name", "scope", "value"];
-
-    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
     /** @var string[] */
@@ -30,6 +26,8 @@ class CreateListVariable extends FlowItem {
     private bool $isLocal;
 
     public function __construct(string $value = "", string $name = "", bool $local = true) {
+        parent::__construct(self::CREATE_LIST_VARIABLE, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->variableValue = array_map("trim", explode(",", $value));
         $this->isLocal = $local;

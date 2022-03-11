@@ -17,19 +17,17 @@ use pocketmine\network\mcpe\protocol\ToastRequestPacket;
 class SendToast extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::SEND_TOAST;
-
     protected string $name = "action.sendToast.name";
     protected string $detail = "action.sendToast.detail";
     protected array $detailDefaultReplace = ["player", "title", "body"];
-
-    protected string $category = FlowItemCategory::PLAYER;
 
     public function __construct(
         private string $player = "",
         private string $title = "",
         private string $body = ""
     ) {
+        parent::__construct(self::SEND_TOAST, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
     }
 

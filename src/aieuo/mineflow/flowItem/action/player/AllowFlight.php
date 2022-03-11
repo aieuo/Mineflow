@@ -16,17 +16,15 @@ use aieuo\mineflow\utils\Language;
 class AllowFlight extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::ALLOW_FLIGHT;
-
     protected string $name = "action.allowFlight.name";
     protected string $detail = "action.allowFlight.detail";
     protected array $detailDefaultReplace = ["player", "allow"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     private bool $allow;
 
     public function __construct(string $player = "", string $allow = "true") {
+        parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
         $this->allow = $allow === "true";
     }

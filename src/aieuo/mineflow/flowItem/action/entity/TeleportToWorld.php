@@ -19,18 +19,16 @@ use pocketmine\Server;
 class TeleportToWorld extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::TELEPORT_TO_WORLD;
-
     protected string $name = "action.teleportToWorld.name";
     protected string $detail = "action.teleportToWorld.detail";
     protected array $detailDefaultReplace = ["entity", "world"];
-
-    protected string $category = FlowItemCategory::ENTITY;
 
     private string $worldName;
     private bool $safeSpawn;
 
     public function __construct(string $entity = "", string $worldName = "", bool $safeSpawn = true) {
+        parent::__construct(self::TELEPORT_TO_WORLD, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
         $this->worldName = $worldName;
         $this->safeSpawn = $safeSpawn;

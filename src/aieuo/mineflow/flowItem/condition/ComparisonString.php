@@ -13,13 +13,9 @@ use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
 
-    protected string $id = self::COMPARISON_STRING;
-
     protected string $name = "condition.comparisonString.name";
     protected string $detail = "condition.comparisonString.detail";
     protected array $detailDefaultReplace = ["value1", "operator", "value2"];
-
-    protected string $category = FlowItemCategory::SCRIPT;
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
@@ -35,6 +31,8 @@ class ComparisonString extends FlowItem implements Condition {
     private array $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
     public function __construct(string $value1 = "", string $operator = null, string $value2 = "") {
+        parent::__construct(self::COMPARISON_STRING, FlowItemCategory::SCRIPT);
+
         $this->value1 = $value1;
         $this->operator = (int)($operator ?? self::EQUALS);
         $this->value2 = $value2;

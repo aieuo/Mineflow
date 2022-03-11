@@ -16,13 +16,10 @@ use pocketmine\math\AxisAlignedBB;
 
 class CreateAABB extends FlowItem {
 
-    protected string $id = self::CREATE_AABB;
-
     protected string $name = "action.createAABB.name";
     protected string $detail = "action.createAABB.detail";
     protected array $detailDefaultReplace = ["min x", "min y", "min z", "max x", "max y", "max z", "result"];
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
@@ -34,6 +31,7 @@ class CreateAABB extends FlowItem {
         private string $maxZ = "",
         private string $variableName = "aabb"
     ) {
+        parent::__construct(self::CREATE_AABB, FlowItemCategory::WORLD);
     }
 
     public function setVariableName(string $variableName): void {

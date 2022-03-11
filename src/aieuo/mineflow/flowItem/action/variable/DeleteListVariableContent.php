@@ -16,19 +16,17 @@ use aieuo\mineflow\variable\ListVariable;
 
 class DeleteListVariableContent extends FlowItem {
 
-    protected string $id = self::DELETE_LIST_VARIABLE_CONTENT;
-
     protected string $name = "action.removeContent.name";
     protected string $detail = "action.removeContent.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key"];
-
-    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $variableName;
     private string $variableKey;
     private bool $isLocal;
 
     public function __construct(string $name = "", string $key = "", bool $local = true) {
+        parent::__construct(self::DELETE_LIST_VARIABLE_CONTENT, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->variableKey = $key;
         $this->isLocal = $local;

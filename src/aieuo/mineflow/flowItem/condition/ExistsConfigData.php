@@ -14,17 +14,15 @@ use aieuo\mineflow\utils\Language;
 class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected string $id = self::EXISTS_CONFIG_DATA;
-
     protected string $name = "condition.existsConfigData.name";
     protected string $detail = "condition.existsConfigData.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    protected string $category = FlowItemCategory::CONFIG;
-
     private string $key;
 
     public function __construct(string $config = "", string $permission = "") {
+        parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
+
         $this->setConfigVariableName($config);
         $this->key = $permission;
     }

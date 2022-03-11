@@ -4,12 +4,14 @@ namespace aieuo\mineflow\flowItem\condition;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class IsSprinting extends IsFlying {
-
-    protected string $id = self::IS_SPRINTING;
+class IsSprinting extends CheckPlayerState {
 
     protected string $name = "condition.isSprinting.name";
     protected string $detail = "condition.isSprinting.detail";
+
+    public function __construct(string $player = "") {
+        parent::__construct(self::IS_SPRINTING, player: $player);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

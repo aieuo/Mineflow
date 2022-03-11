@@ -17,19 +17,17 @@ use aieuo\mineflow\variable\StringVariable;
 
 class JoinListVariableToString extends FlowItem {
 
-    protected string $id = self::JOIN_LIST_VARIABLE_TO_STRING;
-
     protected string $name = "action.joinToString.name";
     protected string $detail = "action.joinToString.detail";
     protected array $detailDefaultReplace = ["name", "separator", "result"];
-
-    protected string $category = FlowItemCategory::VARIABLE;
 
     private string $separator;
     private string $variableName;
     private string $resultName;
 
     public function __construct(string $name = "", string $separator = "", string $result = "result") {
+        parent::__construct(self::JOIN_LIST_VARIABLE_TO_STRING, FlowItemCategory::VARIABLE);
+
         $this->variableName = $name;
         $this->separator = $separator;
         $this->resultName = $result;

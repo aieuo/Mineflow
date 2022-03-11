@@ -17,19 +17,18 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 
 class GetEntity extends FlowItem {
 
-    protected string $id = self::GET_ENTITY;
-
     protected string $name = "action.getEntity.name";
     protected string $detail = "action.getEntity.detail";
     protected array $detailDefaultReplace = ["id", "result"];
 
-    protected string $category = FlowItemCategory::ENTITY;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $entityId;
     private string $resultName;
 
     public function __construct(string $name = "", string $result = "entity") {
+        parent::__construct(self::GET_ENTITY, FlowItemCategory::ENTITY);
+
         $this->entityId = $name;
         $this->resultName = $result;
     }

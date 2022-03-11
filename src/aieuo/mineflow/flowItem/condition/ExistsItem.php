@@ -6,10 +6,12 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ExistsItem extends TypeItem {
 
-    protected string $id = self::EXISTS_ITEM;
-
     protected string $name = "condition.existsItem.name";
     protected string $detail = "condition.existsItem.detail";
+
+    public function __construct(string $player = "", string $item = "") {
+        parent::__construct(self::EXISTS_ITEM, player: $player, item: $item);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

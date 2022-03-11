@@ -7,24 +7,13 @@ namespace aieuo\mineflow\flowItem\action\script;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
-class ElseifAction extends IFAction {
-
-    protected string $id = self::ACTION_ELSEIF;
+class ElseifAction extends IFActionBase {
 
     protected string $name = "action.elseif.name";
     protected string $detail = "action.elseif.description";
 
-    public function getDetail(): string {
-        $details = ["§7=============§f elseif §7=============§f"];
-        foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
-        }
-        $details[] = "§7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f";
-        foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
-        }
-        $details[] = "§7================================§f";
-        return implode("\n", $details);
+    public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
+        parent::__construct(self::ACTION_ELSEIF, conditions: $conditions, actions: $actions, customName: $customName);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

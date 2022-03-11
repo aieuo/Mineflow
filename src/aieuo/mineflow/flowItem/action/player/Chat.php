@@ -7,10 +7,12 @@ use aieuo\mineflow\utils\Language;
 
 class Chat extends TypePlayerMessage {
 
-    protected string $id = self::CHAT;
-
     protected string $name = "action.chat.name";
     protected string $detail = "action.chat.detail";
+
+    public function __construct(string $player = "", string $message = "") {
+        parent::__construct(self::CHAT, player: $player, message: $message);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

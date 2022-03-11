@@ -16,18 +16,17 @@ use aieuo\mineflow\utils\Language;
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected string $id = self::SET_ITEM_LORE;
-
     protected string $name = "action.setLore.name";
     protected string $detail = "action.setLore.detail";
     protected array $detailDefaultReplace = ["item", "lore"];
 
-    protected string $category = FlowItemCategory::ITEM;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private array $lore;
 
     public function __construct(string $item = "", string $lore = "") {
+        parent::__construct(self::SET_ITEM_LORE, FlowItemCategory::ITEM);
+
         $this->setItemVariableName($item);
         $this->lore = array_filter(array_map("trim", explode(";", $lore)), fn(string $t) => $t !== "");
     }

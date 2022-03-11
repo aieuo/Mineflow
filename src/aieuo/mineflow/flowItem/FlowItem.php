@@ -16,14 +16,10 @@ use JsonSerializable;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
-    protected string $id;
-
     protected string $name;
     protected string $detail;
     /** @var string[] */
     protected array $detailDefaultReplace = [];
-
-    protected string $category;
 
     private string $customName = "";
 
@@ -42,6 +38,12 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     public const PERMISSION_ALL = [
         self::PERMISSION_LOOP, self::PERMISSION_CHEAT, self::PERMISSION_CONSOLE, self::PERMISSION_CONFIG, self::PERMISSION_PERMISSION
     ];
+
+    public function __construct(
+        private string $id,
+        private string $category,
+    ) {
+    }
 
     public function getId(): string {
         return $this->id;

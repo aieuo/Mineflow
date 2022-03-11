@@ -8,10 +8,12 @@ use pocketmine\Server;
 
 class SendMessageToOp extends TypeMessage {
 
-    protected string $id = self::SEND_MESSAGE_TO_OP;
-
     protected string $name = "action.sendMessageToOp.name";
     protected string $detail = "action.sendMessageToOp.detail";
+
+    public function __construct(string $message = "") {
+        parent::__construct(self::SEND_MESSAGE_TO_OP, message: $message);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

@@ -19,17 +19,15 @@ use aieuo\mineflow\utils\Language;
 class SendForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::SEND_FORM;
-
     protected string $name = "action.sendForm.name";
     protected string $detail = "action.sendForm.detail";
     protected array $detailDefaultReplace = ["player", "form"];
 
-    protected string $category = FlowItemCategory::FORM;
-
     private string $formName;
 
     public function __construct(string $player = "", string $formName = "") {
+        parent::__construct(self::SEND_FORM, FlowItemCategory::FORM);
+
         $this->setPlayerVariableName($player);
         $this->formName = $formName;
     }

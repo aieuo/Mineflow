@@ -16,19 +16,17 @@ use pocketmine\Server;
 
 class GetWorldByName extends FlowItem {
 
-    protected string $id = self::GET_WORLD_BY_NAME;
-
     protected string $name = "action.getWorldByName.name";
     protected string $detail = "action.getWorldByName.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
         private string $worldName = "",
         private string $resultName = "world"
     ) {
+        parent::__construct(self::GET_WORLD_BY_NAME, FlowItemCategory::WORLD);
     }
 
     public function getWorldName(): string {

@@ -16,13 +16,10 @@ use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 class CreateScoreboardVariable extends FlowItem {
 
-    protected string $id = self::CREATE_SCOREBOARD_VARIABLE;
-
     protected string $name = "action.createScoreboardVariable.name";
     protected string $detail = "action.createScoreboardVariable.detail";
     protected array $detailDefaultReplace = ["result", "id", "displayName", "type"];
 
-    protected string $category = FlowItemCategory::SCOREBOARD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $variableName;
@@ -33,6 +30,8 @@ class CreateScoreboardVariable extends FlowItem {
     private array $displayTypes = [Scoreboard::DISPLAY_SIDEBAR, Scoreboard::DISPLAY_LIST, Scoreboard::DISPLAY_BELOWNAME];
 
     public function __construct(string $id = "", string $displayName = "", string $type = Scoreboard::DISPLAY_SIDEBAR, string $name = "board") {
+        parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
+
         $this->boardId = $id;
         $this->displayName = $displayName;
         $this->displayType = $type;

@@ -14,15 +14,13 @@ use pocketmine\Server;
 class IsOp extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $id = self::IS_OP;
-
     protected string $name = "condition.isOp.name";
     protected string $detail = "condition.isOp.detail";
     protected array $detailDefaultReplace = ["player"];
 
-    protected string $category = FlowItemCategory::PLAYER;
-
     public function __construct(string $player = "") {
+        parent::__construct(self::IS_OP, FlowItemCategory::PLAYER);
+
         $this->setPlayerVariableName($player);
     }
 

@@ -18,13 +18,10 @@ use pocketmine\item\StringToItemParser;
 
 class CreateItemVariable extends FlowItem {
 
-    protected string $id = self::CREATE_ITEM_VARIABLE;
-
     protected string $name = "action.createItemVariable.name";
     protected string $detail = "action.createItemVariable.detail";
     protected array $detailDefaultReplace = ["item", "id", "count", "name"];
 
-    protected string $category = FlowItemCategory::ITEM;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $variableName;
@@ -33,6 +30,8 @@ class CreateItemVariable extends FlowItem {
     private string $itemName;
 
     public function __construct(string $id = "", string $count = "", string $itemName = "", string $variableName = "item") {
+        parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
+
         $this->itemId = $id;
         $this->itemCount = $count;
         $this->itemName = $itemName;

@@ -17,13 +17,15 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
 
     protected array $detailDefaultReplace = ["player", "message"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    public function __construct(
+        string         $id,
+        string         $category = FlowItemCategory::PLAYER,
+        string         $player = "",
+        private string $message = "",
+    ) {
+        parent::__construct($id, $category);
 
-    private string $message;
-
-    public function __construct(string $player = "", string $message = "") {
         $this->setPlayerVariableName($player);
-        $this->message = $message;
     }
 
     public function setMessage(string $message): self {

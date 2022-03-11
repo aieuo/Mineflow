@@ -6,14 +6,14 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 
-class IsPlayer extends IsActiveEntity {
-
-    protected string $id = self::IS_PLAYER;
+class IsPlayer extends CheckEntityStateById {
 
     protected string $name = "condition.isPlayer.name";
     protected string $detail = "condition.isPlayer.detail";
 
-    protected string $category = FlowItemCategory::PLAYER;
+    public function __construct(string $entityId = "") {
+        parent::__construct(self::IS_PLAYER, FlowItemCategory::PLAYER, $entityId);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

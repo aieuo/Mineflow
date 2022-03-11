@@ -17,13 +17,10 @@ use aieuo\mineflow\variable\StringVariable;
 
 class EditString extends FlowItem {
 
-    protected string $id = self::EDIT_STRING;
-
     protected string $name = "action.editString.name";
     protected string $detail = "action.editString.detail";
     protected array $detailDefaultReplace = ["value1", "operator", "value2", "result"];
 
-    protected string $category = FlowItemCategory::STRING;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const TYPE_JOIN = "join";
@@ -45,6 +42,8 @@ class EditString extends FlowItem {
     private string $resultName;
 
     public function __construct(string $value1 = "", string $operator = self::TYPE_JOIN, string $value2 = "", string $resultName = "result") {
+        parent::__construct(self::EDIT_STRING, FlowItemCategory::STRING);
+
         $this->value1 = $value1;
         $this->operator = $operator;
         $this->value2 = $value2;

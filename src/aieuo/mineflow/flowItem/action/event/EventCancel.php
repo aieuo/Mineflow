@@ -13,12 +13,12 @@ use pocketmine\event\Cancellable;
 
 class EventCancel extends FlowItem {
 
-    protected string $id = self::EVENT_CANCEL;
-
     protected string $name = "action.eventCancel.name";
     protected string $detail = "action.eventCancel.detail";
 
-    protected string $category = FlowItemCategory::EVENT;
+    public function __construct() {
+        parent::__construct(self::EVENT_CANCEL, FlowItemCategory::EVENT);
+    }
 
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();

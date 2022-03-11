@@ -16,13 +16,10 @@ use aieuo\mineflow\variable\object\UnknownVariable;
 
 class GetVariableNested extends FlowItem {
 
-    protected string $id = self::GET_VARIABLE_NESTED;
-
     protected string $name = "action.getVariableNested.name";
     protected string $detail = "action.getVariableNested.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
-    protected string $category = FlowItemCategory::VARIABLE;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
@@ -30,6 +27,7 @@ class GetVariableNested extends FlowItem {
         private string $resultName = "var",
         private string $fallbackValue = "",
     ) {
+        parent::__construct(self::GET_VARIABLE_NESTED, FlowItemCategory::VARIABLE);
     }
 
     public function setVariableName(string $name): self {

@@ -20,13 +20,10 @@ use pocketmine\world\Position;
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected string $id = self::POSITION_VARIABLE_ADDITION;
-
     protected string $name = "action.positionAddition.name";
     protected string $detail = "action.positionAddition.detail";
     protected array $detailDefaultReplace = ["position", "x", "y", "z", "result"];
 
-    protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private string $x;
@@ -35,6 +32,8 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     private string $resultName;
 
     public function __construct(string $name = "pos", string $x = "", string $y = "", string $z = "", string $result = "pos") {
+        parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
+
         $this->setPositionVariableName($name);
         $this->x = $x;
         $this->y = $y;

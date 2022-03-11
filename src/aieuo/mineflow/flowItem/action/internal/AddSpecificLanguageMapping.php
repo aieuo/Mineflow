@@ -10,19 +10,16 @@ use aieuo\mineflow\utils\Language;
 
 class AddSpecificLanguageMapping extends FlowItem {
 
-    protected string $id = self::ADD_SPECIFIC_LANGUAGE_MAPPING;
-
     protected string $name = "action.addSpecificLanguageMapping.name";
     protected string $detail = "action.addSpecificLanguageMapping.detail";
     protected array $detailDefaultReplace = ["language", "key", "message"];
-
-    protected string $category = FlowItemCategory::INTERNAL;
 
     public function __construct(
         private string $language = "",
         private string $key = "",
         private string $message = ""
     ) {
+        parent::__construct(self::ADD_SPECIFIC_LANGUAGE_MAPPING, FlowItemCategory::INTERNAL);
     }
 
     public function getLanguage(): string {

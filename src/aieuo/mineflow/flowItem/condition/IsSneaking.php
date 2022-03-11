@@ -14,15 +14,13 @@ use pocketmine\entity\Human;
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $id = self::IS_SNEAKING;
-
     protected string $name = "condition.isSneaking.name";
     protected string $detail = "condition.isSneaking.detail";
     protected array $detailDefaultReplace = ["target"];
 
-    protected string $category = FlowItemCategory::ENTITY;
-
     public function __construct(string $entity = "") {
+        parent::__construct(self::IS_SNEAKING, FlowItemCategory::ENTITY);
+
         $this->setEntityVariableName($entity);
     }
 

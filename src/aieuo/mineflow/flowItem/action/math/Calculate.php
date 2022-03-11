@@ -16,13 +16,10 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate extends FlowItem {
 
-    protected string $id = self::CALCULATE;
-
     protected string $name = "action.calculate.name";
     protected string $detail = "action.calculate.detail";
     protected array $detailDefaultReplace = ["value", "operator", "result"];
 
-    protected string $category = FlowItemCategory::MATH;
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     public const SQUARE = 0;
@@ -49,6 +46,8 @@ class Calculate extends FlowItem {
     private array $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
     public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
+        parent::__construct(self::CALCULATE, FlowItemCategory::MATH);
+
         $this->value = $value;
         $this->operator = (int)($operator ?? self::SQUARE);
         $this->resultName = $resultName;
