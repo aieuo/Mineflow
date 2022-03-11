@@ -22,7 +22,7 @@ body:
     attributes:
       label: Crash dump
       description: If you have a crash dump, please copy and paste it. This will be automatically formatted into code, so no need for backticks.
-      render: shell
+      render: Shell
   - type: input
     id: plugin-version
     attributes:
@@ -48,3 +48,8 @@ body:
     id: server-os
     attributes:
       label: Server OS
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional Information
+      description: Please attach screenshots or exported files of relevant recipes if any.

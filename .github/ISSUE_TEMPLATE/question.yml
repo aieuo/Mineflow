@@ -15,3 +15,8 @@ body:
       label: Plugin Version
       description: What version of mineflow are you running?
       placeholder: 2.0.0
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional Information
+      description: Please attach screenshots or exported files of relevant recipes if any.
