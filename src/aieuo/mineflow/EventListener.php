@@ -9,6 +9,7 @@ use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\trigger\BlockTriggerForm;
 use aieuo\mineflow\utils\Session;
+use aieuo\mineflow\utils\Utils;
 use pocketmine\command\Command;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
@@ -77,7 +78,8 @@ class EventListener implements Listener {
 
         $cmd = $event->getCommand();
         $holder = TriggerHolder::getInstance();
-        $commands = explode(" ", $cmd);
+
+        $commands = Utils::parseCommandString($cmd);
 
         $count = count($commands);
         $origin = $commands[0];

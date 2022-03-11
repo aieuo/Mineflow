@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
 use aieuo\mineflow\variable\object\PlayerObjectVariable;
@@ -46,7 +47,7 @@ class DefaultVariables {
     }
 
     public static function getCommandVariables(string $command): array {
-        $commands = explode(" ", $command);
+        $commands = Utils::parseCommandString($command);
         return [
             "cmd" => new StringVariable(array_shift($commands)),
             "args" => new ListVariable(array_map(fn(string $cmd) => new StringVariable($cmd), $commands)),
