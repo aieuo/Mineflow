@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
+use aieuo\mineflow\recipe\template\RegisterActionRecipeTemplate;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
@@ -212,6 +213,7 @@ class RecipeManager {
 
     public function addTemplates(): void {
         $this->addTemplate(CommandAliasRecipeTemplate::class);
+        $this->addTemplate(RegisterActionRecipeTemplate::class);
     }
 
     /**

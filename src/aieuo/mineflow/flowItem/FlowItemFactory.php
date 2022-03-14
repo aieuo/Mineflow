@@ -142,6 +142,8 @@ use aieuo\mineflow\flowItem\action\variable\DeleteVariable;
 use aieuo\mineflow\flowItem\action\variable\GetVariableNested;
 use aieuo\mineflow\flowItem\action\variable\JoinListVariableToString;
 use aieuo\mineflow\flowItem\action\world\AddParticle;
+use aieuo\mineflow\flowItem\action\world\CreateAABB;
+use aieuo\mineflow\flowItem\action\world\CreateAABBByVector3Variable;
 use aieuo\mineflow\flowItem\action\world\CreatePositionVariable;
 use aieuo\mineflow\flowItem\action\world\DropItem;
 use aieuo\mineflow\flowItem\action\world\GenerateRandomPosition;
@@ -346,6 +348,8 @@ class FlowItemFactory {
         self::register(new GetNearestEntity);
         self::register(new GetNearestLiving);
         self::register(new GetNearestPlayer);
+        self::register(new CreateAABB);
+        self::register(new CreateAABBByVector3Variable);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);
