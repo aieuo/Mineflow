@@ -149,10 +149,12 @@ use aieuo\mineflow\flowItem\action\world\DropItem;
 use aieuo\mineflow\flowItem\action\world\GenerateRandomPosition;
 use aieuo\mineflow\flowItem\action\world\GetBlock;
 use aieuo\mineflow\flowItem\action\world\GetDistance;
+use aieuo\mineflow\flowItem\action\world\GetEntitiesInArea;
 use aieuo\mineflow\flowItem\action\world\GetEntitySidePosition;
 use aieuo\mineflow\flowItem\action\world\GetNearestEntity;
 use aieuo\mineflow\flowItem\action\world\GetNearestLiving;
 use aieuo\mineflow\flowItem\action\world\GetNearestPlayer;
+use aieuo\mineflow\flowItem\action\world\GetPlayersInArea;
 use aieuo\mineflow\flowItem\action\world\GetWorldByName;
 use aieuo\mineflow\flowItem\action\world\PlaySoundAt;
 use aieuo\mineflow\flowItem\action\world\PositionVariableAddition;
@@ -350,6 +352,8 @@ class FlowItemFactory {
         self::register(new GetNearestPlayer);
         self::register(new CreateAABB);
         self::register(new CreateAABBByVector3Variable);
+        self::register(new GetEntitiesInArea);
+        self::register(new GetPlayersInArea);
         /* scoreboard */
         self::register(new CreateScoreboardVariable);
         self::register(new SetScoreboardScore);
