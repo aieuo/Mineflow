@@ -64,7 +64,7 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new WorldVariableDropdown($variables, $this->getWorldVariableName()),
-            new ExampleNumberInput("@action.setWorldTime.form.time", "minecraft:explosion_particle", $this->getTime(), required: true, min: 0, max: World::TIME_FULL),
+            new ExampleNumberInput("@action.setWorldTime.form.time", "12000", $this->getTime(), required: true, min: 0, max: World::TIME_FULL),
         ];
     }
 
