@@ -20,7 +20,7 @@ class CreateAABB extends FlowItem {
 
     protected string $name = "action.createAABB.name";
     protected string $detail = "action.createAABB.detail";
-    protected array $detailDefaultReplace = ["area", "min x", "min y", "min z", "max x", "max y", "max z"];
+    protected array $detailDefaultReplace = ["min x", "min y", "min z", "max x", "max y", "max z", "result"];
 
     protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;

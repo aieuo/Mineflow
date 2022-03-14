@@ -23,7 +23,7 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
 
     protected string $name = "action.createAABBByPositionVariable.name";
     protected string $detail = "action.createAABBByPositionVariable.detail";
-    protected array $detailDefaultReplace = ["area", "pos1", "pos2"];
+    protected array $detailDefaultReplace = ["pos1", "pos2", "result"];
 
     protected string $category = FlowItemCategory::WORLD;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
