@@ -55,7 +55,7 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "" and $this->getScore() !== "";
+        return $this->getScoreboardVariableName() !== "" and $this->getScore() !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
@@ -75,7 +75,7 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
-            new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
+            new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), false),
             new ExampleInput("@action.setScore.form.score", "100", $this->getScore(), true),
         ];
     }

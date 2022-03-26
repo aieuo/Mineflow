@@ -45,7 +45,7 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getScoreboardVariableName() !== "" and $this->getScoreName() !== "";
+        return $this->getScoreboardVariableName() !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
@@ -62,7 +62,7 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
-            new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), true),
+            new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), false),
         ];
     }
 
