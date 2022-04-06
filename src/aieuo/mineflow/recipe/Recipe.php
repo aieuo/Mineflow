@@ -376,7 +376,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 }
             }
 
-            $from = "3.0.0";
+            $from = "2.6.0";
         }
 
         $this->version = $from;
