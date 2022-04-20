@@ -7,6 +7,7 @@ use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\template\SpecificBlockRecipeTemplate;
 use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\utils\Language;
@@ -212,6 +213,7 @@ class RecipeManager {
 
     public function addTemplates(): void {
         $this->addTemplate(CommandAliasRecipeTemplate::class);
+        $this->addTemplate(SpecificBlockRecipeTemplate::class);
     }
 
     /**

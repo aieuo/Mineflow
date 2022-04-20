@@ -15,11 +15,18 @@ use pocketmine\event\Event;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\player\PlayerEvent;
 use function array_key_last;
+use function explode;
 
 class EventTrigger extends Trigger {
 
     private bool $enabled = true;
     private string $eventClass;
+
+    public static function fromEventClass(string $class, string $subKey = ""): EventTrigger {
+        $names = explode("\\", $class);
+        $key = $names[array_key_last($names)];
+        return self::create($key, $subKey);
+    }
 
     public static function create(string $key, string $subKey = ""): EventTrigger {
         return Main::getEventManager()->getTrigger($key) ?? new EventTrigger($key, $subKey, "");
