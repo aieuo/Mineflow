@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\utils;
 
+use function count;
 use function preg_match_all;
 use function stripslashes;
 
@@ -17,6 +18,9 @@ class Utils {
                     break;
                 }
             }
+        }
+        if (count($commands) === 0) {
+            $commands[] = "";
         }
         return $commands;
     }
