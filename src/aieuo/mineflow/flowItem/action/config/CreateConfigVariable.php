@@ -25,6 +25,8 @@ class CreateConfigVariable extends FlowItem {
     protected string $category = FlowItemCategory::CONFIG;
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
+    protected int $permission = self::PERMISSION_LEVEL_2;
+
     public function __construct(
         private string $fileName = "",
         private string $variableName = "config"
