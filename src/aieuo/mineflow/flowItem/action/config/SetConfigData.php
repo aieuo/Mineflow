@@ -67,7 +67,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $this->throwIfCannotExecute();
 
         $key = $source->replaceVariables($this->getKey());
-        $value = $source->replaceVariables($this->getValue());
+        $value = $this->getValue();
 
         $helper = Main::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
@@ -77,7 +77,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
             } else if ($variable instanceof NumberVariable) {
                 $value = $variable->getValue();
             } else {
-                $value = (string)$variable;
+                $value = $source->replaceVariables((string)$variable);
             }
         } else {
             $value = $helper->replaceVariables($value, $source->getVariables());
