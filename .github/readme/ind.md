@@ -1,5 +1,5 @@
 # Mineflow
-This language readme is made by keenanyafiqy
+This IND Readme is made by [@keenanyafiqy](https://github.com/keenanyafiqy). Check it out!
 
 
 [![GitHub license](https://img.shields.io/badge/license-UIUC/NCSA-blue.svg)](https://github.com/aieuo/Mineflow/blob/master/LICENSE)
@@ -27,7 +27,7 @@ This language readme is made by keenanyafiqy
 
 Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.
 
-\* Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission <your name> 2` dari konsol.
+\* Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.
 
 ## Perintah
 | command | description |
@@ -54,7 +54,7 @@ Untuk mengubah izin, jalankan `/mineflow permission <name> <level>`. Level yang 
 Karakter yang diapit oleh "{" dan "}" dikenali sebagai variabel dan akan diganti.
 contoh: `{target}`, `{item}`
 
-[detail lebih lanjut](https://github.com/aieuo/Mineflow/wiki/Variable)        
+[Detail lebih lanjut](https://github.com/aieuo/Mineflow/wiki/Variable)        
         
 ## Tutorial
 ### Buat resep
@@ -75,7 +75,7 @@ Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`.
 ##### Langkah
 1. Jalankan perintah `/mineflow add` dan tambahkan perintah /id.
 ![tambahkanPerintah](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
-2. Jalankan `/mineflow resep add` dan tambahkan resep dengan nama pilihan Anda.
+2. Jalankan `/mineflow recipe add` dan tambahkan resep dengan nama pilihan Anda.
 ![tambahkanResep](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Klik `Edit tindakan > Tambah tindakan > Pemain` untuk menambahkan `bidang Kirim pesan ke obrolan` ke resep yang telah Anda buat.
 4. Masukkan `{target.hand.id}:{target.hand.damage}` di bidang pesan `bidang Kirim pesan ke obrolan`.  
@@ -88,7 +88,7 @@ Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`.
 {target.hand} adalah [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` diganti dengan nama item dan `{target.hand.count}` dengan jumlah item.
 
 ##### Untuk dapat menggunakannya non-OP
-Setel izin perintah ke `siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
+Setel izin perintah ke `Siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
 
 ## Hak Cipta
 Ikon yang dibuat oleh [Pause08](https://www.flaticon.com/authors/pause08) dari [www.flaticon.com](https://www.flaticon.com/)
