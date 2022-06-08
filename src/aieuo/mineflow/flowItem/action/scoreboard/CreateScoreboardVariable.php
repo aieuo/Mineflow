@@ -16,8 +16,8 @@ use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 class CreateScoreboardVariable extends FlowItem {
 
-    protected string $name = "action.createScoreboardVariable.name";
-    protected string $detail = "action.createScoreboardVariable.detail";
+    protected string $name = "action.createScoreboard.name";
+    protected string $detail = "action.createScoreboard.detail";
     protected array $detailDefaultReplace = ["result", "id", "displayName", "type"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -97,9 +97,9 @@ class CreateScoreboardVariable extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.createScoreboardVariable.form.id", "aieuo", $this->getBoardId(), true),
-            new ExampleInput("@action.createScoreboardVariable.form.displayName", "auieo", $this->getDisplayName(), true),
-            new Dropdown("@action.createScoreboardVariable.form.type", $this->displayTypes, array_search($this->getDisplayType(), $this->displayTypes, true)),
+            new ExampleInput("@action.createScoreboard.form.id", "aieuo", $this->getBoardId(), true),
+            new ExampleInput("@action.createScoreboard.form.displayName", "auieo", $this->getDisplayName(), true),
+            new Dropdown("@action.createScoreboard.form.type", $this->displayTypes, array_search($this->getDisplayType(), $this->displayTypes, true)),
             new ExampleInput("@action.form.resultVariableName", "board", $this->getVariableName()),
         ];
     }

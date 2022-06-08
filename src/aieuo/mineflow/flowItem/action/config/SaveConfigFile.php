@@ -15,8 +15,8 @@ use aieuo\mineflow\utils\Language;
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected string $name = "action.saveConfigFile.name";
-    protected string $detail = "action.saveConfigFile.detail";
+    protected string $name = "action.saveConfig.name";
+    protected string $detail = "action.saveConfig.detail";
     protected array $detailDefaultReplace = ["config"];
 
     public function __construct(string $config = "") {

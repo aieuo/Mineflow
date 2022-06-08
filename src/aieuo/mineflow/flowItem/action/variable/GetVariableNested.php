@@ -16,8 +16,8 @@ use aieuo\mineflow\variable\object\UnknownVariable;
 
 class GetVariableNested extends FlowItem {
 
-    protected string $name = "action.getVariableNested.name";
-    protected string $detail = "action.getVariableNested.detail";
+    protected string $name = "action.getVariable.name";
+    protected string $detail = "action.getVariable.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -89,9 +89,9 @@ class GetVariableNested extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.getVariableNested.form.target", "target.hand", $this->getVariableName(), true),
+            new ExampleInput("@action.getVariable.form.target", "target.hand", $this->getVariableName(), true),
             new ExampleInput("@action.form.resultVariableName", "item", $this->getResultName(), true),
-            new ExampleInput("@action.getVariableNested.form.fallbackValue", "optional", $this->getFallbackValue(), false),
+            new ExampleInput("@action.getVariable.form.fallbackValue", "optional", $this->getFallbackValue(), false),
         ];
     }
 

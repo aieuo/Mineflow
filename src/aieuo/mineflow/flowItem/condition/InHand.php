@@ -6,8 +6,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class InHand extends TypeItem {
 
-    protected string $name = "condition.inHand.name";
-    protected string $detail = "condition.inHand.detail";
+    protected string $name = "condition.isHandItem.name";
+    protected string $detail = "condition.isHandItem.detail";
 
     public function __construct(string $player = "", string $item = "") {
         parent::__construct(self::IN_HAND, player: $player, item: $item);

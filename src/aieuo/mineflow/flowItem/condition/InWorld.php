@@ -58,7 +58,7 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new ExampleInput("@action.createPositionVariable.form.world", "world", $this->getWorld(), true),
+            new ExampleInput("@action.createPosition.form.world", "world", $this->getWorld(), true),
         ];
     }
 

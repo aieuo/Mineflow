@@ -18,8 +18,8 @@ use pocketmine\world\Position;
 
 class CreatePositionVariable extends FlowItem {
 
-    protected string $name = "action.createPositionVariable.name";
-    protected string $detail = "action.createPositionVariable.detail";
+    protected string $name = "action.createPosition.name";
+    protected string $detail = "action.createPosition.detail";
     protected array $detailDefaultReplace = ["position", "x", "y", "z", "world"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -103,7 +103,7 @@ class CreatePositionVariable extends FlowItem {
         $this->throwIfInvalidNumber($y);
         $this->throwIfInvalidNumber($z);
         if ($level === null) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.world.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
         $position = new Position((float)$x, (float)$y, (float)$z, $level);
@@ -116,10 +116,10 @@ class CreatePositionVariable extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleNumberInput("@action.createPositionVariable.form.x", "0", $this->getX(), true),
-            new ExampleNumberInput("@action.createPositionVariable.form.y", "100", $this->getY(), true),
-            new ExampleNumberInput("@action.createPositionVariable.form.z", "16", $this->getZ(), true),
-            new ExampleInput("@action.createPositionVariable.form.world", "{target.level}", $this->getWorld(), true),
+            new ExampleNumberInput("@action.createPosition.form.x", "0", $this->getX(), true),
+            new ExampleNumberInput("@action.createPosition.form.y", "100", $this->getY(), true),
+            new ExampleNumberInput("@action.createPosition.form.z", "16", $this->getZ(), true),
+            new ExampleInput("@action.createPosition.form.world", "{target.level}", $this->getWorld(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
         ];
     }

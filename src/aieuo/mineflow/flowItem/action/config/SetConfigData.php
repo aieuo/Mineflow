@@ -19,8 +19,8 @@ use aieuo\mineflow\variable\NumberVariable;
 class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected string $name = "action.setConfigData.name";
-    protected string $detail = "action.setConfigData.detail";
+    protected string $name = "action.setConfig.name";
+    protected string $detail = "action.setConfig.detail";
     protected array $detailDefaultReplace = ["config", "key", "value"];
 
     private string $key;
@@ -93,8 +93,8 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
-            new ExampleInput("@action.setConfigData.form.key", "aieuo", $this->getKey(), true),
-            new ExampleInput("@action.setConfigData.form.value", "100", $this->getValue(), true),
+            new ExampleInput("@action.setConfig.form.key", "aieuo", $this->getKey(), true),
+            new ExampleInput("@action.setConfig.form.value", "100", $this->getValue(), true),
         ];
     }
 

@@ -16,8 +16,8 @@ use aieuo\mineflow\variable\MapVariable;
 
 class CreateMapVariable extends FlowItem {
 
-    protected string $name = "action.createMapVariable.name";
-    protected string $detail = "action.createMapVariable.detail";
+    protected string $name = "action.createMap.name";
+    protected string $detail = "action.createMap.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
 
     private string $variableName;

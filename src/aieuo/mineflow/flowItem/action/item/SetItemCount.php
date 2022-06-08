@@ -64,7 +64,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getCount(), true, 0),
+            new ExampleNumberInput("@action.createItem.form.count", "64", $this->getCount(), true, 0),
         ];
     }
 

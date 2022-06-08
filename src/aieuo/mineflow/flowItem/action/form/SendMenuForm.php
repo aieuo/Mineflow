@@ -25,8 +25,8 @@ use pocketmine\player\Player;
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $name = "action.sendMenu.name";
-    protected string $detail = "action.sendMenu.detail";
+    protected string $name = "action.select.name";
+    protected string $detail = "action.select.detail";
     protected array $detailDefaultReplace = ["player", "text", "options", "result"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
@@ -116,13 +116,13 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         $contents = [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
-            new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true),
+            new ExampleInput("@action.input.form.text", "aieuo", $this->getFormText(), true),
         ];
         foreach ($this->getOptions() as $i => $option) {
             $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), Language::get("form.example", ["aieuo"]), $option);
         }
         $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
-        $contents[] = new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose);
+        $contents[] = new Toggle("@action.input.form.resendOnClose", $this->resendOnClose);
         return $contents;
     }
 

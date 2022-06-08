@@ -54,7 +54,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.createConfigVariable.form.name", "config", $this->getFileName(), true),
+            new ExampleInput("@action.createConfig.form.name", "config", $this->getFileName(), true),
         ];
     }
 

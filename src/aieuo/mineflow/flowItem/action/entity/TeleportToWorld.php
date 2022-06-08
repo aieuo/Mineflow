@@ -68,7 +68,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
         $worldManager->loadWorld($worldName);
         $world = $worldManager->getWorldByName($worldName);
         if ($world === null) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.createPositionVariable.world.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
         $entity = $this->getEntity($source);
@@ -82,7 +82,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new ExampleInput("@action.createPositionVariable.form.world", "world", $this->getWorldName(), true),
+            new ExampleInput("@action.createPosition.form.world", "world", $this->getWorldName(), true),
             new Toggle("@action.teleportToWorld.form.safespawn", $this->isSafeSpawn()),
         ];
     }

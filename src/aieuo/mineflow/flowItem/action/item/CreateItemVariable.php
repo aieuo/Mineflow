@@ -18,8 +18,8 @@ use pocketmine\item\StringToItemParser;
 
 class CreateItemVariable extends FlowItem {
 
-    protected string $name = "action.createItemVariable.name";
-    protected string $detail = "action.createItemVariable.detail";
+    protected string $name = "action.createItem.name";
+    protected string $detail = "action.createItem.detail";
     protected array $detailDefaultReplace = ["item", "id", "count", "name"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -89,7 +89,7 @@ class CreateItemVariable extends FlowItem {
         try {
             $item = StringToItemParser::getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
         } catch (\InvalidArgumentException) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.createItemVariable.item.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createItem.item.notFound"));
         }
         if (!empty($count)) {
             $this->throwIfInvalidNumber($count, 0);
@@ -109,9 +109,9 @@ class CreateItemVariable extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.createItemVariable.form.id", "1:0", $this->getItemId(), true),
-            new ExampleNumberInput("@action.createItemVariable.form.count", "64", $this->getItemCount(), false, 0),
-            new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName()),
+            new ExampleInput("@action.createItem.form.id", "1:0", $this->getItemId(), true),
+            new ExampleNumberInput("@action.createItem.form.count", "64", $this->getItemCount(), false, 0),
+            new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName()),
             new ExampleInput("@action.form.resultVariableName", "item", $this->getVariableName(), true),
         ];
     }

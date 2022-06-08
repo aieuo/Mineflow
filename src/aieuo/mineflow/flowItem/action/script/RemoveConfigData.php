@@ -16,8 +16,8 @@ use aieuo\mineflow\utils\Language;
 class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected string $name = "action.removeConfigData.name";
-    protected string $detail = "action.removeConfigData.detail";
+    protected string $name = "action.removeConfig.name";
+    protected string $detail = "action.removeConfig.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
     private string $key;
@@ -64,7 +64,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
-            new ExampleInput("@action.setConfigData.form.key", "aieuo", $this->getKey(), true),
+            new ExampleInput("@action.setConfig.form.key", "aieuo", $this->getKey(), true),
         ];
     }
 

@@ -19,8 +19,8 @@ use pocketmine\math\AxisAlignedBB;
 class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
     use Vector3FlowItemTrait;
 
-    protected string $name = "action.createAABBByPositionVariable.name";
-    protected string $detail = "action.createAABBByPositionVariable.detail";
+    protected string $name = "action.createAABBByVector3Variable.name";
+    protected string $detail = "action.createAABBByVector3Variable.detail";
     protected array $detailDefaultReplace = ["pos1", "pos2", "result"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -76,8 +76,8 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos1"), "@action.createAABBByPositionVariable.form.pos1"),
-            new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos2"), "@action.createAABBByPositionVariable.form.pos2"),
+            new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos1"), "@action.createAABBByVector3Variable.form.pos1"),
+            new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos2"), "@action.createAABBByVector3Variable.form.pos2"),
             new ExampleInput("@action.form.resultVariableName", "area", $this->getVariableName(), true),
         ];
     }

@@ -16,8 +16,8 @@ use aieuo\mineflow\utils\Language;
 class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $name = "action.canClimbWalls.name";
-    protected string $detail = "action.canClimbWalls.detail";
+    protected string $name = "action.allowClimbWalls.name";
+    protected string $detail = "action.allowClimbWalls.detail";
     protected array $detailDefaultReplace = ["player", "allow"];
 
     private bool $allow;
@@ -59,7 +59,7 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new Toggle("@action.canClimbWalls.form.allow", $this->isAllow()),
+            new Toggle("@action.allowClimbWalls.form.allow", $this->isAllow()),
         ];
     }
 

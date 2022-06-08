@@ -11,8 +11,8 @@ use aieuo\mineflow\Main;
 
 class SaveData extends FlowItem {
 
-    protected string $name = "action.saveData.name";
-    protected string $detail = "action.saveData.detail";
+    protected string $name = "action.save.name";
+    protected string $detail = "action.save.detail";
 
     public function __construct() {
         parent::__construct(self::SAVE_DATA, FlowItemCategory::SCRIPT);

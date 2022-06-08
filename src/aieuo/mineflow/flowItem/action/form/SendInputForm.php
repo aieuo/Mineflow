@@ -22,8 +22,8 @@ use pocketmine\player\Player;
 class SendInputForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
 
-    protected string $name = "action.sendInput.name";
-    protected string $detail = "action.sendInput.detail";
+    protected string $name = "action.input.name";
+    protected string $detail = "action.input.detail";
     protected array $detailDefaultReplace = ["player", "text", "result"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
@@ -95,8 +95,8 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         return [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
-            new ExampleInput("@action.sendInput.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
-            new Toggle("@action.sendInput.form.resendOnClose", $this->resendOnClose),
+            new ExampleInput("@action.input.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
+            new Toggle("@action.input.form.resendOnClose", $this->resendOnClose),
         ];
     }
 

@@ -17,8 +17,8 @@ use pocketmine\player\Player;
 class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
 
-    protected string $name = "action.setNameTag.name";
-    protected string $detail = "action.setNameTag.detail";
+    protected string $name = "action.setName.name";
+    protected string $detail = "action.setName.detail";
     protected array $detailDefaultReplace = ["entity", "name"];
 
     private string $newName;
@@ -63,7 +63,7 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new ExampleInput("@action.setNameTag.form.name", "aieuo", $this->getNewName(), true),
+            new ExampleInput("@action.setName.form.name", "aieuo", $this->getNewName(), true),
         ];
     }
 

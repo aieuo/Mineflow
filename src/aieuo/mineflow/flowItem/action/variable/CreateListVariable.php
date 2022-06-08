@@ -16,8 +16,8 @@ use aieuo\mineflow\variable\ListVariable;
 
 class CreateListVariable extends FlowItem {
 
-    protected string $name = "action.createListVariable.name";
-    protected string $detail = "action.createListVariable.detail";
+    protected string $name = "action.createList.name";
+    protected string $detail = "action.createList.detail";
     protected array $detailDefaultReplace = ["name", "scope", "value"];
 
     private string $variableName;

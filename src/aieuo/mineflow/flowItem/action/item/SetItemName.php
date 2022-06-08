@@ -63,7 +63,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleInput("@action.createItemVariable.form.name", "aieuo", $this->getItemName(), true),
+            new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName(), true),
         ];
     }
 

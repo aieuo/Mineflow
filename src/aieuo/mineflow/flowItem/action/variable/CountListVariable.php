@@ -17,8 +17,8 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class CountListVariable extends FlowItem {
 
-    protected string $name = "action.countList.name";
-    protected string $detail = "action.countList.detail";
+    protected string $name = "action.count.name";
+    protected string $detail = "action.count.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
@@ -69,7 +69,7 @@ class CountListVariable extends FlowItem {
         $variable = $source->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.countList.error.notList"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.count.error.notList"));
         }
 
         $count = count($variable->getValue());
@@ -80,7 +80,7 @@ class CountListVariable extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.countList.form.name", "list", $this->getVariableName(), true),
+            new ExampleInput("@action.count.form.name", "list", $this->getVariableName(), true),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
         ];
     }

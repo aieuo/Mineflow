@@ -15,8 +15,8 @@ use pocketmine\Server;
 
 class GetPlayerByName extends FlowItem {
 
-    protected string $name = "action.getPlayerByName.name";
-    protected string $detail = "action.getPlayerByName.detail";
+    protected string $name = "action.getPlayer.name";
+    protected string $detail = "action.getPlayer.detail";
     protected array $detailDefaultReplace = ["name", "result"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -66,7 +66,7 @@ class GetPlayerByName extends FlowItem {
 
         $player = Server::getInstance()->getPlayerExact($name);
         if (!($player instanceof Player)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.getPlayerByName.player.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.getPlayer.player.notFound"));
         }
 
         $result = new PlayerVariable($player, $player->getName());
@@ -77,7 +77,7 @@ class GetPlayerByName extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.getPlayerByName.form.target", "aieuo", $this->getPlayerName(), true),
+            new ExampleInput("@action.getPlayer.form.target", "aieuo", $this->getPlayerName(), true),
             new ExampleInput("@action.form.resultVariableName", "player", $this->getResultName(), true),
         ];
     }

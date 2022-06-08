@@ -16,8 +16,8 @@ use aieuo\mineflow\variable\object\ConfigVariable;
 
 class CreateConfigVariable extends FlowItem {
 
-    protected string $name = "action.createConfigVariable.name";
-    protected string $detail = "action.createConfigVariable.detail";
+    protected string $name = "action.createConfig.name";
+    protected string $detail = "action.createConfig.detail";
     protected array $detailDefaultReplace = ["config", "name"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -75,7 +75,7 @@ class CreateConfigVariable extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.createConfigVariable.form.name", "config", $this->getFileName(), true),
+            new ExampleInput("@action.createConfig.form.name", "config", $this->getFileName(), true),
             new ExampleInput("@action.form.resultVariableName", "config", $this->getVariableName(), true),
         ];
     }

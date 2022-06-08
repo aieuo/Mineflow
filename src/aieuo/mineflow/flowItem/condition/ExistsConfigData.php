@@ -14,8 +14,8 @@ use aieuo\mineflow\utils\Language;
 class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
 
-    protected string $name = "condition.existsConfigData.name";
-    protected string $detail = "condition.existsConfigData.detail";
+    protected string $name = "condition.existsConfig.name";
+    protected string $detail = "condition.existsConfig.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
     private string $key;
@@ -58,7 +58,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     public function getEditFormElements(array $variables): array {
         return [
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
-            new ExampleInput("@condition.existsConfigData.form.key", "aieuo", $this->getKey(), true),
+            new ExampleInput("@condition.existsConfig.form.key", "aieuo", $this->getKey(), true),
         ];
     }
 

@@ -17,8 +17,8 @@ use aieuo\mineflow\variable\MapVariable;
 
 class CreateMapVariableFromJson extends FlowItem {
 
-    protected string $name = "action.createMapVariableFromJson.name";
-    protected string $detail = "action.createMapVariableFromJson.detail";
+    protected string $name = "action.createMapFromJson.name";
+    protected string $detail = "action.createMapFromJson.detail";
     protected array $detailDefaultReplace = ["name", "scope", "json"];
 
     private string $variableName;

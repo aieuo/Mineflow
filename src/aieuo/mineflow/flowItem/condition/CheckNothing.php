@@ -8,8 +8,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class CheckNothing extends FlowItem implements Condition {
 
-    protected string $name = "condition.noCheck.name";
-    protected string $detail = "condition.noCheck.detail";
+    protected string $name = "condition.checkNothing.name";
+    protected string $detail = "condition.checkNothing.detail";
 
     public function __construct() {
         parent::__construct(self::CHECK_NOTHING, FlowItemCategory::COMMON);

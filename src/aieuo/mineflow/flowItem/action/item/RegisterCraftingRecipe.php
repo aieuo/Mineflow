@@ -18,8 +18,8 @@ use pocketmine\Server;
 class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
 
-    protected string $name = "action.registerRecipe.name";
-    protected string $detail = "action.registerRecipe.detail";
+    protected string $name = "action.registerShapedRecipe.name";
+    protected string $detail = "action.registerShapedRecipe.detail";
     protected array $detailDefaultReplace = ["inputs", "outputs"];
 
     public function __construct(string $i1 = "", string $i2 = "", string $i3 = "", string $i4 = "", string $i5 = "", string $i6 = "", string $i7 = "", string $i8 = "", string $i9 = "", string $o = "") {
@@ -60,15 +60,15 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $shape = $this->trimShape($shape);
 
         $details = ["---".Language::get($this->detail)."---"];
-        $details[] = Language::get("action.registerRecipe.shape");
+        $details[] = Language::get("action.registerShapedRecipe.shape");
         foreach ($shape as $line) {
             $details[] = "- |".$line."|";
         }
-        $details[] = Language::get("action.registerRecipe.ingredients");
+        $details[] = Language::get("action.registerShapedRecipe.ingredients");
         foreach ($ingredients as $key => $ingredient) {
             $details[] = "- ".$key." = ".$ingredient;
         }
-        $details[] = Language::get("action.registerRecipe.results");
+        $details[] = Language::get("action.registerShapedRecipe.results");
         $details[] = "- ".$this->getItemVariableName("output");
         $details[] = "------------------------";
         return implode("\n", $details);
@@ -117,7 +117,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
 
         $shape = $this->trimShape($shape);
         if (empty($shape)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.registerRecipe.recipe.empty"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.registerShapedRecipe.recipe.empty"));
         }
 
         $recipe = new ShapedRecipe($shape, $ingredients, [$output]);
@@ -151,16 +151,16 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input0"), "@action.registerRecipe.ingredients A", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input1"), "@action.registerRecipe.ingredients B", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input2"), "@action.registerRecipe.ingredients C", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input3"), "@action.registerRecipe.ingredients D", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input4"), "@action.registerRecipe.ingredients E", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input5"), "@action.registerRecipe.ingredients F", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input6"), "@action.registerRecipe.ingredients G", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input7"), "@action.registerRecipe.ingredients H", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input8"), "@action.registerRecipe.ingredients I", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("output"), "@action.registerRecipe.results RESULT"),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input0"), "@action.registerShapedRecipe.ingredients A", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input1"), "@action.registerShapedRecipe.ingredients B", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input2"), "@action.registerShapedRecipe.ingredients C", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input3"), "@action.registerShapedRecipe.ingredients D", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input4"), "@action.registerShapedRecipe.ingredients E", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input5"), "@action.registerShapedRecipe.ingredients F", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input6"), "@action.registerShapedRecipe.ingredients G", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input7"), "@action.registerShapedRecipe.ingredients H", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("input8"), "@action.registerShapedRecipe.ingredients I", true),
+            new ItemVariableDropdown($variables, $this->getItemVariableName("output"), "@action.registerShapedRecipe.results RESULT"),
         ];
     }
 

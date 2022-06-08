@@ -17,8 +17,8 @@ use pocketmine\item\StringToItemParser;
 
 class CreateBlockVariable extends FlowItem {
 
-    protected string $name = "action.createBlockVariable.name";
-    protected string $detail = "action.createBlockVariable.detail";
+    protected string $name = "action.createBlock.name";
+    protected string $detail = "action.createBlock.detail";
     protected array $detailDefaultReplace = ["block", "id"];
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
@@ -63,12 +63,12 @@ class CreateBlockVariable extends FlowItem {
         try {
             $item = StringToItemParser::getInstance()->getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
         } catch (\InvalidArgumentException) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlockVariable.block.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlock.block.notFound"));
         }
 
         $block = $item->getBlock();
         if ($item->getId() !== 0 and $block->getId() === 0) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlockVariable.block.notFound"));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlock.block.notFound"));
         }
 
         $variable = new BlockVariable($block, $name);
@@ -79,7 +79,7 @@ class CreateBlockVariable extends FlowItem {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.createBlockVariable.form.id", "1:0", $this->getBlockId(), true),
+            new ExampleInput("@action.createBlock.form.id", "1:0", $this->getBlockId(), true),
             new ExampleInput("@action.form.resultVariableName", "block", $this->getVariableName(), true),
         ];
     }

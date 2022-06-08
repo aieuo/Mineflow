@@ -12,8 +12,8 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class GenerateRandomNumber extends TypeGetMathVariable {
 
-    protected string $name = "action.generateRandomNumber.name";
-    protected string $detail = "action.generateRandomNumber.detail";
+    protected string $name = "action.random.name";
+    protected string $detail = "action.random.detail";
     protected array $detailDefaultReplace = ["min", "max", "result"];
 
     protected string $resultName = "random";
@@ -71,8 +71,8 @@ class GenerateRandomNumber extends TypeGetMathVariable {
 
     public function getEditFormElements(array $variables): array {
         return [
-            new ExampleInput("@action.generateRandomNumber.form.min", "0", $this->getMin(), true),
-            new ExampleInput("@action.generateRandomNumber.form.max", "10", $this->getMax(), true),
+            new ExampleInput("@action.random.form.min", "0", $this->getMin(), true),
+            new ExampleInput("@action.random.form.max", "10", $this->getMax(), true),
             new ExampleInput("@action.form.resultVariableName", "random", $this->getResultName(), true),
         ];
     }

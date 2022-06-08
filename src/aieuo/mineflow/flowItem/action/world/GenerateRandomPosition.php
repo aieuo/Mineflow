@@ -20,8 +20,8 @@ use pocketmine\world\Position;
 class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
 
-    protected string $name = "action.generateRandomPosition.name";
-    protected string $detail = "action.generateRandomPosition.detail";
+    protected string $name = "action.randomPosition.name";
+    protected string $detail = "action.randomPosition.detail";
     protected array $detailDefaultReplace = ["min", "max", "result"];
 
     private string $resultName;
