@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,15 +13,11 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 
 class PlaySound extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.playSound.name";
-    protected string $detail = "action.playSound.detail";
-    protected array $detailDefaultReplace = ["player", "sound", "volume", "pitch"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $player = "",
@@ -31,6 +28,14 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         parent::__construct(self::PLAY_SOUND, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "sound", "volume", "pitch"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()];
     }
 
     public function setSound(string $health): void {
@@ -59,11 +64,6 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

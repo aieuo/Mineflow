@@ -8,9 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class RemoveItemAll extends TypeItem {
 
-    protected string $name = "action.removeItemAll.name";
-    protected string $detail = "action.removeItemAll.detail";
-
     public function __construct(string $player = "", string $item = "") {
         parent::__construct(self::REMOVE_ITEM_ALL, player: $player, item: $item);
     }

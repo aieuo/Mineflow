@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\action\internal;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -10,18 +13,29 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use function array_shift;
 use function count;
+use function implode;
 
 class AddLanguageMappings extends FlowItem {
-
-    protected string $name = "action.addLanguageMappings.name";
-    protected string $detail = "action.addLanguageMappings.detail";
-    protected array $detailDefaultReplace = ["key", "messages"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         private string $key = "",
         private array $mappings = [],
     ) {
         parent::__construct(self::ADD_LANGUAGE_MAPPINGS, FlowItemCategory::INTERNAL);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["key", "messages"];
+    }
+
+    public function getDetailReplaces(): array {
+        $messages = [];
+        foreach ($this->getMappings() as $language => $message) {
+            if (empty($message)) continue;
+            $messages[] = $language.": ".$message;
+        }
+        return [$this->getKey(), implode("\n§7-§f ", $messages)];
     }
 
     public function getKey(): string {
@@ -42,17 +56,6 @@ class AddLanguageMappings extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getKey() !== "" and count($this->mappings) > 0;
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-
-        $messages = [];
-        foreach ($this->getMappings() as $language => $message) {
-            if (empty($message)) continue;
-            $messages[] = $language.": ".$message;
-        }
-        return Language::get($this->detail, [$this->getKey(), implode("\n§7-§f ", $messages)]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

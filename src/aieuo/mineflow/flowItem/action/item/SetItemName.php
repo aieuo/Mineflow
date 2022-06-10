@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,14 +12,10 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class SetItemName extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
-
-    protected string $name = "action.setItemName.name";
-    protected string $detail = "action.setItemName.detail";
-    protected array $detailDefaultReplace = ["item", "name"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -26,6 +23,14 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["item", "name"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getItemVariableName(), $this->getItemName()];
     }
 
     public function setItemName(string $itemName): void {
@@ -38,11 +43,6 @@ class SetItemName extends FlowItem implements ItemFlowItem {
 
     public function isDataValid(): bool {
         return $this->getItemVariableName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getItemVariableName(), $this->getItemName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

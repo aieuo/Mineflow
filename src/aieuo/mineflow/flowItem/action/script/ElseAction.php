@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -16,9 +17,7 @@ use pocketmine\player\Player;
 
 class ElseAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
-
-    protected string $name = "action.else.name";
-    protected string $detail = "action.else.description";
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_ELSE, FlowItemCategory::SCRIPT);

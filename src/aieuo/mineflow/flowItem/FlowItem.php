@@ -16,11 +16,6 @@ use JsonSerializable;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
-    protected string $name;
-    protected string $detail;
-    /** @var string[] */
-    protected array $detailDefaultReplace = [];
-
     private string $customName = "";
 
     public const RETURN_NONE = "none";
@@ -49,18 +44,11 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $this->id;
     }
 
-    public function getName(): string {
-        return Language::get($this->name);
-    }
+    abstract public function getName(): string;
 
-    public function getDescription(): string {
-        $replaces = array_map(fn($replace) => "§7<".$replace.">§f", $this->detailDefaultReplace);
-        return Language::get($this->detail, $replaces);
-    }
+    abstract public function getDescription(): string;
 
-    public function getDetail(): string {
-        return Language::get($this->detail);
-    }
+    abstract public function getDetail(): string;
 
     public function setCustomName(?string $name = null): void {
         $this->customName = $name ?? "";

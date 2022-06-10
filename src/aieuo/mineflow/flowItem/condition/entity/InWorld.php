@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
@@ -10,19 +11,23 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 
 class InWorld extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "condition.inWorld.name";
-    protected string $detail = "condition.inWorld.detail";
-    protected array $detailDefaultReplace = ["target", "world"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", private string $world = "") {
         parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["target", "world"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getWorld()];
     }
 
     public function setWorld(string $world): void {
@@ -35,10 +40,6 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->getWorld() !== "";
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getWorld()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

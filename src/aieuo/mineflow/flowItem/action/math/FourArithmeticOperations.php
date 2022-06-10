@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class FourArithmeticOperations extends FlowItem {
-
-    protected string $name = "action.fourArithmeticOperations.name";
-    protected string $detail = "action.fourArithmeticOperations.detail";
-    protected array $detailDefaultReplace = ["value1", "value2", "operator", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -38,6 +36,14 @@ class FourArithmeticOperations extends FlowItem {
         private string $resultName = "result"
     ) {
         parent::__construct(self::FOUR_ARITHMETIC_OPERATIONS, FlowItemCategory::MATH);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["value1", "value2", "operator", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2(), $this->getResultName()];
     }
 
     public function setValues(string $value1, string $value2): self {
@@ -74,11 +80,6 @@ class FourArithmeticOperations extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getValue1() !== "" and $this->getValue2() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

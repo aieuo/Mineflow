@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -14,17 +15,13 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
-use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\types\BossBarColor;
 use function array_keys;
 use function array_search;
 
 class ShowBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.showBossbar.name";
-    protected string $detail = "action.showBossbar.detail";
-    protected array $detailDefaultReplace = ["player", "title", "max", "value", "color", "id"];
+    use ActionNameWithMineflowLanguage;
 
     private array $colors = [
         "pink" => BossBarColor::PINK,
@@ -47,6 +44,14 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "title", "max", "value", "color", "id"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getColor(), $this->getBarId()];
     }
 
     public function setTitle(string $health): void {
@@ -91,11 +96,6 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->title !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getColor(), $this->getBarId()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

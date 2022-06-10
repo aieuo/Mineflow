@@ -5,21 +5,26 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\command;
 
 use aieuo\mineflow\command\MineflowConsoleCommandSender;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 
 class CommandConsole extends FlowItem {
-
-    protected string $name = "action.commandConsole.name";
-    protected string $detail = "action.commandConsole.detail";
-    protected array $detailDefaultReplace = ["command"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(private string $command = "") {
         parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["command"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getCommand()];
     }
 
     public function getPermissions(): array {
@@ -36,11 +41,6 @@ class CommandConsole extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->command !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getCommand()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

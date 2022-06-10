@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\inventory;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
@@ -14,20 +15,24 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
-
-    protected string $name = "action.setItem.name";
-    protected string $detail = "action.setItem.detail";
-    protected array $detailDefaultReplace = ["player", "item", "index"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", string $item = "", private string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
         $this->setPlayerVariableName($player);
         $this->setItemVariableName($item);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "item", "index"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()];
     }
 
     public function setIndex(string $health): void {
@@ -40,11 +45,6 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

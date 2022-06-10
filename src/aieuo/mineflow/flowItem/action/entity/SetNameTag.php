@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,20 +12,24 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 
 class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.setName.name";
-    protected string $detail = "action.setName.detail";
-    protected array $detailDefaultReplace = ["entity", "name"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", private string $newName = "") {
         parent::__construct(self::SET_NAME, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "name"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getNewName()];
     }
 
     public function setNewName(string $newName): void {
@@ -37,11 +42,6 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->newName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getNewName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

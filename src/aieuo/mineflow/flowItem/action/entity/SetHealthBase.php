@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 
 abstract class SetHealthBase extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["entity", "health"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string $id,
@@ -28,6 +27,14 @@ abstract class SetHealthBase extends FlowItem implements EntityFlowItem {
         $this->setEntityVariableName($entity);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "health"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getHealth()];
+    }
+
     public function setHealth(string $health): void {
         $this->health = $health;
     }
@@ -38,10 +45,6 @@ abstract class SetHealthBase extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->health !== "";
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getHealth()]);
     }
 
     public function getEditFormElements(array $variables): array {

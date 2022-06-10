@@ -10,14 +10,9 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.executeRecipeWithEntity.name";
-    protected string $detail = "action.executeRecipeWithEntity.detail";
-    protected array $detailDefaultReplace = ["name", "target"];
 
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
@@ -25,13 +20,16 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
         $this->setEntityVariableName($entity);
     }
 
-    public function isDataValid(): bool {
-        return $this->getRecipeName() !== "" and $this->getEntityVariableName() !== "";
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "target"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getRecipeName(), $this->getEntityVariableName()]);
+    public function getDetailReplaces(): array {
+        return [$this->getRecipeName(), $this->getEntityVariableName()];
+    }
+
+    public function isDataValid(): bool {
+        return $this->getRecipeName() !== "" and $this->getEntityVariableName() !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\plugin;
 
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\utils\TextFormat;
 
 class GetMoney extends FlowItem {
-
-    protected string $name = "action.getMoney.name";
-    protected string $detail = "action.getMoney.detail";
-    protected array $detailDefaultReplace = ["target", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -28,6 +26,14 @@ class GetMoney extends FlowItem {
         private string $resultName = "money"
     ) {
         parent::__construct(self::GET_MONEY, FlowItemCategory::PLUGIN);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["target", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerName(), $this->getResultName()];
     }
 
     public function setPlayerName(string $name): self {
@@ -50,11 +56,6 @@ class GetMoney extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerName() !== "" and $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

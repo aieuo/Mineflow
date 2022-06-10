@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -15,10 +16,7 @@ use aieuo\mineflow\utils\Language;
 
 class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.allowClimbWalls.name";
-    protected string $detail = "action.allowClimbWalls.detail";
-    protected array $detailDefaultReplace = ["player", "allow"];
+    use ActionNameWithMineflowLanguage;
 
     private bool $allow;
 
@@ -27,6 +25,14 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
 
         $this->setPlayerVariableName($player);
         $this->allow = $allow === "true";
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "allow"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), Language::get("action.allowFlight.".($this->isAllow() ? "allow" : "notAllow"))];
     }
 
     public function setAllow(bool $allow): void {
@@ -39,11 +45,6 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), ["action.allowFlight.".($this->isAllow() ? "allow" : "notAllow")]]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

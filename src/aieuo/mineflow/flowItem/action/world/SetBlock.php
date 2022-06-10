@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\BlockFlowItem;
 use aieuo\mineflow\flowItem\base\BlockFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -13,14 +14,10 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     use PositionFlowItemTrait, BlockFlowItemTrait;
-
-    protected string $name = "action.setBlock.name";
-    protected string $detail = "action.setBlock.detail";
-    protected array $detailDefaultReplace = ["position", "block"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $position = "", string $block = "") {
         parent::__construct(self::SET_BLOCK, FlowItemCategory::WORLD);
@@ -29,9 +26,12 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
         $this->setBlockVariableName($block);
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getBlockVariableName()]);
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "block"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getBlockVariableName()];
     }
 
     public function isDataValid(): bool {

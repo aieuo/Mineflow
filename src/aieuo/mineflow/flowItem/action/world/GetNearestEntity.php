@@ -8,9 +8,6 @@ use pocketmine\entity\Entity;
 
 class GetNearestEntity extends GetNearestEntityBase {
 
-    protected string $name = "action.getNearestEntity.name";
-    protected string $detail = "action.getNearestEntity.detail";
-
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(string $position = "", string $maxDistance = "100", string $resultName = "entity") {

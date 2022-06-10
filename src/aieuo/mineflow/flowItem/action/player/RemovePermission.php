@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,19 +13,23 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 
 class RemovePermission extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.removePermission.name";
-    protected string $detail = "action.removePermission.detail";
-    protected array $detailDefaultReplace = ["player", "permission"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", private string $playerPermission = "") {
         parent::__construct(self::REMOVE_PERMISSION, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "permission"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getPlayerPermission()];
     }
 
     public function getPermissions(): array {
@@ -41,11 +46,6 @@ class RemovePermission extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->playerPermission !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPlayerPermission()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

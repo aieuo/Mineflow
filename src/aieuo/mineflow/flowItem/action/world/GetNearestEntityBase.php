@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,7 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
@@ -20,8 +20,7 @@ use pocketmine\entity\Entity;
 
 abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["position", "distance", "entity"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $id,
@@ -33,6 +32,14 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
         parent::__construct($id, $category);
 
         $this->setPositionVariableName($position);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "distance", "entity"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getResultName()];
     }
 
     /**
@@ -54,10 +61,6 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
 
     public function getMaxDistance(): string {
         return $this->maxDistance;
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getResultName()]);
     }
 
     public function isDataValid(): bool {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,16 +13,12 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\Server;
 
 class PlaySoundAt extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
-
-    protected string $name = "action.playSoundAt.name";
-    protected string $detail = "action.playSoundAt.detail";
-    protected array $detailDefaultReplace = ["position", "sound", "volume", "pitch"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $position = "",
@@ -32,6 +29,14 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         parent::__construct(self::PLAY_SOUND_AT, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($position);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "sound", "volume", "pitch"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()];
     }
 
     public function setSound(string $health): void {
@@ -60,11 +65,6 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPositionVariableName() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

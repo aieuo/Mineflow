@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\variable;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use function implode;
 
 class CreateListVariable extends FlowItem {
-
-    protected string $name = "action.createList.name";
-    protected string $detail = "action.createList.detail";
-    protected array $detailDefaultReplace = ["name", "scope", "value"];
+    use ActionNameWithMineflowLanguage;
 
     /** @var string[] */
     private array $variableValue;
@@ -31,6 +29,14 @@ class CreateListVariable extends FlowItem {
         parent::__construct(self::CREATE_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->variableValue = array_map("trim", explode(",", $value));
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "scope", "value"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getVariableValue())];
     }
 
     public function setVariableName(string $variableName): void {
@@ -51,11 +57,6 @@ class CreateListVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getVariableValue())]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

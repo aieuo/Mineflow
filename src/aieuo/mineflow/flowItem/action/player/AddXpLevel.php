@@ -8,9 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class AddXpLevel extends AddXpBase {
 
-    protected string $name = "action.addXpLevel.name";
-    protected string $detail = "action.addXpLevel.detail";
-
     public function __construct(string $player = "", string $xp = "") {
         parent::__construct(self::ADD_XP_LEVEL, player: $player, xp: $xp);
     }

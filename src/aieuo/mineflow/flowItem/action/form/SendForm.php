@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\form;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -18,15 +19,20 @@ use aieuo\mineflow\utils\Language;
 
 class SendForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.sendForm.name";
-    protected string $detail = "action.sendForm.detail";
-    protected array $detailDefaultReplace = ["player", "form"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", private string $formName = "") {
         parent::__construct(self::SEND_FORM, FlowItemCategory::FORM);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "form"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getFormName()];
     }
 
     public function setFormName(string $formName): void {
@@ -39,11 +45,6 @@ class SendForm extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->formName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

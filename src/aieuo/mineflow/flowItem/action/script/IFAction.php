@@ -8,9 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class IFAction extends IFActionBase {
 
-    protected string $name = "action.if.name";
-    protected string $detail = "action.if.description";
-
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_IF, conditions: $conditions, actions: $actions, customName: $customName);
     }

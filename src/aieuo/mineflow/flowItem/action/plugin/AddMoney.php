@@ -12,9 +12,6 @@ use pocketmine\utils\TextFormat;
 
 class AddMoney extends TypeMoney {
 
-    protected string $name = "action.addMoney.name";
-    protected string $detail = "action.addMoney.detail";
-
     public function __construct(string $playerName = "{target.name}", string $amount = "") {
         parent::__construct(self::ADD_MONEY, playerName: $playerName, amount: $amount);
     }

@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class AndScript extends LogicalOperation {
-
-    protected string $name = "condition.and.name";
-    protected string $detail = "condition.and.detail";
 
     public function __construct() {
         parent::__construct(self::CONDITION_AND);

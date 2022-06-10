@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\Server;
 
 class GetWorldByName extends FlowItem {
-
-    protected string $name = "action.getWorldByName.name";
-    protected string $detail = "action.getWorldByName.detail";
-    protected array $detailDefaultReplace = ["name", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -27,6 +24,14 @@ class GetWorldByName extends FlowItem {
         private string $resultName = "world"
     ) {
         parent::__construct(self::GET_WORLD_BY_NAME, FlowItemCategory::WORLD);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getWorldName(), $this->getResultName()];
     }
 
     public function getWorldName(): string {
@@ -43,11 +48,6 @@ class GetWorldByName extends FlowItem {
 
     public function setResultName(string $resultName): void {
         $this->resultName = $resultName;
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getWorldName(), $this->getResultName()]);
     }
 
     public function isDataValid(): bool {

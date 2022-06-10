@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 
 class IsActiveEntity extends CheckEntityStateById {
-
-    protected string $name = "condition.isActiveEntity.name";
-    protected string $detail = "condition.isActiveEntity.detail";
 
     public function __construct(string $entityId = "") {
         parent::__construct(self::IS_ACTIVE_ENTITY, entityId: $entityId);

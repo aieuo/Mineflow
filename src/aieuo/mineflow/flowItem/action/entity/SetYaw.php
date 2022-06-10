@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,20 +12,24 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 
 class SetYaw extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.setYaw.name";
-    protected string $detail = "action.setYaw.detail";
-    protected array $detailDefaultReplace = ["entity", "yaw"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", private string $yaw = "") {
         parent::__construct(self::SET_YAW, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "yaw"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getYaw()];
     }
 
     public function setYaw(string $yaw): self {
@@ -38,11 +43,6 @@ class SetYaw extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->yaw !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getYaw()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

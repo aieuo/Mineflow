@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\config;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
-
-    protected string $name = "action.saveConfig.name";
-    protected string $detail = "action.saveConfig.detail";
-    protected array $detailDefaultReplace = ["config"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $config = "") {
         parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
@@ -25,13 +22,16 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         $this->setConfigVariableName($config);
     }
 
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONFIG];
+    public function getDetailDefaultReplaces(): array {
+        return ["config"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getConfigVariableName()]);
+    public function getDetailReplaces(): array {
+        return [$this->getConfigVariableName()];
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_CONFIG];
     }
 
     public function isDataValid(): bool {

@@ -8,9 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class AddItem extends TypeItem {
 
-    protected string $name = "action.addItem.name";
-    protected string $detail = "action.addItem.detail";
-
     public function __construct(string $player = "", string $item = "") {
         parent::__construct(self::ADD_ITEM, player: $player, item: $item);
     }

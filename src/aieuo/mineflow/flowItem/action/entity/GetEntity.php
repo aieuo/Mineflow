@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,15 +17,20 @@ use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 
 class GetEntity extends FlowItem {
-
-    protected string $name = "action.getEntity.name";
-    protected string $detail = "action.getEntity.detail";
-    protected array $detailDefaultReplace = ["id", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(private string $entityId = "", private string $resultName = "entity") {
         parent::__construct(self::GET_ENTITY, FlowItemCategory::ENTITY);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["id", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getKey(), $this->getResultName()];
     }
 
     public function setKey(string $name): self {
@@ -47,11 +53,6 @@ class GetEntity extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getKey() !== "" and !empty($this->getResultName());
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getKey(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

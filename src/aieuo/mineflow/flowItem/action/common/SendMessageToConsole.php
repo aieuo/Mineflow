@@ -3,15 +3,14 @@
 namespace aieuo\mineflow\flowItem\action\common;
 
 use aieuo\mineflow\flowItem\action\player\TypeMessage;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 
 class SendMessageToConsole extends TypeMessage {
-
-    protected string $name = "action.sendMessageToConsole.name";
-    protected string $detail = "action.sendMessageToConsole.detail";
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $message = "") {
         parent::__construct(self::SEND_MESSAGE_TO_CONSOLE, FlowItemCategory::COMMON, $message);

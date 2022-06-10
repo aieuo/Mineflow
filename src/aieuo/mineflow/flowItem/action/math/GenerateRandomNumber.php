@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\math;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
 
 class GenerateRandomNumber extends TypeGetMathVariable {
-
-    protected string $name = "action.random.name";
-    protected string $detail = "action.random.detail";
-    protected array $detailDefaultReplace = ["min", "max", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $resultName = "random";
 
@@ -24,6 +21,14 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         string         $resultName = "random"
     ) {
         parent::__construct(self::GENERATE_RANDOM_NUMBER, resultName: $resultName);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["min", "max", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getMin(), $this->getMax(), $this->getResultName()];
     }
 
     public function setMin(string $min): self {
@@ -46,11 +51,6 @@ class GenerateRandomNumber extends TypeGetMathVariable {
 
     public function isDataValid(): bool {
         return $this->min !== "" and $this->max !== "" and $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

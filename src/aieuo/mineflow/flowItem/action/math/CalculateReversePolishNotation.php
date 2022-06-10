@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -14,10 +15,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class CalculateReversePolishNotation extends FlowItem {
-
-    protected string $name = "action.calculateRPN.name";
-    protected string $detail = "action.calculateRPN.detail";
-    protected array $detailDefaultReplace = ["formula", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -26,6 +24,14 @@ class CalculateReversePolishNotation extends FlowItem {
         private string $resultName = "result"
     ) {
         parent::__construct(self::REVERSE_POLISH_NOTATION, FlowItemCategory::MATH);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["formula", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getFormula(), $this->getResultName()];
     }
 
     public function setFormula(string $formula): self {
@@ -48,11 +54,6 @@ class CalculateReversePolishNotation extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getFormula() !== "" and $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getFormula(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

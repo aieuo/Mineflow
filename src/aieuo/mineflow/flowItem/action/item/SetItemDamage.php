@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,15 +12,11 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\item\ItemFactory;
 
 class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
-
-    protected string $name = "action.setItemDamage.name";
-    protected string $detail = "action.setItemDamage.detail";
-    protected array $detailDefaultReplace = ["item", "damage"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -27,6 +24,14 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         parent::__construct(self::SET_ITEM_DAMAGE, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["item", "damage"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getItemVariableName(), $this->getDamage()];
     }
 
     public function setDamage(string $damage): void {
@@ -39,11 +44,6 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
 
     public function isDataValid(): bool {
         return $this->getItemVariableName() !== "" and $this->damage !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getItemVariableName(), $this->getDamage()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

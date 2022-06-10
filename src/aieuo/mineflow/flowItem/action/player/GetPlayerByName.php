@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -14,10 +17,7 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 
 class GetPlayerByName extends FlowItem {
-
-    protected string $name = "action.getPlayer.name";
-    protected string $detail = "action.getPlayer.detail";
-    protected array $detailDefaultReplace = ["name", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -26,6 +26,14 @@ class GetPlayerByName extends FlowItem {
         private string $resultName = "player"
     ) {
         parent::__construct(self::GET_PLAYER, FlowItemCategory::PLAYER);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerName(), $this->getResultName()];
     }
 
     public function setPlayerName(string $name): self {
@@ -48,11 +56,6 @@ class GetPlayerByName extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerName() !== "" and !empty($this->getResultName());
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerName(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -14,6 +15,7 @@ use pocketmine\player\Player;
 
 abstract class IFActionBase extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string  $id,

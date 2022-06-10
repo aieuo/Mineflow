@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,19 +12,23 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 
 class SetScale extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.setScale.name";
-    protected string $detail = "action.setScale.detail";
-    protected array $detailDefaultReplace = ["entity", "scale"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", private string $scale = "") {
         parent::__construct(self::SET_SCALE, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "scale"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getScale()];
     }
 
     public function setScale(string $scale): void {
@@ -36,11 +41,6 @@ class SetScale extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->scale !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getScale()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

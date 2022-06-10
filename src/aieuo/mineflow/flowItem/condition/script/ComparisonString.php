@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -13,10 +16,7 @@ use aieuo\mineflow\utils\Language;
 use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
-
-    protected string $name = "condition.comparisonString.name";
-    protected string $detail = "condition.comparisonString.detail";
-    protected array $detailDefaultReplace = ["value1", "operator", "value2"];
+    use ConditionNameWithMineflowLanguage;
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
@@ -37,6 +37,14 @@ class ComparisonString extends FlowItem implements Condition {
         parent::__construct(self::COMPARISON_STRING, FlowItemCategory::SCRIPT);
 
         $this->operator = (int)($operator ?? self::EQUALS);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["value1", "operator", "value2"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()];
     }
 
     public function setValues(string $value1, string $value2): self {
@@ -63,11 +71,6 @@ class ComparisonString extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->value1 !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

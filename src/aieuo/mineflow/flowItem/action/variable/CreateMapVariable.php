@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\variable;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
+use function implode;
 
 class CreateMapVariable extends FlowItem {
-
-    protected string $name = "action.createMap.name";
-    protected string $detail = "action.createMap.detail";
-    protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
+    use ActionNameWithMineflowLanguage;
 
     private array $variableKey;
     private array $variableValue;
@@ -33,6 +31,14 @@ class CreateMapVariable extends FlowItem {
 
         $this->variableKey = array_map("trim", explode(",", $key));
         $this->variableValue = array_map("trim", explode(",", $value));
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "scope", "key", "value"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getKey()), implode(",", $this->getVariableValue())];
     }
 
     public function setVariableName(string $variableName): void {
@@ -61,11 +67,6 @@ class CreateMapVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getKey()), implode(",", $this->getVariableValue())]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

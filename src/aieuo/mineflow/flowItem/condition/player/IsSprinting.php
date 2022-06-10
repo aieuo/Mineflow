@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class IsSprinting extends CheckPlayerState {
-
-    protected string $name = "condition.isSprinting.name";
-    protected string $detail = "condition.isSprinting.detail";
 
     public function __construct(string $player = "") {
         parent::__construct(self::IS_SPRINTING, player: $player);

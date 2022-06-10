@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\string;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
 
 class EditString extends FlowItem {
-
-    protected string $name = "action.editString.name";
-    protected string $detail = "action.editString.detail";
-    protected array $detailDefaultReplace = ["value1", "operator", "value2", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -43,6 +41,14 @@ class EditString extends FlowItem {
         private string $resultName = "result"
     ) {
         parent::__construct(self::EDIT_STRING, FlowItemCategory::STRING);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["value1", "operator", "value2", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()];
     }
 
     public function setValues(string $value1, string $value2): self {
@@ -79,11 +85,6 @@ class EditString extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getValue1() !== "" and $this->getValue2() !== "" and $this->getOperator() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

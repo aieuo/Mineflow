@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -19,11 +20,8 @@ use pocketmine\world\Position;
 
 class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
+    use ActionNameWithMineflowLanguage;
 
-    protected string $name = "action.randomPosition.name";
-    protected string $detail = "action.randomPosition.detail";
-    protected array $detailDefaultReplace = ["min", "max", "result"];
-    
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
@@ -37,6 +35,14 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $this->setPositionVariableName($max, "pos2");
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["min", "max", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
+    }
+
     public function setResultName(string $name): self {
         $this->resultName = $name;
         return $this;
@@ -48,11 +54,6 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
 
     public function isDataValid(): bool {
         return $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

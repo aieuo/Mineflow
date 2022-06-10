@@ -9,9 +9,6 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class GetPi extends TypeGetMathVariable {
 
-    protected string $name = "action.getPi.name";
-    protected string $detail = "action.getPi.detail";
-
     public function __construct(string $resultName = "pi") {
         parent::__construct(self::GET_PI, resultName: $resultName);
     }

@@ -2,19 +2,16 @@
 
 namespace aieuo\mineflow\flowItem\action\common;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 
 class GetDate extends FlowItem {
-
-    protected string $name = "action.getDate.name";
-    protected string $detail = "action.getDate.detail";
-    protected array $detailDefaultReplace = ["format", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -23,6 +20,14 @@ class GetDate extends FlowItem {
         private string $resultName = "date"
     ) {
         parent::__construct(self::GET_DATE, FlowItemCategory::COMMON);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["format", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getFormat(), $this->getResultName()];
     }
 
     public function setFormat(string $format): void {
@@ -43,11 +48,6 @@ class GetDate extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getFormat() !== "" and $this->getResultName();
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getFormat(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

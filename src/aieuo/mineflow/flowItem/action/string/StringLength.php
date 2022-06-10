@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\string;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class StringLength extends FlowItem {
-
-    protected string $name = "action.strlen.name";
-    protected string $detail = "action.strlen.detail";
-    protected array $detailDefaultReplace = ["string", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -25,6 +22,14 @@ class StringLength extends FlowItem {
         private string $resultName = "length"
     ) {
         parent::__construct(self::STRING_LENGTH, FlowItemCategory::STRING);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["string", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getValue(), $this->getResultName()];
     }
 
     public function setValue(string $value1): self {
@@ -47,11 +52,6 @@ class StringLength extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getValue() !== "" and $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

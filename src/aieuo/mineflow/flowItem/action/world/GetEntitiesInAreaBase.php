@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\AxisAlignedBBFlowItem;
 use aieuo\mineflow\flowItem\base\AxisAlignedBBFlowItemTrait;
 use aieuo\mineflow\flowItem\base\WorldFlowItem;
@@ -14,7 +15,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\AxisAlignedBBVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
@@ -22,8 +22,7 @@ use function array_map;
 
 abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFlowItem, WorldFlowItem {
     use AxisAlignedBBFlowItemTrait, WorldFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["aabb", "world", "result"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $id,
@@ -38,6 +37,14 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
         $this->setWorldVariableName($worldName);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["aabb", "world", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getAxisAlignedBBVariableName(), $this->getWorldVariableName(), $this->getResultName()];
+    }
+
     public function getResultName(): string {
         return $this->resultName;
     }
@@ -48,11 +55,6 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
 
     public function isDataValid(): bool {
         return $this->getAxisAlignedBBVariableName() !== "" and $this->getWorldVariableName() !== "" and $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getAxisAlignedBBVariableName(), $this->getWorldVariableName(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

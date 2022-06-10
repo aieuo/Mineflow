@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 
 class RandomNumber extends FlowItem implements Condition {
-
-    protected string $name = "condition.randomNumber.name";
-    protected string $detail = "condition.randomNumber.detail";
-    protected array $detailDefaultReplace = ["min", "max", "value"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(
         private string $min = "",
@@ -21,6 +20,14 @@ class RandomNumber extends FlowItem implements Condition {
         private string $value = ""
     ) {
         parent::__construct(self::RANDOM_NUMBER, FlowItemCategory::MATH);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["min", "max", "value"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getMin(), $this->getMax(), $this->getValue()];
     }
 
     public function setMin(string $min): void {
@@ -49,11 +56,6 @@ class RandomNumber extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->min !== "" and $this->max !== "" and $this->value !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getMin(), $this->getMax(), $this->getValue()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

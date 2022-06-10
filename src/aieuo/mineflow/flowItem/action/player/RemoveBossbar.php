@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,19 +13,23 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
-use aieuo\mineflow\utils\Language;
 
 class RemoveBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.removeBossbar.name";
-    protected string $detail = "action.removeBossbar.detail";
-    protected array $detailDefaultReplace = ["player", "id"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", private string $barId = "") {
         parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "id"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getBarId()];
     }
 
     public function setBarId(string $barId): void {
@@ -37,11 +42,6 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->barId !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getBarId()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

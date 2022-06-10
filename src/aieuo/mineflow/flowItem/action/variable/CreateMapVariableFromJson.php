@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 
 class CreateMapVariableFromJson extends FlowItem {
-
-    protected string $name = "action.createMapFromJson.name";
-    protected string $detail = "action.createMapFromJson.detail";
-    protected array $detailDefaultReplace = ["name", "scope", "json"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         private string $variableName = "",
@@ -27,6 +24,14 @@ class CreateMapVariableFromJson extends FlowItem {
         private bool   $isLocal = true
     ) {
         parent::__construct(self::CREATE_MAP_VARIABLE_FROM_JSON, FlowItemCategory::VARIABLE);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "scope", "json"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getJson()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -47,11 +52,6 @@ class CreateMapVariableFromJson extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->json !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getJson()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -22,10 +23,7 @@ use pocketmine\entity\Living;
 
 class AddEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.addEffect.name";
-    protected string $detail = "action.addEffect.detail";
-    protected array $detailDefaultReplace = ["entity", "id", "power", "time"];
+    use ActionNameWithMineflowLanguage;
 
     private bool $visible = false;
 
@@ -38,6 +36,14 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         parent::__construct(self::ADD_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "id", "power", "time"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getEffectId(), $this->getPower(), $this->getTime()];
     }
 
     public function setEffectId(string $effectId): void {
@@ -66,11 +72,6 @@ class AddEffect extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->effectId !== "" and $this->power !== "" and $this->time !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getEffectId(), $this->getPower(), $this->getTime()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

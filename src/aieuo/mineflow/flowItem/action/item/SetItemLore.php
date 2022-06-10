@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,14 +12,11 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\utils\Language;
+use function implode;
 
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
-
-    protected string $name = "action.setLore.name";
-    protected string $detail = "action.setLore.detail";
-    protected array $detailDefaultReplace = ["item", "lore"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -31,6 +29,14 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         $this->lore = array_filter(array_map("trim", explode(";", $lore)), fn(string $t) => $t !== "");
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["item", "lore"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getItemVariableName(), implode(";", $this->getLore())];
+    }
+
     public function setLore(array $lore): void {
         $this->lore = $lore;
     }
@@ -41,11 +47,6 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
 
     public function isDataValid(): bool {
         return $this->getItemVariableName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getItemVariableName(), implode(";", $this->getLore())]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

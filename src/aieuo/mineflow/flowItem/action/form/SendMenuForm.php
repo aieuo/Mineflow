@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\form;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -21,13 +22,11 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
+use function implode;
 
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.select.name";
-    protected string $detail = "action.select.detail";
-    protected array $detailDefaultReplace = ["player", "text", "options", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -44,6 +43,14 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         $this->setPlayerVariableName($player);
         $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "text", "options", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getFormText(), implode(";", $this->getOptions()), $this->getResultName()];
     }
 
     public function setFormText(string $formText): void {
@@ -72,11 +79,6 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFormText(), implode(";", $this->getOptions()), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -20,10 +21,7 @@ use pocketmine\item\enchantment\StringToEnchantmentParser;
 
 class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
-
-    protected string $name = "action.addEnchant.name";
-    protected string $detail = "action.addEnchant.detail";
-    protected array $detailDefaultReplace = ["item", "id", "world"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -35,6 +33,14 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["item", "id", "world"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
     }
 
     public function setEnchantId(string $enchantId): void {
@@ -55,11 +61,6 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
 
     public function isDataValid(): bool {
         return $this->getItemVariableName() !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

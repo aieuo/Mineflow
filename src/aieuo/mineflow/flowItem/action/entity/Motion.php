@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,15 +12,12 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 use pocketmine\math\Vector3;
+use function array_merge;
 
 class Motion extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.motion.name";
-    protected string $detail = "action.motion.detail";
-    protected array $detailDefaultReplace = ["entity", "x", "y", "z"];
+    use ActionNameWithMineflowLanguage;
 
     private string $x = "0";
     private string $y = "0";
@@ -30,6 +28,14 @@ class Motion extends FlowItem implements EntityFlowItem {
 
         $this->setEntityVariableName($entity);
         $this->setPosition($x, $y, $z);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "x", "y", "z"];
+    }
+
+    public function getDetailReplaces(): array {
+        return array_merge([$this->getEntityVariableName()], $this->getPosition());
     }
 
     public function setPosition(string $x, string $y, string $z): self {
@@ -45,11 +51,6 @@ class Motion extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, array_merge([$this->getEntityVariableName()], $this->getPosition()));
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

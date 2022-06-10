@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,19 +12,23 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 
 class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
-
-    protected string $name = "action.removeConfig.name";
-    protected string $detail = "action.removeConfig.detail";
-    protected array $detailDefaultReplace = ["config", "key"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
 
         $this->setConfigVariableName($config);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["config", "key"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getConfigVariableName(), $this->getKey()];
     }
 
     public function getPermissions(): array {
@@ -40,11 +45,6 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
 
     public function isDataValid(): bool {
         return $this->getConfigVariableName() !== "" and $this->key !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

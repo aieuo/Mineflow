@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\block;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\StringToItemParser;
 
 class CreateBlockVariable extends FlowItem {
-
-    protected string $name = "action.createBlock.name";
-    protected string $detail = "action.createBlock.detail";
-    protected array $detailDefaultReplace = ["block", "id"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -28,6 +26,14 @@ class CreateBlockVariable extends FlowItem {
         private string $variableName = "block"
     ) {
         parent::__construct(self::CREATE_BLOCK_VARIABLE, FlowItemCategory::BLOCK);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["block", "id"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->getBlockId()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -48,11 +54,6 @@ class CreateBlockVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->blockId !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getBlockId()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

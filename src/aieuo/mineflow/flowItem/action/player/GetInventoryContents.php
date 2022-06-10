@@ -11,9 +11,6 @@ use pocketmine\item\Item;
 
 class GetInventoryContents extends GetInventoryContentsBase {
 
-    protected string $name = "action.getInventory.name";
-    protected string $detail = "action.getInventory.detail";
-
     public function __construct(string $player = "", string $resultName = "inventory") {
         parent::__construct(self::GET_INVENTORY_CONTENTS, player: $player, resultName: $resultName);
     }

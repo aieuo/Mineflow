@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
 
 class JoinListVariableToString extends FlowItem {
-
-    protected string $name = "action.joinToString.name";
-    protected string $detail = "action.joinToString.detail";
-    protected array $detailDefaultReplace = ["name", "separator", "result"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         private string $variableName = "",
@@ -27,6 +25,14 @@ class JoinListVariableToString extends FlowItem {
         private string $resultName = "result"
     ) {
         parent::__construct(self::JOIN_LIST_VARIABLE_TO_STRING, FlowItemCategory::VARIABLE);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "separator", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->getSeparator(), $this->getResultName()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -55,11 +61,6 @@ class JoinListVariableToString extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->separator !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getSeparator(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

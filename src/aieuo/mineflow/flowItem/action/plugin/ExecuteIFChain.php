@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\plugin;
 
 use aieuo\ip\IFPlugin;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -19,10 +20,7 @@ use pocketmine\Server;
 
 class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.executeIFChain.name";
-    protected string $detail = "action.executeIFChain.detail";
-    protected array $detailDefaultReplace = ["chain", "player"];
+    use ActionNameWithMineflowLanguage;
 
     /** @var string[] */
     private array $args = [];
@@ -31,6 +29,14 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         parent::__construct(self::EXECUTE_IF_CHAIN, FlowItemCategory::PLUGIN);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["chain", "player"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getChainName(), $this->getPlayerVariableName()];
     }
 
     public function getPermissions(): array {
@@ -48,11 +54,6 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getChainName() !== "" and $this->getPlayerVariableName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getChainName(), $this->getPlayerVariableName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

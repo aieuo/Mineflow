@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -11,14 +14,10 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
-
-    protected string $name = "action.setSleeping.name";
-    protected string $detail = "action.setSleeping.detail";
-    protected array $detailDefaultReplace = ["player", "position"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", string $position = "") {
         parent::__construct(self::SET_SLEEPING, FlowItemCategory::PLAYER);
@@ -27,9 +26,12 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $this->setPositionVariableName($position);
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPositionVariableName()]);
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "position"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getPositionVariableName()];
     }
 
     public function isDataValid(): bool {

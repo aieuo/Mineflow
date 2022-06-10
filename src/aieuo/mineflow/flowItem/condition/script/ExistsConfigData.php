@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
@@ -10,19 +13,23 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 
 class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
-
-    protected string $name = "condition.existsConfig.name";
-    protected string $detail = "condition.existsConfig.detail";
-    protected array $detailDefaultReplace = ["config", "key"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
 
         $this->setConfigVariableName($config);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["config", "key"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getConfigVariableName(), $this->getKey()];
     }
 
     public function setKey(string $key): void {
@@ -35,11 +42,6 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
 
     public function isDataValid(): bool {
         return $this->getConfigVariableName() !== "" and $this->getKey() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

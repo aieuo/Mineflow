@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
@@ -9,15 +10,11 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Human;
 
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "condition.isSneaking.name";
-    protected string $detail = "condition.isSneaking.detail";
-    protected array $detailDefaultReplace = ["target"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "") {
         parent::__construct(self::IS_SNEAKING, FlowItemCategory::ENTITY);
@@ -25,13 +22,16 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         $this->setEntityVariableName($entity);
     }
 
-    public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "";
+    public function getDetailDefaultReplaces(): array {
+        return ["target"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName()]);
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName()];
+    }
+
+    public function isDataValid(): bool {
+        return $this->getEntityVariableName() !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

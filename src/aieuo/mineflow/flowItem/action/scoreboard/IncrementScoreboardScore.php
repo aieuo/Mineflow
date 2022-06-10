@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,14 +13,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class IncrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
-
-    protected string $name = "action.incrementScore.name";
-    protected string $detail = "action.incrementScore.detail";
-    protected array $detailDefaultReplace = ["scoreboard", "name", "score"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $scoreboard = "",
@@ -29,6 +26,14 @@ class IncrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         parent::__construct(self::INCREMENT_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
         $this->setScoreboardVariableName($scoreboard);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["scoreboard", "name", "score"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()];
     }
 
     public function getScoreName(): string {
@@ -45,11 +50,6 @@ class IncrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
 
     public function setScore(string $score): void {
         $this->score = $score;
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()]);
     }
 
     public function isDataValid(): bool {

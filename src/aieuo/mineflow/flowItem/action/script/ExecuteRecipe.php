@@ -8,9 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ExecuteRecipe extends ExecuteRecipeBase {
 
-    protected string $name = "action.executeRecipe.name";
-    protected string $detail = "action.executeRecipe.detail";
-
     public function __construct(string $name = "", string $args = "") {
         parent::__construct(self::EXECUTE_RECIPE, recipeName: $name, args: $args);
     }

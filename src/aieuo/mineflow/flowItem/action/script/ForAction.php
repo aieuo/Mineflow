@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -21,9 +22,7 @@ use pocketmine\player\Player;
 
 class ForAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
-
-    protected string $name = "action.for.name";
-    protected string $detail = "action.for.description";
+    use ActionNameWithMineflowLanguage;
 
     private string $counterName = "i";
     private string $startIndex = "0";

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\player;
 
 use aieuo\mineflow\flowItem\condition\entity\CheckEntityState;
@@ -8,9 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\player\Player;
 
 class IsPlayerVariable extends CheckEntityState {
-
-    protected string $name = "condition.isPlayerVariable.name";
-    protected string $detail = "condition.isPlayerVariable.detail";
 
     public function __construct(string $entity = "") {
         parent::__construct(self::IS_PLAYER_VARIABLE, FlowItemCategory::PLAYER, $entity);

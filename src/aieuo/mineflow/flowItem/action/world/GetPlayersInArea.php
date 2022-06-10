@@ -7,9 +7,6 @@ use pocketmine\player\Player;
 
 class GetPlayersInArea extends GetEntitiesInAreaBase {
 
-    protected string $name = "action.getPlayersInArea.name";
-    protected string $detail = "action.getPlayersInArea.detail";
-
     public function __construct(string $aabb = "", string $worldName = "", string $resultName = "players") {
         parent::__construct(self::GET_PLAYERS_IN_AREA, aabb: $aabb, worldName: $worldName, resultName: $resultName);
     }

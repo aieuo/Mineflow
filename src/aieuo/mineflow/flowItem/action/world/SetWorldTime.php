@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\WorldFlowItem;
 use aieuo\mineflow\flowItem\base\WorldFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,15 +12,11 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\world\World;
 
 class SetWorldTime extends FlowItem implements WorldFlowItem {
     use WorldFlowItemTrait;
-
-    protected string $name = "action.setWorldTime.name";
-    protected string $detail = "action.setWorldTime.detail";
-    protected array $detailDefaultReplace = ["world", "time"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $worldName = "",
@@ -28,6 +25,14 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
         parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
 
         $this->setWorldVariableName($worldName);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["world", "time"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getWorldVariableName(), $this->getTime()];
     }
 
     public function getTime(): string {
@@ -40,11 +45,6 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
 
     public function isDataValid(): bool {
         return $this->getWorldVariableName() !== "" and $this->getTime() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getWorldVariableName(), $this->getTime()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

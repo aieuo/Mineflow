@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -22,10 +23,7 @@ use pocketmine\world\Position;
 
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.getEntitySide.name";
-    protected string $detail = "action.getEntitySide.detail";
-    protected array $detailDefaultReplace = ["entity", "direction", "step", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -81,6 +79,14 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         $this->setEntityVariableName($entity);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "direction", "step", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+    }
+
     public function setDirection(string $direction): self {
         $this->direction = $direction;
         return $this;
@@ -108,11 +114,6 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

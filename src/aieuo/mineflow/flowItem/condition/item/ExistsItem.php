@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ExistsItem extends TypeItem {
-
-    protected string $name = "condition.existsItem.name";
-    protected string $detail = "condition.existsItem.detail";
 
     public function __construct(string $player = "", string $item = "") {
         parent::__construct(self::EXISTS_ITEM, player: $player, item: $item);

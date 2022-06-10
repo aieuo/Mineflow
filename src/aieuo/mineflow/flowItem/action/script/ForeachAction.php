@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -26,9 +27,7 @@ use pocketmine\player\Player;
 
 class ForeachAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
-
-    protected string $name = "action.foreach.name";
-    protected string $detail = "action.foreach.description";
+    use ActionNameWithMineflowLanguage;
 
     private string $listVariableName = "list";
     private string $keyVariableName = "key";

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\variable;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -9,14 +12,10 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 
 class ExistsListVariableKey extends FlowItem implements Condition {
-
-    protected string $name = "condition.existsListVariableKey.name";
-    protected string $detail = "condition.existsListVariableKey.detail";
-    protected array $detailDefaultReplace = ["scope", "name", "key"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(
         private string $variableName = "",
@@ -24,6 +23,14 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         private bool   $isLocal = true
     ) {
         parent::__construct(self::EXISTS_LIST_VARIABLE_KEY, FlowItemCategory::VARIABLE);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["scope", "name", "key"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -44,11 +51,6 @@ class ExistsListVariableKey extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->variableKey !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->isLocal ? "local" : "global", $this->getVariableName(), $this->getKey()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

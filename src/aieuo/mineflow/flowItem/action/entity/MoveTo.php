@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -14,15 +15,11 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\math\Vector3;
 
 class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
-
-    protected string $name = "action.moveTo.name";
-    protected string $detail = "action.moveTo.detail";
-    protected array $detailDefaultReplace = ["entity", "position", "speedX", "speedY", "speedZ"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $entity = "",
@@ -37,13 +34,16 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $this->setPositionVariableName($position);
     }
 
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "position", "speedX", "speedY", "speedZ"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()]);
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getPositionVariableName(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
+    }
+
+    public function getPermissions(): array {
+        return [self::PERMISSION_LOOP];
     }
 
     public function isDataValid(): bool {

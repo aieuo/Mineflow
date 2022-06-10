@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,17 +13,13 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
-
-    protected string $name = "action.positionAddition.name";
-    protected string $detail = "action.positionAddition.detail";
-    protected array $detailDefaultReplace = ["position", "x", "y", "z", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -36,6 +33,14 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($name);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "x", "y", "z", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
     }
 
     public function setX(string $x): void {
@@ -72,11 +77,6 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPositionVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "" and $this->resultName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

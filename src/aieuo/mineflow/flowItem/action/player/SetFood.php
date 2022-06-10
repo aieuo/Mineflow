@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -9,19 +12,23 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class SetFood extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.setFood.name";
-    protected string $detail = "action.setFood.detail";
-    protected array $detailDefaultReplace = ["player", "food"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", private string $food = "") {
         parent::__construct(self::SET_FOOD, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "food"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getFood()];
     }
 
     public function setFood(string $health): void {
@@ -34,11 +41,6 @@ class SetFood extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->food !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getFood()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

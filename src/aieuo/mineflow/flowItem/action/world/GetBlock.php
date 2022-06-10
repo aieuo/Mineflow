@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,17 +12,13 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\world\Position;
 
 class GetBlock extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
-
-    protected string $name = "action.getBlock.name";
-    protected string $detail = "action.getBlock.detail";
-    protected array $detailDefaultReplace = ["position", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -31,17 +28,20 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         $this->setPositionVariableName($position);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getResultName()];
+    }
+
     public function setResultName(string $resultName): void {
         $this->resultName = $resultName;
     }
 
     public function getResultName(): string {
         return $this->resultName;
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getResultName()]);
     }
 
     public function isDataValid(): bool {

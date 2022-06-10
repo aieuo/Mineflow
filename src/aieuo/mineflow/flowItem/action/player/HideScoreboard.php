@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
@@ -13,14 +14,10 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {
     use PlayerFlowItemTrait, ScoreboardFlowItemTrait;
-
-    protected string $name = "action.hideScoreboard.name";
-    protected string $detail = "action.hideScoreboard.detail";
-    protected array $detailDefaultReplace = ["player", "scoreboard"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         parent::__construct(self::HIDE_SCOREBOARD, FlowItemCategory::PLAYER);
@@ -29,9 +26,12 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         $this->setScoreboardVariableName($scoreboard);
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getScoreboardVariableName()]);
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "scoreboard"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getScoreboardVariableName()];
     }
 
     public function isDataValid(): bool {

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -13,6 +16,7 @@ use pocketmine\player\Player;
 
 abstract class LogicalOperation extends FlowItem implements Condition, FlowItemContainer {
     use FlowItemContainerTrait;
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(
         string $id,

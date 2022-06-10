@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class CountListVariable extends FlowItem {
-
-    protected string $name = "action.count.name";
-    protected string $detail = "action.count.detail";
-    protected array $detailDefaultReplace = ["name", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -28,6 +26,14 @@ class CountListVariable extends FlowItem {
         private string $resultName = "count"
     ) {
         parent::__construct(self::COUNT_LIST_VARIABLE, FlowItemCategory::VARIABLE);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->getResultName()];
     }
 
     public function setVariableName(string $name): self {
@@ -50,11 +56,6 @@ class CountListVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getVariableName() !== "" and !empty($this->getResultName());
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

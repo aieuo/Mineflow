@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -15,10 +16,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 
 class DeleteListVariableContent extends FlowItem {
-
-    protected string $name = "action.removeContent.name";
-    protected string $detail = "action.removeContent.detail";
-    protected array $detailDefaultReplace = ["name", "scope", "key"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         private string $variableName = "",
@@ -26,6 +24,14 @@ class DeleteListVariableContent extends FlowItem {
         private bool   $isLocal = true
     ) {
         parent::__construct(self::DELETE_LIST_VARIABLE_CONTENT, FlowItemCategory::VARIABLE);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "scope", "key"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -46,11 +52,6 @@ class DeleteListVariableContent extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->variableKey !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

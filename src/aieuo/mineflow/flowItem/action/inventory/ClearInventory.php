@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\inventory;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class ClearInventory extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.clearInventory.name";
-    protected string $detail = "action.clearInventory.detail";
-    protected array $detailDefaultReplace = ["player"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "") {
         parent::__construct(self::CLEAR_INVENTORY, FlowItemCategory::INVENTORY);
@@ -25,13 +22,16 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
         $this->setPlayerVariableName($player);
     }
 
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "";
+    public function getDetailDefaultReplaces(): array {
+        return ["player"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName()]);
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName()];
+    }
+
+    public function isDataValid(): bool {
+        return $this->getPlayerVariableName() !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

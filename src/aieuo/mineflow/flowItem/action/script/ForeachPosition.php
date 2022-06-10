@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -25,9 +26,7 @@ use pocketmine\world\Position;
 
 class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlowItem {
     use FlowItemContainerTrait, PositionFlowItemTrait;
-
-    protected string $name = "action.foreachPosition.name";
-    protected string $detail = "action.foreachPosition.description";
+    use ActionNameWithMineflowLanguage;
 
     private string $counterName = "pos";
 

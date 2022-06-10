@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\event;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -12,9 +13,7 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\event\Cancellable;
 
 class EventCancel extends FlowItem {
-
-    protected string $name = "action.eventCancel.name";
-    protected string $detail = "action.eventCancel.detail";
+    use ActionNameWithMineflowLanguage;
 
     public function __construct() {
         parent::__construct(self::EVENT_CANCEL, FlowItemCategory::EVENT);

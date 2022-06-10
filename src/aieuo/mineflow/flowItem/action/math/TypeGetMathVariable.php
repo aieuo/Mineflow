@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\math;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 abstract class TypeGetMathVariable extends FlowItem {
-
-    protected array $detailDefaultReplace = ["result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -23,6 +22,14 @@ abstract class TypeGetMathVariable extends FlowItem {
         private string $resultName = "result",
     ) {
         parent::__construct($id, $category);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getResultName()];
     }
 
     public function setResultName(string $name): self {
@@ -36,11 +43,6 @@ abstract class TypeGetMathVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getResultName()]);
     }
 
     public function getEditFormElements(array $variables): array {

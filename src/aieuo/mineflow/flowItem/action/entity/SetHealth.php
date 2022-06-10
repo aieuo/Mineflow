@@ -8,9 +8,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class SetHealth extends SetHealthBase {
 
-    protected string $name = "action.setHealth.name";
-    protected string $detail = "action.setHealth.detail";
-
     public function __construct(string $entity = "", string $health = "") {
         parent::__construct(self::SET_HEALTH, entity: $entity, health: $health);
     }

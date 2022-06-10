@@ -14,13 +14,11 @@ use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
+use function floor;
+use function implode;
 
 class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
-
-    protected string $name = "action.registerShapedRecipe.name";
-    protected string $detail = "action.registerShapedRecipe.detail";
-    protected array $detailDefaultReplace = ["inputs", "outputs"];
 
     public function __construct(string $i1 = "", string $i2 = "", string $i3 = "", string $i4 = "", string $i5 = "", string $i6 = "", string $i7 = "", string $i8 = "", string $i9 = "", string $o = "") {
         parent::__construct(self::REGISTER_SHAPED_RECIPE, FlowItemCategory::ITEM);
@@ -29,8 +27,12 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $this->setItemVariableName($o, "output");
     }
 
-    public function isDataValid(): bool {
-        return $this->getItemVariableName("output") !== "";
+    public function getName(): string {
+        return Language::get("action.registerShapedRecipe.name");
+    }
+
+    public function getDescription(): string {
+        return Language::get("action.registerShapedRecipe.detail");
     }
 
     public function getDetail(): string {
@@ -59,7 +61,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         }
         $shape = $this->trimShape($shape);
 
-        $details = ["---".Language::get($this->detail)."---"];
+        $details = ["---".Language::get("action.registerShapedRecipe.detail")."---"];
         $details[] = Language::get("action.registerShapedRecipe.shape");
         foreach ($shape as $line) {
             $details[] = "- |".$line."|";
@@ -72,6 +74,10 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $details[] = "- ".$this->getItemVariableName("output");
         $details[] = "------------------------";
         return implode("\n", $details);
+    }
+
+    public function isDataValid(): bool {
+        return $this->getItemVariableName("output") !== "";
     }
 
     public function setInputItemVariableNames(array $items): void {

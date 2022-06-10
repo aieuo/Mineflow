@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 abstract class AddXpBase extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["player", "value"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string $id,
@@ -28,6 +27,14 @@ abstract class AddXpBase extends FlowItem implements PlayerFlowItem {
         $this->setPlayerVariableName($player);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "value"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getXp()];
+    }
+
     public function setXp(string $xp): void {
         $this->xp = $xp;
     }
@@ -38,10 +45,6 @@ abstract class AddXpBase extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->xp !== "";
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getXp()]);
     }
 
     public function getEditFormElements(array $variables): array {

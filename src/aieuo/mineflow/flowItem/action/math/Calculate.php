@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -15,10 +16,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class Calculate extends FlowItem {
-
-    protected string $name = "action.calculate.name";
-    protected string $detail = "action.calculate.detail";
-    protected array $detailDefaultReplace = ["value", "operator", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -53,6 +51,14 @@ class Calculate extends FlowItem {
         $this->operator = (int)($operator ?? self::SQUARE);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["value", "operator", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
+    }
+
     public function setValue(string $value): self {
         $this->value = $value;
         return $this;
@@ -82,11 +88,6 @@ class Calculate extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getValue() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

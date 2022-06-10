@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -16,10 +17,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 
 class AddMapVariable extends FlowItem {
-
-    protected string $name = "action.addMapVariable.name";
-    protected string $detail = "action.addMapVariable.detail";
-    protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         private string $variableName = "",
@@ -28,6 +26,14 @@ class AddMapVariable extends FlowItem {
         private bool   $isLocal = true
     ) {
         parent::__construct(self::ADD_MAP_VARIABLE, FlowItemCategory::VARIABLE);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name", "scope", "key", "value"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey(), $this->getVariableValue()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -56,11 +62,6 @@ class AddMapVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->variableKey !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getKey(), $this->getVariableValue()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

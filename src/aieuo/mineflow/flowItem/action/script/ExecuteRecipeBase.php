@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -14,8 +15,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 
 abstract class ExecuteRecipeBase extends FlowItem {
-
-    protected array $detailDefaultReplace = ["name"];
+    use ActionNameWithMineflowLanguage;
 
     /** @var string[] */
     private array $args;
@@ -29,6 +29,14 @@ abstract class ExecuteRecipeBase extends FlowItem {
         parent::__construct($id, $category);
 
         $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getRecipeName()];
     }
 
     public function getPermissions(): array {
@@ -54,10 +62,6 @@ abstract class ExecuteRecipeBase extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getRecipeName() !== "";
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getRecipeName()]);
     }
 
     public function getRecipe(FlowItemExecutor $source): Recipe {

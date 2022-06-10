@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -13,14 +14,10 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
     use PositionFlowItemTrait, ItemFlowItemTrait;
-
-    protected string $name = "action.dropItem.name";
-    protected string $detail = "action.dropItem.detail";
-    protected array $detailDefaultReplace = ["position", "item"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $position = "", string $item = "") {
         parent::__construct(self::DROP_ITEM, FlowItemCategory::WORLD);
@@ -29,13 +26,16 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
         $this->setItemVariableName($item);
     }
 
-    public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->getItemVariableName() !== "";
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "item"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getItemVariableName()]);
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getItemVariableName()];
+    }
+
+    public function isDataValid(): bool {
+        return $this->getPositionVariableName() !== "" and $this->getItemVariableName() !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

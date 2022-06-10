@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\inventory;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
@@ -19,10 +20,7 @@ use pocketmine\entity\Living;
 
 class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
-
-    protected string $name = "action.equipArmor.name";
-    protected string $detail = "action.equipArmor.detail";
-    protected array $detailDefaultReplace = ["entity", "item", "index"];
+    use ActionNameWithMineflowLanguage;
 
     private array $slots = [
         "action.equipArmor.helmet",
@@ -38,6 +36,14 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         $this->setItemVariableName($item);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "item", "index"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->slots[$this->getIndex()])];
+    }
+
     public function setIndex(string $health): void {
         $this->index = $health;
     }
@@ -48,11 +54,6 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getItemVariableName(), Language::get($this->slots[$this->getIndex()])]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

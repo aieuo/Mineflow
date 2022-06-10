@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\entity\Living;
 
 class IsCreatureVariable extends CheckEntityState {
-
-    protected string $name = "condition.isCreatureVariable.name";
-    protected string $detail = "condition.isCreatureVariable.detail";
 
     public function __construct(string $entity = "") {
         parent::__construct(self::IS_CREATURE_VARIABLE, entity: $entity);

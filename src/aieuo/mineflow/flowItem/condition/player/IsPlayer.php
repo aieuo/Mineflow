@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\player;
 
 use aieuo\mineflow\flowItem\condition\entity\CheckEntityStateById;
@@ -8,9 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 
 class IsPlayer extends CheckEntityStateById {
-
-    protected string $name = "condition.isPlayer.name";
-    protected string $detail = "condition.isPlayer.detail";
 
     public function __construct(string $entityId = "") {
         parent::__construct(self::IS_PLAYER, FlowItemCategory::PLAYER, $entityId);

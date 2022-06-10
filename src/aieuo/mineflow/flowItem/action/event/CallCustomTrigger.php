@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\event;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\utils\Language;
 
 class CallCustomTrigger extends FlowItem {
-
-    protected string $name = "action.callTrigger.name";
-    protected string $detail = "action.callTrigger.detail";
-    protected array $detailDefaultReplace = ["identifier"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(private string $triggerName = "") {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["identifier"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getTriggerName()];
     }
 
     public function setTriggerName(string $formName): void {
@@ -32,11 +37,6 @@ class CallCustomTrigger extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->triggerName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getTriggerName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

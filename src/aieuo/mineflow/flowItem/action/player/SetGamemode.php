@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -16,10 +17,7 @@ use pocketmine\data\java\GameModeIdMap;
 
 class SetGamemode extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected string $name = "action.setGamemode.name";
-    protected string $detail = "action.setGamemode.detail";
-    protected array $detailDefaultReplace = ["player", "gamemode"];
+    use ActionNameWithMineflowLanguage;
 
     private array $gamemodes = [
         "action.gamemode.survival",
@@ -34,6 +32,14 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         $this->setPlayerVariableName($player);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "gamemode"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])];
+    }
+
     public function setGamemode(string $gamemode): void {
         $this->gamemode = $gamemode;
     }
@@ -44,11 +50,6 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->gamemode !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), Language::get($this->gamemodes[$this->getGamemode()])]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

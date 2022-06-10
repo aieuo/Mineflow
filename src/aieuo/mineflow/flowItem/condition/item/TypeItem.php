@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\item;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ItemFlowItem;
 use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
@@ -11,12 +14,10 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["player", "item"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(
         string $id,
@@ -30,9 +31,13 @@ abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, I
         $this->setItemVariableName($item);
     }
 
-    public function getDetail(): string {
+    public function getDetailDefaultReplaces(): array {
         if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getItemVariableName()]);
+        return ["player", "item"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getItemVariableName()];
     }
 
     public function isDataValid(): bool {

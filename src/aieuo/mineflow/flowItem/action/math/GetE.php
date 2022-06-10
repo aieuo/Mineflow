@@ -9,9 +9,6 @@ use aieuo\mineflow\variable\NumberVariable;
 
 class GetE extends TypeGetMathVariable {
 
-    protected string $name = "action.getE.name";
-    protected string $detail = "action.getE.detail";
-
     public function __construct(string $resultName = "e") {
         parent::__construct(self::GET_E, resultName: $resultName);
     }

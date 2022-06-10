@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
 use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,19 +12,23 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
-
-    protected string $name = "action.removeScore.name";
-    protected string $detail = "action.removeScore.detail";
-    protected array $detailDefaultReplace = ["scoreboard", "name"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $scoreboard = "", private string $scoreName = "") {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
         $this->setScoreboardVariableName($scoreboard);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["scoreboard", "name"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getScoreboardVariableName(), $this->getScoreName()];
     }
 
     public function getScoreName(): string {
@@ -32,11 +37,6 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
 
     public function setScoreName(string $scoreName): void {
         $this->scoreName = $scoreName;
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getScoreboardVariableName(), $this->getScoreName()]);
     }
 
     public function isDataValid(): bool {

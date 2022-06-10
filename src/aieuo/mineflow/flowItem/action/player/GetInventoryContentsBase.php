@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
 
 abstract class GetInventoryContentsBase extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["player", "inventory"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $id,
@@ -31,6 +30,14 @@ abstract class GetInventoryContentsBase extends FlowItem implements PlayerFlowIt
         $this->setPlayerVariableName($player);
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "inventory"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getResultName()];
+    }
+
     public function setResultName(string $health): void {
         $this->resultName = $health;
     }
@@ -41,10 +48,6 @@ abstract class GetInventoryContentsBase extends FlowItem implements PlayerFlowIt
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->resultName !== "";
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getResultName()]);
     }
 
     public function getEditFormElements(array $variables): array {

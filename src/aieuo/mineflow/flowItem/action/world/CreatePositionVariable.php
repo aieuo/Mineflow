@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -17,10 +18,7 @@ use pocketmine\Server;
 use pocketmine\world\Position;
 
 class CreatePositionVariable extends FlowItem {
-
-    protected string $name = "action.createPosition.name";
-    protected string $detail = "action.createPosition.detail";
-    protected array $detailDefaultReplace = ["position", "x", "y", "z", "world"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -32,6 +30,14 @@ class CreatePositionVariable extends FlowItem {
         private string $variableName = "pos"
     ) {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "x", "y", "z", "world"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getWorld()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -76,11 +82,6 @@ class CreatePositionVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getWorld()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

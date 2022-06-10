@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\action\internal;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -9,10 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 
 class AddSpecificLanguageMapping extends FlowItem {
-
-    protected string $name = "action.addSpecificLanguageMapping.name";
-    protected string $detail = "action.addSpecificLanguageMapping.detail";
-    protected array $detailDefaultReplace = ["language", "key", "message"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         private string $language = "",
@@ -20,6 +20,14 @@ class AddSpecificLanguageMapping extends FlowItem {
         private string $message = ""
     ) {
         parent::__construct(self::ADD_SPECIFIC_LANGUAGE_MAPPING, FlowItemCategory::INTERNAL);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["language", "key", "message"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getLanguage(), $this->getKey(), $this->getMessage()];
     }
 
     public function getLanguage(): string {
@@ -48,11 +56,6 @@ class AddSpecificLanguageMapping extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getMessage() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getLanguage(), $this->getKey(), $this->getMessage()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

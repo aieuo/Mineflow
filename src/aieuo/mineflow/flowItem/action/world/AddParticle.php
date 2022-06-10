@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
 use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,16 +13,12 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
 
 class AddParticle extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
-
-    protected string $name = "action.addParticle.name";
-    protected string $detail = "action.addParticle.detail";
-    protected array $detailDefaultReplace = ["position", "particle", "amount", ""];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $position = "",
@@ -31,6 +28,14 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($position);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["position", "particle", "amount", ""];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() === "1" ? "" : "s"];
     }
 
     public function getPermissions(): array {
@@ -55,11 +60,6 @@ class AddParticle extends FlowItem implements PositionFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPositionVariableName() !== "" and $this->particle !== "" and $this->amount !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() === "1" ? "" : "s"]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

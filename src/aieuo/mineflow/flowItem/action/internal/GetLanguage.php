@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\action\internal;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -10,13 +13,11 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 use function array_map;
+use function implode;
 use function trim;
 
 class GetLanguage extends FlowItem {
-
-    protected string $name = "action.getLanguageMessage.name";
-    protected string $detail = "action.getLanguageMessage.detail";
-    protected array $detailDefaultReplace = ["language", "key", "parameters", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -27,6 +28,15 @@ class GetLanguage extends FlowItem {
         private string $resultName = "message"
     ) {
         parent::__construct(self::GET_LANGUAGE_MESSAGE, FlowItemCategory::INTERNAL);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["language", "key", "parameters", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        $parameters = implode(", ", $this->getParameters());
+        return [$this->getLanguage(), $this->getKey(), $parameters, $this->getResultName()];
     }
 
     public function getLanguage(): string {
@@ -63,12 +73,6 @@ class GetLanguage extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getResultName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        $parameters = implode(", ", $this->getParameters());
-        return Language::get($this->detail, [$this->getLanguage(), $this->getKey(), $parameters, $this->getResultName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

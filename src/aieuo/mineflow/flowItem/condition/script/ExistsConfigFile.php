@@ -1,24 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 
 class ExistsConfigFile extends FlowItem implements Condition {
-
-    protected string $name = "condition.existsConfigFile.name";
-    protected string $detail = "condition.existsConfigFile.detail";
-    protected array $detailDefaultReplace = ["name"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(private string $fileName = "") {
         parent::__construct(self::EXISTS_CONFIG_FILE, FlowItemCategory::CONFIG);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["name"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getFileName()];
     }
 
     public function setFileName(string $name): self {
@@ -32,11 +39,6 @@ class ExistsConfigFile extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->getFileName() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getFileName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 
 class CreateAABB extends FlowItem {
-
-    protected string $name = "action.createAABB.name";
-    protected string $detail = "action.createAABB.detail";
-    protected array $detailDefaultReplace = ["min x", "min y", "min z", "max x", "max y", "max z", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -32,6 +29,14 @@ class CreateAABB extends FlowItem {
         private string $variableName = "aabb"
     ) {
         parent::__construct(self::CREATE_AABB, FlowItemCategory::WORLD);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["min x", "min y", "min z", "max x", "max y", "max z", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getMinX(), $this->getMinY(), $this->getMinZ(), $this->getMaxX(), $this->getMaxY(), $this->getMaxZ(), $this->getVariableName()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -92,11 +97,6 @@ class CreateAABB extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->minX !== "" and $this->minY !== "" and $this->minZ !== "" and $this->maxX !== "" and $this->maxY !== "" and $this->maxZ !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getMinX(), $this->getMinY(), $this->getMinZ(), $this->getMaxX(), $this->getMaxY(), $this->getMaxZ(), $this->getVariableName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

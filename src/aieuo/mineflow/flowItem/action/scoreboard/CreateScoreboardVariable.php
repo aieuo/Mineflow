@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 class CreateScoreboardVariable extends FlowItem {
-
-    protected string $name = "action.createScoreboard.name";
-    protected string $detail = "action.createScoreboard.detail";
-    protected array $detailDefaultReplace = ["result", "id", "displayName", "type"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -31,6 +28,14 @@ class CreateScoreboardVariable extends FlowItem {
         private string $variableName = "board"
     ) {
         parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["result", "id", "displayName", "type"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->getBoardId(), $this->getDisplayName(), $this->getDisplayType()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -67,11 +72,6 @@ class CreateScoreboardVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->boardId !== "" and $this->displayName !== "" and in_array($this->displayType, $this->displayTypes, true);
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getBoardId(), $this->getDisplayName(), $this->getDisplayType()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\plugin;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 
 abstract class TypeMoney extends FlowItem implements Condition {
-
-    protected array $detailDefaultReplace = ["target", "amount"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(
         string         $id,
@@ -20,6 +21,14 @@ abstract class TypeMoney extends FlowItem implements Condition {
         private string $amount = "",
     ) {
         parent::__construct($id, $category);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["target", "amount"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerName(), $this->getAmount()];
     }
 
     public function setPlayerName(string $name): self {
@@ -42,11 +51,6 @@ abstract class TypeMoney extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->getPlayerName() !== "" and $this->amount !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerName(), $this->getAmount()]);
     }
 
     public function getEditFormElements(array $variables): array {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\config;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
 use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,21 +13,25 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
-
-    protected string $name = "action.setConfig.name";
-    protected string $detail = "action.setConfig.detail";
-    protected array $detailDefaultReplace = ["config", "key", "value"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $config = "", private string $key = "", private string $value = "") {
         parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG);
 
         $this->setConfigVariableName($config);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["config", "key", "value"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getConfigVariableName(), $this->getKey(), $this->getValue()];
     }
 
     public function getPermissions(): array {
@@ -51,11 +56,6 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
 
     public function isDataValid(): bool {
         return $this->getConfigVariableName() !== "" and $this->key !== "" and $this->value !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getConfigVariableName(), $this->getKey(), $this->getValue()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

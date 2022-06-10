@@ -1,24 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\player;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
 class IsPlayerOnlineByName extends FlowItem implements Condition {
-
-    protected string $name = "condition.isPlayerOnlineByName.name";
-    protected string $detail = "condition.isPlayerOnlineByName.detail";
-    protected array $detailDefaultReplace = ["player"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(private string $playerName = "target") {
         parent::__construct(self::IS_PLAYER_ONLINE_BY_NAME, FlowItemCategory::PLAYER);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerName()];
     }
 
     public function getPlayerName(): string {
@@ -31,11 +38,6 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->getPlayerName() !== null;
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

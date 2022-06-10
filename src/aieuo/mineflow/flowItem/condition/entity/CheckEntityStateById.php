@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 
 abstract class CheckEntityStateById extends FlowItem implements Condition {
-
-    protected array $detailDefaultReplace = ["id"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(
         string         $id,
@@ -18,6 +19,14 @@ abstract class CheckEntityStateById extends FlowItem implements Condition {
         private string $entityId = "",
     ) {
         parent::__construct($id, $category);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["id"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityId()];
     }
 
     public function setEntityId(string $id): self {
@@ -31,10 +40,6 @@ abstract class CheckEntityStateById extends FlowItem implements Condition {
 
     public function isDataValid(): bool {
         return $this->getEntityId() !== null;
-    }
-
-    public function getDetail(): string {
-        return Language::get($this->detail, [$this->getEntityId()]);
     }
 
     public function getEditFormElements(array $variables): array {

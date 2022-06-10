@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -18,15 +19,20 @@ use pocketmine\Server;
 
 class TeleportToWorld extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.teleportToWorld.name";
-    protected string $detail = "action.teleportToWorld.detail";
-    protected array $detailDefaultReplace = ["entity", "world"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", private string $worldName = "", private bool $safeSpawn = true) {
         parent::__construct(self::TELEPORT_TO_WORLD, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "world"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getWorldName()];
     }
 
     public function setWorldName(string $worldName): void {
@@ -47,11 +53,6 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->worldName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getWorldName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

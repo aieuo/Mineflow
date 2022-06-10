@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -19,15 +20,20 @@ use pocketmine\entity\Living;
 
 class ClearEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
-
-    protected string $name = "action.clearEffect.name";
-    protected string $detail = "action.clearEffect.detail";
-    protected array $detailDefaultReplace = ["entity", "id"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", private string $effectId = "") {
         parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["entity", "id"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getEffectId()];
     }
 
     public function setEffectId(string $effectId): void {
@@ -40,11 +46,6 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
 
     public function isDataValid(): bool {
         return $this->getEntityVariableName() !== "" and $this->effectId !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getEffectId()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

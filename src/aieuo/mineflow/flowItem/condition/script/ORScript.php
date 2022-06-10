@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ORScript extends LogicalOperation {
-
-    protected string $name = "condition.or.name";
-    protected string $detail = "condition.or.detail";
 
     public function __construct(string $id = self::CONDITION_OR) {
         parent::__construct($id);

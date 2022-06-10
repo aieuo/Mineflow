@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\Vector3FlowItem;
 use aieuo\mineflow\flowItem\base\Vector3FlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,17 +12,13 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\Vector3VariableDropdown;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 
 class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
     use Vector3FlowItemTrait;
-
-    protected string $name = "action.createAABBByVector3Variable.name";
-    protected string $detail = "action.createAABBByVector3Variable.detail";
-    protected array $detailDefaultReplace = ["pos1", "pos2", "result"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -36,6 +33,14 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         $this->setVector3VariableName($pos2, "pos2");
     }
 
+    public function getDetailDefaultReplaces(): array {
+        return ["pos1", "pos2", "result"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVector3VariableName("pos1"), $this->getVector3VariableName("pos2"), $this->getVariableName()];
+    }
+
     public function setVariableName(string $variableName): void {
         $this->variableName = $variableName;
     }
@@ -46,11 +51,6 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->getVector3VariableName("pos1") !== "" and $this->getVector3VariableName("pos2") !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVector3VariableName("pos1"), $this->getVector3VariableName("pos2"), $this->getVariableName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

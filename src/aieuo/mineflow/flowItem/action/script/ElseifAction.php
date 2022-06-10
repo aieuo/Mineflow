@@ -9,9 +9,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ElseifAction extends IFActionBase {
 
-    protected string $name = "action.elseif.name";
-    protected string $detail = "action.elseif.description";
-
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_ELSEIF, conditions: $conditions, actions: $actions, customName: $customName);
     }

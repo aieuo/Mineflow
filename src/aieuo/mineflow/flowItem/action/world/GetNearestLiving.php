@@ -10,9 +10,6 @@ use pocketmine\entity\Living;
 
 class GetNearestLiving extends GetNearestEntityBase {
 
-    protected string $name = "action.getNearestLiving.name";
-    protected string $detail = "action.getNearestLiving.detail";
-
     public function __construct(string $position = "", string $maxDistance = "100", string $resultName = "living") {
         parent::__construct(self::GET_NEAREST_LIVING, position: $position, maxDistance: $maxDistance, resultName: $resultName);
     }

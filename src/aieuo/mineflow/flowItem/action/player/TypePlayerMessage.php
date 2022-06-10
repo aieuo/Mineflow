@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
-
-    protected array $detailDefaultReplace = ["player", "message"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(
         string         $id,
@@ -26,6 +25,14 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
         parent::__construct($id, $category);
 
         $this->setPlayerVariableName($player);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "message"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getMessage()];
     }
 
     public function setMessage(string $message): self {
@@ -39,11 +46,6 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
 
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->getMessage() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getMessage()]);
     }
 
     public function getEditFormElements(array $variables): array {

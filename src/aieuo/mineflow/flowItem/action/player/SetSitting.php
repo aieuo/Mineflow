@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -13,7 +14,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Entity;
 use pocketmine\network\mcpe\protocol\AddActorPacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
@@ -25,10 +25,7 @@ use pocketmine\player\Player;
 
 class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
-
-    protected string $name = "action.setSitting.name";
-    protected string $detail = "action.setSitting.detail";
-    protected array $detailDefaultReplace = ["player", "position"];
+    use ActionNameWithMineflowLanguage;
 
     private static array $entityIds = [];
 
@@ -39,9 +36,12 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $this->setPositionVariableName($position);
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getPlayerVariableName(), $this->getPositionVariableName()]);
+    public function getDetailDefaultReplaces(): array {
+        return ["player", "position"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getPlayerVariableName(), $this->getPositionVariableName()];
     }
 
     public function isDataValid(): bool {

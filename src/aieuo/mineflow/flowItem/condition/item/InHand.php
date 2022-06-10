@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class InHand extends TypeItem {
-
-    protected string $name = "condition.isHandItem.name";
-    protected string $detail = "condition.isHandItem.detail";
 
     public function __construct(string $player = "", string $item = "") {
         parent::__construct(self::IN_HAND, player: $player, item: $item);

@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 class ExitRecipe extends FlowItem {
-
-    protected string $name = "action.exit.name";
-    protected string $detail = "action.exit.detail";
+    use ActionNameWithMineflowLanguage;
 
     public function __construct() {
         parent::__construct(self::EXIT_RECIPE, FlowItemCategory::SCRIPT);

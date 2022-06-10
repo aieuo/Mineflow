@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\utils\Language;
 use pocketmine\scheduler\ClosureTask;
 
 class Wait extends FlowItem {
-
-    protected string $name = "action.wait.name";
-    protected string $detail = "action.wait.detail";
-    protected array $detailDefaultReplace = ["time"];
+    use ActionNameWithMineflowLanguage;
 
     public function __construct(private string $time = "") {
         parent::__construct(self::ACTION_WAIT, FlowItemCategory::SCRIPT);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["time"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getTime()];
     }
 
     public function setTime(string $time): self {
@@ -33,11 +38,6 @@ class Wait extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->getTime() !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getTime()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

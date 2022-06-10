@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -15,10 +16,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
 
 class CreateConfigVariable extends FlowItem {
-
-    protected string $name = "action.createConfig.name";
-    protected string $detail = "action.createConfig.detail";
-    protected array $detailDefaultReplace = ["config", "name"];
+    use ActionNameWithMineflowLanguage;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -27,6 +25,14 @@ class CreateConfigVariable extends FlowItem {
         private string $variableName = "config"
     ) {
         parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
+    }
+
+    public function getDetailDefaultReplaces(): array {
+        return ["config", "name"];
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getVariableName(), $this->getFileName()];
     }
 
     public function getPermissions(): array {
@@ -51,11 +57,6 @@ class CreateConfigVariable extends FlowItem {
 
     public function isDataValid(): bool {
         return $this->variableName !== "" and $this->fileName !== "";
-    }
-
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getVariableName(), $this->getFileName()]);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

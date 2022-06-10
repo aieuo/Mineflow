@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
@@ -12,14 +15,10 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 
 class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
-
-    protected string $name = "condition.inArea.name";
-    protected string $detail = "condition.inArea.detail";
-    protected array $detailDefaultReplace = ["target", "pos1", "pos2"];
+    use ConditionNameWithMineflowLanguage;
 
     public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         parent::__construct(self::IN_AREA, FlowItemCategory::ENTITY);
@@ -29,13 +28,16 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         $this->setPositionVariableName($pos2, "pos2");
     }
 
-    public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "";
+    public function getDetailDefaultReplaces(): array {
+        return ["target", "pos1", "pos2"];
     }
 
-    public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-        return Language::get($this->detail, [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")]);
+    public function getDetailReplaces(): array {
+        return [$this->getEntityVariableName(), $this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2")];
+    }
+
+    public function isDataValid(): bool {
+        return $this->getEntityVariableName() !== "" and $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "";
     }
 
     public function execute(FlowItemExecutor $source): \Generator {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\flowItem\condition\plugin;
 
 use aieuo\mineflow\economy\Economy;
@@ -9,9 +11,6 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\utils\TextFormat;
 
 class LessMoney extends TypeMoney {
-
-    protected string $name = "condition.lessMoney.name";
-    protected string $detail = "condition.lessMoney.detail";
 
     public function __construct(string $playerName = "{target.name}", string $amount = "") {
         parent::__construct(self::LESS_MONEY, playerName: $playerName, amount: $amount);
