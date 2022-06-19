@@ -1,7 +1,7 @@
 name: Mineflow
 main: aieuo\mineflow\Main
 version: 2.10.0
-api: 4.0.0
+api: 4.5.0
 load: POSTWORLD
 softdepend:
   - EconomyAPI
