@@ -93,6 +93,7 @@ use aieuo\mineflow\flowItem\action\player\SendMessageToOp;
 use aieuo\mineflow\flowItem\action\player\SendPopup;
 use aieuo\mineflow\flowItem\action\player\SendTip;
 use aieuo\mineflow\flowItem\action\player\SendTitle;
+use aieuo\mineflow\flowItem\action\player\SendToast;
 use aieuo\mineflow\flowItem\action\player\SetFood;
 use aieuo\mineflow\flowItem\action\player\SetGamemode;
 use aieuo\mineflow\flowItem\action\player\SetSitting;
@@ -226,6 +227,7 @@ class FlowItemFactory {
         self::register(new BroadcastMessage);
         self::register(new SendMessageToOp);
         self::register(new SendTitle);
+        self::register(new SendToast);
         self::register(new Chat);
         /* entity */
         self::register(new SetNameTag);
