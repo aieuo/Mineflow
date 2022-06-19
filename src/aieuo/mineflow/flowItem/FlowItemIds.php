@@ -208,6 +208,7 @@ interface FlowItemIds {
     public const EXISTS_ITEM = "existsItem";
     public const IN_HAND = "isHandItem";
     public const REMOVE_ITEM_CONDITION = "removeItemCondition";
+    public const EXISTS_ARMOR = "existsArmor";
 
     public const COMPARISON_NUMBER = "comparisonNumber";
     public const COMPARISON_STRING = "comparisonString";

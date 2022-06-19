@@ -166,6 +166,7 @@ use aieuo\mineflow\flowItem\condition\CheckNothing;
 use aieuo\mineflow\flowItem\condition\ComparisonNumber;
 use aieuo\mineflow\flowItem\condition\ComparisonString;
 use aieuo\mineflow\flowItem\condition\Condition;
+use aieuo\mineflow\flowItem\condition\ExistsArmor;
 use aieuo\mineflow\flowItem\condition\ExistsConfigData;
 use aieuo\mineflow\flowItem\condition\ExistsConfigFile;
 use aieuo\mineflow\flowItem\condition\ExistsItem;
@@ -397,6 +398,7 @@ class FlowItemFactory {
         self::register(new ExistsItem);
         self::register(new CanAddItem);
         self::register(new RemoveItemCondition);
+        self::register(new ExistsArmor);
         /* script */
         self::register(new ComparisonNumber);
         self::register(new ComparisonString);
