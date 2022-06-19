@@ -1,0 +1,10 @@
+name: Suggestion
+description: Suggestion
+title: "[Suggestion] "
+body:
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggestion
+    validations:
+      required: true
