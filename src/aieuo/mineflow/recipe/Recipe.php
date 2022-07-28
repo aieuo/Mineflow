@@ -24,6 +24,7 @@ use pocketmine\entity\Entity;
 use pocketmine\event\Event;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use pocketmine\utils\Filesystem;
 use function array_key_last;
 use function explode;
 use function str_replace;
@@ -330,8 +331,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $json = json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
         if ($json === $this->getRawData()) return;
 
-        if (file_put_contents($path, $json) === false) {
+        try {
+            FileSystem::safeFilePutContents($path, $json);
+        } catch(\RuntimeException $e) {
             Main::getInstance()->getLogger()->error(Language::get("recipe.save.failed", [$this->getPathname()]));
+            Main::getInstance()->getLogger()->logException($e);
         }
     }
 

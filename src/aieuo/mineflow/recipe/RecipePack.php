@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\ConfigHolder;
+use pocketmine\utils\Filesystem;
 
 class RecipePack implements \JsonSerializable {
 
@@ -98,7 +99,7 @@ class RecipePack implements \JsonSerializable {
 
     public function export(string $path): void {
         if (!file_exists($path)) @mkdir($path, 0777, true);
-        file_put_contents($path.$this->name.".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
+        FileSystem::safeFilePutContents($path.$this->name.".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
     }
 
     public function jsonSerialize(): array {
