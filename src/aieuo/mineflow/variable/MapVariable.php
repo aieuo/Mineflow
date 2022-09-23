@@ -33,7 +33,7 @@ class MapVariable extends ListVariable {
         unset($this->value[$index]);
     }
 
-    public function add($target): MapVariable {
+    public function add(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -43,7 +43,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function sub($target): MapVariable {
+    public function sub(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -53,7 +53,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function mul($target): MapVariable {
+    public function mul(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -63,7 +63,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function div($target): MapVariable {
+    public function div(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];

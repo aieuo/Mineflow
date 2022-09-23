@@ -16,13 +16,13 @@ class BoolVariable extends Variable implements \JsonSerializable {
         return (bool)parent::getValue();
     }
 
-    public function add($target): BoolVariable {
+    public function add(Variable $target): BoolVariable {
         if (!($target instanceof BoolVariable)) throw new UnsupportedCalculationException();
 
         return new BoolVariable($this->getValue() or $target->getValue());
     }
 
-    public function mul($target): BoolVariable {
+    public function mul(Variable $target): BoolVariable {
         if (!($target instanceof BoolVariable)) throw new UnsupportedCalculationException();
 
         return new BoolVariable($this->getValue() and $target->getValue());

@@ -72,7 +72,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return $this->value[(int)$index];
     }
 
-    public function add($target): ListVariable {
+    public function add(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -82,7 +82,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function sub($target): ListVariable {
+    public function sub(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -92,7 +92,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function mul($target): ListVariable {
+    public function mul(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -102,7 +102,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function div($target): ListVariable {
+    public function div(Variable $target): ListVariable {
         if ($target instanceof ListVariable) throw new UnsupportedCalculationException();
 
         $values = [];

@@ -25,30 +25,26 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return new NumberVariable($result);
     }
 
-    public function add($target): NumberVariable {
+    public function add(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() + $target->getValue());
-        if (is_numeric($target)) return new NumberVariable($this->getValue() + $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function sub($target): NumberVariable {
+    public function sub(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() - $target->getValue());
-        if (is_numeric($target)) return new NumberVariable($this->getValue() - $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function mul($target): NumberVariable {
+    public function mul(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() * $target->getValue());
-        if (is_numeric($target)) return new NumberVariable($this->getValue() * $target);
 
         throw new UnsupportedCalculationException();
     }
 
-    public function div($target): NumberVariable {
+    public function div(Variable $target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() / $target->getValue());
-        if (is_numeric($target)) return new NumberVariable($this->getValue() / $target);
 
         throw new UnsupportedCalculationException();
     }

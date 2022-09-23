@@ -12,17 +12,16 @@ class StringVariable extends Variable implements \JsonSerializable {
         return (string)parent::getValue();
     }
 
-    public function add($target): StringVariable {
+    public function add(Variable $target): StringVariable {
         return new StringVariable($this->getValue().$target);
     }
 
-    public function sub($target): StringVariable {
+    public function sub(Variable $target): StringVariable {
         return new StringVariable(str_replace((string)$target, "", $this->getValue()));
     }
 
-    public function mul($target): StringVariable {
-        if ($target instanceof NumberVariable) $target = $target->getValue();
-        if(is_numeric($target)) return new StringVariable(str_repeat($this->getValue(), (int)$target));
+    public function mul(Variable $target): StringVariable {
+        if ($target instanceof NumberVariable) return new StringVariable(str_repeat($this->getValue(), $target->getValue()));
 
         throw new UnsupportedCalculationException();
     }

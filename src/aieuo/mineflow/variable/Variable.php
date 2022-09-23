@@ -85,19 +85,19 @@ abstract class Variable {
         return (string)$this->getValue();
     }
 
-    public function add($target): Variable {
+    public function add(Variable $target): Variable {
         throw new UnsupportedCalculationException();
     }
 
-    public function sub($target): Variable {
+    public function sub(Variable $target): Variable {
         throw new UnsupportedCalculationException();
     }
 
-    public function mul($target): Variable {
+    public function mul(Variable $target): Variable {
         throw new UnsupportedCalculationException();
     }
 
-    public function div($target): Variable {
+    public function div(Variable $target): Variable {
         throw new UnsupportedCalculationException();
     }
 
