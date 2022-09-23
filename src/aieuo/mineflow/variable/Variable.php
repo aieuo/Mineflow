@@ -13,14 +13,14 @@ abstract class Variable {
     /** @var string|int|Variable[]|object */
     protected $value;
 
-    public int $type;
-
-    public static function create($value, int $type = self::STRING): ?self {
+    public static function create($value, int|string $type): ?self {
         return match ($type) {
-            self::STRING => new StringVariable((string)$value),
-            self::NUMBER => new NumberVariable((float)$value),
-            self::LIST => new ListVariable($value),
-            self::MAP => new MapVariable($value),
+            0, StringVariable::getTypeName() => new StringVariable((string)$value),
+            1, NumberVariable::getTypeName() => new NumberVariable((float)$value),
+            2, ListVariable::getTypeName() => new ListVariable($value),
+            3, MapVariable::getTypeName() => new MapVariable($value),
+            5, BooleanVariable::getTypeName() => new BooleanVariable($value),
+            6, NullVariable::getTypeName() => new NullVariable(),
             default => null,
         };
     }
