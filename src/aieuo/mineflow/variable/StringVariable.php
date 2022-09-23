@@ -12,8 +12,11 @@ class StringVariable extends Variable implements \JsonSerializable {
         return "string";
     }
 
+    public function __construct(private string $value) {
+    }
+
     public function getValue(): string {
-        return (string)parent::getValue();
+        return $this->value;
     }
 
     public function add(Variable $target): StringVariable {

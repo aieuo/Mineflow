@@ -34,8 +34,12 @@ class EntityVariable extends PositionVariable {
         parent::__construct($this->entity->getPosition(), $str);
     }
 
+    public function getValue(): Entity {
+        return $this->entity;
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
-        $entity = $this->getEntity();
+        $entity = $this->getValue();
         switch ($index) {
             case "id":
                 return new NumberVariable($entity->getId());
@@ -66,10 +70,6 @@ class EntityVariable extends PositionVariable {
         }
     }
 
-    public function getEntity(): Entity {
-        return $this->entity;
-    }
-
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "id" => new DummyVariable(DummyVariable::NUMBER),
@@ -86,7 +86,7 @@ class EntityVariable extends PositionVariable {
     }
 
     public function __toString(): string {
-        $name = $this->getEntity()->getNameTag();
-        return empty($name) ? (string)$this->getEntity() : $name;
+        $name = $this->getValue()->getNameTag();
+        return empty($name) ? (string)$this->getValue() : $name;
     }
 }

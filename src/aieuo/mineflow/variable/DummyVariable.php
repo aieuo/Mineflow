@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
@@ -118,5 +120,9 @@ class DummyVariable extends Variable {
             self::AXIS_ALIGNED_BB,
             self::RECIPE,
         ], true);
+    }
+
+    public function getValue(): mixed {
+        return null;
     }
 }

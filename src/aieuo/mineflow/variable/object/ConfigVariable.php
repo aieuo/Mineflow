@@ -28,12 +28,12 @@ class ConfigVariable extends ObjectVariable {
         return "config";
     }
 
-    public function __construct(Config $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Config $config, ?string $str = null) {
+        parent::__construct($str);
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $config = $this->getConfig();
+        $config = $this->getValue();
         $data = $config->get($index);
         if ($data === null) return null;
         if (is_string($data)) return new StringVariable($data);
@@ -48,15 +48,14 @@ class ConfigVariable extends ObjectVariable {
         return $variable;
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getConfig(): Config {
-        return $this->getValue();
+    public function getValue(): Config {
+        return $this->config;
     }
 
     public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Main::getVariableHelper();
         $values = [];
-        foreach ($this->getConfig()->getAll() as $key => $value) {
+        foreach ($this->getValue()->getAll() as $key => $value) {
             $variable = match (true) {
                 is_array($value) => $variableHelper->arrayToListVariable($value),
                 is_numeric($value) => new NumberVariable($value),
@@ -83,6 +82,6 @@ class ConfigVariable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        return "Config(".$this->getConfig()->getPath().")";
+        return "Config(".$this->getValue()->getPath().")";
     }
 }

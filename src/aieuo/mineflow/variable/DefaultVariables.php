@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\utils\Utils;

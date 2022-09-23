@@ -17,23 +17,22 @@ class MapVariable extends ListVariable {
         return "map";
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        if (!isset($this->value[$index])) return null;
-        return $this->value[$index];
-    }
-
     public function setValueAt(int|string $key, Variable $value): void {
-        $this->value[$key] = $value;
-    }
-
-    public function removeValueAt(int|string $index): void {
-        unset($this->value[$index]);
+        $this->values[$key] = $value;
     }
 
     public function removeValue(Variable $value, bool $strict = true): void {
         $index = $this->indexOf($value, $strict);
-        if ($index === null) return;
-        unset($this->value[$index]);
+        if ($index === false) return;
+        unset($this->values[$index]);
+    }
+
+    public function removeValueAt(int|string $index): void {
+        unset($this->values[$index]);
+    }
+
+    public function getValueFromIndex(string $index): ?Variable {
+        return $this->values[$index] ?? null;
     }
 
     public function add(Variable $target): MapVariable {

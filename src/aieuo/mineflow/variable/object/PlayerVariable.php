@@ -22,7 +22,8 @@ class PlayerVariable extends HumanVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $player = $this->getPlayer();
+        /** @var Player $player */
+        $player = $this->getValue();
         return match ($index) {
             "name" => new StringVariable($player->getName()),
             "display_name" => new StringVariable($player->getDisplayName()),
@@ -35,11 +36,6 @@ class PlayerVariable extends HumanVariable {
             "flying" => new BooleanVariable($player->isFlying()),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getPlayer(): Player {
-        return $this->getEntity();
     }
 
     public static function getValuesDummy(): array {
@@ -57,6 +53,8 @@ class PlayerVariable extends HumanVariable {
     }
 
     public function __toString(): string {
-        return $this->getPlayer()->getName();
+        /** @var Player $player */
+        $player = $this->getValue();
+        return $player->getName();
     }
 }

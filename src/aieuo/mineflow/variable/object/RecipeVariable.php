@@ -17,12 +17,16 @@ class RecipeVariable extends ObjectVariable {
         return "recipe";
     }
 
-    public function __construct(Recipe $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Recipe $recipe, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): Recipe {
+        return $this->recipe;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $recipe = $this->getRecipe();
+        $recipe = $this->getValue();
         return match ($index) {
             "name" => new StringVariable($recipe->getName()),
             "group" => new StringVariable($recipe->getGroup()),
@@ -30,11 +34,6 @@ class RecipeVariable extends ObjectVariable {
             "variables" => new MapVariable($recipe->getExecutor()?->getVariables() ?? []),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getRecipe(): Recipe {
-        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {
@@ -47,7 +46,7 @@ class RecipeVariable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        $recipe = $this->getRecipe();
+        $recipe = $this->getValue();
         return $recipe->getGroup()."/".$recipe->getName();
     }
 }

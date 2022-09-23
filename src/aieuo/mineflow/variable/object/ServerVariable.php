@@ -24,12 +24,16 @@ class ServerVariable extends ObjectVariable {
         return "server";
     }
 
-    public function __construct(Server $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Server $server, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): Server {
+        return $this->server;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $server = $this->getServer();
+        $server = $this->getValue();
         switch ($index) {
             case "name":
                 return new StringVariable($server->getName());
@@ -71,11 +75,6 @@ class ServerVariable extends ObjectVariable {
             default:
                 return parent::getValueFromIndex($index);
         }
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getServer(): Server {
-        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

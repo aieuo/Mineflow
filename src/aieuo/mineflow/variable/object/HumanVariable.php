@@ -20,7 +20,8 @@ class HumanVariable extends LivingVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $human = $this->getHuman();
+        /** @var Human $human */
+        $human = $this->getValue();
         return match ($index) {
             "hand" => new ItemVariable($human->getInventory()->getItemInHand()),
             "food" => new NumberVariable($human->getHungerManager()->getFood()),
@@ -30,11 +31,6 @@ class HumanVariable extends LivingVariable {
             "inventory" => new InventoryVariable($human->getInventory()),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getHuman(): Human {
-        return $this->getEntity();
     }
 
     public static function getValuesDummy(): array {

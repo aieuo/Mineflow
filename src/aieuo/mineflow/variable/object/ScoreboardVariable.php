@@ -15,16 +15,19 @@ class ScoreboardVariable extends ObjectVariable {
         return "scoreboard";
     }
 
+    public function __construct(private Scoreboard $scoreboard, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): Scoreboard {
+        return $this->scoreboard;
+    }
+
     public function getValueFromIndex(string $index): ?Variable {
-        $board = $this->getScoreboard();
+        $board = $this->getValue();
         $scores = $board->getScores();
 
         if (!isset($scores[$index])) return null;
         return new NumberVariable($scores[$index]);
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getScoreboard(): Scoreboard {
-        return $this->getValue();
     }
 }

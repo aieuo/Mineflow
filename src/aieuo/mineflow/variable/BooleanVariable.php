@@ -12,12 +12,11 @@ class BooleanVariable extends Variable implements \JsonSerializable {
         return "boolean";
     }
 
-    public function __construct(bool $value) {
-        parent::__construct($value);
+    public function __construct(private bool $value) {
     }
 
     public function getValue(): bool {
-        return (bool)parent::getValue();
+        return $this->value;
     }
 
     public function add(Variable $target): BooleanVariable {

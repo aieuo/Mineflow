@@ -17,8 +17,12 @@ class Vector3Variable extends ObjectVariable {
         return "vector3";
     }
 
-    public function __construct(Vector3 $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Vector3 $vector3, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): Vector3 {
+        return $this->vector3;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
@@ -38,11 +42,6 @@ class Vector3Variable extends ObjectVariable {
         };
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getVector3(): Vector3 {
-        return $this->getValue();
-    }
-
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "x" => new DummyVariable(DummyVariable::NUMBER),
@@ -59,7 +58,7 @@ class Vector3Variable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        $value = $this->getVector3();
+        $value = $this->getValue();
         return $value->x.",".$value->y.",".$value->z;
     }
 }

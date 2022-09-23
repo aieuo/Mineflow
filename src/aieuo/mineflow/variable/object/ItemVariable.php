@@ -18,12 +18,16 @@ class ItemVariable extends ObjectVariable {
         return "item";
     }
 
-    public function __construct(Item $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Item $item, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): Item {
+        return $this->item;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $item = $this->getItem();
+        $item = $this->getValue();
         return match ($index) {
             "name" => new StringVariable($item->getName()),
             "vanilla_name" => new StringVariable($item->getVanillaName()),
@@ -37,13 +41,8 @@ class ItemVariable extends ObjectVariable {
         };
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getItem(): Item {
-        return $this->getValue();
-    }
-
-    public function setItem(Item $item): void  {
-        $this->setValue($item);
+    public function setItem(Item $item): void {
+        $this->item = $item;
     }
 
     public static function getValuesDummy(): array {
@@ -61,7 +60,7 @@ class ItemVariable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        $item = $this->getItem();
+        $item = $this->getValue();
         return "Item[".$item->getName()."] (".$item->getId().":".($item->hasAnyDamageValue() ? "?" : $item->getMeta()).")x".$item->getCount();
     }
 }

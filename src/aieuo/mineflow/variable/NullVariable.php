@@ -10,8 +10,8 @@ class NullVariable extends Variable implements \JsonSerializable {
         return "null";
     }
 
-    public function __construct() {
-        parent::__construct(null);
+    public function getValue(): mixed {
+        return null;
     }
 
     public function __toString(): string {

@@ -11,6 +11,8 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
+use function end;
+use function explode;
 
 class EventVariable extends ObjectVariable {
 
@@ -18,22 +20,21 @@ class EventVariable extends ObjectVariable {
         return "event";
     }
 
-    public function __construct(Event $value, ?string $str = null) {
-        parent::__construct($value, $str ?? $this->getEventName($value));
+    public function __construct(private Event $event, ?string $str = null) {
+        parent::__construct($str ?? $this->getEventName($event));
+    }
+
+    public function getValue(): Event {
+        return $this->event;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $event = $this->getEvent();
+        $event = $this->getValue();
         return match ($index) {
             "name" => new StringVariable($this->getEventName($event)),
             "isCanceled" => new BooleanVariable($event instanceof Cancellable ? $event->isCancelled() : false),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getEvent(): Event {
-        return $this->getValue();
     }
 
     public function getEventName(Event $event): string {

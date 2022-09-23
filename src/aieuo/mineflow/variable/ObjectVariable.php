@@ -1,18 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
-class ObjectVariable extends Variable {
+abstract class ObjectVariable extends Variable {
 
     private ?string $showString;
 
-    public function __construct(object $value, ?string $str = null) {
-        parent::__construct($value);
+    public function __construct(?string $str = null) {
         $this->showString = $str;
-    }
-
-    public function getValue(): object {
-        return parent::getValue();
     }
 
     public function getShowString(): ?string {

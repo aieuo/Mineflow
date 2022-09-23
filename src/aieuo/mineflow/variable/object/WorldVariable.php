@@ -23,12 +23,16 @@ class WorldVariable extends ObjectVariable {
         return "world";
     }
 
-    public function __construct(World $value, ?string $str = null) {
-        parent::__construct($value, $str ?? $value->getFolderName());
+    public function __construct(private World $world, ?string $str = null) {
+        parent::__construct($str ?? $world->getFolderName());
+    }
+
+    public function getValue(): World {
+        return $this->world;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $level = $this->getWorld();
+        $level = $this->getValue();
         return match ($index) {
             "name" => new StringVariable($level->getDisplayName()),
             "folderName" => new StringVariable($level->getFolderName()),
@@ -43,11 +47,6 @@ class WorldVariable extends ObjectVariable {
             ))),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getWorld(): World {
-        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {

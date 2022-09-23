@@ -42,27 +42,9 @@ abstract class Variable {
         return self::create($values, $data["type"]);
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function __construct($value) {
-        $this->value = $value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value): void {
-        $this->value = $value;
-    }
     abstract public static function getTypeName(): string;
 
-    /**
-     * @return string|int|Variable[]|object|bool
-     */
-    public function getValue() {
-        return $this->value;
-    }
+    abstract public function getValue(): mixed;
 
     public function getValueFromIndex(string $index): ?Variable {
         return null;

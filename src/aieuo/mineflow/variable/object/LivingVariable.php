@@ -20,7 +20,8 @@ class LivingVariable extends EntityVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $living = $this->getLiving();
+        /** @var Living $living */
+        $living = $this->getValue();
         return match ($index) {
             "armor" => new InventoryVariable($living->getArmorInventory()),
             "sprinting" => new BooleanVariable($living->isSprinting()),
@@ -29,11 +30,6 @@ class LivingVariable extends EntityVariable {
             "swimming" => new BooleanVariable($living->isSwimming()),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getLiving(): Living {
-        return $this->getEntity();
     }
 
     public static function getValuesDummy(): array {

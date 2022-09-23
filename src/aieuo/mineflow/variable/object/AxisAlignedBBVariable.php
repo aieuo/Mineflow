@@ -18,12 +18,16 @@ class AxisAlignedBBVariable extends ObjectVariable {
         return "aabb";
     }
 
-    public function __construct(AxisAlignedBB $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private AxisAlignedBB $aabb, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): AxisAlignedBB {
+        return $this->aabb;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $aabb = $this->getAxisAlignedBB();
+        $aabb = $this->getValue();
         return match ($index) {
             "min_x" => new NumberVariable($aabb->minX),
             "min_y" => new NumberVariable($aabb->minY),
@@ -35,11 +39,6 @@ class AxisAlignedBBVariable extends ObjectVariable {
             "max" => new Vector3($aabb->maxX, $aabb->maxY, $aabb->maxZ),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getAxisAlignedBB(): AxisAlignedBB {
-        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {
@@ -56,6 +55,6 @@ class AxisAlignedBBVariable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        return (string)$this->getAxisAlignedBB();
+        return (string)$this->getValue();
     }
 }

@@ -19,61 +19,54 @@ class ListVariable extends Variable implements \JsonSerializable {
         return "list";
     }
 
-    protected $value = [];
-
     /**
-     * @return Variable[]
-     */
-    public function getValue(): array {
-        return parent::getValue();
-    }
-
-    /**
-     * @param Variable[] $value
+     * @param Variable[] $values
      * @param string|null $str
      */
-    public function __construct(array $value, ?string $str = "") {
-        parent::__construct($value);
+    public function __construct(protected array $values, ?string $str = "") {
         $this->showString = $str;
     }
 
+    public function getValue(): array {
+        return $this->values;
+    }
+
     public function appendValue(Variable $value): void {
-        $this->value[] = $value;
+        $this->values[] = $value;
     }
 
     public function setValueAt(int|string $key, Variable $value): void {
-        $this->value[(int)$key] = $value;
-        $this->value = array_values($this->value);
-    }
-
-    public function removeValueAt(int|string $index): void {
-        unset($this->value[(int)$index]);
-        $this->value = array_values($this->value);
+        $this->values[(int)$key] = $value;
+        $this->values = array_values($this->values);
     }
 
     public function removeValue(Variable $value, bool $strict = true): void {
         $index = $this->indexOf($value, $strict);
-        if ($index === null) return;
-        unset($this->value[$index]);
-        $this->value = array_values($this->value);
+        if ($index === false) return;
+        unset($this->values[$index]);
+        $this->values = array_values($this->values);
+    }
+
+    public function removeValueAt(int|string $index): void {
+        unset($this->values[(int)$index]);
+        $this->values = array_values($this->values);
     }
 
     public function indexOf(Variable $value, bool $strict = true): int|string|null {
         if ($strict) {
-            $index = array_search($value, $this->value, true);
+            $index = array_search($value, $this->values, true);
             return $index === false ? null : $index;
         }
 
         $str = (string)$value;
-        foreach ($this->value as $index => $v) {
+        foreach ($this->values as $index => $v) {
             if ((string)$v === $str) return $index;
         }
         return null;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        if (!isset($this->value[(int)$index])) return null;
-        return $this->value[(int)$index];
+        return $this->values[(int)$index] ?? null;
     }
 
     public function add(Variable $target): ListVariable {
@@ -135,7 +128,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     public function getCount(): int {
-        return count($this->value);
+        return count($this->values);
     }
 
     public function __toString(): string {

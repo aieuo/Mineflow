@@ -16,17 +16,11 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return "number";
     }
 
-    public function __construct(int|float $value) {
-        parent::__construct($value);
+    public function __construct(private int|float $value) {
     }
 
     public function getValue(): int|float {
-        return parent::getValue();
-    }
-
-    public function modulo(NumberVariable $var): NumberVariable {
-        $result = $this->getValue() % $var->getValue();
-        return new NumberVariable($result);
+        return $this->value;
     }
 
     public function add(Variable $target): NumberVariable {
@@ -51,10 +45,6 @@ class NumberVariable extends Variable implements \JsonSerializable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() / $target->getValue());
 
         throw new UnsupportedCalculationException();
-    }
-
-    public function toStringVariable(): StringVariable {
-        return new StringVariable((string)$this->getValue());
     }
 
     public function jsonSerialize(): array {

@@ -18,12 +18,16 @@ class InventoryVariable extends ObjectVariable {
         return "inventory";
     }
 
-    public function __construct(Inventory $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(private Inventory $inventory, ?string $str = null) {
+        parent::__construct($str);
+    }
+
+    public function getValue(): Inventory {
+        return $this->inventory;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $inventory = $this->getInventory();
+        $inventory = $this->getValue();
         return match ($index) {
             "all" => new ListVariable(array_values(array_map(fn(Item $item) => new ItemVariable($item), $inventory->getContents()))),
             "size" => new NumberVariable($inventory->getSize()),
@@ -31,13 +35,8 @@ class InventoryVariable extends ObjectVariable {
         };
     }
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getInventory(): Inventory {
-        return $this->getValue();
-    }
-
     public function __toString(): string {
-        $value = $this->getInventory();
+        $value = $this->getValue();
         $names = explode("\\", $value::class);
         return $names[array_key_last($names)];
     }

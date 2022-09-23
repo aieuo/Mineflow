@@ -20,7 +20,8 @@ class LocationVariable extends PositionVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $location = $this->getLocation();
+        /** @var Location $location */
+        $location = $this->getValue();
         return match ($index) {
             "yaw" => new NumberVariable($location->yaw),
             "pitch" => new NumberVariable($location->pitch),
@@ -32,11 +33,6 @@ class LocationVariable extends PositionVariable {
             "east" => new LocationVariable(Location::fromObject($location->east(1), $location->world, $location->yaw, $location->pitch)),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getLocation(): Location {
-        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {
@@ -53,7 +49,8 @@ class LocationVariable extends PositionVariable {
     }
 
     public function __toString(): string {
-        $value = $this->getLocation();
+        /** @var Location $value */
+        $value = $this->getValue();
         return $value->x.",".$value->y.",".$value->z.",".$value->world->getFolderName()." (".$value->getYaw().",".$value->getPitch().")";
     }
 }

@@ -19,7 +19,8 @@ class PositionVariable extends Vector3Variable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $position = $this->getPosition();
+        /** @var Position $position */
+        $position = $this->getValue();
         return match ($index) {
             "position" => new PositionVariable($position),
             "world" => new WorldVariable($position->world, $position->world->getFolderName()),
@@ -31,11 +32,6 @@ class PositionVariable extends Vector3Variable {
             "east" => new PositionVariable(Position::fromObject($position->east(1), $position->world)),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    public function getPosition(): Position {
-        return $this->getValue();
     }
 
     public static function getValuesDummy(): array {
@@ -51,7 +47,8 @@ class PositionVariable extends Vector3Variable {
     }
 
     public function __toString(): string {
-        $value = $this->getPosition();
+        /** @var Position $position */
+        $value = $this->getValue();
         return $value->x.",".$value->y.",".$value->z.",".$value->world->getFolderName();
     }
 }

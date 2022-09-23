@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -16,11 +18,15 @@ class BlockVariable extends PositionVariable {
     }
 
     public function __construct(private Block $block, ?string $str = null) {
-        parent::__construct($block->getPosition(), $str);
+        parent::__construct($this->block->getPosition(), $str);
+    }
+
+    public function getValue(): Block {
+        return $this->block;
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $block = $this->getBlock();
+        $block = $this->getValue();
         return match ($index) {
             "name" => new StringVariable($block->getName()),
             "id" => new NumberVariable($block->getId()),
@@ -34,10 +40,6 @@ class BlockVariable extends PositionVariable {
             "east" => new BlockVariable($block->getSide(Facing::EAST)),
             default => parent::getValueFromIndex($index),
         };
-    }
-
-    public function getBlock(): Block {
-        return $this->block;
     }
 
     public static function getValuesDummy(): array {
@@ -57,7 +59,7 @@ class BlockVariable extends PositionVariable {
     }
 
     public function __toString(): string {
-        $value = $this->getBlock();
+        $value = $this->getValue();
         return (string)$value;
     }
 }
