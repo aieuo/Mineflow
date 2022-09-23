@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\BooleanVariable;
@@ -8,6 +10,10 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
 
 class LivingVariable extends EntityVariable {
+
+    public static function getTypeName(): string {
+        return "living";
+    }
 
     public function __construct(Living $entity, ?string $str = null) {
         parent::__construct($entity, $str);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -11,6 +13,10 @@ use pocketmine\math\Vector3;
 use function array_merge;
 
 class AxisAlignedBBVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "aabb";
+    }
 
     public function __construct(AxisAlignedBB $value, ?string $str = null) {
         parent::__construct($value, $str);
@@ -52,5 +58,4 @@ class AxisAlignedBBVariable extends ObjectVariable {
     public function __toString(): string {
         return (string)$this->getAxisAlignedBB();
     }
-
 }

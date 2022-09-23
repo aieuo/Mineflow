@@ -12,12 +12,16 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Living;
-use pocketmine\world\World;
 use pocketmine\player\Player;
+use pocketmine\world\World;
 use function array_filter;
 use function array_map;
 
 class WorldVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "world";
+    }
 
     public function __construct(World $value, ?string $str = null) {
         parent::__construct($value, $str ?? $value->getFolderName());

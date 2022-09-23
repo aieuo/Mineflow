@@ -11,6 +11,10 @@ use pocketmine\entity\Location;
 
 class LocationVariable extends PositionVariable {
 
+    public static function getTypeName(): string {
+        return "location";
+    }
+
     public function __construct(Location $value, ?string $str = null) {
         parent::__construct($value, $str);
     }

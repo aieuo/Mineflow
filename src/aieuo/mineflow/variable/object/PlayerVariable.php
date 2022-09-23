@@ -13,6 +13,10 @@ use pocketmine\player\Player;
 
 class PlayerVariable extends HumanVariable {
 
+    public static function getTypeName(): string {
+        return "player";
+    }
+
     public function __construct(Player $value, ?string $str = null) {
         parent::__construct($value, $str ?? $value->getName());
     }

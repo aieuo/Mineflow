@@ -10,6 +10,10 @@ use pocketmine\world\Position;
 
 class PositionVariable extends Vector3Variable {
 
+    public static function getTypeName(): string {
+        return "position";
+    }
+
     public function __construct(Position $value, ?string $str = null) {
         parent::__construct($value, $str);
     }

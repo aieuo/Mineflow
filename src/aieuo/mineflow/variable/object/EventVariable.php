@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\BooleanVariable;
@@ -11,6 +13,10 @@ use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
 
 class EventVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "event";
+    }
 
     public function __construct(Event $value, ?string $str = null) {
         parent::__construct($value, $str ?? $this->getEventName($value));
@@ -42,3 +48,4 @@ class EventVariable extends ObjectVariable {
         ]);
     }
 }
+

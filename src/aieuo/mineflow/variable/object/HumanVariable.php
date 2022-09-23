@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -8,6 +10,10 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Human;
 
 class HumanVariable extends LivingVariable {
+
+    public static function getTypeName(): string {
+        return "human";
+    }
 
     public function __construct(Human $value, ?string $str = null) {
         parent::__construct($value, $str ?? $value->getName());

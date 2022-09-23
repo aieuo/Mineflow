@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -11,6 +13,10 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\item\Item;
 
 class ItemVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "item";
+    }
 
     public function __construct(Item $value, ?string $str = null) {
         parent::__construct($value, $str);

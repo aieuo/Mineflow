@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use function array_merge;
 use function array_reverse;
 use function array_values;
 use function count;
 
 class MapVariable extends ListVariable {
 
-    public int $type = Variable::MAP;
+    public static function getTypeName(): string {
+        return "map";
+    }
 
     public function getValueFromIndex(string $index): ?Variable {
         if (!isset($this->value[$index])) return null;

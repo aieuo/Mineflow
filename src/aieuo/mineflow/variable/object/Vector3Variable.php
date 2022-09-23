@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -10,6 +12,10 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\math\Vector3;
 
 class Vector3Variable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "vector3";
+    }
 
     public function __construct(Vector3 $value, ?string $str = null) {
         parent::__construct($value, $str);

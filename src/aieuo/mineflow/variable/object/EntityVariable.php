@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\BooleanVariable;
@@ -22,6 +24,10 @@ class EntityVariable extends PositionVariable {
             $entity instanceof Living => new LivingVariable($entity),
             default => new EntityVariable($entity),
         };
+    }
+
+    public static function getTypeName(): string {
+        return "entity";
     }
 
     public function __construct(private Entity $entity, ?string $str = null) {

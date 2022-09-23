@@ -11,17 +11,19 @@ use aieuo\mineflow\variable\object\HumanVariable;
 use aieuo\mineflow\variable\object\InventoryVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
 use aieuo\mineflow\variable\object\LivingVariable;
-use aieuo\mineflow\variable\object\RecipeVariable;
-use aieuo\mineflow\variable\object\WorldVariable;
 use aieuo\mineflow\variable\object\LocationVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
 use aieuo\mineflow\variable\object\ScoreboardVariable;
 use aieuo\mineflow\variable\object\Vector3Variable;
+use aieuo\mineflow\variable\object\WorldVariable;
 
 class DummyVariable extends Variable {
 
-    public int $type = Variable::DUMMY;
+    public static function getTypeName(): string {
+        return "dummy";
+    }
 
     private string $description;
     private string $valueType;

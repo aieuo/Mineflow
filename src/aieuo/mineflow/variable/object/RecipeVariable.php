@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\recipe\Recipe;
@@ -10,6 +12,10 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 
 class RecipeVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "recipe";
+    }
 
     public function __construct(Recipe $value, ?string $str = null) {
         parent::__construct($value, $str);

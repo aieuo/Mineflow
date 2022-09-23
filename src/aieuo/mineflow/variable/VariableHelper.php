@@ -399,15 +399,15 @@ class VariableHelper {
         return (bool)preg_match("/{.+}/u", $variable);
     }
 
-    public function getType(string $string): int {
+    public function getType(string $string): string {
         if (str_starts_with($string, "(str)")) {
-            $type = Variable::STRING;
+            $type = StringVariable::getTypeName();
         } elseif (str_starts_with($string, "(num)")) {
-            $type = Variable::NUMBER;
+            $type = NumberVariable::getTypeName();
         } elseif (is_numeric($string)) {
-            $type = Variable::NUMBER;
+            $type = NumberVariable::getTypeName();
         } else {
-            $type = Variable::STRING;
+            $type = StringVariable::getTypeName();
         }
         return $type;
     }

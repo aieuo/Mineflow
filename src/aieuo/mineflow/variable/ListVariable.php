@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
@@ -11,9 +13,11 @@ use function array_values;
 
 class ListVariable extends Variable implements \JsonSerializable {
 
-    public int $type = Variable::LIST;
-
     private ?string $showString;
+
+    public static function getTypeName(): string {
+        return "list";
+    }
 
     protected $value = [];
 
@@ -150,7 +154,7 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "type" => $this->getType(),
+            "type" => static::getTypeName(),
             "value" => $this->getValue(),
         ];
     }

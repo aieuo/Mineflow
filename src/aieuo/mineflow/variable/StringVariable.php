@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 
 class StringVariable extends Variable implements \JsonSerializable {
 
-    public int $type = Variable::STRING;
+    public static function getTypeName(): string {
+        return "string";
+    }
 
     public function getValue(): string {
         return (string)parent::getValue();
@@ -38,7 +42,7 @@ class StringVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "type" => $this->getType(),
+            "type" => static::getTypeName(),
             "value" => $this->getValue(),
         ];
     }

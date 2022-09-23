@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
@@ -7,14 +9,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 
 abstract class Variable {
 
-    public const DUMMY = -1;
-    public const STRING = 0;
-    public const NUMBER = 1;
-    public const LIST = 2;
-    public const MAP = 3;
-    public const OBJECT = 4;
-    public const BOOLEAN = 5;
-    public const NULL = 6;
 
     /** @var string|int|Variable[]|object */
     protected $value;
@@ -61,6 +55,7 @@ abstract class Variable {
     public function setValue($value): void {
         $this->value = $value;
     }
+    abstract public static function getTypeName(): string;
 
     /**
      * @return string|int|Variable[]|object|bool
@@ -75,10 +70,6 @@ abstract class Variable {
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
         return null;
-    }
-
-    public function getType(): int {
-        return $this->type;
     }
 
     public function __toString(): string {

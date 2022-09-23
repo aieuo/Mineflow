@@ -11,6 +11,10 @@ use pocketmine\math\Facing;
 
 class BlockVariable extends PositionVariable {
 
+    public static function getTypeName(): string {
+        return "block";
+    }
+
     public function __construct(private Block $block, ?string $str = null) {
         parent::__construct($block->getPosition(), $str);
     }

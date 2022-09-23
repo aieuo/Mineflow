@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
@@ -11,12 +13,16 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
 use pocketmine\permission\BanEntry;
-use pocketmine\world\World;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use pocketmine\world\World;
 use function array_map;
 
 class ServerVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "server";
+    }
 
     public function __construct(Server $value, ?string $str = null) {
         parent::__construct($value, $str);

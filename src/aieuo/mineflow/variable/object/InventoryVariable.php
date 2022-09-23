@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\ListVariable;
@@ -11,6 +13,10 @@ use pocketmine\item\Item;
 use function array_map;
 
 class InventoryVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "inventory";
+    }
 
     public function __construct(Inventory $value, ?string $str = null) {
         parent::__construct($value, $str);

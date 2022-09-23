@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\utils\Scoreboard;
@@ -8,6 +10,10 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\Variable;
 
 class ScoreboardVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "scoreboard";
+    }
 
     public function getValueFromIndex(string $index): ?Variable {
         $board = $this->getScoreboard();

@@ -4,8 +4,6 @@ namespace aieuo\mineflow\variable;
 
 class ObjectVariable extends Variable {
 
-    public int $type = Variable::OBJECT;
-
     private ?string $showString;
 
     public function __construct(object $value, ?string $str = null) {

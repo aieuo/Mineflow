@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -21,6 +23,10 @@ use function is_bool;
 use function is_numeric;
 
 class ConfigVariable extends ObjectVariable {
+
+    public static function getTypeName(): string {
+        return "config";
+    }
 
     public function __construct(Config $value, ?string $str = null) {
         parent::__construct($value, $str);
