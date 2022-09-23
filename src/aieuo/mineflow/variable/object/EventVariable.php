@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -20,7 +20,7 @@ class EventVariable extends ObjectVariable {
         $event = $this->getEvent();
         return match ($index) {
             "name" => new StringVariable($this->getEventName($event)),
-            "isCanceled" => new BoolVariable($event instanceof Cancellable ? $event->isCancelled() : false),
+            "isCanceled" => new BooleanVariable($event instanceof Cancellable ? $event->isCancelled() : false),
             default => parent::getValueFromIndex($index),
         };
     }

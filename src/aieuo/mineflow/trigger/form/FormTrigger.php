@@ -14,7 +14,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NullVariable;
@@ -46,13 +46,13 @@ class FormTrigger extends Trigger {
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */
-                $variable->setValueAt("data", new BoolVariable($data));
+                $variable->setValueAt("data", new BooleanVariable($data));
                 $variable->setValueAt("button1", new MapVariable([
-                    "selected" => new BoolVariable($data),
+                    "selected" => new BooleanVariable($data),
                     "text" => new StringVariable($form->getButton1Text()),
                 ],  $form->getButton1Text()));
                 $variable->setValueAt("button2", new MapVariable([
-                    "selected" => new BoolVariable(!$data),
+                    "selected" => new BooleanVariable(!$data),
                     "text" => new StringVariable($form->getButton2Text()),
                 ], $form->getButton2Text()));
                 break;
@@ -68,7 +68,7 @@ class FormTrigger extends Trigger {
                 foreach ($form->getContents() as $i => $content) {
                     $var = match ($content->getType()) {
                         Element::ELEMENT_INPUT => new StringVariable($data[$i]),
-                        Element::ELEMENT_TOGGLE => new BoolVariable($data[$i]),
+                        Element::ELEMENT_TOGGLE => new BooleanVariable($data[$i]),
                         Element::ELEMENT_SLIDER, Element::ELEMENT_STEP_SLIDER, Element::ELEMENT_DROPDOWN => new NumberVariable($data[$i]),
                         default => new StringVariable(""),
                     };

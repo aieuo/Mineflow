@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
@@ -17,10 +17,10 @@ class LivingVariable extends EntityVariable {
         $living = $this->getLiving();
         return match ($index) {
             "armor" => new InventoryVariable($living->getArmorInventory()),
-            "sprinting" => new BoolVariable($living->isSprinting()),
-            "sneaking" => new BoolVariable($living->isSneaking()),
-            "gliding" => new BoolVariable($living->isGliding()),
-            "swimming" => new BoolVariable($living->isSwimming()),
+            "sprinting" => new BooleanVariable($living->isSprinting()),
+            "sneaking" => new BooleanVariable($living->isSneaking()),
+            "gliding" => new BooleanVariable($living->isGliding()),
+            "swimming" => new BooleanVariable($living->isSwimming()),
             default => parent::getValueFromIndex($index),
         };
     }

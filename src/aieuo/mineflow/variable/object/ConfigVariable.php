@@ -4,7 +4,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -54,7 +54,7 @@ class ConfigVariable extends ObjectVariable {
             $variable = match (true) {
                 is_array($value) => $variableHelper->arrayToListVariable($value),
                 is_numeric($value) => new NumberVariable($value),
-                is_bool($value) => new BoolVariable($value),
+                is_bool($value) => new BooleanVariable($value),
                 default => new StringVariable($value),
             };
             $variables["it"] = $variable;

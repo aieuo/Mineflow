@@ -322,7 +322,7 @@ class VariableHelper {
         if ($target === "") {
             try {
                 $result = $this->runAction($name, $right, $executor);
-                if (is_bool($result)) return new BoolVariable($result);
+                if (is_bool($result)) return new BooleanVariable($result);
                 if (is_numeric($result)) return new NumberVariable($result);
                 return new StringVariable($result);
             } catch (\UnexpectedValueException $e) {
@@ -432,7 +432,7 @@ class VariableHelper {
             $result[$key] = match (true) {
                 is_array($value) => array_is_list($value) ? new ListVariable($this->toVariableArray($value)) : new MapVariable($this->toVariableArray($value)),
                 is_numeric($value) => new NumberVariable((float)$value),
-                is_bool($value) => new BoolVariable($value),
+                is_bool($value) => new BooleanVariable($value),
                 is_null($value) => new NullVariable(),
                 default => new StringVariable($value),
             };

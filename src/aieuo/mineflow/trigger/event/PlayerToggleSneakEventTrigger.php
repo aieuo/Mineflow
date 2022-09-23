@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\trigger\event;
 
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\event\player\PlayerToggleSneakEvent;
@@ -16,7 +16,7 @@ class PlayerToggleSneakEventTrigger extends EventTrigger {
         /** @var PlayerToggleSneakEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
-        $variables["state"] = new BoolVariable($event->isSneaking());
+        $variables["state"] = new BooleanVariable($event->isSneaking());
         return $variables;
     }
 

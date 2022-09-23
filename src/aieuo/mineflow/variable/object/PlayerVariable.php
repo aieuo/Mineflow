@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -28,7 +28,7 @@ class PlayerVariable extends HumanVariable {
             "port" => new NumberVariable($player->getNetworkSession()->getPort()),
             "uuid" => new StringVariable($player->getUniqueId()->toString()),
             "spawn_point" => new PositionVariable($player->getSpawn()),
-            "flying" => new BoolVariable($player->isFlying()),
+            "flying" => new BooleanVariable($player->isFlying()),
             default => parent::getValueFromIndex($index),
         };
     }
