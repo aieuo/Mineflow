@@ -9,7 +9,7 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\block\Block;
 use pocketmine\math\Facing;
 
-class BlockObjectVariable extends PositionObjectVariable {
+class BlockVariable extends PositionVariable {
 
     public function __construct(private Block $block, ?string $str = null) {
         parent::__construct($block->getPosition(), $str);
@@ -21,13 +21,13 @@ class BlockObjectVariable extends PositionObjectVariable {
             "name" => new StringVariable($block->getName()),
             "id" => new NumberVariable($block->getId()),
             "damage", "meta" => new NumberVariable($block->getMeta()),
-            "item" => new ItemObjectVariable($block->getPickedItem()),
-            "down" => new BlockObjectVariable($block->getSide(Facing::DOWN)),
-            "up" => new BlockObjectVariable($block->getSide(Facing::UP)),
-            "north" => new BlockObjectVariable($block->getSide(Facing::NORTH)),
-            "south" => new BlockObjectVariable($block->getSide(Facing::SOUTH)),
-            "west" => new BlockObjectVariable($block->getSide(Facing::WEST)),
-            "east" => new BlockObjectVariable($block->getSide(Facing::EAST)),
+            "item" => new ItemVariable($block->getPickedItem()),
+            "down" => new BlockVariable($block->getSide(Facing::DOWN)),
+            "up" => new BlockVariable($block->getSide(Facing::UP)),
+            "north" => new BlockVariable($block->getSide(Facing::NORTH)),
+            "south" => new BlockVariable($block->getSide(Facing::SOUTH)),
+            "west" => new BlockVariable($block->getSide(Facing::WEST)),
+            "east" => new BlockVariable($block->getSide(Facing::EAST)),
             default => parent::getValueFromIndex($index),
         };
     }

@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\PlayerObjectVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
@@ -70,7 +70,7 @@ class GetPlayerByName extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.getPlayerByName.player.notFound"));
         }
 
-        $result = new PlayerObjectVariable($player, $player->getName());
+        $result = new PlayerVariable($player, $player->getName());
         $source->addVariable($resultName, $result);
         yield true;
         return $this->getResultName();

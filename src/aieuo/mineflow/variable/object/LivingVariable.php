@@ -7,7 +7,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
 
-class LivingObjectVariable extends EntityObjectVariable {
+class LivingVariable extends EntityVariable {
 
     public function __construct(Living $entity, ?string $str = null) {
         parent::__construct($entity, $str);
@@ -16,7 +16,7 @@ class LivingObjectVariable extends EntityObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
         $living = $this->getLiving();
         return match ($index) {
-            "armor" => new InventoryObjectVariable($living->getArmorInventory()),
+            "armor" => new InventoryVariable($living->getArmorInventory()),
             "sprinting" => new BoolVariable($living->isSprinting()),
             "sneaking" => new BoolVariable($living->isSneaking()),
             "gliding" => new BoolVariable($living->isGliding()),

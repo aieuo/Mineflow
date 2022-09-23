@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\block\Block;
 
 trait BlockFlowItemTrait {
@@ -33,7 +33,7 @@ trait BlockFlowItemTrait {
         $block = $source->replaceVariables($rawName = $this->getBlockVariableName($name));
 
         $variable = $source->getVariable($block);
-        if ($variable instanceof BlockObjectVariable and ($block = $variable->getBlock()) instanceof Block) {
+        if ($variable instanceof BlockVariable and ($block = $variable->getBlock()) instanceof Block) {
             return $block;
         }
 

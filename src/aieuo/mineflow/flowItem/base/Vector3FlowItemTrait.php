@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\Vector3ObjectVariable;
+use aieuo\mineflow\variable\object\Vector3Variable;
 use pocketmine\math\Vector3;
 
 trait Vector3FlowItemTrait {
@@ -27,7 +27,7 @@ trait Vector3FlowItemTrait {
         $vector3 = $source->replaceVariables($rawName = $this->getVector3VariableName($name));
         $variable = $source->getVariable($vector3);
 
-        if ($variable instanceof Vector3ObjectVariable and ($vector3 = $variable->getVector3()) instanceof Vector3) {
+        if ($variable instanceof Vector3Variable and ($vector3 = $variable->getVector3()) instanceof Vector3) {
             return $vector3;
         }
 

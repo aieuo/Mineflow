@@ -8,7 +8,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
-use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
+use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 trait ScoreboardFlowItemTrait {
 
@@ -27,7 +27,7 @@ trait ScoreboardFlowItemTrait {
         $scoreboard = $source->replaceVariables($rawName = $this->getScoreboardVariableName($name));
 
         $variable = $source->getVariable($scoreboard);
-        if ($variable instanceof ScoreboardObjectVariable and ($scoreboard = $variable->getScoreboard()) instanceof Scoreboard) {
+        if ($variable instanceof ScoreboardVariable and ($scoreboard = $variable->getScoreboard()) instanceof Scoreboard) {
             return $scoreboard;
         }
 

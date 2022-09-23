@@ -19,7 +19,7 @@ use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use pocketmine\player\Player;
 
@@ -75,7 +75,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
                     $pos = new Position($x, $y, $z, $pos1->getWorld());
 
                     yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
-                        $counterName => new PositionObjectVariable($pos, $counterName)
+                        $counterName => new PositionVariable($pos, $counterName)
                     ], $source))->executeGenerator();
                 }
             }

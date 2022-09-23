@@ -10,7 +10,7 @@ use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use function array_merge;
 
-class AxisAlignedBBObjectVariable extends ObjectVariable {
+class AxisAlignedBBVariable extends ObjectVariable {
 
     public function __construct(AxisAlignedBB $value, ?string $str = null) {
         parent::__construct($value, $str);

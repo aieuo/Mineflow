@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ConfigObjectVariable;
+use aieuo\mineflow\variable\object\ConfigVariable;
 
 class CreateConfigVariable extends FlowItem {
 
@@ -67,7 +67,7 @@ class CreateConfigVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
 
-        $variable = new ConfigObjectVariable(ConfigHolder::getConfig($file));
+        $variable = new ConfigVariable(ConfigHolder::getConfig($file));
         $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();

@@ -3,10 +3,10 @@
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\utils\Utils;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
-use aieuo\mineflow\variable\object\EntityObjectVariable;
-use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use aieuo\mineflow\variable\object\ServerObjectVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
+use aieuo\mineflow\variable\object\ServerVariable;
 use pocketmine\block\BaseSign;
 use pocketmine\block\Block;
 use pocketmine\entity\Entity;
@@ -26,20 +26,20 @@ class DefaultVariables {
             "default_world" => new StringVariable($server->getWorldManager()->getDefaultWorld()?->getFolderName() ?? ""),
             "onlines" => new ListVariable($onlines),
             "ops" => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true))),
-            "server" => new ServerObjectVariable($server),
+            "server" => new ServerVariable($server),
         ];
     }
 
     public static function getEntityVariables(Entity $target, string $name = "target"): array {
-        return [$name => EntityObjectVariable::fromObject($target)];
+        return [$name => EntityVariable::fromObject($target)];
     }
 
     public static function getPlayerVariables(Player $target, string $name = "target"): array {
-        return [$name => new PlayerObjectVariable($target, $target->getName())];
+        return [$name => new PlayerVariable($target, $target->getName())];
     }
 
     public static function getBlockVariables(Block $block, string $name = "block"): array {
-        $variables = [$name => new BlockObjectVariable($block, $block->getId().":".$block->getMeta())];
+        $variables = [$name => new BlockVariable($block, $block->getId().":".$block->getMeta())];
         if ($block instanceof BaseSign) {
             $variables["sign_lines"] = new ListVariable(array_map(fn(string $text) => new StringVariable($text), $block->getText()->getLines()));
         }

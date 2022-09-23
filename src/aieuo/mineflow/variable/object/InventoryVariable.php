@@ -10,7 +10,7 @@ use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 use function array_map;
 
-class InventoryObjectVariable extends ObjectVariable {
+class InventoryVariable extends ObjectVariable {
 
     public function __construct(Inventory $value, ?string $str = null) {
         parent::__construct($value, $str);
@@ -19,9 +19,9 @@ class InventoryObjectVariable extends ObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
         $inventory = $this->getInventory();
         return match ($index) {
-            "all" => new ListVariable(array_values(array_map(fn(Item $item) => new ItemObjectVariable($item), $inventory->getContents()))),
+            "all" => new ListVariable(array_values(array_map(fn(Item $item) => new ItemVariable($item), $inventory->getContents()))),
             "size" => new NumberVariable($inventory->getSize()),
-            default => new ItemObjectVariable($inventory->getItem((int)$index)),
+            default => new ItemVariable($inventory->getItem((int)$index)),
         };
     }
 

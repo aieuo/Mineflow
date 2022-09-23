@@ -10,7 +10,7 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\item\Item;
 
-class ItemObjectVariable extends ObjectVariable {
+class ItemVariable extends ObjectVariable {
 
     public function __construct(Item $value, ?string $str = null) {
         parent::__construct($value, $str);
@@ -26,7 +26,7 @@ class ItemObjectVariable extends ObjectVariable {
             "damage", "meta" => new NumberVariable($item->getMeta()),
             "count" => new NumberVariable($item->getCount()),
             "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
-            "block" => new BlockObjectVariable($item->getBlock()),
+            "block" => new BlockVariable($item->getBlock()),
             default => parent::getValueFromIndex($index),
         };
     }

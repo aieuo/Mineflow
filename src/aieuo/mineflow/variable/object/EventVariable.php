@@ -10,7 +10,7 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
 
-class EventObjectVariable extends ObjectVariable {
+class EventVariable extends ObjectVariable {
 
     public function __construct(Event $value, ?string $str = null) {
         parent::__construct($value, $str ?? $this->getEventName($value));

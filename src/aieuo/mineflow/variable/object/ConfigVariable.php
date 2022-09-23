@@ -20,7 +20,7 @@ use function is_array;
 use function is_bool;
 use function is_numeric;
 
-class ConfigObjectVariable extends ObjectVariable {
+class ConfigVariable extends ObjectVariable {
 
     public function __construct(Config $value, ?string $str = null) {
         parent::__construct($value, $str);

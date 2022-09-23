@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -17,8 +18,8 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\EventObjectVariable;
-use aieuo\mineflow\variable\object\RecipeObjectVariable;
+use aieuo\mineflow\variable\object\EventVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -60,11 +61,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     private string $rawData = "";
 
-    public function __construct(string $name, string $group = "", string $author = "", string $version = null) {
+    public function __construct(string $name, string $group = "", string $author = "", string $pluginVersion = null) {
         $this->name = $name;
         $this->author = $author;
         $this->group = preg_replace("#/+#u", "/", $group);
-        $this->version = $version;
+        $this->version = $pluginVersion ?? Mineflow::pluginVersion();
     }
 
     public function setName(string $name): void {
@@ -234,9 +235,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
         }
         if ($event !== null) {
-            $variables["event"] = new EventObjectVariable($event);
+            $variables["event"] = new EventVariable($event);
         }
-        $variables["this"] = new RecipeObjectVariable($this);
+        $variables["this"] = new RecipeVariable($this);
 
         $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
             if ($callbackExecutor !== null) {

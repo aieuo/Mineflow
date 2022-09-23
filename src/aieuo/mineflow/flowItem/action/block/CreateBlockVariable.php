@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\StringToItemParser;
 
@@ -73,7 +73,7 @@ class CreateBlockVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlockVariable.block.notFound"));
         }
 
-        $variable = new BlockObjectVariable($block, $name);
+        $variable = new BlockVariable($block, $name);
         $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();

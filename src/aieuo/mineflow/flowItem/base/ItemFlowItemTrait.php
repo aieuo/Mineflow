@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\Item;
 
 trait ItemFlowItemTrait {
@@ -23,11 +23,11 @@ trait ItemFlowItemTrait {
         $this->itemVariableNames[$name] = $item;
     }
 
-    public function getItemVariable(FlowItemExecutor $source, string $name = ""): ItemObjectVariable {
+    public function getItemVariable(FlowItemExecutor $source, string $name = ""): ItemVariable {
         $item = $source->replaceVariables($rawName = $this->getItemVariableName($name));
 
         $variable = $source->getVariable($item);
-        if (!($variable instanceof ItemObjectVariable)) {
+        if (!($variable instanceof ItemVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $rawName]));
         }
 

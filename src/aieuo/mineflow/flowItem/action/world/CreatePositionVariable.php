@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use pocketmine\Server;
 
@@ -109,7 +109,7 @@ class CreatePositionVariable extends FlowItem {
 
         $position = new Position((float)$x, (float)$y, (float)$z, $level);
 
-        $variable = new PositionObjectVariable($position);
+        $variable = new PositionVariable($position);
         $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();

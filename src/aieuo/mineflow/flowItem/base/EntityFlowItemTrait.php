@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\EntityObjectVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 use pocketmine\player\Player;
 
@@ -28,7 +28,7 @@ trait EntityFlowItemTrait {
         $entity = $source->replaceVariables($rawName = $this->getEntityVariableName($name));
 
         $variable = $source->getVariable($entity);
-        if ($variable instanceof EntityObjectVariable and ($entity = $variable->getEntity())) {
+        if ($variable instanceof EntityVariable and ($entity = $variable->getEntity())) {
             return $entity;
         }
 

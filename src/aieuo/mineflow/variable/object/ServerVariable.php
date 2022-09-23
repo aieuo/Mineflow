@@ -16,7 +16,7 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use function array_map;
 
-class ServerObjectVariable extends ObjectVariable {
+class ServerVariable extends ObjectVariable {
 
     public function __construct(Server $value, ?string $str = null) {
         parent::__construct($value, $str);
@@ -32,16 +32,16 @@ class ServerObjectVariable extends ObjectVariable {
             case "default_world":
                 $world = $server->getWorldManager()->getDefaultWorld();
                 if ($world === null) return null;
-                return new WorldObjectVariable($world);
+                return new WorldVariable($world);
             case "worlds":
-                return new ListVariable(array_map(fn(World $world) => new WorldObjectVariable($world), $server->getWorldManager()->getWorlds()));
+                return new ListVariable(array_map(fn(World $world) => new WorldVariable($world), $server->getWorldManager()->getWorlds()));
             case "players":
-                return new ListVariable(array_map(fn(Player $player) => new PlayerObjectVariable($player), array_values($server->getOnlinePlayers())));
+                return new ListVariable(array_map(fn(Player $player) => new PlayerVariable($player), array_values($server->getOnlinePlayers())));
             case "entities":
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
                     foreach ($world->getEntities() as $entity) {
-                        $entities[] = EntityObjectVariable::fromObject($entity);
+                        $entities[] = EntityVariable::fromObject($entity);
                     }
                 }
                 return new ListVariable($entities);
@@ -52,7 +52,7 @@ class ServerObjectVariable extends ObjectVariable {
                         if (!($entity instanceof Living)) {
                             continue;
                         }
-                        $entities[] = EntityObjectVariable::fromObject($entity);
+                        $entities[] = EntityVariable::fromObject($entity);
                     }
                 }
                 return new ListVariable($entities);

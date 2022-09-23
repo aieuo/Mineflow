@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\PlayerObjectVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 
 trait PlayerFlowItemTrait {
@@ -27,7 +27,7 @@ trait PlayerFlowItemTrait {
         $player = $source->replaceVariables($rawName = $this->getPlayerVariableName($name));
 
         $variable = $source->getVariable($player);
-        if ($variable instanceof PlayerObjectVariable and ($player = $variable->getPlayer()) instanceof Player) {
+        if ($variable instanceof PlayerVariable and ($player = $variable->getPlayer()) instanceof Player) {
             return $player;
         }
 

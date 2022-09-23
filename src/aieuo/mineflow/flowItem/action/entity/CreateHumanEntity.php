@@ -16,7 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\HumanObjectVariable;
+use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Location;
 
 class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlowItem {
@@ -71,7 +71,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         $entity = new MineflowHuman($pos, $player->getSkin());
         $entity->spawnToAll();
 
-        $variable = new HumanObjectVariable($entity);
+        $variable = new HumanVariable($entity);
         $source->addVariable($resultName, $variable);
         yield true;
         return $this->getResultName();

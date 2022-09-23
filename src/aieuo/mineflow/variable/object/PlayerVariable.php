@@ -11,7 +11,7 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\player\Player;
 
-class PlayerObjectVariable extends HumanObjectVariable {
+class PlayerVariable extends HumanVariable {
 
     public function __construct(Player $value, ?string $str = null) {
         parent::__construct($value, $str ?? $value->getName());
@@ -27,7 +27,7 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "ip" => new StringVariable($player->getNetworkSession()->getIp()),
             "port" => new NumberVariable($player->getNetworkSession()->getPort()),
             "uuid" => new StringVariable($player->getUniqueId()->toString()),
-            "spawn_point" => new PositionObjectVariable($player->getSpawn()),
+            "spawn_point" => new PositionVariable($player->getSpawn()),
             "flying" => new BoolVariable($player->isFlying()),
             default => parent::getValueFromIndex($index),
         };

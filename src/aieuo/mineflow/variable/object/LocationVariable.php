@@ -9,7 +9,7 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Location;
 
-class LocationObjectVariable extends PositionObjectVariable {
+class LocationVariable extends PositionVariable {
 
     public function __construct(Location $value, ?string $str = null) {
         parent::__construct($value, $str);
@@ -20,12 +20,12 @@ class LocationObjectVariable extends PositionObjectVariable {
         return match ($index) {
             "yaw" => new NumberVariable($location->yaw),
             "pitch" => new NumberVariable($location->pitch),
-            "down" => new LocationObjectVariable(Location::fromObject($location->down(1), $location->world, $location->yaw, $location->pitch)),
-            "up" => new LocationObjectVariable(Location::fromObject($location->up(1), $location->world, $location->yaw, $location->pitch)),
-            "north" => new LocationObjectVariable(Location::fromObject($location->north(1), $location->world, $location->yaw, $location->pitch)),
-            "south" => new LocationObjectVariable(Location::fromObject($location->south(1), $location->world, $location->yaw, $location->pitch)),
-            "west" => new LocationObjectVariable(Location::fromObject($location->west(1), $location->world, $location->yaw, $location->pitch)),
-            "east" => new LocationObjectVariable(Location::fromObject($location->east(1), $location->world, $location->yaw, $location->pitch)),
+            "down" => new LocationVariable(Location::fromObject($location->down(1), $location->world, $location->yaw, $location->pitch)),
+            "up" => new LocationVariable(Location::fromObject($location->up(1), $location->world, $location->yaw, $location->pitch)),
+            "north" => new LocationVariable(Location::fromObject($location->north(1), $location->world, $location->yaw, $location->pitch)),
+            "south" => new LocationVariable(Location::fromObject($location->south(1), $location->world, $location->yaw, $location->pitch)),
+            "west" => new LocationVariable(Location::fromObject($location->west(1), $location->world, $location->yaw, $location->pitch)),
+            "east" => new LocationVariable(Location::fromObject($location->east(1), $location->world, $location->yaw, $location->pitch)),
             default => parent::getValueFromIndex($index),
         };
     }

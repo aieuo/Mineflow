@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\world\Position;
 
 class GetBlock extends FlowItem implements PositionFlowItem {
@@ -61,7 +61,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
         /** @var Position $position */
         $block = $position->world->getBlock($position);
 
-        $variable = new BlockObjectVariable($block);
+        $variable = new BlockVariable($block);
         $source->addVariable($result, $variable);
         yield true;
         return $this->getResultName();

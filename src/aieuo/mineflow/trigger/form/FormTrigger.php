@@ -19,7 +19,7 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\object\RecipeObjectVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
 use aieuo\mineflow\variable\StringVariable;
 
 class FormTrigger extends Trigger {
@@ -84,7 +84,7 @@ class FormTrigger extends Trigger {
             default:
                 return [];
         }
-        $variable->setValueAt("from", $from === null ? new NullVariable() : new RecipeObjectVariable($from));
+        $variable->setValueAt("from", $from === null ? new NullVariable() : new RecipeVariable($from));
         return ["form" => $variable];
     }
 

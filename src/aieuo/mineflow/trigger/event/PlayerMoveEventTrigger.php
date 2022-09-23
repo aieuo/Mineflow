@@ -4,7 +4,7 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\LocationObjectVariable;
+use aieuo\mineflow\variable\object\LocationVariable;
 use pocketmine\event\player\PlayerMoveEvent;
 
 class PlayerMoveEventTrigger extends PlayerEventTrigger {
@@ -15,8 +15,8 @@ class PlayerMoveEventTrigger extends PlayerEventTrigger {
     public function getVariables(mixed $event): array {
         /** @var PlayerMoveEvent $event */
         $variables = [
-            "move_from" => new LocationObjectVariable($event->getFrom()),
-            "move_to" => new LocationObjectVariable($event->getTo())
+            "move_from" => new LocationVariable($event->getFrom()),
+            "move_to" => new LocationVariable($event->getTo())
         ];
         $target = $event->getPlayer();
         return array_merge($variables, DefaultVariables::getPlayerVariables($target));

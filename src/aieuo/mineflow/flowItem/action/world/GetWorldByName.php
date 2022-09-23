@@ -11,7 +11,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
-use aieuo\mineflow\variable\object\WorldObjectVariable;
+use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\Server;
 
 class GetWorldByName extends FlowItem {
@@ -64,7 +64,7 @@ class GetWorldByName extends FlowItem {
 
         $world = Server::getInstance()->getWorldManager()->getWorldByName($worldName);
 
-        $variable = $world === null ? new NullVariable() : new WorldObjectVariable($world);
+        $variable = $world === null ? new NullVariable() : new WorldVariable($world);
         $source->addVariable($result, $variable);
         yield true;
         return $this->getResultName();

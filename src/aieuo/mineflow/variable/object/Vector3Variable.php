@@ -9,7 +9,7 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\math\Vector3;
 
-class Vector3ObjectVariable extends ObjectVariable {
+class Vector3Variable extends ObjectVariable {
 
     public function __construct(Vector3 $value, ?string $str = null) {
         parent::__construct($value, $str);
@@ -22,12 +22,12 @@ class Vector3ObjectVariable extends ObjectVariable {
             "y" => new NumberVariable($position->y),
             "z" => new NumberVariable($position->z),
             "xyz" => new StringVariable($position->x.",".$position->y.",".$position->z),
-            "down" => new Vector3ObjectVariable($position->down(1)),
-            "up" => new Vector3ObjectVariable($position->up(1)),
-            "north" => new Vector3ObjectVariable($position->north(1)),
-            "south" => new Vector3ObjectVariable($position->south(1)),
-            "west" => new Vector3ObjectVariable($position->west(1)),
-            "east" => new Vector3ObjectVariable($position->east(1)),
+            "down" => new Vector3Variable($position->down(1)),
+            "up" => new Vector3Variable($position->up(1)),
+            "north" => new Vector3Variable($position->north(1)),
+            "south" => new Vector3Variable($position->south(1)),
+            "west" => new Vector3Variable($position->west(1)),
+            "east" => new Vector3Variable($position->east(1)),
             default => parent::getValueFromIndex($index),
         };
     }

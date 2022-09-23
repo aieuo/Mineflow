@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\ConfigObjectVariable;
+use aieuo\mineflow\variable\object\ConfigVariable;
 use pocketmine\utils\Config;
 
 trait ConfigFileFlowItemTrait {
@@ -27,7 +27,7 @@ trait ConfigFileFlowItemTrait {
         $config = $source->replaceVariables($rawName = $this->getConfigVariableName($name));
 
         $variable = $source->getVariable($config);
-        if ($variable instanceof ConfigObjectVariable and ($config = $variable->getConfig()) instanceof Config) {
+        if ($variable instanceof ConfigVariable and ($config = $variable->getConfig()) instanceof Config) {
             return $config;
         }
 

@@ -13,14 +13,14 @@ use pocketmine\entity\Human;
 use pocketmine\entity\Living;
 use pocketmine\player\Player;
 
-class EntityObjectVariable extends PositionObjectVariable {
+class EntityVariable extends PositionVariable {
 
-    public static function fromObject(Entity $entity, ?string $str = null): EntityObjectVariable|LivingObjectVariable|HumanObjectVariable|PlayerObjectVariable {
+    public static function fromObject(Entity $entity, ?string $str = null): EntityVariable|LivingVariable|HumanVariable|PlayerVariable {
         return match (true) {
-            $entity instanceof Player => new PlayerObjectVariable($entity, $str ?? $entity->getName()),
-            $entity instanceof Human => new HumanObjectVariable($entity, $str ?? $entity->getNameTag()),
-            $entity instanceof Living => new LivingObjectVariable($entity),
-            default => new EntityObjectVariable($entity),
+            $entity instanceof Player => new PlayerVariable($entity, $str ?? $entity->getName()),
+            $entity instanceof Human => new HumanVariable($entity, $str ?? $entity->getNameTag()),
+            $entity instanceof Living => new LivingVariable($entity),
+            default => new EntityVariable($entity),
         };
     }
 
@@ -54,7 +54,7 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "onGround":
                 return new BoolVariable($entity->isOnGround());
             case "bounding_box":
-                return new AxisAlignedBBObjectVariable($entity->getBoundingBox());
+                return new AxisAlignedBBVariable($entity->getBoundingBox());
             default:
                 return parent::getValueFromIndex($index);
         }

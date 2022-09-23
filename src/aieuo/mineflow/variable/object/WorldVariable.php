@@ -17,7 +17,7 @@ use pocketmine\player\Player;
 use function array_filter;
 use function array_map;
 
-class WorldObjectVariable extends ObjectVariable {
+class WorldVariable extends ObjectVariable {
 
     public function __construct(World $value, ?string $str = null) {
         parent::__construct($value, $str ?? $value->getFolderName());
@@ -29,12 +29,12 @@ class WorldObjectVariable extends ObjectVariable {
             "name" => new StringVariable($level->getDisplayName()),
             "folderName" => new StringVariable($level->getFolderName()),
             "id" => new NumberVariable($level->getId()),
-            "spawn" => new PositionObjectVariable($level->getSpawnLocation()),
-            "safe_spawn" => new PositionObjectVariable($level->getSafeSpawn()),
+            "spawn" => new PositionVariable($level->getSpawnLocation()),
+            "safe_spawn" => new PositionVariable($level->getSafeSpawn()),
             "time" => new NumberVariable($level->getTime()),
-            "players" => new ListVariable(array_values(array_map(fn(Player $player) => new PlayerObjectVariable($player), $level->getPlayers()))),
-            "entities" => new ListVariable(array_values(array_map(fn(Entity $entity) => EntityObjectVariable::fromObject($entity), $level->getEntities()))),
-            "livings" => new ListVariable(array_values(array_map(fn(Living $living) => EntityObjectVariable::fromObject($living),
+            "players" => new ListVariable(array_values(array_map(fn(Player $player) => new PlayerVariable($player), $level->getPlayers()))),
+            "entities" => new ListVariable(array_values(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $level->getEntities()))),
+            "livings" => new ListVariable(array_values(array_map(fn(Living $living) => EntityVariable::fromObject($living),
                 array_filter($level->getEntities(), fn(Entity $entity) => $entity instanceof Living)
             ))),
             default => parent::getValueFromIndex($index),

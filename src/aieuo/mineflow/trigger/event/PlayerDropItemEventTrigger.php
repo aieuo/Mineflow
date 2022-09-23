@@ -4,7 +4,7 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\event\player\PlayerDropItemEvent;
 
 class PlayerDropItemEventTrigger extends EventTrigger {
@@ -17,7 +17,7 @@ class PlayerDropItemEventTrigger extends EventTrigger {
         $target = $event->getPlayer();
         $item = $event->getItem();
         return array_merge(DefaultVariables::getPlayerVariables($target), [
-            "item" => new ItemObjectVariable($item),
+            "item" => new ItemVariable($item),
         ]);
     }
 

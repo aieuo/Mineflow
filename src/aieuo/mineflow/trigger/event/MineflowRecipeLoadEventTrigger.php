@@ -4,7 +4,7 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\event\MineflowRecipeLoadEvent;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\RecipeObjectVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
 
 class MineflowRecipeLoadEventTrigger extends EventTrigger {
     public function __construct(string $subKey = "") {
@@ -15,7 +15,7 @@ class MineflowRecipeLoadEventTrigger extends EventTrigger {
         /** @var MineflowRecipeLoadEvent $event */
         $recipe = $event->getRecipe();
         return [
-            "recipe" => new RecipeObjectVariable($recipe),
+            "recipe" => new RecipeVariable($recipe),
         ];
     }
 

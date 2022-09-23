@@ -2,22 +2,22 @@
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\variable\object\AxisAlignedBBObjectVariable;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
-use aieuo\mineflow\variable\object\ConfigObjectVariable;
-use aieuo\mineflow\variable\object\EntityObjectVariable;
-use aieuo\mineflow\variable\object\EventObjectVariable;
-use aieuo\mineflow\variable\object\HumanObjectVariable;
-use aieuo\mineflow\variable\object\InventoryObjectVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\object\LivingObjectVariable;
-use aieuo\mineflow\variable\object\RecipeObjectVariable;
-use aieuo\mineflow\variable\object\WorldObjectVariable;
-use aieuo\mineflow\variable\object\LocationObjectVariable;
-use aieuo\mineflow\variable\object\PlayerObjectVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
-use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
-use aieuo\mineflow\variable\object\Vector3ObjectVariable;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
+use aieuo\mineflow\variable\object\ConfigVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\EventVariable;
+use aieuo\mineflow\variable\object\HumanVariable;
+use aieuo\mineflow\variable\object\InventoryVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
+use aieuo\mineflow\variable\object\LivingVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
+use aieuo\mineflow\variable\object\WorldVariable;
+use aieuo\mineflow\variable\object\LocationVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
+use aieuo\mineflow\variable\object\ScoreboardVariable;
+use aieuo\mineflow\variable\object\Vector3Variable;
 
 class DummyVariable extends Variable {
 
@@ -77,22 +77,22 @@ class DummyVariable extends Variable {
      */
     public function getObjectValuesDummy(): array {
         return match ($this->getValueType()) {
-            self::BLOCK => BlockObjectVariable::getValuesDummy(),
-            self::CONFIG => ConfigObjectVariable::getValuesDummy(),
-            self::ENTITY => EntityObjectVariable::getValuesDummy(),
-            self::EVENT => EventObjectVariable::getValuesDummy(),
-            self::HUMAN => HumanObjectVariable::getValuesDummy(),
-            self::LIVING => LivingObjectVariable::getValuesDummy(),
-            self::ITEM => ItemObjectVariable::getValuesDummy(),
-            self::WORLD => WorldObjectVariable::getValuesDummy(),
-            self::LOCATION => LocationObjectVariable::getValuesDummy(),
-            self::PLAYER => PlayerObjectVariable::getValuesDummy(),
-            self::POSITION => PositionObjectVariable::getValuesDummy(),
-            self::VECTOR3 => Vector3ObjectVariable::getValuesDummy(),
-            self::SCOREBOARD => ScoreboardObjectVariable::getValuesDummy(),
-            self::INVENTORY => InventoryObjectVariable::getValuesDummy(),
-            self::AXIS_ALIGNED_BB => AxisAlignedBBObjectVariable::getValuesDummy(),
-            self::RECIPE => RecipeObjectVariable::getValuesDummy(),
+            self::BLOCK => BlockVariable::getValuesDummy(),
+            self::CONFIG => ConfigVariable::getValuesDummy(),
+            self::ENTITY => EntityVariable::getValuesDummy(),
+            self::EVENT => EventVariable::getValuesDummy(),
+            self::HUMAN => HumanVariable::getValuesDummy(),
+            self::LIVING => LivingVariable::getValuesDummy(),
+            self::ITEM => ItemVariable::getValuesDummy(),
+            self::WORLD => WorldVariable::getValuesDummy(),
+            self::LOCATION => LocationVariable::getValuesDummy(),
+            self::PLAYER => PlayerVariable::getValuesDummy(),
+            self::POSITION => PositionVariable::getValuesDummy(),
+            self::VECTOR3 => Vector3Variable::getValuesDummy(),
+            self::SCOREBOARD => ScoreboardVariable::getValuesDummy(),
+            self::INVENTORY => InventoryVariable::getValuesDummy(),
+            self::AXIS_ALIGNED_BB => AxisAlignedBBVariable::getValuesDummy(),
+            self::RECIPE => RecipeVariable::getValuesDummy(),
             default => [],
         };
     }

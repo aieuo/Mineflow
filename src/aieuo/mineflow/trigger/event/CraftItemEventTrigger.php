@@ -5,7 +5,7 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\item\Item;
 
@@ -17,8 +17,8 @@ class CraftItemEventTrigger extends EventTrigger {
     public function getVariables(mixed $event): array {
         /** @var CraftItemEvent $event */
         $target = $event->getPlayer();
-        $inputs = array_map(fn(Item $input) => new ItemObjectVariable($input), array_values($event->getInputs()));
-        $outputs = array_map(fn(Item $output) => new ItemObjectVariable($output), array_values($event->getOutputs()));
+        $inputs = array_map(fn(Item $input) => new ItemVariable($input), array_values($event->getInputs()));
+        $outputs = array_map(fn(Item $output) => new ItemVariable($output), array_values($event->getOutputs()));
         $variables = DefaultVariables::getPlayerVariables($target);
         $variables["inputs"] = new ListVariable($inputs);
         $variables["outputs"] = new ListVariable($outputs);

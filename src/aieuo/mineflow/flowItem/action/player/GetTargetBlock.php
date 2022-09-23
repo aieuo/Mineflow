@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\BlockObjectVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
 
 class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -73,7 +73,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $block = $player->getTargetBlock((int)$max);
-        $source->addVariable($result, new BlockObjectVariable($block));
+        $source->addVariable($result, new BlockVariable($block));
         yield true;
         return $this->getResultName();
     }

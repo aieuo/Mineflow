@@ -9,7 +9,7 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 
-class RecipeObjectVariable extends ObjectVariable {
+class RecipeVariable extends ObjectVariable {
 
     public function __construct(Recipe $value, ?string $str = null) {
         parent::__construct($value, $str);
