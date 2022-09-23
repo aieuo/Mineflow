@@ -18,6 +18,7 @@ use aieuo\mineflow\utils\FormManager;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\PlayerConfig;
 use aieuo\mineflow\variable\VariableHelper;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
@@ -46,6 +47,8 @@ class Main extends PluginBase {
 
     protected function onLoad(): void {
         self::$instance = $this;
+
+        Mineflow::init($this);
 
         FlowItemCategory::registerDefaults();
         Language::init();
@@ -134,6 +137,7 @@ class Main extends PluginBase {
         return self::$variableHelper;
     }
 
+    #[Deprecated("Mineflow::getPluginVersion()")]
     public static function getPluginVersion(): string {
         return self::$pluginVersion;
     }

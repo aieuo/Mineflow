@@ -78,7 +78,7 @@ class RecipeForm {
                     $newName = $manager->getNotDuplicatedName($name, $group);
                     (new MineflowForm)->confirmRename($player, $name, $newName,
                         function (string $name) use ($player, $data, $templateClass) {
-                            $recipe = new Recipe($name, $data[1], $player->getName(), Main::getPluginVersion());
+                            $recipe = new Recipe($name, $data[1], $player->getName());
 
                             $this->addRecipe($player, $recipe, $templateClass);
                         },
@@ -87,7 +87,7 @@ class RecipeForm {
                     return;
                 }
 
-                $recipe = new Recipe($name, $group, $player->getName(), Main::getPluginVersion());
+                $recipe = new Recipe($name, $group, $player->getName());
                 if (file_exists($recipe->getFileName($manager->getSaveDir()))) {
                     $it->resend([[Language::get("form.recipe.exists", [$name]), 0]]);
                     return;

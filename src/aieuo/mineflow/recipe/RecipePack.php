@@ -131,7 +131,7 @@ class RecipePack implements \JsonSerializable {
 
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
-            $recipe = new Recipe($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? null);
+            $recipe = new Recipe($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? "0");
             $recipe->loadSaveData($data["actions"]);
 
             $recipe->setTargetSetting(

@@ -9,7 +9,6 @@ use aieuo\mineflow\flowItem\condition\ComparisonString;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\utils\Language;
@@ -45,7 +44,7 @@ class SpecificBlockRecipeTemplate extends RecipeTemplate {
     }
 
     public function build(): Recipe {
-        $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup(), version: Main::getPluginVersion());
+        $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup());
         $recipe->addItem(new IFAction([
             new ComparisonString(match (true) {
                 str_contains($this->block, ":") => "{block.id}:{block.meta}",

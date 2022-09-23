@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -60,11 +61,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     private string $rawData = "";
 
-    public function __construct(string $name, string $group = "", string $author = "", string $version = null) {
+    public function __construct(string $name, string $group = "", string $author = "", string $pluginVersion = null) {
         $this->name = $name;
         $this->author = $author;
         $this->group = preg_replace("#/+#u", "/", $group);
-        $this->version = $version;
+        $this->version = $pluginVersion ?? Mineflow::pluginVersion();
     }
 
     public function setName(string $name): void {
