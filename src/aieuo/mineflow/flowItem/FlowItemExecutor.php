@@ -149,7 +149,7 @@ class FlowItemExecutor {
 
         foreach ($names as $name1) {
             if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
-            $variable = $variable->getValueFromIndex($name1);
+            $variable = $variable->getProperty($name1);
         }
         return $variable;
     }
