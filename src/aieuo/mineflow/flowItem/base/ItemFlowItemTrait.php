@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -36,7 +38,7 @@ trait ItemFlowItemTrait {
 
     public function getItem(FlowItemExecutor $source, string $name = ""): Item {
         $variable = $this->getItemVariable($source, $name);
-        if (!(($item = $variable->getItem()) instanceof Item)) {
+        if (!(($item = $variable->getValue()) instanceof Item)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.item"], $this->getItemVariableName($name)]));
         }
 

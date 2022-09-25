@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -27,7 +29,7 @@ trait PositionFlowItemTrait {
         $position = $source->replaceVariables($rawName = $this->getPositionVariableName($name));
 
         $variable = $source->getVariable($position);
-        if ($variable instanceof PositionVariable and ($position = $variable->getPosition()) instanceof Position) {
+        if ($variable instanceof PositionVariable and ($position = $variable->getValue()) instanceof Position) {
             return $position;
         }
 

@@ -27,8 +27,8 @@ trait Vector3FlowItemTrait {
         $vector3 = $source->replaceVariables($rawName = $this->getVector3VariableName($name));
         $variable = $source->getVariable($vector3);
 
-        if ($variable instanceof Vector3Variable and ($vector3 = $variable->getVector3()) instanceof Vector3) {
-            return $vector3;
+        if ($variable instanceof Vector3Variable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.vector3"], $rawName]));

@@ -69,7 +69,7 @@ class ConfigVariable extends ObjectVariable {
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
         $helper = Main::getVariableHelper();
-        $values = $this->getConfig()->getAll();
+        $values = $this->getValue()->getAll();
         return match ($name) {
             "count" => new NumberVariable(count($values)),
             "reverse" => new MapVariable(array_reverse($values)),

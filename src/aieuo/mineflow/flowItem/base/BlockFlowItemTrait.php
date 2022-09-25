@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -33,8 +35,8 @@ trait BlockFlowItemTrait {
         $block = $source->replaceVariables($rawName = $this->getBlockVariableName($name));
 
         $variable = $source->getVariable($block);
-        if ($variable instanceof BlockVariable and ($block = $variable->getBlock()) instanceof Block) {
-            return $block;
+        if ($variable instanceof BlockVariable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.block"], $rawName]));

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -28,8 +30,8 @@ trait EntityFlowItemTrait {
         $entity = $source->replaceVariables($rawName = $this->getEntityVariableName($name));
 
         $variable = $source->getVariable($entity);
-        if ($variable instanceof EntityVariable and ($entity = $variable->getEntity())) {
-            return $entity;
+        if ($variable instanceof EntityVariable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.entity"], $rawName]));

@@ -25,7 +25,7 @@ class Vector3Variable extends ObjectVariable {
     }
 
     public function getValueFromIndex(string $index): ?Variable {
-        $position = $this->getVector3();
+        $position = $this->getValue();
         return match ($index) {
             "x" => new NumberVariable($position->x),
             "y" => new NumberVariable($position->y),

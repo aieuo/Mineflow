@@ -27,8 +27,8 @@ trait AxisAlignedBBFlowItemTrait {
         $aabb = $source->replaceVariables($rawName = $this->getAxisAlignedBBVariableName($name));
         $variable = $source->getVariable($aabb);
 
-        if ($variable instanceof AxisAlignedBBVariable and ($aabb = $variable->getAxisAlignedBB()) instanceof AxisAlignedBB) {
-            return $aabb;
+        if ($variable instanceof AxisAlignedBBVariable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.aabb"], $rawName]));

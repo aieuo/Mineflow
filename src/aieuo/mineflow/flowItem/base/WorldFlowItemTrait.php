@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -27,8 +29,8 @@ trait WorldFlowItemTrait {
         $world = $source->replaceVariables($rawName = $this->getWorldVariableName($name));
 
         $variable = $source->getVariable($world);
-        if ($variable instanceof WorldVariable and ($world = $variable->getWorld()) instanceof World) {
-            return $world;
+        if ($variable instanceof WorldVariable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.world"], $rawName]));

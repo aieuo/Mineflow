@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -27,8 +29,8 @@ trait ConfigFileFlowItemTrait {
         $config = $source->replaceVariables($rawName = $this->getConfigVariableName($name));
 
         $variable = $source->getVariable($config);
-        if ($variable instanceof ConfigVariable and ($config = $variable->getConfig()) instanceof Config) {
-            return $config;
+        if ($variable instanceof ConfigVariable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.config"], $rawName]));

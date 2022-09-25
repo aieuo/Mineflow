@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -14,11 +16,6 @@ interface WorldFlowItem {
 
     public function setWorldVariableName(string $position, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return World
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getWorld(FlowItemExecutor $source, string $name = ""): World;
 }
