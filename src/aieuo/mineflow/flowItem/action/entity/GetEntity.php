@@ -13,6 +13,7 @@ use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 
 class GetEntity extends FlowItem {
 
@@ -96,7 +97,7 @@ class GetEntity extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::PLAYER, $this->getKey())
+            $this->getResultName() => new DummyVariable(PlayerVariable::class, $this->getKey())
         ];
     }
 }

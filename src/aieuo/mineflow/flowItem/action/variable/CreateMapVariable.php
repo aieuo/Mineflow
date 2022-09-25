@@ -13,7 +13,6 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\variable\Variable;
 
 class CreateMapVariable extends FlowItem {
 
@@ -126,7 +125,7 @@ class CreateMapVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::MAP)
+            $this->getVariableName() => new DummyVariable(MapVariable::class)
         ];
     }
 }

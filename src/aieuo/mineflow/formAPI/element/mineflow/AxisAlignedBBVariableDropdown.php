@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\formAPI\element\mineflow;
 
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 
 class AxisAlignedBBVariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::AXIS_ALIGNED_BB;
+    protected string $variableClass = AxisAlignedBBVariable::class;
 
     protected array $actions = [
         FlowItemIds::CREATE_AABB,
@@ -22,7 +25,7 @@ class AxisAlignedBBVariableDropdown extends VariableDropdown {
      */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
         parent::__construct($text ?? "@action.form.target.aabb", $variables, [
-            DummyVariable::AXIS_ALIGNED_BB,
+            AxisAlignedBBVariable::class,
         ], $default, $optional);
     }
 }

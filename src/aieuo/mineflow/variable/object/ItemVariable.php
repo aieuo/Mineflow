@@ -46,15 +46,15 @@ class ItemVariable extends ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "vanilla_name" => new DummyVariable(DummyVariable::STRING),
-            "custom_name" => new DummyVariable(DummyVariable::STRING),
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "damage" => new DummyVariable(DummyVariable::NUMBER),
-            "meta" => new DummyVariable(DummyVariable::NUMBER),
-            "count" => new DummyVariable(DummyVariable::NUMBER),
-            "lore" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
-            "block" => new DummyVariable(DummyVariable::BLOCK),
+            "name" => new DummyVariable(StringVariable::class),
+            "vanilla_name" => new DummyVariable(StringVariable::class),
+            "custom_name" => new DummyVariable(StringVariable::class),
+            "id" => new DummyVariable(NumberVariable::class),
+            "damage" => new DummyVariable(NumberVariable::class),
+            "meta" => new DummyVariable(NumberVariable::class),
+            "count" => new DummyVariable(NumberVariable::class),
+            "lore" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            "block" => new DummyVariable(BlockVariable::class),
         ]);
     }
 

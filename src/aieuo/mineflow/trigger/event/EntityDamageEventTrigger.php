@@ -5,6 +5,7 @@ namespace aieuo\mineflow\trigger\event;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 
@@ -28,10 +29,10 @@ class EntityDamageEventTrigger extends PlayerEventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "damage" => new DummyVariable(DummyVariable::NUMBER),
-            "cause" => new DummyVariable(DummyVariable::NUMBER),
-            "damager" => new DummyVariable(DummyVariable::PLAYER),
+            "target" => new DummyVariable(PlayerVariable::class),
+            "damage" => new DummyVariable(NumberVariable::class),
+            "cause" => new DummyVariable(NumberVariable::class),
+            "damager" => new DummyVariable(PlayerVariable::class),
         ];
     }
 }

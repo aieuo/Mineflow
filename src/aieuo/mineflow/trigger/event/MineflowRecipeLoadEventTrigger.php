@@ -21,7 +21,7 @@ class MineflowRecipeLoadEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "recipe" => new DummyVariable(DummyVariable::RECIPE),
+            "recipe" => new DummyVariable(RecipeVariable::class),
         ];
     }
 }

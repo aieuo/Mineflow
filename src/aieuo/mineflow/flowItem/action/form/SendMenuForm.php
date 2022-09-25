@@ -161,7 +161,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::MAP)
+            $this->getResultName() => new DummyVariable(MapVariable::class)
         ];
     }
 }

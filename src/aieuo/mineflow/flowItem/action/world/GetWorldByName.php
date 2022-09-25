@@ -89,7 +89,7 @@ class GetWorldByName extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::WORLD)
+            $this->getResultName() => new DummyVariable(WorldVariable::class)
         ];
     }
 }

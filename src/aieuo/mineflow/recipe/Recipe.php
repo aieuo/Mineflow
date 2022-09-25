@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\recipe;
 
-use aieuo\mineflow\event\RecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -19,6 +18,7 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EventVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use aieuo\mineflow\variable\object\RecipeVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
@@ -272,7 +272,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
         $variables = [
-            "target" => new DummyVariable(DummyVariable::PLAYER)
+            "target" => new DummyVariable(PlayerVariable::class)
         ];
 
         $add = [];

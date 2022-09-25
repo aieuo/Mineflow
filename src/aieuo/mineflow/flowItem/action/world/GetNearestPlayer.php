@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\world;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 
 class GetNearestPlayer extends GetNearestEntity {
@@ -34,7 +35,7 @@ class GetNearestPlayer extends GetNearestEntity {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::PLAYER)
+            $this->getResultName() => new DummyVariable(PlayerVariable::class)
         ];
     }
 }

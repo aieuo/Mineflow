@@ -44,17 +44,17 @@ class BlockVariable extends PositionVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "damage" => new DummyVariable(DummyVariable::NUMBER),
-            "meta" => new DummyVariable(DummyVariable::NUMBER),
-            "item" => new DummyVariable(DummyVariable::ITEM),
-            "down" => new DummyVariable(DummyVariable::BLOCK),
-            "up" => new DummyVariable(DummyVariable::BLOCK),
-            "north" => new DummyVariable(DummyVariable::BLOCK),
-            "south" => new DummyVariable(DummyVariable::BLOCK),
-            "west" => new DummyVariable(DummyVariable::BLOCK),
-            "east" => new DummyVariable(DummyVariable::BLOCK),
+            "name" => new DummyVariable(StringVariable::class),
+            "id" => new DummyVariable(NumberVariable::class),
+            "damage" => new DummyVariable(NumberVariable::class),
+            "meta" => new DummyVariable(NumberVariable::class),
+            "item" => new DummyVariable(ItemVariable::class),
+            "down" => new DummyVariable(BlockVariable::class),
+            "up" => new DummyVariable(BlockVariable::class),
+            "north" => new DummyVariable(BlockVariable::class),
+            "south" => new DummyVariable(BlockVariable::class),
+            "west" => new DummyVariable(BlockVariable::class),
+            "east" => new DummyVariable(BlockVariable::class),
         ]);
     }
 

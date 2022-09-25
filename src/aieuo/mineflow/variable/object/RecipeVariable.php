@@ -37,10 +37,10 @@ class RecipeVariable extends ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "group" => new DummyVariable(DummyVariable::STRING),
-            "author" => new DummyVariable(DummyVariable::STRING),
-            "variables" => new DummyVariable(DummyVariable::MAP),
+            "name" => new DummyVariable(StringVariable::class),
+            "group" => new DummyVariable(StringVariable::class),
+            "author" => new DummyVariable(StringVariable::class),
+            "variables" => new DummyVariable(MapVariable::class),
         ]);
     }
 

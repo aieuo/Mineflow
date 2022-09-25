@@ -78,16 +78,16 @@ class ServerVariable extends ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "tick" => new DummyVariable(DummyVariable::NUMBER),
-            "default_world" => new DummyVariable(DummyVariable::WORLD),
-            "worlds" => new DummyVariable(DummyVariable::LIST, DummyVariable::WORLD),
-            "players" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
-            "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
-            "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
-            "ops" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
-            "bans" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
-            "whitelist" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
+            "name" => new DummyVariable(StringVariable::class),
+            "tick" => new DummyVariable(NumberVariable::class),
+            "default_world" => new DummyVariable(WorldVariable::class),
+            "worlds" => new DummyVariable(ListVariable::class, WorldVariable::getTypeName()),
+            "players" => new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
+            "entities" => new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            "livings" => new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            "ops" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            "bans" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            "whitelist" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
         ]);
     }
 

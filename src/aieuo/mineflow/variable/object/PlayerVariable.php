@@ -40,15 +40,15 @@ class PlayerVariable extends HumanVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "display_name" => new DummyVariable(DummyVariable::STRING),
-            "locale" => new DummyVariable(DummyVariable::STRING),
-            "ping" => new DummyVariable(DummyVariable::NUMBER),
-            "ip" => new DummyVariable(DummyVariable::STRING),
-            "port" => new DummyVariable(DummyVariable::NUMBER),
-            "uuid" => new DummyVariable(DummyVariable::STRING),
-            "spawn_point" => new DummyVariable(DummyVariable::POSITION),
-            "flying" => new DummyVariable(DummyVariable::BOOLEAN),
+            "name" => new DummyVariable(StringVariable::class),
+            "display_name" => new DummyVariable(StringVariable::class),
+            "locale" => new DummyVariable(StringVariable::class),
+            "ping" => new DummyVariable(NumberVariable::class),
+            "ip" => new DummyVariable(StringVariable::class),
+            "port" => new DummyVariable(NumberVariable::class),
+            "uuid" => new DummyVariable(StringVariable::class),
+            "spawn_point" => new DummyVariable(PositionVariable::class),
+            "flying" => new DummyVariable(BooleanVariable::class),
         ]);
     }
 

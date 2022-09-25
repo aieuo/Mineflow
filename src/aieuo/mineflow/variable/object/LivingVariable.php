@@ -34,11 +34,11 @@ class LivingVariable extends EntityVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "armor" => new DummyVariable(DummyVariable::INVENTORY),
-            "sprinting" => new DummyVariable(DummyVariable::BOOLEAN),
-            "sneaking" => new DummyVariable(DummyVariable::BOOLEAN),
-            "gliding" => new DummyVariable(DummyVariable::BOOLEAN),
-            "swimming" => new DummyVariable(DummyVariable::BOOLEAN),
+            "armor" => new DummyVariable(InventoryVariable::class),
+            "sprinting" => new DummyVariable(BooleanVariable::class),
+            "sneaking" => new DummyVariable(BooleanVariable::class),
+            "gliding" => new DummyVariable(BooleanVariable::class),
+            "swimming" => new DummyVariable(BooleanVariable::class),
         ]);
     }
 }

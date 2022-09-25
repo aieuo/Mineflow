@@ -43,16 +43,16 @@ class Vector3Variable extends ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "x" => new DummyVariable(DummyVariable::NUMBER),
-            "y" => new DummyVariable(DummyVariable::NUMBER),
-            "z" => new DummyVariable(DummyVariable::NUMBER),
-            "xyz" => new DummyVariable(DummyVariable::STRING),
-            "down" => new DummyVariable(DummyVariable::VECTOR3),
-            "up" => new DummyVariable(DummyVariable::VECTOR3),
-            "north" => new DummyVariable(DummyVariable::VECTOR3),
-            "south" => new DummyVariable(DummyVariable::VECTOR3),
-            "west" => new DummyVariable(DummyVariable::VECTOR3),
-            "east" => new DummyVariable(DummyVariable::VECTOR3),
+            "x" => new DummyVariable(NumberVariable::class),
+            "y" => new DummyVariable(NumberVariable::class),
+            "z" => new DummyVariable(NumberVariable::class),
+            "xyz" => new DummyVariable(StringVariable::class),
+            "down" => new DummyVariable(Vector3Variable::class),
+            "up" => new DummyVariable(Vector3Variable::class),
+            "north" => new DummyVariable(Vector3Variable::class),
+            "south" => new DummyVariable(Vector3Variable::class),
+            "west" => new DummyVariable(Vector3Variable::class),
+            "east" => new DummyVariable(Vector3Variable::class),
         ]);
     }
 

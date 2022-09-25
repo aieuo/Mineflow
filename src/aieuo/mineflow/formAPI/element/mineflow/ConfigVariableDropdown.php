@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\formAPI\element\mineflow;
 
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\ConfigVariable;
 
 class ConfigVariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::CONFIG;
+    protected string $variableClass = ConfigVariable::class;
 
     protected array $actions = [
         FlowItemIds::CREATE_CONFIG_VARIABLE,
@@ -21,7 +24,7 @@ class ConfigVariableDropdown extends VariableDropdown {
      */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
         parent::__construct($text ?? "@action.form.target.config", $variables, [
-            DummyVariable::CONFIG,
+            ConfigVariable::class,
         ], $default, $optional);
     }
 }

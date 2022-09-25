@@ -95,7 +95,7 @@ class GetPlayerByName extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::PLAYER, $this->getPlayerName())
+            $this->getResultName() => new DummyVariable(PlayerVariable::class, $this->getPlayerName())
         ];
     }
 }

@@ -145,7 +145,7 @@ class CreatePositionVariable extends FlowItem {
     public function getAddingVariables(): array {
         $pos = $this->getX().", ".$this->getY().", ".$this->getZ().", ".$this->getWorld();
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::POSITION, $pos)
+            $this->getVariableName() => new DummyVariable(PositionVariable::class, $pos)
         ];
     }
 }

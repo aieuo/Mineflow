@@ -14,7 +14,6 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\Variable;
 
 class AddListVariable extends FlowItem {
 
@@ -109,7 +108,7 @@ class AddListVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::LIST, "[".implode(",", $this->getVariableValue())."]")
+            $this->getVariableName() => new DummyVariable(ListVariable::class, "[".implode(",", $this->getVariableValue())."]")
         ];
     }
 }

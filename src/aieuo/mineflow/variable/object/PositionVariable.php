@@ -36,13 +36,13 @@ class PositionVariable extends Vector3Variable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "world" => new DummyVariable(DummyVariable::WORLD),
-            "down" => new DummyVariable(DummyVariable::POSITION),
-            "up" => new DummyVariable(DummyVariable::POSITION),
-            "north" => new DummyVariable(DummyVariable::POSITION),
-            "south" => new DummyVariable(DummyVariable::POSITION),
-            "west" => new DummyVariable(DummyVariable::POSITION),
-            "east" => new DummyVariable(DummyVariable::POSITION),
+            "world" => new DummyVariable(WorldVariable::class),
+            "down" => new DummyVariable(PositionVariable::class),
+            "up" => new DummyVariable(PositionVariable::class),
+            "north" => new DummyVariable(PositionVariable::class),
+            "south" => new DummyVariable(PositionVariable::class),
+            "west" => new DummyVariable(PositionVariable::class),
+            "east" => new DummyVariable(PositionVariable::class),
         ]);
     }
 

@@ -103,7 +103,7 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         $pos2 = $this->getVector3VariableName("pos2");
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::AXIS_ALIGNED_BB, $area)
+            $this->getVariableName() => new DummyVariable(AxisAlignedBB::class, $area)
         ];
     }
 }

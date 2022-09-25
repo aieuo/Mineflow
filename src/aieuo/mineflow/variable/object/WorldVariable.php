@@ -54,15 +54,15 @@ class WorldVariable extends ObjectVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(DummyVariable::STRING),
-            "folderName" => new DummyVariable(DummyVariable::STRING),
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "spawn" => new DummyVariable(DummyVariable::POSITION),
-            "safe_spawn" => new DummyVariable(DummyVariable::POSITION),
-            "time" => new DummyVariable(DummyVariable::NUMBER),
-            "players" => new DummyVariable(DummyVariable::LIST, DummyVariable::PLAYER),
-            "entities" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
-            "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::LIVING),
+            "name" => new DummyVariable(StringVariable::class),
+            "folderName" => new DummyVariable(StringVariable::class),
+            "id" => new DummyVariable(NumberVariable::class),
+            "spawn" => new DummyVariable(PositionVariable::class),
+            "safe_spawn" => new DummyVariable(PositionVariable::class),
+            "time" => new DummyVariable(NumberVariable::class),
+            "players" => new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
+            "entities" => new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            "livings" => new DummyVariable(ListVariable::class, LivingVariable::getTypeName()),
         ]);
     }
 }

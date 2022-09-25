@@ -4,6 +4,8 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\event\player\PlayerCommandPreprocessEvent;
 
@@ -22,10 +24,10 @@ class PlayerCommandPreprocessEventTrigger extends EventTrigger {
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "message" => new DummyVariable(DummyVariable::STRING),
-            "cmd" => new DummyVariable(DummyVariable::STRING),
-            "args" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
+            "target" => new DummyVariable(PlayerVariable::class),
+            "message" => new DummyVariable(StringVariable::class),
+            "cmd" => new DummyVariable(StringVariable::class),
+            "args" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
         ];
     }
 }

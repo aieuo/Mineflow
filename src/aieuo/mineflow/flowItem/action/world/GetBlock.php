@@ -86,7 +86,7 @@ class GetBlock extends FlowItem implements PositionFlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::BLOCK)
+            $this->getResultName() => new DummyVariable(BlockVariable::class)
         ];
     }
 }

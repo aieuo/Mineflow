@@ -37,14 +37,14 @@ class LocationVariable extends PositionVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "yaw" => new DummyVariable(DummyVariable::NUMBER),
-            "pitch" => new DummyVariable(DummyVariable::NUMBER),
-            "down" => new DummyVariable(DummyVariable::LOCATION),
-            "up" => new DummyVariable(DummyVariable::LOCATION),
-            "north" => new DummyVariable(DummyVariable::LOCATION),
-            "south" => new DummyVariable(DummyVariable::LOCATION),
-            "west" => new DummyVariable(DummyVariable::LOCATION),
-            "east" => new DummyVariable(DummyVariable::LOCATION),
+            "yaw" => new DummyVariable(NumberVariable::class),
+            "pitch" => new DummyVariable(NumberVariable::class),
+            "down" => new DummyVariable(LocationVariable::class),
+            "up" => new DummyVariable(LocationVariable::class),
+            "north" => new DummyVariable(LocationVariable::class),
+            "south" => new DummyVariable(LocationVariable::class),
+            "west" => new DummyVariable(LocationVariable::class),
+            "east" => new DummyVariable(LocationVariable::class),
         ]);
     }
 

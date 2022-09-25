@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\LivingVariable;
 use pocketmine\entity\Living;
 
 class GetNearestLiving extends GetNearestEntity {
@@ -20,7 +21,7 @@ class GetNearestLiving extends GetNearestEntity {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::LIVING)
+            $this->getResultName() => new DummyVariable(LivingVariable::class)
         ];
     }
 }

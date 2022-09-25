@@ -7,6 +7,7 @@ use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\block\Block;
 
 class BlockTrigger extends Trigger {
@@ -29,7 +30,7 @@ class BlockTrigger extends Trigger {
 
     public function getVariablesDummy(): array {
         return [
-            "block" => new DummyVariable(DummyVariable::BLOCK)
+            "block" => new DummyVariable(BlockVariable::class)
         ];
     }
 

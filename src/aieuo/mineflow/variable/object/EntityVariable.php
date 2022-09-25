@@ -13,6 +13,7 @@ use pocketmine\entity\Entity;
 use pocketmine\entity\EntityFactory;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
+use pocketmine\math\AxisAlignedBB;
 use pocketmine\player\Player;
 
 class EntityVariable extends PositionVariable {
@@ -72,16 +73,16 @@ class EntityVariable extends PositionVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "id" => new DummyVariable(DummyVariable::NUMBER),
-            "saveId" => new DummyVariable(DummyVariable::STRING),
-            "nameTag" => new DummyVariable(DummyVariable::STRING),
-            "health" => new DummyVariable(DummyVariable::NUMBER),
-            "maxHealth" => new DummyVariable(DummyVariable::NUMBER),
-            "yaw" => new DummyVariable(DummyVariable::NUMBER),
-            "pitch" => new DummyVariable(DummyVariable::NUMBER),
-            "direction" => new DummyVariable(DummyVariable::NUMBER),
-            "onGround" => new DummyVariable(DummyVariable::BOOLEAN),
-            "bounding_box" => new DummyVariable(DummyVariable::AXIS_ALIGNED_BB),
+            "id" => new DummyVariable(NumberVariable::class),
+            "saveId" => new DummyVariable(StringVariable::class),
+            "nameTag" => new DummyVariable(StringVariable::class),
+            "health" => new DummyVariable(NumberVariable::class),
+            "maxHealth" => new DummyVariable(NumberVariable::class),
+            "yaw" => new DummyVariable(NumberVariable::class),
+            "pitch" => new DummyVariable(NumberVariable::class),
+            "direction" => new DummyVariable(NumberVariable::class),
+            "onGround" => new DummyVariable(BooleanVariable::class),
+            "bounding_box" => new DummyVariable(AxisAlignedBB::class),
         ]);
     }
 

@@ -41,12 +41,12 @@ class HumanVariable extends LivingVariable {
 
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
-            "hand" => new DummyVariable(DummyVariable::ITEM),
-            "food" => new DummyVariable(DummyVariable::NUMBER),
-            "xp" => new DummyVariable(DummyVariable::NUMBER),
-            "xp_level" => new DummyVariable(DummyVariable::NUMBER),
-            "xp_progress" => new DummyVariable(DummyVariable::NUMBER),
-            "inventory" => new DummyVariable(DummyVariable::INVENTORY),
+            "hand" => new DummyVariable(ItemVariable::class),
+            "food" => new DummyVariable(NumberVariable::class),
+            "xp" => new DummyVariable(NumberVariable::class),
+            "xp_level" => new DummyVariable(NumberVariable::class),
+            "xp_progress" => new DummyVariable(NumberVariable::class),
+            "inventory" => new DummyVariable(InventoryVariable::class),
         ]);
     }
 }

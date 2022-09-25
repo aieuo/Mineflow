@@ -123,7 +123,7 @@ class CreateScoreboardVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::SCOREBOARD, $this->getDisplayName())
+            $this->getVariableName() => new DummyVariable(ScoreboardVariable::class, $this->getDisplayName())
         ];
     }
 }

@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\NumberVariable;
 
 abstract class TypeGetMathVariable extends FlowItem {
 
@@ -58,7 +59,7 @@ abstract class TypeGetMathVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::NUMBER)
+            $this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

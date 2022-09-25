@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\formAPI\element\mineflow;
 
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\WorldVariable;
 
 class WorldVariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::WORLD;
+    protected string $variableClass = WorldVariable::class;
 
     protected array $actions = [
         FlowItemIds::GET_WORLD_BY_NAME,
@@ -21,7 +24,7 @@ class WorldVariableDropdown extends VariableDropdown {
      */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
         parent::__construct($text ?? "@action.form.target.world", $variables, [
-            DummyVariable::WORLD,
+            WorldVariable::class,
         ], $default, $optional);
     }
 }

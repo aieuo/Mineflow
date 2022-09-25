@@ -173,7 +173,7 @@ class CreateAABB extends FlowItem {
         $pos2 = $this->getMaxX().", ".$this->getMaxY().", ".$this->getMaxZ();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::AXIS_ALIGNED_BB, $area)
+            $this->getVariableName() => new DummyVariable(AxisAlignedBBVariable::class, $area)
         ];
     }
 }
