@@ -13,6 +13,24 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
+use aieuo\mineflow\variable\object\ConfigVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\EventVariable;
+use aieuo\mineflow\variable\object\HumanVariable;
+use aieuo\mineflow\variable\object\InventoryVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
+use aieuo\mineflow\variable\object\LivingVariable;
+use aieuo\mineflow\variable\object\LocationVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
+use aieuo\mineflow\variable\object\ScoreboardVariable;
+use aieuo\mineflow\variable\object\ServerVariable;
+use aieuo\mineflow\variable\object\UnknownVariable;
+use aieuo\mineflow\variable\object\Vector3Variable;
+use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\utils\Config;
 use function array_is_list;
 use function is_array;
@@ -27,13 +45,12 @@ class VariableHelper {
     /** @var Variable[] */
     private array $variables = [];
 
-    private Config $file;
-
-    public function __construct(Config $file) {
-        $this->file = $file;
+    public function __construct(private Config $file) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+    }
 
-        foreach ($file->getAll() as $name => $data) {
+    public function loadVariables(): void {
+        foreach ($this->file->getAll() as $name => $data) {
             $variable = Variable::fromArray($data);
 
             if ($variable === null) {
@@ -61,7 +78,7 @@ class VariableHelper {
         $variable = $this->get($name);
         foreach ($names as $name1) {
             if (!($variable instanceof Variable)) return null;
-            $variable = $variable->getValueFromIndex($name1);
+            $variable = $variable->getProperty($name1);
         }
         return $variable;
     }
@@ -366,7 +383,7 @@ class VariableHelper {
 
         $tmp = $name;
         foreach ($names as $name1) {
-            $variable = $variable->getValueFromIndex($name1);
+            $variable = $variable->getProperty($name1);
 
             if ($variable === null) {
                 throw new UndefinedMineflowPropertyException($tmp, $name1);
@@ -414,7 +431,7 @@ class VariableHelper {
         return $type;
     }
 
-    public function currentType(string $value) {
+    public function currentType(string $value): string|float {
         if (str_starts_with($value, "(str)")) {
             $newValue = mb_substr($value, 5);
         } elseif (str_starts_with($value, "(num)")) {
@@ -447,5 +464,29 @@ class VariableHelper {
 
         if (array_is_list($variableArray)) return new ListVariable($variableArray);
         return new MapVariable($variableArray);
+    }
+
+    public function initVariableProperties(): void {
+        ListVariable::registerProperties();
+        MapVariable::registerProperties();
+        StringVariable::registerProperties();
+        AxisAlignedBBVariable::registerProperties();
+        BlockVariable::registerProperties();
+        ConfigVariable::registerProperties();
+        EntityVariable::registerProperties();
+        EventVariable::registerProperties();
+        HumanVariable::registerProperties();
+        InventoryVariable::registerProperties();
+        ItemVariable::registerProperties();
+        LivingVariable::registerProperties();
+        LocationVariable::registerProperties();
+        PlayerVariable::registerProperties();
+        PositionVariable::registerProperties();
+        RecipeVariable::registerProperties();
+        ScoreboardVariable::registerProperties();
+        ServerVariable::registerProperties();
+        UnknownVariable::registerProperties();
+        Vector3Variable::registerProperties();
+        WorldVariable::registerProperties();
     }
 }

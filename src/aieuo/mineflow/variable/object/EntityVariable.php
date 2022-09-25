@@ -7,21 +7,22 @@ namespace aieuo\mineflow\variable\object;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\entity\EntityFactory;
 use pocketmine\entity\Human;
 use pocketmine\entity\Living;
-use pocketmine\math\AxisAlignedBB;
+use pocketmine\entity\Location;
+use pocketmine\math\Facing;
 use pocketmine\player\Player;
 
-class EntityVariable extends PositionVariable {
+class EntityVariable extends ObjectVariable {
 
-    public static function fromObject(Entity $entity, ?string $str = null): EntityVariable|LivingVariable|HumanVariable|PlayerVariable {
+    public static function fromObject(Entity $entity): EntityVariable|LivingVariable|HumanVariable|PlayerVariable {
         return match (true) {
-            $entity instanceof Player => new PlayerVariable($entity, $str ?? $entity->getName()),
-            $entity instanceof Human => new HumanVariable($entity, $str ?? $entity->getNameTag()),
+            $entity instanceof Player => new PlayerVariable($entity),
+            $entity instanceof Human => new HumanVariable($entity),
             $entity instanceof Living => new LivingVariable($entity),
             default => new EntityVariable($entity),
         };
@@ -32,62 +33,102 @@ class EntityVariable extends PositionVariable {
     }
 
     public function __construct(private Entity $entity) {
-        parent::__construct($this->entity->getPosition());
     }
 
     public function getValue(): Entity {
         return $this->entity;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $entity = $this->getValue();
-        switch ($index) {
-            case "id":
-                return new NumberVariable($entity->getId());
-            case "saveId":
+    public function __toString(): string {
+        $name = $this->getValue()->getNameTag();
+        return empty($name) ? (string)$this->getValue() : $name;
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "id", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getId()),
+        );
+        self::registerProperty(
+            $class, "saveId", new DummyVariable(StringVariable::class),
+            function (Entity $entity) {
                 try {
                     return new StringVariable(EntityFactory::getInstance()->getSaveId($entity::class));
                 } catch (\InvalidArgumentException) {
                     return new StringVariable("");
                 }
-            case "nameTag":
-                return new StringVariable($entity->getNameTag());
-            case "health":
-                return new NumberVariable($entity->getHealth());
-            case "maxHealth":
-                return new NumberVariable($entity->getMaxHealth());
-            case "yaw":
-                return new NumberVariable($entity->getLocation()->getYaw());
-            case "pitch":
-                return new NumberVariable($entity->getLocation()->getPitch());
-            case "direction":
-                return new NumberVariable($entity->getHorizontalFacing());
-            case "onGround":
-                return new BooleanVariable($entity->isOnGround());
-            case "bounding_box":
-                return new AxisAlignedBBVariable($entity->getBoundingBox());
-            default:
-                return parent::getValueFromIndex($index);
+            }
+        );
+        self::registerProperty(
+            $class, "nameTag", new DummyVariable(StringVariable::class),
+            fn(Entity $entity) => new StringVariable($entity->getNameTag()),
+        );
+        self::registerProperty(
+            $class, "health", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getHealth()),
+        );
+        self::registerProperty(
+            $class, "maxHealth", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getMaxHealth()),
+        );
+        self::registerProperty(
+            $class, "direction", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getHorizontalFacing()),
+        );
+        self::registerProperty(
+            $class, "onGround", new DummyVariable(BooleanVariable::class),
+            fn(Entity $entity) => new BooleanVariable($entity->isOnGround()),
+        );
+        self::registerProperty(
+            $class, "bounding_box", new DummyVariable(AxisAlignedBBVariable::class),
+            fn(Entity $entity) => new AxisAlignedBBVariable($entity->getBoundingBox()),
+        );
+        self::registerProperty(
+            $class, "location", new DummyVariable(LocationVariable::class),
+            fn(Entity $entity) => new LocationVariable($entity->getLocation()),
+        );
+        self::registerProperty(
+            $class, "yaw", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getYaw()),
+        );
+        self::registerProperty(
+            $class, "pitch", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getPitch()),
+        );
+        self::registerProperty(
+            $class, "position", new DummyVariable(LocationVariable::class),
+            fn(Entity $entity) => new PositionVariable($entity->getLocation()->asPosition()),
+        );
+        self::registerProperty(
+            $class, "world", new DummyVariable(WorldVariable::class),
+            fn(Entity $entity) => new WorldVariable($entity->getWorld()),
+        );
+        self::registerProperty(
+            $class, "x", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getX()),
+        );
+        self::registerProperty(
+            $class, "y", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getY()),
+        );
+        self::registerProperty(
+            $class, "z", new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getZ()),
+        );
+        self::registerProperty(
+            $class, "xyz", new DummyVariable(StringVariable::class),
+            fn(Entity $entity) => new StringVariable($entity->getLocation()->getX().",".$entity->getLocation()->getY().",".$entity->getLocation()->getZ()),
+        );
+        foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
+            self::registerProperty(
+                $class, $name, new DummyVariable(LocationVariable::class),
+                fn(Entity $entity) => new LocationVariable(self::getSideLocation($entity, $facing)),
+            );
         }
     }
 
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "id" => new DummyVariable(NumberVariable::class),
-            "saveId" => new DummyVariable(StringVariable::class),
-            "nameTag" => new DummyVariable(StringVariable::class),
-            "health" => new DummyVariable(NumberVariable::class),
-            "maxHealth" => new DummyVariable(NumberVariable::class),
-            "yaw" => new DummyVariable(NumberVariable::class),
-            "pitch" => new DummyVariable(NumberVariable::class),
-            "direction" => new DummyVariable(NumberVariable::class),
-            "onGround" => new DummyVariable(BooleanVariable::class),
-            "bounding_box" => new DummyVariable(AxisAlignedBB::class),
-        ]);
-    }
-
-    public function __toString(): string {
-        $name = $this->getValue()->getNameTag();
-        return empty($name) ? (string)$this->getValue() : $name;
+    private static function getSideLocation(Entity $entity, int $facing): Location {
+        $location = $entity->getLocation();
+        return Location::fromObject($location->getSide($facing), $location->getWorld(), $location->getYaw(), $location->getPitch());
     }
 }

@@ -10,6 +10,7 @@ use aieuo\mineflow\Main;
 use function array_reverse;
 use function array_search;
 use function array_values;
+use function count;
 
 class ListVariable extends Variable implements \JsonSerializable {
 
@@ -119,14 +120,6 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function callMethod(string $name, array $parameters = []): ?Variable {
-        return match ($name) {
-            "count" => new NumberVariable(count($this->value)),
-            "reverse" => new ListVariable(array_reverse($this->value)),
-            default => null,
-        };
-    }
-
     public function getCount(): int {
         return count($this->values);
     }
@@ -159,5 +152,17 @@ class ListVariable extends Variable implements \JsonSerializable {
             else $result[$i] = (string)$value;
         }
         return $result;
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerMethod(
+            $class, "count", new DummyVariable(NumberVariable::class),
+            fn(array $values) => new NumberVariable(count($values)),
+        );
+        self::registerMethod(
+            $class, "reverse", new DummyVariable(ListVariable::class),
+            fn(array $values) => new ListVariable(array_reverse($values)),
+            aliases: ["reversed"],
+        );
     }
 }

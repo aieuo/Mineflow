@@ -7,6 +7,7 @@ namespace aieuo\mineflow\variable\object;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\BooleanVariable;
+use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -31,7 +32,7 @@ class ConfigVariable extends ObjectVariable {
     public function __construct(private Config $config) {
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    protected function getValueFromIndex(string $index): ?Variable {
         $config = $this->getValue();
         $data = $config->get($index);
         if ($data === null) return null;
@@ -67,20 +68,31 @@ class ConfigVariable extends ObjectVariable {
         return new MapVariable($values);
     }
 
-    public function callMethod(string $name, array $parameters = []): ?Variable {
-        $helper = Main::getVariableHelper();
-        $values = $this->getValue()->getAll();
-        return match ($name) {
-            "count" => new NumberVariable(count($values)),
-            "reverse" => new MapVariable(array_reverse($values)),
-            "keys" => $helper->arrayToListVariable(array_keys($values)),
-            "values" => $helper->arrayToListVariable(array_values($values)),
-            "all" => $helper->arrayToListVariable($values),
-            default => null,
-        };
-    }
-
     public function __toString(): string {
         return "Config(".$this->getValue()->getPath().")";
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerMethod(
+            $class, "count", new DummyVariable(NumberVariable::class),
+            fn(Config $config) => new NumberVariable(count($config->getAll())),
+        );
+        self::registerMethod(
+            $class, "reverse", new DummyVariable(MapVariable::class),
+            fn(Config $config) => new MapVariable(array_reverse($config->getAll())),
+            aliases: ["reversed"],
+        );
+        self::registerMethod(
+            $class, "keys", new DummyVariable(ListVariable::class),
+            fn(Config $config) => Main::getVariableHelper()->arrayToListVariable(array_keys($config->getAll())),
+        );
+        self::registerMethod(
+            $class, "values", new DummyVariable(ListVariable::class),
+            fn(Config $config) => Main::getVariableHelper()->arrayToListVariable(array_values($config->getAll())),
+        );
+        self::registerMethod(
+            $class, "all", new DummyVariable(ListVariable::class),
+            fn(Config $config) => Main::getVariableHelper()->arrayToListVariable($config->getAll()),
+        );
     }
 }

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
+use function mb_strlen;
+use function mb_strtolower;
+use function mb_substr;
 
 class StringVariable extends Variable implements \JsonSerializable {
 
@@ -33,20 +36,39 @@ class StringVariable extends Variable implements \JsonSerializable {
         throw new UnsupportedCalculationException();
     }
 
-    public function callMethod(string $name, array $parameters = []): ?Variable {
-        return match ($name) {
-            "length" => new NumberVariable(mb_strlen($this->getValue())),
-            "toLowerCase", "lowercase" => new StringVariable(mb_strtolower($this->getValue())),
-            "toUpperCase", "uppercase" => new StringVariable(mb_strtoupper($this->getValue())),
-            "substring" => new StringVariable(mb_substr($this->getValue(), $parameters[0], $parameters[1] ?? null)),
-            default => null,
-        };
-    }
-
     public function jsonSerialize(): array {
         return [
             "type" => static::getTypeName(),
             "value" => $this->getValue(),
         ];
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerMethod(
+            $class, "length", new DummyVariable(NumberVariable::class),
+            fn(string $value) => new NumberVariable(mb_strlen($value)),
+        );
+        self::registerMethod(
+            $class, "toLowerCase", new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtolower($value)),
+            aliases: ["lowercase"],
+        );
+        self::registerProperty(
+            $class, "lowercase", new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtolower($value)),
+        );
+        self::registerMethod(
+            $class, "toUpperCase", new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtoupper($value)),
+            aliases: ["uppercase"],
+        );
+        self::registerProperty(
+            $class, "uppercase", new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtoupper($value)),
+        );
+        self::registerMethod(
+            $class, "substring", new DummyVariable(StringVariable::class),
+            fn(string $value, array $param) => new StringVariable(mb_substr($value, $param[0], $param[1] ?? null)),
+        );
     }
 }

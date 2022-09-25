@@ -9,7 +9,6 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 
 class RecipeVariable extends ObjectVariable {
 
@@ -24,28 +23,27 @@ class RecipeVariable extends ObjectVariable {
         return $this->recipe;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $recipe = $this->getValue();
-        return match ($index) {
-            "name" => new StringVariable($recipe->getName()),
-            "group" => new StringVariable($recipe->getGroup()),
-            "author" => new StringVariable($recipe->getAuthor()),
-            "variables" => new MapVariable($recipe->getExecutor()?->getVariables() ?? []),
-            default => parent::getValueFromIndex($index),
-        };
-    }
-
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(StringVariable::class),
-            "group" => new DummyVariable(StringVariable::class),
-            "author" => new DummyVariable(StringVariable::class),
-            "variables" => new DummyVariable(MapVariable::class),
-        ]);
-    }
-
     public function __toString(): string {
         $recipe = $this->getValue();
         return $recipe->getGroup()."/".$recipe->getName();
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "name", new DummyVariable(StringVariable::class),
+            fn(Recipe $recipe) => new StringVariable($recipe->getName()),
+        );
+        self::registerProperty(
+            $class, "group", new DummyVariable(StringVariable::class),
+            fn(Recipe $recipe) => new StringVariable($recipe->getGroup()),
+        );
+        self::registerProperty(
+            $class, "author", new DummyVariable(StringVariable::class),
+            fn(Recipe $recipe) => new StringVariable($recipe->getAuthor()),
+        );
+        self::registerProperty(
+            $class, "variables", new DummyVariable(MapVariable::class),
+            fn(Recipe $recipe) => new MapVariable($recipe->getExecutor()?->getVariables() ?? []),
+        );
     }
 }

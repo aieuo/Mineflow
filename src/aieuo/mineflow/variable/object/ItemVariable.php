@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\item\Item;
+use function array_map;
 
 class ItemVariable extends ObjectVariable {
 
@@ -25,41 +25,48 @@ class ItemVariable extends ObjectVariable {
         return $this->item;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $item = $this->getValue();
-        return match ($index) {
-            "name" => new StringVariable($item->getName()),
-            "vanilla_name" => new StringVariable($item->getVanillaName()),
-            "custom_name" => new StringVariable($item->getCustomName()),
-            "id" => new NumberVariable($item->getId()),
-            "damage", "meta" => new NumberVariable($item->getMeta()),
-            "count" => new NumberVariable($item->getCount()),
-            "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
-            "block" => new BlockVariable($item->getBlock()),
-            default => parent::getValueFromIndex($index),
-        };
-    }
-
     public function setItem(Item $item): void {
         $this->item = $item;
-    }
-
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(StringVariable::class),
-            "vanilla_name" => new DummyVariable(StringVariable::class),
-            "custom_name" => new DummyVariable(StringVariable::class),
-            "id" => new DummyVariable(NumberVariable::class),
-            "damage" => new DummyVariable(NumberVariable::class),
-            "meta" => new DummyVariable(NumberVariable::class),
-            "count" => new DummyVariable(NumberVariable::class),
-            "lore" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
-            "block" => new DummyVariable(BlockVariable::class),
-        ]);
     }
 
     public function __toString(): string {
         $item = $this->getValue();
         return "Item[".$item->getName()."] (".$item->getId().":".($item->hasAnyDamageValue() ? "?" : $item->getMeta()).")x".$item->getCount();
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "name", new DummyVariable(StringVariable::class),
+            fn(Item $item) => new StringVariable($item->getName()),
+        );
+        self::registerProperty(
+            $class, "vanilla_name", new DummyVariable(StringVariable::class),
+            fn(Item $item) => new StringVariable($item->getVanillaName()),
+        );
+        self::registerProperty(
+            $class, "custom_name", new DummyVariable(StringVariable::class),
+            fn(Item $item) => new StringVariable($item->getCustomName()),
+        );
+        self::registerProperty(
+            $class, "id", new DummyVariable(NumberVariable::class),
+            fn(Item $item) => new NumberVariable($item->getId()),
+        );
+        self::registerProperty(
+            $class, "damage", new DummyVariable(NumberVariable::class),
+            fn(Item $item) => new NumberVariable($item->getMeta()),
+            aliases: ["meta"],
+        );
+        self::registerProperty(
+            $class, "count", new DummyVariable(NumberVariable::class),
+            fn(Item $item) => new NumberVariable($item->getCount()),
+        );
+        self::registerProperty(
+            $class, "lore", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            fn(Item $item) => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
+        );
+        self::registerProperty(
+            $class, "block", new DummyVariable(BlockVariable::class),
+            fn(Item $item) => new BlockVariable($item->getBlock()),
+        );
     }
 }

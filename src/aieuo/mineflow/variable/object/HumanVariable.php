@@ -6,7 +6,6 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Human;
 
 class HumanVariable extends LivingVariable {
@@ -25,28 +24,32 @@ class HumanVariable extends LivingVariable {
         return $value->getName();
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        /** @var Human $human */
-        $human = $this->getValue();
-        return match ($index) {
-            "hand" => new ItemVariable($human->getInventory()->getItemInHand()),
-            "food" => new NumberVariable($human->getHungerManager()->getFood()),
-            "xp" => new NumberVariable($human->getXpManager()->getCurrentTotalXp()),
-            "xp_level" => new NumberVariable($human->getXpManager()->getXpLevel()),
-            "xp_progress" => new NumberVariable($human->getXpManager()->getXpProgress()),
-            "inventory" => new InventoryVariable($human->getInventory()),
-            default => parent::getValueFromIndex($index),
-        };
-    }
+    public static function registerProperties(string $class = self::class): void {
+        LivingVariable::registerProperties($class);
 
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "hand" => new DummyVariable(ItemVariable::class),
-            "food" => new DummyVariable(NumberVariable::class),
-            "xp" => new DummyVariable(NumberVariable::class),
-            "xp_level" => new DummyVariable(NumberVariable::class),
-            "xp_progress" => new DummyVariable(NumberVariable::class),
-            "inventory" => new DummyVariable(InventoryVariable::class),
-        ]);
+        self::registerProperty(
+            $class, "hand", new DummyVariable(ItemVariable::class),
+            fn(Human $human) => new ItemVariable($human->getInventory()->getItemInHand()),
+        );
+        self::registerProperty(
+            $class, "food", new DummyVariable(NumberVariable::class),
+            fn(Human $human) => new NumberVariable($human->getHungerManager()->getFood()),
+        );
+        self::registerProperty(
+            $class, "xp", new DummyVariable(NumberVariable::class),
+            fn(Human $human) => new NumberVariable($human->getXpManager()->getCurrentTotalXp()),
+        );
+        self::registerProperty(
+            $class, "xp_level", new DummyVariable(NumberVariable::class),
+            fn(Human $human) => new NumberVariable($human->getXpManager()->getXpLevel()),
+        );
+        self::registerProperty(
+            $class, "xp_progress", new DummyVariable(NumberVariable::class),
+            fn(Human $human) => new NumberVariable($human->getXpManager()->getXpProgress()),
+        );
+        self::registerProperty(
+            $class, "inventory", new DummyVariable(InventoryVariable::class),
+            fn(Human $human) => new InventoryVariable($human->getInventory()),
+        );
     }
 }

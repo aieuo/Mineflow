@@ -7,6 +7,7 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use function array_keys;
 use function array_reverse;
 use function array_values;
 use function count;
@@ -85,17 +86,6 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function callMethod(string $name, array $parameters = []): ?Variable {
-        $helper = Main::getVariableHelper();
-        return match ($name) {
-            "count" => new NumberVariable(count($this->value)),
-            "reverse" => new MapVariable(array_reverse($this->value)),
-            "keys" => $helper->arrayToListVariable(array_keys($this->value)),
-            "values" => new ListVariable(array_values($this->value)),
-            default => null,
-        };
-    }
-
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
@@ -103,5 +93,25 @@ class MapVariable extends ListVariable {
             $values[] = $key.":".$value;
         }
         return "<".implode(",", $values).">";
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerMethod(
+            $class, "count", new DummyVariable(NumberVariable::class),
+            fn(array $values) => new NumberVariable(count($values)),
+        );
+        self::registerMethod(
+            $class, "reverse", new DummyVariable(ListVariable::class),
+            fn(array $values) => new ListVariable(array_reverse($values)),
+            aliases: ["reversed"],
+        );
+        self::registerMethod(
+            $class, "keys", new DummyVariable(ListVariable::class),
+            fn(array $values) => Main::getVariableHelper()->arrayToListVariable(array_keys($values)),
+        );
+        self::registerMethod(
+            $class, "values", new DummyVariable(ListVariable::class),
+            fn(array $values) => new ListVariable(array_values($values)),
+        );
     }
 }

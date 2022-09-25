@@ -8,7 +8,6 @@ use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
 use function end;
@@ -27,29 +26,24 @@ class EventVariable extends ObjectVariable {
         return $this->event;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $event = $this->getValue();
-        return match ($index) {
-            "name" => new StringVariable($this->getEventName($event)),
-            "isCanceled" => new BooleanVariable($event instanceof Cancellable ? $event->isCancelled() : false),
-            default => parent::getValueFromIndex($index),
-        };
-    }
-
     public function getEventName(Event $event): string {
         $names = explode("\\", $event->getEventName());
         return end($names);
     }
 
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(StringVariable::class),
-            "isCanceled" => new DummyVariable(BooleanVariable::class),
-        ]);
-    }
-
     public function __toString(): string {
         return $this->getEventName($this->getValue());
     }
-}
 
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "name", new DummyVariable(StringVariable::class),
+            fn(Event $event) => new StringVariable($this->getEventName($event)),
+        );
+        self::registerProperty(
+            $class, "canceled", new DummyVariable(BooleanVariable::class),
+            fn(Event $event) => new BooleanVariable($event instanceof Cancellable and $event->isCancelled()),
+            aliases: ["isCanceled"],
+        );
+    }
+}

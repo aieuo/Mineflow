@@ -9,13 +9,13 @@ use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Living;
 use pocketmine\player\Player;
 use pocketmine\world\World;
 use function array_filter;
 use function array_map;
+use function array_values;
 
 class WorldVariable extends ObjectVariable {
 
@@ -34,35 +34,44 @@ class WorldVariable extends ObjectVariable {
         return $this->getValue()->getFolderName();
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $level = $this->getValue();
-        return match ($index) {
-            "name" => new StringVariable($level->getDisplayName()),
-            "folderName" => new StringVariable($level->getFolderName()),
-            "id" => new NumberVariable($level->getId()),
-            "spawn" => new PositionVariable($level->getSpawnLocation()),
-            "safe_spawn" => new PositionVariable($level->getSafeSpawn()),
-            "time" => new NumberVariable($level->getTime()),
-            "players" => new ListVariable(array_values(array_map(fn(Player $player) => new PlayerVariable($player), $level->getPlayers()))),
-            "entities" => new ListVariable(array_values(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $level->getEntities()))),
-            "livings" => new ListVariable(array_values(array_map(fn(Living $living) => EntityVariable::fromObject($living),
-                array_filter($level->getEntities(), fn(Entity $entity) => $entity instanceof Living)
-            ))),
-            default => parent::getValueFromIndex($index),
-        };
-    }
-
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(StringVariable::class),
-            "folderName" => new DummyVariable(StringVariable::class),
-            "id" => new DummyVariable(NumberVariable::class),
-            "spawn" => new DummyVariable(PositionVariable::class),
-            "safe_spawn" => new DummyVariable(PositionVariable::class),
-            "time" => new DummyVariable(NumberVariable::class),
-            "players" => new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
-            "entities" => new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
-            "livings" => new DummyVariable(ListVariable::class, LivingVariable::getTypeName()),
-        ]);
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "name", new DummyVariable(StringVariable::class),
+            fn(World $world) => new StringVariable($world->getDisplayName()),
+        );
+        self::registerProperty(
+            $class, "folderName", new DummyVariable(StringVariable::class),
+            fn(World $world) => new StringVariable($world->getFolderName()),
+        );
+        self::registerProperty(
+            $class, "id", new DummyVariable(NumberVariable::class),
+            fn(World $world) => new NumberVariable($world->getId()),
+        );
+        self::registerProperty(
+            $class, "spawn", new DummyVariable(PositionVariable::class),
+            fn(World $world) => new PositionVariable($world->getSpawnLocation()),
+        );
+        self::registerProperty(
+            $class, "safe_spawn", new DummyVariable(PositionVariable::class),
+            fn(World $world) => new PositionVariable($world->getSafeSpawn()),
+        );
+        self::registerProperty(
+            $class, "time", new DummyVariable(NumberVariable::class),
+            fn(World $world) => new NumberVariable($world->getTime()),
+        );
+        self::registerProperty(
+            $class, "players", new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
+            fn(World $world) => new ListVariable(array_values(array_map(fn(Player $player) => new PlayerVariable($player), $world->getPlayers()))),
+        );
+        self::registerProperty(
+            $class, "entities", new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            fn(World $world) => new ListVariable(array_values(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $world->getEntities()))),
+        );
+        self::registerProperty(
+            $class, "livings", new DummyVariable(ListVariable::class, LivingVariable::getTypeName()),
+            fn($world) => new ListVariable(array_values(array_map(fn(Living $living) => EntityVariable::fromObject($living),
+                array_filter($world->getEntities(), fn(Entity $entity) => $entity instanceof Living)
+            )))
+        );
     }
 }

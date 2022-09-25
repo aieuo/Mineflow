@@ -6,7 +6,6 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
 
 class LivingVariable extends EntityVariable {
@@ -19,26 +18,28 @@ class LivingVariable extends EntityVariable {
         parent::__construct($entity);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        /** @var Living $living */
-        $living = $this->getValue();
-        return match ($index) {
-            "armor" => new InventoryVariable($living->getArmorInventory()),
-            "sprinting" => new BooleanVariable($living->isSprinting()),
-            "sneaking" => new BooleanVariable($living->isSneaking()),
-            "gliding" => new BooleanVariable($living->isGliding()),
-            "swimming" => new BooleanVariable($living->isSwimming()),
-            default => parent::getValueFromIndex($index),
-        };
-    }
+    public static function registerProperties(string $class = self::class): void {
+        EntityVariable::registerProperties($class);
 
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "armor" => new DummyVariable(InventoryVariable::class),
-            "sprinting" => new DummyVariable(BooleanVariable::class),
-            "sneaking" => new DummyVariable(BooleanVariable::class),
-            "gliding" => new DummyVariable(BooleanVariable::class),
-            "swimming" => new DummyVariable(BooleanVariable::class),
-        ]);
+        self::registerProperty(
+            $class, "armor", new DummyVariable(InventoryVariable::class),
+            fn(Living $living) => new InventoryVariable($living->getArmorInventory()),
+        );
+        self::registerProperty(
+            $class, "sprinting", new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isSprinting()),
+        );
+        self::registerProperty(
+            $class, "sneaking", new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isSneaking()),
+        );
+        self::registerProperty(
+            $class, "gliding", new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isGliding()),
+        );
+        self::registerProperty(
+            $class, "swimming", new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isSwimming()),
+        );
     }
 }

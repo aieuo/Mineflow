@@ -10,13 +10,13 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
 use pocketmine\permission\BanEntry;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\world\World;
 use function array_map;
+use function array_values;
 
 class ServerVariable extends ObjectVariable {
 
@@ -31,22 +31,38 @@ class ServerVariable extends ObjectVariable {
         return $this->server;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $server = $this->getValue();
-        switch ($index) {
-            case "name":
-                return new StringVariable($server->getName());
-            case "tick":
-                return new NumberVariable($server->getTick());
-            case "default_world":
+    public function __toString(): string {
+        return (string)(new MapVariable(self::getValuesDummy()));
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "name", new DummyVariable(StringVariable::class),
+            fn(Server $server) => new StringVariable($server->getName())
+        );
+        self::registerProperty(
+            $class, "tick", new DummyVariable(NumberVariable::class),
+            fn(Server $server) => new NumberVariable($server->getTick())
+        );
+        self::registerProperty(
+            $class, "default_world", new DummyVariable(WorldVariable::class),
+            function (Server $server) {
                 $world = $server->getWorldManager()->getDefaultWorld();
                 if ($world === null) return null;
                 return new WorldVariable($world);
-            case "worlds":
-                return new ListVariable(array_map(fn(World $world) => new WorldVariable($world), $server->getWorldManager()->getWorlds()));
-            case "players":
-                return new ListVariable(array_map(fn(Player $player) => new PlayerVariable($player), array_values($server->getOnlinePlayers())));
-            case "entities":
+            }
+        );
+        self::registerProperty(
+            $class, "worlds", new DummyVariable(ListVariable::class, WorldVariable::getTypeName()),
+            fn(Server $server) => new ListVariable(array_map(fn(World $world) => new WorldVariable($world), $server->getWorldManager()->getWorlds()))
+        );
+        self::registerProperty(
+            $class, "players", new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
+            fn(Server $server) => new ListVariable(array_map(fn(Player $player) => new PlayerVariable($player), array_values($server->getOnlinePlayers())))
+        );
+        self::registerProperty(
+            $class, "entities", new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            function (Server $server) {
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
                     foreach ($world->getEntities() as $entity) {
@@ -54,7 +70,11 @@ class ServerVariable extends ObjectVariable {
                     }
                 }
                 return new ListVariable($entities);
-            case "livings":
+            }
+        );
+        self::registerProperty(
+            $class, "livings", new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            function (Server $server) {
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
                     foreach ($world->getEntities() as $entity) {
@@ -65,33 +85,19 @@ class ServerVariable extends ObjectVariable {
                     }
                 }
                 return new ListVariable($entities);
-            case "ops":
-                return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)));
-            case "bans":
-                return new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getNameBans()->getEntries()));
-            case "whitelist":
-                return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getWhitelisted()->getAll(true)));
-            default:
-                return parent::getValueFromIndex($index);
-        }
-    }
-
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "name" => new DummyVariable(StringVariable::class),
-            "tick" => new DummyVariable(NumberVariable::class),
-            "default_world" => new DummyVariable(WorldVariable::class),
-            "worlds" => new DummyVariable(ListVariable::class, WorldVariable::getTypeName()),
-            "players" => new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
-            "entities" => new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
-            "livings" => new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
-            "ops" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
-            "bans" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
-            "whitelist" => new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
-        ]);
-    }
-
-    public function __toString(): string {
-        return (string)(new MapVariable(self::getValuesDummy()));
+            }
+        );
+        self::registerProperty(
+            $class, "ops", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            fn(Server $server) => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)))
+        );
+        self::registerProperty(
+            $class, "bans", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            fn(Server $server) => new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getNameBans()->getEntries()))
+        );
+        self::registerProperty(
+            $class, "whitelist", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            fn(Server $server) => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getWhitelisted()->getAll(true)))
+        );
     }
 }

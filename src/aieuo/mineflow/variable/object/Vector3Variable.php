@@ -8,7 +8,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\variable\Variable;
+use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 
 class Vector3Variable extends ObjectVariable {
@@ -24,40 +24,33 @@ class Vector3Variable extends ObjectVariable {
         return $this->vector3;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        $position = $this->getValue();
-        return match ($index) {
-            "x" => new NumberVariable($position->x),
-            "y" => new NumberVariable($position->y),
-            "z" => new NumberVariable($position->z),
-            "xyz" => new StringVariable($position->x.",".$position->y.",".$position->z),
-            "down" => new Vector3Variable($position->down(1)),
-            "up" => new Vector3Variable($position->up(1)),
-            "north" => new Vector3Variable($position->north(1)),
-            "south" => new Vector3Variable($position->south(1)),
-            "west" => new Vector3Variable($position->west(1)),
-            "east" => new Vector3Variable($position->east(1)),
-            default => parent::getValueFromIndex($index),
-        };
-    }
-
-    public static function getValuesDummy(): array {
-        return array_merge(parent::getValuesDummy(), [
-            "x" => new DummyVariable(NumberVariable::class),
-            "y" => new DummyVariable(NumberVariable::class),
-            "z" => new DummyVariable(NumberVariable::class),
-            "xyz" => new DummyVariable(StringVariable::class),
-            "down" => new DummyVariable(Vector3Variable::class),
-            "up" => new DummyVariable(Vector3Variable::class),
-            "north" => new DummyVariable(Vector3Variable::class),
-            "south" => new DummyVariable(Vector3Variable::class),
-            "west" => new DummyVariable(Vector3Variable::class),
-            "east" => new DummyVariable(Vector3Variable::class),
-        ]);
-    }
-
     public function __toString(): string {
         $value = $this->getValue();
         return $value->x.",".$value->y.",".$value->z;
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "x", new DummyVariable(NumberVariable::class),
+            fn(Vector3 $position) => new NumberVariable($position->x),
+        );
+        self::registerProperty(
+            $class, "y", new DummyVariable(NumberVariable::class),
+            fn(Vector3 $position) => new NumberVariable($position->y),
+        );
+        self::registerProperty(
+            $class, "z", new DummyVariable(NumberVariable::class),
+            fn(Vector3 $position) => new NumberVariable($position->z),
+        );
+        self::registerProperty(
+            $class, "xyz", new DummyVariable(StringVariable::class),
+            fn(Vector3 $position) => new StringVariable($position->x.",".$position->y.",".$position->z),
+        );
+        foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
+            self::registerProperty(
+                $class, $name, new DummyVariable(Vector3Variable::class),
+                fn(Vector3 $position) => new Vector3Variable($position->getSide($facing)),
+            );
+        }
     }
 }
