@@ -15,8 +15,8 @@ class LocationVariable extends PositionVariable {
         return "location";
     }
 
-    public function __construct(Location $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(Location $value) {
+        parent::__construct($value);
     }
 
     public function getValueFromIndex(string $index): ?Variable {

@@ -24,8 +24,7 @@ class ServerVariable extends ObjectVariable {
         return "server";
     }
 
-    public function __construct(private Server $server, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Server $server) {
     }
 
     public function getValue(): Server {

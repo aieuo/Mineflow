@@ -17,8 +17,7 @@ class RecipeVariable extends ObjectVariable {
         return "recipe";
     }
 
-    public function __construct(private Recipe $recipe, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Recipe $recipe) {
     }
 
     public function getValue(): Recipe {

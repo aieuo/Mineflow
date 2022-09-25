@@ -18,8 +18,7 @@ class InventoryVariable extends ObjectVariable {
         return "inventory";
     }
 
-    public function __construct(private Inventory $inventory, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Inventory $inventory) {
     }
 
     public function getValue(): Inventory {

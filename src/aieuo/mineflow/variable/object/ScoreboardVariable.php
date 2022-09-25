@@ -15,8 +15,7 @@ class ScoreboardVariable extends ObjectVariable {
         return "scoreboard";
     }
 
-    public function __construct(private Scoreboard $scoreboard, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Scoreboard $scoreboard) {
     }
 
     public function getValue(): Scoreboard {

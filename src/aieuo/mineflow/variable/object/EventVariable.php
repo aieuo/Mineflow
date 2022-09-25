@@ -20,8 +20,7 @@ class EventVariable extends ObjectVariable {
         return "event";
     }
 
-    public function __construct(private Event $event, ?string $str = null) {
-        parent::__construct($str ?? $this->getEventName($event));
+    public function __construct(private Event $event) {
     }
 
     public function getValue(): Event {
@@ -47,6 +46,10 @@ class EventVariable extends ObjectVariable {
             "name" => new DummyVariable(DummyVariable::STRING),
             "isCanceled" => new DummyVariable(DummyVariable::BOOLEAN),
         ]);
+    }
+
+    public function __toString(): string {
+        return $this->getEventName($this->getValue());
     }
 }
 

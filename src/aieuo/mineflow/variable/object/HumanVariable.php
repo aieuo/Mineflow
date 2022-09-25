@@ -15,8 +15,14 @@ class HumanVariable extends LivingVariable {
         return "human";
     }
 
-    public function __construct(Human $value, ?string $str = null) {
-        parent::__construct($value, $str ?? $value->getName());
+    public function __construct(Human $value) {
+        parent::__construct($value);
+    }
+
+    public function __toString(): string {
+        /** @var Human $value */
+        $value = $this->getValue();
+        return $value->getName();
     }
 
     public function getValueFromIndex(string $index): ?Variable {

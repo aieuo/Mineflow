@@ -15,8 +15,8 @@ class LivingVariable extends EntityVariable {
         return "living";
     }
 
-    public function __construct(Living $entity, ?string $str = null) {
-        parent::__construct($entity, $str);
+    public function __construct(Living $entity) {
+        parent::__construct($entity);
     }
 
     public function getValueFromIndex(string $index): ?Variable {

@@ -30,8 +30,8 @@ class EntityVariable extends PositionVariable {
         return "entity";
     }
 
-    public function __construct(private Entity $entity, ?string $str = null) {
-        parent::__construct($this->entity->getPosition(), $str);
+    public function __construct(private Entity $entity) {
+        parent::__construct($this->entity->getPosition());
     }
 
     public function getValue(): Entity {

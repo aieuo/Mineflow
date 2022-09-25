@@ -23,12 +23,15 @@ class WorldVariable extends ObjectVariable {
         return "world";
     }
 
-    public function __construct(private World $world, ?string $str = null) {
-        parent::__construct($str ?? $world->getFolderName());
+    public function __construct(private World $world) {
     }
 
     public function getValue(): World {
         return $this->world;
+    }
+
+    public function __toString(): string {
+        return $this->getValue()->getFolderName();
     }
 
     public function getValueFromIndex(string $index): ?Variable {

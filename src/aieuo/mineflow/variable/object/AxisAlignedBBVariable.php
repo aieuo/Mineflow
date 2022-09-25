@@ -18,8 +18,7 @@ class AxisAlignedBBVariable extends ObjectVariable {
         return "aabb";
     }
 
-    public function __construct(private AxisAlignedBB $aabb, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private AxisAlignedBB $aabb) {
     }
 
     public function getValue(): AxisAlignedBB {

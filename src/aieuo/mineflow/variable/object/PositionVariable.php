@@ -14,8 +14,8 @@ class PositionVariable extends Vector3Variable {
         return "position";
     }
 
-    public function __construct(Position $value, ?string $str = null) {
-        parent::__construct($value, $str);
+    public function __construct(Position $value) {
+        parent::__construct($value);
     }
 
     public function getValueFromIndex(string $index): ?Variable {

@@ -17,8 +17,8 @@ class BlockVariable extends PositionVariable {
         return "block";
     }
 
-    public function __construct(private Block $block, ?string $str = null) {
-        parent::__construct($this->block->getPosition(), $str);
+    public function __construct(private Block $block) {
+        parent::__construct($this->block->getPosition());
     }
 
     public function getValue(): Block {
@@ -60,6 +60,6 @@ class BlockVariable extends PositionVariable {
 
     public function __toString(): string {
         $value = $this->getValue();
-        return (string)$value;
+        return $value->getId().":".$value->getMeta();
     }
 }

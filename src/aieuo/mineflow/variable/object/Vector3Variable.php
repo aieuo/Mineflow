@@ -17,8 +17,7 @@ class Vector3Variable extends ObjectVariable {
         return "vector3";
     }
 
-    public function __construct(private Vector3 $vector3, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Vector3 $vector3) {
     }
 
     public function getValue(): Vector3 {

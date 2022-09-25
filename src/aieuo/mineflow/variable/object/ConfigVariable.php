@@ -28,8 +28,7 @@ class ConfigVariable extends ObjectVariable {
         return "config";
     }
 
-    public function __construct(private Config $config, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Config $config) {
     }
 
     public function getValueFromIndex(string $index): ?Variable {

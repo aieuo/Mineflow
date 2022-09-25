@@ -18,8 +18,7 @@ class ItemVariable extends ObjectVariable {
         return "item";
     }
 
-    public function __construct(private Item $item, ?string $str = null) {
-        parent::__construct($str);
+    public function __construct(private Item $item) {
     }
 
     public function getValue(): Item {
