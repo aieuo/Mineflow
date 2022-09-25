@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\formAPI\element\mineflow;
 
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 
 class PlayerVariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::PLAYER;
+    protected string $variableClass = PlayerVariable::class;
 
     protected array $actions = [
         FlowItemIds::GET_PLAYER
@@ -21,7 +24,7 @@ class PlayerVariableDropdown extends VariableDropdown {
      */
     public function __construct(array $variables = [], string $default = "", ?string $text = null, bool $optional = false) {
         parent::__construct($text ?? "@action.form.target.player", $variables, [
-            DummyVariable::PLAYER,
+            PlayerVariable::class,
         ], $default, $optional);
     }
 }

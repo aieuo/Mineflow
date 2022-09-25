@@ -14,18 +14,19 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ObjectVariable;
 use pocketmine\player\Player;
 use function in_array;
 
 abstract class VariableDropdown extends Dropdown {
 
-    protected string $variableType;
+    protected string $variableClass;
 
     private string $defaultText;
 
     /** @var string[] */
     protected array $actions = [];
-    private array $variableTypes;
+    private array $variableClasses;
     private array $variableNames = [];
 
     private bool $optional;
@@ -36,26 +37,30 @@ abstract class VariableDropdown extends Dropdown {
     /**
      * @param string $text
      * @param array<string, DummyVariable> $variables
-     * @param string[] $variableTypes
+     * @param string[] $variableClasses
      * @param string $default
      * @param bool $optional
      */
-    public function __construct(string $text, array $variables = [], array $variableTypes = [], string $default = "", bool $optional = false) {
+    public function __construct(string $text, array $variables = [], array $variableClasses = [], string $default = "", bool $optional = false) {
         $this->defaultText = $default;
-        $this->variableTypes = $variableTypes;
+        $this->variableClasses = $variableClasses;
         $this->optional = $optional;
         $options = $this->updateOptions($this->flattenVariables($variables));
 
         parent::__construct($text, $options, $this->findDefaultKey($default));
     }
 
+    /**
+     * @param array<string, DummyVariable> $variables
+     * @return array
+     */
     public function updateOptions(array $variables): array {
-        $variableTypes = $this->variableTypes;
+        $variableTypes = $this->variableClasses;
         $default = $this->defaultText;
 
         $options = [];
         foreach ($variables as $name => $variable) {
-            if (!in_array($variable->getValueType(), $variableTypes, true)) continue;
+            if (!in_array($variable->getValueClass(), $variableTypes, true)) continue;
 
             $options[$name] = empty($variable->getDescription()) ? $name : ($name." §7(".$variable->getDescription().")");
         }
@@ -91,8 +96,14 @@ abstract class VariableDropdown extends Dropdown {
         $this->setDefaultIndex($this->findDefaultKey($default));
     }
 
+    public function getVariableClass(): string {
+        return $this->variableClass;
+    }
+
     public function getVariableType(): string {
-        return $this->variableType;
+        /** @var ObjectVariable $class */
+        $class = $this->variableClass;
+        return $class::getTypeName();
     }
 
     public function getDefaultText(): string {

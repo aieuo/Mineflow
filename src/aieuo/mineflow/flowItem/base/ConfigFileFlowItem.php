@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -14,11 +16,6 @@ interface ConfigFileFlowItem {
 
     public function setConfigVariableName(string $config, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Config
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getConfig(FlowItemExecutor $source, string $name = ""): Config;
 }

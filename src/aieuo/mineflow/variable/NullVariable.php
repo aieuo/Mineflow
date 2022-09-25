@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 class NullVariable extends Variable implements \JsonSerializable {
 
-    public int $type = Variable::NULL;
+    public static function getTypeName(): string {
+        return "null";
+    }
 
-    public function __construct() {
-        parent::__construct(null);
+    public function getValue(): mixed {
+        return null;
     }
 
     public function __toString(): string {
@@ -16,8 +20,8 @@ class NullVariable extends Variable implements \JsonSerializable {
 
     public function jsonSerialize(): array {
         return [
-            "type" => $this->getType(),
-            "value" => $this->getValue(),
+            "type" => static::getTypeName(),
+            "value" => null,
         ];
     }
 }

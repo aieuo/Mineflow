@@ -50,6 +50,10 @@ class Main extends PluginBase {
 
         Mineflow::init($this);
 
+        self::$variableHelper = new VariableHelper(new Config($this->getDataFolder()."variables.json", Config::JSON));
+
+        self::$variableHelper->initVariableProperties();
+
         FlowItemCategory::registerDefaults();
         Language::init();
     }
@@ -85,8 +89,7 @@ class Main extends PluginBase {
         self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));
         self::$eventManager = new EventManager(new Config($this->getDataFolder()."events.yml"));
         self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
-
-        self::$variableHelper = new VariableHelper(new Config($this->getDataFolder()."variables.json", Config::JSON));
+        self::$variableHelper->loadVariables();
 
         self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
         self::$recipeManager->loadRecipes();

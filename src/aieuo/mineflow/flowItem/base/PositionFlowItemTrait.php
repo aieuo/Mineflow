@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -7,7 +9,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 
 trait PositionFlowItemTrait {
@@ -27,7 +29,7 @@ trait PositionFlowItemTrait {
         $position = $source->replaceVariables($rawName = $this->getPositionVariableName($name));
 
         $variable = $source->getVariable($position);
-        if ($variable instanceof PositionObjectVariable and ($position = $variable->getPosition()) instanceof Position) {
+        if ($variable instanceof PositionVariable and ($position = $variable->getValue()) instanceof Position) {
             return $position;
         }
 

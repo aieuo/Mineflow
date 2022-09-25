@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace aieuo\mineflow\flowItem\base;
 
@@ -14,11 +16,6 @@ interface ItemFlowItem {
 
     public function setItemVariableName(string $item, string $name = ""): void;
 
-    /**
-     * @param FlowItemExecutor $source
-     * @param string $name
-     * @return Item
-     * @throws InvalidFlowValueException
-     */
+    /** @throws InvalidFlowValueException */
     public function getItem(FlowItemExecutor $source, string $name = ""): Item;
 }

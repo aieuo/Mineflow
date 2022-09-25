@@ -153,7 +153,7 @@ class Calculate2 extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::NUMBER)
+            $this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

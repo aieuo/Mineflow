@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\event\inventory\FurnaceBurnEvent;
 
 class FurnaceBurnEventTrigger extends EventTrigger {
@@ -14,12 +14,12 @@ class FurnaceBurnEventTrigger extends EventTrigger {
     public function getVariables(mixed $event): array {
         /** @var FurnaceBurnEvent $event */
         $fuel = $event->getFuel();
-        return ["fuel" => new ItemObjectVariable($fuel),];
+        return ["fuel" => new ItemVariable($fuel),];
     }
 
     public function getVariablesDummy(): array {
         return [
-            "fuel" => new DummyVariable(DummyVariable::ITEM)
+            "fuel" => new DummyVariable(ItemVariable::class)
         ];
     }
 }

@@ -15,7 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
-use aieuo\mineflow\variable\object\EntityObjectVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 
 class GetNearestEntity extends FlowItem implements PositionFlowItem {
@@ -83,7 +83,7 @@ class GetNearestEntity extends FlowItem implements PositionFlowItem {
 
         $entity = $position->world->getNearestEntity($position, (float)$maxDistance, $this->getTargetClass());
 
-        $variable = $entity === null ? new NullVariable() : EntityObjectVariable::fromObject($entity);
+        $variable = $entity === null ? new NullVariable() : EntityVariable::fromObject($entity);
         $source->addVariable($result, $variable);
         yield true;
         return $this->getResultName();
@@ -110,7 +110,7 @@ class GetNearestEntity extends FlowItem implements PositionFlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::ENTITY, "nullable")
+            $this->getResultName() => new DummyVariable(EntityVariable::class, "nullable")
         ];
     }
 }

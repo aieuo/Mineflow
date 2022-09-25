@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\object\EntityObjectVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 use function array_map;
 
@@ -63,7 +63,7 @@ class GetEntitiesInArea extends FlowItem implements AxisAlignedBBFlowItem, World
         $result = $source->replaceVariables($this->getResultName());
 
         $entities = $this->filterEntities($world->getNearbyEntities($aabb));
-        $variable = new ListVariable(array_map(fn(Entity $entity) => EntityObjectVariable::fromObject($entity), $entities));
+        $variable = new ListVariable(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $entities));
         $source->addVariable($result, $variable);
 
         yield true;

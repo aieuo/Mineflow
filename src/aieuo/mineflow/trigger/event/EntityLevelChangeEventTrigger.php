@@ -4,7 +4,8 @@ namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\WorldObjectVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
+use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Event;
 
@@ -22,16 +23,16 @@ class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
         /** @var EntityTeleportEvent $event */
         $target = $event->getEntity();
         $variables = DefaultVariables::getEntityVariables($target);
-        $variables["origin_world"] = new WorldObjectVariable($event->getFrom()->getWorld());
-        $variables["target_world"] = new WorldObjectVariable($event->getTo()->getWorld());
+        $variables["origin_world"] = new WorldVariable($event->getFrom()->getWorld());
+        $variables["target_world"] = new WorldVariable($event->getTo()->getWorld());
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "origin_world" => new DummyVariable(DummyVariable::WORLD),
-            "target_world" => new DummyVariable(DummyVariable::WORLD),
+            "target" => new DummyVariable(PlayerVariable::class),
+            "origin_world" => new DummyVariable(WorldVariable::class),
+            "target_world" => new DummyVariable(WorldVariable::class),
         ];
     }
 }

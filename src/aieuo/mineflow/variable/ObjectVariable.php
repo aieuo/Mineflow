@@ -1,28 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
-class ObjectVariable extends Variable {
-
-    public int $type = Variable::OBJECT;
-
-    private ?string $showString;
-
-    public function __construct(object $value, ?string $str = null) {
-        parent::__construct($value);
-        $this->showString = $str;
-    }
-
-    public function getValue(): object {
-        return parent::getValue();
-    }
-
-    public function getShowString(): ?string {
-        return $this->showString;
-    }
+abstract class ObjectVariable extends Variable {
 
     public function __toString(): string {
-        if (!empty($this->showString)) return (string)$this->showString;
         if (method_exists($this->getValue(), "__toString")) {
             $str = (string)$this->getValue();
         } else {

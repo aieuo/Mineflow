@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\recipe;
 
-use aieuo\mineflow\event\RecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -18,8 +17,9 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\EventObjectVariable;
-use aieuo\mineflow\variable\object\RecipeObjectVariable;
+use aieuo\mineflow\variable\object\EventVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -235,9 +235,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
         }
         if ($event !== null) {
-            $variables["event"] = new EventObjectVariable($event);
+            $variables["event"] = new EventVariable($event);
         }
-        $variables["this"] = new RecipeObjectVariable($this);
+        $variables["this"] = new RecipeVariable($this);
 
         $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
             if ($callbackExecutor !== null) {
@@ -272,7 +272,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
         $variables = [
-            "target" => new DummyVariable(DummyVariable::PLAYER)
+            "target" => new DummyVariable(PlayerVariable::class)
         ];
 
         $add = [];

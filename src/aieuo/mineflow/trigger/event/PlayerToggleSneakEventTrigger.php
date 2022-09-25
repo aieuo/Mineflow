@@ -2,9 +2,10 @@
 
 namespace aieuo\mineflow\trigger\event;
 
-use aieuo\mineflow\variable\BoolVariable;
+use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 
 class PlayerToggleSneakEventTrigger extends EventTrigger {
@@ -16,14 +17,14 @@ class PlayerToggleSneakEventTrigger extends EventTrigger {
         /** @var PlayerToggleSneakEvent $event */
         $target = $event->getPlayer();
         $variables = DefaultVariables::getPlayerVariables($target);
-        $variables["state"] = new BoolVariable($event->isSneaking());
+        $variables["state"] = new BooleanVariable($event->isSneaking());
         return $variables;
     }
 
     public function getVariablesDummy(): array {
         return [
-            "target" => new DummyVariable(DummyVariable::PLAYER),
-            "state" => new DummyVariable(DummyVariable::BOOLEAN),
+            "target" => new DummyVariable(PlayerVariable::class),
+            "state" => new DummyVariable(BooleanVariable::class),
         ];
     }
 }

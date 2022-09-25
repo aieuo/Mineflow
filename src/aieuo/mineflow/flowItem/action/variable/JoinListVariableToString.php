@@ -113,7 +113,7 @@ class JoinListVariableToString extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::STRING)
+            $this->getResultName() => new DummyVariable(StringVariable::class)
         ];
     }
 }

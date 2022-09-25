@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ScoreboardObjectVariable;
+use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 class CreateScoreboardVariable extends FlowItem {
 
@@ -90,7 +90,7 @@ class CreateScoreboardVariable extends FlowItem {
 
         $scoreboard = new Scoreboard($type, $id, $displayName);
 
-        $variable = new ScoreboardObjectVariable($scoreboard);
+        $variable = new ScoreboardVariable($scoreboard);
         $source->addVariable($variableName, $variable);
         yield true;
         return $this->getVariableName();
@@ -123,7 +123,7 @@ class CreateScoreboardVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::SCOREBOARD, $this->getDisplayName())
+            $this->getVariableName() => new DummyVariable(ScoreboardVariable::class, $this->getDisplayName())
         ];
     }
 }

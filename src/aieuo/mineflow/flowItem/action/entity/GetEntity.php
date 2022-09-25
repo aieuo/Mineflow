@@ -12,7 +12,8 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\EntityObjectVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 
 class GetEntity extends FlowItem {
 
@@ -72,7 +73,7 @@ class GetEntity extends FlowItem {
         if ($entity === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntity.notFound", [$id]));
         }
-        $source->addVariable($resultName, EntityObjectVariable::fromObject($entity));
+        $source->addVariable($resultName, EntityVariable::fromObject($entity));
         yield true;
         return $this->getResultName();
     }
@@ -96,7 +97,7 @@ class GetEntity extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::PLAYER, $this->getKey())
+            $this->getResultName() => new DummyVariable(PlayerVariable::class, $this->getKey())
         ];
     }
 }

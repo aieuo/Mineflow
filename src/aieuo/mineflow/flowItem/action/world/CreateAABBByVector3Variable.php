@@ -13,7 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\Vector3VariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\AxisAlignedBBObjectVariable;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 
 class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
@@ -70,7 +70,7 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
             max((float)$pos1->z, (float)$pos2->z),
         );
 
-        $source->addVariable($name, new AxisAlignedBBObjectVariable($aabb));
+        $source->addVariable($name, new AxisAlignedBBVariable($aabb));
         yield true;
         return $this->getVariableName();
     }
@@ -103,7 +103,7 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         $pos2 = $this->getVector3VariableName("pos2");
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::AXIS_ALIGNED_BB, $area)
+            $this->getVariableName() => new DummyVariable(AxisAlignedBB::class, $area)
         ];
     }
 }

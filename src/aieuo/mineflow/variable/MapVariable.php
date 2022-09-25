@@ -1,39 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use function array_merge;
+use function array_keys;
 use function array_reverse;
 use function array_values;
 use function count;
 
 class MapVariable extends ListVariable {
 
-    public int $type = Variable::MAP;
-
-    public function getValueFromIndex(string $index): ?Variable {
-        if (!isset($this->value[$index])) return null;
-        return $this->value[$index];
+    public static function getTypeName(): string {
+        return "map";
     }
 
     public function setValueAt(int|string $key, Variable $value): void {
-        $this->value[$key] = $value;
-    }
-
-    public function removeValueAt(int|string $index): void {
-        unset($this->value[$index]);
+        $this->values[$key] = $value;
     }
 
     public function removeValue(Variable $value, bool $strict = true): void {
         $index = $this->indexOf($value, $strict);
-        if ($index === null) return;
-        unset($this->value[$index]);
+        if ($index === false) return;
+        unset($this->values[$index]);
     }
 
-    public function add($target): MapVariable {
+    public function removeValueAt(int|string $index): void {
+        unset($this->values[$index]);
+    }
+
+    public function getValueFromIndex(string $index): ?Variable {
+        return $this->values[$index] ?? null;
+    }
+
+    public function add(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -43,7 +46,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function sub($target): MapVariable {
+    public function sub(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -53,7 +56,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function mul($target): MapVariable {
+    public function mul(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -63,7 +66,7 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function div($target): MapVariable {
+    public function div(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
         $values = [];
@@ -83,17 +86,6 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function callMethod(string $name, array $parameters = []): ?Variable {
-        $helper = Main::getVariableHelper();
-        return match ($name) {
-            "count" => new NumberVariable(count($this->value)),
-            "reverse" => new MapVariable(array_reverse($this->value)),
-            "keys" => $helper->arrayToListVariable(array_keys($this->value)),
-            "values" => new ListVariable(array_values($this->value)),
-            default => null,
-        };
-    }
-
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
         $values = [];
@@ -101,5 +93,25 @@ class MapVariable extends ListVariable {
             $values[] = $key.":".$value;
         }
         return "<".implode(",", $values).">";
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerMethod(
+            $class, "count", new DummyVariable(NumberVariable::class),
+            fn(array $values) => new NumberVariable(count($values)),
+        );
+        self::registerMethod(
+            $class, "reverse", new DummyVariable(ListVariable::class),
+            fn(array $values) => new ListVariable(array_reverse($values)),
+            aliases: ["reversed"],
+        );
+        self::registerMethod(
+            $class, "keys", new DummyVariable(ListVariable::class),
+            fn(array $values) => Main::getVariableHelper()->arrayToListVariable(array_keys($values)),
+        );
+        self::registerMethod(
+            $class, "values", new DummyVariable(ListVariable::class),
+            fn(array $values) => new ListVariable(array_values($values)),
+        );
     }
 }

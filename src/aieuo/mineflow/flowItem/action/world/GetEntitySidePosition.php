@@ -16,7 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\math\Facing;
 use pocketmine\world\Position;
 
@@ -158,7 +158,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntitySide.direction.notFound", [$side]));
         }
 
-        $source->addVariable($resultName, new PositionObjectVariable(Position::fromObject($pos, $entity->getWorld())));
+        $source->addVariable($resultName, new PositionVariable(Position::fromObject($pos, $entity->getWorld())));
         yield true;
         return $this->getResultName();
     }
@@ -190,7 +190,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::POSITION)
+            $this->getResultName() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

@@ -11,7 +11,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\AxisAlignedBBObjectVariable;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 
 class CreateAABB extends FlowItem {
@@ -128,7 +128,7 @@ class CreateAABB extends FlowItem {
             max((float)$minZ, (float)$maxZ),
         );
 
-        $source->addVariable($name, new AxisAlignedBBObjectVariable($aabb));
+        $source->addVariable($name, new AxisAlignedBBVariable($aabb));
         yield true;
         return $this->getVariableName();
     }
@@ -173,7 +173,7 @@ class CreateAABB extends FlowItem {
         $pos2 = $this->getMaxX().", ".$this->getMaxY().", ".$this->getMaxZ();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::AXIS_ALIGNED_BB, $area)
+            $this->getVariableName() => new DummyVariable(AxisAlignedBBVariable::class, $area)
         ];
     }
 }

@@ -28,7 +28,7 @@ use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DefaultVariables;
-use aieuo\mineflow\variable\object\PlayerObjectVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 
 class CustomFormForm {
@@ -342,7 +342,7 @@ class CustomFormForm {
     }
 
     public function executeForm(Player $player, Form $form): void {
-        $variables = array_merge(DefaultVariables::getServerVariables(), ["target" => new PlayerObjectVariable($player)]);
+        $variables = array_merge(DefaultVariables::getServerVariables(), ["target" => new PlayerVariable($player)]);
         $form = clone $form;
         try {
             $form->replaceVariablesFromExecutor(new FlowItemExecutor([], null, $variables));

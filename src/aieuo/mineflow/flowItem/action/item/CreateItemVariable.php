@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\StringToItemParser;
 
@@ -102,7 +102,7 @@ class CreateItemVariable extends FlowItem {
             $item->setCustomName($itemName);
         }
 
-        $variable = new ItemObjectVariable($item);
+        $variable = new ItemVariable($item);
         $source->addVariable($name, $variable);
         yield true;
         return $this->getVariableName();
@@ -135,7 +135,7 @@ class CreateItemVariable extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(DummyVariable::ITEM, $this->getItemId())
+            $this->getVariableName() => new DummyVariable(ItemVariable::class, $this->getItemId())
         ];
     }
 }

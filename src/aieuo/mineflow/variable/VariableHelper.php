@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UndefinedMineflowMethodException;
@@ -11,6 +13,24 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
+use aieuo\mineflow\variable\object\BlockVariable;
+use aieuo\mineflow\variable\object\ConfigVariable;
+use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\EventVariable;
+use aieuo\mineflow\variable\object\HumanVariable;
+use aieuo\mineflow\variable\object\InventoryVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
+use aieuo\mineflow\variable\object\LivingVariable;
+use aieuo\mineflow\variable\object\LocationVariable;
+use aieuo\mineflow\variable\object\PlayerVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
+use aieuo\mineflow\variable\object\RecipeVariable;
+use aieuo\mineflow\variable\object\ScoreboardVariable;
+use aieuo\mineflow\variable\object\ServerVariable;
+use aieuo\mineflow\variable\object\UnknownVariable;
+use aieuo\mineflow\variable\object\Vector3Variable;
+use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\utils\Config;
 use function array_is_list;
 use function is_array;
@@ -25,13 +45,12 @@ class VariableHelper {
     /** @var Variable[] */
     private array $variables = [];
 
-    private Config $file;
-
-    public function __construct(Config $file) {
-        $this->file = $file;
+    public function __construct(private Config $file) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+    }
 
-        foreach ($file->getAll() as $name => $data) {
+    public function loadVariables(): void {
+        foreach ($this->file->getAll() as $name => $data) {
             $variable = Variable::fromArray($data);
 
             if ($variable === null) {
@@ -59,7 +78,7 @@ class VariableHelper {
         $variable = $this->get($name);
         foreach ($names as $name1) {
             if (!($variable instanceof Variable)) return null;
-            $variable = $variable->getValueFromIndex($name1);
+            $variable = $variable->getProperty($name1);
         }
         return $variable;
     }
@@ -322,7 +341,7 @@ class VariableHelper {
         if ($target === "") {
             try {
                 $result = $this->runAction($name, $right, $executor);
-                if (is_bool($result)) return new BoolVariable($result);
+                if (is_bool($result)) return new BooleanVariable($result);
                 if (is_numeric($result)) return new NumberVariable($result);
                 return new StringVariable($result);
             } catch (\UnexpectedValueException $e) {
@@ -364,7 +383,7 @@ class VariableHelper {
 
         $tmp = $name;
         foreach ($names as $name1) {
-            $variable = $variable->getValueFromIndex($name1);
+            $variable = $variable->getProperty($name1);
 
             if ($variable === null) {
                 throw new UndefinedMineflowPropertyException($tmp, $name1);
@@ -399,20 +418,20 @@ class VariableHelper {
         return (bool)preg_match("/{.+}/u", $variable);
     }
 
-    public function getType(string $string): int {
+    public function getType(string $string): string {
         if (str_starts_with($string, "(str)")) {
-            $type = Variable::STRING;
+            $type = StringVariable::getTypeName();
         } elseif (str_starts_with($string, "(num)")) {
-            $type = Variable::NUMBER;
+            $type = NumberVariable::getTypeName();
         } elseif (is_numeric($string)) {
-            $type = Variable::NUMBER;
+            $type = NumberVariable::getTypeName();
         } else {
-            $type = Variable::STRING;
+            $type = StringVariable::getTypeName();
         }
         return $type;
     }
 
-    public function currentType(string $value) {
+    public function currentType(string $value): string|float {
         if (str_starts_with($value, "(str)")) {
             $newValue = mb_substr($value, 5);
         } elseif (str_starts_with($value, "(num)")) {
@@ -432,7 +451,7 @@ class VariableHelper {
             $result[$key] = match (true) {
                 is_array($value) => array_is_list($value) ? new ListVariable($this->toVariableArray($value)) : new MapVariable($this->toVariableArray($value)),
                 is_numeric($value) => new NumberVariable((float)$value),
-                is_bool($value) => new BoolVariable($value),
+                is_bool($value) => new BooleanVariable($value),
                 is_null($value) => new NullVariable(),
                 default => new StringVariable($value),
             };
@@ -445,5 +464,29 @@ class VariableHelper {
 
         if (array_is_list($variableArray)) return new ListVariable($variableArray);
         return new MapVariable($variableArray);
+    }
+
+    public function initVariableProperties(): void {
+        ListVariable::registerProperties();
+        MapVariable::registerProperties();
+        StringVariable::registerProperties();
+        AxisAlignedBBVariable::registerProperties();
+        BlockVariable::registerProperties();
+        ConfigVariable::registerProperties();
+        EntityVariable::registerProperties();
+        EventVariable::registerProperties();
+        HumanVariable::registerProperties();
+        InventoryVariable::registerProperties();
+        ItemVariable::registerProperties();
+        LivingVariable::registerProperties();
+        LocationVariable::registerProperties();
+        PlayerVariable::registerProperties();
+        PositionVariable::registerProperties();
+        RecipeVariable::registerProperties();
+        ScoreboardVariable::registerProperties();
+        ServerVariable::registerProperties();
+        UnknownVariable::registerProperties();
+        Vector3Variable::registerProperties();
+        WorldVariable::registerProperties();
     }
 }

@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
@@ -99,7 +99,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
         $position = Position::fromObject($pos->add((float)$x, (float)$y, (float)$z), $pos->getWorld());
 
-        $variable = new PositionObjectVariable($position);
+        $variable = new PositionVariable($position);
         $source->addVariable($name, $variable);
         yield true;
         return $this->getResultName();
@@ -131,7 +131,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     public function getAddingVariables(): array {
         $desc = $this->getPositionVariableName()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::POSITION, $desc)
+            $this->getResultName() => new DummyVariable(PositionVariable::class, $desc)
         ];
     }
 }

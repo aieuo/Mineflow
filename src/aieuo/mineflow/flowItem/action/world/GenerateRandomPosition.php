@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 
 class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
@@ -70,7 +70,7 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $y = mt_rand((int)min($pos1->y, $pos2->y), (int)max($pos1->y, $pos2->y));
         $z = mt_rand((int)min($pos1->z, $pos2->z), (int)max($pos1->z, $pos2->z));
         $rand = new Position($x, $y, $z, $pos1->getWorld());
-        $source->addVariable($resultName, new PositionObjectVariable($rand));
+        $source->addVariable($resultName, new PositionVariable($rand));
         yield true;
         return $this->getResultName();
     }
@@ -96,7 +96,7 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(DummyVariable::POSITION)
+            $this->getResultName() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

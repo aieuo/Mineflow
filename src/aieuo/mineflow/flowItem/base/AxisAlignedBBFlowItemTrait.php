@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\AxisAlignedBBObjectVariable;
+use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 
 trait AxisAlignedBBFlowItemTrait {
@@ -27,8 +27,8 @@ trait AxisAlignedBBFlowItemTrait {
         $aabb = $source->replaceVariables($rawName = $this->getAxisAlignedBBVariableName($name));
         $variable = $source->getVariable($aabb);
 
-        if ($variable instanceof AxisAlignedBBObjectVariable and ($aabb = $variable->getAxisAlignedBB()) instanceof AxisAlignedBB) {
-            return $aabb;
+        if ($variable instanceof AxisAlignedBBVariable) {
+            return $variable->getValue();
         }
 
         throw new InvalidFlowValueException($this->getName(), Language::get("action.target.not.valid", [["action.target.require.aabb"], $rawName]));
