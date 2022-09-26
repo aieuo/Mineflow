@@ -10,7 +10,7 @@ use function array_search;
 class Dropdown extends Element {
     protected string $type = self::ELEMENT_DROPDOWN;
 
-    private ?int $assign;
+    private ?int $result;
 
     public function __construct(
         string          $text,
@@ -19,7 +19,7 @@ class Dropdown extends Element {
         int             &$result = null
     ) {
         parent::__construct($text);
-        $this->assign = &$assign;
+        $this->result = &$result;
     }
 
     public function addOption(string $option): self {
@@ -56,7 +56,7 @@ class Dropdown extends Element {
 
     public function onFormSubmit(CustomFormResponse $response, Player $player): void {
         parent::onFormSubmit($response, $player);
-        $this->assign = $response->getDropdownResponse();
+        $this->result = $response->getDropdownResponse();
     }
 
     public function jsonSerialize(): array {
