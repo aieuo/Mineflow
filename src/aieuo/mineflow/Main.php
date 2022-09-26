@@ -10,6 +10,7 @@ use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemFactory;
+use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventManager;
 use aieuo\mineflow\trigger\time\CheckTimeTriggerTask;
@@ -49,6 +50,8 @@ class Main extends PluginBase {
         self::$instance = $this;
 
         Mineflow::init($this);
+
+        RecipeArgument::init();
 
         self::$variableHelper = new VariableHelper(new Config($this->getDataFolder()."variables.json", Config::JSON));
 

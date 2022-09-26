@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\trigger\Trigger;
@@ -22,6 +23,7 @@ use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
 use function array_map;
 use function array_merge;
+use function array_search;
 use function array_values;
 use function file_exists;
 
@@ -249,7 +251,7 @@ class RecipeForm {
                                         $this->sendRecipeMenu($player, $recipe);
                                         break;
                                     case 1:
-                                        $this->sendSetArgs($player, $recipe);
+                                        $this->sendArgumentList($player, $recipe);
                                         break;
                                     case 2:
                                         $this->sendSetReturns($player, $recipe);
@@ -318,29 +320,55 @@ class RecipeForm {
             })->addMessages($messages)->show($player);
     }
 
-    public function sendSetArgs(Player $player, Recipe $recipe, array $messages = []): void {
-        $contents = [new Toggle("@form.exit")];
+    public function sendArgumentList(Player $player, Recipe $recipe, array $messages = []): void {
+        $buttons = [
+            new Button("@form.back", fn() => $this->sendRecipeMenu($player, $recipe)),
+            new Button("@form.recipe.args.add", fn() => $this->sendArgumentDetail($player, $recipe, null))
+        ];
         foreach ($recipe->getArguments() as $i => $argument) {
-            $contents[] = new Input(Language::get("form.recipe.args", [$i]), "", $argument);
+            $buttons[] = new Button(Language::get("form.recipe.args", [$i, $argument->getName()]), fn() => $this->sendArgumentDetail($player, $recipe, $argument));
         }
-        $contents[] = new Input("@form.recipe.args.add");
-        (new CustomForm("@form.recipe.args.set"))
-            ->setContents($contents)
-            ->onReceive(function (Player $player, array $data) use($recipe) {
-                if ($data[0]) {
-                    $this->sendRecipeMenu($player, $recipe);
+
+        (new ListForm("@form.recipe.args.set"))
+            ->setButtons($buttons)
+            ->addMessages($messages)
+            ->show($player);
+    }
+
+    public function sendArgumentDetail(Player $player, Recipe $recipe, ?RecipeArgument $argument): void {
+        $types = RecipeArgument::getTypes();
+        $index = ($argument === null ? 0 : array_search($argument->getType(), $types, true));
+
+        $contents = [];
+        $contents[] = new Dropdown("@form.recipe.args.type", $types, $index, result: $typeIndex);
+        $contents[] = new Input("@form.recipe.args.name", default: $argument?->getName() ?? "", required: true, result: $name);
+        $contents[] = new Input("@form.recipe.args.description", default: $argument?->getDescription() ?? "", result: $description);
+        if ($argument !== null) {
+            $contents[] = new Toggle("@form.delete", result: $delete);
+        }
+        $contents[] = new CancelToggle(fn() => $this->sendArgumentList($player, $recipe));
+
+        (new CustomForm("@form.recipe.args.add"))
+            ->addContents($contents)
+            ->onReceive(function () use($player, $recipe, $argument, $types, &$typeIndex, &$name, &$description, &$delete) {
+                if ($delete) {
+                    $recipe->removeArgument($argument);
+                    $this->sendArgumentList($player, $recipe, ["@form.deleted"]);
                     return;
                 }
 
-                $arguments = [];
-                for ($i = 1, $iMax = count($data); $i < $iMax; $i++) {
-                    if ($data[$i] !== "") $arguments[] = $data[$i];
+                $type = $types[$typeIndex];
+                if ($argument === null) {
+                    $argument = new RecipeArgument($type, $name, $description);
+                    $recipe->addArgument($argument);
+                    $this->sendArgumentList($player, $recipe, ["@form.added"]);
+                } else {
+                    $argument->setType($type);
+                    $argument->setName($name);
+                    $argument->setDescription($description);
+                    $this->sendArgumentList($player, $recipe, ["@form.changed"]);
                 }
-                $recipe->setArguments($arguments);
-                $this->sendSetArgs($player, $recipe, ["@form.changed"]);
-            })->onClose(fn() => $this->sendRecipeMenu($player, $recipe))
-            ->addMessages($messages)
-            ->show($player);
+            })->show($player);
     }
 
     public function sendSetReturns(Player $player, Recipe $recipe, array $messages = []): void {

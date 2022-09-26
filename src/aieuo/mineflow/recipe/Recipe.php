@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -20,6 +21,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EventVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use aieuo\mineflow\variable\object\RecipeVariable;
+use aieuo\mineflow\variable\object\UnknownVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -27,7 +29,9 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\Filesystem;
 use function array_key_last;
+use function array_search;
 use function explode;
+use function is_string;
 use function str_replace;
 use function version_compare;
 
@@ -54,6 +58,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     /** @var Trigger[] */
     private array $triggers = [];
 
+    /** @var RecipeArgument[] */
     private array $arguments = [];
     private array $returnValues = [];
 
@@ -229,8 +234,15 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             if (!$arg instanceof Variable) {
                 $arg = Variable::create($helper->currentType($arg), $helper->getType($arg));
             }
-            $variables[$argument] = $arg;
+            try {
+                $argument->validateType($arg);
+            } catch (\InvalidArgumentException) {
+                Logger::warning(Language::get("recipe.argument.type.error", [$this->getPathname(), $argument->getType(), $arg::getTypeName()]), $target);
+                return false;
+            }
+            $variables[$argument->getName()] = $arg;
         }
+
         if ($target !== null) {
             $variables = array_merge($variables, DefaultVariables::getEntityVariables($target));
         }
@@ -262,6 +274,18 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->arguments;
     }
 
+    public function addArgument(RecipeArgument $argument): void {
+        $this->arguments[] = $argument;
+    }
+
+    public function removeArgument(RecipeArgument $argument): void {
+        $index = array_search($argument, $this->arguments, true);
+        if ($index !== false) {
+            unset($this->arguments[$index]);
+            $this->arguments = array_values($this->arguments);
+        }
+    }
+
     public function setReturnValues(array $returnValues): void {
         $this->returnValues = $returnValues;
     }
@@ -274,6 +298,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $variables = [
             "target" => new DummyVariable(PlayerVariable::class)
         ];
+
+        foreach ($this->getArguments() as $argument) {
+            $variables[$argument->getName()] = $argument->getDummyVariable();
+        }
 
         $add = [];
         foreach ($this->getTriggers() as $trigger) {
@@ -304,8 +332,17 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $contents["target"]["options"] ?? []
         );
         $this->setTriggersFromArray($contents["triggers"] ?? []);
-        $this->setArguments($contents["arguments"] ?? []);
         $this->setReturnValues($contents["returnValues"] ?? []);
+
+        $arguments = [];
+        foreach ($contents["arguments"] ?? [] as $argument) {
+            if (is_string($argument)) {
+                $arguments[] = new RecipeArgument(UnknownVariable::getTypeName(), $argument, "");
+            } else {
+                $arguments[] = RecipeArgument::unserialize($argument);
+            }
+        }
+        $this->setArguments($arguments);
         return $this;
     }
 
