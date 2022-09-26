@@ -288,7 +288,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
      * @throws FlowItemLoadException|\ErrorException
      */
     public function loadSaveData(array $contents): self {
-        foreach ($contents as $i => $content) {
+        foreach ($contents["actions"] as $i => $content) {
             try {
                 $action = FlowItem::loadEachSaveData($content);
             } catch (\ErrorException $e) {
@@ -298,6 +298,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
             $this->addItem($action, FlowItemContainer::ACTION);
         }
+
+        $this->setTargetSetting(
+            $contents["target"]["type"] ?? Recipe::TARGET_DEFAULT,
+            $contents["target"]["options"] ?? []
+        );
+        $this->setTriggersFromArray($contents["triggers"] ?? []);
+        $this->setArguments($contents["arguments"] ?? []);
+        $this->setReturnValues($contents["returnValues"] ?? []);
         return $this;
     }
 

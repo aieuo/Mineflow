@@ -7,9 +7,9 @@ use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\template\SpecificBlockRecipeTemplate;
 use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
+use aieuo\mineflow\recipe\template\SpecificBlockRecipeTemplate;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use ErrorException;
@@ -71,14 +71,7 @@ class RecipeManager {
             $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? "0");
             $recipe->setRawData($json);
             try {
-                $recipe->loadSaveData($data["actions"]);
-                $recipe->setTargetSetting(
-                    $data["target"]["type"] ?? Recipe::TARGET_DEFAULT,
-                    $data["target"]["options"] ?? []
-                );
-                $recipe->setTriggersFromArray($data["triggers"] ?? []);
-                $recipe->setArguments($data["arguments"] ?? []);
-                $recipe->setReturnValues($data["returnValues"] ?? []);
+                $recipe->loadSaveData($data);
             } catch (\ErrorException|\UnexpectedValueException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
