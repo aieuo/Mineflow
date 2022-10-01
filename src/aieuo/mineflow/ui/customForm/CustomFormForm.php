@@ -258,7 +258,7 @@ class CustomFormForm {
                     return Language::get("trigger.form.close");
                 default:
                     if ($form instanceof ListForm) {
-                        $button = $form->getButtonById($key);
+                        $button = $form->getButtonByUUID($key);
                         return Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
                     }
                     return "";

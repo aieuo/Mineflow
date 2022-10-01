@@ -99,7 +99,7 @@ class FormTrigger extends Trigger {
             default:
                 $form = Main::getFormManager()->getForm($this->getKey());
                 if ($form instanceof ListForm) {
-                    $button = $form->getButtonById($this->getSubKey());
+                    $button = $form->getButtonByUUID($this->getSubKey());
                     $content = Language::get("trigger.form.string.button", [$this->getKey(), $button instanceof Button ? $button->getText() : ""]);
                 } else {
                     $content = $this->getKey();
