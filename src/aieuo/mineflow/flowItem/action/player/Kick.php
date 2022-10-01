@@ -25,12 +25,10 @@ class Kick extends FlowItem implements PlayerFlowItem {
     protected string $category = FlowItemCategory::PLAYER;
 
     private string $reason;
-    private bool $isAdmin;
 
-    public function __construct(string $player = "", string $reason = "", bool $isAdmin = false) {
+    public function __construct(string $player = "", string $reason = "") {
         $this->setPlayerVariableName($player);
         $this->reason = $reason;
-        $this->isAdmin = $isAdmin;
     }
 
     public function setReason(string $reason): void {
@@ -60,7 +58,7 @@ class Kick extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
-            $player->kick($reason, $this->isAdmin);
+            $player->kick($reason);
         }), 1);
         yield true;
     }
@@ -75,11 +73,10 @@ class Kick extends FlowItem implements PlayerFlowItem {
     public function loadSaveData(array $content): FlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setReason($content[1]);
-        if (isset($content[2]) and is_bool($content[2])) $this->isAdmin = $content[2];
         return $this;
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getReason(), $this->isAdmin];
+        return [$this->getPlayerVariableName(), $this->getReason()];
     }
 }
