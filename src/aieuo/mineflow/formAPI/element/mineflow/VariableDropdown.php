@@ -156,14 +156,14 @@ abstract class VariableDropdown extends Dropdown {
                         if ($container instanceof Recipe) {
                             $place = array_search(Session::getSession($player)->get("action_list_clicked"), $container->getActions(), true);
                             if ($place !== false) {
-                                $container->pushItem($place, $action, FlowItemContainer::ACTION);
+                                $container->pushAction($place, $action);
                             } else {
-                                $container->addItem($action, FlowItemContainer::ACTION);
+                                $container->addAction($action);
                             }
                         } else {
                             $container1 = $parents[count($parents) - 2] ?? $recipe;
                             $place = array_search($container, $container1->getActions(), true);
-                            $container1->pushItem($place, $action, FlowItemContainer::ACTION);
+                            $container1->pushAction($place, $action);
                         }
                         $add = $action->getAddingVariables();
                         $variables = array_merge($recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION), $add);

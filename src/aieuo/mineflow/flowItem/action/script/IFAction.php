@@ -24,8 +24,8 @@ class IFAction extends FlowItem implements FlowItemContainer {
     protected string $category = FlowItemCategory::SCRIPT;
 
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
-        $this->setItems($conditions, FlowItemContainer::CONDITION);
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setConditions($conditions);
+        $this->setActions($actions);
         $this->setCustomName($customName);
     }
 
@@ -73,12 +73,12 @@ class IFAction extends FlowItem implements FlowItemContainer {
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $i => $content) {
             $condition = FlowItem::loadEachSaveData($content);
-            $this->addItem($condition, FlowItemContainer::CONDITION);
+            $this->addCondition($condition);
         }
 
         foreach ($contents[1] as $i => $content) {
             $action = FlowItem::loadEachSaveData($content);
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
         return $this;
     }
@@ -99,12 +99,12 @@ class IFAction extends FlowItem implements FlowItemContainer {
         foreach ($this->getConditions() as $k => $condition) {
             $conditions[$k] = clone $condition;
         }
-        $this->setItems($conditions, FlowItemContainer::CONDITION);
+        $this->setConditions($conditions);
 
         $actions = [];
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }

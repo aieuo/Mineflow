@@ -25,7 +25,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     protected string $category = FlowItemCategory::SCRIPT;
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
         $this->setCustomName($customName);
     }
 
@@ -63,7 +63,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents as $content) {
             $action = FlowItem::loadEachSaveData($content);
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
         return $this;
     }
@@ -85,6 +85,6 @@ class ElseAction extends FlowItem implements FlowItemContainer {
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }

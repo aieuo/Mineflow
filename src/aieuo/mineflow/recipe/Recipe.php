@@ -300,7 +300,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
 
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
         return $this;
     }
@@ -431,6 +431,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }
