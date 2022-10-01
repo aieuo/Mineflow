@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\event\MineflowRecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -16,6 +17,7 @@ use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
+use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EventVariable;
@@ -216,7 +218,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         foreach ($targets as $target) {
             $recipe = clone $this;
-            $recipe->execute($target, $event, $variables, $args, $callbackExecutor);
+            $ev = new MineflowRecipeExecuteEvent($recipe, $target, $variables);
+            $ev->call();
+            if ($ev->isCancelled()) continue;
+
+            $recipe->execute($target, $event, $ev->getVariables(), $args, $callbackExecutor);
         }
         return true;
     }
@@ -324,7 +330,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
 
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
 
         $this->setTargetSetting(
@@ -364,8 +370,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function getFileName(string $baseDir): string {
-        $group = preg_replace("#[.¥:?<>|*\"]#u", "", $this->getGroup());
-        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", $this->getName());
+        $group = Utils::getValidGroupName($this->getGroup());
+        $name = Utils::getValidFileName($this->getName());
         if (!empty($group)) $baseDir .= $group."/";
         return $baseDir.$name.".json";
     }
@@ -472,6 +478,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }

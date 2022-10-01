@@ -12,6 +12,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipePack;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Utils;
 use pocketmine\player\Player;
 
 class ExportForm {
@@ -92,7 +93,7 @@ class ExportForm {
 
                 /** @var array<string|int>[] $errors */
                 $errors = [];
-                if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($name, "/@#~"))) $errors = ["@form.recipe.invalidName", 0];
+                if (!Utils::isValidFileName($name)) $errors = ["@form.recipe.invalidName", 0];
 
                 if (!empty($errors)) {
                     $this->sendExportMenu($player, $recipes, $data, $errors);

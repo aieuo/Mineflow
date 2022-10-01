@@ -21,8 +21,8 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function __construct(array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_ELSE, FlowItemCategory::SCRIPT);
-        
-        $this->setItems($actions, FlowItemContainer::ACTION);
+
+        $this->setActions($actions);
         $this->setCustomName($customName);
     }
 
@@ -41,7 +41,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function execute(FlowItemExecutor $source): \Generator {
         $lastResult = $source->getLastResult();
-        if (!is_bool($lastResult)) throw new InvalidFlowValueException();
+        if (!is_bool($lastResult)) throw new InvalidFlowValueException($this->getName());
         if ($lastResult) return;
 
         yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
@@ -60,7 +60,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents as $content) {
             $action = FlowItem::loadEachSaveData($content);
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
         return $this;
     }
@@ -82,6 +82,6 @@ class ElseAction extends FlowItem implements FlowItemContainer {
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }

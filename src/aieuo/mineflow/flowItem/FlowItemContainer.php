@@ -29,10 +29,36 @@ interface FlowItemContainer {
      */
     public function getItems(string $name): array;
 
+    public function addAction(FlowItem $action): void;
+
+    /**
+     * @param FlowItem[] $actions
+     */
+    public function setActions(array $actions): void;
+
+    public function pushAction(int $index, FlowItem $action): void;
+
+    public function getAction(int $index): ?FlowItem;
+
+    public function removeAction(int $index): void;
+
     /**
      * @return FlowItem[]
      */
     public function getActions(): array;
+
+    public function addCondition(FlowItem $condition): void;
+
+    /**
+     * @param FlowItem[] $conditions
+     */
+    public function setConditions(array $conditions): void;
+
+    public function pushCondition(int $index, FlowItem $condition): void;
+
+    public function getCondition(int $index): ?FlowItem;
+
+    public function removeCondition(int $index): void;
 
     /**
      * @return FlowItem[]

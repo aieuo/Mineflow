@@ -2,6 +2,9 @@
 
 namespace aieuo\mineflow\flowItem;
 
+use function array_merge;
+use function array_splice;
+
 trait FlowItemContainerTrait {
 
     /** @var FlowItem[][] */
@@ -11,6 +14,10 @@ trait FlowItemContainerTrait {
         $this->items[$name][] = $action;
     }
 
+    /**
+     * @param FlowItem[] $actions
+     * @param string $name
+     */
     public function setItems(array $actions, string $name): void {
         $this->items[$name] = $actions;
     }
@@ -40,11 +47,57 @@ trait FlowItemContainerTrait {
         return $this->items[$name] ?? [];
     }
 
+    public function addAction(FlowItem $action): void {
+        $this->addItem($action, FlowItemContainer::ACTION);
+    }
+
+    /**
+     * @param FlowItem[] $actions
+     */
+    public function setActions(array $actions): void {
+        $this->setItems($actions, FlowItemContainer::ACTION);
+    }
+
+    public function pushAction(int $index, FlowItem $action): void {
+        $this->pushItem($index, $action, FlowItemContainer::ACTION);
+    }
+
+    public function getAction(int $index): ?FlowItem {
+        return $this->getItem($index, FlowItemContainer::ACTION);
+    }
+
+    public function removeAction(int $index): void {
+        $this->removeItem($index, FlowItemContainer::ACTION);
+    }
+
     /**
      * @return FlowItem[]
      */
     public function getActions(): array {
         return $this->getItems(self::ACTION);
+    }
+
+    public function addCondition(FlowItem $condition): void {
+        $this->addItem($condition, FlowItemContainer::CONDITION);
+    }
+
+    /**
+     * @param FlowItem[] $conditions
+     */
+    public function setConditions(array $conditions): void {
+        $this->setItems($conditions, FlowItemContainer::CONDITION);
+    }
+
+    public function pushCondition(int $index, FlowItem $condition): void {
+        $this->pushItem($index, $condition, FlowItemContainer::CONDITION);
+    }
+
+    public function getCondition(int $index): ?FlowItem {
+        return $this->getItem($index, FlowItemContainer::CONDITION);
+    }
+
+    public function removeCondition(int $index): void {
+        $this->removeItem($index, FlowItemContainer::CONDITION);
     }
 
     /**

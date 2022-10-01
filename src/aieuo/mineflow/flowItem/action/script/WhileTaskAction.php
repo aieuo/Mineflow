@@ -36,8 +36,8 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     ) {
         parent::__construct(self::ACTION_WHILE_TASK, FlowItemCategory::SCRIPT);
 
-        $this->setItems($conditions, FlowItemContainer::CONDITION);
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setConditions($conditions);
+        $this->setActions($actions);
         $this->setCustomName($customName);
     }
 
@@ -125,12 +125,12 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
             $condition = FlowItem::loadEachSaveData($content);
-            $this->addItem($condition, FlowItemContainer::CONDITION);
+            $this->addCondition($condition);
         }
 
         foreach ($contents[1] as $content) {
             $action = FlowItem::loadEachSaveData($content);
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
 
         $this->setInterval($contents[2] ?? 20);
@@ -166,12 +166,12 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         foreach ($this->getConditions() as $k => $condition) {
             $conditions[$k] = clone $condition;
         }
-        $this->setItems($conditions, FlowItemContainer::CONDITION);
+        $this->setConditions($conditions);
 
         $actions = [];
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }

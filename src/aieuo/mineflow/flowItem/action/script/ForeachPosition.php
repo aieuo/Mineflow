@@ -35,7 +35,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
         $this->setCustomName($customName);
     }
 
@@ -116,7 +116,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
             $action = FlowItem::loadEachSaveData($content);
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
 
         $this->setPositionVariableName($contents[1], "pos1");
@@ -153,6 +153,6 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }

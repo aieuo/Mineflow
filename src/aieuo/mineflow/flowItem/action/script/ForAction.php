@@ -33,7 +33,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
     public function __construct(array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT);
 
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
         $this->setCustomName($customName);
     }
 
@@ -144,7 +144,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
     public function loadSaveData(array $contents): FlowItem {
         foreach ($contents[0] as $content) {
             $action = FlowItem::loadEachSaveData($content);
-            $this->addItem($action, FlowItemContainer::ACTION);
+            $this->addAction($action);
         }
 
         $this->setCounterName($contents[1]);
@@ -183,6 +183,6 @@ class ForAction extends FlowItem implements FlowItemContainer {
         foreach ($this->getActions() as $k => $action) {
             $actions[$k] = clone $action;
         }
-        $this->setItems($actions, FlowItemContainer::ACTION);
+        $this->setActions($actions);
     }
 }
