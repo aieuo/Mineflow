@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ConfigObjectVariable;
 
@@ -63,7 +64,7 @@ class CreateConfigVariable extends FlowItem {
 
         $name = $source->replaceVariables($this->getVariableName());
         $file = $source->replaceVariables($this->getFileName());
-        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($file, "/@#~"))) {
+        if (!Utils::isValidFileName($file)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
 

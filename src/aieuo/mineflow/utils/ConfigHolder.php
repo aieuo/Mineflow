@@ -11,7 +11,7 @@ class ConfigHolder {
     private static array $configs = [];
 
     public static function existsConfigFile(string $name): bool {
-        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
+        $name = Utils::getValidFileName($name);
         if (isset(self::$configs[$name])) return true;
 
         $path = Main::getInstance()->getDataFolder()."configs/".$name.".yml";
@@ -19,7 +19,7 @@ class ConfigHolder {
     }
 
     public static function getConfig(string $name): Config {
-        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
+        $name = Utils::getValidFileName($name);
         if (isset(self::$configs[$name])) return self::$configs[$name];
 
         $dir = Main::getInstance()->getDataFolder()."configs/";
@@ -30,7 +30,7 @@ class ConfigHolder {
     }
 
     public static function setConfig(string $name, array $data, bool $save = false): void {
-        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
+        $name = Utils::getValidFileName($name);
 
         $dir = Main::getInstance()->getDataFolder()."configs/";
         if (!file_exists($dir)) @mkdir($dir, 0777, true);

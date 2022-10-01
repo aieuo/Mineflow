@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Utils;
 
 class ExistsConfigFile extends FlowItem implements Condition {
 
@@ -47,8 +48,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $name = $source->replaceVariables($this->getFileName());
-        $name = preg_replace("#[.¥/:?<>|*\"]#u", "", preg_quote($name, "/@#~"));
+        $name = Utils::getValidFileName($source->replaceVariables($this->getFileName()));
 
         yield true;
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
@@ -61,7 +61,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
     }
 
     public function parseFromFormData(array $data): array {
-        if (preg_match("#[.¥/:?<>|*\"]#u", preg_quote($data[0], "/@#~"))) throw new InvalidFormValueException("@form.recipe.invalidName", 0);
+        if (!Utils::isValidFileName($data[0])) throw new InvalidFormValueException("@form.recipe.invalidName", 0);
         return [$data[0]];
     }
 
