@@ -81,6 +81,7 @@ class Bossbar {
             0,
             0,
             0,
+            0,
             [],
             [
                 EntityMetadataProperties::FLAGS => new LongMetadataProperty(
