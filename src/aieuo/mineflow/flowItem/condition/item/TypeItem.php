@@ -32,7 +32,6 @@ abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, I
     }
 
     public function getDetailDefaultReplaces(): array {
-        if (!$this->isDataValid()) return $this->getName();
         return ["player", "item"];
     }
 
