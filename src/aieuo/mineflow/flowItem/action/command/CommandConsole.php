@@ -30,8 +30,8 @@ class CommandConsole extends FlowItem {
         $this->command = $command;
     }
 
-    public function setCommand(string $health): void {
-        $this->command = $health;
+    public function setCommand(string $command): void {
+        $this->command = $command;
     }
 
     public function getCommand(): string {
