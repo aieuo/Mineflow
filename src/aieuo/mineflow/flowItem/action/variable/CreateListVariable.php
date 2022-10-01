@@ -20,17 +20,17 @@ class CreateListVariable extends FlowItem {
     protected string $detail = "action.createList.detail";
     protected array $detailDefaultReplace = ["name", "scope", "value"];
 
-    private string $variableName;
     /** @var string[] */
     private array $variableValue;
-    private bool $isLocal;
 
-    public function __construct(string $value = "", string $name = "", bool $local = true) {
+    public function __construct(
+        string         $value = "",
+        private string $variableName = "",
+        private bool   $isLocal = true
+    ) {
         parent::__construct(self::CREATE_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
-        $this->variableName = $name;
         $this->variableValue = array_map("trim", explode(",", $value));
-        $this->isLocal = $local;
     }
 
     public function setVariableName(string $variableName): void {

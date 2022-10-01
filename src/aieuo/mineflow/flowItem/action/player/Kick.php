@@ -20,15 +20,14 @@ class Kick extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.kick.detail";
     protected array $detailDefaultReplace = ["player", "reason"];
 
-    private string $reason;
-    private bool $isAdmin;
-
-    public function __construct(string $player = "", string $reason = "", bool $isAdmin = false) {
+    public function __construct(
+        string         $player = "",
+        private string $reason = "",
+        private bool   $isAdmin = false
+    ) {
         parent::__construct(self::KICK, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->reason = $reason;
-        $this->isAdmin = $isAdmin;
     }
 
     public function setReason(string $reason): void {

@@ -29,14 +29,11 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $resultName;
-
-    public function __construct(string $name = "", string $pos = "", string $result = "human") {
+    public function __construct(string $name = "", string $pos = "", private string $resultName = "human") {
         parent::__construct(self::CREATE_HUMAN_ENTITY, FlowItemCategory::ENTITY);
 
         $this->setPlayerVariableName($name);
         $this->setPositionVariableName($pos);
-        $this->resultName = $result;
     }
 
     public function setResultName(string $name): self {

@@ -29,20 +29,15 @@ class FourArithmeticOperations extends FlowItem {
     public const DIVISION = 3;
     public const MODULO = 4;
 
-    private string $value1;
-    private int $operator;
-    private string $value2;
-    private string $resultName;
-
     private array $operatorSymbols = ["+", "-", "*", "/", "％"];
 
-    public function __construct(string $value1 = "", int $operator = self::ADDITION, string $value2 = "", string $resultName = "result") {
+    public function __construct(
+        private string $value1 = "",
+        private int $operator = self::ADDITION,
+        private string $value2 = "",
+        private string $resultName = "result"
+    ) {
         parent::__construct(self::FOUR_ARITHMETIC_OPERATIONS, FlowItemCategory::MATH);
-
-        $this->value1 = $value1;
-        $this->operator = $operator;
-        $this->value2 = $value2;
-        $this->resultName = $resultName;
     }
 
     public function setValues(string $value1, string $value2): self {

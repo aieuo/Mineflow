@@ -23,15 +23,14 @@ class AddParticle extends FlowItem implements PositionFlowItem {
     protected string $detail = "action.addParticle.detail";
     protected array $detailDefaultReplace = ["position", "particle", "amount", ""];
 
-    private string $particle;
-    private string $amount;
-
-    public function __construct(string $position = "", string $particle = "", string $amount = "1") {
+    public function __construct(
+        string         $position = "",
+        private string $particle = "",
+        private string $amount = "1"
+    ) {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($position);
-        $this->particle = $particle;
-        $this->amount = $amount;
     }
 
     public function getPermissions(): array {

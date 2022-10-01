@@ -24,13 +24,10 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.clearEffect.detail";
     protected array $detailDefaultReplace = ["entity", "id"];
 
-    private string $effectId;
-
-    public function __construct(string $entity = "", string $id = "") {
+    public function __construct(string $entity = "", private string $effectId = "") {
         parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->effectId = $id;
     }
 
     public function setEffectId(string $effectId): void {

@@ -23,14 +23,11 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     protected string $detail = "action.setItem.detail";
     protected array $detailDefaultReplace = ["player", "item", "index"];
 
-    private string $index;
-
-    public function __construct(string $player = "", string $item = "", string $index = "") {
+    public function __construct(string $player = "", string $item = "", private string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
         $this->setPlayerVariableName($player);
         $this->setItemVariableName($item);
-        $this->index = $index;
     }
 
     public function setIndex(string $health): void {

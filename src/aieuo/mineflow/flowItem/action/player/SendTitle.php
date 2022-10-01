@@ -20,21 +20,17 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.sendTitle.detail";
     protected array $detailDefaultReplace = ["player", "title", "subtitle", "fadein", "stay", "fadeout"];
 
-    private string $title;
-    private string $subtitle;
-    private string $fadein;
-    private string $stay;
-    private string $fadeout;
-
-    public function __construct(string $player = "", string $title = "", string $subtitle = "", string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1") {
+    public function __construct(
+        string         $player = "",
+        private string $title = "",
+        private string $subtitle = "",
+        private string $fadein = "-1",
+        private string $stay = "-1",
+        private string $fadeout = "-1"
+    ) {
         parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->title = $title;
-        $this->subtitle = $subtitle;
-        $this->fadein = $fadeIn;
-        $this->stay = $stay;
-        $this->fadeout = $fadeOut;
     }
 
     public function setTitle(string $title, string $subtitle = ""): self {

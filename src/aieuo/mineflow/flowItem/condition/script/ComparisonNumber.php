@@ -24,18 +24,14 @@ class ComparisonNumber extends FlowItem implements Condition {
     public const GREATER_EQUAL = 4;
     public const LESS_EQUAL = 5;
 
-    private string $value1;
-    private int $operator;
-    private string $value2;
-
     private array $operatorSymbols = ["==", "!=", ">", "<", ">=", "<="];
 
-    public function __construct(string $value1 = "", int $operator = self::EQUAL, string $value2 = "") {
+    public function __construct(
+        private string $value1 = "",
+        private int    $operator = self::EQUAL,
+        private string $value2 = ""
+    ) {
         parent::__construct(self::COMPARISON_NUMBER, FlowItemCategory::SCRIPT);
-
-        $this->value1 = $value1;
-        $this->operator = $operator;
-        $this->value2 = $value2;
     }
 
     public function setValues(string $value1, string $value2): self {

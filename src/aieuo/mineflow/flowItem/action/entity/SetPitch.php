@@ -21,13 +21,10 @@ class SetPitch extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.setPitch.detail";
     protected array $detailDefaultReplace = ["entity", "pitch"];
 
-    private string $pitch;
-
-    public function __construct(string $entity = "", string $pitch = "") {
+    public function __construct(string $entity = "", private string $pitch = "") {
         parent::__construct(self::SET_PITCH, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->pitch = $pitch;
     }
 
     public function setPitch(string $pitch): self {

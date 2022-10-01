@@ -20,13 +20,10 @@ class SetScale extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.setScale.detail";
     protected array $detailDefaultReplace = ["entity", "scale"];
 
-    private string $scale;
-
-    public function __construct(string $entity = "", string $scale = "") {
+    public function __construct(string $entity = "", private string $scale = "") {
         parent::__construct(self::SET_SCALE, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->scale = $scale;
     }
 
     public function setScale(string $scale): void {

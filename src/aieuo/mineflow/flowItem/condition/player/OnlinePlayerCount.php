@@ -12,16 +12,12 @@ abstract class OnlinePlayerCount extends FlowItem implements Condition {
 
     protected array $detailDefaultReplace = ["value"];
 
-    private string $value;
-
     public function __construct(
-        string $id,
-        string $category = FlowItemCategory::PLAYER,
-        string $value = ""
+        string         $id,
+        string         $category = FlowItemCategory::PLAYER,
+        private string $value = ""
     ) {
         parent::__construct($id, $category);
-
-        $this->value = $value;
     }
 
     public function setValue(string $value): void {

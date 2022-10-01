@@ -16,12 +16,8 @@ class ExistsVariable extends FlowItem implements Condition {
     protected string $detail = "condition.existsVariable.detail";
     protected array $detailDefaultReplace = ["name"];
 
-    private string $variableName;
-
-    public function __construct(string $name = "") {
+    public function __construct(private string $variableName = "") {
         parent::__construct(self::EXISTS_VARIABLE, FlowItemCategory::VARIABLE);
-
-        $this->variableName = $name;
     }
 
     public function setVariableName(string $variableName): void {

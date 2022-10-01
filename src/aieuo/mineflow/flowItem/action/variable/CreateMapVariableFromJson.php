@@ -21,16 +21,12 @@ class CreateMapVariableFromJson extends FlowItem {
     protected string $detail = "action.createMapFromJson.detail";
     protected array $detailDefaultReplace = ["name", "scope", "json"];
 
-    private string $variableName;
-    private string $json;
-    private bool $isLocal;
-
-    public function __construct(string $name = "", string $json = "", bool $local = true) {
+    public function __construct(
+        private string $variableName = "",
+        private string $json = "",
+        private bool   $isLocal = true
+    ) {
         parent::__construct(self::CREATE_MAP_VARIABLE_FROM_JSON, FlowItemCategory::VARIABLE);
-
-        $this->variableName = $name;
-        $this->json = $json;
-        $this->isLocal = $local;
     }
 
     public function setVariableName(string $variableName): void {

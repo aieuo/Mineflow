@@ -20,18 +20,19 @@ class CreateMapVariable extends FlowItem {
     protected string $detail = "action.createMap.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
 
-    private string $variableName;
     private array $variableKey;
     private array $variableValue;
-    private bool $isLocal;
 
-    public function __construct(string $name = "", string $key = "", string $value = "", bool $local = true) {
+    public function __construct(
+        private string $variableName = "",
+        string         $key = "",
+        string         $value = "",
+        private bool   $isLocal = true
+    ) {
         parent::__construct(self::CREATE_MAP_VARIABLE, FlowItemCategory::VARIABLE);
 
-        $this->variableName = $name;
         $this->variableKey = array_map("trim", explode(",", $key));
         $this->variableValue = array_map("trim", explode(",", $value));
-        $this->isLocal = $local;
     }
 
     public function setVariableName(string $variableName): void {

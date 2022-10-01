@@ -23,13 +23,10 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $damage;
-
-    public function __construct(string $item = "", string $damage = "") {
+    public function __construct(string $item = "", private string $damage = "") {
         parent::__construct(self::SET_ITEM_DAMAGE, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
-        $this->damage = $damage;
     }
 
     public function setDamage(string $damage): void {

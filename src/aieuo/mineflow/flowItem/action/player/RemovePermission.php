@@ -21,13 +21,10 @@ class RemovePermission extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.removePermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    private string $playerPermission;
-
-    public function __construct(string $player = "", string $permission = "") {
+    public function __construct(string $player = "", private string $playerPermission = "") {
         parent::__construct(self::REMOVE_PERMISSION, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->playerPermission = $permission;
     }
 
     public function getPermissions(): array {

@@ -23,17 +23,15 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
     protected string $detail = "action.playSoundAt.detail";
     protected array $detailDefaultReplace = ["position", "sound", "volume", "pitch"];
 
-    private string $sound;
-    private string $volume;
-    private string $pitch;
-
-    public function __construct(string $position = "", string $sound = "", string $volume = "1", string $pitch = "1") {
+    public function __construct(
+        string         $position = "",
+        private string $sound = "",
+        private string $volume = "1",
+        private string $pitch = "1"
+    ) {
         parent::__construct(self::PLAY_SOUND_AT, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($position);
-        $this->sound = $sound;
-        $this->volume = $volume;
-        $this->pitch = $pitch;
     }
 
     public function setSound(string $health): void {

@@ -27,15 +27,14 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $enchantId;
-    private string $enchantLevel;
-
-    public function __construct(string $item = "", string $id = "", string $level = "1") {
+    public function __construct(
+        string         $item = "",
+        private string $enchantId = "",
+        private string $enchantLevel = "1"
+    ) {
         parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
-        $this->enchantId = $id;
-        $this->enchantLevel = $level;
     }
 
     public function setEnchantId(string $enchantId): void {

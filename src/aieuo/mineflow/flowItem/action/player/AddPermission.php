@@ -21,13 +21,10 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.addPermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    private string $playerPermission;
-
-    public function __construct(string $player = "", string $permission = "") {
+    public function __construct(string $player = "", private string $playerPermission = "") {
         parent::__construct(self::ADD_PERMISSION, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->playerPermission = $permission;
     }
 
     public function getPermissions(): array {

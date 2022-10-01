@@ -24,16 +24,13 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.executeIFChain.detail";
     protected array $detailDefaultReplace = ["chain", "player"];
 
-    private string $chainName;
-
     /** @var string[] */
     private array $args = [];
 
-    public function __construct(string $chain = "", string $player = "") {
+    public function __construct(private string $chainName = "", string $player = "") {
         parent::__construct(self::EXECUTE_IF_CHAIN, FlowItemCategory::PLUGIN);
 
         $this->setPlayerVariableName($player);
-        $this->chainName = $chain;
     }
 
     public function getPermissions(): array {

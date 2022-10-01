@@ -39,18 +39,18 @@ class Calculate extends FlowItem {
     public const CALC_ROUND = 14;
     public const CALC_CEIL = 15;
 
-    private string $value;
     private int $operator;
-    private string $resultName;
 
     private array $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
-    public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
+    public function __construct(
+        private string $value = "",
+        string         $operator = null,
+        private string $resultName = "result"
+    ) {
         parent::__construct(self::CALCULATE, FlowItemCategory::MATH);
 
-        $this->value = $value;
         $this->operator = (int)($operator ?? self::SQUARE);
-        $this->resultName = $resultName;
     }
 
     public function setValue(string $value): self {

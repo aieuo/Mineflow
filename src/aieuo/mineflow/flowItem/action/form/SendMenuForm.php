@@ -31,18 +31,19 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $formText;
-    private string $resultName;
     private array $options;
     private bool $resendOnClose = false;
 
-    public function __construct(string $player = "", string $text = "", string $options = "", string $resultName = "menu") {
+    public function __construct(
+        string         $player = "",
+        private string $formText = "",
+        string         $options = "",
+        private string $resultName = "menu"
+    ) {
         parent::__construct(self::SEND_MENU, FlowItemCategory::FORM);
 
         $this->setPlayerVariableName($player);
-        $this->formText = $text;
         $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
-        $this->resultName = $resultName;
     }
 
     public function setFormText(string $formText): void {

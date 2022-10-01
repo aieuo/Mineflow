@@ -22,13 +22,10 @@ class SetItemName extends FlowItem implements ItemFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $itemName;
-
-    public function __construct(string $item = "", string $itemName = "") {
+    public function __construct(string $item = "", private string $itemName = "") {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
-        $this->itemName = $itemName;
     }
 
     public function setItemName(string $itemName): void {

@@ -25,13 +25,10 @@ class GetBlock extends FlowItem implements PositionFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $resultName;
-
-    public function __construct(string $position = "", string $result = "block") {
+    public function __construct(string $position = "", private string $resultName = "block") {
         parent::__construct(self::GET_BLOCK, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($position);
-        $this->resultName = $result;
     }
 
     public function setResultName(string $resultName): void {

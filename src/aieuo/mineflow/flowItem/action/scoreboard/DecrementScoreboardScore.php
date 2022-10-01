@@ -21,15 +21,14 @@ class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     protected string $detail = "action.decrementScore.detail";
     protected array $detailDefaultReplace = ["scoreboard", "name", "score"];
 
-    private string $scoreName;
-    private string $score;
-
-    public function __construct(string $scoreboard = "", string $name = "", string $score = "") {
+    public function __construct(
+        string         $scoreboard = "",
+        private string $scoreName = "",
+        private string $score = ""
+    ) {
         parent::__construct(self::DECREMENT_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
         $this->setScoreboardVariableName($scoreboard);
-        $this->scoreName = $name;
-        $this->score = $score;
     }
 
     public function getScoreName(): string {

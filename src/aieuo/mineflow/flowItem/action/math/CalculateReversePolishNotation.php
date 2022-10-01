@@ -21,14 +21,11 @@ class CalculateReversePolishNotation extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $formula;
-    private string $resultName;
-
-    public function __construct(string $formula = "", string $resultName = "result") {
+    public function __construct(
+        private string $formula = "",
+        private string $resultName = "result"
+    ) {
         parent::__construct(self::REVERSE_POLISH_NOTATION, FlowItemCategory::MATH);
-
-        $this->formula = $formula;
-        $this->resultName = $resultName;
     }
 
     public function setFormula(string $formula): self {

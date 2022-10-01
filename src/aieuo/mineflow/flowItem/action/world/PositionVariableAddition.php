@@ -26,19 +26,16 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $x;
-    private string $y;
-    private string $z;
-    private string $resultName;
-
-    public function __construct(string $name = "pos", string $x = "", string $y = "", string $z = "", string $result = "pos") {
+    public function __construct(
+        string         $name = "pos",
+        private string $x = "",
+        private string $y = "",
+        private string $z = "",
+        private string $resultName = "pos"
+    ) {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($name);
-        $this->x = $x;
-        $this->y = $y;
-        $this->z = $z;
-        $this->resultName = $result;
     }
 
     public function setX(string $x): void {

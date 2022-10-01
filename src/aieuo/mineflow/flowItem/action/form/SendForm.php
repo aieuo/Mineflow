@@ -23,13 +23,10 @@ class SendForm extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.sendForm.detail";
     protected array $detailDefaultReplace = ["player", "form"];
 
-    private string $formName;
-
-    public function __construct(string $player = "", string $formName = "") {
+    public function __construct(string $player = "", private string $formName = "") {
         parent::__construct(self::SEND_FORM, FlowItemCategory::FORM);
 
         $this->setPlayerVariableName($player);
-        $this->formName = $formName;
     }
 
     public function setFormName(string $formName): void {

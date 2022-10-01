@@ -21,14 +21,11 @@ class GetPlayerByName extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $playerName;
-    private string $resultName;
-
-    public function __construct(string $name = "", string $result = "player") {
+    public function __construct(
+        private string $playerName = "",
+        private string $resultName = "player"
+    ) {
         parent::__construct(self::GET_PLAYER, FlowItemCategory::PLAYER);
-
-        $this->playerName = $name;
-        $this->resultName = $result;
     }
 
     public function setPlayerName(string $name): self {

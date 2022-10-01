@@ -22,17 +22,15 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.playSound.detail";
     protected array $detailDefaultReplace = ["player", "sound", "volume", "pitch"];
 
-    private string $sound;
-    private string $volume;
-    private string $pitch;
-
-    public function __construct(string $player = "", string $sound = "", string $volume = "1", string $pitch = "1") {
+    public function __construct(
+        string         $player = "",
+        private string $sound = "",
+        private string $volume = "1",
+        private string $pitch = "1"
+    ) {
         parent::__construct(self::PLAY_SOUND, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->sound = $sound;
-        $this->volume = $volume;
-        $this->pitch = $pitch;
     }
 
     public function setSound(string $health): void {

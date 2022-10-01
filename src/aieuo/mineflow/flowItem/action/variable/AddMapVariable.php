@@ -21,18 +21,13 @@ class AddMapVariable extends FlowItem {
     protected string $detail = "action.addMapVariable.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key", "value"];
 
-    private string $variableName;
-    private string $variableKey;
-    private string $variableValue;
-    private bool $isLocal;
-
-    public function __construct(string $name = "", string $key = "", string $value = "", bool $local = true) {
+    public function __construct(
+        private string $variableName = "",
+        private string $variableKey = "",
+        private string $variableValue = "",
+        private bool   $isLocal = true
+    ) {
         parent::__construct(self::ADD_MAP_VARIABLE, FlowItemCategory::VARIABLE);
-
-        $this->variableName = $name;
-        $this->variableKey = $key;
-        $this->variableValue = $value;
-        $this->isLocal = $local;
     }
 
     public function setVariableName(string $variableName): void {

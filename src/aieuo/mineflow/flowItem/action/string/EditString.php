@@ -36,18 +36,13 @@ class EditString extends FlowItem {
         self::TYPE_SPLIT,
     ];
 
-    private string $value1;
-    private string $operator;
-    private string $value2;
-    private string $resultName;
-
-    public function __construct(string $value1 = "", string $operator = self::TYPE_JOIN, string $value2 = "", string $resultName = "result") {
+    public function __construct(
+        private string $value1 = "",
+        private string $operator = self::TYPE_JOIN,
+        private string $value2 = "",
+        private string $resultName = "result"
+    ) {
         parent::__construct(self::EDIT_STRING, FlowItemCategory::STRING);
-
-        $this->value1 = $value1;
-        $this->operator = $operator;
-        $this->value2 = $value2;
-        $this->resultName = $resultName;
     }
 
     public function setValues(string $value1, string $value2): self {

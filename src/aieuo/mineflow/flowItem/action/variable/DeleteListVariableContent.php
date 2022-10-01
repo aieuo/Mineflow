@@ -20,16 +20,12 @@ class DeleteListVariableContent extends FlowItem {
     protected string $detail = "action.removeContent.detail";
     protected array $detailDefaultReplace = ["name", "scope", "key"];
 
-    private string $variableName;
-    private string $variableKey;
-    private bool $isLocal;
-
-    public function __construct(string $name = "", string $key = "", bool $local = true) {
+    public function __construct(
+        private string $variableName = "",
+        private string $variableKey = "",
+        private bool   $isLocal = true
+    ) {
         parent::__construct(self::DELETE_LIST_VARIABLE_CONTENT, FlowItemCategory::VARIABLE);
-
-        $this->variableName = $name;
-        $this->variableKey = $key;
-        $this->isLocal = $local;
     }
 
     public function setVariableName(string $variableName): void {

@@ -21,13 +21,10 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.removeBossbar.detail";
     protected array $detailDefaultReplace = ["player", "id"];
 
-    private string $barId;
-
-    public function __construct(string $player = "", string $barId = "") {
+    public function __construct(string $player = "", private string $barId = "") {
         parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->barId = $barId;
     }
 
     public function setBarId(string $barId): void {

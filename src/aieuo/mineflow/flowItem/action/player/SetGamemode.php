@@ -28,13 +28,10 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         "action.gamemode.spectator"
     ];
 
-    private string $gamemode;
-
-    public function __construct(string $player = "", string $gamemode = "") {
+    public function __construct(string $player = "", private string $gamemode = "") {
         parent::__construct(self::SET_GAMEMODE, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->gamemode = $gamemode;
     }
 
     public function setGamemode(string $gamemode): void {

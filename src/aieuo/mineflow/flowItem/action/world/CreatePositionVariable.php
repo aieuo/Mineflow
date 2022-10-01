@@ -24,20 +24,14 @@ class CreatePositionVariable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $variableName;
-    private string $x;
-    private string $y;
-    private string $z;
-    private string $world;
-
-    public function __construct(string $x = "", string $y = "", string $z = "", string $world = "{target.world.name}", string $name = "pos") {
+    public function __construct(
+        private string $x = "",
+        private string $y = "",
+        private string $z = "",
+        private string $world = "{target.world.name}",
+        private string $variableName = "pos"
+    ) {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
-
-        $this->x = $x;
-        $this->y = $y;
-        $this->z = $z;
-        $this->world = $world;
-        $this->variableName = $name;
     }
 
     public function setVariableName(string $variableName): void {

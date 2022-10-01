@@ -21,15 +21,14 @@ class AddDamage extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.addDamage.detail";
     protected array $detailDefaultReplace = ["entity", "damage"];
 
-    private string $damage;
-    private int $cause;
-
-    public function __construct(string $entity = "", string $damage = "", int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK) {
+    public function __construct(
+        string         $entity = "",
+        private string $damage = "",
+        private int    $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK
+    ) {
         parent::__construct(self::ADD_DAMAGE, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->damage = $damage;
-        $this->cause = $cause;
     }
 
     public function setDamage(string $damage): void {

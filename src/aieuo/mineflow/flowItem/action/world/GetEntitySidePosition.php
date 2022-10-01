@@ -29,10 +29,6 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $direction;
-    private string $steps;
-    private string $resultName;
-
     public const SIDE_DOWN = "down";
     public const SIDE_UP = "up";
     public const SIDE_NORTH = "north";
@@ -74,13 +70,15 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         Facing::NORTH,
     ];
 
-    public function __construct(string $entity = "", string $direction = "", string $step = "1", string $result = "pos") {
+    public function __construct(
+        string         $entity = "",
+        private string $direction = "",
+        private string $steps = "1",
+        private string $resultName = "pos"
+    ) {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
         $this->setEntityVariableName($entity);
-        $this->direction = $direction;
-        $this->steps = $step;
-        $this->resultName = $result;
     }
 
     public function setDirection(string $direction): self {

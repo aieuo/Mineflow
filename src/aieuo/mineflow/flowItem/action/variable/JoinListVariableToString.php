@@ -21,16 +21,12 @@ class JoinListVariableToString extends FlowItem {
     protected string $detail = "action.joinToString.detail";
     protected array $detailDefaultReplace = ["name", "separator", "result"];
 
-    private string $separator;
-    private string $variableName;
-    private string $resultName;
-
-    public function __construct(string $name = "", string $separator = "", string $result = "result") {
+    public function __construct(
+        private string $variableName = "",
+        private string $separator = "",
+        private string $resultName = "result"
+    ) {
         parent::__construct(self::JOIN_LIST_VARIABLE_TO_STRING, FlowItemCategory::VARIABLE);
-
-        $this->variableName = $name;
-        $this->separator = $separator;
-        $this->resultName = $result;
     }
 
     public function setVariableName(string $variableName): void {

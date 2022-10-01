@@ -25,18 +25,18 @@ class ComparisonString extends FlowItem implements Condition {
     public const STARTS_WITH = 4;
     public const ENDS_WITH = 5;
 
-    private string $value1;
     private int $operator;
-    private string $value2;
 
     private array $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
-    public function __construct(string $value1 = "", string $operator = null, string $value2 = "") {
+    public function __construct(
+        private string $value1 = "",
+        string         $operator = null,
+        private string $value2 = ""
+    ) {
         parent::__construct(self::COMPARISON_STRING, FlowItemCategory::SCRIPT);
 
-        $this->value1 = $value1;
         $this->operator = (int)($operator ?? self::EQUALS);
-        $this->value2 = $value2;
     }
 
     public function setValues(string $value1, string $value2): self {

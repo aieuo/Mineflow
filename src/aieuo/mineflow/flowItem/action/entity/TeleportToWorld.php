@@ -23,15 +23,10 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.teleportToWorld.detail";
     protected array $detailDefaultReplace = ["entity", "world"];
 
-    private string $worldName;
-    private bool $safeSpawn;
-
-    public function __construct(string $entity = "", string $worldName = "", bool $safeSpawn = true) {
+    public function __construct(string $entity = "", private string $worldName = "", private bool $safeSpawn = true) {
         parent::__construct(self::TELEPORT_TO_WORLD, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->worldName = $worldName;
-        $this->safeSpawn = $safeSpawn;
     }
 
     public function setWorldName(string $worldName): void {

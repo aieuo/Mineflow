@@ -23,14 +23,15 @@ class GetDistance extends FlowItem implements PositionFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $resultName;
-
-    public function __construct(string $pos1 = "", string $pos2 = "", string $result = "distance") {
+    public function __construct(
+        string         $pos1 = "",
+        string         $pos2 = "",
+        private string $resultName = "distance"
+    ) {
         parent::__construct(self::GET_DISTANCE, FlowItemCategory::WORLD);
 
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
-        $this->resultName = $result;
     }
 
     public function setResultName(string $resultName): void {

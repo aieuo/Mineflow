@@ -18,13 +18,10 @@ class SetFood extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.setFood.detail";
     protected array $detailDefaultReplace = ["player", "food"];
 
-    private string $food;
-
-    public function __construct(string $player = "", string $health = "") {
+    public function __construct(string $player = "", private string $food = "") {
         parent::__construct(self::SET_FOOD, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->food = $health;
     }
 
     public function setFood(string $health): void {

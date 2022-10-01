@@ -23,14 +23,11 @@ class GetMoney extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $playerName;
-    private string $resultName;
-
-    public function __construct(string $name = "{target.name}", string $result = "money") {
+    public function __construct(
+        private string $playerName = "{target.name}",
+        private string $resultName = "money"
+    ) {
         parent::__construct(self::GET_MONEY, FlowItemCategory::PLUGIN);
-
-        $this->playerName = $name;
-        $this->resultName = $result;
     }
 
     public function setPlayerName(string $name): self {

@@ -23,16 +23,14 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.getTargetBlock.detail";
     protected array $detailDefaultReplace = ["player", "maxDistance", "result"];
 
-    private string $max;
-
-    private string $resultName;
-
-    public function __construct(string $player = "", string $max = "100", string $result = "block") {
+    public function __construct(
+        string         $player = "",
+        private string $max = "100",
+        private string $resultName = "block"
+    ) {
         parent::__construct(self::GET_TARGET_BLOCK, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->max = $max;
-        $this->resultName = $result;
     }
 
     public function setMax(string $max): void {

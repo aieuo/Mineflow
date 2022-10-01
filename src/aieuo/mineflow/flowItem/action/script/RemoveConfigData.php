@@ -20,13 +20,10 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     protected string $detail = "action.removeConfig.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    private string $key;
-
-    public function __construct(string $config = "", string $key = "") {
+    public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
 
         $this->setConfigVariableName($config);
-        $this->key = $key;
     }
 
     public function getPermissions(): array {

@@ -21,13 +21,10 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.setName.detail";
     protected array $detailDefaultReplace = ["entity", "name"];
 
-    private string $newName;
-
-    public function __construct(string $entity = "", string $newName = "") {
+    public function __construct(string $entity = "", private string $newName = "") {
         parent::__construct(self::SET_NAME, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->newName = $newName;
     }
 
     public function setNewName(string $newName): void {

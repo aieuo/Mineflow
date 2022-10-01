@@ -19,13 +19,10 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
     protected string $detail = "condition.inWorld.detail";
     protected array $detailDefaultReplace = ["target", "world"];
 
-    private string $world = "";
-
-    public function __construct(string $entity = "", string $world = "") {
+    public function __construct(string $entity = "", private string $world = "") {
         parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->setWorld($world);
     }
 
     public function setWorld(string $world): void {

@@ -23,14 +23,8 @@ class GetEntity extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $entityId;
-    private string $resultName;
-
-    public function __construct(string $name = "", string $result = "entity") {
+    public function __construct(private string $entityId = "", private string $resultName = "entity") {
         parent::__construct(self::GET_ENTITY, FlowItemCategory::ENTITY);
-
-        $this->entityId = $name;
-        $this->resultName = $result;
     }
 
     public function setKey(string $name): self {

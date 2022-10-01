@@ -24,8 +24,6 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     protected string $detail = "action.equipArmor.detail";
     protected array $detailDefaultReplace = ["entity", "item", "index"];
 
-    private string $index;
-
     private array $slots = [
         "action.equipArmor.helmet",
         "action.equipArmor.chestplate",
@@ -33,12 +31,11 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         "action.equipArmor.boots",
     ];
 
-    public function __construct(string $entity = "", string $item = "", string $index = "") {
+    public function __construct(string $entity = "", string $item = "", private string $index = "") {
         parent::__construct(self::EQUIP_ARMOR, FlowItemCategory::INVENTORY);
 
         $this->setEntityVariableName($entity);
         $this->setItemVariableName($item);
-        $this->index = $index;
     }
 
     public function setIndex(string $health): void {

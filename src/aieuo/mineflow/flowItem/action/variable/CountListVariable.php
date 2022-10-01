@@ -23,14 +23,11 @@ class CountListVariable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $variableName;
-    private string $resultName;
-
-    public function __construct(string $name = "", string $result = "count") {
+    public function __construct(
+        private string $variableName = "",
+        private string $resultName = "count"
+    ) {
         parent::__construct(self::COUNT_LIST_VARIABLE, FlowItemCategory::VARIABLE);
-
-        $this->variableName = $name;
-        $this->resultName = $result;
     }
 
     public function setVariableName(string $name): self {

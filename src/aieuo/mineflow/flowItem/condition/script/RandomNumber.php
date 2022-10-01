@@ -15,16 +15,12 @@ class RandomNumber extends FlowItem implements Condition {
     protected string $detail = "condition.randomNumber.detail";
     protected array $detailDefaultReplace = ["min", "max", "value"];
 
-    private string $min;
-    private string $max;
-    private string $value;
-
-    public function __construct(string $min = "", string $max = "", string $value = "") {
+    public function __construct(
+        private string $min = "",
+        private string $max = "",
+        private string $value = ""
+    ) {
         parent::__construct(self::RANDOM_NUMBER, FlowItemCategory::MATH);
-
-        $this->min = $min;
-        $this->max = $max;
-        $this->value = $value;
     }
 
     public function setMin(string $min): void {

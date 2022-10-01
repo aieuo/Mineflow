@@ -20,13 +20,10 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     protected string $detail = "action.removeScoreName.detail";
     protected array $detailDefaultReplace = ["scoreboard", "score"];
 
-    private string $score;
-
-    public function __construct(string $scoreboard = "", string $score = "") {
+    public function __construct(string $scoreboard = "", private string $score = "") {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE_NAME, FlowItemCategory::SCOREBOARD);
 
         $this->setScoreboardVariableName($scoreboard);
-        $this->score = $score;
     }
 
     public function getScore(): string {

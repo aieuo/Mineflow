@@ -31,10 +31,7 @@ class Calculate2 extends FlowItem {
     public const CALC_ATAN2 = 5;
     public const CALC_ROUND = 6;
 
-    private string $value1;
-    private string $value2;
     private int $operator;
-    private string $resultName;
 
     private array $operatorSymbols = [
         "min(x, y)",
@@ -46,13 +43,15 @@ class Calculate2 extends FlowItem {
         "round(x, y)"
     ];
 
-    public function __construct(string $value1 = "", string $value2 = "", string $operator = null, string $resultName = "result") {
+    public function __construct(
+        private string $value1 = "",
+        private string $value2 = "",
+        string         $operator = null,
+        private string $resultName = "result"
+    ) {
         parent::__construct(self::CALCULATE2, FlowItemCategory::MATH);
 
-        $this->value1 = $value1;
-        $this->value2 = $value2;
         $this->operator = (int)($operator ?? self::CALC_MIN);
-        $this->resultName = $resultName;
     }
 
     public function setValue1(string $value1): self {

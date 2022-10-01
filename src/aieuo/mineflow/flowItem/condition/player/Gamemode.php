@@ -27,13 +27,10 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         "action.gamemode.spectator"
     ];
 
-    private int $gamemode;
-
-    public function __construct(string $player = "", int $mode = 0) {
+    public function __construct(string $player = "", private int $gamemode = 0) {
         parent::__construct(self::GAMEMODE, FlowItemCategory::PLAYER);
 
         $this->setPlayerVariableName($player);
-        $this->gamemode = $mode;
     }
 
     public function setGamemode(int $gamemode): void {

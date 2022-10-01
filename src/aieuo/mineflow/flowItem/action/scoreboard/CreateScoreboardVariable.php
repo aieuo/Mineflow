@@ -22,20 +22,15 @@ class CreateScoreboardVariable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $variableName;
-    private string $boardId;
-    private string $displayName;
-    private string $displayType;
-
     private array $displayTypes = [Scoreboard::DISPLAY_SIDEBAR, Scoreboard::DISPLAY_LIST, Scoreboard::DISPLAY_BELOWNAME];
 
-    public function __construct(string $id = "", string $displayName = "", string $type = Scoreboard::DISPLAY_SIDEBAR, string $name = "board") {
+    public function __construct(
+        private string $boardId = "",
+        private string $displayName = "",
+        private string $displayType = Scoreboard::DISPLAY_SIDEBAR,
+        private string $variableName = "board"
+    ) {
         parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
-
-        $this->boardId = $id;
-        $this->displayName = $displayName;
-        $this->displayType = $type;
-        $this->variableName = $name;
     }
 
     public function setVariableName(string $variableName): void {

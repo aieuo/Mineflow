@@ -17,12 +17,8 @@ class ExistsConfigFile extends FlowItem implements Condition {
     protected string $detail = "condition.existsConfigFile.detail";
     protected array $detailDefaultReplace = ["name"];
 
-    private string $fileName;
-
-    public function __construct(string $name = "") {
+    public function __construct(private string $fileName = "") {
         parent::__construct(self::EXISTS_CONFIG_FILE, FlowItemCategory::CONFIG);
-
-        $this->fileName = $name;
     }
 
     public function setFileName(string $name): self {

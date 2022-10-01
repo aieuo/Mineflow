@@ -20,14 +20,11 @@ class StringLength extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $value;
-    private string $resultName;
-
-    public function __construct(string $value = "", string $resultName = "length") {
+    public function __construct(
+        private string $value = "",
+        private string $resultName = "length"
+    ) {
         parent::__construct(self::STRING_LENGTH, FlowItemCategory::STRING);
-
-        $this->value = $value;
-        $this->resultName = $resultName;
     }
 
     public function setValue(string $value1): self {

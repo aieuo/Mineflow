@@ -19,13 +19,10 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
     protected string $detail = "condition.existsConfig.detail";
     protected array $detailDefaultReplace = ["config", "key"];
 
-    private string $key;
-
-    public function __construct(string $config = "", string $permission = "") {
+    public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
 
         $this->setConfigVariableName($config);
-        $this->key = $permission;
     }
 
     public function setKey(string $key): void {

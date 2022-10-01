@@ -27,19 +27,17 @@ class AddEffect extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.addEffect.detail";
     protected array $detailDefaultReplace = ["entity", "id", "power", "time"];
 
-    private string $effectId;
-    private string $power;
-    private string $time;
-
     private bool $visible = false;
 
-    public function __construct(string $entity = "", string $id = "", string $time = "300", string $power = "1") {
+    public function __construct(
+        string         $entity = "",
+        private string $effectId = "",
+        private string $time = "300",
+        private string $power = "1"
+    ) {
         parent::__construct(self::ADD_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->effectId = $id;
-        $this->time = $time;
-        $this->power = $power;
     }
 
     public function setEffectId(string $effectId): void {

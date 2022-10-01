@@ -21,13 +21,10 @@ class Command extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.command.detail";
     protected array $detailDefaultReplace = ["player", "command"];
 
-    private string $command;
-
-    public function __construct(string $player = "", string $command = "") {
+    public function __construct(string $player = "", private string $command = "") {
         parent::__construct(self::COMMAND, FlowItemCategory::COMMAND);
 
         $this->setPlayerVariableName($player);
-        $this->command = $command;
     }
 
     public function setCommand(string $health): void {

@@ -18,12 +18,8 @@ class Wait extends FlowItem {
     protected string $detail = "action.wait.detail";
     protected array $detailDefaultReplace = ["time"];
 
-    private string $time;
-
-    public function __construct(string $time = "") {
+    public function __construct(private string $time = "") {
         parent::__construct(self::ACTION_WAIT, FlowItemCategory::SCRIPT);
-
-        $this->time = $time;
     }
 
     public function setTime(string $time): self {

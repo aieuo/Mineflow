@@ -23,15 +23,10 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     protected string $detail = "action.setConfig.detail";
     protected array $detailDefaultReplace = ["config", "key", "value"];
 
-    private string $key;
-    private string $value;
-
-    public function __construct(string $config = "", string $key = "", string $value = "") {
+    public function __construct(string $config = "", private string $key = "", private string $value = "") {
         parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG);
 
         $this->setConfigVariableName($config);
-        $this->key = $key;
-        $this->value = $value;
     }
 
     public function getPermissions(): array {

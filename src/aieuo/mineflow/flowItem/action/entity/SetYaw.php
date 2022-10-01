@@ -21,13 +21,10 @@ class SetYaw extends FlowItem implements EntityFlowItem {
     protected string $detail = "action.setYaw.detail";
     protected array $detailDefaultReplace = ["entity", "yaw"];
 
-    private string $yaw;
-
-    public function __construct(string $entity = "", string $pitch = "") {
+    public function __construct(string $entity = "", private string $yaw = "") {
         parent::__construct(self::SET_YAW, FlowItemCategory::ENTITY);
 
         $this->setEntityVariableName($entity);
-        $this->yaw = $pitch;
     }
 
     public function setYaw(string $yaw): self {

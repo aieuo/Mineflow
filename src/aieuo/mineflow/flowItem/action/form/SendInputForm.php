@@ -28,16 +28,16 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private string $formText;
-    private string $resultName;
     private bool $resendOnClose = false;
 
-    public function __construct(string $player = "", string $text = "", string $resultName = "input") {
+    public function __construct(
+        string         $player = "",
+        private string $formText = "",
+        private string $resultName = "input"
+    ) {
         parent::__construct(self::SEND_INPUT, FlowItemCategory::FORM);
 
         $this->setPlayerVariableName($player);
-        $this->formText = $text;
-        $this->resultName = $resultName;
     }
 
     public function setFormText(string $formText): void {

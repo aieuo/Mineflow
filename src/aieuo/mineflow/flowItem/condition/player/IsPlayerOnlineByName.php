@@ -17,12 +17,8 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
     protected string $detail = "condition.isPlayerOnlineByName.detail";
     protected array $detailDefaultReplace = ["player"];
 
-    private string $playerName;
-
-    public function __construct(string $playerName = "target") {
+    public function __construct(private string $playerName = "target") {
         parent::__construct(self::IS_PLAYER_ONLINE_BY_NAME, FlowItemCategory::PLAYER);
-
-        $this->playerName = $playerName;
     }
 
     public function getPlayerName(): string {

@@ -18,12 +18,8 @@ class CommandConsole extends FlowItem {
     protected string $detail = "action.commandConsole.detail";
     protected array $detailDefaultReplace = ["command"];
 
-    private string $command;
-
-    public function __construct(string $command = "") {
+    public function __construct(private string $command = "") {
         parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
-
-        $this->command = $command;
     }
 
     public function getPermissions(): array {

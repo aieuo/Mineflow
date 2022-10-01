@@ -24,18 +24,13 @@ class CreateItemVariable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $variableName;
-    private string $itemId;
-    private string $itemCount;
-    private string $itemName;
-
-    public function __construct(string $id = "", string $count = "", string $itemName = "", string $variableName = "item") {
+    public function __construct(
+        private string $itemId = "",
+        private string $itemCount = "",
+        private string $itemName = "",
+        private string $variableName = "item"
+    ) {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
-
-        $this->itemId = $id;
-        $this->itemCount = $count;
-        $this->itemName = $itemName;
-        $this->variableName = $variableName;
     }
 
     public function setVariableName(string $variableName): void {

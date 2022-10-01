@@ -24,22 +24,21 @@ class AddVariable extends FlowItem {
     protected string $detail = "action.addVariable.detail";
     protected array $detailDefaultReplace = ["name", "value", "type", "scope"];
 
-    private string $variableName;
-    private string $variableValue;
     private string $variableType;
-    private bool $isLocal;
 
 
     private array $variableTypes = [0 => "string", "string" => "string", 1 => "number", "number" => "number"];
     private array $variableClasses = ["string" => StringVariable::class, "number" => NumberVariable::class];
 
-    public function __construct(string $name = "", string $value = "", string $type = null, bool $local = true) {
+    public function __construct(
+        private string $variableName = "",
+        private string $variableValue = "",
+        string         $type = null,
+        private bool   $isLocal = true
+    ) {
         parent::__construct(self::ADD_VARIABLE, FlowItemCategory::VARIABLE);
 
-        $this->variableName = $name;
-        $this->variableValue = $value;
         $this->variableType = $type ?? StringVariable::getTypeName();
-        $this->isLocal = $local;
     }
 
     public function setVariableName(string $variableName): void {

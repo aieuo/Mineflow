@@ -18,12 +18,8 @@ class CallCustomTrigger extends FlowItem {
     protected string $detail = "action.callTrigger.detail";
     protected array $detailDefaultReplace = ["identifier"];
 
-    private string $triggerName;
-
-    public function __construct(string $triggerName = "") {
+    public function __construct(private string $triggerName = "") {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
-
-        $this->triggerName = $triggerName;
     }
 
     public function setTriggerName(string $formName): void {

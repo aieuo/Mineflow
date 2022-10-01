@@ -22,13 +22,10 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private string $count;
-
-    public function __construct(string $item = "", string $count = "") {
+    public function __construct(string $item = "", private string $count = "") {
         parent::__construct(self::SET_ITEM_COUNT, FlowItemCategory::ITEM);
 
         $this->setItemVariableName($item);
-        $this->count = $count;
     }
 
     public function setCount(string $count): void {
