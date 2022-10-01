@@ -44,7 +44,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
 
     public function execute(FlowItemExecutor $source): \Generator {
         $lastResult = $source->getLastResult();
-        if (!is_bool($lastResult)) throw new InvalidFlowValueException();
+        if (!is_bool($lastResult)) throw new InvalidFlowValueException($this->getName());
         if ($lastResult) return;
 
         yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();

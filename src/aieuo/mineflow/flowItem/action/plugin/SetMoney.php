@@ -21,7 +21,7 @@ class SetMoney extends TypeMoney {
         $this->throwIfCannotExecute();
 
         if (!Economy::isPluginLoaded()) {
-            throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
+            throw new InvalidFlowValueException($this->getName(), TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $name = $source->replaceVariables($this->getPlayerName());

@@ -29,7 +29,7 @@ class ElseifAction extends IFAction {
 
     public function execute(FlowItemExecutor $source): \Generator {
         $lastResult = $source->getLastResult();
-        if (!is_bool($lastResult)) throw new InvalidFlowValueException();
+        if (!is_bool($lastResult)) throw new InvalidFlowValueException($this->getName());
         if ($lastResult) return true;
 
         foreach ($this->getConditions() as $condition) {
