@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\recipe;
 
-use aieuo\mineflow\event\RecipeExecuteEvent;
+use aieuo\mineflow\event\MineflowRecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -211,7 +211,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         foreach ($targets as $target) {
             $recipe = clone $this;
-            $recipe->execute($target, $event, $variables, $args, $callbackExecutor);
+            $ev = new MineflowRecipeExecuteEvent($recipe, $target, $variables);
+            $ev->call();
+            if ($ev->isCancelled()) continue;
+
+            $recipe->execute($target, $event, $ev->getVariables(), $args, $callbackExecutor);
         }
         return true;
     }
