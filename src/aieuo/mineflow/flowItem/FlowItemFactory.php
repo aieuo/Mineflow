@@ -112,6 +112,7 @@ use aieuo\mineflow\flowItem\action\scoreboard\RemoveScoreboardScoreName;
 use aieuo\mineflow\flowItem\action\scoreboard\SetScoreboardScore;
 use aieuo\mineflow\flowItem\action\scoreboard\SetScoreboardScoreName;
 use aieuo\mineflow\flowItem\action\scoreboard\ShowScoreboard;
+use aieuo\mineflow\flowItem\action\script\ActionGroup;
 use aieuo\mineflow\flowItem\action\script\CallRecipe;
 use aieuo\mineflow\flowItem\action\script\ElseAction;
 use aieuo\mineflow\flowItem\action\script\ElseifAction;
@@ -298,6 +299,7 @@ class FlowItemFactory {
         self::register(new CallRecipe);
         self::register(new ExecuteRecipe);
         self::register(new ExecuteRecipeWithEntity);
+        self::register(new ActionGroup);
         self::register(new SaveData);
         self::register(new CreateConfigVariable);
         self::register(new SetConfigData);

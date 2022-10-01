@@ -169,6 +169,7 @@ interface FlowItemIds {
     public const GET_CONFIG_VALUE_OR_SET = "getConfigOrSet";
     public const EXIT_RECIPE = "exit";
     public const EXIT_CONTAINER = "break";
+    public const ACTION_GROUP = "group";
 
     public const SEND_INPUT = "input";
     public const SEND_MENU = "select";
