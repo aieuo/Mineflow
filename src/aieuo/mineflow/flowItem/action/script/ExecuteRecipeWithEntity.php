@@ -20,7 +20,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
     protected array $detailDefaultReplace = ["name", "target"];
 
     public function __construct(string $name = "", string $entity = "") {
-        parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, name: $name);
+        parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
 
         $this->setEntityVariableName($entity);
     }

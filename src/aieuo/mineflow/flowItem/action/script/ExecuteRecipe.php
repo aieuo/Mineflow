@@ -12,7 +12,7 @@ class ExecuteRecipe extends ExecuteRecipeBase {
     protected string $detail = "action.executeRecipe.detail";
 
     public function __construct(string $name = "", string $args = "") {
-        parent::__construct(self::EXECUTE_RECIPE, name: $name, args: $args);
+        parent::__construct(self::EXECUTE_RECIPE, recipeName: $name, args: $args);
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
