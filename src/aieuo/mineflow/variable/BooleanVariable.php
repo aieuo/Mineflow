@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\Tag;
 
 class BooleanVariable extends Variable implements \JsonSerializable {
 
@@ -33,6 +35,10 @@ class BooleanVariable extends Variable implements \JsonSerializable {
 
     public function __toString(): string {
         return $this->getValue() ? "true" : "false";
+    }
+
+    public function toNBTTag(): Tag {
+        return new ByteTag((int)$this->value);
     }
 
     public function jsonSerialize(): array {

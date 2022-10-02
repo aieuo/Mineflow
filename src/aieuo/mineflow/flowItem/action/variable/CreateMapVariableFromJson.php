@@ -13,7 +13,9 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
+use function array_is_list;
 
 class CreateMapVariableFromJson extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -66,7 +68,11 @@ class CreateMapVariableFromJson extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), json_last_error_msg());
         }
 
-        $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value));
+        if (array_is_list($value)) {
+            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($value));
+        } else {
+            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value));
+        }
 
         if ($this->isLocal) {
             $source->addVariable($name, $variable);

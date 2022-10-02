@@ -13,6 +13,14 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\tag\Tag;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
@@ -488,5 +496,24 @@ class VariableHelper {
         UnknownVariable::registerProperties();
         Vector3Variable::registerProperties();
         WorldVariable::registerProperties();
+    }
+
+    public function tagToVariable(Tag $tag): Variable {
+        return match (true) {
+            $tag instanceof StringTag => new StringVariable($tag->getValue()),
+            $tag instanceof ByteTag => new BoolVariable((bool)$tag->getValue()),
+            $tag instanceof FloatTag, $tag instanceof IntTag, $tag instanceof DoubleTag => new NumberVariable($tag->getValue()),
+            $tag instanceof ListTag => new ListVariable($this->listTagToVariableArray($tag)),
+            $tag instanceof CompoundTag => new MapVariable($this->listTagToVariableArray($tag)),
+            default => new NullVariable(),
+        };
+    }
+
+    public function listTagToVariableArray(ListTag|CompoundTag $tag): array {
+        $result = [];
+        foreach ($tag as $key => $value) {
+            $result[$key] = $this->tagToVariable($value);
+        }
+        return $result;
     }
 }

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\Tag;
+use function is_int;
 
 class NumberVariable extends Variable implements \JsonSerializable {
 
@@ -45,6 +49,14 @@ class NumberVariable extends Variable implements \JsonSerializable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() / $target->getValue());
 
         throw new UnsupportedCalculationException();
+    }
+
+    public function toNBTTag(): Tag {
+        if (is_int($this->value)) {
+            return new IntTag($this->value);
+        }
+
+        return new FloatTag((float)$this->value);
     }
 
     public function jsonSerialize(): array {
