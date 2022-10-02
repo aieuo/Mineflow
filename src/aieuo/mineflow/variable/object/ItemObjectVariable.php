@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -18,6 +19,7 @@ class ItemObjectVariable extends ObjectVariable {
 
     public function getValueFromIndex(string $index): ?Variable {
         $item = $this->getItem();
+        $helper = Main::getVariableHelper();
         return match ($index) {
             "name" => new StringVariable($item->getName()),
             "vanilla_name" => new StringVariable($item->getVanillaName()),
@@ -27,6 +29,7 @@ class ItemObjectVariable extends ObjectVariable {
             "count" => new NumberVariable($item->getCount()),
             "lore" => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
             "block" => new BlockObjectVariable($item->getBlock()),
+            "tag" => $helper->tagToVariable($item->getNamedTag()),
             default => parent::getValueFromIndex($index),
         };
     }

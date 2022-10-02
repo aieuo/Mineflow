@@ -81,6 +81,12 @@ interface FlowItemIds {
     public const SET_ITEM_DAMAGE = "setItemDamage";
     public const SET_ITEM_COUNT = "setItemCount";
     public const SET_ITEM_NAME = "setItemName";
+    public const SET_ITEM_DATA = "setItemData";
+    public const SET_ITEM_DATA_FROM_NBT_JSON = "setItemDataFromNBTJson";
+    public const GET_ITEM_DATA = "getItemData";
+    public const REMOVE_ITEM_DATA = "removeItemData";
+    public const HAS_ITEM_DATA = "hasItemData";
+
     public const EQUIP_ARMOR = "equipArmor";
     public const GET_INVENTORY_CONTENTS = "getInventory";
     public const GET_ARMOR_INVENTORY_CONTENTS = "getArmorInventory";

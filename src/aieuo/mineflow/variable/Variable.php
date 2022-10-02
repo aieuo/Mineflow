@@ -4,6 +4,7 @@ namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use pocketmine\nbt\tag\Tag;
 
 abstract class Variable {
 
@@ -103,5 +104,9 @@ abstract class Variable {
 
     public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
         throw new UnsupportedCalculationException();
+    }
+
+    public function toNBTTag(): Tag {
+        throw new \UnexpectedValueException();
     }
 }

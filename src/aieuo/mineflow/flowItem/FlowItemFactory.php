@@ -60,9 +60,13 @@ use aieuo\mineflow\flowItem\action\inventory\SetItem;
 use aieuo\mineflow\flowItem\action\inventory\SetItemInHand;
 use aieuo\mineflow\flowItem\action\item\AddEnchantment;
 use aieuo\mineflow\flowItem\action\item\CreateItemVariable;
+use aieuo\mineflow\flowItem\action\item\GetItemData;
 use aieuo\mineflow\flowItem\action\item\RegisterCraftingRecipe;
+use aieuo\mineflow\flowItem\action\item\RemoveItemData;
 use aieuo\mineflow\flowItem\action\item\SetItemCount;
 use aieuo\mineflow\flowItem\action\item\SetItemDamage;
+use aieuo\mineflow\flowItem\action\item\SetItemData;
+use aieuo\mineflow\flowItem\action\item\SetItemDataFromNBTJson;
 use aieuo\mineflow\flowItem\action\item\SetItemLore;
 use aieuo\mineflow\flowItem\action\item\SetItemName;
 use aieuo\mineflow\flowItem\action\math\Calculate;
@@ -175,6 +179,7 @@ use aieuo\mineflow\flowItem\condition\ExistsItem;
 use aieuo\mineflow\flowItem\condition\ExistsListVariableKey;
 use aieuo\mineflow\flowItem\condition\ExistsVariable;
 use aieuo\mineflow\flowItem\condition\Gamemode;
+use aieuo\mineflow\flowItem\condition\HasItemData;
 use aieuo\mineflow\flowItem\condition\HasPermission;
 use aieuo\mineflow\flowItem\condition\InArea;
 use aieuo\mineflow\flowItem\condition\InHand;
@@ -282,6 +287,10 @@ class FlowItemFactory {
         self::register(new AddEnchantment);
         self::register(new EquipArmor);
         self::register(new SetItem);
+        self::register(new SetItemData);
+        self::register(new SetItemDataFromNBTJson);
+        self::register(new GetItemData);
+        self::register(new RemoveItemData);
         self::register(new ClearInventory);
         self::register(new GetInventoryContents);
         self::register(new GetArmorInventoryContents);
@@ -432,6 +441,8 @@ class FlowItemFactory {
         /* variable */
         self::register(new ExistsVariable);
         self::register(new ExistsListVariableKey);
+        /* item */
+        self::register(new HasItemData);
 
 
         self::registerAliases();

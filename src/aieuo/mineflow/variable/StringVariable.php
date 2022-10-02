@@ -3,6 +3,8 @@
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
+use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\tag\Tag;
 
 class StringVariable extends Variable implements \JsonSerializable {
 
@@ -35,6 +37,10 @@ class StringVariable extends Variable implements \JsonSerializable {
             "substring" => new StringVariable(mb_substr($this->getValue(), $parameters[0], $parameters[1] ?? null)),
             default => null,
         };
+    }
+
+    public function toNBTTag(): Tag {
+        return new StringTag((string)$this->value);
     }
 
     public function jsonSerialize(): array {

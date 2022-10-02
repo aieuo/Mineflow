@@ -5,7 +5,8 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use function array_merge;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\Tag;
 use function array_reverse;
 use function array_values;
 use function count;
@@ -92,6 +93,14 @@ class MapVariable extends ListVariable {
             "values" => new ListVariable(array_values($this->value)),
             default => null,
         };
+    }
+
+    public function toNBTTag(): Tag {
+        $tag = CompoundTag::create();
+        foreach ($this->getValue() as $key => $value) {
+            $tag->setTag($key, $value->toNBTTag());
+        }
+        return $tag;
     }
 
     public function __toString(): string {

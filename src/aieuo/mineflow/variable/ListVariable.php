@@ -5,6 +5,8 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\Tag;
 use function array_reverse;
 use function array_search;
 use function array_values;
@@ -148,13 +150,6 @@ class ListVariable extends Variable implements \JsonSerializable {
         return $this->showString;
     }
 
-    public function jsonSerialize(): array {
-        return [
-            "type" => $this->getType(),
-            "value" => $this->getValue(),
-        ];
-    }
-
     public function toArray(): array {
         $result = [];
         foreach ($this->getValue() as $i => $value) {
@@ -162,5 +157,20 @@ class ListVariable extends Variable implements \JsonSerializable {
             else $result[$i] = (string)$value;
         }
         return $result;
+    }
+
+    public function toNBTTag(): Tag {
+        $result = [];
+        foreach ($this->getValue() as $value) {
+            $result[] = $value->toNBTTag();
+        }
+        return new ListTag($result);
+    }
+
+    public function jsonSerialize(): array {
+        return [
+            "type" => $this->getType(),
+            "value" => $this->getValue(),
+        ];
     }
 }
