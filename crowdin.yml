@@ -1,8 +1,6 @@
 files:
   - source: /resources/language/eng.ini
     translation: /resources/language/%three_letters_code%.ini
-  - source: /README.md
-    translation: /.github/readme/%three_letters_code%.md
   - source: /.github/changelogs/eng/*.md
     translation: /.github/changelogs/%three_letters_code%/%file_name%.md
 commit_message: "[ci skip] New translations %original_file_name% (%language%)"
