@@ -46,7 +46,7 @@ class Language {
     }
 
     public static function getAvailableLanguages(): array {
-        return array_keys(self::$messages);
+        return array_filter(array_keys(self::$messages), fn(string $name) => !empty(self::$messages[$name]));
     }
 
     public static function loadBaseMessage(string $language = null): void {
