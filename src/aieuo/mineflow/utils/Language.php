@@ -6,6 +6,7 @@ use aieuo\mineflow\Main;
 use function array_key_last;
 use function implode;
 use function parse_ini_file;
+use const INI_SCANNER_RAW;
 
 class Language {
 
@@ -45,7 +46,7 @@ class Language {
     }
 
     public static function getAvailableLanguages(): array {
-        return array_keys(self::$messages);
+        return array_filter(array_keys(self::$messages), fn(string $name) => !empty(self::$messages[$name]));
     }
 
     public static function loadBaseMessage(string $language = null): void {
@@ -55,7 +56,7 @@ class Language {
         $messages = [];
         foreach ($owner->getResources() as $resource) {
             if ($resource->getFilename() !== $language.".ini") continue;
-            $messages = parse_ini_file($resource->getPathname());
+            $messages = parse_ini_file($resource->getPathname(), scanner_mode: INI_SCANNER_RAW);
         }
         self::$messages[$language] = $messages;
     }

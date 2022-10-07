@@ -497,6 +497,10 @@ class FlowItemFactory {
         return self::$list;
     }
 
+    public static function getAllAliases(): array {
+        return self::$aliases;
+    }
+
     public static function register(FlowItem $action): void {
         self::$list[$action->getId()] = clone $action;
     }
