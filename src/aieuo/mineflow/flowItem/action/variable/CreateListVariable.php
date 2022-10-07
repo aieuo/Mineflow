@@ -13,7 +13,6 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\Variable;
 
 class CreateListVariable extends FlowItem {
 
@@ -88,7 +87,7 @@ class CreateListVariable extends FlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-            new ExampleInput("@action.variable.form.value", "aiueo", implode(",", $this->getVariableValue()), true),
+            new ExampleInput("@action.variable.form.value", "aiueo", implode(",", $this->getVariableValue()), false),
             new Toggle("@action.variable.form.global", !$this->isLocal),
         ];
     }
