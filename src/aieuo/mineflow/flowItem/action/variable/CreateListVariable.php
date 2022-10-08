@@ -22,8 +22,8 @@ class CreateListVariable extends FlowItem {
     private array $variableValue;
 
     public function __construct(
-        string         $value = "",
         private string $variableName = "",
+        string         $value = "",
         private bool   $isLocal = true
     ) {
         parent::__construct(self::CREATE_LIST_VARIABLE, FlowItemCategory::VARIABLE);
