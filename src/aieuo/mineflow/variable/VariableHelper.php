@@ -13,14 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
-use pocketmine\nbt\tag\ByteTag;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\DoubleTag;
-use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\StringTag;
-use pocketmine\nbt\tag\Tag;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
@@ -39,6 +31,14 @@ use aieuo\mineflow\variable\object\ServerVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
 use aieuo\mineflow\variable\object\Vector3Variable;
 use aieuo\mineflow\variable\object\WorldVariable;
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ListTag;
+use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\tag\Tag;
 use pocketmine\utils\Config;
 use function array_is_list;
 use function is_array;
@@ -238,7 +238,7 @@ class VariableHelper {
 
         if (!isset($rules[$priority])) {
             $value = array_shift($tokens);
-            return is_numeric($value) ? new NumberVariable($value) : $value;
+            return is_numeric($value) ? new NumberVariable((float)$value) : $value;
         }
 
         $type = $rules[$priority]["type"];
