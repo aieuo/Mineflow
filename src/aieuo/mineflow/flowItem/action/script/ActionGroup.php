@@ -65,7 +65,7 @@ class ActionGroup extends FlowItem implements FlowItemContainer {
     }
 
     public function loadSaveData(array $contents): FlowItem {
-        foreach ($contents[1] as $content) {
+        foreach ($contents as $content) {
             $action = FlowItem::loadEachSaveData($content);
             $this->addAction($action);
         }
