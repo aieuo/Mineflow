@@ -44,6 +44,7 @@ abstract class RecipeTemplate {
         $form = new CustomForm(static::getName());
         $form->addContents($formPart->getElements());
         $form->addContent(new CancelToggle(fn() => $onComplete(null)));
+        $form->addMessages($formPart->getMessages());
         $form->onReceive(function (Player $player, array $data) use($onComplete, $form, $formPart) {
             array_pop($data);
             if ($formPart->getOnReceive() === null) {
