@@ -117,6 +117,10 @@ class FlowItemExecutor {
         $this->exit = true;
     }
 
+    public function setWaiting(): void {
+        $this->waiting = true;
+    }
+
     public function getTarget(): ?Entity {
         return $this->target;
     }

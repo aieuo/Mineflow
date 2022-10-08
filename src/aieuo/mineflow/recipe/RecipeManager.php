@@ -5,20 +5,29 @@ namespace aieuo\mineflow\recipe;
 use aieuo\mineflow\event\MineflowRecipeLoadEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
+use aieuo\mineflow\flowItem\custom\CustomAction;
 use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\recipe\template\SpecificBlockRecipeTemplate;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
+use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\StringVariable;
 use ErrorException;
 use RegexIterator;
+use SOFe\AwaitGenerator\Await;
 use function file_get_contents;
 use function json_decode;
 use function json_last_error_msg;
+use function ltrim;
 use function str_replace;
-use function substr;
+use function str_starts_with;
+use function version_compare;
 use const PHP_EOL;
 
 class RecipeManager {
@@ -28,33 +37,45 @@ class RecipeManager {
 
     private array $templates = [];
 
-    private string $saveDir;
-
-    public function __construct(string $saveDir) {
-        $this->saveDir = $saveDir;
-        if (!file_exists($this->saveDir)) @mkdir($this->saveDir, 0777, true);
+    public function __construct(
+        private string $recipeDirectory,
+        private string $addonDirectory,
+    ) {
+        if (!file_exists($recipeDirectory)) @mkdir($recipeDirectory, 0777, true);
+        if (!file_exists($addonDirectory)) @mkdir($addonDirectory, 0777, true);
     }
 
-    public function getSaveDir(): string {
-        return $this->saveDir;
+    public function getRecipeDirectory(): string {
+        return $this->recipeDirectory;
     }
 
-    public function loadRecipes(): void {
+    public function getAddonDirectory(): string {
+        return $this->addonDirectory;
+    }
+
+    /**
+     * @param string $path
+     * @return \Iterator<\SplFileInfo>
+     */
+    public function getRecipeFiles(string $path): \Iterator {
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
-                $this->getSaveDir(),
+                $path,
                 \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
             )
         );
-        $files = new \RegexIterator($files, '/\.json$/', RegexIterator::MATCH);
+        return new \RegexIterator($files, '/\.json$/', RegexIterator::MATCH);
+    }
 
+    public function loadRecipes(): void {
+        $files = $this->getRecipeFiles($this->getRecipeDirectory());
         foreach ($files as $file) {
             /** @var \SplFileInfo $file */
             $pathname = $file->getPathname();
             $group = str_replace(
-                ["\\", str_replace("\\", "/", substr($this->getSaveDir(), 0, -1))],
+                ["\\", str_replace("\\", "/", $this->getRecipeDirectory())],
                 ["/", ""], $file->getPath());
-            if ($group !== "") $group = substr($group, 1);
+            $group = ltrim($group, "/");
 
             $json = file_get_contents($pathname);
             $data = json_decode($json, true);
@@ -88,14 +109,109 @@ class RecipeManager {
         }
     }
 
+    public function loadAddons(): void {
+        Await::f2c(function () {
+            $files = $this->getRecipeFiles($this->getAddonDirectory());
+            /** @var \SplFileInfo $file */
+            foreach ($files as $file) {
+                try {
+                    $pack = RecipePack::load($file->getPathname());
+                } catch (\ErrorException|\UnexpectedValueException|FlowItemLoadException|\InvalidArgumentException $e) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), $e->getMessage()]));
+                    continue;
+                }
+
+                if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), ["import.plugin.outdated"]]));
+                    continue;
+                }
+
+                if (($manifestRecipe = $pack->getRecipe("_manifest")) === null) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.notfound")]));
+                    continue;
+                }
+
+                /** @var FlowItemExecutor $executor */
+                $executor = yield from Await::promise(function ($resolve) use($manifestRecipe) {
+                    $executor = new FlowItemExecutor([], null, onComplete: $resolve);
+                    $executor->setWaiting();
+
+                    $manifestRecipe->execute(null, callbackExecutor: $executor);
+                });
+
+                $variables = $executor->getVariables();
+                if (!isset($variables["manifest"])) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.variable.notfound")]));
+                    continue;
+                }
+                $manifest = $variables["manifest"];
+
+                if (!($manifest instanceof MapVariable)) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.variable.type.error")]));
+                    continue;
+                }
+
+                $addonId = $manifest->getValueFromIndex("id");
+                $recipeInfos = $manifest->getValueFromIndex("recipes");
+
+                if (!($addonId instanceof StringVariable)) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.variable.key.missing", ["id", "string"])]));
+                    continue;
+                }
+                if (!($recipeInfos instanceof ListVariable)) {
+                    Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.variable.key.missing", ["recipes", "list"])]));
+                    continue;
+                }
+
+                $recipeManager = Main::getRecipeManager();
+                foreach ($recipeInfos->getValue() as $i => $value) {
+                    if (!$value instanceof MapVariable) {
+                        Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.info.type.error", [$i])]));
+                        continue;
+                    }
+
+                    $recipeInfo = $value->getValue();
+                    foreach (["id", "category", "path"] as $key) {
+                        if (!isset($recipeInfo[$key])) {
+                            Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.info.key.missing", [$i, $key])]));
+                            continue 2;
+                        }
+                    }
+
+                    $path = $recipeInfo["path"];
+                    $id = "addon.".$addonId.".".$recipeInfo["id"];
+                    $category = $recipeInfo["category"];
+                    if (!str_starts_with($path, $manifestRecipe->getGroup())) {
+                        $path = ltrim($manifestRecipe->getGroup()."/".$path, "/");
+                    }
+
+                    [$name, $group] = $recipeManager->parseName($path);
+                    $recipe = $pack->getRecipe($name, $group);
+                    if ($recipe === null) {
+                        Logger::warning(Language::get("addon.manifest.recipe.notfound", [$file->getBasename(), $i, $path]));
+                        continue;
+                    }
+
+                    if (FlowItemFactory::get($id) !== null) {
+                        Logger::warning(Language::get("addon.manifest.recipe.exists", [$file->getBasename(), $i, $path]));
+                        continue;
+                    }
+
+                    $action = new CustomAction($id, $category, clone $recipe);
+                    FlowItemFactory::register($action);
+                }
+            }
+        });
+    }
+
     public function exists(string $name, string $group = ""): bool {
         return isset($this->recipes[$group][$name]);
     }
 
     public function add(Recipe $recipe, bool $createFile = true): void {
         $this->recipes[$recipe->getGroup()][$recipe->getName()] = $recipe;
-        if ($createFile and !file_exists($recipe->getFileName($this->getSaveDir()))) {
-            $recipe->save($this->getSaveDir());
+        if ($createFile and !file_exists($recipe->getFileName($this->getRecipeDirectory()))) {
+            $recipe->save($this->getRecipeDirectory());
         }
     }
 
@@ -122,13 +238,13 @@ class RecipeManager {
 
     public function remove(string $name, string $group = ""): void {
         if (!$this->exists($name, $group)) return;
-        unlink($this->get($name, $group)->getFileName($this->getSaveDir()));
+        unlink($this->get($name, $group)->getFileName($this->getRecipeDirectory()));
         unset($this->recipes[$group][$name]);
     }
 
     public function deleteGroup(string $group): bool {
         try {
-            $deleted = rmdir($this->getSaveDir().$group);
+            $deleted = rmdir($this->getRecipeDirectory().$group);
             if ($deleted) {
                 unset($this->recipes[$group]);
             }
@@ -141,7 +257,7 @@ class RecipeManager {
     public function saveAll(): void {
         foreach ($this->getAll() as $group) {
             foreach ($group as $recipe) {
-                $recipe->save($this->getSaveDir());
+                $recipe->save($this->getRecipeDirectory());
             }
         }
     }
@@ -158,11 +274,11 @@ class RecipeManager {
     public function rename(string $recipeName, string $newName, string $group = ""): void {
         if (!$this->exists($recipeName, $group)) return;
         $recipe = $this->get($recipeName, $group);
-        $oldPath = $recipe->getFileName($this->getSaveDir());
+        $oldPath = $recipe->getFileName($this->getRecipeDirectory());
         $recipe->setName($newName);
         unset($this->recipes[$group][$recipeName]);
         $this->recipes[$group][$newName] = $recipe;
-        rename($oldPath, $recipe->getFileName($this->getSaveDir()));
+        rename($oldPath, $recipe->getFileName($this->getRecipeDirectory()));
     }
 
     public function parseName(string $name): array {

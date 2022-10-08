@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\ui;
 
+use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
@@ -12,6 +13,8 @@ use aieuo\mineflow\recipe\RecipePack;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
+use pocketmine\utils\TextFormat;
+use function basename;
 
 class ImportForm {
 
@@ -48,7 +51,17 @@ class ImportForm {
                     return;
                 }
 
-                $pack = RecipePack::import($path);
+                try {
+                    $pack = RecipePack::load($path);
+                } catch (\ErrorException|\UnexpectedValueException $e) {
+                    $player->sendMessage(TextFormat::RED.Language::get("recipe.load.failed", [basename($path, ".json"), $e->getMessage()]));
+                    return;
+                } catch (FlowItemLoadException|\InvalidArgumentException $e) {
+                    $player->sendMessage(TextFormat::RED.Language::get("recipe.load.failed", [basename($path, ".json"), ""]));
+                    $player->sendMessage(TextFormat::RED.$e->getMessage());
+                    return;
+                }
+
                 if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
                     $player->sendMessage(Language::get("import.plugin.outdated"));
                     return;

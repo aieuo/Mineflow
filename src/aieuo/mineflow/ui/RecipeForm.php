@@ -91,7 +91,7 @@ class RecipeForm {
                 }
 
                 $recipe = new Recipe($name, $group, $player->getName());
-                if (file_exists($recipe->getFileName($manager->getSaveDir()))) {
+                if (file_exists($recipe->getFileName($manager->getRecipeDirectory()))) {
                     $it->resend([[Language::get("form.recipe.exists", [$name]), 0]]);
                     return;
                 }
@@ -264,7 +264,7 @@ class RecipeForm {
                         $this->sendChangeTarget($player, $recipe);
                         break;
                     case 7:
-                        $recipe->save(Main::getRecipeManager()->getSaveDir());
+                        $recipe->save(Main::getRecipeManager()->getRecipeDirectory());
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
                     case 8:

@@ -94,7 +94,8 @@ class Main extends PluginBase {
         self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
         self::$variableHelper->loadVariables();
 
-        self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
+        self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/", $this->getDataFolder()."addon/");
+        self::$recipeManager->loadAddons();
         self::$recipeManager->loadRecipes();
         self::$recipeManager->addTemplates();
 

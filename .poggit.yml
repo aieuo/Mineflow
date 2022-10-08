@@ -2,4 +2,7 @@
 projects:
   Mineflow:
     path: ""
+    libs:
+      - src: SOF3/await-generator/await-generator
+        version: ^3.1.0
 ...

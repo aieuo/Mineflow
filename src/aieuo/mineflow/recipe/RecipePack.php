@@ -7,7 +7,9 @@ use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\ConfigHolder;
+use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Filesystem;
+use function json_last_error_msg;
 
 class RecipePack implements \JsonSerializable {
 
@@ -34,6 +36,18 @@ class RecipePack implements \JsonSerializable {
         $this->configs = $configs ?? $this->getLinkedConfigFiles();
 
         $this->version = $version ?? Main::getPluginVersion();
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getAuthor(): string {
+        return $this->author;
+    }
+
+    public function getDetail(): string {
+        return $this->detail;
     }
 
     public function getRecipes(): array {
@@ -97,6 +111,17 @@ class RecipePack implements \JsonSerializable {
         return $configData;
     }
 
+    public function hasRecipe(string $name, string $group = null): bool {
+        return $this->getRecipe($name, $group) !== null;
+    }
+
+    public function getRecipe(string $name, string $group = null): ?Recipe {
+        foreach ($this->recipes as $recipe) {
+            if ($recipe->getName() === $name and ($group === null or $recipe->getGroup() === $group)) return $recipe;
+        }
+        return null;
+    }
+
     public function export(string $path): void {
         if (!file_exists($path)) @mkdir($path, 0777, true);
         FileSystem::safeFilePutContents($path.$this->name.".json", json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING));
@@ -117,13 +142,19 @@ class RecipePack implements \JsonSerializable {
 
     /**
      * @param string $path
-     * @return RecipePack|null
-     * @throws FlowItemLoadException|\ErrorException
+     * @return RecipePack
+     * @throws FlowItemLoadException
+     * @throws \ErrorException
      */
-    public static function import(string $path): ?RecipePack {
-        if (!file_exists($path)) return null;
+    public static function load(string $path): RecipePack {
+        if (!file_exists($path)) {
+            throw new \InvalidArgumentException("Recipe pack ".$path." is not exists.");
+        }
 
         $packData = json_decode(file_get_contents($path), true);
+        if ($packData === null) {
+            throw new \InvalidArgumentException(Language::get("recipe.json.decode.failed", [$path, json_last_error_msg()]));
+        }
 
         $name = $packData["name"];
         $author = $packData["author"];
@@ -132,7 +163,7 @@ class RecipePack implements \JsonSerializable {
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
             $recipe = new Recipe($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? "0");
-            $recipe->loadSaveData($data["actions"]);
+            $recipe->loadSaveData($data);
             $recipe->checkVersion();
 
             $recipes[] = $recipe;
