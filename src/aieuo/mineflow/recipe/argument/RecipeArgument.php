@@ -136,7 +136,6 @@ class RecipeArgument implements \JsonSerializable {
                 $element->setDefault($default);
             } elseif ($element instanceof VariableDropdown) {
                 $element->updateDefault($default);
-                $element->setResponseWithBracket(true);
             } elseif ($element instanceof Dropdown) {
                 $element->setDefaultString($default);
             }
