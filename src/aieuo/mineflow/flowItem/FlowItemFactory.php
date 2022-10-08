@@ -498,7 +498,11 @@ class FlowItemFactory {
         return self::$aliases;
     }
 
-    public static function register(FlowItem $action): void {
+    public static function register(FlowItem $action, bool $override = false): void {
+        if (!$override and isset(self::$list[$action->getId()])) {
+            throw new \InvalidArgumentException("FlowItem id ".$action->getId()." is already used by ".self::$list[$action->getId()]::class);
+        }
+
         self::$list[$action->getId()] = clone $action;
     }
 
