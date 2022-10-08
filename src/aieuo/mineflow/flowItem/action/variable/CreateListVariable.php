@@ -86,7 +86,7 @@ class CreateListVariable extends FlowItem {
     public function getEditFormElements(array $variables): array {
         return [
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-            new ExampleInput("@action.variable.form.value", "aiueo", implode(",", $this->getVariableValue()), true),
+            new ExampleInput("@action.variable.form.value", "aiueo", implode(",", $this->getVariableValue()), false),
             new Toggle("@action.variable.form.global", !$this->isLocal),
         ];
     }
