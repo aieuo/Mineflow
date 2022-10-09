@@ -189,12 +189,12 @@ class RecipeManager {
                     [$name, $group] = $recipeManager->parseName($path);
                     $recipe = $pack->getRecipe($name, $group);
                     if ($recipe === null) {
-                        Logger::warning(Language::get("addon.manifest.recipe.notfound", [$file->getBasename(), $i, $path]));
+                        Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.recipe.notfound", [$path])]));
                         continue;
                     }
 
                     if (FlowItemFactory::get($id) !== null) {
-                        Logger::warning(Language::get("addon.manifest.recipe.exists", [$file->getBasename(), $i, $path]));
+                        Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.id.exists", [$id])]));
                         continue;
                     }
 

@@ -243,7 +243,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             try {
                 $argument->validateType($arg);
             } catch (\InvalidArgumentException) {
-                Logger::warning(Language::get("recipe.argument.type.error", [$this->getPathname(), $argument->getType(), $arg::getTypeName()]), $target);
+                Logger::warning(Language::get("recipe.argument.type.error", [$this->getPathname(), $argument->getName(), $argument->getType(), $arg::getTypeName()]), $target);
                 return false;
             }
             $variables[$argument->getName()] = $arg;
