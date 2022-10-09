@@ -260,7 +260,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
             if ($callbackExecutor !== null) {
                 foreach ($this->getReturnValues() as $value) {
-                    $variable = $executor->getVariable($value);
+                    $variable = $executor->getVariable($executor->replaceVariables($value));
                     if ($variable instanceof Variable) $callbackExecutor->addVariable($value, $variable);
                 }
                 $callbackExecutor->resume();
