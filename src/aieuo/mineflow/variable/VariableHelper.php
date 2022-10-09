@@ -396,7 +396,7 @@ class VariableHelper {
     }
 
     public function isSimpleVariableString(string $variable): bool {
-        return (bool)preg_match("/^{[^{}\[\].]+}$/u", $variable);
+        return (bool)preg_match("/^{[^{}\[\]]+}$/u", $variable);
     }
 
     public function isVariableString(string $variable): bool {
