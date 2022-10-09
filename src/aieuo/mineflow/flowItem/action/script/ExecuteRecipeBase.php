@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
+use function substr;
 
 abstract class ExecuteRecipeBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -86,12 +87,8 @@ abstract class ExecuteRecipeBase extends FlowItem {
         $helper = Main::getVariableHelper();
         $args = [];
         foreach ($this->getArgs() as $arg) {
-            if (!$helper->isSimpleVariableString($arg)) {
-                $args[] = $helper->replaceVariables($arg, $source->getVariables());
-                continue;
-            }
-            $arg = $source->getVariable(substr($arg, 1, -1)) ?? $helper->get(substr($arg, 1, -1)) ?? $arg;
-            $args[] = $arg;
+            $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
+            $args[$name] = $helper->copyOrCreateVariable($arg, $source);
         }
         return $args;
     }

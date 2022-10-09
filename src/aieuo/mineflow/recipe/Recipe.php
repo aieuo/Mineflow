@@ -20,10 +20,12 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\object\EventVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use aieuo\mineflow\variable\object\RecipeVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
+use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -231,8 +233,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->executor;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $args = [], ?FlowItemExecutor $callbackExecutor = null): bool {
+    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $arguments = [], ?FlowItemExecutor $callbackExecutor = null): bool {
         $helper = Main::getVariableHelper();
+        $args = array_values($arguments);
         foreach ($this->getArguments() as $i => $argument) {
             if (!isset($args[$i])) continue;
 
@@ -256,12 +259,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $variables["event"] = new EventVariable($event);
         }
         $variables["this"] = new RecipeVariable($this);
+        $variables["_"] = $this->createSystemVariable($arguments);
 
         $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
             if ($callbackExecutor !== null) {
                 foreach ($this->getReturnValues() as $value) {
-                    $variable = $executor->getVariable($executor->replaceVariables($value));
-                    if ($variable instanceof Variable) $callbackExecutor->addVariable($value, $variable);
+                    $name = $executor->replaceVariables($value);
+                    $variable = $executor->getVariable($name);
+                    if ($variable instanceof Variable) $callbackExecutor->addVariable($name, $variable);
                 }
                 $callbackExecutor->resume();
             }
@@ -270,6 +275,23 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }, $this);
         $this->executor->execute();
         return true;
+    }
+
+    /**
+     * @param array<string, Variable> $arguments
+     * @return MapVariable
+     */
+    private function createSystemVariable(array $arguments): MapVariable {
+        $values = [];
+        foreach ($arguments as $name => $argument) {
+            $values[] = new MapVariable([
+                "name" => new StringVariable($name),
+                "type" => $argument::getTypeName(),
+                "value" => $argument
+            ]);
+        }
+        $argumentVariable = new MapVariable($values);
+        return new MapVariable(["args" => $argumentVariable]);
     }
 
     public function setArguments(array $arguments): void {

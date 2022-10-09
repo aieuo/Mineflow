@@ -12,6 +12,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\Recipe;
 use function array_map;
+use function substr;
 
 class CustomAction extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -45,15 +46,6 @@ class CustomAction extends FlowItem {
         $this->arguments = $arguments;
     }
 
-    public function getArgumentVariables(FlowItemExecutor $executor): array {
-        $helper = Main::getVariableHelper();
-        $args = [];
-        foreach ($this->getArguments() as $arg) {
-            $args[] = $helper->copyOrCreateVariable($arg, $executor);
-        }
-        return $args;
-    }
-
     public function isDataValid(): bool {
         return true;
     }
@@ -70,6 +62,16 @@ class CustomAction extends FlowItem {
 
         $recipe->executeAllTargets($source->getTarget(), $source->getVariables(), $source->getEvent(), $args, $source);
         yield false;
+    }
+
+    public function getArgumentVariables(FlowItemExecutor $executor): array {
+        $helper = Main::getVariableHelper();
+        $args = [];
+        foreach ($this->getArguments() as $arg) {
+            $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
+            $args[$name] = $helper->copyOrCreateVariable($arg, $executor);
+        }
+        return $args;
     }
 
     public function getEditFormElements(array $variables): array {
