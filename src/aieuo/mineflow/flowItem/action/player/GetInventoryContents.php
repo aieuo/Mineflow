@@ -13,9 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use pocketmine\item\Item;
+use aieuo\mineflow\variable\object\InventoryObjectVariable;
 
 class GetInventoryContents extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -62,7 +60,7 @@ class GetInventoryContents extends FlowItem implements PlayerFlowItem {
         $entity = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($entity);
 
-        $variable = new ListVariable(array_map(fn(Item $item) => new ItemObjectVariable($item), $entity->getInventory()->getContents()));
+        $variable = new InventoryObjectVariable($entity->getInventory());
 
         $source->addVariable($resultName, $variable);
         yield true;

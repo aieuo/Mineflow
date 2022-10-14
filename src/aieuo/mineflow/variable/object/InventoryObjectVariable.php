@@ -19,7 +19,8 @@ class InventoryObjectVariable extends ObjectVariable {
     public function getValueFromIndex(string $index): ?Variable {
         $inventory = $this->getInventory();
         return match ($index) {
-            "all" => new ListVariable(array_values(array_map(fn(Item $item) => new ItemObjectVariable($item), $inventory->getContents()))),
+            "all" => new ListVariable(array_values(array_map(fn(Item $item) => new ItemObjectVariable($item), $inventory->getContents(true)))),
+            "items" => new ListVariable(array_values(array_map(fn(Item $item) => new ItemObjectVariable($item), $inventory->getContents(false)))),
             "size" => new NumberVariable($inventory->getSize()),
             default => new ItemObjectVariable($inventory->getItem((int)$index)),
         };
@@ -31,8 +32,6 @@ class InventoryObjectVariable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        $value = $this->getInventory();
-        $names = explode("\\", $value::class);
-        return $names[array_key_last($names)];
+        return (string)$this->getValueFromIndex("all");
     }
 }
