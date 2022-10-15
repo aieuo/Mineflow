@@ -337,6 +337,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         $json = json_encode($this, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
         if ($json === $this->getRawData()) return;
+        $this->setRawData($json);
 
         try {
             FileSystem::safeFilePutContents($path, $json);
