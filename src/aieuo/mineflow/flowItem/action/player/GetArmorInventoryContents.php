@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\variable\object\InventoryObjectVariable;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\object\ItemVariable;
-use pocketmine\item\Item;
+use aieuo\mineflow\variable\object\InventoryVariable;
 
 class GetArmorInventoryContents extends GetInventoryContentsBase {
 
@@ -23,7 +20,7 @@ class GetArmorInventoryContents extends GetInventoryContentsBase {
 
         $entity = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($entity);
-        $variable = new InventoryObjectVariable($entity->getArmorInventory());
+        $variable = new InventoryVariable($entity->getArmorInventory());
 
         $source->addVariable($resultName, $variable);
         yield true;

@@ -5,8 +5,10 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\object\Vector3ObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
+use aieuo\mineflow\variable\object\LocationVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
+use aieuo\mineflow\variable\object\Vector3Variable;
 use pocketmine\entity\Location;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
@@ -20,38 +22,38 @@ class VariableDeserializer {
     private static array $deserializers = [];
 
     public static function init(): void {
-        self::register(Variable::STRING, static fn($data) => new StringVariable((string)$data));
-        self::register(Variable::NUMBER, static fn($data) => new NumberVariable((float)$data));
-        self::register(Variable::BOOLEAN, static fn($data) => new BoolVariable((bool)$data));
-        self::register(Variable::NULL, static fn() => new NullVariable());
-        self::register(Variable::LIST, static function ($data) {
+        self::register(StringVariable::getTypeName(), static fn($data) => new StringVariable((string)$data));
+        self::register(NumberVariable::getTypeName(), static fn($data) => new NumberVariable((float)$data));
+        self::register(BooleanVariable::getTypeName(), static fn($data) => new BooleanVariable((bool)$data));
+        self::register(NullVariable::getTypeName(), static fn() => new NullVariable());
+        self::register(ListVariable::getTypeName(), static function ($data) {
             return new ListVariable(array_map(fn($v) => self::deserialize($v) ?? new NullVariable(), $data));
         });
-        self::register(Variable::MAP, static function ($data) {
+        self::register(MapVariable::getTypeName(), static function ($data) {
             return new MapVariable(array_map(fn($v) => self::deserialize($v) ?? new NullVariable(), $data));
         });
 
-        self::register("item", static fn($data) => new ItemObjectVariable(Item::jsonDeserialize($data)));
-        self::register("vector3", static function ($data) {
-            return new Vector3ObjectVariable(new Vector3($data["x"], $data["y"], $data["z"]));
+        self::register(ItemVariable::getTypeName(), static fn($data) => new ItemVariable(Item::jsonDeserialize($data)));
+        self::register(Vector3Variable::getTypeName(), static function ($data) {
+            return new Vector3Variable(new Vector3($data["x"], $data["y"], $data["z"]));
         });
-        self::register("position", static function ($data) {
+        self::register(PositionVariable::getTypeName(), static function ($data) {
             $world = Server::getInstance()->getWorldManager()->getWorldByName($data["world"]);
-            return new Vector3ObjectVariable(new Position($data["x"], $data["y"], $data["z"], $world));
+            return new Vector3Variable(new Position($data["x"], $data["y"], $data["z"], $world));
         });
-        self::register("location", static function ($data) {
+        self::register(LocationVariable::getTypeName(), static function ($data) {
             $world = Server::getInstance()->getWorldManager()->getWorldByName($data["world"]);
-            return new Vector3ObjectVariable(new Location($data["x"], $data["y"], $data["z"], $world, $data["yaw"], $data["pitch"]));
+            return new Vector3Variable(new Location($data["x"], $data["y"], $data["z"], $world, $data["yaw"], $data["pitch"]));
         });
     }
 
     /**
-     * @param string|int $type
+     * @param string $type
      * @param callable(mixed): ?Variable $deserializer
      * @param bool $override
      * @return void
      */
-    public static function register(string|int $type, callable $deserializer, bool $override = false): void {
+    public static function register(string $type, callable $deserializer, bool $override = false): void {
         if (!$override and isset(self::$deserializers[$type])) {
             throw new \InvalidArgumentException("Variable deserializer ".$type." is already registered");
         }

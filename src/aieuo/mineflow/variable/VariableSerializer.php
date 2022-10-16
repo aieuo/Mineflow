@@ -5,72 +5,78 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\variable\object\ItemObjectVariable;
-use aieuo\mineflow\variable\object\LocationObjectVariable;
-use aieuo\mineflow\variable\object\PositionObjectVariable;
-use aieuo\mineflow\variable\object\Vector3ObjectVariable;
+use aieuo\mineflow\variable\object\ItemVariable;
+use aieuo\mineflow\variable\object\LocationVariable;
+use aieuo\mineflow\variable\object\PositionVariable;
+use aieuo\mineflow\variable\object\Vector3Variable;
+use pocketmine\entity\Location;
+use pocketmine\world\Position;
 use function array_map;
 
 class VariableSerializer {
 
     /** @var array<string, callable(Variable): mixed> */
     private static array $serializers = [];
-    /** @var array<class-string<Variable>, string> */
-    private static array $types;
 
     public static function init(): void {
-        self::register(StringVariable::class, Variable::STRING, static fn(StringVariable $var) => $var->getValue());
-        self::register(NumberVariable::class, Variable::NUMBER, static fn(NumberVariable $var) => $var->getValue());
-        self::register(BoolVariable::class, Variable::BOOLEAN, static fn(BoolVariable $var) => $var->getValue());
-        self::register(NullVariable::class, Variable::NULL, static fn() => null);
-        self::register(ListVariable::class, Variable::LIST, static function (ListVariable $var) {
+        self::register(StringVariable::getTypeName(), static fn(StringVariable $var) => $var->getValue());
+        self::register(NumberVariable::getTypeName(), static fn(NumberVariable $var) => $var->getValue());
+        self::register(BooleanVariable::getTypeName(), static fn(BooleanVariable $var) => $var->getValue());
+        self::register(NullVariable::getTypeName(), static fn() => null);
+        self::register(ListVariable::getTypeName(), static function (ListVariable $var) {
             return array_map(fn(Variable $v) => self::serialize($v) ?? self::fallback($v), $var->getValue());
         });
-        self::register(MapVariable::class, (string)Variable::MAP, static function (MapVariable $var) {
+        self::register(MapVariable::getTypeName(), static function (MapVariable $var) {
             return array_map(fn(Variable $v) => self::serialize($v) ?? self::fallback($v), $var->getValue());
         });
 
-        self::register(ItemObjectVariable::class, "item", static fn(ItemObjectVariable $var) => $var->getItem()->jsonSerialize());
-        self::register(Vector3ObjectVariable::class, "vector3", static fn(Vector3ObjectVariable $var) => [
-            "x" => $var->getVector3()->getX(),
-            "y" => $var->getVector3()->getY(),
-            "z" => $var->getVector3()->getZ(),
+        self::register(ItemVariable::getTypeName(), static fn(ItemVariable $var) => $var->getValue()->jsonSerialize());
+        self::register(Vector3Variable::getTypeName(), static fn(Vector3Variable $var) => [
+            "x" => $var->getValue()->getX(),
+            "y" => $var->getValue()->getY(),
+            "z" => $var->getValue()->getZ(),
         ]);
-        self::register(PositionObjectVariable::class, "position", static fn(PositionObjectVariable $var) => [
-            "x" => $var->getPosition()->getX(),
-            "y" => $var->getPosition()->getY(),
-            "z" => $var->getPosition()->getZ(),
-            "world" => $var->getPosition()->getWorld()->getFolderName(),
-        ]);
-        self::register(LocationObjectVariable::class, "location", static fn(LocationObjectVariable $var) => [
-            "x" => $var->getLocation()->getX(),
-            "y" => $var->getLocation()->getY(),
-            "z" => $var->getLocation()->getZ(),
-            "world" => $var->getLocation()->getWorld()->getFolderName(),
-            "yaw" => $var->getLocation()->getYaw(),
-            "pitch" => $var->getLocation()->getPitch(),
-        ]);
+        self::register(PositionVariable::getTypeName(), static function (PositionVariable $var) {
+            /** @var Position $pos */
+            $pos = $var->getValue();
+            return [
+                "x" => $pos->getX(),
+                "y" => $pos->getY(),
+                "z" => $pos->getZ(),
+                "world" => $pos->getWorld()->getFolderName(),
+            ];
+        });
+        self::register(LocationVariable::getTypeName(), static function (LocationVariable $var) {
+            /** @var Location $pos */
+            $pos = $var->getValue();
+            return [
+                "x" => $pos->getX(),
+                "y" => $pos->getY(),
+                "z" => $pos->getZ(),
+                "world" => $pos->getWorld()->getFolderName(),
+                "yaw" => $pos->getYaw(),
+                "pitch" => $pos->getPitch(),
+            ];
+        });
     }
 
     /**
-     * @param string $class
-     * @param string|int $type
+     * @param string $type
      * @param callable(array<string, mixed>): ?Variable $deserializer
      * @param bool $override
      * @return void
      */
-    public static function register(string $class, string|int $type, callable $deserializer, bool $override = false): void {
+    public static function register(string $type, callable $deserializer, bool $override = false): void {
         if (!$override and isset(self::$serializers[$type])) {
             throw new \InvalidArgumentException("Variable serializer ".$type." is already registered");
         }
 
-        self::$types[$class] = $type;
         self::$serializers[$type] = $deserializer;
     }
 
     public static function serialize(Variable $variable): ?array {
-        if (!isset(self::$types[$variable::class])) return null;
-        $type = self::$types[$variable::class];
+        $type = $variable::getTypeName();
+        if (!isset(self::$serializers[$type])) return null;
 
         return [
             "type" => $type,
@@ -80,7 +86,7 @@ class VariableSerializer {
 
     public static function fallback(Variable $variable): array {
         return [
-            "type" => Variable::STRING,
+            "type" => StringVariable::getTypeName(),
             "value" => (string)$variable,
         ];
     }
