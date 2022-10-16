@@ -39,8 +39,11 @@ class VariableHelper {
         $this->file = $file;
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
+        VariableSerializer::init();
+        VariableDeserializer::init();
+
         foreach ($file->getAll() as $name => $data) {
-            $variable = Variable::fromArray($data);
+            $variable = VariableDeserializer::deserialize($data);
 
             if ($variable === null) {
                 Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed"));
@@ -84,8 +87,13 @@ class VariableHelper {
 
     public function saveAll(): void {
         foreach ($this->variables as $name => $variable) {
-            if (!($variable instanceof \JsonSerializable) and $name !== "") continue;
-            $this->file->set($name, $variable);
+            $serialized = VariableSerializer::serialize($variable);
+            
+            if ($serialized !== null) {
+                $this->file->set($name, $serialized);
+            } elseif ($variable instanceof \JsonSerializable) {
+                $this->file->set($name, $variable);
+            }
         }
         $this->file->save();
     }
