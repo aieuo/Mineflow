@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class Chat extends TypePlayerMessage {
 
@@ -22,6 +23,7 @@ class Chat extends TypePlayerMessage {
         $this->throwIfInvalidPlayer($player);
 
         $player->chat($message);
-        yield true;
+
+        yield Await::ALL;
     }
 }

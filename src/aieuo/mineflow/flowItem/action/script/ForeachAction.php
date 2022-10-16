@@ -24,6 +24,7 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class ForeachAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -102,9 +103,10 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
                 $keyName => $keyVariable,
                 $valueName => $valueVariable
-            ], $source))->executeGenerator();
+            ], $source))->getGenerator();
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function hasCustomMenu(): bool {

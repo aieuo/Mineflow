@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsVariable extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -45,7 +46,7 @@ class ExistsVariable extends FlowItem implements Condition {
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
 
-        yield true;
+        yield Await::ALL;
         return $source->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 

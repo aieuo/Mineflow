@@ -19,6 +19,7 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class ForAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -105,13 +106,13 @@ class ForAction extends FlowItem implements FlowItemContainer {
         $this->throwIfInvalidNumber($fluctuation, null, null, [0]);
         $fluctuation = (float)$fluctuation;
 
-        for ($i = $start; $i <= $end; $i += $fluctuation) {
+        for ($i = (float)$start; $i <= (float)$end; $i += $fluctuation) {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
                 $counterName => new NumberVariable($i)
-            ], $source))->executeGenerator();
+            ], $source))->getGenerator();
         }
-        $source->resume();
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function hasCustomMenu(): bool {

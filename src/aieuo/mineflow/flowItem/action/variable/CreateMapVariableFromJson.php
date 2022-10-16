@@ -15,6 +15,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
+use SOFe\AwaitGenerator\Await;
 use function array_is_list;
 
 class CreateMapVariableFromJson extends FlowItem {
@@ -79,7 +80,8 @@ class CreateMapVariableFromJson extends FlowItem {
         } else {
             $helper->add($name, $variable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

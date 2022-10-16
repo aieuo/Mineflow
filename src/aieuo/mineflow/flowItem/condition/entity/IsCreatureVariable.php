@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class IsCreatureVariable extends CheckEntityState {
 
@@ -19,7 +20,7 @@ class IsCreatureVariable extends CheckEntityState {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        yield true;
+        yield Await::ALL;
         return $entity instanceof Living;
     }
 }

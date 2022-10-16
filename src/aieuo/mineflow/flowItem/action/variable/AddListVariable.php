@@ -15,6 +15,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use SOFe\AwaitGenerator\Await;
 use function implode;
 
 class AddListVariable extends FlowItem {
@@ -80,7 +81,8 @@ class AddListVariable extends FlowItem {
             $addVariable = $helper->copyOrCreateVariable($value, $source);
             $variable->appendValue($addVariable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

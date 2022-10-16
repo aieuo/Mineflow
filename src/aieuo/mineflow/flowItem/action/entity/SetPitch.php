@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class SetPitch extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -56,7 +57,8 @@ class SetPitch extends FlowItem implements EntityFlowItem {
 
         $entity->setRotation($entity->getLocation()->getYaw(), (float)$pitch);
         if ($entity instanceof Player) $entity->teleport($entity->getPosition(), $entity->getLocation()->getYaw(), (float)$pitch);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

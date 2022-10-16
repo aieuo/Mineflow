@@ -18,6 +18,9 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
+use function array_search;
+use function is_int;
 
 class AddVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -90,7 +93,8 @@ class AddVariable extends FlowItem {
         } else {
             Main::getVariableHelper()->add($name, $variable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

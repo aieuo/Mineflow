@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\math\Vector3;
+use SOFe\AwaitGenerator\Await;
 use function array_merge;
 
 class Motion extends FlowItem implements EntityFlowItem {
@@ -67,7 +68,8 @@ class Motion extends FlowItem implements EntityFlowItem {
 
         $motion = new Vector3((float)$motions[0], (float)$motions[1], (float)$motions[2]);
         $entity->setMotion($motion);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

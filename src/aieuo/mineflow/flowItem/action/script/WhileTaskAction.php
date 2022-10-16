@@ -19,6 +19,7 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class WhileTaskAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -84,14 +85,15 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
             $source->addVariable("i", new NumberVariable($this->loopCount)); // TODO: i を変更できるようにする
             foreach ($this->getConditions() as $i => $condition) {
                 if (!(yield from $condition->execute($source))) {
-                    $source->resume();
-                    return true;
+                    break 2;
                 }
             }
 
-            yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
+            yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->getGenerator();
             yield from $wait->execute($source);
         }
+
+        yield Await::ALL;
     }
 
     public function hasCustomMenu(): bool {

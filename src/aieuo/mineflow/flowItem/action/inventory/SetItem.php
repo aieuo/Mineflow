@@ -15,6 +15,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
@@ -60,7 +62,8 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         $item = $this->getItem($source);
 
         $player->getInventory()->setItem((int)$index, $item);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

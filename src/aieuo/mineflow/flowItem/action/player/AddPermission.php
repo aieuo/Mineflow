@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use SOFe\AwaitGenerator\Await;
 
 class AddPermission extends AddPermissionBase {
 
@@ -23,6 +24,7 @@ class AddPermission extends AddPermissionBase {
         $this->throwIfInvalidPlayer($player);
 
         $player->addAttachment(Main::getInstance(), $permission, true);
-        yield true;
+
+        yield Await::ALL;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipe extends ExecuteRecipeBase {
 
@@ -19,6 +20,7 @@ class ExecuteRecipe extends ExecuteRecipeBase {
         $args = $this->getArguments($source);
 
         $recipe->executeAllTargets($source->getTarget(), $source->getVariables(), $source->getEvent(), $args);
-        yield true;
+
+        yield Await::ALL;
     }
 }

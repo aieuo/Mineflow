@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class Command extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -53,7 +54,8 @@ class Command extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Server::getInstance()->dispatchCommand($player, $command);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

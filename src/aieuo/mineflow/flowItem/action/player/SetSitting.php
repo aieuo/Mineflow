@@ -22,6 +22,7 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 use pocketmine\network\mcpe\protocol\types\entity\LongMetadataProperty;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
@@ -70,7 +71,8 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $player->getNetworkSession()->sendDataPacket($pk);
 
         self::$entityIds[$player->getName()] = $pk->actorRuntimeId;
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

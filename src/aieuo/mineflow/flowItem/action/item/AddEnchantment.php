@@ -18,6 +18,7 @@ use pocketmine\data\bedrock\EnchantmentIdMap;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\StringToEnchantmentParser;
+use SOFe\AwaitGenerator\Await;
 
 class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -81,7 +82,8 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         $this->throwIfInvalidNumber($level);
 
         $item->addEnchantment(new EnchantmentInstance($enchant, (int)$level));
-        yield true;
+
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

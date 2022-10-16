@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\java\GameModeIdMap;
+use SOFe\AwaitGenerator\Await;
 
 class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -61,7 +62,7 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
 
         $gamemode = GameModeIdMap::getInstance()->fromId($this->getGamemode());
 
-        yield true;
+        yield Await::ALL;
         return $player->getGamemode() === $gamemode;
     }
 

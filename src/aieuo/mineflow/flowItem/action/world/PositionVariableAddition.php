@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
+use SOFe\AwaitGenerator\Await;
 
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -97,7 +98,8 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
         $variable = new PositionVariable($position);
         $source->addVariable($name, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

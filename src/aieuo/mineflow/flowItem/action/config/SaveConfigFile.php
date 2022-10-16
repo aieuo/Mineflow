@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
@@ -42,9 +44,9 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         $this->throwIfCannotExecute();
 
         $config = $this->getConfig($source);
-
         $config->save();
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

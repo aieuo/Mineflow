@@ -14,6 +14,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
@@ -47,7 +49,8 @@ class Teleport extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $position = $this->getPosition($source);
 
         $entity->teleport($position);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

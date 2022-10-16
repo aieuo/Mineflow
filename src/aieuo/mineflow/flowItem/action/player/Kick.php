@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\Main;
 use pocketmine\scheduler\ClosureTask;
+use SOFe\AwaitGenerator\Await;
 
 class Kick extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -61,7 +62,8 @@ class Kick extends FlowItem implements PlayerFlowItem {
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
             $player->kick($reason);
         }), 1);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

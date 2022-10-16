@@ -46,7 +46,7 @@ class ActionGroup extends FlowItem implements FlowItemContainer {
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
+        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->getGenerator();
         return true;
     }
 

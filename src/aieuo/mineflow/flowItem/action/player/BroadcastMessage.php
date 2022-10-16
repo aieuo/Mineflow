@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class BroadcastMessage extends TypeMessage {
 
@@ -19,6 +20,7 @@ class BroadcastMessage extends TypeMessage {
 
         $message = Language::replace($source->replaceVariables($this->getMessage()));
         Server::getInstance()->broadcastMessage($message);
-        yield true;
+
+        yield Await::ALL;
     }
 }

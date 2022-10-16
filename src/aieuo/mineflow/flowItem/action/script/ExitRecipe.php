@@ -1,13 +1,15 @@
-<?php
+<?php /** @noinspection PhpInconsistentReturnPointsInspection */
 
 declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
+use aieuo\mineflow\exception\RecipeInterruptException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class ExitRecipe extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -17,8 +19,8 @@ class ExitRecipe extends FlowItem {
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        $source->exit();
-        yield true;
+        yield Await::ALL;
+        throw new RecipeInterruptException();
     }
 
     public function isDataValid(): bool {

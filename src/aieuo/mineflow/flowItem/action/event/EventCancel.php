@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Cancellable;
+use SOFe\AwaitGenerator\Await;
 
 class EventCancel extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -27,7 +28,8 @@ class EventCancel extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));
         }
         $event->cancel();
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function isDataValid(): bool {

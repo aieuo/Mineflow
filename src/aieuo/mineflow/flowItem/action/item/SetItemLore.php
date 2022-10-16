@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use function implode;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -57,7 +58,8 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         $lore = array_map(fn(string $lore) => $source->replaceVariables($lore), $this->getLore());
 
         $item->setLore($lore);
-        yield true;
+
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use SOFe\AwaitGenerator\Await;
 
 class HasItemData extends FlowItem implements Condition, ItemFlowItem {
     use ItemFlowItemTrait;
@@ -56,7 +57,7 @@ class HasItemData extends FlowItem implements Condition, ItemFlowItem {
         $key = $source->replaceVariables($this->getKey());
         $tags = $item->getNamedTag();
 
-        yield true;
+        yield Await::ALL;
         return $tags->getTag($key) !== null;
     }
 

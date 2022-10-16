@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class InWorld extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
@@ -50,7 +52,7 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
 
         $world = $source->replaceVariables($this->getWorld());
 
-        yield true;
+        yield Await::ALL;
         return $entity->getPosition()->getWorld()->getFolderName() === $world;
     }
 

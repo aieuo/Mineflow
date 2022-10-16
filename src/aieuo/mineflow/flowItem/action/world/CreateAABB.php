@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
+use SOFe\AwaitGenerator\Await;
 
 class CreateAABB extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -127,7 +128,8 @@ class CreateAABB extends FlowItem {
         );
 
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 

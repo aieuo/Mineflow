@@ -15,6 +15,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
 
 class DeleteListVariableContentByValue extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -80,7 +81,8 @@ class DeleteListVariableContentByValue extends FlowItem {
         }
 
         $variable->removeValue($value, false);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

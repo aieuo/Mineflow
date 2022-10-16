@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemCount extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -54,7 +56,8 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         $item = $this->getItem($source);
 
         $item->setCount((int)$count);
-        yield true;
+
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

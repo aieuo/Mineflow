@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class AddSpecificLanguageMapping extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -66,7 +67,8 @@ class AddSpecificLanguageMapping extends FlowItem {
         $message = $source->replaceVariables($this->getMessage());
 
         Language::add([$key => $message], $language);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class StringLength extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -62,7 +63,8 @@ class StringLength extends FlowItem {
 
         $length = mb_strlen($value);
         $source->addVariable($resultName, new NumberVariable($length));
-        yield true;
+
+        yield Await::ALL;
         return $length;
     }
 

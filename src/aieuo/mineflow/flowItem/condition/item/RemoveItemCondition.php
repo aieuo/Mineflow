@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveItemCondition extends TypeItem {
 
@@ -23,7 +24,7 @@ class RemoveItemCondition extends TypeItem {
         if (!$player->getInventory()->contains($item)) return false;
         $player->getInventory()->removeItem($item);
 
-        yield true;
+        yield Await::ALL;
         return true;
     }
 }

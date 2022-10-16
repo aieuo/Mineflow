@@ -19,6 +19,7 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class RepeatAction extends FlowItem implements FlowItemContainer {
     use FlowItemContainerTrait;
@@ -97,10 +98,10 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         for ($i = (int)$start; $i < $end; $i++) {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
                 $name => new NumberVariable($i)
-            ], $source))->executeGenerator();
+            ], $source))->getGenerator();
         }
-        $source->resume();
-        return true;
+
+        return Await::ALL;
     }
 
     public function hasCustomMenu(): bool {

@@ -13,6 +13,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -53,7 +55,8 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::remove($player, $id);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

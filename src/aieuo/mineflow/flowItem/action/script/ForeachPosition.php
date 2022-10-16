@@ -23,6 +23,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\player\Player;
 use pocketmine\world\Position;
+use SOFe\AwaitGenerator\Await;
 
 class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlowItem {
     use FlowItemContainerTrait, PositionFlowItemTrait;
@@ -75,12 +76,12 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
                     yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
                         $counterName => new PositionVariable($pos, $counterName)
-                    ], $source))->executeGenerator();
+                    ], $source))->getGenerator();
                 }
             }
         }
 
-        yield true;
+        yield Await::ALL;
     }
 
     public function hasCustomMenu(): bool {

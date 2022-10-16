@@ -15,6 +15,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\item\StringToItemParser;
+use SOFe\AwaitGenerator\Await;
 
 class CreateBlockVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -74,7 +75,8 @@ class CreateBlockVariable extends FlowItem {
 
         $variable = new BlockVariable($block, $name);
         $source->addVariable($name, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 

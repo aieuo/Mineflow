@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class DoNothing extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -16,7 +17,7 @@ class DoNothing extends FlowItem {
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        yield true;
+        yield Await::ALL;
     }
 
     public function isDataValid(): bool {

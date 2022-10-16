@@ -17,6 +17,7 @@ use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
@@ -71,7 +72,8 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem((int)$index, $item);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

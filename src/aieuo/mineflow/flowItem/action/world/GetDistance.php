@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetDistance extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -61,7 +62,8 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         $distance = $pos1->distance($pos2);
 
         $source->addVariable($result, new NumberVariable($distance));
-        yield true;
+
+        yield Await::ALL;
         return $distance;
     }
 

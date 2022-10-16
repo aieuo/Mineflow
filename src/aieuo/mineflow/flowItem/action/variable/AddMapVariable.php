@@ -15,6 +15,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
+use SOFe\AwaitGenerator\Await;
 
 class AddMapVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -81,7 +82,8 @@ class AddMapVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
         $variable->setValueAt($key, $addVariable);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

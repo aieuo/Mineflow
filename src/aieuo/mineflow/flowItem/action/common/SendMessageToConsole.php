@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SendMessageToConsole extends TypeMessage {
     use ActionNameWithMineflowLanguage;
@@ -21,6 +22,7 @@ class SendMessageToConsole extends TypeMessage {
 
         $message = Language::replace($source->replaceVariables($this->getMessage()));
         Main::getInstance()->getLogger()->info($message);
-        yield true;
+
+        yield Await::ALL;
     }
 }

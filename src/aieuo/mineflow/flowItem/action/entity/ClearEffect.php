@@ -17,6 +17,7 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
 use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class ClearEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -63,7 +64,8 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
         if ($entity instanceof Living) {
             $entity->getEffects()->remove($effect);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

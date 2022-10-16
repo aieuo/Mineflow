@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class FourArithmeticOperations extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -122,7 +123,8 @@ class FourArithmeticOperations extends FlowItem {
         }
 
         $source->addVariable($resultName, new NumberVariable($result));
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 

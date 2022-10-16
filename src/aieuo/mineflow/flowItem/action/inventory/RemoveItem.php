@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\inventory;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveItem extends TypeItem {
 
@@ -21,6 +22,7 @@ class RemoveItem extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->removeItem($item);
-        yield true;
+
+        yield Await::ALL;
     }
 }

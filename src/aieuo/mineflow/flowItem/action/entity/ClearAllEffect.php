@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class ClearAllEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -44,7 +45,8 @@ class ClearAllEffect extends FlowItem implements EntityFlowItem {
         if ($entity instanceof Living) {
             $entity->getEffects()->clear();
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

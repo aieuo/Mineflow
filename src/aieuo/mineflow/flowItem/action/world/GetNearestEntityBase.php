@@ -17,6 +17,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
+use SOFe\AwaitGenerator\Await;
 
 abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -80,7 +81,8 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
 
         $variable = $entity === null ? new NullVariable() : EntityVariable::fromObject($entity);
         $source->addVariable($result, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

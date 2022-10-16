@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ScoreboardVariable;
+use SOFe\AwaitGenerator\Await;
 
 class CreateScoreboardVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -86,7 +87,8 @@ class CreateScoreboardVariable extends FlowItem {
 
         $variable = new ScoreboardVariable($scoreboard);
         $source->addVariable($variableName, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 

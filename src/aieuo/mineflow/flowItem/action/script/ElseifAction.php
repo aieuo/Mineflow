@@ -22,7 +22,7 @@ class ElseifAction extends IFActionBase {
             if (!(yield from $condition->execute($source))) return false;
         }
 
-        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
+        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->getGenerator();
         return true;
     }
 }

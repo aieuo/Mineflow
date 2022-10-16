@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class TeleportToWorld extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -72,7 +73,8 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
 
         $pos = $this->safeSpawn ? $world->getSafeSpawn() : $world->getSpawnLocation();
         $entity->teleport($pos);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

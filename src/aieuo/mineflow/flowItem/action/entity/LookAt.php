@@ -15,6 +15,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
@@ -50,7 +51,8 @@ class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
         if ($entity instanceof Living) {
             $entity->lookAt($position);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

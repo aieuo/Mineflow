@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use pocketmine\utils\TextFormat;
+use SOFe\AwaitGenerator\Await;
 
 class GetMoney extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -70,7 +71,8 @@ class GetMoney extends FlowItem {
 
         $money = Economy::getPlugin()->getMoney($targetName);
         $source->addVariable($resultName, new NumberVariable($money));
-        yield true;
+
+        yield Await::ALL;
         return $money;
     }
 

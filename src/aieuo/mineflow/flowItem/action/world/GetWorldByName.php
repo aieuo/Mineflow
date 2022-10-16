@@ -13,6 +13,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class GetWorldByName extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -64,7 +65,8 @@ class GetWorldByName extends FlowItem {
 
         $variable = $world === null ? new NullVariable() : new WorldVariable($world);
         $source->addVariable($result, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

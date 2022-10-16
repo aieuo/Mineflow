@@ -19,6 +19,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Location;
+use SOFe\AwaitGenerator\Await;
 
 class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
@@ -70,7 +71,8 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
         $variable = new HumanVariable($entity);
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

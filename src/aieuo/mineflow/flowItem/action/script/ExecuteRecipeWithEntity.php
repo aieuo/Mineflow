@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -41,7 +43,8 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
         $this->throwIfInvalidEntity($entity);
 
         $recipe->execute($entity, $source->getEvent(), $source->getVariables());
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

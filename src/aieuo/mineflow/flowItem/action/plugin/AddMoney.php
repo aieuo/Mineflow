@@ -9,6 +9,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\TextFormat;
+use SOFe\AwaitGenerator\Await;
 
 class AddMoney extends TypeMoney {
 
@@ -30,6 +31,7 @@ class AddMoney extends TypeMoney {
 
         $economy = Economy::getPlugin();
         $economy->addMoney($name, (int)$amount);
-        yield true;
+
+        yield Await::ALL;
     }
 }

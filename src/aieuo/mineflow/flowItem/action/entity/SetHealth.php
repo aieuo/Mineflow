@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class SetHealth extends SetHealthBase {
 
@@ -23,6 +24,7 @@ class SetHealth extends SetHealthBase {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setHealth((float)$health);
-        yield true;
+
+        yield Await::ALL;
     }
 }

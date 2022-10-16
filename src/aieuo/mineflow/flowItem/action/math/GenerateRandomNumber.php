@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GenerateRandomNumber extends TypeGetMathVariable {
     use ActionNameWithMineflowLanguage;
@@ -65,7 +66,8 @@ class GenerateRandomNumber extends TypeGetMathVariable {
 
         $rand = mt_rand((int)$min, (int)$max);
         $source->addVariable($resultName, new NumberVariable($rand));
-        yield true;
+
+        yield Await::ALL;
         return $rand;
     }
 

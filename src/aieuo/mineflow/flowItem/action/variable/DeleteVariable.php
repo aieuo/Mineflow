@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class DeleteVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -51,7 +53,8 @@ class DeleteVariable extends FlowItem {
         } else {
             Main::getVariableHelper()->delete($name);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

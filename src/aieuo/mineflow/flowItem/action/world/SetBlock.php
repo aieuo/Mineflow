@@ -14,6 +14,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
     use PositionFlowItemTrait, BlockFlowItemTrait;
@@ -46,7 +48,8 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
         $block = $this->getBlock($source);
 
         $position->world->setBlock($position, $block);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

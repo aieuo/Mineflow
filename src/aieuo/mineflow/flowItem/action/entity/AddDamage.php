@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\event\entity\EntityDamageEvent;
+use SOFe\AwaitGenerator\Await;
 
 class AddDamage extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -69,7 +70,8 @@ class AddDamage extends FlowItem implements EntityFlowItem {
 
         $event = new EntityDamageEvent($entity, $cause, (float)$damage);
         $entity->attack($event);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

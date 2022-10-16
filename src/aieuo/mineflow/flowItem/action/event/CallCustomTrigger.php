@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class CallCustomTrigger extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -46,7 +48,8 @@ class CallCustomTrigger extends FlowItem {
         $trigger = CustomTrigger::create($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
         $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

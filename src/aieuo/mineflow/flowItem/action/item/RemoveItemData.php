@@ -17,6 +17,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\nbt\NbtException;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveItemData extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -68,7 +69,7 @@ class RemoveItemData extends FlowItem implements ItemFlowItem {
             throw new InvalidFlowValueException(Language::get("variable.convert.nbt.failed", [$e->getMessage(), $key]));
         }
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use pocketmine\world\World;
+use SOFe\AwaitGenerator\Await;
 
 class SetWorldTime extends FlowItem implements WorldFlowItem {
     use WorldFlowItemTrait;
@@ -56,7 +57,8 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
         $this->throwIfInvalidNumber($time, 0, World::TIME_FULL);
 
         $world->setTime((int)$time);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

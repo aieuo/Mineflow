@@ -12,6 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
 use function array_map;
 use function implode;
 use function trim;
@@ -85,7 +86,8 @@ class GetLanguage extends FlowItem {
 
         $variable = new StringVariable(Language::get($key, $parameters, $language));
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

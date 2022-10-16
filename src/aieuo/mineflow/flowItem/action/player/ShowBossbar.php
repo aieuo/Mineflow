@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
 use pocketmine\network\mcpe\protocol\types\BossBarColor;
+use SOFe\AwaitGenerator\Await;
 use function array_keys;
 use function array_search;
 
@@ -114,7 +115,8 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         Bossbar::add($player, $id, $title, (float)$max, (float)$value / (float)$max, $color);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

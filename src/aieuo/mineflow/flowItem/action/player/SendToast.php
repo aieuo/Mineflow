@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\network\mcpe\protocol\ToastRequestPacket;
+use SOFe\AwaitGenerator\Await;
 
 class SendToast extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -66,7 +67,8 @@ class SendToast extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getNetworkSession()->sendDataPacket(ToastRequestPacket::create($title, $body));
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetEntity extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -68,7 +69,8 @@ class GetEntity extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntity.notFound", [$id]));
         }
         $source->addVariable($resultName, EntityVariable::fromObject($entity));
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

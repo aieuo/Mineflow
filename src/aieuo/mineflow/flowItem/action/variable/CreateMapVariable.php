@@ -14,6 +14,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use function implode;
+use SOFe\AwaitGenerator\Await;
 
 class CreateMapVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -92,7 +93,8 @@ class CreateMapVariable extends FlowItem {
         } else {
             $helper->add($name, $variable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

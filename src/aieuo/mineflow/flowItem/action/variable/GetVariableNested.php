@@ -14,6 +14,7 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetVariableNested extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -84,7 +85,8 @@ class GetVariableNested extends FlowItem {
         }
 
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

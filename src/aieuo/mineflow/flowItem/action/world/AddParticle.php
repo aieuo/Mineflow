@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class AddParticle extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -79,7 +80,8 @@ class AddParticle extends FlowItem implements PositionFlowItem {
             $pk->molangVariablesJson = "";
             Server::getInstance()->broadcastPackets($position->world->getPlayers(), [$pk]);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

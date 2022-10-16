@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 use function array_shift;
 use function count;
 use function implode;
@@ -69,7 +70,7 @@ class AddLanguageMappings extends FlowItem {
             Language::add([$key => $message], $language);
         }
 
-        yield true;
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

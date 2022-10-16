@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetDate extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -58,7 +59,8 @@ class GetDate extends FlowItem {
 
         $date = date($format);
         $source->addVariable($resultName, new StringVariable($date));
-        yield true;
+
+        yield Await::ALL;
         return $date;
     }
 

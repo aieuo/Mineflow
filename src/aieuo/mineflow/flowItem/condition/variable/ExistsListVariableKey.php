@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\ListVariable;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsListVariableKey extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -64,7 +65,7 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
 
-        yield true;
+        yield Await::ALL;
         return isset($value[$key]);
     }
 

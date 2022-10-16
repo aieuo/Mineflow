@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class UnsetImmobile extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -41,7 +43,8 @@ class UnsetImmobile extends FlowItem implements EntityFlowItem {
         $this->throwIfInvalidEntity($entity);
 
         $entity->setImmobile(false);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class ComparisonNumber extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -89,7 +90,8 @@ class ComparisonNumber extends FlowItem implements Condition {
             self::LESS_EQUAL => $value1 <= $value2,
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 

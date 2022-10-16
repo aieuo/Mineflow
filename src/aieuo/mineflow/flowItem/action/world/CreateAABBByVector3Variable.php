@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\Vector3VariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
+use SOFe\AwaitGenerator\Await;
 
 class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
     use Vector3FlowItemTrait;
@@ -70,7 +71,8 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         );
 
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 

@@ -18,6 +18,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class SendInputForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -74,20 +75,21 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        $this->sendForm($source, $player, $text, $resultName);
-        yield false;
+        yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
+            $this->sendForm($source, $player, $text, $resultName, $resolve);
+        });
     }
 
-    private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName): void {
+    private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName, callable $callback): void {
         (new CustomForm($text))
             ->setContents([
                 new Input($text, "", "", true),
-            ])->onReceive(function (Player $player, array $data) use ($source, $resultName) {
+            ])->onReceive(function (Player $player, array $data) use ($source, $resultName, $callback) {
                 $variable = new StringVariable($data[0]);
                 $source->addVariable($resultName, $variable);
-                $source->resume();
-            })->onClose(function (Player $player) use ($source, $text, $resultName) {
-                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);
+                $callback();
+            })->onClose(function (Player $player) use ($source, $text, $resultName, $callback) {
+                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName, $callback);
             })->show($player);
     }
 

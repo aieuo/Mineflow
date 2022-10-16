@@ -13,6 +13,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
@@ -51,7 +53,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
 
         $key = $source->replaceVariables($this->getKey());
 
-        yield true;
+        yield Await::ALL;
         return $config->getNested($key) !== null;
     }
 

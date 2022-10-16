@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use SOFe\AwaitGenerator\Await;
 
 class RandomNumber extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -69,7 +70,7 @@ class RandomNumber extends FlowItem implements Condition {
         $this->throwIfInvalidNumber($max);
         $this->throwIfInvalidNumber($value);
 
-        yield true;
+        yield Await::ALL;
         return mt_rand(min((int)$min, (int)$max), max((int)$min, (int)$max)) === (int)$value;
     }
 

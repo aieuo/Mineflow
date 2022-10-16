@@ -15,6 +15,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class GetPlayerByName extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -71,7 +72,8 @@ class GetPlayerByName extends FlowItem {
 
         $result = new PlayerVariable($player, $player->getName());
         $source->addVariable($resultName, $result);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

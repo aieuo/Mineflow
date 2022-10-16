@@ -18,6 +18,7 @@ use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
+use SOFe\AwaitGenerator\Await;
 use function array_map;
 
 abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFlowItem, WorldFlowItem {
@@ -68,7 +69,7 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
         $variable = new ListVariable(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $entities));
         $source->addVariable($result, $variable);
 
-        yield true;
+        yield Await::ALL;
         return $this->getResultName();
     }
 

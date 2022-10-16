@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class AddXpProgress extends AddXpBase {
 
@@ -24,6 +25,7 @@ class AddXpProgress extends AddXpBase {
         $new = $player->getXpManager()->getCurrentTotalXp() + (int)$xp;
         if ($new < 0) $xp = -$player->getXpManager()->getCurrentTotalXp();
         $player->getXpManager()->addXp((int)$xp);
-        yield true;
+
+        yield Await::ALL;
     }
 }

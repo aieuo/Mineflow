@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\math\Vector3;
+use SOFe\AwaitGenerator\Await;
 
 class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
@@ -100,7 +101,8 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
 
             $entity->setMotion(new Vector3($x, $y, $z));
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

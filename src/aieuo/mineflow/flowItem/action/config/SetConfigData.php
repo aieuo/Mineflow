@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
@@ -80,9 +81,9 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         }
 
         $config = $this->getConfig($source);
-
         $config->setNested($key, $value);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

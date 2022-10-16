@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
@@ -47,11 +49,11 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getScoreName());
-
         $board = $this->getScoreboard($source);
 
         $board->removeScore($name);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

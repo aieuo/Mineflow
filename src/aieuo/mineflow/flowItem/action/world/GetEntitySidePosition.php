@@ -20,6 +20,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\math\Facing;
 use pocketmine\world\Position;
+use SOFe\AwaitGenerator\Await;
 
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -156,7 +157,8 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         }
 
         $source->addVariable($resultName, new PositionVariable(Position::fromObject($pos, $entity->getWorld())));
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 

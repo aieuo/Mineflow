@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
+use SOFe\AwaitGenerator\Await;
 
 class DeleteListVariableContent extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -70,7 +71,8 @@ class DeleteListVariableContent extends FlowItem {
         }
 
         $variable->removeValueAt($key);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class CommandConsole extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -49,7 +50,8 @@ class CommandConsole extends FlowItem {
         $command = $source->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage()), $command);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

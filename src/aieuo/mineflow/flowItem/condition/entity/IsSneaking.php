@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use pocketmine\entity\Human;
+use SOFe\AwaitGenerator\Await;
 
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
@@ -40,7 +41,7 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        yield true;
+        yield Await::ALL;
         return $entity instanceof Human and $entity->isSneaking();
     }
 

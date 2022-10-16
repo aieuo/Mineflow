@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
+use SOFe\AwaitGenerator\Await;
 
 class CreateConfigVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -71,7 +72,8 @@ class CreateConfigVariable extends FlowItem {
 
         $variable = new ConfigVariable(ConfigHolder::getConfig($file));
         $source->addVariable($name, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 

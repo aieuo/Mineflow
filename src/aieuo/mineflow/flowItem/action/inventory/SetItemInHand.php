@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\inventory;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemInHand extends TypeItem {
 
@@ -21,6 +22,7 @@ class SetItemInHand extends TypeItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->getInventory()->setItemInHand($item);
-        yield true;
+
+        yield Await::ALL;
     }
 }

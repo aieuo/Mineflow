@@ -14,6 +14,8 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
+use function abs;
 
 class Calculate extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -121,7 +123,8 @@ class Calculate extends FlowItem {
         };
 
         $source->addVariable($resultName, new NumberVariable($result));
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 

@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\exception\RecipeInterruptException;
 use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
@@ -16,46 +17,41 @@ use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
+use SOFe\AwaitGenerator\Await;
 
 class FlowItemExecutor {
-
-    /* @var FlowItem[] */
-    private array $items;
-    private ?Entity $target;
-    /* @var Variable[] */
-    private array $variables;
-    private ?FlowItemExecutor $parent;
-    private ?Event $event;
-    private ?\Closure $onComplete;
-    private ?\Closure $onError;
-    private ?Recipe $sourceRecipe;
 
     private mixed $lastResult;
 
     private FlowItem $currentFlowItem;
     private int $currentIndex;
-    private \Generator $generator;
 
-    private bool $waiting = false;
-    private bool $exit = false;
-    private bool $resuming = false;
-
-    public function __construct(array $items, ?Entity $target, array $variables = [], ?self $parent = null, ?Event $event = null, \Closure $onComplete = null, \Closure $onError = null, ?Recipe $sourceRecipe = null) {
-        $this->items = $items;
-        $this->target = $target;
-        $this->variables = $variables;
-        $this->parent = $parent;
-        $this->event = $event;
-        $this->onComplete = $onComplete;
-        $this->onError = $onError;
-        $this->sourceRecipe = $sourceRecipe;
-
+    /**
+     * @param FlowItem[] $items
+     * @param Entity|null $target
+     * @param Variable[] $variables
+     * @param FlowItemExecutor|null $parent
+     * @param Event|null $event
+     * @param \Closure|null $onComplete
+     * @param \Closure|null $onError
+     * @param Recipe|null $sourceRecipe
+     */
+    public function __construct(
+        private array $items,
+        private ?Entity $target,
+        private array $variables = [],
+        private ?self $parent = null,
+        private ?Event $event = null,
+        private ?\Closure $onComplete = null,
+        private ?\Closure $onError = null,
+        private ?Recipe $sourceRecipe = null
+    ) {
         if ($event === null and $parent !== null) {
             $this->event = $parent->getEvent();
         }
     }
 
-    public function executeGenerator(): \Generator {
+    public function getGenerator(): \Generator {
         foreach ($this->items as $i => $item) {
             $this->currentIndex = $i;
             $this->currentFlowItem = $item;
@@ -63,58 +59,23 @@ class FlowItemExecutor {
         }
     }
 
-    public function execute(bool $first = true): bool {
-        $this->generator = $this->generator ?? $this->executeGenerator();
-
-        try {
-            if (!$first) $this->generator->next();
-
-            while ($this->generator->valid()) {
-                if ($this->exit) {
-                    $this->resuming = false;
-                    $this->waiting = false;
-                    return false;
-                }
-
-                $result = $this->generator->current();
-                if (!$result and !$this->resuming) {
-                    $this->waiting = true;
-                    return false;
-                }
-
-                if (!$result) {
-                    $this->resuming = false;
-                }
-
-                $this->generator->next();
+    public function execute(): bool {
+        Await::f2c(function () {
+            try {
+                yield from $this->getGenerator();
+            } catch (InvalidFlowValueException $e) {
+                Logger::warning(Language::get("action.error", [$e->getFlowItemName(), $e->getMessage()]), $this->target);
+                if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
+            } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|UnsupportedCalculationException $e) {
+                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
+                if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
+            } catch (RecipeInterruptException) {
+                // ignored
             }
-        } catch (InvalidFlowValueException $e) {
-            Logger::warning(Language::get("action.error", [$this->currentFlowItem->getName(), $e->getMessage()]), $this->target);
-            if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
-        } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|UnsupportedCalculationException $e) {
-            if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
-            if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
-        }
 
-        if ($this->onComplete !== null) ($this->onComplete)($this);
+            if ($this->onComplete !== null) ($this->onComplete)($this);
+        });
         return true;
-    }
-
-    public function resume(): void {
-        $this->parent?->resume();
-
-        $this->resuming = true;
-        if (!$this->waiting) return;
-
-        $this->resuming = false;
-        $this->waiting = false;
-        $this->execute(false);
-    }
-
-    public function exit(): void {
-        $this->parent?->exit();
-
-        $this->exit = true;
     }
 
     public function getTarget(): ?Entity {

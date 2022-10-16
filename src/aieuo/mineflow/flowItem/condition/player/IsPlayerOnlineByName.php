@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayerOnlineByName extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -47,7 +48,7 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
 
         $player = Server::getInstance()->getPlayerExact($name);
 
-        yield true;
+        yield Await::ALL;
         return $player instanceof Player;
     }
 

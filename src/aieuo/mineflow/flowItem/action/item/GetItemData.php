@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class GetItemData extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -78,7 +79,7 @@ class GetItemData extends FlowItem implements ItemFlowItem {
         $variable = Main::getVariableHelper()->tagToVariable($tag);
         $source->addVariable($resultName, $variable);
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

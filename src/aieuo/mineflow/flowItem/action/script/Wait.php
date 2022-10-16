@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use pocketmine\scheduler\ClosureTask;
+use SOFe\AwaitGenerator\Await;
 
 class Wait extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -46,12 +47,9 @@ class Wait extends FlowItem {
         $time = $source->replaceVariables($this->getTime());
         $this->throwIfInvalidNumber($time, 1 / 20);
 
-        Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function () use ($source): void {
-                $source->resume();
-            }
-        ), (int)((float)$time * 20));
-        yield false;
+        yield from Await::promise(function ($resolve) use($time) {
+            Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask($resolve), (int)($time * 20));
+        });
     }
 
     public function getEditFormElements(array $variables): array {

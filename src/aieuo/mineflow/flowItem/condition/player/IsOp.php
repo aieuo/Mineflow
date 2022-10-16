@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class IsOp extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -42,7 +43,7 @@ class IsOp extends FlowItem implements Condition, PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player);
 
-        yield true;
+        yield Await::ALL;
         return Server::getInstance()->isOp($player->getName());
     }
 

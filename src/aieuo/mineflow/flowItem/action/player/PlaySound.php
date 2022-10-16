@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
+use SOFe\AwaitGenerator\Await;
 
 class PlaySound extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -87,7 +88,8 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
         $player->getNetworkSession()->sendDataPacket($pk);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

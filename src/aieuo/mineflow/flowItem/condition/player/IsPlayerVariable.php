@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\condition\entity\CheckEntityState;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayerVariable extends CheckEntityState {
 
@@ -21,7 +22,7 @@ class IsPlayerVariable extends CheckEntityState {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        yield true;
+        yield Await::ALL;
         return $entity instanceof Player;
     }
 }

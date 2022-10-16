@@ -18,6 +18,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\nbt\JsonNbtParser;
 use pocketmine\nbt\NbtException;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -68,7 +69,7 @@ class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
             throw new InvalidFlowValueException(Language::get("variable.convert.nbt.failed", [$e->getMessage(), $json]));
         }
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

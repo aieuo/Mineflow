@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class CheckNothing extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -18,7 +19,7 @@ class CheckNothing extends FlowItem implements Condition {
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        yield true;
+        yield Await::ALL;
         return true;
     }
 

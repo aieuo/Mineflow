@@ -18,6 +18,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\nbt\NbtException;
+use SOFe\AwaitGenerator\Await;
 use function substr;
 
 class SetItemData extends FlowItem implements ItemFlowItem {
@@ -80,7 +81,7 @@ class SetItemData extends FlowItem implements ItemFlowItem {
             throw new InvalidFlowValueException(Language::get("variable.convert.nbt.failed", [$e->getMessage(), (string)$variable]));
         }
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

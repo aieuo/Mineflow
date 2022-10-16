@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class CountListVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -72,7 +73,8 @@ class CountListVariable extends FlowItem {
 
         $count = count($variable->getValue());
         $source->addVariable($resultName, new NumberVariable($count));
-        yield true;
+
+        yield Await::ALL;
         return $count;
     }
 

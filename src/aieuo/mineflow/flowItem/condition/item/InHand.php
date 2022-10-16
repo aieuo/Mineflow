@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class InHand extends TypeItem {
 
@@ -22,7 +23,7 @@ class InHand extends TypeItem {
 
         $hand = $player->getInventory()->getItemInHand();
 
-        yield true;
+        yield Await::ALL;
         return ($hand->getId() === $item->getId()
             and $hand->getMeta() === $item->getMeta()
             and $hand->getCount() >= $item->getCount()

@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsConfigFile extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -48,7 +49,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
 
         $name = Utils::getValidFileName($source->replaceVariables($this->getFileName()));
 
-        yield true;
+        yield Await::ALL;
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
     }
 

@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class IsActiveEntityVariable extends CheckEntityState {
 
@@ -20,7 +21,7 @@ class IsActiveEntityVariable extends CheckEntityState {
         $entity = $this->getEntity($source);
         $this->throwIfInvalidEntity($entity);
 
-        yield true;
+        yield Await::ALL;
         return $entity->isAlive() and !$entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());
     }
 }

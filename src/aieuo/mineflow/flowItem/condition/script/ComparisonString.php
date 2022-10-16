@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
@@ -89,7 +90,8 @@ class ComparisonString extends FlowItem implements Condition {
             self::ENDS_WITH => str_ends_with($value1, $value2),
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 

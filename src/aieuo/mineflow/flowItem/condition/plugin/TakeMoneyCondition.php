@@ -9,6 +9,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\TextFormat;
+use SOFe\AwaitGenerator\Await;
 
 class TakeMoneyCondition extends TypeMoney {
 
@@ -35,7 +36,7 @@ class TakeMoneyCondition extends TypeMoney {
             return true;
         }
 
-        yield true;
+        yield Await::ALL;
         return false;
     }
 }

@@ -13,6 +13,8 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\object\UnknownObjectVariable;
+use SOFe\AwaitGenerator\Await;
 use function implode;
 
 class CreateListVariable extends FlowItem {
@@ -80,7 +82,8 @@ class CreateListVariable extends FlowItem {
         } else {
             $helper->add($name, $variable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

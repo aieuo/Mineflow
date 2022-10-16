@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 use pocketmine\world\Position;
 
 class CreatePositionVariable extends FlowItem {
@@ -105,7 +106,8 @@ class CreatePositionVariable extends FlowItem {
 
         $variable = new PositionVariable($position);
         $source->addVariable($name, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 

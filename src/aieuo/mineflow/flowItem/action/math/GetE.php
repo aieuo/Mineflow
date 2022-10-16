@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetE extends TypeGetMathVariable {
 
@@ -18,7 +19,8 @@ class GetE extends TypeGetMathVariable {
 
         $resultName = $source->replaceVariables($this->getResultName());
         $source->addVariable($resultName, new NumberVariable(M_E));
-        yield true;
+
+        yield Await::ALL;
         return M_E;
     }
 }

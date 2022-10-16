@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -41,7 +43,7 @@ class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
         $player = $this->getPlayer($source);
         $this->throwIfInvalidPlayer($player, false);
 
-        yield true;
+        yield Await::ALL;
         return $player->isOnline();
     }
 

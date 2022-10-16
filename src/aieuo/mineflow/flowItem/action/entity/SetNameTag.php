@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -54,7 +55,8 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
 
         $entity->setNameTag($name);
         if ($entity instanceof Player) $entity->setDisplayName($name);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

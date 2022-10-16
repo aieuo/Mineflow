@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class IFNotAction extends IFActionBase {
 
@@ -17,7 +18,9 @@ class IFNotAction extends IFActionBase {
             if (yield from $condition->execute($source)) return false;
         }
 
-        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
+        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->getGenerator();
+        yield Await::ALL;
+
         return true;
     }
 }

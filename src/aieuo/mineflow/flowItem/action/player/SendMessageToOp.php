@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\player;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class SendMessageToOp extends TypeMessage {
 
@@ -24,6 +25,7 @@ class SendMessageToOp extends TypeMessage {
                 $player->sendMessage($message);
             }
         }
-        yield true;
+
+        yield Await::ALL;
     }
 }

@@ -17,6 +17,7 @@ use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Event;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -84,7 +85,8 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
             $data["else"],
             $options
         );
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

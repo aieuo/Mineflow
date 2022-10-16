@@ -15,6 +15,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class PlaySoundAt extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
@@ -87,7 +88,8 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $pk->volume = (float)$volume;
         $pk->pitch = (float)$pitch;
         Server::getInstance()->broadcastPackets($position->world->getPlayers(), [$pk]);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

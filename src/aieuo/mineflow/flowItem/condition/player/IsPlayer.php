@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\condition\entity\CheckEntityStateById;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayer extends CheckEntityStateById {
 
@@ -21,7 +22,7 @@ class IsPlayer extends CheckEntityStateById {
         $id = $source->replaceVariables($this->getEntityId());
         $this->throwIfInvalidNumber($id);
 
-        yield true;
+        yield Await::ALL;
         return EntityHolder::isPlayer((int)$id);
     }
 }

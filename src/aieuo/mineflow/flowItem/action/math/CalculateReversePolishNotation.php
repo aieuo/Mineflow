@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class CalculateReversePolishNotation extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -84,7 +85,8 @@ class CalculateReversePolishNotation extends FlowItem {
         $result = $stack[0];
 
         $source->addVariable($resultName, new NumberVariable($result));
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 

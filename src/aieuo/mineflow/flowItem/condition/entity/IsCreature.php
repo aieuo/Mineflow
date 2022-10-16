@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class IsCreature extends CheckEntityStateById {
 
@@ -22,7 +23,7 @@ class IsCreature extends CheckEntityStateById {
 
         $entity = EntityHolder::findEntity((int)$id);
 
-        yield true;
+        yield Await::ALL;
         return $entity instanceof Living;
     }
 }

@@ -13,6 +13,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -52,7 +54,7 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
 
         $permission = $this->getPlayerPermission();
 
-        yield true;
+        yield Await::ALL;
         return $player->hasPermission($permission);
     }
 

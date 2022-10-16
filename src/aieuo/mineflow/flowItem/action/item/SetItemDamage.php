@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use pocketmine\item\ItemFactory;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -57,7 +58,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $newItem = ItemFactory::getInstance()->get($item->getId(), (int)$damage, $item->getCount(), $item->getNamedTag());
         $this->getItemVariable($source)->setItem($newItem);
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 

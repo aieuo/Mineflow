@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\java\GameModeIdMap;
+use SOFe\AwaitGenerator\Await;
 
 class SetGamemode extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -62,7 +63,8 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         $this->throwIfInvalidPlayer($player);
 
         $player->setGamemode(GameModeIdMap::getInstance()->fromId((int)$gamemode));
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function getEditFormElements(array $variables): array {

@@ -15,6 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
 
 class EditString extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -114,7 +115,8 @@ class EditString extends FlowItem {
         }
 
         $source->addVariable($resultName, $result);
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 

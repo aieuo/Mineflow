@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\object\InventoryVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetArmorInventoryContents extends GetInventoryContentsBase {
 
@@ -23,7 +24,8 @@ class GetArmorInventoryContents extends GetInventoryContentsBase {
         $variable = new InventoryVariable($entity->getArmorInventory());
 
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 }

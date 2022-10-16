@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 use function floor;
 use function implode;
 
@@ -128,7 +129,8 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
 
         $recipe = new ShapedRecipe($shape, $ingredients, [$output]);
         Server::getInstance()->getCraftingManager()->registerShapedRecipe($recipe);
-        yield true;
+
+        yield Await::ALL;
     }
 
     public function trimShape(array $shape): array {
