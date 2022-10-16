@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\variable\object\ItemObjectVariable;
+use aieuo\mineflow\variable\object\LocationObjectVariable;
+use aieuo\mineflow\variable\object\PositionObjectVariable;
 use aieuo\mineflow\variable\object\Vector3ObjectVariable;
 use pocketmine\entity\Location;
 use pocketmine\item\Item;
@@ -37,11 +39,11 @@ class VariableDeserializer {
         });
         self::register("position", static function ($data) {
             $world = Server::getInstance()->getWorldManager()->getWorldByName($data["world"]);
-            return new Vector3ObjectVariable(new Position($data["x"], $data["y"], $data["z"], $world));
+            return new PositionObjectVariable(new Position($data["x"], $data["y"], $data["z"], $world));
         });
         self::register("location", static function ($data) {
             $world = Server::getInstance()->getWorldManager()->getWorldByName($data["world"]);
-            return new Vector3ObjectVariable(new Location($data["x"], $data["y"], $data["z"], $world, $data["yaw"], $data["pitch"]));
+            return new LocationObjectVariable(new Location($data["x"], $data["y"], $data["z"], $world, $data["yaw"], $data["pitch"]));
         });
     }
 
