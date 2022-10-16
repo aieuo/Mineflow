@@ -215,6 +215,7 @@ class FlowItemFactory {
 
     /** @var FlowItem[] */
     private static array $list = [];
+    /** @var FlowItem[] */
     private static array $aliases = [];
 
     public static function init(): void {
