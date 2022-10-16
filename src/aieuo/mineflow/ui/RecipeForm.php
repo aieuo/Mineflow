@@ -66,7 +66,7 @@ class RecipeForm {
 
                 $errors = [];
                 if (!Utils::isValidFileName($name)) $errors[] = ["@form.recipe.invalidName", 0];
-                if (!Utils::isValidFileName($group)) $errors[] = ["@form.recipe.invalidName", 1];
+                if (!Utils::isValidGroupName($group)) $errors[] = ["@form.recipe.invalidName", 1];
                 if (!empty($errors)) {
                     $it->resend($errors);
                     return;

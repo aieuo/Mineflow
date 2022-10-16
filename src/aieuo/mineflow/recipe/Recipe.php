@@ -385,6 +385,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         try {
             FileSystem::safeFilePutContents($path, $json);
+            $this->setRawData($json);
         } catch(\RuntimeException $e) {
             Main::getInstance()->getLogger()->error(Language::get("recipe.save.failed", [$this->getPathname()]));
             Main::getInstance()->getLogger()->logException($e);

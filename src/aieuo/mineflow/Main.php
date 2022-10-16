@@ -143,7 +143,7 @@ class Main extends PluginBase {
         return self::$variableHelper;
     }
 
-    #[Deprecated("Mineflow::getPluginVersion()")]
+    #[Deprecated(replacement: "Mineflow::getPluginVersion()")]
     public static function getPluginVersion(): string {
         return self::$pluginVersion;
     }

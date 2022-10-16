@@ -55,6 +55,9 @@ class VariableHelper {
 
     public function __construct(private Config $file) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+
+        VariableSerializer::init();
+        VariableDeserializer::init();
     }
 
     public function loadVariables(): void {
@@ -103,8 +106,13 @@ class VariableHelper {
 
     public function saveAll(): void {
         foreach ($this->variables as $name => $variable) {
-            if (!($variable instanceof \JsonSerializable) and $name !== "") continue;
-            $this->file->set($name, $variable);
+            $serialized = VariableSerializer::serialize($variable);
+
+            if ($serialized !== null) {
+                $this->file->set($name, $serialized);
+            } elseif ($variable instanceof \JsonSerializable) {
+                $this->file->set($name, $variable);
+            }
         }
         $this->file->save();
     }
@@ -415,7 +423,7 @@ class VariableHelper {
     }
 
     public function isSimpleVariableString(string $variable): bool {
-        return (bool)preg_match("/^{[^{}\[\].]+}$/u", $variable);
+        return (bool)preg_match("/^{[^{}\[\]]+}$/u", $variable);
     }
 
     public function isVariableString(string $variable): bool {
