@@ -39,11 +39,11 @@ class VariableDeserializer {
         });
         self::register(PositionVariable::getTypeName(), static function ($data) {
             $world = Server::getInstance()->getWorldManager()->getWorldByName($data["world"]);
-            return new Vector3Variable(new Position($data["x"], $data["y"], $data["z"], $world));
+            return new PositionVariable(new Position($data["x"], $data["y"], $data["z"], $world));
         });
         self::register(LocationVariable::getTypeName(), static function ($data) {
             $world = Server::getInstance()->getWorldManager()->getWorldByName($data["world"]);
-            return new Vector3Variable(new Location($data["x"], $data["y"], $data["z"], $world, $data["yaw"], $data["pitch"]));
+            return new LocationVariable(new Location($data["x"], $data["y"], $data["z"], $world, $data["yaw"], $data["pitch"]));
         });
     }
 
