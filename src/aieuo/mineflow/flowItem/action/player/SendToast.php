@@ -62,9 +62,7 @@ class SendToast extends FlowItem implements PlayerFlowItem {
 
         $title = $source->replaceVariables($this->getTitle());
         $body = $source->replaceVariables($this->getBody());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $player->getNetworkSession()->sendDataPacket(ToastRequestPacket::create($title, $body));
 

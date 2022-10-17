@@ -62,13 +62,10 @@ class IncrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getScoreName());
-        $score = $source->replaceVariables($this->getScore());
-
-        $this->throwIfInvalidNumber($score);
-
+        $score = $this->getInt($source->replaceVariables($this->getScore()));
         $board = $this->getScoreboard($source);
 
-        $board->setScore($name, ($board->getScore($name) ?? 0) + (int)$score);
+        $board->setScore($name, ($board->getScore($name) ?? 0) + $score);
 
         yield Await::ALL;
     }

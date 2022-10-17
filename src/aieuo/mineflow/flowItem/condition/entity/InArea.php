@@ -45,9 +45,7 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+        $entity = $this->getOnlineEntity($source);
         $pos1 = $this->getPosition($source, "pos1");
         $pos2 = $this->getPosition($source, "pos2");
         $pos = $entity->getLocation()->floor();

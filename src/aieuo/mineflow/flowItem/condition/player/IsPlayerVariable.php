@@ -19,8 +19,7 @@ class IsPlayerVariable extends CheckEntityState {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         yield Await::ALL;
         return $entity instanceof Player;

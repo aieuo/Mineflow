@@ -104,16 +104,11 @@ class Calculate2 extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
+        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
+        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value1);
-        $this->throwIfInvalidNumber($value2);
-
-        $value1 = (float)$value1;
-        $value2 = (float)$value2;
         $result = match ($operator) {
             self::CALC_MIN => min($value1, $value2),
             self::CALC_MAX => max($value1, $value2),

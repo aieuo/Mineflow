@@ -44,8 +44,7 @@ class Wait extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $time = $source->replaceVariables($this->getTime());
-        $this->throwIfInvalidNumber($time, 1 / 20);
+        $time = $this->getFloat($source->replaceVariables($this->getTime()), 1 / 20);
 
         yield from Await::promise(function ($resolve) use($time) {
             Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask($resolve), (int)($time * 20));

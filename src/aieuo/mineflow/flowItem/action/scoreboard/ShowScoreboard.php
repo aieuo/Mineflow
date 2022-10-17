@@ -43,9 +43,7 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+        $player = $this->getOnlinePlayer($source);
         $board = $this->getScoreboard($source);
 
         $board->show($player);

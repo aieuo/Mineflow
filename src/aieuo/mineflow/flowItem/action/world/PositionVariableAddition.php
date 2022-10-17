@@ -85,14 +85,10 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
         $pos = $this->getPosition($source);
 
-        $x = $source->replaceVariables($this->getX());
-        $y = $source->replaceVariables($this->getY());
-        $z = $source->replaceVariables($this->getZ());
+        $x = $this->getFloat($source->replaceVariables($this->getX()));
+        $y = $this->getFloat($source->replaceVariables($this->getY()));
+        $z = $this->getFloat($source->replaceVariables($this->getZ()));
         $name = $source->replaceVariables($this->getResultName());
-
-        $this->throwIfInvalidNumber($x);
-        $this->throwIfInvalidNumber($y);
-        $this->throwIfInvalidNumber($z);
 
         $position = Position::fromObject($pos->add((float)$x, (float)$y, (float)$z), $pos->getWorld());
 

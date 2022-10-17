@@ -49,14 +49,11 @@ class SetPitch extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $pitch = $source->replaceVariables($this->getPitch());
-        $this->throwIfInvalidNumber($pitch);
+        $pitch = $this->getFloat($source->replaceVariables($this->getPitch()));
+        $entity = $this->getOnlineEntity($source);
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setRotation($entity->getLocation()->getYaw(), (float)$pitch);
-        if ($entity instanceof Player) $entity->teleport($entity->getPosition(), $entity->getLocation()->getYaw(), (float)$pitch);
+        $entity->setRotation($entity->getLocation()->getYaw(), $pitch);
+        if ($entity instanceof Player) $entity->teleport($entity->getPosition(), $entity->getLocation()->getYaw(), $pitch);
 
         yield Await::ALL;
     }

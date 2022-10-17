@@ -60,15 +60,11 @@ class AddDamage extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $damage = $source->replaceVariables($this->getDamage());
+        $damage = $this->getFloat($source->replaceVariables($this->getDamage()), min: 1);
         $cause = $this->getCause();
+        $entity = $this->getOnlineEntity($source);
 
-        $this->throwIfInvalidNumber($damage, 1);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $event = new EntityDamageEvent($entity, $cause, (float)$damage);
+        $event = new EntityDamageEvent($entity, $cause, $damage);
         $entity->attack($event);
 
         yield Await::ALL;

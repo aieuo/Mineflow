@@ -48,14 +48,10 @@ class SetScale extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $health = $source->replaceVariables($this->getScale());
+        $scale = $this->getFloat($source->replaceVariables($this->getScale()), min: 0, exclude: [0]);
+        $entity = $this->getOnlineEntity($source);
 
-        $this->throwIfInvalidNumber($health, 0, null);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setScale((float)$health);
+        $entity->setScale($scale);
 
         yield Await::ALL;
     }

@@ -16,8 +16,7 @@ class IsGliding extends CheckPlayerState {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         yield Await::ALL;
         return $player->isGliding();

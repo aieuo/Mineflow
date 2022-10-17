@@ -19,5 +19,7 @@ interface EntityFlowItem {
     /** @throws InvalidFlowValueException */
     public function getEntity(FlowItemExecutor $source, string $name = ""): Entity;
 
-    public function throwIfInvalidEntity(Entity $entity): void;
+    /** @throws InvalidFlowValueException */
+    public function getOnlineEntity(FlowItemExecutor $source, string $name = ""): Entity;
+
 }

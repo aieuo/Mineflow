@@ -89,20 +89,17 @@ class CreatePositionVariable extends FlowItem {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getVariableName());
-        $x = $source->replaceVariables($this->getX());
-        $y = $source->replaceVariables($this->getY());
-        $z = $source->replaceVariables($this->getZ());
+        $x = $this->getFloat($source->replaceVariables($this->getX()));
+        $y = $this->getFloat($source->replaceVariables($this->getY()));
+        $z = $this->getFloat($source->replaceVariables($this->getZ()));
         $levelName = $source->replaceVariables($this->getWorld());
         $level = Server::getInstance()->getWorldManager()->getWorldByName($levelName);
 
-        $this->throwIfInvalidNumber($x);
-        $this->throwIfInvalidNumber($y);
-        $this->throwIfInvalidNumber($z);
         if ($level === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
-        $position = new Position((float)$x, (float)$y, (float)$z, $level);
+        $position = new Position($x, $y, $z, $level);
 
         $variable = new PositionVariable($position);
         $source->addVariable($name, $variable);

@@ -40,8 +40,7 @@ class IsOp extends FlowItem implements Condition, PlayerFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         yield Await::ALL;
         return Server::getInstance()->isOp($player->getName());

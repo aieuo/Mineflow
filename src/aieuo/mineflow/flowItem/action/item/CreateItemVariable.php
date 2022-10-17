@@ -89,8 +89,7 @@ class CreateItemVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createItem.item.notFound"));
         }
         if (!empty($count)) {
-            $this->throwIfInvalidNumber($count, 0);
-            $item->setCount((int)$count);
+            $item->setCount($this->getInt($count, 0));
         } else {
             $item->setCount($item->getMaxStackSize());
         }

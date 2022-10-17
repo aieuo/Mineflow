@@ -104,8 +104,7 @@ class EditString extends FlowItem {
                 $result = new StringVariable(str_replace($value2, "", $value1));
                 break;
             case self::TYPE_REPEAT:
-                $this->throwIfInvalidNumber($value2, 1);
-                $result = new StringVariable(str_repeat($value1, (int)$value2));
+                $result = new StringVariable(str_repeat($value1, $this->getInt($value2, 1)));
                 break;
             case self::TYPE_SPLIT:
                 $result = new ListVariable(array_map(fn(string $str) => new StringVariable($str), explode($value2, $value1)));

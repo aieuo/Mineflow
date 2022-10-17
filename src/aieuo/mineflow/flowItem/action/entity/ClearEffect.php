@@ -58,8 +58,7 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
         if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         if ($entity instanceof Living) {
             $entity->getEffects()->remove($effect);

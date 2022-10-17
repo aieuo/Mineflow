@@ -51,8 +51,7 @@ class AllowClimbWalls extends FlowItem implements PlayerFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $player->setCanClimbWalls($this->isAllow());
 

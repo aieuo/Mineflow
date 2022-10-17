@@ -25,13 +25,11 @@ class OverMoney extends TypeMoney {
         }
 
         $name = $source->replaceVariables($this->getPlayerName());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()));
 
         $myMoney = Economy::getPlugin()->getMoney($name);
 
         yield Await::ALL;
-        return $myMoney >= (int)$amount;
+        return $myMoney >= $amount;
     }
 }

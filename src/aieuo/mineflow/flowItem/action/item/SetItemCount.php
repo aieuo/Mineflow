@@ -50,12 +50,10 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $count = $source->replaceVariables($this->getCount());
-        $this->throwIfInvalidNumber($count, 0);
-
+        $count = $this->getInt($source->replaceVariables($this->getCount()), 0);
         $item = $this->getItem($source);
 
-        $item->setCount((int)$count);
+        $item->setCount($count);
 
         yield Await::ALL;
         return $this->getItemVariableName();

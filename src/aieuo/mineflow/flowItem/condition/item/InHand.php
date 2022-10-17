@@ -17,9 +17,7 @@ class InHand extends TypeItem {
         $this->throwIfCannotExecute();
 
         $item = $this->getItem($source);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $hand = $player->getInventory()->getItemInHand();
 

@@ -73,11 +73,9 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
 
         $position = $this->getPosition($source);
         $result = $source->replaceVariables($this->getResultName());
+        $maxDistance = $this->getFloat($source->replaceVariables($this->getMaxDistance()));
 
-        $maxDistance = $source->replaceVariables($this->getMaxDistance());
-        $this->throwIfInvalidNumber($maxDistance);
-
-        $entity = $position->world->getNearestEntity($position, (float)$maxDistance, $this->getTargetClass());
+        $entity = $position->world->getNearestEntity($position, $maxDistance, $this->getTargetClass());
 
         $variable = $entity === null ? new NullVariable() : EntityVariable::fromObject($entity);
         $source->addVariable($result, $variable);

@@ -62,9 +62,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
 
         $name = $source->replaceVariables($this->getChainName());
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+        $player = $this->getOnlinePlayer($source);
         if (Server::getInstance()->getPluginManager()->getPlugin("if") === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.otherPlugin.notFound", ["if"]));
         }

@@ -55,9 +55,7 @@ class Kick extends FlowItem implements PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $reason = $source->replaceVariables($this->getReason());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
             $player->kick($reason);

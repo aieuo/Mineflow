@@ -81,8 +81,8 @@ class AddVariable extends FlowItem {
                 $variable = new StringVariable($value);
                 break;
             case NumberVariable::getTypeName():
-                $this->throwIfInvalidNumber($value);
-                $variable = new NumberVariable((float)$value);
+                $value = $this->getFloat($value);
+                $variable = new NumberVariable($value);
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.error.recipe"));

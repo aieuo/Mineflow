@@ -86,16 +86,13 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        $count = $source->replaceVariables($this->repeatCount);
-        $this->throwIfInvalidNumber($count, 1);
-
-        $start = $source->replaceVariables($this->startIndex);
-        $this->throwIfInvalidNumber($start);
+        $count = $this->getInt($source->replaceVariables($this->repeatCount), 1);
+        $start = $this->getInt($source->replaceVariables($this->startIndex));
 
         $name = $this->counterName;
-        $end = (int)$start + (int)$count;
+        $end = $start + $count;
 
-        for ($i = (int)$start; $i < $end; $i++) {
+        for ($i = $start; $i < $end; $i++) {
             yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
                 $name => new NumberVariable($i)
             ], $source))->getGenerator();

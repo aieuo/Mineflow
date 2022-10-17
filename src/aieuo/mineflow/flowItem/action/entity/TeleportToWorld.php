@@ -68,8 +68,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         $pos = $this->safeSpawn ? $world->getSafeSpawn() : $world->getSpawnLocation();
         $entity->teleport($pos);

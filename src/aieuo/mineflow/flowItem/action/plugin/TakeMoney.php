@@ -25,12 +25,10 @@ class TakeMoney extends TypeMoney {
         }
 
         $name = $source->replaceVariables($this->getPlayerName());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount, 1);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()), 1);
 
         $economy = Economy::getPlugin();
-        $economy->takeMoney($name, (int)$amount);
+        $economy->takeMoney($name, $amount);
 
         yield Await::ALL;
     }

@@ -95,13 +95,10 @@ class Calculate extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value = $source->replaceVariables($this->getValue());
+        $value = $this->getFloat($source->replaceVariables($this->getValue()));
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value);
-
-        $value = (float)$value;
         $result = match ($operator) {
             self::SQUARE => $value * $value,
             self::SQUARE_ROOT => sqrt($value),

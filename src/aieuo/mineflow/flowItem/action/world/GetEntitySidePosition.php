@@ -120,14 +120,10 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+        $entity = $this->getOnlineEntity($source);
         $side = $source->replaceVariables($this->getDirection());
-        $step = $source->replaceVariables($this->getSteps());
+        $step = $this->getInt($source->replaceVariables($this->getSteps()));
         $resultName = $source->replaceVariables($this->getResultName());
-
-        $this->throwIfInvalidNumber($step);
 
         $direction = $entity->getHorizontalFacing();
         $pos = $entity->getPosition()->floor()->add(0.5, 0.5, 0.5);
@@ -138,7 +134,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
             case self::SIDE_SOUTH:
             case self::SIDE_WEST:
             case self::SIDE_EAST:
-                $pos = $pos->getSide($this->vector3SideMap[$side], (int)$step);
+                $pos = $pos->getSide($this->vector3SideMap[$side], $step);
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case self::SIDE_LEFT:
@@ -150,7 +146,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
             case self::SIDE_RIGHT:
                 $direction++;
             case self::SIDE_FRONT:
-                $pos = $pos->getSide($this->directionSideMap[$direction % 4], (int)$step);
+                $pos = $pos->getSide($this->directionSideMap[$direction % 4], $step);
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntitySide.direction.notFound", [$side]));

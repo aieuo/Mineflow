@@ -18,8 +18,7 @@ class OnlinePlayerMoreThan extends OnlinePlayerCount {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value = $source->replaceVariables($this->getValue());
-        $this->throwIfInvalidNumber($value);
+        $value = $this->getInt($source->replaceVariables($this->getValue()));
 
         yield Await::ALL;
         return count(Server::getInstance()->getOnlinePlayers()) > $value;

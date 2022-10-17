@@ -87,9 +87,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
 
         $text = $source->replaceVariables($this->getFormText());
         $resultName = $source->replaceVariables($this->getResultName());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
             $this->sendForm($source, $player, $text, $resultName, $resolve);

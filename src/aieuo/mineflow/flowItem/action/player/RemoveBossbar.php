@@ -50,9 +50,7 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $id = $source->replaceVariables($this->getBarId());
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         Bossbar::remove($player, $id);
 

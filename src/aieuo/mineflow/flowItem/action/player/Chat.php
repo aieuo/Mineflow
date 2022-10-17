@@ -18,9 +18,7 @@ class Chat extends TypePlayerMessage {
         $this->throwIfCannotExecute();
 
         $message = Language::replace($source->replaceVariables($this->getMessage()));
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $player->chat($message);
 

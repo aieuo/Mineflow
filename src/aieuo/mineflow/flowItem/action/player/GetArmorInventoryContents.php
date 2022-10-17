@@ -18,9 +18,7 @@ class GetArmorInventoryContents extends GetInventoryContentsBase {
         $this->throwIfCannotExecute();
 
         $resultName = $source->replaceVariables($this->getResultName());
-
-        $entity = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($entity);
+        $entity = $this->getOnlinePlayer($source);
         $variable = new InventoryVariable($entity->getArmorInventory());
 
         $source->addVariable($resultName, $variable);

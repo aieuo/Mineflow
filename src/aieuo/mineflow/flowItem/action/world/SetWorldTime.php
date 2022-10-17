@@ -52,11 +52,9 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
         $this->throwIfCannotExecute();
 
         $world = $this->getWorld($source);
-        $time = $source->replaceVariables($this->getTime());
+        $time = $this->getInt($source->replaceVariables($this->getTime()), 0, World::TIME_FULL);
 
-        $this->throwIfInvalidNumber($time, 0, World::TIME_FULL);
-
-        $world->setTime((int)$time);
+        $world->setTime($time);
 
         yield Await::ALL;
     }

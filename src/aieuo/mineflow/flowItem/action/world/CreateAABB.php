@@ -104,27 +104,20 @@ class CreateAABB extends FlowItem {
         $this->throwIfCannotExecute();
 
         $name = $source->replaceVariables($this->getVariableName());
-        $minX = $source->replaceVariables($this->getMinX());
-        $minY = $source->replaceVariables($this->getMinY());
-        $minZ = $source->replaceVariables($this->getMinZ());
-        $maxX = $source->replaceVariables($this->getMaxX());
-        $maxY = $source->replaceVariables($this->getMaxY());
-        $maxZ = $source->replaceVariables($this->getMaxZ());
-
-        $this->throwIfInvalidNumber($minX);
-        $this->throwIfInvalidNumber($minY);
-        $this->throwIfInvalidNumber($minZ);
-        $this->throwIfInvalidNumber($maxX);
-        $this->throwIfInvalidNumber($maxY);
-        $this->throwIfInvalidNumber($maxZ);
+        $minX = $this->getFloat($source->replaceVariables($this->getMinX()));
+        $minY = $this->getFloat($source->replaceVariables($this->getMinY()));
+        $minZ = $this->getFloat($source->replaceVariables($this->getMinZ()));
+        $maxX = $this->getFloat($source->replaceVariables($this->getMaxX()));
+        $maxY = $this->getFloat($source->replaceVariables($this->getMaxY()));
+        $maxZ = $this->getFloat($source->replaceVariables($this->getMaxZ()));
 
         $aabb = new AxisAlignedBB(
-            min((float)$minX, (float)$maxX),
-            min((float)$minY, (float)$maxY),
-            min((float)$minZ, (float)$maxZ),
-            max((float)$minX, (float)$maxX),
-            max((float)$minY, (float)$maxY),
-            max((float)$minZ, (float)$maxZ),
+            min($minX, $maxX),
+            min($minY, $maxY),
+            min($minZ, $maxZ),
+            max($minX, $maxX),
+            max($minY, $maxY),
+            max($minZ, $maxZ),
         );
 
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));

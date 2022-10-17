@@ -25,12 +25,10 @@ class SetMoney extends TypeMoney {
         }
 
         $name = $source->replaceVariables($this->getPlayerName());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount, 0);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()), 0);
 
         $economy = Economy::getPlugin();
-        $economy->setMoney($name, (int)$amount);
+        $economy->setMoney($name, $amount);
 
         yield Await::ALL;
     }

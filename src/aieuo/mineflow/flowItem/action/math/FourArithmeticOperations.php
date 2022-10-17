@@ -86,41 +86,19 @@ class FourArithmeticOperations extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
+        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
+        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value1);
-        $this->throwIfInvalidNumber($value2);
-
-        switch ($operator) {
-            case self::ADDITION:
-                $result = (float)$value1 + (float)$value2;
-                break;
-            case self::SUBTRACTION:
-                $result = (float)$value1 - (float)$value2;
-                break;
-            case self::MULTIPLICATION:
-                $result = (float)$value1 * (float)$value2;
-                break;
-            case self::DIVISION:
-                /** @noinspection TypeUnsafeComparisonInspection */
-                if ($value2 == 0) {
-                    throw new InvalidFlowValueException($this->getName(), Language::get("variable.number.div.0"));
-                }
-                $result = (float)$value1 / (float)$value2;
-                break;
-            case self::MODULO:
-                /** @noinspection TypeUnsafeComparisonInspection */
-                if ($value2 == 0) {
-                    throw new InvalidFlowValueException($this->getName(), Language::get("variable.number.div.0"));
-                }
-                $result = (float)$value1 % (float)$value2;
-                break;
-            default:
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
-        }
+        $result = match ($operator) {
+            self::ADDITION => $value1 + $value2,
+            self::SUBTRACTION => $value1 - $value2,
+            self::MULTIPLICATION => $value1 * $value2,
+            self::DIVISION => $value1 / $this->getFloat($value2, exclude: [0.0]),
+            self::MODULO => $value1 % $this->getFloat($value2, exclude: [0.0]),
+            default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
+        };
 
         $source->addVariable($resultName, new NumberVariable($result));
 

@@ -17,10 +17,9 @@ class IsActiveEntity extends CheckEntityStateById {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
 
         yield Await::ALL;
-        return EntityHolder::isActive((int)$id);
+        return EntityHolder::isActive($id);
     }
 }

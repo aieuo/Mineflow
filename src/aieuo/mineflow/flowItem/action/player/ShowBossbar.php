@@ -103,18 +103,14 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         $this->throwIfCannotExecute();
 
         $title = $source->replaceVariables($this->getTitle());
-        $max = $source->replaceVariables($this->getMax());
-        $value = $source->replaceVariables($this->getValue());
+        $max = $this->getFloat($source->replaceVariables($this->getMax()), 1);
+        $value = $this->getFloat($source->replaceVariables($this->getValue()));
         $id = $source->replaceVariables($this->getBarId());
         $color = $this->colors[$source->replaceVariables($this->getColor())] ?? BossBarColor::PURPLE;
 
-        $this->throwIfInvalidNumber($max, 1);
-        $this->throwIfInvalidNumber($value);
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        Bossbar::add($player, $id, $title, (float)$max, (float)$value / (float)$max, $color);
+        Bossbar::add($player, $id, $title, $max, $value / $max, $color);
 
         yield Await::ALL;
     }

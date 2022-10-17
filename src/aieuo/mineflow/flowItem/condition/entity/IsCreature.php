@@ -18,10 +18,8 @@ class IsCreature extends CheckEntityStateById {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
-
-        $entity = EntityHolder::findEntity((int)$id);
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
+        $entity = EntityHolder::findEntity($id);
 
         yield Await::ALL;
         return $entity instanceof Living;

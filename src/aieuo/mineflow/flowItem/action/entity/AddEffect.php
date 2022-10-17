@@ -79,20 +79,16 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         $this->throwIfCannotExecute();
 
         $effectId = $source->replaceVariables($this->getEffectId());
-        $time = $source->replaceVariables($this->getTime());
-        $power = $source->replaceVariables($this->getPower());
+        $time = $this->getInt($source->replaceVariables($this->getTime()));
+        $power = $this->getInt($source->replaceVariables($this->getPower()));
+        $entity = $this->getOnlineEntity($source);
 
         $effect = StringToEffectParser::getInstance()->parse($effectId);
         if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
-        $this->throwIfInvalidNumber($time);
-        $this->throwIfInvalidNumber($power);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
 
         if ($entity instanceof Living) {
-            $entity->getEffects()->add(new EffectInstance($effect, (int)$time * 20, (int)$power - 1, $this->visible));
+            $entity->getEffects()->add(new EffectInstance($effect, $time * 20, $power - 1, $this->visible));
         }
 
         yield Await::ALL;

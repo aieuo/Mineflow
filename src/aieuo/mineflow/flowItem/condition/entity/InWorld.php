@@ -11,7 +11,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class InWorld extends FlowItem implements Condition, EntityFlowItem {
@@ -47,9 +46,7 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+        $entity = $this->getOnlineEntity($source);
         $world = $source->replaceVariables($this->getWorld());
 
         yield Await::ALL;

@@ -56,13 +56,10 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $gamemode = $source->replaceVariables($this->getGamemode());
-        $this->throwIfInvalidNumber($gamemode, 0, 3);
+        $gamemode = $this->getInt($source->replaceVariables($this->getGamemode()), 0, 3);
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $player->setGamemode(GameModeIdMap::getInstance()->fromId((int)$gamemode));
+        $player->setGamemode(GameModeIdMap::getInstance()->fromId($gamemode));
 
         yield Await::ALL;
     }
