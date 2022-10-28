@@ -59,9 +59,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         return $this->getConfigVariableName() !== "" and $this->key !== "" and $this->value !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $key = $source->replaceVariables($this->getKey());
         $value = $this->getValue();
 

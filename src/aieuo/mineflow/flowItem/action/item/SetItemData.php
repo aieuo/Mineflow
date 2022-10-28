@@ -65,9 +65,7 @@ class SetItemData extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->getKey() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
         $key = $source->replaceVariables($this->getKey());
         $variable = $this->getValueVariable($source);

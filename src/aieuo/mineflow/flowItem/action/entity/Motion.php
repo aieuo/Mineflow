@@ -54,9 +54,7 @@ class Motion extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $motions = array_map(fn($value) => $this->getFloat($source->replaceVariables($value)), $this->getPosition());
         $entity = $this->getOnlineEntity($source);
 

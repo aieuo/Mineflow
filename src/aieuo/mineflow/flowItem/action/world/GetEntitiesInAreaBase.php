@@ -58,9 +58,7 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
         return $this->getAxisAlignedBBVariableName() !== "" and $this->getWorldVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $aabb = $this->getAxisAlignedBB($source);
         $world = $this->getWorld($source);
         $result = $source->replaceVariables($this->getResultName());

@@ -61,9 +61,7 @@ class CreateListVariable extends FlowItem {
         return $this->variableName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $values = $this->getVariableValue();

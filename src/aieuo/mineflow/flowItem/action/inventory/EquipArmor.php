@@ -57,9 +57,7 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $index = $this->getInt($source->replaceVariables($this->getIndex()), 0, 3);
         $entity = $this->getOnlineEntity($source);
         $item = $this->getItem($source);

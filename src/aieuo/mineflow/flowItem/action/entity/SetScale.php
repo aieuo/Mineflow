@@ -45,9 +45,7 @@ class SetScale extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->scale !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $scale = $this->getFloat($source->replaceVariables($this->getScale()), min: 0, exclude: [0]);
         $entity = $this->getOnlineEntity($source);
 

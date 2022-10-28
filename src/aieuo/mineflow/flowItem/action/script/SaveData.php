@@ -22,7 +22,7 @@ class SaveData extends FlowItem {
         return true;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         Main::getRecipeManager()->saveAll();
         Main::getFormManager()->saveAll();
         Main::getVariableHelper()->saveAll();

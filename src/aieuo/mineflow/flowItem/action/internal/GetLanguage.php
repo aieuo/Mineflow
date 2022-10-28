@@ -76,9 +76,7 @@ class GetLanguage extends FlowItem {
         return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $language = $source->replaceVariables($this->getLanguage());
         $key = $source->replaceVariables($this->getKey());
         $parameters = array_map(fn($parameter) => $source->replaceVariables($parameter), $this->getParameters());

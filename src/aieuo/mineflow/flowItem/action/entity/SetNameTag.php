@@ -45,9 +45,7 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->newName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getNewName());
         $entity = $this->getOnlineEntity($source);
 

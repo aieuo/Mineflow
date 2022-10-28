@@ -99,9 +99,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->title !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $title = $source->replaceVariables($this->getTitle());
         $max = $this->getFloat($source->replaceVariables($this->getMax()), 1);
         $value = $this->getFloat($source->replaceVariables($this->getValue()));

@@ -63,9 +63,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->particle !== "" and $this->amount !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $particleName = $source->replaceVariables($this->getParticle());
         $amount = $this->getInt($source->replaceVariables($this->getAmount()), 1);
 

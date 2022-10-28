@@ -57,9 +57,7 @@ class SendToast extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $title = $source->replaceVariables($this->getTitle());
         $body = $source->replaceVariables($this->getBody());
         $player = $this->getOnlinePlayer($source);

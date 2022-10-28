@@ -36,9 +36,7 @@ class SetImmobile extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
         $entity->setImmobile(true);
 

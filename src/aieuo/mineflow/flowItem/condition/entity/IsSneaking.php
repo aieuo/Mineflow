@@ -35,9 +35,7 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         return $this->getEntityVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
 
         yield Await::ALL;

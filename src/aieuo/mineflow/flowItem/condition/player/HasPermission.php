@@ -46,9 +46,7 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPlayerPermission() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getOnlinePlayer($source);
         $permission = $this->getPlayerPermission();
 

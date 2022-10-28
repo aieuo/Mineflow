@@ -45,9 +45,7 @@ class SetFood extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->food !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $health = $this->getInt($source->replaceVariables($this->getFood()), 0, 20);
         $entity = $this->getOnlinePlayer($source);
 

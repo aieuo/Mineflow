@@ -57,9 +57,7 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         return $this->damage !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $damage = $this->getFloat($source->replaceVariables($this->getDamage()), min: 1);
         $cause = $this->getCause();
         $entity = $this->getOnlineEntity($source);

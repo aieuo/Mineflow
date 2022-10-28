@@ -76,9 +76,7 @@ class CreateItemVariable extends FlowItem {
         return $this->variableName !== "" and $this->itemId !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $id = $source->replaceVariables($this->getItemId());
         $count = $source->replaceVariables($this->getItemCount());

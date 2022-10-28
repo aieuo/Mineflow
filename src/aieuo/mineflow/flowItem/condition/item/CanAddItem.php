@@ -13,9 +13,7 @@ class CanAddItem extends TypeItem {
         parent::__construct(self::CAN_ADD_ITEM, player: $player, item: $item);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
         $player = $this->getOnlinePlayer($source);
 

@@ -15,9 +15,7 @@ class BroadcastMessage extends TypeMessage {
         parent::__construct(self::BROADCAST_MESSAGE, message: $message);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $message = Language::replace($source->replaceVariables($this->getMessage()));
         Server::getInstance()->broadcastMessage($message);
 

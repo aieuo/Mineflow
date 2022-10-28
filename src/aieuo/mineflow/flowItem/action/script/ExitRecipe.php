@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\exception\RecipeInterruptException;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -18,7 +18,7 @@ class ExitRecipe extends FlowItem {
         parent::__construct(self::EXIT_RECIPE, FlowItemCategory::SCRIPT);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         yield Await::ALL;
         throw new RecipeInterruptException();
     }

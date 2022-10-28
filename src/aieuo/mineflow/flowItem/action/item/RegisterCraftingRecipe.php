@@ -95,9 +95,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         return $items;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $output = $this->getItem($source, "output");
         $shape = ["", "", ""];
         $ingredients = [];

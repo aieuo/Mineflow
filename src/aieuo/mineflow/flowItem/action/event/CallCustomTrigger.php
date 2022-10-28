@@ -41,9 +41,7 @@ class CallCustomTrigger extends FlowItem {
         return $this->triggerName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getTriggerName());
         $trigger = CustomTrigger::create($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);

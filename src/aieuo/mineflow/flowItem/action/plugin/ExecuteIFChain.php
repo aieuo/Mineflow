@@ -57,9 +57,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         return $this->getChainName() !== "" and $this->getPlayerVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getChainName());
 
         $player = $this->getOnlinePlayer($source);

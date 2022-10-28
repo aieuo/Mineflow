@@ -49,9 +49,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
         return $this->getConfigVariableName() !== "" and $this->key !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $key = $source->replaceVariables($this->getKey());
 
         $config = $this->getConfig($source);

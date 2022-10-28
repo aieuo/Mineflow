@@ -15,9 +15,7 @@ class IsCreature extends CheckEntityStateById {
         parent::__construct(self::IS_CREATURE, entityId: $entityId);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $id = $this->getInt($source->replaceVariables($this->getEntityId()));
         $entity = EntityHolder::findEntity($id);
 

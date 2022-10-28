@@ -17,9 +17,7 @@ class SendMessageToConsole extends TypeMessage {
         parent::__construct(self::SEND_MESSAGE_TO_CONSOLE, FlowItemCategory::COMMON, $message);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $message = Language::replace($source->replaceVariables($this->getMessage()));
         Main::getInstance()->getLogger()->info($message);
 

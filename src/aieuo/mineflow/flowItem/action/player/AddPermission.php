@@ -15,9 +15,7 @@ class AddPermission extends AddPermissionBase {
         parent::__construct(self::ADD_PERMISSION, FlowItemCategory::PLAYER, player: $player, playerPermission: $playerPermission);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $permission = $source->replaceVariables($this->getPlayerPermission());
         $player = $this->getOnlinePlayer($source);
 

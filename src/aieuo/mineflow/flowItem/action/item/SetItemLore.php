@@ -50,9 +50,7 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
 
         $lore = array_map(fn(string $lore) => $source->replaceVariables($lore), $this->getLore());

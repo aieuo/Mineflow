@@ -56,9 +56,7 @@ class GetEntity extends FlowItem {
         return $this->getKey() !== "" and !empty($this->getResultName());
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $id = $this->getInt($source->replaceVariables($this->getEntityId()), min: 0);
         $resultName = $source->replaceVariables($this->getReturnName());
 

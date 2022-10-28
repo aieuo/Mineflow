@@ -37,9 +37,7 @@ class IsOp extends FlowItem implements Condition, PlayerFlowItem {
         return $this->getPlayerVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getOnlinePlayer($source);
 
         yield Await::ALL;

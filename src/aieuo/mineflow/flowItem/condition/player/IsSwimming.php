@@ -13,9 +13,7 @@ class IsSwimming extends CheckPlayerState {
         parent::__construct(self::IS_SWIMMING, player: $player);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getOnlinePlayer($source);
 
         yield Await::ALL;

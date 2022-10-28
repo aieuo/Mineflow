@@ -40,9 +40,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         return $this->getConfigVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $config = $this->getConfig($source);
         $config->save();
 

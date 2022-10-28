@@ -59,9 +59,7 @@ class GetMoney extends FlowItem {
         return $this->getPlayerName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         if (!Economy::isPluginLoaded()) {
             throw new InvalidFlowValueException($this->getName(), TextFormat::RED.Language::get("economy.notfound"));
         }

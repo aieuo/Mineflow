@@ -44,9 +44,7 @@ class DeleteVariable extends FlowItem {
         return $this->variableName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         if ($this->isLocal) {
             $source->removeVariable($name);

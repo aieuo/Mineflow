@@ -47,9 +47,7 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getItemName());
 
         $item = $this->getItem($source);

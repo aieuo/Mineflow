@@ -41,9 +41,7 @@ class Wait extends FlowItem {
         return $this->getTime() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $time = $this->getFloat($source->replaceVariables($this->getTime()), 1 / 20);
 
         yield from Await::promise(function ($resolve) use($time) {

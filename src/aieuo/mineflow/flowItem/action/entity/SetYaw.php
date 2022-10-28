@@ -46,9 +46,7 @@ class SetYaw extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->yaw !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $yaw = $this->getFloat($source->replaceVariables($this->getYaw()));
         $entity = $this->getOnlineEntity($source);
 

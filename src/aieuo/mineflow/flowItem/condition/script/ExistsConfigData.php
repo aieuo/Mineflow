@@ -46,9 +46,7 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         return $this->getConfigVariableName() !== "" and $this->getKey() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $config = $this->getConfig($source);
 
         $key = $source->replaceVariables($this->getKey());

@@ -59,9 +59,7 @@ class AddSpecificLanguageMapping extends FlowItem {
         return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getMessage() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $language = $source->replaceVariables($this->getLanguage());
         $key = $source->replaceVariables($this->getKey());
         $message = $source->replaceVariables($this->getMessage());

@@ -64,9 +64,7 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
 
         $id = $source->replaceVariables($this->getEnchantId());

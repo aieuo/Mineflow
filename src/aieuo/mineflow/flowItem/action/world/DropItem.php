@@ -40,9 +40,7 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getItemVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->getPosition($source);
 
         $item = $this->getItem($source);

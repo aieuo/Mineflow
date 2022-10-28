@@ -117,9 +117,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
         $side = $source->replaceVariables($this->getDirection());
         $step = $this->getInt($source->replaceVariables($this->getSteps()));

@@ -68,9 +68,7 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
         return $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->getPosition($source);
         $result = $source->replaceVariables($this->getResultName());
         $maxDistance = $this->getFloat($source->replaceVariables($this->getMaxDistance()));

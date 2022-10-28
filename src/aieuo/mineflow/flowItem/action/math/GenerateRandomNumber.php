@@ -54,9 +54,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return $this->min !== "" and $this->max !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $min = $this->getInt($source->replaceVariables($this->getMin()));
         $max = $this->getInt($source->replaceVariables($this->getMax()));
         $resultName = $source->replaceVariables($this->getResultName());

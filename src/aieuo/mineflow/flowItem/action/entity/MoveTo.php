@@ -75,9 +75,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         return $this->speedZ;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
         $position = $this->getPosition($source);
         $entityPosition = $entity->getLocation();

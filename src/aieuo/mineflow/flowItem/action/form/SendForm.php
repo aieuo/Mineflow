@@ -48,9 +48,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
         return $this->formName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getFormName());
         $manager = Main::getFormManager();
         $form = $manager->getForm($name);

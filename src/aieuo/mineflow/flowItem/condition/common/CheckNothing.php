@@ -18,7 +18,7 @@ class CheckNothing extends FlowItem implements Condition {
         parent::__construct(self::CHECK_NOTHING, FlowItemCategory::COMMON);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         yield Await::ALL;
         return true;
     }

@@ -45,9 +45,7 @@ class Command extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->command !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $command = $source->replaceVariables($this->getCommand());
         $player = $this->getOnlinePlayer($source);
 

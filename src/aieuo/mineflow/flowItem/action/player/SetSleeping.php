@@ -40,9 +40,7 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getOnlinePlayer($source);
         $position = $this->getPosition($source);
 

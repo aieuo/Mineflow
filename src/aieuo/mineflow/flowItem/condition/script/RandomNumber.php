@@ -59,9 +59,7 @@ class RandomNumber extends FlowItem implements Condition {
         return $this->min !== "" and $this->max !== "" and $this->value !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $min = $this->getInt($source->replaceVariables($this->getMin()));
         $max = $this->getInt($source->replaceVariables($this->getMax()));
         $value = $this->getInt($source->replaceVariables($this->getValue()));

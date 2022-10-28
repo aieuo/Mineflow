@@ -13,9 +13,7 @@ class AddXpLevel extends AddXpBase {
         parent::__construct(self::ADD_XP_LEVEL, player: $player, xp: $xp);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $xp = $this->getInt($source->replaceVariables($this->getXp()));
         $player = $this->getOnlinePlayer($source);
 

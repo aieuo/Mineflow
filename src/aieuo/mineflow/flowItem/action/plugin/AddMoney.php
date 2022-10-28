@@ -17,9 +17,7 @@ class AddMoney extends TypeMoney {
         parent::__construct(self::ADD_MONEY, playerName: $playerName, amount: $amount);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         if (!Economy::isPluginLoaded()) {
             throw new InvalidFlowValueException(TextFormat::RED.Language::get("economy.notfound"));
         }

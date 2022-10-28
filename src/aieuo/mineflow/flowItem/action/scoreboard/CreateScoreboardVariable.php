@@ -75,9 +75,7 @@ class CreateScoreboardVariable extends FlowItem {
         return $this->variableName !== "" and $this->boardId !== "" and $this->displayName !== "" and in_array($this->displayType, $this->displayTypes, true);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $variableName = $source->replaceVariables($this->getVariableName());
         $id = $source->replaceVariables($this->getBoardId());
         $displayName = $source->replaceVariables($this->getDisplayName());

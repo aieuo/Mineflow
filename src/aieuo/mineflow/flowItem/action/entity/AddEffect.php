@@ -75,9 +75,7 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->effectId !== "" and $this->power !== "" and $this->time !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $effectId = $source->replaceVariables($this->getEffectId());
         $time = $this->getInt($source->replaceVariables($this->getTime()));
         $power = $this->getInt($source->replaceVariables($this->getPower()));

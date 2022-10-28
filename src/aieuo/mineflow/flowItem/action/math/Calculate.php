@@ -92,9 +92,7 @@ class Calculate extends FlowItem {
         return $this->getValue() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value = $this->getFloat($source->replaceVariables($this->getValue()));
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();

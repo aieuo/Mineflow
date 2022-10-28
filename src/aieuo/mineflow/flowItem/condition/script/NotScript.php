@@ -12,7 +12,7 @@ class NotScript extends LogicalOperation {
         parent::__construct(self::CONDITION_NOT);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         foreach ($this->getConditions() as $condition) {
             if (!(yield from $condition->execute($source))) return true;
         }

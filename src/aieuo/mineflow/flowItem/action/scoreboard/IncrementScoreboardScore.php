@@ -58,9 +58,7 @@ class IncrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScore() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getScoreName());
         $score = $this->getInt($source->replaceVariables($this->getScore()));
         $board = $this->getScoreboard($source);

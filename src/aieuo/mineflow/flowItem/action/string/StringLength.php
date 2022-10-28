@@ -55,9 +55,7 @@ class StringLength extends FlowItem {
         return $this->getValue() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value = $source->replaceVariables($this->getValue());
         $resultName = $source->replaceVariables($this->getResultName());
 

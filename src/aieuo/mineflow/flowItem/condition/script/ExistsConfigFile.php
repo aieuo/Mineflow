@@ -44,9 +44,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
         return $this->getFileName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = Utils::getValidFileName($source->replaceVariables($this->getFileName()));
 
         yield Await::ALL;

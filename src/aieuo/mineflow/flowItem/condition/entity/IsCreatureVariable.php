@@ -14,9 +14,7 @@ class IsCreatureVariable extends CheckEntityState {
         parent::__construct(self::IS_CREATURE_VARIABLE, entity: $entity);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
 
         yield Await::ALL;

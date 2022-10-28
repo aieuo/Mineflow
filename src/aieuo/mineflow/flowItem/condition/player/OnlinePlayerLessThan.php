@@ -15,9 +15,7 @@ class OnlinePlayerLessThan extends OnlinePlayerCount {
         parent::__construct(self::ONLINE_PLAYER_LESS_THAN, value: $value);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value = $this->getInt($source->replaceVariables($this->getValue()));
 
         yield Await::ALL;

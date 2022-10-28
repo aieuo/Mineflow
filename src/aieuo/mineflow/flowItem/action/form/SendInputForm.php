@@ -66,9 +66,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $text = $source->replaceVariables($this->getFormText());
         $resultName = $source->replaceVariables($this->getResultName());
         $player = $this->getOnlinePlayer($source);

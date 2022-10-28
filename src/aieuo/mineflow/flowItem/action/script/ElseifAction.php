@@ -13,7 +13,7 @@ class ElseifAction extends IFActionBase {
         parent::__construct(self::ACTION_ELSEIF, conditions: $conditions, actions: $actions, customName: $customName);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $lastResult = $source->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException($this->getName());
         if ($lastResult) return true;

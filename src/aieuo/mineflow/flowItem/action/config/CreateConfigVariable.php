@@ -61,9 +61,7 @@ class CreateConfigVariable extends FlowItem {
         return $this->variableName !== "" and $this->fileName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $file = $source->replaceVariables($this->getFileName());
         if (!Utils::isValidFileName($file)) {

@@ -40,9 +40,7 @@ class LookAt extends FlowItem implements EntityFlowItem, PositionFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
         $position = $this->getPosition($source);
 

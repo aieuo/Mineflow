@@ -40,9 +40,7 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         return $this->getPlayerVariableName() !== "" and $this->getScoreboardVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getOnlinePlayer($source);
         $board = $this->getScoreboard($source);
 

@@ -13,9 +13,7 @@ class RemoveItemCondition extends TypeItem {
         parent::__construct(self::REMOVE_ITEM_CONDITION, player: $player, item: $item);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
         $player = $this->getOnlinePlayer($source);
 

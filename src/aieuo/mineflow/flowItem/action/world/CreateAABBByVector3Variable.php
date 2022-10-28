@@ -54,9 +54,7 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         return $this->variableName !== "" and $this->getVector3VariableName("pos1") !== "" and $this->getVector3VariableName("pos2") !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $pos1 = $this->getVector3($source, "pos1");
         $pos2 = $this->getVector3($source, "pos2");

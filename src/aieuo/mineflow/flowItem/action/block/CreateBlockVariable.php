@@ -57,9 +57,7 @@ class CreateBlockVariable extends FlowItem {
         return $this->variableName !== "" and $this->blockId !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $id = $source->replaceVariables($this->getBlockId());
         try {

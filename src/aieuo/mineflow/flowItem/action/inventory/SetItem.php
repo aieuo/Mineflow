@@ -49,9 +49,7 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $index = $this->getInt($source->replaceVariables($this->getIndex()), 0);
         $player = $this->getOnlinePlayer($source);
 

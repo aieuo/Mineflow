@@ -88,9 +88,7 @@ class EditString extends FlowItem {
         return $this->getValue1() !== "" and $this->getValue2() !== "" and $this->getOperator() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $source->replaceVariables($this->getValue1());
         $value2 = $source->replaceVariables($this->getValue2());
         $resultName = $source->replaceVariables($this->getResultName());

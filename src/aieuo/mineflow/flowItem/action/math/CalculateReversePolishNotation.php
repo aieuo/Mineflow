@@ -57,9 +57,7 @@ class CalculateReversePolishNotation extends FlowItem {
         return $this->getFormula() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $formula = $source->replaceVariables($this->getFormula());
         $resultName = $source->replaceVariables($this->getResultName());
 

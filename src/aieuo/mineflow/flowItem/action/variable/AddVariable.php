@@ -70,9 +70,7 @@ class AddVariable extends FlowItem {
         return $this->variableName !== "" and $this->variableValue !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $value = $source->replaceVariables($this->getVariableValue());
 

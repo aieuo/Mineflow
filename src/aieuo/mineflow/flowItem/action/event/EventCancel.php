@@ -20,9 +20,7 @@ class EventCancel extends FlowItem {
         parent::__construct(self::EVENT_CANCEL, FlowItemCategory::EVENT);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $event = $source->getEvent();
         if (!($event instanceof Cancellable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.eventCancel.notCancelable"));

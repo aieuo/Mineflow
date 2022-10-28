@@ -51,9 +51,7 @@ class GetDate extends FlowItem {
         return $this->getFormat() !== "" and $this->getResultName();
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $format = $source->replaceVariables($this->getFormat());
         $resultName = $source->replaceVariables($this->getResultName());
 

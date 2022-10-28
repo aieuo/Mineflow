@@ -52,9 +52,7 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $pos1 = $this->getPosition($source, "pos1");
         $pos2 = $this->getPosition($source, "pos2");
         $result = $source->replaceVariables($this->getResultName());

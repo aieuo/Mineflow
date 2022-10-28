@@ -79,7 +79,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $wait = new Wait((string)($this->getInterval() / 20));
         while (true) {
             $source->addVariable("i", new NumberVariable($this->loopCount)); // TODO: i を変更できるようにする

@@ -42,9 +42,7 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         return $this->getEntityVariableName() !== "" and $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
         $pos1 = $this->getPosition($source, "pos1");
         $pos2 = $this->getPosition($source, "pos2");

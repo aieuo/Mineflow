@@ -13,9 +13,7 @@ class SetHealth extends SetHealthBase {
         parent::__construct(self::SET_HEALTH, entity: $entity, health: $health);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $health = $this->getFloat($source->replaceVariables($this->getHealth()), min: 0);
         $entity = $this->getOnlineEntity($source);
 

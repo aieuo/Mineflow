@@ -57,9 +57,7 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         return $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $pos1 = $this->getPosition($source, "pos1");
         $pos2 = $this->getPosition($source, "pos2");
         $resultName = $source->replaceVariables($this->getResultName());

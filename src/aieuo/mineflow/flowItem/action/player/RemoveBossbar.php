@@ -46,9 +46,7 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->barId !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $id = $source->replaceVariables($this->getBarId());
         $player = $this->getOnlinePlayer($source);
 

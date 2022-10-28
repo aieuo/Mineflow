@@ -15,9 +15,7 @@ class IsActiveEntityVariable extends CheckEntityState {
         parent::__construct(self::IS_ACTIVE_ENTITY_VARIABLE, FlowItemCategory::ENTITY, $entity);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
 
         yield Await::ALL;

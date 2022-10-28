@@ -55,9 +55,7 @@ class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->getJson() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
         $json = $this->getJson();
 

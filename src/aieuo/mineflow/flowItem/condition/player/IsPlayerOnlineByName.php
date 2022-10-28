@@ -41,9 +41,7 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
         return $this->getPlayerName() !== null;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getPlayerName());
 
         $player = Server::getInstance()->getPlayerExact($name);

@@ -85,7 +85,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $count = $this->getInt($source->replaceVariables($this->repeatCount), 1);
         $start = $this->getInt($source->replaceVariables($this->startIndex));
 

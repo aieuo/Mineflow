@@ -59,7 +59,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $counterName = $source->replaceVariables($this->counterName);
 
         $pos1 = $this->getPosition($source, "pos1");

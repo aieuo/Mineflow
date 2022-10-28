@@ -80,9 +80,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $pos = $this->getPosition($source);
 
         $x = $this->getFloat($source->replaceVariables($this->getX()));

@@ -67,9 +67,7 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $sound = $source->replaceVariables($this->getSound());
         $volume = $this->getInt($source->replaceVariables($this->getVolume()));
         $pitch = $this->getInt($source->replaceVariables($this->getPitch()));

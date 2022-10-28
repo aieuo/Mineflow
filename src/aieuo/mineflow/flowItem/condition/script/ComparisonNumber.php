@@ -69,9 +69,7 @@ class ComparisonNumber extends FlowItem implements Condition {
         return $this->value1 !== "" and $this->value2 !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
         $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $operator = $this->getOperator();

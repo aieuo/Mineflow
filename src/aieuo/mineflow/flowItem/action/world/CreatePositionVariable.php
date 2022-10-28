@@ -85,9 +85,7 @@ class CreatePositionVariable extends FlowItem {
         return $this->variableName !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $x = $this->getFloat($source->replaceVariables($this->getX()));
         $y = $this->getFloat($source->replaceVariables($this->getY()));

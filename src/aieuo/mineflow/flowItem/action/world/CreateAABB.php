@@ -100,9 +100,7 @@ class CreateAABB extends FlowItem {
         return $this->variableName !== "" and $this->minX !== "" and $this->minY !== "" and $this->minZ !== "" and $this->maxX !== "" and $this->maxY !== "" and $this->maxZ !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $minX = $this->getFloat($source->replaceVariables($this->getMinX()));
         $minY = $this->getFloat($source->replaceVariables($this->getMinY()));

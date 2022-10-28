@@ -14,9 +14,7 @@ class SendMessage extends TypePlayerMessage {
         parent::__construct(self::SEND_MESSAGE, player: $player, message: $message);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $message = Language::replace($source->replaceVariables($this->getMessage()));
         $player = $this->getOnlinePlayer($source);
 

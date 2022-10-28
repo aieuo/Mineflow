@@ -46,9 +46,7 @@ class SetPitch extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->pitch !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $pitch = $this->getFloat($source->replaceVariables($this->getPitch()));
         $entity = $this->getOnlineEntity($source);
 

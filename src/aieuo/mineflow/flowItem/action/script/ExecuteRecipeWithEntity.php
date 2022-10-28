@@ -34,9 +34,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
         return $this->getRecipeName() !== "" and $this->getEntityVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe($source);
 
         $entity = $this->getOnlineEntity($source);

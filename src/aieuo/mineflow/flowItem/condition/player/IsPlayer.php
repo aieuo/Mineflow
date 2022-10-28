@@ -16,9 +16,7 @@ class IsPlayer extends CheckEntityStateById {
         parent::__construct(self::IS_PLAYER, FlowItemCategory::PLAYER, $entityId);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $id = $this->getInt($source->replaceVariables($this->getEntityId()));
 
         yield Await::ALL;

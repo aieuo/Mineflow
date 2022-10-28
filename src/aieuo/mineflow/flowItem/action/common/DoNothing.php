@@ -16,7 +16,7 @@ class DoNothing extends FlowItem {
         parent::__construct(self::DO_NOTHING, FlowItemCategory::COMMON);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         yield Await::ALL;
     }
 

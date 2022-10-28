@@ -17,9 +17,7 @@ class LessMoney extends TypeMoney {
         parent::__construct(self::LESS_MONEY, playerName: $playerName, amount: $amount);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         if (!Economy::isPluginLoaded()) {
             throw new InvalidFlowValueException($this->getName(), TextFormat::RED.Language::get("economy.notfound"));
         }

@@ -59,9 +59,7 @@ class AddLanguageMappings extends FlowItem {
         return $this->getKey() !== "" and count($this->mappings) > 0;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $key = $source->replaceVariables($this->getKey());
         foreach ($this->getMappings() as $language => $message) {
             $message = $source->replaceVariables($message);

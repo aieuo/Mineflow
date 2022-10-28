@@ -74,9 +74,7 @@ class ComparisonString extends FlowItem implements Condition {
         return $this->value1 !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $source->replaceVariables($this->getValue1());
         $value2 = $source->replaceVariables($this->getValue2());
         $operator = $this->getOperator();

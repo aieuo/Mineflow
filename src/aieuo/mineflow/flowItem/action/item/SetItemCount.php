@@ -47,9 +47,7 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->count !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $count = $this->getInt($source->replaceVariables($this->getCount()), 0);
         $item = $this->getItem($source);
 

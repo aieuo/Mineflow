@@ -48,9 +48,7 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
         return $this->getWorldVariableName() !== "" and $this->getTime() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $world = $this->getWorld($source);
         $time = $this->getInt($source->replaceVariables($this->getTime()), 0, World::TIME_FULL);
 

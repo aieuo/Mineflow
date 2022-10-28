@@ -55,9 +55,7 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getOnlinePlayer($source);
         $pos = $this->getPosition($source);
 

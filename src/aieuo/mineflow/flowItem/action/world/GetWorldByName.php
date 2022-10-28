@@ -55,9 +55,7 @@ class GetWorldByName extends FlowItem {
         return $this->getWorldName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $worldName = $source->replaceVariables($this->getWorldName());
         $result = $source->replaceVariables($this->getResultName());
 

@@ -43,9 +43,7 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getWorld() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
         $world = $source->replaceVariables($this->getWorld());
 

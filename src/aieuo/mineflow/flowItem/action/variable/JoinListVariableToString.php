@@ -64,9 +64,7 @@ class JoinListVariableToString extends FlowItem {
         return $this->separator !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $separator = $source->replaceVariables($this->getSeparator());

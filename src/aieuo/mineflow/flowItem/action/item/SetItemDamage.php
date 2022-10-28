@@ -47,9 +47,7 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->damage !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $damage = $this->getInt($source->replaceVariables($this->getDamage()), 0);
         $item = $this->getItem($source);
 

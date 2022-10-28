@@ -71,9 +71,7 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and ($this->getTitle() !== "" or $this->getSubTitle() !== "");
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $title = $source->replaceVariables($this->getTitle());
         $subtitle = $source->replaceVariables($this->getSubTitle());
         $times = array_map(fn($time) => $this->getInt($source->replaceVariables($time)), $this->getTime());

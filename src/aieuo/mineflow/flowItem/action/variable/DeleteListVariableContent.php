@@ -55,9 +55,7 @@ class DeleteListVariableContent extends FlowItem {
         return $this->variableName !== "" and $this->variableKey !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Main::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());

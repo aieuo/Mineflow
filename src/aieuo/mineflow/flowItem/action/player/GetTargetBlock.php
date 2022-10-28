@@ -59,9 +59,7 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->max !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $max = $this->getInt($source->replaceVariables($this->getMax()), 1);
         $result = $source->replaceVariables($this->getResultName());
         $player = $this->getOnlinePlayer($source);

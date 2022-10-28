@@ -53,9 +53,7 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->gamemode !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $gamemode = $this->getInt($source->replaceVariables($this->getGamemode()), 0, 3);
         $player = $this->getOnlinePlayer($source);
 

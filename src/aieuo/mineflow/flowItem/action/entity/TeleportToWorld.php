@@ -56,9 +56,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->worldName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $worldName = $source->replaceVariables($this->getWorldName());
 
         $worldManager = Server::getInstance()->getWorldManager();

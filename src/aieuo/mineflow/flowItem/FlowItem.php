@@ -81,13 +81,6 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $data;
     }
 
-    public function throwIfCannotExecute(): void {
-        if (!$this->isDataValid()) {
-            $message = Language::get("invalid.contents");
-            throw new InvalidFlowValueException($this->getName(), $message);
-        }
-    }
-
     private function throwIfInvalidNumber(string|float|int $number, float|int|null $min = null, float|int|null $max = null, array $exclude = []): void {
         if (!is_numeric($number)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$number]));
@@ -188,7 +181,17 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /**
      * @param FlowItemExecutor $source
-     * @return bool|string|int|\Generator
+     * @return \Generator
+     * @throws InvalidFlowValueException
      */
-    abstract public function execute(FlowItemExecutor $source);
+    final public function execute(FlowItemExecutor $source): \Generator {
+        if (!$this->isDataValid()) {
+            $message = Language::get("invalid.contents");
+            throw new InvalidFlowValueException($this->getName(), $message);
+        }
+
+        return yield from $this->onExecute($source);
+    }
+
+    abstract protected function onExecute(FlowItemExecutor $source): \Generator;
 }

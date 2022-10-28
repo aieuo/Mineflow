@@ -13,9 +13,7 @@ class CallRecipe extends ExecuteRecipeBase {
         parent::__construct(self::CALL_RECIPE, recipeName: $name, args: $args);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe($source);
         $args = $this->getArguments($source);
 

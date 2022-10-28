@@ -14,9 +14,7 @@ class GetInventoryContents extends GetInventoryContentsBase {
         parent::__construct(self::GET_INVENTORY_CONTENTS, player: $player, resultName: $resultName);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $resultName = $source->replaceVariables($this->getResultName());
         $entity = $this->getOnlinePlayer($source);
 

@@ -49,9 +49,7 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->effectId !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $effectId = $source->replaceVariables($this->getEffectId());
 
         $effect = StringToEffectParser::getInstance()->parse($effectId);

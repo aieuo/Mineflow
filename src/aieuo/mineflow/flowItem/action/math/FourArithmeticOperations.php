@@ -83,9 +83,7 @@ class FourArithmeticOperations extends FlowItem {
         return $this->getValue1() !== "" and $this->getValue2() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
         $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $resultName = $source->replaceVariables($this->getResultName());

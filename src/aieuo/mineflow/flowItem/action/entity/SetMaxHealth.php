@@ -13,9 +13,7 @@ class SetMaxHealth extends SetHealthBase {
         parent::__construct(self::SET_MAX_HEALTH, entity: $entity, health: $health);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $health = $this->getInt($source->replaceVariables($this->getHealth()), min: 1);
         $entity = $this->getOnlineEntity($source);
 

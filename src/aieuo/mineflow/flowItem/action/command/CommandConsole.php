@@ -44,9 +44,7 @@ class CommandConsole extends FlowItem {
         return $this->command !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $command = $source->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage()), $command);
