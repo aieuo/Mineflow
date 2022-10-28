@@ -7,7 +7,6 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
-use JetBrains\PhpStorm\Deprecated;
 use pocketmine\player\Player;
 use function call_user_func;
 use function is_callable;
@@ -79,11 +78,6 @@ class ListForm extends Form {
 
     public function getButton(int $index): ?Button {
         return $this->buttons[$index] ?? null;
-    }
-
-    #[Deprecated(replacement: "%class%->getButtonByUUID(%parameter0%)")]
-    public function getButtonById(string $uuid): ?Button {
-        return $this->getButtonByUUID($uuid);
     }
 
     public function getButtonByUUID(string $uuid): ?Button {

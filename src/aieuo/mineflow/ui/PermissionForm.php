@@ -10,7 +10,7 @@ use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\StringResponseDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 use pocketmine\Server;
@@ -32,7 +32,7 @@ class PermissionForm {
     }
 
     public function sendEditPermission(Player $player, string $target, array $messages = []): void {
-        $config = Main::getInstance()->getPlayerSettings();
+        $config = Mineflow::getPlayerSettings();
         $permissions = $config->getPlayerActionPermissions($target);
 
         $contents = [];

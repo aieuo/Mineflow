@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 
@@ -67,7 +67,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
     public function getRecipe(FlowItemExecutor $source): Recipe {
         $name = $source->replaceVariables($this->getRecipeName());
 
-        $recipeManager = Main::getRecipeManager();
+        $recipeManager = Mineflow::getRecipeManager();
         [$recipeName, $group] = $recipeManager->parseName($name);
         if (empty($group)) {
             $sr = $source->getSourceRecipe();
@@ -83,7 +83,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
     }
 
     public function getArguments(FlowItemExecutor $source): array {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $args = [];
         foreach ($this->getArgs() as $arg) {
             if (!$helper->isSimpleVariableString($arg)) {
