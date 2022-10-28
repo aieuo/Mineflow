@@ -4,6 +4,7 @@ namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\nbt\tag\Tag;
 
 abstract class Variable {
@@ -32,6 +33,7 @@ abstract class Variable {
         };
     }
 
+    #[Deprecated(replacement: "VariableDeserializer::deserialize(%parameter0%)")]
     public static function fromArray(array $data): ?self {
         if (!isset($data["value"]) or !isset($data["type"])) return null;
 
