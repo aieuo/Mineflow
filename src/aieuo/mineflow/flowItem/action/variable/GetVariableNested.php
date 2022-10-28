@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
@@ -71,11 +72,11 @@ class GetVariableNested extends FlowItem {
         $variableName = $source->replaceVariables($this->getVariableName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($variableName) ?? Main::getVariableHelper()->getNested($variableName);
+        $variable = $source->getVariable($variableName) ?? Mineflow::getVariableHelper()->getNested($variableName);
 
         $fallbackValue = $this->getFallbackValue();
         if ($fallbackValue !== "" and $variable === null) {
-            $variable = Main::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
+            $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
         }
 
         if ($variable === null) {

@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -57,7 +58,7 @@ class DeleteListVariableContentByValue extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
 
         $value = $this->getValue();

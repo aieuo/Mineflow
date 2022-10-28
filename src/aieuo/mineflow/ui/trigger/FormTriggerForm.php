@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\Trigger;
@@ -36,7 +37,7 @@ class FormTriggerForm extends TriggerForm {
                         (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
-                        $manager = Main::getFormManager();
+                        $manager = Mineflow::getFormManager();
                         $form = $manager->getForm($trigger->getKey());
                         (new CustomFormForm)->sendFormMenu($player, $form);
                         break;
@@ -59,7 +60,7 @@ class FormTriggerForm extends TriggerForm {
                     return;
                 }
 
-                $manager = Main::getFormManager();
+                $manager = Mineflow::getFormManager();
                 if (!$manager->existsForm($data[0])) {
                     $this->sendConfirmCreate($player, $data[0], function (bool $result) use ($player, $recipe, $data) {
                         if ($result) {

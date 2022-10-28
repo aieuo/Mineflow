@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -63,7 +64,7 @@ class CountListVariable extends FlowItem {
         $name = $source->replaceVariables($this->getVariableName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
+        $variable = $source->getVariable($name) ?? Mineflow::getVariableHelper()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.count.error.notList"));

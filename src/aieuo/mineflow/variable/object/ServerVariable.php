@@ -41,6 +41,18 @@ class ServerVariable extends ObjectVariable {
             fn(Server $server) => new StringVariable($server->getName())
         );
         self::registerProperty(
+            $class, "motd", new DummyVariable(StringVariable::class),
+            fn(Server $server) => new StringVariable($server->getMotd())
+        );
+        self::registerProperty(
+            $class, "ip", new DummyVariable(StringVariable::class),
+            fn(Server $server) => new StringVariable($server->getIp())
+        );
+        self::registerProperty(
+            $class, "port", new DummyVariable(NumberVariable::class),
+            fn(Server $server) => new NumberVariable($server->getPort())
+        );
+        self::registerProperty(
             $class, "tick", new DummyVariable(NumberVariable::class),
             fn(Server $server) => new NumberVariable($server->getTick())
         );
@@ -94,6 +106,10 @@ class ServerVariable extends ObjectVariable {
         self::registerProperty(
             $class, "bans", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getNameBans()->getEntries()))
+        );
+        self::registerProperty(
+            $class, "ip_bans", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            fn(Server $server) => new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getIPBans()->getEntries()))
         );
         self::registerProperty(
             $class, "whitelist", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),

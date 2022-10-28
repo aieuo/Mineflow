@@ -7,6 +7,7 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
@@ -113,7 +114,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
-        $variableHelper = Main::getVariableHelper();
+        $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $value) {
             $variables["it"] = $value;

@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\trigger\time;
 
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\scheduler\Task;
 
@@ -15,7 +16,7 @@ class CheckTimeTriggerTask extends Task {
     }
 
     public function onRun(): void {
-        $date = new \DateTime("now", Main::getInstance()->getTimeTriggerTimeZone());
+        $date = new \DateTime("now", Mineflow::getTimeTriggerTimeZone());
         $trigger = TimeTrigger::create($date->format("H"), $date->format("i"));
         if ($this->triggerHolder->existsRecipe($trigger)) {
             $recipes = $this->triggerHolder->getRecipes($trigger);

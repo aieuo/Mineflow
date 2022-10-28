@@ -7,6 +7,7 @@ use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 
@@ -32,7 +33,7 @@ class MineflowForm {
                 new Input("@form.recipe.groupName", "", $default[1] ?? ""),
                 new CancelToggle(fn() => is_callable($onCancel) ? $onCancel() : (new HomeForm)->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data, callable $callback) use($it) {
-                $manager = Main::getRecipeManager();
+                $manager = Mineflow::getRecipeManager();
 
                 [$name, $group] = $data;
                 if ($group === "") [$name, $group] = $manager->parseName($data[0]);

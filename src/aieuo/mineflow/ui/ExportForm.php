@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipePack;
 use aieuo\mineflow\utils\Language;
@@ -18,7 +19,7 @@ use pocketmine\player\Player;
 class ExportForm {
 
     public function sendRecipeListByRecipe(Player $player, Recipe $recipe): void {
-        $recipes = Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe);
+        $recipes = Mineflow::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe);
         $this->sendRecipeList($player, $recipes);
     }
 
@@ -41,7 +42,7 @@ class ExportForm {
     public function sendSelectRecipe(Player $player, array $recipes): void {
         (new MineflowForm)->selectRecipe($player, "@form.export.selectRecipe.title",
             function (Recipe $recipe) use ($player, $recipes) {
-                $recipes = array_merge($recipes, Main::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
+                $recipes = array_merge($recipes, Mineflow::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
                 $this->sendRecipeList($player, $recipes, ["@form.added"]);
             },
             fn() => $this->sendRecipeList($player, $recipes, ["@form.cancelled"])

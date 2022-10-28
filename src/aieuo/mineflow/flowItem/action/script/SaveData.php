@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\Mineflow;
 
 class SaveData extends FlowItem {
     use ActionNameWithMineflowLanguage;
@@ -23,9 +24,9 @@ class SaveData extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        Main::getRecipeManager()->saveAll();
-        Main::getFormManager()->saveAll();
-        Main::getVariableHelper()->saveAll();
+        Mineflow::getRecipeManager()->saveAll();
+        Mineflow::getFormManager()->saveAll();
+        Mineflow::getVariableHelper()->saveAll();
 
         yield Await::ALL;
     }

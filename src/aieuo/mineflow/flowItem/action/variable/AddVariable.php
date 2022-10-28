@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -89,7 +90,7 @@ class AddVariable extends FlowItem {
         if ($this->isLocal) {
             $source->addVariable($name, $variable);
         } else {
-            Main::getVariableHelper()->add($name, $variable);
+            Mineflow::getVariableHelper()->add($name, $variable);
         }
 
         yield Await::ALL;
@@ -106,7 +107,7 @@ class AddVariable extends FlowItem {
     }
 
     public function parseFromFormData(array $data): array {
-        $containsVariable = Main::getVariableHelper()->containsVariable($data[1]);
+        $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
         if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
             throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
         }

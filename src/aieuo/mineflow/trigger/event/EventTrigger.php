@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
@@ -29,7 +30,7 @@ class EventTrigger extends Trigger {
     }
 
     public static function create(string $key, string $subKey = ""): EventTrigger {
-        return Main::getEventManager()->getTrigger($key) ?? new EventTrigger($key, $subKey, "");
+        return Mineflow::getEventManager()->getTrigger($key) ?? new EventTrigger($key, $subKey, "");
     }
 
     public function __construct(string $key, string $subKey, string $eventClass = null) {

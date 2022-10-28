@@ -22,8 +22,6 @@ class EventManager {
     public function __construct(Config $setting) {
         $this->setting = $setting;
         $this->eventListener = new EventTriggerListener();
-
-        $this->addDefaultTriggers();
     }
 
     public function addDefaultTriggers(): void {

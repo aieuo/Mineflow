@@ -6,6 +6,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -41,9 +42,9 @@ class ConfigVariable extends ObjectVariable {
         if (!is_array($data)) return null;
 
         if (array_is_list($data)) {
-            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($data));
+            $variable = new ListVariable(Mineflow::getVariableHelper()->toVariableArray($data));
         } else {
-            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($data));
+            $variable = new MapVariable(Mineflow::getVariableHelper()->toVariableArray($data));
         }
         return $variable;
     }
@@ -53,7 +54,7 @@ class ConfigVariable extends ObjectVariable {
     }
 
     public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
-        $variableHelper = Main::getVariableHelper();
+        $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getValue()->getAll() as $key => $value) {
             $variable = match (true) {
@@ -84,15 +85,15 @@ class ConfigVariable extends ObjectVariable {
         );
         self::registerMethod(
             $class, "keys", new DummyVariable(ListVariable::class),
-            fn(Config $config) => Main::getVariableHelper()->arrayToListVariable(array_keys($config->getAll())),
+            fn(Config $config) => Mineflow::getVariableHelper()->arrayToListVariable(array_keys($config->getAll())),
         );
         self::registerMethod(
             $class, "values", new DummyVariable(ListVariable::class),
-            fn(Config $config) => Main::getVariableHelper()->arrayToListVariable(array_values($config->getAll())),
+            fn(Config $config) => Mineflow::getVariableHelper()->arrayToListVariable(array_values($config->getAll())),
         );
         self::registerMethod(
             $class, "all", new DummyVariable(ListVariable::class),
-            fn(Config $config) => Main::getVariableHelper()->arrayToListVariable($config->getAll()),
+            fn(Config $config) => Mineflow::getVariableHelper()->arrayToListVariable($config->getAll()),
         );
     }
 }

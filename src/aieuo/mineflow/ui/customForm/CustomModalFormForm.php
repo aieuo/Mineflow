@@ -10,6 +10,7 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
@@ -75,7 +76,7 @@ class CustomModalFormForm {
                 new CancelToggle(fn() => $this->sendMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data) use($form, $index) {
                 $form->setButton($index, $data[1]);
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendMenu($player, $form, ["@form.changed"]);
             })->show($player);
     }

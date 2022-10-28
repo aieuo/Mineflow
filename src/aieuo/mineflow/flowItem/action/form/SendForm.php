@@ -14,6 +14,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -50,7 +51,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getFormName());
-        $manager = Main::getFormManager();
+        $manager = Mineflow::getFormManager();
         $form = $manager->getForm($name);
         if ($form === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));

@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\ListVariable;
 use SOFe\AwaitGenerator\Await;
 
@@ -55,7 +56,7 @@ class ExistsListVariableKey extends FlowItem implements Condition {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
 

@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\command\subcommand;
 
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
@@ -32,9 +33,9 @@ class RecipeCommand extends MineflowSubcommand {
                     return;
                 }
                 $path = (isset($args[2]) ? ($args[2]."/") : "").$args[1];
-                [$name, $group] = Main::getRecipeManager()->parseName($path);
+                [$name, $group] = Mineflow::getRecipeManager()->parseName($path);
 
-                $recipe = Main::getRecipeManager()->get($name, $group);
+                $recipe = Mineflow::getRecipeManager()->get($name, $group);
                 if ($recipe === null) {
                     $sender->sendMessage(Language::get("action.executeRecipe.notFound"));
                     return;

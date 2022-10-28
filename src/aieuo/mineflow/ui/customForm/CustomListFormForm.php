@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\mineflow\CommandConsoleButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
@@ -49,7 +50,7 @@ class CustomListFormForm {
     }
 
     public function sendSelectButtonType(Player $player, ListForm $form): void {
-        $hasConsoleCommandPermission = Main::getInstance()->getPlayerSettings()->hasPlayerActionPermission($player->getName(), FlowItem::PERMISSION_CONSOLE);
+        $hasConsoleCommandPermission = Mineflow::getPlayerSettings()->hasPlayerActionPermission($player->getName(), FlowItem::PERMISSION_CONSOLE);
         (new ListForm("@customForm.list.addButton"))
             ->addButton(new Button("@form.back", fn() => $this->sendMenu($player, $form)))
             ->addButton(new Button("@customForm.list.button.type.normal", fn() => $this->sendAddButton($player, $form)))
@@ -67,7 +68,7 @@ class CustomListFormForm {
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
                 $image = $data[1] === "" ? null : new ButtonImage($data[1], ButtonImage::TYPE_PATH);
                 $form->addButton(new Button($data[0], null, $image));
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, ["@form.added"]);
             })->addArgs($form)->show($player);
     }
@@ -86,7 +87,7 @@ class CustomListFormForm {
                     : new CommandButton($command, $buttonText, null, $image);
 
                 $form->addButton($button);
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, ["@form.added"]);
             })->show($player);
     }
@@ -110,7 +111,7 @@ class CustomListFormForm {
                     $button->setText($buttonText);
                     $button->setImage($iconPath === "" ? null : new ButtonImage($iconPath, ButtonImage::TYPE_PATH));
                 }
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$delete ? "@form.deleted" : "@form.changed"]);
             })->show($player);
     }
@@ -131,7 +132,7 @@ class CustomListFormForm {
                     $button->setCommand($data[2]);
                     $button->setImage($data[3] === "" ? null : new ButtonImage($data[3], ButtonImage::TYPE_PATH));
                 }
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$data[3] ? "@form.deleted" : "@form.changed"]);
             })->show($player);
     }

@@ -68,7 +68,7 @@ class VariableHelper {
                 Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed"));
                 continue;
             }
-            
+
             $this->variables[$name] = $variable;
         }
     }

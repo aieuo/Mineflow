@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -58,7 +59,7 @@ class CreateMapVariableFromJson extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $json = $this->getJson();
 
@@ -68,9 +69,9 @@ class CreateMapVariableFromJson extends FlowItem {
         }
 
         if (array_is_list($value)) {
-            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($value));
+            $variable = new ListVariable(Mineflow::getVariableHelper()->toVariableArray($value));
         } else {
-            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value));
+            $variable = new MapVariable(Mineflow::getVariableHelper()->toVariableArray($value));
         }
 
         if ($this->isLocal) {

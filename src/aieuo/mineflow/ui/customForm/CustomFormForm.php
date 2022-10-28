@@ -19,6 +19,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -76,12 +77,12 @@ class CustomFormForm {
                     default => throw new InvalidFormValueException("@form.insufficient", 1),
                 };
 
-                $manager = Main::getFormManager();
+                $manager = Mineflow::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
                     (new MineflowForm)->confirmRename($player, $data[0], $newName,
                         function (string $name) use ($player, $form) {
-                            $manager = Main::getFormManager();
+                            $manager = Mineflow::getFormManager();
                             $form->setTitle($name);
                             $manager->addForm($name, $form);
                             Session::getSession($player)->set("form_menu_prev", [$this, "sendMenu"]);
@@ -108,7 +109,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $manager = Main::getFormManager();
+                $manager = Mineflow::getFormManager();
                 $name = $data[0];
                 if (!$manager->existsForm($name)) {
                     $this->sendSelectForm($player, $data, [["@form.form.notFound", 0]]);
@@ -122,7 +123,7 @@ class CustomFormForm {
     }
 
     public function sendFormList(Player $player): void {
-        $manager = Main::getFormManager();
+        $manager = Mineflow::getFormManager();
         $forms = $manager->getAllFormData();
         $buttons = [];
         foreach ($forms as $form) {
@@ -163,7 +164,7 @@ class CustomFormForm {
                 new CancelToggle(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data, Form $form) {
                 $form->setTitle($data[0]);
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendFormMenu($player, $form, ["@form.changed"]);
             })->addArgs($form)->show($player);
     }
@@ -176,7 +177,7 @@ class CustomFormForm {
                 new CancelToggle(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data) use($form) {
                 $form->setContent($data[0]);
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendFormMenu($player, $form, ["@form.changed"]);
             })->show($player);
     }
@@ -187,12 +188,12 @@ class CustomFormForm {
                 new Input("@customForm.name", "", $default[0] ?? $form->getName(), true),
                 new CancelToggle(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"])),
             ])->onReceive(function (Player $player, array $data) use($form, $it) {
-                $manager = Main::getFormManager();
+                $manager = Mineflow::getFormManager();
                 if ($manager->existsForm($data[0])) {
                     $newName = $manager->getNotDuplicatedName($data[0]);
                     (new MineflowForm)->confirmRename($player, $data[0], $newName,
                         function (string $name) use ($player, $form) {
-                            $manager = Main::getFormManager();
+                            $manager = Mineflow::getFormManager();
                             $manager->removeForm($form->getName());
                             $form->setName($name);
                             $manager->addForm($name, $form);
@@ -211,7 +212,7 @@ class CustomFormForm {
     }
 
     public function sendRecipeList(Player $player, Form $form, array $messages = []): void {
-        $recipes = Main::getFormManager()->getAssignedRecipes($form->getName());
+        $recipes = Mineflow::getFormManager()->getAssignedRecipes($form->getName());
         (new ListForm(Language::get("form.recipes.title", [$form->getName()])))
             ->addButton(new Button("@form.back", fn() => $this->sendFormMenu($player, $form)))
             ->addButton(new Button("@form.add", fn() => $this->sendSelectRecipe($player, $form)))
@@ -231,7 +232,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $manager = Main::getRecipeManager();
+                $manager = Mineflow::getRecipeManager();
                 [$name, $group] = $manager->parseName($data[0]);
                 $recipe = $manager->get($name, $group);
                 if ($recipe === null) {
@@ -277,8 +278,8 @@ class CustomFormForm {
                     Session::getSession($player)->set("recipe_menu_prev", function() use($player, $form, $name, $triggers) {
                         $this->sendRecipeMenu($player, $form, $name, $triggers);
                     });
-                    [$name, $group] = Main::getRecipeManager()->parseName($name);
-                    $recipe = Main::getRecipeManager()->get($name, $group);
+                    [$name, $group] = Mineflow::getRecipeManager()->parseName($name);
+                    $recipe = Mineflow::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
             })->show($player);
@@ -288,7 +289,7 @@ class CustomFormForm {
         (new ModalForm(Language::get("form.recipe.delete.title", [$form->getName()])))
             ->setContent(Language::get("form.delete.confirm", [$form->getName()]))
             ->onYes(function() use($player, $form) {
-                Main::getFormManager()->removeForm($form->getName());
+                Mineflow::getFormManager()->removeForm($form->getName());
                 $this->sendMenu($player, ["@form.deleted"]);
             })->onNo(fn() => $this->sendFormMenu($player, $form, ["@form.cancelled"]))
             ->setButton2("@form.no")

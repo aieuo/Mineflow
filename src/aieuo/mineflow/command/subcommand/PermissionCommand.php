@@ -3,7 +3,7 @@
 namespace aieuo\mineflow\command\subcommand;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\PermissionForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
@@ -12,7 +12,7 @@ use function implode;
 
 class PermissionCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {
-        $config = Main::getInstance()->getPlayerSettings();
+        $config = Mineflow::getPlayerSettings();
 
         if ($sender instanceof Player) {
             if ($config->hasPlayerActionPermission($sender->getName(), FlowItem::PERMISSION_PERMISSION)) {

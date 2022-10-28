@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
 use pocketmine\event\Listener;
@@ -29,7 +30,7 @@ class EventTriggerListener implements Listener {
 
     public function onEvent(Event $event): void {
         $holder = TriggerHolder::getInstance();
-        $manager = Main::getEventManager();
+        $manager = Mineflow::getEventManager();
         $class = $event::class;
         do {
             $keys = $manager->getKeysFromEventClass($class);
