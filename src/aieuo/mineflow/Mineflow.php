@@ -14,7 +14,7 @@ class Mineflow {
         self::$pluginVersion = $main->getDescription()->getVersion();
     }
 
-    public static function pluginVersion(): string {
+    public static function getPluginVersion(): string {
         return self::$pluginVersion;
     }
 

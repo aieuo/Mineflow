@@ -30,7 +30,6 @@ use pocketmine\utils\Filesystem;
 use function array_key_last;
 use function explode;
 use function str_replace;
-use function var_dump;
 use function version_compare;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
@@ -67,7 +66,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->name = $name;
         $this->author = $author;
         $this->group = preg_replace("#/+#u", "/", $group);
-        $this->version = $pluginVersion ?? Mineflow::pluginVersion();
+        $this->version = $pluginVersion ?? Mineflow::getPluginVersion();
     }
 
     public function setName(string $name): void {
