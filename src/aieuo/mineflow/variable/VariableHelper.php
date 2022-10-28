@@ -62,7 +62,7 @@ class VariableHelper {
 
     public function loadVariables(): void {
         foreach ($this->file->getAll() as $name => $data) {
-            $variable = Variable::fromArray($data);
+            $variable = VariableDeserializer::deserialize($data);
 
             if ($variable === null) {
                 Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed"));
