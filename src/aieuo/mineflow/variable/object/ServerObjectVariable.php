@@ -11,9 +11,9 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Living;
 use pocketmine\permission\BanEntry;
-use pocketmine\world\World;
 use pocketmine\player\Player;
 use pocketmine\Server;
+use pocketmine\world\World;
 use function array_map;
 
 class ServerObjectVariable extends ObjectVariable {
@@ -27,6 +27,14 @@ class ServerObjectVariable extends ObjectVariable {
         switch ($index) {
             case "name":
                 return new StringVariable($server->getName());
+            case "motd":
+                return new StringVariable($server->getMotd());
+            case "ip":
+                return new StringVariable($server->getIp());
+            case "port":
+                return new NumberVariable($server->getPort());
+            case "start_time":
+                return new NumberVariable($server->getStartTime());
             case "tick":
                 return new NumberVariable($server->getTick());
             case "default_world":
@@ -60,6 +68,8 @@ class ServerObjectVariable extends ObjectVariable {
                 return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)));
             case "bans":
                 return new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getNameBans()->getEntries()));
+            case "ip_bans":
+                return new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getIPBans()->getEntries()));
             case "whitelist":
                 return new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getWhitelisted()->getAll(true)));
             default:
@@ -75,6 +85,10 @@ class ServerObjectVariable extends ObjectVariable {
     public static function getValuesDummy(): array {
         return array_merge(parent::getValuesDummy(), [
             "name" => new DummyVariable(DummyVariable::STRING),
+            "motd" => new DummyVariable(DummyVariable::STRING),
+            "ip" => new DummyVariable(DummyVariable::STRING),
+            "port" => new DummyVariable(DummyVariable::NUMBER),
+            "start_time" => new DummyVariable(DummyVariable::NUMBER),
             "tick" => new DummyVariable(DummyVariable::NUMBER),
             "default_world" => new DummyVariable(DummyVariable::WORLD),
             "worlds" => new DummyVariable(DummyVariable::LIST, DummyVariable::WORLD),
@@ -83,6 +97,7 @@ class ServerObjectVariable extends ObjectVariable {
             "livings" => new DummyVariable(DummyVariable::LIST, DummyVariable::ENTITY),
             "ops" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
             "bans" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
+            "ip_bans" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
             "whitelist" => new DummyVariable(DummyVariable::LIST, DummyVariable::STRING),
         ]);
     }

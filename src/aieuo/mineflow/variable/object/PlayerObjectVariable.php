@@ -29,6 +29,8 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "uuid" => new StringVariable($player->getUniqueId()->toString()),
             "spawn_point" => new PositionObjectVariable($player->getSpawn()),
             "flying" => new BoolVariable($player->isFlying()),
+            "first_played" => new NumberVariable($player->getFirstPlayed() ?? 0),
+            "last_played" => new NumberVariable($player->getLastPlayed() ?? 0),
             default => parent::getValueFromIndex($index),
         };
     }
@@ -49,6 +51,8 @@ class PlayerObjectVariable extends HumanObjectVariable {
             "uuid" => new DummyVariable(DummyVariable::STRING),
             "spawn_point" => new DummyVariable(DummyVariable::POSITION),
             "flying" => new DummyVariable(DummyVariable::BOOLEAN),
+            "first_played" => new DummyVariable(DummyVariable::NUMBER),
+            "last_played" => new DummyVariable(DummyVariable::NUMBER),
         ]);
     }
 
