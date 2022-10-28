@@ -35,20 +35,7 @@ abstract class Variable {
 
     #[Deprecated(replacement: "VariableDeserializer::deserialize(%parameter0%)")]
     public static function fromArray(array $data): ?self {
-        if (!isset($data["value"]) or !isset($data["type"])) return null;
-
-        if (!is_array($data["value"])) return self::create($data["value"], $data["type"]);
-
-        $values = [];
-        foreach ($data["value"] as $key => $value) {
-            if (!is_array($value)) continue;
-
-            $var = self::fromArray($value);
-            if ($var === null) continue;
-
-            $values[$key] = $var;
-        }
-        return self::create($values, $data["type"]);
+        return VariableDeserializer::deserialize($data);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -35,9 +36,9 @@ class ConfigObjectVariable extends ObjectVariable {
         if (!is_array($data)) return null;
 
         if (array_is_list($data)) {
-            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($data));
+            $variable = new ListVariable(Mineflow::getVariableHelper()->toVariableArray($data));
         } else {
-            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($data));
+            $variable = new MapVariable(Mineflow::getVariableHelper()->toVariableArray($data));
         }
         return $variable;
     }
@@ -48,7 +49,7 @@ class ConfigObjectVariable extends ObjectVariable {
     }
 
     public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
-        $variableHelper = Main::getVariableHelper();
+        $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getConfig()->getAll() as $key => $value) {
             $variable = match (true) {
@@ -64,7 +65,7 @@ class ConfigObjectVariable extends ObjectVariable {
     }
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $values = $this->getConfig()->getAll();
         return match ($name) {
             "count" => new NumberVariable(count($values)),

@@ -5,6 +5,7 @@ namespace aieuo\mineflow\formAPI;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use JetBrains\PhpStorm\Deprecated;
@@ -111,7 +112,7 @@ class ListForm extends Form {
     }
 
     public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
 
         $this->setTitle($executor->replaceVariables($this->getTitle()));
         $this->setContent($executor->replaceVariables($this->getContent()));

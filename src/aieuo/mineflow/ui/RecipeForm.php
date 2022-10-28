@@ -13,6 +13,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\trigger\Trigger;
@@ -45,7 +46,7 @@ class RecipeForm {
     }
 
     public function sendAddRecipe(Player $player, array $default = []): void {
-        $manager = Main::getRecipeManager();
+        $manager = Mineflow::getRecipeManager();
         $name = $manager->getNotDuplicatedName("recipe");
         $templateDropdownOptions = array_values(array_merge(
             [Language::get("form.element.variableDropdown.none")],
@@ -58,7 +59,7 @@ class RecipeForm {
                 new Dropdown("@recipe.template", $templateDropdownOptions),
                 new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data, string $defaultName) use($it) {
-                $manager = Main::getRecipeManager();
+                $manager = Mineflow::getRecipeManager();
                 $name = $data[0] === "" ? $defaultName : $data[0];
                 $group = $data[1];
 
@@ -106,7 +107,7 @@ class RecipeForm {
             return;
         }
 
-        Main::getRecipeManager()->add($recipe);
+        Mineflow::getRecipeManager()->add($recipe);
         Session::getSession($player)->set("recipe_menu_prev", function() use($player, $recipe) {
             $this->sendRecipeList($player, $recipe->getGroup());
         });
@@ -137,7 +138,7 @@ class RecipeForm {
     }
 
     public function sendRecipeList(Player $player, string $path = "", array $messages = []): void {
-        $manager = Main::getRecipeManager();
+        $manager = Mineflow::getRecipeManager();
         $recipeGroups = $manager->getByPath($path);
         $buttons = [
             new Button("@form.back"),
@@ -262,7 +263,7 @@ class RecipeForm {
                         $this->sendChangeTarget($player, $recipe);
                         break;
                     case 7:
-                        $recipe->save(Main::getRecipeManager()->getSaveDir());
+                        $recipe->save(Mineflow::getRecipeManager()->getSaveDir());
                         $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                         break;
                     case 8:
@@ -272,7 +273,7 @@ class RecipeForm {
                         (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
                             ->setContent(Language::get("form.delete.confirm", [$recipe->getName()]))
                             ->onYes(function() use ($player, $recipe) {
-                                $manager = Main::getRecipeManager();
+                                $manager = Mineflow::getRecipeManager();
                                 $recipe->removeTriggerAll();
                                 $manager->remove($recipe->getName(), $recipe->getGroup());
                                 $this->sendRecipeList($player, $recipe->getGroup(), ["@form.deleted"]);
@@ -291,12 +292,12 @@ class RecipeForm {
                 new Input("@form.recipe.changeName.content1", "", $recipe->getName(), true),
                 new CancelToggle(fn() => $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]))
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) use($form) {
-                $manager = Main::getRecipeManager();
+                $manager = Mineflow::getRecipeManager();
                 if ($manager->exists($data[1], $recipe->getGroup())) {
                     $newName = $manager->getNotDuplicatedName($data[1], $recipe->getGroup());
                     (new MineflowForm)->confirmRename($player, $data[1], $newName,
                         function (string $name) use ($player, $recipe) {
-                            $manager = Main::getRecipeManager();
+                            $manager = Mineflow::getRecipeManager();
                             $manager->rename($recipe->getName(), $name, $recipe->getGroup());
                             $this->sendRecipeMenu($player, $recipe);
                         },
@@ -415,7 +416,7 @@ class RecipeForm {
     }
 
     public function confirmDeleteRecipeGroup(Player $player, string $path): void {
-        $recipes = Main::getRecipeManager()->getByPath($path);
+        $recipes = Mineflow::getRecipeManager()->getByPath($path);
         $count = count($recipes) - 1 + count($recipes[$path] ?? []);
         if ($count >= 1) {
             $this->sendRecipeList($player, $path, ["@recipe.group.delete.not.empty"]);
@@ -424,7 +425,7 @@ class RecipeForm {
         (new ModalForm(Language::get("form.recipe.delete.title", [$path])))
             ->setContent(Language::get("form.delete.confirm", [$path, count($recipes)]))
             ->onYes(function() use ($player, $path) {
-                $manager = Main::getRecipeManager();
+                $manager = Mineflow::getRecipeManager();
                 $result = $manager->deleteGroup($path);
                 $this->sendRecipeList($player, $manager->getParentPath($path), [$result ? "@form.deleted" : "@recipe.group.delete.not.empty"]);
             })->onNo(function() use($player, $path) {

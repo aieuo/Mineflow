@@ -5,6 +5,7 @@ namespace aieuo\mineflow\formAPI\element;
 use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 
@@ -55,7 +56,7 @@ class NumberInput extends Input {
         parent::onFormSubmit($response, $player);
         $data = $response->getInputResponse();
 
-        if ($data === "" or Main::getVariableHelper()->containsVariable($data)) return;
+        if ($data === "" or Mineflow::getVariableHelper()->containsVariable($data)) return;
 
         if (!is_numeric($data)) {
             $response->addError(Language::get("action.error.notNumber", [$data]));

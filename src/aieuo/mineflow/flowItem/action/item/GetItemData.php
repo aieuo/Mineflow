@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 
 class GetItemData extends FlowItem implements ItemFlowItem {
@@ -73,7 +74,7 @@ class GetItemData extends FlowItem implements ItemFlowItem {
             throw new InvalidFlowValueException(Language::get("action.getItemData.tag.not.exists", [$key]));
         }
 
-        $variable = Main::getVariableHelper()->tagToVariable($tag);
+        $variable = Mineflow::getVariableHelper()->tagToVariable($tag);
         $source->addVariable($resultName, $variable);
 
         yield true;

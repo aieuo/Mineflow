@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 
 class SaveData extends FlowItem {
 
@@ -23,9 +24,9 @@ class SaveData extends FlowItem {
     }
 
     public function execute(FlowItemExecutor $source): \Generator {
-        Main::getRecipeManager()->saveAll();
-        Main::getFormManager()->saveAll();
-        Main::getVariableHelper()->saveAll();
+        Mineflow::getRecipeManager()->saveAll();
+        Mineflow::getFormManager()->saveAll();
+        Mineflow::getVariableHelper()->saveAll();
         yield true;
     }
 

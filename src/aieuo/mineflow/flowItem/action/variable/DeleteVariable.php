@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 
 class DeleteVariable extends FlowItem {
@@ -54,7 +55,7 @@ class DeleteVariable extends FlowItem {
         if ($this->isLocal) {
             $source->removeVariable($name);
         } else {
-            Main::getVariableHelper()->delete($name);
+            Mineflow::getVariableHelper()->delete($name);
         }
         yield true;
     }

@@ -226,7 +226,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     }
 
     public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $args = [], ?FlowItemExecutor $callbackExecutor = null): bool {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         foreach ($this->getArguments() as $i => $argument) {
             if (!isset($args[$i])) continue;
 
@@ -348,7 +348,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function checkVersion(): void {
         $createdVersion = $this->version;
-        $currentVersion = Main::getPluginVersion();
+        $currentVersion = Mineflow::getPluginVersion();
 
         if ($createdVersion !== null and version_compare($createdVersion, $currentVersion, "=")) return;
 
@@ -377,7 +377,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $from = "2.0.0";
         }
         if ($this->needUpgrade($from, $to, "2.6.0")) {
-            $eventTriggers = Main::getEventManager();
+            $eventTriggers = Mineflow::getEventManager();
             foreach ($this->getTriggers() as $trigger) {
                 if ($trigger instanceof EventTrigger) {
                     $this->removeTrigger($trigger);

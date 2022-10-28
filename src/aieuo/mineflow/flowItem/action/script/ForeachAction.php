@@ -14,6 +14,7 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\FlowItemContainerForm;
 use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
@@ -87,7 +88,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     public function execute(FlowItemExecutor $source): \Generator {
         $listName = $source->replaceVariables($this->listVariableName);
-        $list = $source->getVariable($listName) ?? Main::getVariableHelper()->getNested($listName);
+        $list = $source->getVariable($listName) ?? Mineflow::getVariableHelper()->getNested($listName);
         $keyName = $source->replaceVariables($this->keyVariableName);
         $valueName = $source->replaceVariables($this->valueVariableName);
 

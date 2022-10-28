@@ -7,6 +7,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 
 class ExistsVariable extends FlowItem implements Condition {
@@ -45,7 +46,7 @@ class ExistsVariable extends FlowItem implements Condition {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
 
         yield true;

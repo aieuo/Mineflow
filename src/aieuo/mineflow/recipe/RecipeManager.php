@@ -7,9 +7,10 @@ use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\recipe\template\SpecificBlockRecipeTemplate;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
+use aieuo\mineflow\recipe\template\SpecificBlockRecipeTemplate;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use ErrorException;
@@ -184,7 +185,7 @@ class RecipeManager {
     }
 
     public function getWithLinkedRecipes(FlowItemContainer $recipe, Recipe $origin, bool $base = true): array {
-        $recipeManager = Main::getRecipeManager();
+        $recipeManager = Mineflow::getRecipeManager();
 
         $recipes = [];
         if ($base) $recipes[] = [$origin->getGroup()."/".$origin->getName() => $origin];
@@ -196,7 +197,7 @@ class RecipeManager {
             }
 
             if ($action instanceof ExecuteRecipe) {
-                $name = Main::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
+                $name = Mineflow::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
 
                 [$recipeName, $group] = $recipeManager->parseName($name);
                 if (empty($group)) $group = $origin->getGroup();

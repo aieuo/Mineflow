@@ -7,6 +7,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipePack;
 use aieuo\mineflow\utils\ConfigHolder;
@@ -71,7 +72,7 @@ class ImportForm {
     }
 
     public function importRecipes(Player $player, array $recipes, callable $onComplete = null, int $start = 0): void {
-        $manager = Main::getRecipeManager();
+        $manager = Mineflow::getRecipeManager();
         for ($i = $start, $iMax = count($recipes); $i < $iMax; $i++) {
             /** @var Recipe $recipe */
             $recipe = $recipes[$i];
@@ -93,7 +94,7 @@ class ImportForm {
     }
 
     public function importCommands(Player $player, array $commands, callable $onComplete = null, int $start = 0): void {
-        $manager = Main::getCommandManager();
+        $manager = Mineflow::getCommandManager();
         $commands = array_values($commands);
         for ($i = $start, $iMax = count($commands); $i < $iMax; $i++) {
             $data = $commands[$i];
@@ -116,7 +117,7 @@ class ImportForm {
     }
 
     public function importForms(Player $player, array $forms, callable $onComplete = null, int $start = 0): void {
-        $manager = Main::getFormManager();
+        $manager = Mineflow::getFormManager();
         $names = array_keys($forms);
         for ($i = $start, $iMax = count($forms); $i < $iMax; $i++) {
             $name = $names[$i];

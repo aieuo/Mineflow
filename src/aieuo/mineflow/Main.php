@@ -8,14 +8,10 @@ use aieuo\mineflow\command\MineflowCommand;
 use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\ServerStartEvent;
-use aieuo\mineflow\flowItem\FlowItemCategory;
-use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventManager;
 use aieuo\mineflow\trigger\time\CheckTimeTriggerTask;
-use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\FormManager;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\PlayerConfig;
 use aieuo\mineflow\variable\VariableHelper;
 use JetBrains\PhpStorm\Deprecated;
@@ -25,21 +21,8 @@ use pocketmine\utils\Config;
 class Main extends PluginBase {
 
     private static Main $instance;
-    private static string $pluginVersion;
-
-    private Config $config;
-    private PlayerConfig $playerSettings;
 
     private bool $loaded = false;
-    private bool $enabledRecipeErrorInConsole;
-    private ?\DateTimeZone $timeTriggerTimeZone = null;
-
-    private static RecipeManager $recipeManager;
-    private static CommandManager $commandManager;
-    private static EventManager $eventManager;
-    private static FormManager $formManager;
-
-    private static VariableHelper $variableHelper;
 
     public static function getInstance(): self {
         return self::$instance;
@@ -49,50 +32,26 @@ class Main extends PluginBase {
         self::$instance = $this;
 
         Mineflow::init($this);
-
-        FlowItemCategory::registerDefaults();
-        Language::init();
     }
 
     public function onEnable(): void {
-        self::$pluginVersion = $this->getDescription()->getVersion();
-
-        $serverLanguage = $this->getServer()->getLanguage()->getLang();
-        $this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
-            "language" => in_array($serverLanguage, Language::getAvailableLanguages(), true) ? $serverLanguage : "eng",
-            "show_recipe_errors_in_console" => true,
-            "time_trigger_timezone" => ""
-        ]);
-        $this->config->save();
-
-        $this->enabledRecipeErrorInConsole = $this->config->get("show_recipe_errors_in_console", true);
-        if (!empty($timezone = $this->config->get("time_trigger_timezone"))) {
-            $this->timeTriggerTimeZone = new \DateTimeZone($timezone);
-        }
-
-        Language::setLanguage($this->config->get("language", "eng"));
-
-        $this->playerSettings = new PlayerConfig($this->getDataFolder()."player.yml", Config::YAML);
-
-        $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
+        Mineflow::loadConfig();
 
         (new Economy($this))->loadPlugin();
 
         EntityManager::init();
-        Triggers::init();
-        FlowItemFactory::init();
 
-        self::$commandManager = new CommandManager($this, new Config($this->getDataFolder()."commands.yml", Config::YAML));
-        self::$eventManager = new EventManager(new Config($this->getDataFolder()."events.yml"));
-        self::$formManager = new FormManager(new Config($this->getDataFolder()."forms.json", Config::JSON));
+        Mineflow::getCommandManager()->init();
 
-        self::$variableHelper = new VariableHelper(new Config($this->getDataFolder()."variables.json", Config::JSON));
+        Mineflow::getEventManager()->addDefaultTriggers();
 
-        self::$recipeManager = new RecipeManager($this->getDataFolder()."recipes/");
-        self::$recipeManager->loadRecipes();
-        self::$recipeManager->addTemplates();
+        Mineflow::getVariableHelper()->loadVariables();
+
+        Mineflow::getRecipeManager()->loadRecipes();
+        Mineflow::getRecipeManager()->addTemplates();
 
         (new EventListener())->registerEvents();
+        $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
         if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
 
@@ -104,54 +63,64 @@ class Main extends PluginBase {
 
     public function onDisable(): void {
         if (!$this->loaded) return;
-        self::$recipeManager->saveAll();
-        self::$formManager->saveAll();
-        self::$variableHelper->saveAll();
+
+        Mineflow::getRecipeManager()->saveAll();
+        Mineflow::getFormManager()->saveAll();
+        Mineflow::getVariableHelper()->saveAll();
     }
 
+    #[Deprecated(replacement: "Mineflow::getConfig()")]
     public function getConfig(): Config {
-        return $this->config;
+        return Mineflow::getConfig();
     }
 
+    #[Deprecated(replacement: "Mineflow::getPlayerSettings()")]
     public function getPlayerSettings(): PlayerConfig {
-        return $this->playerSettings;
+        return Mineflow::getPlayerSettings();
     }
 
+    #[Deprecated(replacement: "Mineflow::getRecipeManager()")]
     public static function getRecipeManager(): RecipeManager {
-        return self::$recipeManager;
+        return Mineflow::getRecipeManager();
     }
 
+    #[Deprecated(replacement: "Mineflow::getCommandManager()")]
     public static function getCommandManager(): CommandManager {
-        return self::$commandManager;
+        return Mineflow::getCommandManager();
     }
 
+    #[Deprecated(replacement: "Mineflow::getFormManager()")]
     public static function getFormManager(): FormManager {
-        return self::$formManager;
+        return Mineflow::getFormManager();
     }
 
+    #[Deprecated(replacement: "Mineflow::getEventManager()")]
     public static function getEventManager(): EventManager {
-        return self::$eventManager;
+        return Mineflow::getEventManager();
     }
 
+    #[Deprecated(replacement: "Mineflow::getVariableHelper()")]
     public static function getVariableHelper(): VariableHelper {
-        return self::$variableHelper;
+        return Mineflow::getVariableHelper();
     }
 
     #[Deprecated(replacement: "Mineflow::getPluginVersion()")]
     public static function getPluginVersion(): string {
-        return self::$pluginVersion;
+        return Mineflow::getPluginVersion();
     }
 
+    #[Deprecated(replacement: "Mineflow::isEnabledRecipeErrorInConsole()")]
     public function isEnabledRecipeErrorInConsole(): bool {
-        return $this->enabledRecipeErrorInConsole;
+        return Mineflow::isEnabledRecipeErrorInConsole();
     }
 
+    #[Deprecated(replacement: "Mineflow::getTimeTriggerTimeZone()")]
     public function getTimeTriggerTimeZone(): ?\DateTimeZone {
-        return $this->timeTriggerTimeZone;
+        return Mineflow::getTimeTriggerTimeZone();
     }
 
+    #[Deprecated(replacement: "Mineflow::setEnabledRecipeErrorInConsole(%parameter0%)")]
     public function setEnabledRecipeErrorInConsole(bool $enabledRecipeErrorInConsole): void {
-        $this->enabledRecipeErrorInConsole = $enabledRecipeErrorInConsole;
-        $this->config->set("show_recipe_errors_in_console", $enabledRecipeErrorInConsole);
+        Mineflow::setEnabledRecipeErrorInConsole($enabledRecipeErrorInConsole);
     }
 }

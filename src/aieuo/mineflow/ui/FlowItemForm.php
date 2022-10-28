@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
@@ -134,7 +135,7 @@ class FlowItemForm {
                 (new FlowItemContainerForm)->sendActionList($player, $container, $type);
             }),
             new Button("@form.items.category.favorite", function () use($player, $container, $type) {
-                $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), $type);
+                $favorites = Mineflow::getPlayerSettings()->getFavorites($player->getName(), $type);
                 $actions = [];
                 foreach ($favorites as $favorite) {
                     $action = FlowItemFactory::get($favorite);
@@ -150,7 +151,7 @@ class FlowItemForm {
         foreach (FlowItemCategory::all() as $category) {
             $buttons[] = new Button("@category.".$category, function () use($player, $container, $type, $category) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
-                $actions = FlowItemFactory::getByFilter($category, Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName()), !$isCondition, $isCondition);
+                $actions = FlowItemFactory::getByFilter($category, Mineflow::getPlayerSettings()->getPlayerActionPermission($player->getName()), !$isCondition, $isCondition);
 
                 Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
                 $this->sendSelectAction($player, $container, $type, $actions);
@@ -172,7 +173,7 @@ class FlowItemForm {
                 new CancelToggle(fn() => $this->selectActionCategory($player, $container, $type))
             ])->onReceive(function (Player  $player, array $data) use($container, $type) {
                 $isCondition = $type === FlowItemContainer::CONDITION;
-                $permission = Main::getInstance()->getPlayerSettings()->getPlayerActionPermission($player->getName());
+                $permission = Mineflow::getPlayerSettings()->getPlayerActionPermission($player->getName());
                 $actions = array_values(array_filter(FlowItemFactory::getByFilter(null, $permission, !$isCondition, $isCondition), function (FlowItem  $item) use($data) {
                     return stripos($item->getName(), $data[0]) !== false;
                 }));
@@ -204,7 +205,7 @@ class FlowItemForm {
     }
 
     public function sendActionMenu(Player $player, FlowItemContainer $container, string $type, FlowItem $item, array $messages = []): void {
-        $favorites = Main::getInstance()->getPlayerSettings()->getFavorites($player->getName(), $type);
+        $favorites = Mineflow::getPlayerSettings()->getFavorites($player->getName(), $type);
 
         /** @var FlowItemContainer|FlowItem $container */
         (new ListForm(Language::get("form.$type.menu.title", [$container->getContainerName(), $item->getId()])))
@@ -241,7 +242,7 @@ class FlowItemForm {
                         })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
                         break;
                     case 2:
-                        $config = Main::getInstance()->getPlayerSettings();
+                        $config = Mineflow::getPlayerSettings();
                         $config->toggleFavorite($player->getName(), $type, $item->getId());
                         $config->save();
                         $this->sendActionMenu($player, $container, $type, $item, ["@form.changed"]);

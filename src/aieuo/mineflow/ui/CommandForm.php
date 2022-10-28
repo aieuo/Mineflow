@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\utils\Language;
@@ -42,7 +43,7 @@ class CommandForm {
                 ], $defaults[2] ?? 0),
                 new CancelToggle(fn() => $callback === null ? $this->sendMenu($player) : $callback(false)),
             ])->onReceive(function (Player $player, array $data) use($callback) {
-                $manager = Main::getCommandManager();
+                $manager = Mineflow::getCommandManager();
                 $original = $manager->getOriginCommand($data[0]);
                 if (!$manager->isSubcommand($data[0]) and $manager->existsCommand($original)) {
                     throw new InvalidFormValueException("@form.command.alreadyExists", 0);
@@ -75,7 +76,7 @@ class CommandForm {
                 new Input("@form.command.name", "", $defaults[0] ?? "", true),
                 new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data) {
-                $manager = Main::getCommandManager();
+                $manager = Mineflow::getCommandManager();
                 if (!$manager->existsCommand($manager->getOriginCommand($data[0]))) {
                     throw new InvalidFormValueException("@form.command.notFound", 0);
                 }
@@ -88,7 +89,7 @@ class CommandForm {
     }
 
     public function sendCommandList(Player $player): void {
-        $manager = Main::getCommandManager();
+        $manager = Mineflow::getCommandManager();
         $commands = $manager->getCommandAll();
         $buttons = [new Button("@form.back", fn() => $this->sendMenu($player))];
         foreach ($commands as $command) {
@@ -151,7 +152,7 @@ class CommandForm {
                     return;
                 }
 
-                $manager = Main::getCommandManager();
+                $manager = Mineflow::getCommandManager();
                 $command["description"] = $data[0];
                 $manager->updateCommand($command);
                 $this->sendCommandMenu($player, $command);
@@ -179,7 +180,7 @@ class CommandForm {
                     return;
                 }
 
-                $manager = Main::getCommandManager();
+                $manager = Mineflow::getCommandManager();
                 $command["permission"] = ["mineflow.customcommand.op", "mineflow.customcommand.true"][$data[0]];
                 $manager->updateCommand($command);
                 $this->sendCommandMenu($player, $command);
@@ -192,7 +193,7 @@ class CommandForm {
                 new Input("@form.command.addCommand.permission.custom.input", "", $command["permission"], true),
                 new CancelToggle(fn() => $callback === null ? $this->changePermission($player, $command) : $callback(false)),
             ])->onReceive(function (Player $player, array $data, array $command) use($callback) {
-                $manager = Main::getCommandManager();
+                $manager = Mineflow::getCommandManager();
                 $command["permission"] = $data[0];
                 $manager->updateCommand($command);
                 if ($callback === null) {
@@ -210,10 +211,10 @@ class CommandForm {
             ->setButton2("@form.no")
             ->onReceive(function (Player $player, ?bool $data, array $command) {
                 if ($data) {
-                    $commandManager = Main::getCommandManager();
-                    $recipeManager = Main::getRecipeManager();
+                    $commandManager = Mineflow::getCommandManager();
+                    $recipeManager = Mineflow::getRecipeManager();
 
-                    $recipes = Main::getCommandManager()->getAssignedRecipes($command["command"]);
+                    $recipes = Mineflow::getCommandManager()->getAssignedRecipes($command["command"]);
                     foreach ($recipes as $recipe => $commands) {
                         [$name, $group] = $recipeManager->parseName($recipe);
 
@@ -235,7 +236,7 @@ class CommandForm {
     public function sendRecipeList(Player $player, array $command, array $messages = []): void {
         $buttons = [new Button("@form.back"), new Button("@form.add")];
 
-        $recipes = Main::getCommandManager()->getAssignedRecipes($command["command"]);
+        $recipes = Mineflow::getCommandManager()->getAssignedRecipes($command["command"]);
         foreach ($recipes as $name => $commands) {
             $buttons[] = new Button($name." | ".count($commands));
         }
@@ -268,7 +269,7 @@ class CommandForm {
     }
 
     public function sendRecipeMenu(Player $player, array $commandData, int $index, array $recipes): void {
-        $command = Main::getCommandManager()->getCommand($commandData["command"]);
+        $command = Mineflow::getCommandManager()->getCommand($commandData["command"]);
         $triggers = array_values($recipes)[$index];
         $content = implode("\n", array_map(function (String $cmd) {
             return "/".$cmd;
@@ -282,8 +283,8 @@ class CommandForm {
                         $this->sendRecipeMenu($player, $command, $index, $recipes);
                     });
                     $recipeName = array_keys($recipes)[$index];
-                    [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
-                    $recipe = Main::getRecipeManager()->get($name, $group);
+                    [$name, $group] = Mineflow::getRecipeManager()->parseName($recipeName);
+                    $recipe = Mineflow::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 })
             ])->show($player);

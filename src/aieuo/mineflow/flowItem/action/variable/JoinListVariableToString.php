@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -71,7 +72,7 @@ class JoinListVariableToString extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $separator = $source->replaceVariables($this->getSeparator());
         $result = $source->replaceVariables($this->getResultName());

@@ -33,23 +33,22 @@ class VariableHelper {
     /** @var Variable[] */
     private array $variables = [];
 
-    private Config $file;
-
-    public function __construct(Config $file) {
-        $this->file = $file;
+    public function __construct(private Config $file) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
         VariableSerializer::init();
         VariableDeserializer::init();
+    }
 
-        foreach ($file->getAll() as $name => $data) {
+    public function loadVariables(): void {
+        foreach ($this->file->getAll() as $name => $data) {
             $variable = VariableDeserializer::deserialize($data);
 
             if ($variable === null) {
                 Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed"));
                 continue;
             }
-            
+
             $this->variables[$name] = $variable;
         }
     }

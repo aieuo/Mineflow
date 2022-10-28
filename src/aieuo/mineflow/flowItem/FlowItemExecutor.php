@@ -8,6 +8,7 @@ use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
@@ -136,7 +137,7 @@ class FlowItemExecutor {
     }
 
     public function replaceVariables(string $text): string {
-        return Main::getVariableHelper()->replaceVariables($text, $this->getVariables(), $this);
+        return Mineflow::getVariableHelper()->replaceVariables($text, $this->getVariables(), $this);
     }
 
     public function getVariable(string $name): ?Variable {

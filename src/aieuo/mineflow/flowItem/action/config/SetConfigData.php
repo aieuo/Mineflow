@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -69,7 +70,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $key = $source->replaceVariables($this->getKey());
         $value = $this->getValue();
 
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
             $variable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
             if ($variable instanceof ListVariable) {

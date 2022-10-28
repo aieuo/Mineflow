@@ -5,6 +5,7 @@ namespace aieuo\mineflow\ui\trigger;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
@@ -35,7 +36,7 @@ class EventTriggerForm extends TriggerForm {
     }
 
     public function sendEventTriggerList(Player $player, Recipe $recipe): void {
-        $events = Main::getEventManager()->getEnabledEvents();
+        $events = Mineflow::getEventManager()->getEnabledEvents();
         $buttons = [new Button("@form.back")];
         foreach ($events as $event => $value) {
             $buttons[] = new Button((string)EventTrigger::create($event));
@@ -80,7 +81,7 @@ class EventTriggerForm extends TriggerForm {
     }
 
     public function sendSelectEvent(Player $player): void {
-        $events = Main::getEventManager()->getEnabledEvents();
+        $events = Mineflow::getEventManager()->getEnabledEvents();
         $buttons = [];
         foreach ($events as $event => $value) {
             $buttons[] = new Button((string)EventTrigger::create($event), fn() => $this->sendRecipeList($player, $event));
@@ -94,7 +95,7 @@ class EventTriggerForm extends TriggerForm {
     public function sendRecipeList(Player $player, string $event, array $messages = []): void {
         $buttons = [new Button("@form.back"), new Button("@form.add")];
 
-        $recipes = Main::getEventManager()->getAssignedRecipes($event);
+        $recipes = Mineflow::getEventManager()->getAssignedRecipes($event);
         foreach ($recipes as $name => $events) {
             $buttons[] = new Button($name);
         }
@@ -138,8 +139,8 @@ class EventTriggerForm extends TriggerForm {
                     Session::getSession($player)->set("recipe_menu_prev", function() use($player, $event, $recipeName) {
                         $this->sendRecipeMenu($player, $event, $recipeName);
                     });
-                    [$name, $group] = Main::getRecipeManager()->parseName($recipeName);
-                    $recipe = Main::getRecipeManager()->get($name, $group);
+                    [$name, $group] = Mineflow::getRecipeManager()->parseName($recipeName);
+                    $recipe = Mineflow::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
             })->addArgs($event, $recipeName)->show($player);

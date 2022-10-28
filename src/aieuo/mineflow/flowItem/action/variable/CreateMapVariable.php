@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -73,7 +74,7 @@ class CreateMapVariable extends FlowItem {
     public function execute(FlowItemExecutor $source): \Generator {
         $this->throwIfCannotExecute();
 
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $keys = array_map(fn(string $key) => $source->replaceVariables($key), $this->getKey());
         $values = $this->getVariableValue();

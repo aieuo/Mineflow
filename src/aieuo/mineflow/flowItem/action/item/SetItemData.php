@@ -85,7 +85,7 @@ class SetItemData extends FlowItem implements ItemFlowItem {
     }
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $value = $this->getValue();
 
         $variable = null;

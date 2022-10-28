@@ -6,6 +6,7 @@ use aieuo\mineflow\command\subcommand\CustomCommandCommand;
 use aieuo\mineflow\command\subcommand\LanguageCommand;
 use aieuo\mineflow\command\subcommand\RecipeCommand;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\ui\HomeForm;
 use aieuo\mineflow\ui\SettingForm;
@@ -76,7 +77,7 @@ class MineflowCommand extends Command {
                     $sender->sendMessage(Language::get("command.permission.usage"));
                     return;
                 }
-                $config = Main::getInstance()->getPlayerSettings();
+                $config = Mineflow::getPlayerSettings();
                 $permission = $sender instanceof Player ? $config->getPlayerActionPermission($sender->getName()) : 2;
                 if ($permission < (int)$args[1]) {
                     $sender->sendMessage(Language::get("command.permission.permission.notEnough"));
@@ -92,9 +93,9 @@ class MineflowCommand extends Command {
                     return;
                 }
                 $path = (isset($args[1]) ? ($args[1]."/") : "").$args[0];
-                [$name, $group] = Main::getRecipeManager()->parseName($path);
+                [$name, $group] = Mineflow::getRecipeManager()->parseName($path);
 
-                $recipe = Main::getRecipeManager()->get($name, $group);
+                $recipe = Mineflow::getRecipeManager()->get($name, $group);
                 if ($recipe === null) {
                     $sender->sendMessage(Language::get("action.executeRecipe.notFound"));
                     return;

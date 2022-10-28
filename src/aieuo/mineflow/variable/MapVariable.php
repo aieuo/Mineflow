@@ -5,6 +5,7 @@ namespace aieuo\mineflow\variable;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
@@ -75,7 +76,7 @@ class MapVariable extends ListVariable {
     }
 
     public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
-        $variableHelper = Main::getVariableHelper();
+        $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $key => $value) {
             $variables["it"] = $value;
@@ -85,7 +86,7 @@ class MapVariable extends ListVariable {
     }
 
     public function callMethod(string $name, array $parameters = []): ?Variable {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         return match ($name) {
             "count" => new NumberVariable(count($this->value)),
             "reverse" => new MapVariable(array_reverse($this->value)),
