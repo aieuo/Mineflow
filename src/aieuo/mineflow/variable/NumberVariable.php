@@ -24,11 +24,6 @@ class NumberVariable extends Variable implements \JsonSerializable {
         return parent::getValue();
     }
 
-    public function modulo(NumberVariable $var): NumberVariable {
-        $result = $this->getValue() % $var->getValue();
-        return new NumberVariable($result);
-    }
-
     public function add($target): NumberVariable {
         if ($target instanceof NumberVariable) return new NumberVariable($this->getValue() + $target->getValue());
         if (is_numeric($target)) return new NumberVariable($this->getValue() + $target);
