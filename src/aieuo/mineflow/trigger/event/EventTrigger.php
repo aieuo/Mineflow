@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\trigger\event;
 
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;

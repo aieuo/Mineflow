@@ -12,7 +12,6 @@ use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\element\mineflow\CommandConsoleButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;

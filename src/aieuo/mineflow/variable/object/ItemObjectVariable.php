@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;

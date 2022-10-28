@@ -7,7 +7,6 @@ namespace aieuo\mineflow\flowItem\action\script;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 
 class SaveData extends FlowItem {

@@ -3,7 +3,6 @@
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BoolVariable;
 use aieuo\mineflow\variable\ListVariable;
