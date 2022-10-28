@@ -64,9 +64,9 @@ class AxisAlignedBBObjectVariable extends ObjectVariable {
         }
         if ($target instanceof AxisAlignedBBObjectVariable) {
             $target = $target->getAxisAlignedBB();
-            return self::fromVector3(
-                new Vector3($aabb->minX + $target->minX, $aabb->minY + $target->minY, $aabb->minZ + $target->minZ),
-                new Vector3($aabb->maxX + $target->maxX, $aabb->maxY + $target->maxY, $aabb->maxZ + $target->maxZ),
+            return self::fromFloat(
+                $aabb->minX + $target->minX, $aabb->minY + $target->minY, $aabb->minZ + $target->minZ,
+                $aabb->maxX + $target->maxX, $aabb->maxY + $target->maxY, $aabb->maxZ + $target->maxZ,
             );
         }
 
@@ -85,9 +85,9 @@ class AxisAlignedBBObjectVariable extends ObjectVariable {
         }
         if ($target instanceof AxisAlignedBBObjectVariable) {
             $target = $target->getAxisAlignedBB();
-            return self::fromVector3(
-                new Vector3($aabb->minX - $target->minX, $aabb->minY - $target->minY, $aabb->minZ - $target->minZ),
-                new Vector3($aabb->maxX - $target->maxX, $aabb->maxY - $target->maxY, $aabb->maxZ - $target->maxZ),
+            return self::fromFloat(
+                $aabb->minX - $target->minX, $aabb->minY - $target->minY, $aabb->minZ - $target->minZ,
+                $aabb->maxX - $target->maxX, $aabb->maxY - $target->maxY, $aabb->maxZ - $target->maxZ,
             );
         }
 
