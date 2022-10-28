@@ -486,6 +486,7 @@ class FlowItemFactory {
             if ($permission !== null and $item->getPermission() > $permission) continue;
             if (!$getAction and !($item instanceof Condition)) continue;
             if (!$getCondition and ($item instanceof Condition)) continue;
+
             $items[] = $item;
         }
         return $items;

@@ -17,7 +17,7 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
 
     protected array $detailDefaultReplace = ["player", "message"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER_MESSAGE;
 
     private string $message;
 

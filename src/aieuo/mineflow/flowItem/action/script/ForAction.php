@@ -27,7 +27,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
     protected string $name = "action.for.name";
     protected string $detail = "action.for.description";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT_LOOP;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

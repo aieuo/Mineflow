@@ -27,7 +27,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     protected string $name = "action.whileTask.name";
     protected string $detail = "action.whileTask.description";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT_LOOP;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

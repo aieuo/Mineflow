@@ -21,7 +21,7 @@ class IFAction extends FlowItem implements FlowItemContainer {
     protected string $name = "action.if.name";
     protected string $detail = "action.if.description";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT_IF;
 
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         $this->setConditions($conditions);

@@ -22,7 +22,7 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.sendTitle.detail";
     protected array $detailDefaultReplace = ["player", "title", "subtitle", "fadein", "stay", "fadeout"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER_MESSAGE;
 
     private string $title;
     private string $subtitle;

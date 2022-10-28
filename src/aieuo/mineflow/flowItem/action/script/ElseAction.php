@@ -22,7 +22,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     protected string $name = "action.else.name";
     protected string $detail = "action.else.description";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT_IF;
 
     public function __construct(array $actions = [], ?string $customName = null) {
         $this->setActions($actions);

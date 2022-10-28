@@ -26,7 +26,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.executeIFChain.detail";
     protected array $detailDefaultReplace = ["chain", "player"];
 
-    protected string $category = FlowItemCategory::PLUGIN;
+    protected string $category = FlowItemCategory::PLUGIN_IF_PLUGIN;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

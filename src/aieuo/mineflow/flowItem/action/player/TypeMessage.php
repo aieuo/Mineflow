@@ -13,7 +13,7 @@ abstract class TypeMessage extends FlowItem {
 
     protected array $detailDefaultReplace = ["message"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER_MESSAGE;
 
     private string $message;
 

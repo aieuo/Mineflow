@@ -20,7 +20,7 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
     protected string $detail = "condition.hasPermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER_PERMISSION;
 
     private string $playerPermission;
 

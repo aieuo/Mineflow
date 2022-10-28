@@ -23,7 +23,7 @@ class SendToast extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.sendToast.detail";
     protected array $detailDefaultReplace = ["player", "title", "body"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER_MESSAGE;
 
     public function __construct(
         private string $player = "",

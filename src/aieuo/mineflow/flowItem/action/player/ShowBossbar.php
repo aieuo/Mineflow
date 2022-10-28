@@ -28,7 +28,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.showBossbar.detail";
     protected array $detailDefaultReplace = ["player", "title", "max", "value", "color", "id"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::BOSSBAR;
 
     private array $colors = [
         "pink" => BossBarColor::PINK,

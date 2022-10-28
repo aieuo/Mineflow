@@ -24,7 +24,7 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
     protected string $detail = "action.hideScoreboard.detail";
     protected array $detailDefaultReplace = ["player", "scoreboard"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::SCOREBOARD;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         $this->setPlayerVariableName($player);

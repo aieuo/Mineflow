@@ -14,7 +14,7 @@ abstract class TypeMoney extends FlowItem {
 
     protected array $detailDefaultReplace = ["target", "amount"];
 
-    protected string $category = FlowItemCategory::PLUGIN;
+    protected string $category = FlowItemCategory::PLUGIN_ECONOMY;
 
     private string $playerName;
     private string $amount;

@@ -20,8 +20,8 @@ use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionObjectVariable;
-use pocketmine\world\Position;
 use pocketmine\player\Player;
+use pocketmine\world\Position;
 
 class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlowItem {
     use FlowItemContainerTrait, PositionFlowItemTrait;
@@ -31,7 +31,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
     protected string $name = "action.foreachPosition.name";
     protected string $detail = "action.foreachPosition.description";
 
-    protected string $category = FlowItemCategory::SCRIPT;
+    protected string $category = FlowItemCategory::SCRIPT_LOOP;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 

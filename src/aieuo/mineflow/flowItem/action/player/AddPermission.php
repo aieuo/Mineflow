@@ -23,7 +23,7 @@ class AddPermission extends FlowItem implements PlayerFlowItem {
     protected string $detail = "action.addPermission.detail";
     protected array $detailDefaultReplace = ["player", "permission"];
 
-    protected string $category = FlowItemCategory::PLAYER;
+    protected string $category = FlowItemCategory::PLAYER_PERMISSION;
 
     protected int $permission = self::PERMISSION_LEVEL_1;
 
