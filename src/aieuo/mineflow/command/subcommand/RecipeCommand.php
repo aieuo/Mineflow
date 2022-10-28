@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;

@@ -8,7 +8,6 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\command\CommandTrigger;

@@ -8,7 +8,6 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Main;
 use SOFe\AwaitGenerator\Await;
 use aieuo\mineflow\Mineflow;
 

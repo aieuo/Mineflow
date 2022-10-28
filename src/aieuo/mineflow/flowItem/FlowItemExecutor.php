@@ -8,7 +8,6 @@ use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;

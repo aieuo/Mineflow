@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;

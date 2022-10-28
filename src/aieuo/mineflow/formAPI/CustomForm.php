@@ -12,7 +12,6 @@ use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\formAPI\element\StringResponseDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;

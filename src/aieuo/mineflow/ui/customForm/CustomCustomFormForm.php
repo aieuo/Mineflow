@@ -17,7 +17,6 @@ use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;

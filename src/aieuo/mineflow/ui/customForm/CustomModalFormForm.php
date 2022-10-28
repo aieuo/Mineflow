@@ -9,7 +9,6 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
