@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\event;
 
+use aieuo\mineflow\event\CustomTriggerCallEvent;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -52,6 +53,8 @@ class CallCustomTrigger extends FlowItem {
         $trigger = CustomTrigger::create($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
         $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
+
+        (new CustomTriggerCallEvent($trigger, $source))->call();
         yield true;
     }
 
