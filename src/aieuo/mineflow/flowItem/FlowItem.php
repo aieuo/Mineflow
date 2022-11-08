@@ -56,6 +56,10 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return Language::get($this->detail);
     }
 
+    public function getShortDetail(): string {
+        return empty($this->getCustomName()) ? $this->getDetail() : "§l".$this->getCustomName()."§r§f";
+    }
+
     public function setCustomName(?string $name = null): void {
         $this->customName = $name ?? "";
     }

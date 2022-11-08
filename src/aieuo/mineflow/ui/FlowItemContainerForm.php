@@ -19,7 +19,7 @@ class FlowItemContainerForm {
 
         $buttons = [new Button("@form.back"), new Button("@{$type}.add")];
         foreach ($actions as $action) {
-            $buttons[] = new Button(empty($action->getCustomName()) ? trim(TextFormat::clean($action->getDetail())) : $action->getCustomName());
+            $buttons[] = new Button(trim(TextFormat::clean($action->getShortDetail())));
         }
 
         (new ListForm(Language::get("form.{$type}Container.list.title", [$container->getContainerName()])))
@@ -80,7 +80,7 @@ class FlowItemContainerForm {
             }
 
             $color = ($i === $selected ? TextFormat::AQUA : "");
-            $buttons[] = new Button($color.trim(TextFormat::clean($action->getDetail())), function (Player $player) use($i, $action, $container, $type, $selected, $count) {
+            $buttons[] = new Button($color.trim(TextFormat::clean($action->getShortDetail())), function (Player $player) use($i, $action, $container, $type, $selected, $count) {
                 if ($i === $selected or !($action instanceof FlowItemContainer)) {
                     $this->sendMoveAction($player, $container, $type, $selected, ["@form.move.target.invalid"], $count);
                 } else {

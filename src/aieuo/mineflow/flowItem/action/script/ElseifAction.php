@@ -17,11 +17,11 @@ class ElseifAction extends IFAction {
     public function getDetail(): string {
         $details = ["§7=============§f elseif §7=============§f"];
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            $details[] = $condition->getShortDetail();
         }
         $details[] = "§7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f";
         foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
+            $details[] = $action->getShortDetail();
         }
         $details[] = "§7================================§f";
         return implode("\n", $details);

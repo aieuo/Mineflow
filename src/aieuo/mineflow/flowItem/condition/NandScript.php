@@ -14,7 +14,7 @@ class NandScript extends AndScript {
     public function getDetail(): string {
         $details = ["-----------nand-----------"];
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            $details[] = $condition->getShortDetail();
         }
         $details[] = "------------------------";
         return implode("\n", $details);

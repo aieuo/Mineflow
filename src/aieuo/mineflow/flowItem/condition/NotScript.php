@@ -12,7 +12,7 @@ class NotScript extends NandScript {
     public function getDetail(): string {
         $details = ["-----------not-----------"];
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            $details[] = $condition->getShortDetail();
         }
         $details[] = "------------------------";
         return implode("\n", $details);

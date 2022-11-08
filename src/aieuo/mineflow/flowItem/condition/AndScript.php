@@ -24,7 +24,7 @@ class AndScript extends FlowItem implements Condition, FlowItemContainer {
     public function getDetail(): string {
         $details = ["----------and-----------"];
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            $details[] = $condition->getShortDetail();
         }
         $details[] = "------------------------";
         return implode("\n", $details);

@@ -14,7 +14,7 @@ class NorScript extends ORScript {
     public function getDetail(): string {
         $details = ["-----------nor-----------"];
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            $details[] = $condition->getShortDetail();
         }
         $details[] = "------------------------";
         return implode("\n", $details);
