@@ -412,7 +412,7 @@ class VariableHelper {
 
     public function copyOrCreateVariable(string $value, ?FlowItemExecutor $executor = null): Variable {
         if ($this->isSimpleVariableString($value)) {
-            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? $this->get(substr($value, 1, -1));
+            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? $this->getNested(substr($value, 1, -1));
             if ($variable !== null) {
                 return $variable;
             }

@@ -27,7 +27,7 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     private array $args = [];
 
     public function __construct(private string $chainName = "", string $player = "") {
-        parent::__construct(self::EXECUTE_IF_CHAIN, FlowItemCategory::PLUGIN);
+        parent::__construct(self::EXECUTE_IF_CHAIN, FlowItemCategory::PLUGIN_IF_PLUGIN);
 
         $this->setPlayerVariableName($player);
     }

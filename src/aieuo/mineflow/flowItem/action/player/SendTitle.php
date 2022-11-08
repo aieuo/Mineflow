@@ -29,7 +29,7 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         private string $stay = "-1",
         private string $fadeout = "-1"
     ) {
-        parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER);
+        parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER_MESSAGE);
 
         $this->setPlayerVariableName($player);
     }

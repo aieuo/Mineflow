@@ -32,7 +32,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
     private string $fluctuation = "1";
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT);
+        parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT_LOOP);
 
         $this->setActions($actions);
         $this->setCustomName($customName);

@@ -19,7 +19,7 @@ abstract class IFActionBase extends FlowItem implements FlowItemContainer {
 
     public function __construct(
         string  $id,
-        string  $category = FlowItemCategory::SCRIPT,
+        string  $category = FlowItemCategory::SCRIPT_IF,
         array   $conditions = [],
         array   $actions = [],
         ?string $customName = null

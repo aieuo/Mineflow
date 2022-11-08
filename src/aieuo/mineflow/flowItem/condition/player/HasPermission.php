@@ -21,7 +21,7 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
     use ConditionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", private string $playerPermission = "") {
-        parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER);
+        parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER_PERMISSION);
 
         $this->setPlayerVariableName($player);
     }

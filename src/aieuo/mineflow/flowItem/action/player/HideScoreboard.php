@@ -22,7 +22,7 @@ class HideScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
     use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", string $scoreboard = "") {
-        parent::__construct(self::HIDE_SCOREBOARD, FlowItemCategory::PLAYER);
+        parent::__construct(self::HIDE_SCOREBOARD, FlowItemCategory::SCOREBOARD);
 
         $this->setPlayerVariableName($player);
         $this->setScoreboardVariableName($scoreboard);

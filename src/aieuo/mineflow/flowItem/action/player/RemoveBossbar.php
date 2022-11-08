@@ -21,7 +21,7 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
     use ActionNameWithMineflowLanguage;
 
     public function __construct(string $player = "", private string $barId = "") {
-        parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::PLAYER);
+        parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->setPlayerVariableName($player);
     }

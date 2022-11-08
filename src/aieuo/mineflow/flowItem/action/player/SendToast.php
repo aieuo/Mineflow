@@ -24,7 +24,7 @@ class SendToast extends FlowItem implements PlayerFlowItem {
         private string $title = "",
         private string $body = ""
     ) {
-        parent::__construct(self::SEND_TOAST, FlowItemCategory::PLAYER);
+        parent::__construct(self::SEND_TOAST, FlowItemCategory::PLAYER_MESSAGE);
 
         $this->setPlayerVariableName($player);
     }

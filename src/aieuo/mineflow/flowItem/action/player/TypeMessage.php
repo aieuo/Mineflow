@@ -14,7 +14,7 @@ abstract class TypeMessage extends FlowItem {
 
     public function __construct(
         string         $id,
-        string         $category = FlowItemCategory::PLAYER,
+        string         $category = FlowItemCategory::PLAYER_MESSAGE,
         private string $message = ""
     ) {
         parent::__construct($id, $category);

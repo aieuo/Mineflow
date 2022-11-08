@@ -42,7 +42,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         private string $color = "purple",
         private string $barId = ""
     ) {
-        parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::PLAYER);
+        parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->setPlayerVariableName($player);
     }

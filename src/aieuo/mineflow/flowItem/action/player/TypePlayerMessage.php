@@ -18,7 +18,7 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
 
     public function __construct(
         string         $id,
-        string         $category = FlowItemCategory::PLAYER,
+        string         $category = FlowItemCategory::PLAYER_PERMISSION,
         string         $player = "",
         private string $message = "",
     ) {

@@ -489,6 +489,7 @@ class FlowItemFactory {
             }
             if (!$getAction and !($item instanceof Condition)) continue;
             if (!$getCondition and ($item instanceof Condition)) continue;
+
             $items[] = $item;
         }
         return $items;

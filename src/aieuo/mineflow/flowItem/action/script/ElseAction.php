@@ -20,7 +20,7 @@ class ElseAction extends FlowItem implements FlowItemContainer {
     use ActionNameWithMineflowLanguage;
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        parent::__construct(self::ACTION_ELSE, FlowItemCategory::SCRIPT);
+        parent::__construct(self::ACTION_ELSE, FlowItemCategory::SCRIPT_IF);
 
         $this->setActions($actions);
         $this->setCustomName($customName);

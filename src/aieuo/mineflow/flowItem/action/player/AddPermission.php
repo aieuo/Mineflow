@@ -12,7 +12,7 @@ use SOFe\AwaitGenerator\Await;
 class AddPermission extends AddPermissionBase {
 
     public function __construct(string $player = "", string $playerPermission = "") {
-        parent::__construct(self::ADD_PERMISSION, FlowItemCategory::PLAYER, player: $player, playerPermission: $playerPermission);
+        parent::__construct(self::ADD_PERMISSION, FlowItemCategory::PLAYER_PERMISSION, player: $player, playerPermission: $playerPermission);
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

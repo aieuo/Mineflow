@@ -19,7 +19,6 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\nbt\NbtException;
 use SOFe\AwaitGenerator\Await;
-use function substr;
 
 class SetItemData extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
@@ -87,16 +86,7 @@ class SetItemData extends FlowItem implements ItemFlowItem {
         $helper = Mineflow::getVariableHelper();
         $value = $this->getValue();
 
-        $variable = null;
-        if ($helper->isSimpleVariableString($value)) {
-            $variable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
-        }
-
-        if ($variable === null) {
-            $value = $helper->replaceVariables($value, $source->getVariables());
-            $variable = Variable::create($helper->currentType($value), $helper->getType($value));
-        }
-        return $variable;
+        return $helper->copyOrCreateVariable($value, $source);
     }
 
     public function getEditFormElements(array $variables): array {

@@ -15,7 +15,7 @@ abstract class TypeMoney extends FlowItem {
 
     public function __construct(
         string         $id,
-        string         $category = FlowItemCategory::PLUGIN,
+        string         $category = FlowItemCategory::PLUGIN_ECONOMY,
         private string $playerName = "{target.name}",
         private string $amount = "",
     ) {

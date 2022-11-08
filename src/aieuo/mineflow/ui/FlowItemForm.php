@@ -148,14 +148,8 @@ class FlowItemForm {
             })
         ];
 
-        foreach (FlowItemCategory::all() as $category) {
-            $buttons[] = new Button("@category.".$category, function () use($player, $container, $type, $category) {
-                $isCondition = $type === FlowItemContainer::CONDITION;
-                $actions = FlowItemFactory::getByFilter($category, Mineflow::getPlayerSettings()->getPlayerActionPermissions($player->getName()), !$isCondition, $isCondition);
-
-                Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
-                $this->sendSelectAction($player, $container, $type, $actions);
-            });
+        foreach (FlowItemCategory::root() as $category) {
+            $buttons[] = $this->getCategoryButton($player, $category, "@category.".$category, $container, $type);
         }
 
         $buttons[] = new Button("@form.search", fn() => $this->sendSearchAction($player, $container, $type));
@@ -164,6 +158,20 @@ class FlowItemForm {
         (new ListForm(Language::get("form.$type.category.title", [$container->getContainerName()])))
             ->addButtons($buttons)
             ->show($player);
+    }
+
+    private function getCategoryButton(Player $player, string $category, string $text, FlowItemContainer $container, string $type): Button {
+        return new Button($text, function () use($player, $container, $type, $category) {
+            $this->onSelectCategory($player, $category, $container, $type);
+        });
+    }
+
+    private function onSelectCategory(Player $player, string $category, FlowItemContainer $container, string $type): void {
+        $isCondition = $type === FlowItemContainer::CONDITION;
+        $actions = FlowItemFactory::getByFilter($category, Mineflow::getPlayerSettings()->getPlayerActionPermissions($player->getName()), !$isCondition, $isCondition);
+
+        Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
+        $this->sendSelectAction($player, $container, $type, $actions, $category);
     }
 
     public function sendSearchAction(Player $player, FlowItemContainer $container, string $type): void {
@@ -183,19 +191,33 @@ class FlowItemForm {
             })->show($player);
     }
 
-    public function sendSelectAction(Player $player, FlowItemContainer $container, string $type, array $items): void {
+    public function sendSelectAction(Player $player, FlowItemContainer $container, string $type, array $items, string $category = null): void {
         $buttons = [
-            new Button("@form.back", fn() => $this->selectActionCategory($player, $container, $type))
+            new Button("@form.back", function() use($player, $container, $type, $category) {
+                if ($category !== null and ($parent = FlowItemCategory::getParent($category)) !== null) {
+                    $this->onSelectCategory($player, $parent, $container, $type);
+                } else {
+                    $this->selectActionCategory($player, $container, $type);
+                }
+            })
         ];
+        $subCategoryCount = 0;
+        if ($category !== null) {
+            foreach (FlowItemCategory::getChildren($category) as $child) {
+                $buttons[] = $this->getCategoryButton($player, $child, "[@category.".$child."]", $container, $type);
+                $subCategoryCount ++;
+            }
+        }
         foreach ($items as $item) {
             $buttons[] = new Button($item->getName());
         }
         /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.$type.select.title", [$container->getContainerName(), Session::getSession($player)->get("flowItem_category", "")])))
+        (new ListForm(Language::get("form.$type.select.title", [$container->getContainerName(), $category ?? ""])))
             ->setContent(count($buttons) === 1 ? "@form.action.empty" : "@form.selectButton")
             ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data) use($container, $type, $items) {
+            ->onReceive(function (Player $player, int $data) use($container, $type, $items, $subCategoryCount) {
                 $data --;
+                $data -= $subCategoryCount;
 
                 Session::getSession($player)->set($type."s", $items);
                 $item = clone $items[$data];
@@ -217,7 +239,7 @@ class FlowItemForm {
                 switch ($data) {
                     case 0:
                         $actions = Session::getSession($player)->get($type."s");
-                        $this->sendSelectAction($player, $container, $type, $actions);
+                        $this->sendSelectAction($player, $container, $type, $actions, $item->getCategory());
                         break;
                     case 1:
                         if ($item->hasCustomMenu()) {
