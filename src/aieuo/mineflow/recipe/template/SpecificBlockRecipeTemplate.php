@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\recipe\template;
 
-use aieuo\mineflow\flowItem\action\script\IFAction;
+use aieuo\mineflow\flowItem\action\script\ifelse\IFAction;
 use aieuo\mineflow\flowItem\condition\script\ComparisonString;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\Dropdown;

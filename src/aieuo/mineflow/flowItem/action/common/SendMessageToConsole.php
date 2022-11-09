@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\action\common;
 
-use aieuo\mineflow\flowItem\action\player\TypeMessage;
+use aieuo\mineflow\flowItem\action\player\message\TypeMessage;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
