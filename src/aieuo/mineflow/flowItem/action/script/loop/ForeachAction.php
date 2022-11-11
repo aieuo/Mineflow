@@ -76,7 +76,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
         $details = ["", "§7==§f foreach(".$repeat.") §7==§f"];
         foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
+            $details[] = $action->getShortDetail();
         }
         $details[] = "§7================================§f";
         return implode("\n", $details);

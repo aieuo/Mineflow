@@ -35,7 +35,7 @@ class ActionGroup extends FlowItem implements FlowItemContainer {
     public function getDetail(): string {
         $details = ["", "§7------------------------§f"];
         foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
+            $details[] = $action->getShortDetail();
         }
         $details[] = "§7------------------------§f\n";
         return implode("\n", $details);

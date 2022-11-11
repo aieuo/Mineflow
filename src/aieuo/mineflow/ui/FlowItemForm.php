@@ -32,10 +32,11 @@ class FlowItemForm {
 
         /** @var Recipe|FlowItem $container */
         (new ListForm(Language::get("form.$type.addedItemMenu.title", [$container->getContainerName(), $action->getName()])))
-            ->setContent(trim($action->getDetail()))
+            ->setContent(trim($action->getCustomName()."\n\n".ltrim($action->getDetail())))
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.edit"),
+                new Button("@form.home.rename.title"),
                 new Button("@form.move"),
                 new Button("@form.duplicate"),
                 new Button("@form.delete"),
@@ -55,15 +56,18 @@ class FlowItemForm {
                         })->onReceive([$this, "onUpdateAction"])->show($player);
                         break;
                     case 2:
-                        (new FlowItemContainerForm)->sendMoveAction($player, $container, $type, array_search($action, $container->getItems($type), true));
+                        $this->sendChangeName($player, $action, $container, $type);
                         break;
                     case 3:
+                        (new FlowItemContainerForm)->sendMoveAction($player, $container, $type, array_search($action, $container->getItems($type), true));
+                        break;
+                    case 4:
                         $newItem = clone $action;
                         $container->addItem($newItem, $type);
                         Session::getSession($player)->pop("parents");
                         (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.duplicate.success"]);
                         break;
-                    case 4:
+                    case 5:
                         $this->sendConfirmDelete($player, $action, $container, $type);
                         break;
                 }
@@ -77,7 +81,7 @@ class FlowItemForm {
         $parent = end($parents);
 
         /** @var FlowItem|FlowItemContainer $action */
-        $detail = trim($action->getDetail());
+        $detail = trim($action->getCustomName()."\n\n".ltrim($action->getDetail()));
         (new ListForm($action->getName()))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButton(
