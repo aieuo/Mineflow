@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\ui\customForm;
 
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -49,7 +49,7 @@ class CustomListFormForm {
     }
 
     public function sendSelectButtonType(Player $player, ListForm $form): void {
-        $hasConsoleCommandPermission = Mineflow::getPlayerSettings()->hasPlayerActionPermission($player->getName(), FlowItem::PERMISSION_CONSOLE);
+        $hasConsoleCommandPermission = Mineflow::getPlayerSettings()->hasPlayerActionPermission($player->getName(), FlowItemPermission::CONSOLE);
         (new ListForm("@customForm.list.addButton"))
             ->addButton(new Button("@form.back", fn() => $this->sendMenu($player, $form)))
             ->addButton(new Button("@customForm.list.button.type.normal", fn() => $this->sendAddButton($player, $form)))

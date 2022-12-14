@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 
@@ -23,6 +24,7 @@ abstract class AddPermissionBase extends FlowItem implements PlayerFlowItem {
         private string $playerPermission = ""
     ) {
         parent::__construct($id, $category);
+        $this->setPermissions([FlowItemPermission::PERMISSION]);
 
         $this->setPlayerVariableName($player);
     }
@@ -33,10 +35,6 @@ abstract class AddPermissionBase extends FlowItem implements PlayerFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getPlayerVariableName(), $this->getPlayerPermission()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_PERMISSION];
     }
 
     public function setPlayerPermission(string $playerPermission): void {

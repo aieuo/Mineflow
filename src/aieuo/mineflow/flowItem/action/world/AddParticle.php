@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -27,6 +28,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         private string $amount = "1"
     ) {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setPositionVariableName($position);
     }
@@ -37,10 +39,6 @@ class AddParticle extends FlowItem implements PositionFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() === "1" ? "" : "s"];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setParticle(string $particle): void {

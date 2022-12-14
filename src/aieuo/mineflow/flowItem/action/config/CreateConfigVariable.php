@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
@@ -27,6 +28,7 @@ class CreateConfigVariable extends FlowItem {
         private string $variableName = "config"
     ) {
         parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
+        $this->setPermissions([FlowItemPermission::CONFIG]);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,10 +37,6 @@ class CreateConfigVariable extends FlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getVariableName(), $this->getFileName()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONFIG];
     }
 
     public function setVariableName(string $variableName): void {

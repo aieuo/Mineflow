@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
@@ -27,6 +28,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
         string         $args = ""
     ) {
         parent::__construct($id, $category);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
     }
@@ -37,10 +39,6 @@ abstract class ExecuteRecipeBase extends FlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getRecipeName()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setRecipeName(string $name): self {

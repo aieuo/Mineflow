@@ -7,6 +7,7 @@ namespace aieuo\mineflow;
 use aieuo\mineflow\command\CommandManager;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemFactory;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventManager;
@@ -41,6 +42,7 @@ class Mineflow {
         self::$pluginVersion = $main->getDescription()->getVersion();
 
         FlowItemCategory::registerDefaults();
+        FlowItemPermission::registerDefaults();
         Language::init();
         Triggers::init();
         FlowItemFactory::init();

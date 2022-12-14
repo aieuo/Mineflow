@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
@@ -20,6 +20,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
 
     public function __construct(string $config = "") {
         parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
+        $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }
@@ -30,10 +31,6 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getConfigVariableName()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONFIG];
     }
 
     public function isDataValid(): bool {
