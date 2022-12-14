@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
@@ -35,18 +35,19 @@ class PermissionForm {
         $config = Mineflow::getPlayerSettings();
         $permissions = $config->getPlayerActionPermissions($target);
 
+        $allPermissions = FlowItemPermission::all();
         $contents = [];
-        foreach (FlowItem::PERMISSION_ALL as $permission) {
+        foreach ($allPermissions as $permission) {
             $contents[] = new Toggle("@permission.".$permission, in_array($permission, $permissions, true));
         }
         $contents[] = new CancelToggle(fn() => $this->sendSelectPlayer($player));
 
         (new CustomForm(Language::get("permission.form.edit.title", [$target])))
             ->addContents($contents)
-            ->onReceiveWithoutPlayer(function (array $data) use($player, $target, $config, $permissions) {
+            ->onReceiveWithoutPlayer(function (array $data) use($player, $target, $config, $permissions, $allPermissions) {
                 array_pop($data);
                 foreach ($data as $i => $checked) {
-                    $permission = FlowItem::PERMISSION_ALL[$i];
+                    $permission = $allPermissions[$i];
                     $hasPermission = in_array($permission, $permissions, true);
                     if ($hasPermission and !$checked) {
                         $config->removePlayerActionPermission($target, $permission);

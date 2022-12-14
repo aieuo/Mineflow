@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -30,6 +31,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         private string $speedZ = "0.1"
     ) {
         parent::__construct(self::MOVE_TO, FlowItemCategory::ENTITY);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setEntityVariableName($entity);
         $this->setPositionVariableName($position);
@@ -41,10 +43,6 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getEntityVariableName(), $this->getPositionVariableName(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function isDataValid(): bool {

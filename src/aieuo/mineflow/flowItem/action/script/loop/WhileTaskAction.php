@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -37,14 +38,11 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         ?string     $customName = null
     ) {
         parent::__construct(self::ACTION_WHILE_TASK, FlowItemCategory::SCRIPT_LOOP);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setConditions($conditions);
         $this->setActions($actions);
         $this->setCustomName($customName);
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setLimit(int $limit): void {

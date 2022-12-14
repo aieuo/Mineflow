@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
@@ -23,6 +24,7 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
 
     public function __construct(string $player = "", string $allow = "true") {
         parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
+        $this->setPermissions([FlowItemPermission::CHEAT]);
 
         $this->setPlayerVariableName($player);
         $this->allow = $allow === "true";
@@ -34,10 +36,6 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getPlayerVariableName(), Language::get("action.allowFlight.".($this->isAllow() ? "allow" : "notAllow"))];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CHEAT];
     }
 
     public function setAllow(bool $allow): void {

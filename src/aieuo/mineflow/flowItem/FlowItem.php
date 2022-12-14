@@ -25,18 +25,16 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     protected string $returnValueType = self::RETURN_NONE;
 
     public const PERMISSION_LOOP = "loop";
-    public const PERMISSION_CHEAT = "cheat";
-    public const PERMISSION_CONSOLE = "console";
-    public const PERMISSION_CONFIG = "config";
-    public const PERMISSION_PERMISSION = "permission";
 
-    public const PERMISSION_ALL = [
-        self::PERMISSION_LOOP, self::PERMISSION_CHEAT, self::PERMISSION_CONSOLE, self::PERMISSION_CONFIG, self::PERMISSION_PERMISSION
-    ];
-
+    /**
+     * @param string $id
+     * @param string $category
+     * @param string[] $permissions
+     */
     public function __construct(
         private string $id,
         private string $category,
+        private array  $permissions = [],
     ) {
     }
 
@@ -67,7 +65,11 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     }
 
     public function getPermissions(): array {
-        return [];
+        return $this->permissions;
+    }
+
+    public function setPermissions(array $permissions): void {
+        $this->permissions = $permissions;
     }
 
     public function getReturnValueType(): string {

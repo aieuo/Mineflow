@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -33,15 +34,12 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
         parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");
         $this->setActions($actions);
         $this->setCustomName($customName);
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function getDetail(): string {

@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -32,14 +33,11 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
         parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setActions($actions);
         $this->repeatCount = (string)$count;
         $this->setCustomName($customName);
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setRepeatCount(string $count): void {

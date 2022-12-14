@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
@@ -20,6 +21,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
 
     public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
+        $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }
@@ -30,10 +32,6 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getConfigVariableName(), $this->getKey()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONFIG];
     }
 
     public function setKey(string $health): void {
