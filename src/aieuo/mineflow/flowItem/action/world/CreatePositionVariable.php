@@ -9,6 +9,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
@@ -16,9 +19,11 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\Server;
 use pocketmine\world\Position;
+use SOFe\AwaitGenerator\Await;
 
 class CreatePositionVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -84,43 +89,37 @@ class CreatePositionVariable extends FlowItem {
         return $this->variableName !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
-        $x = $source->replaceVariables($this->getX());
-        $y = $source->replaceVariables($this->getY());
-        $z = $source->replaceVariables($this->getZ());
+        $x = $this->getFloat($source->replaceVariables($this->getX()));
+        $y = $this->getFloat($source->replaceVariables($this->getY()));
+        $z = $this->getFloat($source->replaceVariables($this->getZ()));
         $levelName = $source->replaceVariables($this->getWorld());
         $level = Server::getInstance()->getWorldManager()->getWorldByName($levelName);
 
-        $this->throwIfInvalidNumber($x);
-        $this->throwIfInvalidNumber($y);
-        $this->throwIfInvalidNumber($z);
         if ($level === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
-        $position = new Position((float)$x, (float)$y, (float)$z, $level);
+        $position = new Position($x, $y, $z, $level);
 
         $variable = new PositionVariable($position);
         $source->addVariable($name, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@action.createPosition.form.x", "0", $this->getX(), true),
             new ExampleNumberInput("@action.createPosition.form.y", "100", $this->getY(), true),
             new ExampleNumberInput("@action.createPosition.form.z", "16", $this->getZ(), true),
             new ExampleInput("@action.createPosition.form.world", "{target.level}", $this->getWorld(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[4], $data[0], $data[1], $data[2], $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->rearrange([4, 0, 1, 2, 3]);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

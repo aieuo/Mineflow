@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
 
@@ -19,7 +19,7 @@ class LanguageCommand extends MineflowSubcommand {
         }
         Language::setLanguage($args[0]);
 
-        $config = Main::getInstance()->getConfig();
+        $config = Mineflow::getConfig();
         $config->set("language", $args[0]);
         $config->save();
 

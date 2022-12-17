@@ -9,16 +9,21 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
+use SOFe\AwaitGenerator\Await;
 use function array_is_list;
 
 class CreateMapVariableFromJson extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $variableName = "",
@@ -56,10 +61,8 @@ class CreateMapVariableFromJson extends FlowItem {
         return $this->variableName !== "" and $this->json !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $helper = Main::getVariableHelper();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $json = $this->getJson();
 
@@ -69,9 +72,9 @@ class CreateMapVariableFromJson extends FlowItem {
         }
 
         if (array_is_list($value)) {
-            $variable = new ListVariable(Main::getVariableHelper()->toVariableArray($value));
+            $variable = new ListVariable(Mineflow::getVariableHelper()->toVariableArray($value));
         } else {
-            $variable = new MapVariable(Main::getVariableHelper()->toVariableArray($value));
+            $variable = new MapVariable(Mineflow::getVariableHelper()->toVariableArray($value));
         }
 
         if ($this->isLocal) {
@@ -79,19 +82,18 @@ class CreateMapVariableFromJson extends FlowItem {
         } else {
             $helper->add($name, $variable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.value", "aeiuo", $this->getJson(), true),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], $data[1], !$data[2]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->logicalNOT(2);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

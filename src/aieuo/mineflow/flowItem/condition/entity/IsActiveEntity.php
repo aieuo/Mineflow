@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
+use SOFe\AwaitGenerator\Await;
 
 class IsActiveEntity extends CheckEntityStateById {
 
@@ -13,13 +14,10 @@ class IsActiveEntity extends CheckEntityStateById {
         parent::__construct(self::IS_ACTIVE_ENTITY, entityId: $entityId);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
-
-        yield true;
-        return EntityHolder::isActive((int)$id);
+        yield Await::ALL;
+        return EntityHolder::isActive($id);
     }
 }

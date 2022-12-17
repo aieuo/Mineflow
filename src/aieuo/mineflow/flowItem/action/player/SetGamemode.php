@@ -10,14 +10,19 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\java\GameModeIdMap;
+use SOFe\AwaitGenerator\Await;
 
 class SetGamemode extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private array $gamemodes = [
         "action.gamemode.survival",
@@ -52,28 +57,22 @@ class SetGamemode extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->gamemode !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $gamemode = $this->getInt($source->replaceVariables($this->getGamemode()), 0, 3);
+        $player = $this->getOnlinePlayer($source);
 
-        $gamemode = $source->replaceVariables($this->getGamemode());
-        $this->throwIfInvalidNumber($gamemode, 0, 3);
+        $player->setGamemode(GameModeIdMap::getInstance()->fromId($gamemode));
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $player->setGamemode(GameModeIdMap::getInstance()->fromId((int)$gamemode));
-        yield true;
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new Dropdown("@action.setGamemode.form.gamemode", array_map(fn(string $mode) => Language::get($mode), $this->gamemodes), (int)$this->getGamemode()),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], (string)$data[1]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => (string)$value);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

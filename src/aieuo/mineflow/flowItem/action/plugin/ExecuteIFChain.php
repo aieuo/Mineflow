@@ -12,21 +12,27 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\event\Event;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     /** @var string[] */
     private array $args = [];
 
     public function __construct(private string $chainName = "", string $player = "") {
-        parent::__construct(self::EXECUTE_IF_CHAIN, FlowItemCategory::PLUGIN);
+        parent::__construct(self::EXECUTE_IF_CHAIN, FlowItemCategory::PLUGIN_IF_PLUGIN);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setPlayerVariableName($player);
     }
@@ -37,10 +43,6 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getChainName(), $this->getPlayerVariableName()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setChainName(string $name): self {
@@ -56,14 +58,10 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         return $this->getChainName() !== "" and $this->getPlayerVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getChainName());
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+        $player = $this->getOnlinePlayer($source);
         if (Server::getInstance()->getPluginManager()->getPlugin("if") === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.otherPlugin.notFound", ["if"]));
         }
@@ -84,14 +82,15 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
             $data["else"],
             $options
         );
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.executeIFChain.form.name", "aieuo", $this->getChainName(), true),
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

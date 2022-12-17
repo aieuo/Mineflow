@@ -8,16 +8,22 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
 use function array_map;
+use function explode;
 use function implode;
 use function trim;
 
 class GetLanguage extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -75,9 +81,7 @@ class GetLanguage extends FlowItem {
         return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $language = $source->replaceVariables($this->getLanguage());
         $key = $source->replaceVariables($this->getKey());
         $parameters = array_map(fn($parameter) => $source->replaceVariables($parameter), $this->getParameters());
@@ -85,22 +89,22 @@ class GetLanguage extends FlowItem {
 
         $variable = new StringVariable(Language::get($key, $parameters, $language));
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $languages = implode(", ", Language::getAvailableLanguages());
-        return [
+        $builder->elements([
             new ExampleInput(Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), "eng", $this->getLanguage(), true),
             new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
             new ExampleInput("@action.getLanguageMessage.form.parameters", "aieuo, 123", implode(", ", $this->getParameters())),
             new ExampleInput("@action.form.resultVariableName", "message", $this->getResultName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        $parameters = array_map(fn($parameter) => trim($parameter), explode(",", $data[2]));
-        return [$data[0], $data[1], $parameters, $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(3, function ($value) {
+                return array_map(fn($parameter) => trim($parameter), explode(",", $value));
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -4,7 +4,7 @@ namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
@@ -35,7 +35,7 @@ class RecipePack implements \JsonSerializable {
         $this->forms = $forms ?? $this->getLinkedForms();
         $this->configs = $configs ?? $this->getLinkedConfigFiles();
 
-        $this->version = $version ?? Main::getPluginVersion();
+        $this->version = $version ?? Mineflow::getPluginVersion();
     }
 
     public function getName(): string {
@@ -71,7 +71,7 @@ class RecipePack implements \JsonSerializable {
     }
 
     private function getLinkedCommands(): array {
-        $commandManager = Main::getCommandManager();
+        $commandManager = Mineflow::getCommandManager();
         $commands = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
@@ -85,7 +85,7 @@ class RecipePack implements \JsonSerializable {
     }
 
     private function getLinkedForms(): array {
-        $formManager = Main::getFormManager();
+        $formManager = Mineflow::getFormManager();
         $forms = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {

@@ -10,13 +10,21 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use SOFe\AwaitGenerator\Await;
+use function array_filter;
+use function array_map;
+use function explode;
 use function implode;
 
 class SetItemLore extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -49,28 +57,26 @@ class SetItemLore extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
 
         $lore = array_map(fn(string $lore) => $source->replaceVariables($lore), $this->getLore());
 
         $item->setLore($lore);
-        yield true;
+
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleInput("@action.setLore.form.lore", "1;aiueo;abc", implode(";", $this->getLore()), false),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        $lore = array_filter(array_map("trim", explode(";", $data[1])), fn(string $t) => $t !== "");
-        return [$data[0], $lore];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, function ($value) {
+                return array_filter(array_map("trim", explode(";", $value)), fn(string $t) => $t !== "");
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

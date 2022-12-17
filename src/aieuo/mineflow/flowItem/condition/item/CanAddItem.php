@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class CanAddItem extends TypeItem {
 
@@ -12,15 +13,11 @@ class CanAddItem extends TypeItem {
         parent::__construct(self::CAN_ADD_ITEM, player: $player, item: $item);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        yield true;
+        yield Await::ALL;
         return $player->getInventory()->canAddItem($item);
     }
 }

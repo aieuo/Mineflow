@@ -11,11 +11,16 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "") {
         parent::__construct(self::IS_PLAYER_ONLINE, FlowItemCategory::PLAYER);
@@ -35,20 +40,17 @@ class IsPlayerOnline extends FlowItem implements Condition, PlayerFlowItem {
         return $this->getPlayerVariableName() !== null;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player, false);
 
-        yield true;
+        yield Await::ALL;
         return $player->isOnline();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

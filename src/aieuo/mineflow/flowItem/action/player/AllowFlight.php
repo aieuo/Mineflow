@@ -10,18 +10,24 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class AllowFlight extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private bool $allow;
 
     public function __construct(string $player = "", string $allow = "true") {
         parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
+        $this->setPermissions([FlowItemPermission::CHEAT]);
 
         $this->setPlayerVariableName($player);
         $this->allow = $allow === "true";
@@ -33,10 +39,6 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getPlayerVariableName(), Language::get("action.allowFlight.".($this->isAllow() ? "allow" : "notAllow"))];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CHEAT];
     }
 
     public function setAllow(bool $allow): void {
@@ -51,21 +53,19 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $player = $this->getOnlinePlayer($source);
 
         $player->setAllowFlight($this->isAllow());
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new Toggle("@action.allowFlight.form.allow", $this->isAllow()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

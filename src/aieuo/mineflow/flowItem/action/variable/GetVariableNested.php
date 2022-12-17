@@ -9,14 +9,18 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetVariableNested extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -66,17 +70,15 @@ class GetVariableNested extends FlowItem {
         return $this->getVariableName() !== "" and !empty($this->getResultName());
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $variableName = $source->replaceVariables($this->getVariableName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($variableName) ?? Main::getVariableHelper()->getNested($variableName);
+        $variable = $source->getVariable($variableName) ?? Mineflow::getVariableHelper()->getNested($variableName);
 
         $fallbackValue = $this->getFallbackValue();
         if ($fallbackValue !== "" and $variable === null) {
-            $variable = Main::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
+            $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
         }
 
         if ($variable === null) {
@@ -84,16 +86,17 @@ class GetVariableNested extends FlowItem {
         }
 
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.getVariable.form.target", "target.hand", $this->getVariableName(), true),
             new ExampleInput("@action.form.resultVariableName", "item", $this->getResultName(), true),
             new ExampleInput("@action.getVariable.form.fallbackValue", "optional", $this->getFallbackValue(), false),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

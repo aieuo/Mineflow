@@ -8,8 +8,11 @@ use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -32,27 +35,23 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
         return $this->getRecipeName() !== "" and $this->getEntityVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe($source);
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+        $entity = $this->getOnlineEntity($source);
 
         $recipe->execute($entity, $source->getEvent(), $source->getVariables());
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return $data;
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->clear();
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

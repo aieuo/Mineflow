@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\command\subcommand;
 
-use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\PermissionForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\command\CommandSender;
@@ -12,10 +12,10 @@ use function implode;
 
 class PermissionCommand extends MineflowSubcommand {
     public function execute(CommandSender $sender, array $args): void {
-        $config = Main::getInstance()->getPlayerSettings();
+        $config = Mineflow::getPlayerSettings();
 
         if ($sender instanceof Player) {
-            if ($config->hasPlayerActionPermission($sender->getName(), FlowItem::PERMISSION_PERMISSION)) {
+            if ($config->hasPlayerActionPermission($sender->getName(), FlowItemPermission::PERMISSION)) {
                 (new PermissionForm())->sendSelectPlayer($sender);
             } else {
                 $sender->sendMessage(Language::get("command.permission.permission.notEnough"));
@@ -24,7 +24,7 @@ class PermissionCommand extends MineflowSubcommand {
         }
 
         if (!isset($args[0])) {
-            $sender->sendMessage(Language::get("command.permission.usage", [implode("|", FlowItem::PERMISSION_ALL)."|all"]));
+            $sender->sendMessage(Language::get("command.permission.usage", [implode("|", FlowItemPermission::all())."|all"]));
             return;
         }
 
@@ -36,7 +36,7 @@ class PermissionCommand extends MineflowSubcommand {
                 }
 
                 if ($args[2] === "all") {
-                    foreach (FlowItem::PERMISSION_ALL as $permission) {
+                    foreach (FlowItemPermission::all() as $permission) {
                         $config->addPlayerActionPermission($args[1], $permission);
                     }
                 } else {
@@ -52,7 +52,7 @@ class PermissionCommand extends MineflowSubcommand {
                 }
 
                 if ($args[2] === "all") {
-                    foreach (FlowItem::PERMISSION_ALL as $permission) {
+                    foreach (FlowItemPermission::all() as $permission) {
                         $config->removePlayerActionPermission($args[1], $permission);
                     }
                 } else {
@@ -71,7 +71,7 @@ class PermissionCommand extends MineflowSubcommand {
                 $sender->sendMessage(implode(", ", $permissions));
                 break;
             default:
-                $sender->sendMessage(Language::get("command.permission.usage", [implode("|", FlowItem::PERMISSION_ALL)."|all"]));
+                $sender->sendMessage(Language::get("command.permission.usage", [implode("|", FlowItemPermission::all())."|all"]));
         }
     }
 }

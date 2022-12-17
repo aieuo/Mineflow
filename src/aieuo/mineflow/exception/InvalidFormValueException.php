@@ -23,4 +23,8 @@ class InvalidFormValueException extends \RuntimeException {
     public function getIndex(): int {
         return $this->index;
     }
+
+    public function setIndex(int $index): void {
+        $this->index = $index;
+    }
 }

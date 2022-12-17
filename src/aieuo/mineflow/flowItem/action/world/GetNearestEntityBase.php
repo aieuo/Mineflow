@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -17,10 +19,12 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
+use SOFe\AwaitGenerator\Await;
 
 abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -67,29 +71,26 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
         return $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->getPosition($source);
         $result = $source->replaceVariables($this->getResultName());
+        $maxDistance = $this->getFloat($source->replaceVariables($this->getMaxDistance()));
 
-        $maxDistance = $source->replaceVariables($this->getMaxDistance());
-        $this->throwIfInvalidNumber($maxDistance);
-
-        $entity = $position->world->getNearestEntity($position, (float)$maxDistance, $this->getTargetClass());
+        $entity = $position->world->getNearestEntity($position, $maxDistance, $this->getTargetClass());
 
         $variable = $entity === null ? new NullVariable() : EntityVariable::fromObject($entity);
         $source->addVariable($result, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleNumberInput("@action.getNearestEntity.form.maxDistance", "100", $this->getMaxDistance(), true),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

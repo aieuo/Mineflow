@@ -8,7 +8,9 @@ namespace aieuo\mineflow\flowItem\custom;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\Recipe;
 use function array_map;
@@ -16,6 +18,7 @@ use function substr;
 
 class CustomAction extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -54,9 +57,7 @@ class CustomAction extends FlowItem {
         return false;
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    public function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe();
         $args = $this->getArgumentVariables($source);
 
@@ -65,7 +66,7 @@ class CustomAction extends FlowItem {
     }
 
     public function getArgumentVariables(FlowItemExecutor $executor): array {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $args = [];
         foreach ($this->getArguments() as $arg) {
             $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
@@ -74,13 +75,13 @@ class CustomAction extends FlowItem {
         return $args;
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $arguments = $this->getRecipe()->getArguments();
         $elements = [];
         foreach ($arguments as $i => $argument) {
             $elements[] = $argument->getInputElement($variables, $this->getArguments()[$i] ?? null);
         }
-        return $elements;
+        $builder->elements($elements);
     }
 
     public function loadSaveData(array $content): FlowItem {

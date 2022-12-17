@@ -10,15 +10,20 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class AddParticle extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $position = "",
@@ -26,6 +31,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         private string $amount = "1"
     ) {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setPositionVariableName($position);
     }
@@ -36,10 +42,6 @@ class AddParticle extends FlowItem implements PositionFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() === "1" ? "" : "s"];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setParticle(string $particle): void {
@@ -62,32 +64,29 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->particle !== "" and $this->amount !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $particleName = $source->replaceVariables($this->getParticle());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount, 1);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()), 1);
 
         $position = $this->getPosition($source);
 
-        for ($i = 0; $i < (int)$amount; $i++) {
+        for ($i = 0; $i < $amount; $i++) {
             $pk = new SpawnParticleEffectPacket();
             $pk->position = $position;
             $pk->particleName = $particleName;
             $pk->molangVariablesJson = "";
             Server::getInstance()->broadcastPackets($position->world->getPlayers(), [$pk]);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $this->getParticle(), true),
             new ExampleNumberInput("@action.addParticle.form.amount", "1", $this->getAmount(), true, 1),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

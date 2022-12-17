@@ -10,13 +10,17 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
@@ -73,9 +77,7 @@ class ComparisonString extends FlowItem implements Condition {
         return $this->value1 !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $source->replaceVariables($this->getValue1());
         $value2 = $source->replaceVariables($this->getValue2());
         $operator = $this->getOperator();
@@ -89,16 +91,17 @@ class ComparisonString extends FlowItem implements Condition {
             self::ENDS_WITH => str_ends_with($value1, $value2),
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
             new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
             new ExampleInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), false),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

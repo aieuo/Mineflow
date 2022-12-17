@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\condition\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 use function count;
 
 class OnlinePlayerMoreThan extends OnlinePlayerCount {
@@ -14,13 +15,10 @@ class OnlinePlayerMoreThan extends OnlinePlayerCount {
         parent::__construct(self::ONLINE_PLAYER_MORE_THAN, value: $value);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $value = $this->getInt($source->replaceVariables($this->getValue()));
 
-        $value = $source->replaceVariables($this->getValue());
-        $this->throwIfInvalidNumber($value);
-
-        yield true;
+        yield Await::ALL;
         return count(Server::getInstance()->getOnlinePlayers()) > $value;
     }
 }

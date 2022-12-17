@@ -10,13 +10,17 @@ use aieuo\mineflow\flowItem\base\WorldFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use pocketmine\world\World;
+use SOFe\AwaitGenerator\Await;
 
 class SetWorldTime extends FlowItem implements WorldFlowItem {
     use WorldFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $worldName = "",
@@ -47,23 +51,20 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
         return $this->getWorldVariableName() !== "" and $this->getTime() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $world = $this->getWorld($source);
-        $time = $source->replaceVariables($this->getTime());
+        $time = $this->getInt($source->replaceVariables($this->getTime()), 0, World::TIME_FULL);
 
-        $this->throwIfInvalidNumber($time, 0, World::TIME_FULL);
+        $world->setTime($time);
 
-        $world->setTime((int)$time);
-        yield true;
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new WorldVariableDropdown($variables, $this->getWorldVariableName()),
             new ExampleNumberInput("@action.setWorldTime.form.time", "12000", $this->getTime(), required: true, min: 0, max: World::TIME_FULL),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

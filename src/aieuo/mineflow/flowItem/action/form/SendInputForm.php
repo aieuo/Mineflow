@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -18,10 +20,12 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class SendInputForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -65,39 +69,36 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $text = $source->replaceVariables($this->getFormText());
         $resultName = $source->replaceVariables($this->getResultName());
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $this->sendForm($source, $player, $text, $resultName);
-        yield false;
+        yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
+            $this->sendForm($source, $player, $text, $resultName, $resolve);
+        });
     }
 
-    private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName): void {
+    private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName, callable $callback): void {
         (new CustomForm($text))
             ->setContents([
                 new Input($text, "", "", true),
-            ])->onReceive(function (Player $player, array $data) use ($source, $resultName) {
+            ])->onReceive(function (Player $player, array $data) use ($source, $resultName, $callback) {
                 $variable = new StringVariable($data[0]);
                 $source->addVariable($resultName, $variable);
-                $source->resume();
-            })->onClose(function (Player $player) use ($source, $text, $resultName) {
-                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);
+                $callback();
+            })->onClose(function (Player $player) use ($source, $text, $resultName, $callback) {
+                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName, $callback);
             })->show($player);
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
             new ExampleInput("@action.input.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
             new Toggle("@action.input.form.resendOnClose", $this->resendOnClose),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

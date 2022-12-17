@@ -17,7 +17,7 @@ use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
@@ -105,7 +105,7 @@ class CustomCustomFormForm {
                     default => throw new InvalidFormValueException("@form.insufficient", 0),
                 };
                 $form->addContent($element);
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendEditElement($player, $form, $element, ["@form.added"]);
             })->addArgs($form)->show($player);
     }
@@ -183,7 +183,7 @@ class CustomCustomFormForm {
 
                 if (array_pop($data)) {
                     $form->removeContentAt($index);
-                    Main::getFormManager()->addForm($form->getName(), $form);
+                    Mineflow::getFormManager()->addForm($form->getName(), $form);
                     $this->sendElementList($player, $form, ["@form.deleted"]);
                     return;
                 }
@@ -237,7 +237,7 @@ class CustomCustomFormForm {
                 }
 
                 $form->setContent($element, $index);
-                Main::getFormManager()->addForm($form->getName(), $form);
+                Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendElementList($player, $form, ["@form.changed"]);
             })->addMessages($messages)->show($player);
     }

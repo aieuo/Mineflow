@@ -5,15 +5,21 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\event;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
+use aieuo\mineflow\event\CustomTriggerCallEvent;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class CallCustomTrigger extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $triggerName = "") {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
@@ -39,20 +45,20 @@ class CallCustomTrigger extends FlowItem {
         return $this->triggerName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getTriggerName());
         $trigger = CustomTrigger::create($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
         $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
-        yield true;
+
+        (new CustomTriggerCallEvent($trigger, $source))->call();
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.callTrigger.form.identifier", "aieuo", $this->getTriggerName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

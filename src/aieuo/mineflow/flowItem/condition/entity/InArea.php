@@ -13,12 +13,17 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         parent::__construct(self::IN_AREA, FlowItemCategory::ENTITY);
@@ -40,28 +45,24 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         return $this->getEntityVariableName() !== "" and $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $entity = $this->getOnlineEntity($source);
         $pos1 = $this->getPosition($source, "pos1");
         $pos2 = $this->getPosition($source, "pos2");
         $pos = $entity->getLocation()->floor();
 
-        yield true;
+        yield Await::ALL;
         return $pos->x >= min($pos1->x, $pos2->x) and $pos->x <= max($pos1->x, $pos2->x)
             and $pos->y >= min($pos1->y, $pos2->y) and $pos->y <= max($pos1->y, $pos2->y)
             and $pos->z >= min($pos1->z, $pos2->z) and $pos->z <= max($pos1->z, $pos2->z);
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new PositionVariableDropdown($variables, $this->getPositionVariableName("pos1"), "@condition.inArea.form.pos1"),
             new PositionVariableDropdown($variables, $this->getPositionVariableName("pos2"), "@condition.inArea.form.pos2"),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

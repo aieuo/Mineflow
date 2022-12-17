@@ -74,7 +74,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $this->name = $name;
         $this->author = $author;
         $this->group = preg_replace("#/+#u", "/", $group);
-        $this->version = $pluginVersion ?? Mineflow::pluginVersion();
+        $this->version = $pluginVersion ?? Mineflow::getPluginVersion();
     }
 
     public function setName(string $name): void {
@@ -124,7 +124,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }
         $details[] = str_repeat("~", 20);
         foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
+            $details[] = $action->getShortDetail();
         }
         return implode("\n§f", $details);
     }
@@ -214,7 +214,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }
     }
 
-    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = [], ?FlowItemExecutor $callbackExecutor = null): ?bool {
+    public function executeAllTargets(?Entity $player = null, array $variables = [], ?Event $event = null, array $args = [], ?FlowItemExecutor $from = null, ?callable $callback = null): ?bool {
         $targets = $this->getTargets($player);
         $variables = array_merge($variables, DefaultVariables::getServerVariables());
 
@@ -224,7 +224,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $ev->call();
             if ($ev->isCancelled()) continue;
 
-            $recipe->execute($target, $event, $ev->getVariables(), $args, $callbackExecutor);
+            $recipe->execute($target, $event, $ev->getVariables(), $args, $from, $callback);
         }
         return true;
     }
@@ -233,8 +233,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->executor;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $arguments = [], ?FlowItemExecutor $callbackExecutor = null): bool {
-        $helper = Main::getVariableHelper();
+    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $arguments = [], ?FlowItemExecutor $from = null, ?callable $callback = null): bool {
+        $helper = Mineflow::getVariableHelper();
         $args = array_values($arguments);
         foreach ($this->getArguments() as $i => $argument) {
             if (!isset($args[$i])) continue;
@@ -261,14 +261,16 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $variables["this"] = new RecipeVariable($this);
         $variables["_"] = $this->createSystemVariable($arguments);
 
-        $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($callbackExecutor) {
-            if ($callbackExecutor !== null) {
+        $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($from, $callback) {
+            if ($from !== null) {
                 foreach ($this->getReturnValues() as $value) {
                     $name = $executor->replaceVariables($value);
                     $variable = $executor->getVariable($name);
-                    if ($variable instanceof Variable) $callbackExecutor->addVariable($name, $variable);
+                    if ($variable instanceof Variable) $from->addVariable($name, $variable);
                 }
-                $callbackExecutor->resume();
+            }
+            if ($callback !== null) {
+                $callback();
             }
         }, function (int $index, FlowItem $flowItem, ?Entity $target) {
             Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $index, $flowItem->getName()]), $target);
@@ -407,6 +409,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
         try {
             FileSystem::safeFilePutContents($path, $json);
+            $this->setRawData($json);
         } catch(\RuntimeException $e) {
             Main::getInstance()->getLogger()->error(Language::get("recipe.save.failed", [$this->getPathname()]));
             Main::getInstance()->getLogger()->logException($e);
@@ -415,7 +418,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function checkVersion(): void {
         $createdVersion = $this->version;
-        $currentVersion = Main::getPluginVersion();
+        $currentVersion = Mineflow::getPluginVersion();
 
         if ($createdVersion !== null and version_compare($createdVersion, $currentVersion, "=")) return;
 
@@ -444,7 +447,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $from = "2.0.0";
         }
         if ($this->needUpgrade($from, $to, "2.6.0")) {
-            $eventTriggers = Main::getEventManager();
+            $eventTriggers = Mineflow::getEventManager();
             foreach ($this->getTriggers() as $trigger) {
                 if ($trigger instanceof EventTrigger) {
                     $this->removeTrigger($trigger);

@@ -35,7 +35,7 @@ class ActionGroup extends FlowItem implements FlowItemContainer {
     public function getDetail(): string {
         $details = ["", "§7------------------------§f"];
         foreach ($this->getActions() as $action) {
-            $details[] = $action->getDetail();
+            $details[] = $action->getShortDetail();
         }
         $details[] = "§7------------------------§f\n";
         return implode("\n", $details);
@@ -45,9 +45,8 @@ class ActionGroup extends FlowItem implements FlowItemContainer {
         return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->executeGenerator();
-        return true;
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->getGenerator();
     }
 
     public function isDataValid(): bool {

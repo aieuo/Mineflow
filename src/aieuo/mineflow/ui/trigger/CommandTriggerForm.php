@@ -8,7 +8,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\Trigger;
@@ -35,7 +35,7 @@ class CommandTriggerForm extends TriggerForm {
                         (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
                         break;
                     case 2:
-                        $manager = Main::getCommandManager();
+                        $manager = Mineflow::getCommandManager();
                         $command = $manager->getCommand($manager->getOriginCommand($trigger->getKey()));
                         (new CommandForm)->sendCommandMenu($player, $command);
                         break;
@@ -58,7 +58,7 @@ class CommandTriggerForm extends TriggerForm {
                     return;
                 }
 
-                $manager = Main::getCommandManager();
+                $manager = Mineflow::getCommandManager();
                 $original = $manager->getOriginCommand($data[0]);
                 if (!$manager->existsCommand($original)) {
                     $this->sendConfirmCreate($player, $original, function (bool $result) use ($player, $recipe, $data) {

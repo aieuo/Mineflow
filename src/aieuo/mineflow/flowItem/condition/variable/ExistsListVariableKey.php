@@ -9,13 +9,18 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\ListVariable;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsListVariableKey extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $variableName = "",
@@ -53,10 +58,8 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         return $this->variableName !== "" and $this->variableKey !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $helper = Main::getVariableHelper();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
 
@@ -64,20 +67,18 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
 
-        yield true;
+        yield Await::ALL;
         return isset($value[$key]);
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.key", "auieo", $this->getKey(), true),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], $data[1], !$data[2]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->logicalNOT(2);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

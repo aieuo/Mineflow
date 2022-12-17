@@ -10,18 +10,24 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $config = "", private string $key = "", private string $value = "") {
         parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG);
+        $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }
@@ -32,10 +38,6 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getConfigVariableName(), $this->getKey(), $this->getValue()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONFIG];
     }
 
     public function setKey(string $health): void {
@@ -58,13 +60,11 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         return $this->getConfigVariableName() !== "" and $this->key !== "" and $this->value !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $key = $source->replaceVariables($this->getKey());
         $value = $this->getValue();
 
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
             $variable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
             if ($variable instanceof ListVariable) {
@@ -80,17 +80,17 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         }
 
         $config = $this->getConfig($source);
-
         $config->setNested($key, $value);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
             new ExampleInput("@action.setConfig.form.key", "aieuo", $this->getKey(), true),
             new ExampleInput("@action.setConfig.form.value", "100", $this->getValue(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

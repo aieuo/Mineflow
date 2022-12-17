@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\inventory;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveItemAll extends TypeItem {
 
@@ -12,15 +13,12 @@ class RemoveItemAll extends TypeItem {
         parent::__construct(self::REMOVE_ITEM_ALL, player: $player, item: $item);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
+        $player = $this->getOnlinePlayer($source);
 
         $player->getInventory()->remove($item);
-        yield true;
+
+        yield Await::ALL;
     }
 }

@@ -9,11 +9,15 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsVariable extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $variableName = "") {
         parent::__construct(self::EXISTS_VARIABLE, FlowItemCategory::VARIABLE);
@@ -39,20 +43,18 @@ class ExistsVariable extends FlowItem implements Condition {
         return $this->variableName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $helper = Main::getVariableHelper();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
 
-        yield true;
+        yield Await::ALL;
         return $source->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

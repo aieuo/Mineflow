@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\condition\entity\CheckEntityStateById;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayer extends CheckEntityStateById {
 
@@ -15,13 +16,10 @@ class IsPlayer extends CheckEntityStateById {
         parent::__construct(self::IS_PLAYER, FlowItemCategory::PLAYER, $entityId);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
-
-        yield true;
-        return EntityHolder::isPlayer((int)$id);
+        yield Await::ALL;
+        return EntityHolder::isPlayer($id);
     }
 }

@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\entity\Entity;
@@ -22,10 +24,12 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityLink;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 use pocketmine\network\mcpe\protocol\types\entity\LongMetadataProperty;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private static array $entityIds = [];
 
@@ -48,12 +52,8 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $player = $this->getOnlinePlayer($source);
         $position = $this->getPosition($source);
 
         self::leave($player);
@@ -70,14 +70,15 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         $player->getNetworkSession()->sendDataPacket($pk);
 
         self::$entityIds[$player->getName()] = $pk->actorRuntimeId;
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

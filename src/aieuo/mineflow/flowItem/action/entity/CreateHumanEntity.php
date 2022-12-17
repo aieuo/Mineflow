@@ -13,16 +13,20 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Location;
+use SOFe\AwaitGenerator\Await;
 
 class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -54,12 +58,8 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return $this->getPlayerVariableName() !== "" and $this->getPositionVariableName() !== "" and $this->getResultName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $player = $this->getOnlinePlayer($source);
         $pos = $this->getPosition($source);
 
         $resultName = $source->replaceVariables($this->getResultName());
@@ -70,16 +70,17 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
 
         $variable = new HumanVariable($entity);
         $source->addVariable($resultName, $variable);
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.createHuman.form.skin", "target", $this->getPlayerVariableName(), true),
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

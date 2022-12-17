@@ -10,14 +10,18 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\math\Vector3;
+use SOFe\AwaitGenerator\Await;
 use function array_merge;
 
 class Motion extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private string $x = "0";
     private string $y = "0";
@@ -53,30 +57,23 @@ class Motion extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $motions = array_map(fn($value) => $this->getFloat($source->replaceVariables($value)), $this->getPosition());
+        $entity = $this->getOnlineEntity($source);
 
-        $motions = array_map(function ($value) use ($source) {
-            $v = $source->replaceVariables($value);
-            $this->throwIfInvalidNumber($v);
-            return $v;
-        }, $this->getPosition());
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $motion = new Vector3((float)$motions[0], (float)$motions[1], (float)$motions[2]);
+        $motion = new Vector3($motions[0], $motions[1], $motions[2]);
         $entity->setMotion($motion);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ExampleNumberInput("@action.motion.form.x", "2", $this->x, true),
             new ExampleNumberInput("@action.motion.form.y", "3", $this->y, true),
             new ExampleNumberInput("@action.motion.form.z", "4", $this->z, true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

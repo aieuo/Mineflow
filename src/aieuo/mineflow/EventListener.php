@@ -100,8 +100,7 @@ class EventListener implements Listener {
     }
 
     public function onDeath(PlayerDeathEvent $event): void {
-        $player = $event->getPlayer();
-        if ($player instanceof Player) SetSitting::leave($player);
+        SetSitting::leave($event->getPlayer());
     }
 
     public function receive(DataPacketReceiveEvent $event): void {

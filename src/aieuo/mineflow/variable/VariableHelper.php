@@ -55,17 +55,20 @@ class VariableHelper {
 
     public function __construct(private Config $file) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+
+        VariableSerializer::init();
+        VariableDeserializer::init();
     }
 
     public function loadVariables(): void {
         foreach ($this->file->getAll() as $name => $data) {
-            $variable = Variable::fromArray($data);
+            $variable = VariableDeserializer::deserialize($data);
 
             if ($variable === null) {
                 Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed"));
                 continue;
             }
-            
+
             $this->variables[$name] = $variable;
         }
     }
@@ -103,8 +106,13 @@ class VariableHelper {
 
     public function saveAll(): void {
         foreach ($this->variables as $name => $variable) {
-            if (!($variable instanceof \JsonSerializable) and $name !== "") continue;
-            $this->file->set($name, $variable);
+            $serialized = VariableSerializer::serialize($variable);
+
+            if ($serialized !== null) {
+                $this->file->set($name, $serialized);
+            } elseif ($variable instanceof \JsonSerializable) {
+                $this->file->set($name, $variable);
+            }
         }
         $this->file->save();
     }
@@ -404,7 +412,7 @@ class VariableHelper {
 
     public function copyOrCreateVariable(string $value, ?FlowItemExecutor $executor = null): Variable {
         if ($this->isSimpleVariableString($value)) {
-            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? $this->get(substr($value, 1, -1));
+            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? $this->getNested(substr($value, 1, -1));
             if ($variable !== null) {
                 return $variable;
             }
@@ -501,7 +509,7 @@ class VariableHelper {
     public function tagToVariable(Tag $tag): Variable {
         return match (true) {
             $tag instanceof StringTag => new StringVariable($tag->getValue()),
-            $tag instanceof ByteTag => new BoolVariable((bool)$tag->getValue()),
+            $tag instanceof ByteTag => new BooleanVariable((bool)$tag->getValue()),
             $tag instanceof FloatTag, $tag instanceof IntTag, $tag instanceof DoubleTag => new NumberVariable($tag->getValue()),
             $tag instanceof ListTag => new ListVariable($this->listTagToVariableArray($tag)),
             $tag instanceof CompoundTag => new MapVariable($this->listTagToVariableArray($tag)),

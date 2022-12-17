@@ -8,14 +8,18 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
+use SOFe\AwaitGenerator\Await;
 
 class CreateAABB extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -99,40 +103,32 @@ class CreateAABB extends FlowItem {
         return $this->variableName !== "" and $this->minX !== "" and $this->minY !== "" and $this->minZ !== "" and $this->maxX !== "" and $this->maxY !== "" and $this->maxZ !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
-        $minX = $source->replaceVariables($this->getMinX());
-        $minY = $source->replaceVariables($this->getMinY());
-        $minZ = $source->replaceVariables($this->getMinZ());
-        $maxX = $source->replaceVariables($this->getMaxX());
-        $maxY = $source->replaceVariables($this->getMaxY());
-        $maxZ = $source->replaceVariables($this->getMaxZ());
-
-        $this->throwIfInvalidNumber($minX);
-        $this->throwIfInvalidNumber($minY);
-        $this->throwIfInvalidNumber($minZ);
-        $this->throwIfInvalidNumber($maxX);
-        $this->throwIfInvalidNumber($maxY);
-        $this->throwIfInvalidNumber($maxZ);
+        $minX = $this->getFloat($source->replaceVariables($this->getMinX()));
+        $minY = $this->getFloat($source->replaceVariables($this->getMinY()));
+        $minZ = $this->getFloat($source->replaceVariables($this->getMinZ()));
+        $maxX = $this->getFloat($source->replaceVariables($this->getMaxX()));
+        $maxY = $this->getFloat($source->replaceVariables($this->getMaxY()));
+        $maxZ = $this->getFloat($source->replaceVariables($this->getMaxZ()));
 
         $aabb = new AxisAlignedBB(
-            min((float)$minX, (float)$maxX),
-            min((float)$minY, (float)$maxY),
-            min((float)$minZ, (float)$maxZ),
-            max((float)$minX, (float)$maxX),
-            max((float)$minY, (float)$maxY),
-            max((float)$minZ, (float)$maxZ),
+            min($minX, $maxX),
+            min($minY, $maxY),
+            min($minZ, $maxZ),
+            max($minX, $maxX),
+            max($minY, $maxY),
+            max($minZ, $maxZ),
         );
 
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
-        yield true;
+
+        yield Await::ALL;
         return $this->getVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@action.createAABB.form.minX", "0", $this->getMinX(), true),
             new ExampleNumberInput("@action.createAABB.form.minY", "100", $this->getMinY(), true),
             new ExampleNumberInput("@action.createAABB.form.minZ", "16", $this->getMinZ(), true),
@@ -140,7 +136,7 @@ class CreateAABB extends FlowItem {
             new ExampleNumberInput("@action.createAABB.form.maxY", "200", $this->getMaxY(), true),
             new ExampleNumberInput("@action.createAABB.form.maxZ", "160", $this->getMaxZ(), true),
             new ExampleInput("@action.form.resultVariableName", "area", $this->getVariableName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

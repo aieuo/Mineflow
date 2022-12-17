@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class ExistsArmor extends TypeItem {
 
@@ -11,15 +12,11 @@ class ExistsArmor extends TypeItem {
         parent::__construct(self::EXISTS_ARMOR, player: $player, item: $item);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        yield true;
+        yield Await::ALL;
         return $player->getArmorInventory()->contains($item);
     }
 }

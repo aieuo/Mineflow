@@ -10,14 +10,20 @@ use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
+use SOFe\AwaitGenerator\Await;
 
 class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $config = "") {
         parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
+        $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }
@@ -30,27 +36,21 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         return [$this->getConfigVariableName()];
     }
 
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONFIG];
-    }
-
     public function isDataValid(): bool {
         return $this->getConfigVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $config = $this->getConfig($source);
-
         $config->save();
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

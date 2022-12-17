@@ -9,14 +9,21 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
+use function array_map;
+use function explode;
 use function substr;
 
 abstract class ExecuteRecipeBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     /** @var string[] */
     private array $args;
@@ -28,6 +35,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
         string         $args = ""
     ) {
         parent::__construct($id, $category);
+        $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
     }
@@ -38,10 +46,6 @@ abstract class ExecuteRecipeBase extends FlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getRecipeName()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_LOOP];
     }
 
     public function setRecipeName(string $name): self {
@@ -68,7 +72,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
     public function getRecipe(FlowItemExecutor $source): Recipe {
         $name = $source->replaceVariables($this->getRecipeName());
 
-        $recipeManager = Main::getRecipeManager();
+        $recipeManager = Mineflow::getRecipeManager();
         [$recipeName, $group] = $recipeManager->parseName($name);
         if (empty($group)) {
             $sr = $source->getSourceRecipe();
@@ -84,7 +88,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
     }
 
     public function getArguments(FlowItemExecutor $source): array {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $args = [];
         foreach ($this->getArgs() as $arg) {
             $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
@@ -93,15 +97,13 @@ abstract class ExecuteRecipeBase extends FlowItem {
         return $args;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
             new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], array_map("trim", explode(",", $data[1]))];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => array_map("trim", explode(",", $value)));
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

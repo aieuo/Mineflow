@@ -9,14 +9,19 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
+use function abs;
 
 class Calculate extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -90,16 +95,11 @@ class Calculate extends FlowItem {
         return $this->getValue() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $value = $source->replaceVariables($this->getValue());
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $value = $this->getFloat($source->replaceVariables($this->getValue()));
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value);
-
-        $value = (float)$value;
         $result = match ($operator) {
             self::SQUARE => $value * $value,
             self::SQUARE_ROOT => sqrt($value),
@@ -121,7 +121,8 @@ class Calculate extends FlowItem {
         };
 
         $source->addVariable($resultName, new NumberVariable($result));
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 
@@ -133,12 +134,12 @@ class Calculate extends FlowItem {
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.calculate.form.value", "10", $this->getValue(), true),
             new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

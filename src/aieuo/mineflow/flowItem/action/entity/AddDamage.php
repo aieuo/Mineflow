@@ -10,13 +10,17 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\event\entity\EntityDamageEvent;
+use SOFe\AwaitGenerator\Await;
 
 class AddDamage extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $entity = "",
@@ -56,27 +60,22 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         return $this->damage !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $damage = $source->replaceVariables($this->getDamage());
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $damage = $this->getFloat($source->replaceVariables($this->getDamage()), min: 1);
         $cause = $this->getCause();
+        $entity = $this->getOnlineEntity($source);
 
-        $this->throwIfInvalidNumber($damage, 1);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $event = new EntityDamageEvent($entity, $cause, (float)$damage);
+        $event = new EntityDamageEvent($entity, $cause, $damage);
         $entity->attack($event);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ExampleNumberInput("@action.addDamage.form.damage", "10", $this->getDamage(), true, 1),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -7,7 +7,7 @@ use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
@@ -47,7 +47,7 @@ class SettingForm {
     }
 
     public function sendEventListForm(Player $player): void {
-        $events = Main::getEventManager()->getEvents();
+        $events = Mineflow::getEventManager()->getEvents();
         $contents = [];
         foreach ($events as $name => $enabled) {
             $contents[] = new Toggle((string)EventTrigger::create($name), $enabled);
@@ -58,9 +58,9 @@ class SettingForm {
                 $count = 0;
                 foreach ($events as $name => $enabled) {
                     if ($data[$count] and !$enabled) {
-                        Main::getEventManager()->enableEvent($name);
+                        Mineflow::getEventManager()->enableEvent($name);
                     } elseif (!$data[$count] and $enabled) {
-                        Main::getEventManager()->disableEvent($name);
+                        Mineflow::getEventManager()->disableEvent($name);
                     }
                     $count++;
                 }

@@ -28,7 +28,7 @@ abstract class LogicalOperation extends FlowItem implements Condition, FlowItemC
     public function getDetail(): string {
         $details = ["----------".$this->getId()."-----------"];
         foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getDetail();
+            $details[] = $condition->getShortDetail();
         }
         $details[] = "------------------------";
         return implode("\n", $details);

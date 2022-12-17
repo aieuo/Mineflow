@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -72,7 +72,7 @@ class ItemVariable extends ObjectVariable {
         );
         self::registerProperty(
             $class, "tag", new DummyVariable(MapVariable::class),
-            fn(Item $item) => Main::getVariableHelper()->tagToVariable($item->getNamedTag()),
+            fn(Item $item) => Mineflow::getVariableHelper()->tagToVariable($item->getNamedTag()),
         );
     }
 }

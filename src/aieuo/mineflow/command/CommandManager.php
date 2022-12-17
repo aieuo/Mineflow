@@ -21,9 +21,11 @@ class CommandManager {
     public function __construct(Main $owner, Config $commands) {
         $this->owner = $owner;
         $this->config = $commands;
-        $this->registerCommands();
     }
 
+    public function init(): void {
+        $this->registerCommands();
+    }
 
     public function isRegistered(string $command): bool {
         return $this->owner->getServer()->getPluginCommand($command) !== null;

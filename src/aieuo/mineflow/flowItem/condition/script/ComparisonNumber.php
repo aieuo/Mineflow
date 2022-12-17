@@ -10,12 +10,16 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class ComparisonNumber extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public const EQUAL = 0;
     public const NOT_EQUAL = 1;
@@ -68,18 +72,11 @@ class ComparisonNumber extends FlowItem implements Condition {
         return $this->value1 !== "" and $this->value2 !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
+        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
         $operator = $this->getOperator();
 
-        $this->throwIfInvalidNumber($value1);
-        $this->throwIfInvalidNumber($value2);
-
-        $value1 = (float)$value1;
-        $value2 = (float)$value2;
         $result = match ($operator) {
             self::EQUAL => $value1 === $value2,
             self::NOT_EQUAL => $value1 !== $value2,
@@ -89,16 +86,17 @@ class ComparisonNumber extends FlowItem implements Condition {
             self::LESS_EQUAL => $value1 <= $value2,
             default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
         };
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
             new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
             new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

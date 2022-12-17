@@ -10,13 +10,17 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use pocketmine\item\ItemFactory;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemDamage extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -46,26 +50,22 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->damage !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $damage = $source->replaceVariables($this->getDamage());
-        $this->throwIfInvalidNumber($damage, 0);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $damage = $this->getInt($source->replaceVariables($this->getDamage()), 0);
         $item = $this->getItem($source);
 
-        $newItem = ItemFactory::getInstance()->get($item->getId(), (int)$damage, $item->getCount(), $item->getNamedTag());
+        $newItem = ItemFactory::getInstance()->get($item->getId(), $damage, $item->getCount(), $item->getNamedTag());
         $this->getItemVariable($source)->setItem($newItem);
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleNumberInput("@action.setDamage.form.damage", "0", $this->getDamage(), true, 0),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

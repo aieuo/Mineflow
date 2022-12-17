@@ -11,6 +11,9 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -20,10 +23,12 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\math\Facing;
 use pocketmine\world\Position;
+use SOFe\AwaitGenerator\Await;
 
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -116,17 +121,11 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $entity = $this->getOnlineEntity($source);
         $side = $source->replaceVariables($this->getDirection());
-        $step = $source->replaceVariables($this->getSteps());
+        $step = $this->getInt($source->replaceVariables($this->getSteps()));
         $resultName = $source->replaceVariables($this->getResultName());
-
-        $this->throwIfInvalidNumber($step);
 
         $direction = $entity->getHorizontalFacing();
         $pos = $entity->getPosition()->floor()->add(0.5, 0.5, 0.5);
@@ -137,7 +136,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
             case self::SIDE_SOUTH:
             case self::SIDE_WEST:
             case self::SIDE_EAST:
-                $pos = $pos->getSide($this->vector3SideMap[$side], (int)$step);
+                $pos = $pos->getSide($this->vector3SideMap[$side], $step);
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case self::SIDE_LEFT:
@@ -149,28 +148,27 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
             case self::SIDE_RIGHT:
                 $direction++;
             case self::SIDE_FRONT:
-                $pos = $pos->getSide($this->directionSideMap[$direction % 4], (int)$step);
+                $pos = $pos->getSide($this->directionSideMap[$direction % 4], $step);
                 break;
             default:
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntitySide.direction.notFound", [$side]));
         }
 
         $source->addVariable($resultName, new PositionVariable(Position::fromObject($pos, $entity->getWorld())));
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
             new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], $this->directions[$data[1]] ?? "", $data[2], $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => $this->directions[$value] ?? "");
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

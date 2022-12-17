@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class SetMaxHealth extends SetHealthBase {
 
@@ -12,17 +13,12 @@ class SetMaxHealth extends SetHealthBase {
         parent::__construct(self::SET_MAX_HEALTH, entity: $entity, health: $health);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $health = $this->getInt($source->replaceVariables($this->getHealth()), min: 1);
+        $entity = $this->getOnlineEntity($source);
 
-        $health = $source->replaceVariables($this->getHealth());
+        $entity->setMaxHealth($health);
 
-        $this->throwIfInvalidNumber($health, 1, null);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setMaxHealth((int)$health);
-        yield true;
+        yield Await::ALL;
     }
 }

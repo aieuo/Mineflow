@@ -9,12 +9,16 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use SOFe\AwaitGenerator\Await;
 
 class InWorld extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $entity = "", private string $world = "") {
         parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
@@ -42,23 +46,19 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getWorld() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $entity = $this->getOnlineEntity($source);
         $world = $source->replaceVariables($this->getWorld());
 
-        yield true;
+        yield Await::ALL;
         return $entity->getPosition()->getWorld()->getFolderName() === $world;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ExampleInput("@action.createPosition.form.world", "world", $this->getWorld(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

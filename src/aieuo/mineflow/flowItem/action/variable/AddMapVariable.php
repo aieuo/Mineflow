@@ -9,15 +9,20 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
+use SOFe\AwaitGenerator\Await;
 
 class AddMapVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $variableName = "",
@@ -64,10 +69,8 @@ class AddMapVariable extends FlowItem {
         return $this->variableName !== "" and $this->variableKey !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $helper = Main::getVariableHelper();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
 
@@ -81,21 +84,19 @@ class AddMapVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
         $variable->setValueAt($key, $addVariable);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.key", "auieo", $this->getKey(), false),
             new ExampleInput("@action.variable.form.value", "aeiuo", $this->getVariableValue(), false),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        // TODO: AddListVariableのように区切って複数同時に追加できるようにする
-        return [$data[0], $data[1], $data[2], !$data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->logicalNOT(3);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

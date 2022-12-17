@@ -65,5 +65,13 @@ class PlayerVariable extends HumanVariable {
             $class, "flying", new DummyVariable(BooleanVariable::class),
             fn(Player $player) => new BooleanVariable($player->isFlying()),
         );
+        self::registerProperty(
+            $class, "first_played", new DummyVariable(NumberVariable::class),
+            fn(Player $player) => new NumberVariable($player->getFirstPlayed() ?? 0),
+        );
+        self::registerProperty(
+            $class, "last_played", new DummyVariable(NumberVariable::class),
+            fn(Player $player) => new NumberVariable($player->getLastPlayed() ?? 0),
+        );
     }
 }

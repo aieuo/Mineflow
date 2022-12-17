@@ -9,14 +9,20 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class CommandConsole extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $command = "") {
         parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
+        $this->setPermissions([FlowItemPermission::CONSOLE]);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -25,10 +31,6 @@ class CommandConsole extends FlowItem {
 
     public function getDetailReplaces(): array {
         return [$this->getCommand()];
-    }
-
-    public function getPermissions(): array {
-        return [self::PERMISSION_CONSOLE];
     }
 
     public function setCommand(string $command): void {
@@ -43,19 +45,18 @@ class CommandConsole extends FlowItem {
         return $this->command !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $command = $source->replaceVariables($this->getCommand());
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage()), $command);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

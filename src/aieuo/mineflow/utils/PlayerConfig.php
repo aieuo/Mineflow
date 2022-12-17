@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\utils;
 
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\FlowItemPermission;
 use pocketmine\utils\Config;
 use function array_diff;
 use function in_array;
@@ -78,13 +78,13 @@ class PlayerConfig extends Config {
     public function getPermissionsByLegacyPermissionLevel(int $level): array {
         $permissions = [];
         if ($level >= 1) {
-            $permissions[] = FlowItem::PERMISSION_CONSOLE;
-            $permissions[] = FlowItem::PERMISSION_CHEAT;
-            $permissions[] = FlowItem::PERMISSION_LOOP;
-            $permissions[] = FlowItem::PERMISSION_PERMISSION;
+            $permissions[] = FlowItemPermission::CONSOLE;
+            $permissions[] = FlowItemPermission::CHEAT;
+            $permissions[] = FlowItemPermission::LOOP;
+            $permissions[] = FlowItemPermission::PERMISSION;
         }
         if ($level >= 2) {
-            $permissions[] = FlowItem::PERMISSION_CONFIG;
+            $permissions[] = FlowItemPermission::CONFIG;
         }
         return $permissions;
     }

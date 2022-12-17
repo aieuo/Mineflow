@@ -9,7 +9,7 @@ use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
@@ -97,7 +97,7 @@ class FormTrigger extends Trigger {
                 $content = Language::get("trigger.form.string.close", [$this->getKey()]);
                 break;
             default:
-                $form = Main::getFormManager()->getForm($this->getKey());
+                $form = Mineflow::getFormManager()->getForm($this->getKey());
                 if ($form instanceof ListForm) {
                     $button = $form->getButtonByUUID($this->getSubKey());
                     $content = Language::get("trigger.form.string.button", [$this->getKey(), $button instanceof Button ? $button->getText() : ""]);

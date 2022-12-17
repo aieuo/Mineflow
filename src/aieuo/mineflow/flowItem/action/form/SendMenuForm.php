@@ -10,6 +10,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -22,11 +25,19 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_pop;
+use function array_shift;
+use function explode;
 use function implode;
 
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -81,20 +92,17 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $text = $source->replaceVariables($this->getFormText());
         $resultName = $source->replaceVariables($this->getResultName());
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $this->sendForm($source, $player, $text, $resultName);
-        yield false;
+        yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
+            $this->sendForm($source, $player, $text, $resultName, $resolve);
+        });
     }
 
-    private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName): void {
+    private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName, callable $callback): void {
         $buttons = [];
         foreach ($this->options as $option) {
             $buttons[] = new Button($option);
@@ -103,19 +111,19 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         (new ListForm($text))
             ->setContent($text)
             ->setButtons($buttons)
-            ->onReceive(function (Player $player, int $data) use ($source, $resultName) {
+            ->onReceive(function (Player $player, int $data) use ($source, $resultName, $callback) {
                 $variable = new MapVariable([
                     "id" => new NumberVariable($data),
                     "text" => new StringVariable($this->options[$data]),
                 ], $this->options[$data]);
                 $source->addVariable($resultName, $variable);
-                $source->resume();
-            })->onClose(function (Player $player) use ($source, $text, $resultName) {
-                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName);
+                $callback();
+            })->onClose(function (Player $player) use ($source, $text, $resultName, $callback) {
+                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName, $callback);
             })->show($player);
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $contents = [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
@@ -126,19 +134,22 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         }
         $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
         $contents[] = new Toggle("@action.input.form.resendOnClose", $this->resendOnClose);
-        return $contents;
-    }
 
-    public function parseFromFormData(array $data): array {
-        $target = array_shift($data);
-        $resultName = array_shift($data);
-        $text = array_shift($data);
-        $resendOnClose = array_pop($data);
-        $add = array_filter(array_map("trim", explode(";", array_pop($data))), fn(string $o) => $o !== "");
+        $builder->elements($contents);
 
-        $options = array_filter($data, fn(string $o) => $o !== "");
-        $options = array_merge($options, $add);
-        return [$target, $resultName, $text, $options, $resendOnClose];
+        $builder->response(function (EditFormResponseProcessor $response) {
+            $response->preprocess(function (array $data) {
+                $target = array_shift($data);
+                $resultName = array_shift($data);
+                $text = array_shift($data);
+                $resendOnClose = array_pop($data);
+                $add = array_filter(array_map("trim", explode(";", array_pop($data))), fn(string $o) => $o !== "");
+
+                $options = array_filter($data, fn(string $o) => $o !== "");
+                $options = array_merge($options, $add);
+                return [$target, $resultName, $text, $options, $resendOnClose];
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

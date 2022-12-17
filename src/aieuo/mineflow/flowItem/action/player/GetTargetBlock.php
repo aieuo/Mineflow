@@ -10,15 +10,19 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $player = "",
@@ -58,28 +62,24 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->max !== "" and $this->resultName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $max = $source->replaceVariables($this->getMax());
-        $this->throwIfInvalidNumber($max, 1);
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $max = $this->getInt($source->replaceVariables($this->getMax()), 1);
         $result = $source->replaceVariables($this->getResultName());
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $block = $player->getTargetBlock((int)$max);
+        $block = $player->getTargetBlock($max);
         $source->addVariable($result, new BlockVariable($block));
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleNumberInput("@action.getTargetBlock.form.max", "100", $this->getMax(), true),
             new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

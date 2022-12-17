@@ -10,12 +10,16 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class ClearAllEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $entity = "") {
         parent::__construct(self::CLEAR_ALL_EFFECT, FlowItemCategory::ENTITY);
@@ -35,22 +39,20 @@ class ClearAllEffect extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $entity = $this->getOnlineEntity($source);
 
         if ($entity instanceof Living) {
             $entity->getEffects()->clear();
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

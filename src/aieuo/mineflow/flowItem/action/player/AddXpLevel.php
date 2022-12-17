@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class AddXpLevel extends AddXpBase {
 
@@ -12,18 +13,14 @@ class AddXpLevel extends AddXpBase {
         parent::__construct(self::ADD_XP_LEVEL, player: $player, xp: $xp);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $xp = $this->getInt($source->replaceVariables($this->getXp()));
+        $player = $this->getOnlinePlayer($source);
 
-        $xp = $source->replaceVariables($this->getXp());
-        $this->throwIfInvalidNumber($xp);
-
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        $new = $player->getXpManager()->getXpLevel() + (int)$xp;
+        $new = $player->getXpManager()->getXpLevel() + $xp;
         if ($new < 0) $xp = -$player->getXpManager()->getXpLevel();
         $player->getXpManager()->addXpLevels((int)$xp);
-        yield true;
+
+        yield Await::ALL;
     }
 }

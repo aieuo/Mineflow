@@ -10,15 +10,19 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\Server;
+use SOFe\AwaitGenerator\Await;
 
 class PlaySoundAt extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $position = "",
@@ -67,16 +71,10 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         return $this->getPositionVariableName() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $sound = $source->replaceVariables($this->getSound());
-        $volume = $source->replaceVariables($this->getVolume());
-        $pitch = $source->replaceVariables($this->getPitch());
-
-        $this->throwIfInvalidNumber($volume);
-        $this->throwIfInvalidNumber($pitch);
-
+        $volume = $this->getFloat($source->replaceVariables($this->getVolume()));
+        $pitch = $this->getFloat($source->replaceVariables($this->getPitch()));
         $position = $this->getPosition($source);
 
         $pk = new PlaySoundPacket();
@@ -84,19 +82,20 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         $pk->x = $position->x;
         $pk->y = $position->y;
         $pk->z = $position->z;
-        $pk->volume = (float)$volume;
-        $pk->pitch = (float)$pitch;
+        $pk->volume = $volume;
+        $pk->pitch = $pitch;
         Server::getInstance()->broadcastPackets($position->world->getPlayers(), [$pk]);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
             new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
             new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

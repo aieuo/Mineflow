@@ -10,12 +10,17 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemCount extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -45,24 +50,21 @@ class SetItemCount extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->count !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $count = $source->replaceVariables($this->getCount());
-        $this->throwIfInvalidNumber($count, 0);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $count = $this->getInt($source->replaceVariables($this->getCount()), 0);
         $item = $this->getItem($source);
 
-        $item->setCount((int)$count);
-        yield true;
+        $item->setCount($count);
+
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleNumberInput("@action.createItem.form.count", "64", $this->getCount(), true, 0),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

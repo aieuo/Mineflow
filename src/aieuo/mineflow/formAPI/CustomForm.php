@@ -12,7 +12,7 @@ use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\formAPI\element\StringResponseDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use pocketmine\player\Player;
@@ -98,7 +98,7 @@ class CustomForm extends Form {
     }
 
     public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
 
         $this->setTitle($executor->replaceVariables($this->getTitle()));
         foreach ($this->getContents() as $content) {

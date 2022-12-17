@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\template\AddonManifestRecipeTemplate;
 use aieuo\mineflow\recipe\template\CommandAliasRecipeTemplate;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
@@ -135,9 +136,7 @@ class RecipeManager {
                 /** @var FlowItemExecutor $executor */
                 $executor = yield from Await::promise(function ($resolve) use($manifestRecipe) {
                     $executor = new FlowItemExecutor([], null, onComplete: $resolve);
-                    $executor->setWaiting();
-
-                    $manifestRecipe->execute(null, callbackExecutor: $executor);
+                    $manifestRecipe->execute(null, from: $executor);
                 });
 
                 $variables = $executor->getVariables();
@@ -164,7 +163,7 @@ class RecipeManager {
                     continue;
                 }
 
-                $recipeManager = Main::getRecipeManager();
+                $recipeManager = Mineflow::getRecipeManager();
                 foreach ($recipeInfos->getValue() as $i => $value) {
                     if (!$value instanceof MapVariable) {
                         Logger::warning(Language::get("addon.load.failed", [$file->getBasename(), Language::get("addon.manifest.info.type.error", [$i])]));
@@ -294,7 +293,7 @@ class RecipeManager {
     }
 
     public function getWithLinkedRecipes(FlowItemContainer $recipe, Recipe $origin, bool $base = true): array {
-        $recipeManager = Main::getRecipeManager();
+        $recipeManager = Mineflow::getRecipeManager();
 
         $recipes = [];
         if ($base) $recipes[] = [$origin->getGroup()."/".$origin->getName() => $origin];
@@ -306,7 +305,7 @@ class RecipeManager {
             }
 
             if ($action instanceof ExecuteRecipe) {
-                $name = Main::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
+                $name = Mineflow::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
 
                 [$recipeName, $group] = $recipeManager->parseName($name);
                 if (empty($group)) $group = $origin->getGroup();

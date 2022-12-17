@@ -6,13 +6,11 @@ namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\Element;
-use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use JsonSerializable;
+use pocketmine\player\Player;
+use SOFe\AwaitGenerator\GeneratorUtil;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
@@ -24,19 +22,19 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     protected string $returnValueType = self::RETURN_NONE;
 
-    public const PERMISSION_LOOP = "loop";
-    public const PERMISSION_CHEAT = "cheat";
-    public const PERMISSION_CONSOLE = "console";
-    public const PERMISSION_CONFIG = "config";
-    public const PERMISSION_PERMISSION = "permission";
+    public const EDIT_SUCCESS = 0;
+    public const EDIT_CANCELED = 1;
+    public const EDIT_CLOSE = 2;
 
-    public const PERMISSION_ALL = [
-        self::PERMISSION_LOOP, self::PERMISSION_CHEAT, self::PERMISSION_CONSOLE, self::PERMISSION_CONFIG, self::PERMISSION_PERMISSION
-    ];
-
+    /**
+     * @param string $id
+     * @param string $category
+     * @param string[] $permissions
+     */
     public function __construct(
         private string $id,
         private string $category,
+        private array  $permissions = [],
     ) {
     }
 
@@ -49,6 +47,10 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     abstract public function getDescription(): string;
 
     abstract public function getDetail(): string;
+
+    public function getShortDetail(): string {
+        return empty($this->getCustomName()) ? $this->getDetail() : "§l".$this->getCustomName()."§r§f";
+    }
 
     public function setCustomName(?string $name = null): void {
         $this->customName = $name ?? "";
@@ -63,7 +65,11 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     }
 
     public function getPermissions(): array {
-        return [];
+        return $this->permissions;
+    }
+
+    public function setPermissions(array $permissions): void {
+        $this->permissions = $permissions;
     }
 
     public function getReturnValueType(): string {
@@ -81,50 +87,36 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $data;
     }
 
-    public function throwIfCannotExecute(): void {
-        if (!$this->isDataValid()) {
-            $message = Language::get("invalid.contents");
-            throw new InvalidFlowValueException($this->getName(), $message);
+    private function throwIfInvalidNumber(string|float|int $number, float|int|null $min = null, float|int|null $max = null, array $exclude = []): void {
+        if (!is_numeric($number)) {
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$number]));
         }
-    }
-
-    public function throwIfInvalidNumber(string $numberStr, ?float $min = null, ?float $max = null, array $exclude = []): void {
-        if (!is_numeric($numberStr)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$numberStr]));
-        }
-        $number = (float)$numberStr;
+        $number = (float)$number;
         if ($min !== null and $number < $min) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.lessValue", [$min, $number]));
         }
         if ($max !== null and $number > $max) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.overValue", [$max, $number]));
         }
-        if (!empty($exclude) and in_array($number, $exclude, true)) {
+        /** @noinspection TypeUnsafeArraySearchInspection */
+        if (!empty($exclude) and in_array($number, $exclude)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
         }
     }
 
-    /**
-     * @param array<string, DummyVariable> $variables
-     * @return CustomForm
-     */
-    public function getEditForm(array $variables): CustomForm {
-        return (new CustomForm($this->getName()))
-            ->addContent(new Label($this->getDescription()))
-            ->addContents($this->getEditFormElements($variables))
-            ->addContent(new CancelToggle());
+    protected function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
+        $this->throwIfInvalidNumber($number, $min, $max, $exclude);
+        return (int)$number;
     }
 
-    /**
-     * @param array<string, DummyVariable> $variables
-     * @return Element[]
-     */
-    public function getEditFormElements(array $variables): array {
-        return [];
+    protected function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
+        $this->throwIfInvalidNumber($number, $min, $max, $exclude);
+        return (float)$number;
     }
 
-    public function parseFromFormData(array $data): array {
-        return $data;
+    public function edit(Player $player, array $variables, bool $isNew): \Generator {
+        yield from GeneratorUtil::empty();
+        return self::EDIT_SUCCESS;
     }
 
     /**
@@ -177,7 +169,17 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /**
      * @param FlowItemExecutor $source
-     * @return bool|string|int|\Generator
+     * @return \Generator
+     * @throws InvalidFlowValueException
      */
-    abstract public function execute(FlowItemExecutor $source);
+    final public function execute(FlowItemExecutor $source): \Generator {
+        if (!$this->isDataValid()) {
+            $message = Language::get("invalid.contents");
+            throw new InvalidFlowValueException($this->getName(), $message);
+        }
+
+        return yield from $this->onExecute($source);
+    }
+
+    abstract protected function onExecute(FlowItemExecutor $source): \Generator;
 }

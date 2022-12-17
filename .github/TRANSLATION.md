@@ -11,3 +11,4 @@ After joining, please select the language you want to translate, open `Mineflow/
 | Language   | Contributors  |
 |------------|---------------|
 | Indonesian | @keenanyafiqy |
+| Vietnamese | @NhanAZ       |

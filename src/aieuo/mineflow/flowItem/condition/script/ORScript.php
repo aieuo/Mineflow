@@ -12,7 +12,7 @@ class ORScript extends LogicalOperation {
         parent::__construct($id);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         foreach ($this->getConditions() as $condition) {
             if (yield from $condition->execute($source)) return true;
         }

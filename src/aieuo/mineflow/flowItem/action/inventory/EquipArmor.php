@@ -12,15 +12,19 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private array $slots = [
         "action.equipArmor.helmet",
@@ -56,30 +60,24 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         return $this->getEntityVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $index = $source->replaceVariables($this->getIndex());
-
-        $this->throwIfInvalidNumber($index, 0, 3);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $index = $this->getInt($source->replaceVariables($this->getIndex()), 0, 3);
+        $entity = $this->getOnlineEntity($source);
         $item = $this->getItem($source);
 
         if ($entity instanceof Living) {
-            $entity->getArmorInventory()->setItem((int)$index, $item);
+            $entity->getArmorInventory()->setItem($index, $item);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new Dropdown("@action.equipArmor.form.index", array_map(fn(string $text) => Language::get($text), $this->slots), (int)$this->getIndex()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

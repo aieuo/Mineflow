@@ -8,12 +8,16 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use pocketmine\scheduler\ClosureTask;
+use SOFe\AwaitGenerator\Await;
 
 class Wait extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $time = "") {
         parent::__construct(self::ACTION_WAIT, FlowItemCategory::SCRIPT);
@@ -40,24 +44,18 @@ class Wait extends FlowItem {
         return $this->getTime() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $time = $this->getFloat($source->replaceVariables($this->getTime()), 1 / 20);
 
-        $time = $source->replaceVariables($this->getTime());
-        $this->throwIfInvalidNumber($time, 1 / 20);
-
-        Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(
-            function () use ($source): void {
-                $source->resume();
-            }
-        ), (int)((float)$time * 20));
-        yield false;
+        yield from Await::promise(function ($resolve) use($time) {
+            Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask($resolve), (int)($time * 20));
+        });
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.wait.form.time", "10", $this->getTime(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

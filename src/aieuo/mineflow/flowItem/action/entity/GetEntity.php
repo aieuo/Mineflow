@@ -9,15 +9,19 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
+use SOFe\AwaitGenerator\Await;
 
 class GetEntity extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -55,28 +59,25 @@ class GetEntity extends FlowItem {
         return $this->getKey() !== "" and !empty($this->getResultName());
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()), min: 0);
+        $resultName = $source->replaceVariables($this->getReturnName());
 
-        $id = $source->replaceVariables($this->getKey());
-        $resultName = $source->replaceVariables($this->getResultName());
-
-        $this->throwIfInvalidNumber($id, 0);
-
-        $entity = EntityHolder::findEntity((int)$id);
+        $entity = EntityHolder::findEntity($id);
         if ($entity === null) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntity.notFound", [$id]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.getEntity.notFound", [(string)$id]));
         }
         $source->addVariable($resultName, EntityVariable::fromObject($entity));
-        yield true;
+
+        yield Await::ALL;
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getKey(), true),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

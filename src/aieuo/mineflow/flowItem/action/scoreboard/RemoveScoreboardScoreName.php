@@ -10,12 +10,17 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $scoreboard = "", private string $score = "") {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE_NAME, FlowItemCategory::SCOREBOARD);
@@ -43,24 +48,20 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
         return $this->getScoreboardVariableName() !== "" and $this->getScore() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $score = $source->replaceVariables($this->getScore());
-
-        $this->throwIfInvalidNumber($score);
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $score = $this->getInt($source->replaceVariables($this->getScore()));
         $board = $this->getScoreboard($source);
 
-        $board->removeScoreName((int)$score);
-        yield true;
+        $board->removeScoreName($score);
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
             new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -9,6 +9,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\TextFormat;
+use SOFe\AwaitGenerator\Await;
 
 class OverMoney extends TypeMoney {
 
@@ -16,21 +17,17 @@ class OverMoney extends TypeMoney {
         parent::__construct(self::OVER_MONEY, playerName: $playerName, amount: $amount);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         if (!Economy::isPluginLoaded()) {
             throw new InvalidFlowValueException($this->getName(), TextFormat::RED.Language::get("economy.notfound"));
         }
 
         $name = $source->replaceVariables($this->getPlayerName());
-        $amount = $source->replaceVariables($this->getAmount());
-
-        $this->throwIfInvalidNumber($amount);
+        $amount = $this->getInt($source->replaceVariables($this->getAmount()));
 
         $myMoney = Economy::getPlugin()->getMoney($name);
 
-        yield true;
-        return $myMoney >= (int)$amount;
+        yield Await::ALL;
+        return $myMoney >= $amount;
     }
 }

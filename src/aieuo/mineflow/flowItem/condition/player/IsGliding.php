@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use SOFe\AwaitGenerator\Await;
 
 class IsGliding extends CheckPlayerState {
 
@@ -12,13 +13,10 @@ class IsGliding extends CheckPlayerState {
         parent::__construct(self::IS_GLIDING, player: $player);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $player = $this->getOnlinePlayer($source);
 
-        $player = $this->getPlayer($source);
-        $this->throwIfInvalidPlayer($player);
-
-        yield true;
+        yield Await::ALL;
         return $player->isGliding();
     }
 }

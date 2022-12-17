@@ -9,15 +9,20 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
+use SOFe\AwaitGenerator\Await;
 
 class EditString extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -87,9 +92,7 @@ class EditString extends FlowItem {
         return $this->getValue1() !== "" and $this->getValue2() !== "" and $this->getOperator() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $source->replaceVariables($this->getValue1());
         $value2 = $source->replaceVariables($this->getValue2());
         $resultName = $source->replaceVariables($this->getResultName());
@@ -103,8 +106,7 @@ class EditString extends FlowItem {
                 $result = new StringVariable(str_replace($value2, "", $value1));
                 break;
             case self::TYPE_REPEAT:
-                $this->throwIfInvalidNumber($value2, 1);
-                $result = new StringVariable(str_repeat($value1, (int)$value2));
+                $result = new StringVariable(str_repeat($value1, $this->getInt($value2, 1)));
                 break;
             case self::TYPE_SPLIT:
                 $result = new ListVariable(array_map(fn(string $str) => new StringVariable($str), explode($value2, $value1)));
@@ -114,12 +116,13 @@ class EditString extends FlowItem {
         }
 
         $source->addVariable($resultName, $result);
-        yield true;
+
+        yield Await::ALL;
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
             new Dropdown("@action.fourArithmeticOperations.form.operator",
                 array_map(fn(string $type) => Language::get("action.editString.".$type), $this->operators),
@@ -127,11 +130,9 @@ class EditString extends FlowItem {
             ),
             new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], $this->operators[$data[1]], $data[2], $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => $this->operators[$value]);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

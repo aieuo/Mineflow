@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 use pocketmine\entity\Living;
+use SOFe\AwaitGenerator\Await;
 
 class IsCreature extends CheckEntityStateById {
 
@@ -14,15 +15,11 @@ class IsCreature extends CheckEntityStateById {
         parent::__construct(self::IS_CREATURE, entityId: $entityId);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $id = $this->getInt($source->replaceVariables($this->getEntityId()));
+        $entity = EntityHolder::findEntity($id);
 
-        $id = $source->replaceVariables($this->getEntityId());
-        $this->throwIfInvalidNumber($id);
-
-        $entity = EntityHolder::findEntity((int)$id);
-
-        yield true;
+        yield Await::ALL;
         return $entity instanceof Living;
     }
 }

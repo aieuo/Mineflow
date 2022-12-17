@@ -10,12 +10,17 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SetScale extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $entity = "", private string $scale = "") {
         parent::__construct(self::SET_SCALE, FlowItemCategory::ENTITY);
@@ -43,25 +48,20 @@ class SetScale extends FlowItem implements EntityFlowItem {
         return $this->getEntityVariableName() !== "" and $this->scale !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $scale = $this->getFloat($source->replaceVariables($this->getScale()), min: 0, exclude: [0]);
+        $entity = $this->getOnlineEntity($source);
 
-        $health = $source->replaceVariables($this->getScale());
+        $entity->setScale($scale);
 
-        $this->throwIfInvalidNumber($health, 0, null);
-
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        $entity->setScale((float)$health);
-        yield true;
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ExampleNumberInput("@action.setScale.form.scale", "1", $this->getScale(), true, 0, excludes: [0]),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

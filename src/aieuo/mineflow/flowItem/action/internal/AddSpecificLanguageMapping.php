@@ -8,11 +8,16 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
+use function implode;
 
 class AddSpecificLanguageMapping extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $language = "",
@@ -58,24 +63,23 @@ class AddSpecificLanguageMapping extends FlowItem {
         return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getMessage() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $language = $source->replaceVariables($this->getLanguage());
         $key = $source->replaceVariables($this->getKey());
         $message = $source->replaceVariables($this->getMessage());
 
         Language::add([$key => $message], $language);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $languages = implode(", ", Language::getAvailableLanguages());
-        return [
+        $builder->elements([
             new ExampleInput(Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), "eng", $this->getLanguage(), true),
             new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
             new ExampleInput("@action.addSpecificLanguageMapping.form.message", "Hello", $this->getMessage(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

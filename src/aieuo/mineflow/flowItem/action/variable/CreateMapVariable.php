@@ -8,15 +8,22 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
+use SOFe\AwaitGenerator\Await;
+use function array_map;
+use function explode;
 use function implode;
 
 class CreateMapVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private array $variableKey;
     private array $variableValue;
@@ -69,10 +76,8 @@ class CreateMapVariable extends FlowItem {
         return $this->variableName !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
-        $helper = Main::getVariableHelper();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $keys = array_map(fn(string $key) => $source->replaceVariables($key), $this->getKey());
         $values = $this->getVariableValue();
@@ -92,23 +97,21 @@ class CreateMapVariable extends FlowItem {
         } else {
             $helper->add($name, $variable);
         }
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.key", "auieo", implode(",", $this->getKey()), false),
             new ExampleInput("@action.variable.form.value", "aeiuo", implode(",", $this->getVariableValue()), false),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        $name = $data[0];
-        $key = array_map("trim", explode(",", $data[1]));
-        $value = array_map("trim", explode(",", $data[2]));
-        return [$name, $key, $value, !$data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => array_map("trim", explode(",", $value)));
+            $response->preprocessAt(2, fn($value) => array_map("trim", explode(",", $value)));
+            $response->logicalNOT(3);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

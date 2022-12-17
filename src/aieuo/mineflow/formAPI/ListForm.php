@@ -4,10 +4,9 @@ namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
-use JetBrains\PhpStorm\Deprecated;
 use pocketmine\player\Player;
 use function call_user_func;
 use function is_callable;
@@ -81,11 +80,6 @@ class ListForm extends Form {
         return $this->buttons[$index] ?? null;
     }
 
-    #[Deprecated(replacement: "%class%->getButtonByUUID(%parameter0%)")]
-    public function getButtonById(string $uuid): ?Button {
-        return $this->getButtonByUUID($uuid);
-    }
-
     public function getButtonByUUID(string $uuid): ?Button {
         foreach ($this->getButtons() as $button) {
             if ($button->getUUID() === $uuid) return $button;
@@ -111,7 +105,7 @@ class ListForm extends Form {
     }
 
     public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
 
         $this->setTitle($executor->replaceVariables($this->getTitle()));
         $this->setContent($executor->replaceVariables($this->getContent()));

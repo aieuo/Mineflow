@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\condition\entity\CheckEntityState;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 
 class IsPlayerVariable extends CheckEntityState {
 
@@ -15,13 +16,10 @@ class IsPlayerVariable extends CheckEntityState {
         parent::__construct(self::IS_PLAYER_VARIABLE, FlowItemCategory::PLAYER, $entity);
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $entity = $this->getOnlineEntity($source);
 
-        $entity = $this->getEntity($source);
-        $this->throwIfInvalidEntity($entity);
-
-        yield true;
+        yield Await::ALL;
         return $entity instanceof Player;
     }
 }

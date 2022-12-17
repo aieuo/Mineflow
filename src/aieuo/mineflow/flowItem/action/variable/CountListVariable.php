@@ -9,15 +9,19 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use SOFe\AwaitGenerator\Await;
 
 class CountListVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -58,13 +62,11 @@ class CountListVariable extends FlowItem {
         return $this->getVariableName() !== "" and !empty($this->getResultName());
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($name) ?? Main::getVariableHelper()->getNested($name);
+        $variable = $source->getVariable($name) ?? Mineflow::getVariableHelper()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.count.error.notList"));
@@ -72,15 +74,16 @@ class CountListVariable extends FlowItem {
 
         $count = count($variable->getValue());
         $source->addVariable($resultName, new NumberVariable($count));
-        yield true;
+
+        yield Await::ALL;
         return $count;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.count.form.name", "list", $this->getVariableName(), true),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

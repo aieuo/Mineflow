@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
@@ -18,11 +20,12 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\nbt\NbtException;
-use function substr;
+use SOFe\AwaitGenerator\Await;
 
 class SetItemData extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -64,9 +67,7 @@ class SetItemData extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName() !== "" and $this->getKey() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->getItem($source);
         $key = $source->replaceVariables($this->getKey());
         $variable = $this->getValueVariable($source);
@@ -80,32 +81,23 @@ class SetItemData extends FlowItem implements ItemFlowItem {
             throw new InvalidFlowValueException(Language::get("variable.convert.nbt.failed", [$e->getMessage(), (string)$variable]));
         }
 
-        yield true;
+        yield Await::ALL;
         return $this->getItemVariableName();
     }
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
-        $helper = Main::getVariableHelper();
+        $helper = Mineflow::getVariableHelper();
         $value = $this->getValue();
 
-        $variable = null;
-        if ($helper->isSimpleVariableString($value)) {
-            $variable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1));
-        }
-
-        if ($variable === null) {
-            $value = $helper->replaceVariables($value, $source->getVariables());
-            $variable = Variable::create($helper->currentType($value), $helper->getType($value));
-        }
-        return $variable;
+        return $helper->copyOrCreateVariable($value, $source);
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
             new ExampleInput("@action.setItemData.form.value", "100", $this->getValue(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

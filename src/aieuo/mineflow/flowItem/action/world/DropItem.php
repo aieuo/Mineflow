@@ -12,12 +12,17 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
     use PositionFlowItemTrait, ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $position = "", string $item = "") {
         parent::__construct(self::DROP_ITEM, FlowItemCategory::WORLD);
@@ -38,22 +43,21 @@ class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
         return $this->getPositionVariableName() !== "" and $this->getItemVariableName() !== "";
     }
 
-    public function execute(FlowItemExecutor $source): \Generator {
-        $this->throwIfCannotExecute();
-
+    protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->getPosition($source);
 
         $item = $this->getItem($source);
 
         $position->getWorld()->dropItem($position, $item);
-        yield true;
+
+        yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {
