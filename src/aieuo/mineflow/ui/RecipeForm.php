@@ -230,7 +230,7 @@ class RecipeForm {
                 new Button("@form.recipe.changeTarget", fn() => $this->sendChangeTarget($player, $recipe)),
                 new Button("@form.recipe.recipeMenu.enable", fn() => $this->sendToggleEnable($player, $recipe)),
                 new Button("@form.recipe.recipeMenu.save", function () use($player, $recipe) {
-                    $recipe->save(Mineflow::getRecipeManager()->getSaveDir());
+                    $recipe->save(Mineflow::getRecipeManager()->getRecipeDirectory());
                     $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                 }),
                 new Button("@mineflow.export", fn() => (new ExportForm)->sendRecipeListByRecipe($player, $recipe)),
