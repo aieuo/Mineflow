@@ -70,6 +70,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     private string $rawData = "";
 
+    private bool $enabled = true;
+
     public function __construct(string $name, string $group = "", string $author = "", string $pluginVersion = null) {
         $this->name = $name;
         $this->author = $author;
@@ -107,6 +109,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getPluginVersion(): string {
         return $this->version;
+    }
+
+    public function setEnabled(bool $enabled): void {
+        $this->enabled = $enabled;
+    }
+
+    public function isEnabled(): bool {
+        return $this->enabled;
     }
 
     public function setRawData(string $rawData): void {
@@ -357,6 +367,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $this->addAction($action);
         }
 
+        $this->setEnabled($contents["enabled"] ?? true);
         $this->setTargetSetting(
             $contents["target"]["type"] ?? Recipe::TARGET_DEFAULT,
             $contents["target"]["options"] ?? []
@@ -382,6 +393,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             "group" => $this->group,
             "plugin_version" => $this->version,
             "author" => $this->author,
+            "enabled" => $this->enabled,
             "actions" => $this->getActions(),
             "triggers" => $this->triggers,
             "target" => [

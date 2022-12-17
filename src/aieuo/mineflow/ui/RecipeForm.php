@@ -12,8 +12,8 @@ use aieuo\mineflow\formAPI\element\Label;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\trigger\Trigger;
@@ -27,6 +27,7 @@ use function array_merge;
 use function array_search;
 use function array_values;
 use function file_exists;
+use function is_callable;
 
 class RecipeForm {
 
@@ -208,82 +209,33 @@ class RecipeForm {
 
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []): void {
         $detail = trim($recipe->getDetail());
+        if (!$recipe->isEnabled()) {
+            $messages[] = Language::get("form.recipe.disabled");
+        }
         (new ListForm(Language::get("form.recipe.recipeMenu.title", [$recipe->getPathname()])))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
             ->addButtons([
-                new Button("@form.back"),
-                new Button("@action.edit"),
-                new Button("@form.recipe.recipeMenu.changeName"),
-                new Button("@form.recipe.recipeMenu.execute"),
-                new Button("@form.recipe.recipeMenu.setTrigger"),
-                new Button("@form.recipe.args.return.set"),
-                new Button("@form.recipe.changeTarget"),
-                new Button("@form.recipe.recipeMenu.save"),
-                new Button("@mineflow.export"),
-                new Button("@form.delete"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
-                switch ($data) {
-                    case 0:
-                        $prev = Session::getSession($player)->get("recipe_menu_prev");
-                        is_callable($prev) ? $prev($player) : $this->sendMenu($player);
-                        break;
-                    case 1:
-                        Session::getSession($player)->set("parents", []);
-                        (new FlowItemContainerForm)->sendActionList($player, $recipe, FlowItemContainer::ACTION);
-                        break;
-                    case 2:
-                        $this->sendChangeName($player, $recipe);
-                        break;
-                    case 3:
-                        $recipe->executeAllTargets($player);
-                        break;
-                    case 4:
-                        $this->sendTriggerList($player, $recipe);
-                        break;
-                    case 5:
-                        (new ListForm("@form.recipe.args.return.set"))
-                            ->setButtons([
-                                new Button("@form.back"),
-                                new Button("@form.recipe.args.set"),
-                                new Button("@form.recipe.returnValue.set"),
-                            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
-                                switch ($data) {
-                                    case 0:
-                                        $this->sendRecipeMenu($player, $recipe);
-                                        break;
-                                    case 1:
-                                        $this->sendArgumentList($player, $recipe);
-                                        break;
-                                    case 2:
-                                        $this->sendSetReturns($player, $recipe);
-                                        break;
-                                }
-                            })->addArgs($recipe)->show($player);
-                        break;
-                    case 6:
-                        $this->sendChangeTarget($player, $recipe);
-                        break;
-                    case 7:
-                        $recipe->save(Mineflow::getRecipeManager()->getRecipeDirectory());
-                        $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
-                        break;
-                    case 8:
-                        (new ExportForm)->sendRecipeListByRecipe($player, $recipe);
-                        break;
-                    case 9:
-                        (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
-                            ->setContent(Language::get("form.delete.confirm", [$recipe->getName()]))
-                            ->onYes(function() use ($player, $recipe) {
-                                $manager = Mineflow::getRecipeManager();
-                                $recipe->removeTriggerAll();
-                                $manager->remove($recipe->getName(), $recipe->getGroup());
-                                $this->sendRecipeList($player, $recipe->getGroup(), ["@form.deleted"]);
-                            })->onNo(function() use($player, $recipe) {
-                                $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
-                            })->show($player);
-                        break;
-                }
-            })->addArgs($recipe)->addMessages($messages)->show($player);
+                new Button("@form.back", function () use($player) {
+                    $prev = Session::getSession($player)->get("recipe_menu_prev");
+                    is_callable($prev) ? $prev($player) : $this->sendMenu($player);
+                }),
+                new Button("@action.edit", function () use($player, $recipe) {
+                    Session::getSession($player)->set("parents", []);
+                    (new FlowItemContainerForm)->sendActionList($player, $recipe, FlowItemContainer::ACTION);
+                }),
+                new Button("@form.recipe.recipeMenu.changeName", fn() => $this->sendChangeName($player, $recipe)),
+                new Button("@form.recipe.recipeMenu.execute", fn() => $recipe->executeAllTargets($player)),
+                new Button("@form.recipe.recipeMenu.setTrigger", fn() => $this->sendTriggerList($player, $recipe)),
+                new Button("@form.recipe.args.return.set", fn() => $this->sendArgumentMenu($player, $recipe)),
+                new Button("@form.recipe.changeTarget", fn() => $this->sendChangeTarget($player, $recipe)),
+                new Button("@form.recipe.recipeMenu.enable", fn() => $this->sendToggleEnable($player, $recipe)),
+                new Button("@form.recipe.recipeMenu.save", function () use($player, $recipe) {
+                    $recipe->save(Mineflow::getRecipeManager()->getSaveDir());
+                    $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
+                }),
+                new Button("@mineflow.export", fn() => (new ExportForm)->sendRecipeListByRecipe($player, $recipe)),
+                new Button("@form.delete", fn() => $this->sendConfirmDelete($player, $recipe)),
+            ])->addArgs($recipe)->addMessages($messages)->show($player);
     }
 
     public function sendChangeName(Player $player, Recipe $recipe): void {
@@ -319,6 +271,27 @@ class RecipeForm {
             ->addButtonsEach($triggers, function (Trigger $trigger) use($player, $recipe) {
                 return new Button((string)$trigger, fn() => (new BaseTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger));
             })->addMessages($messages)->show($player);
+    }
+
+    public function sendArgumentMenu(Player $player, Recipe $recipe): void {
+        (new ListForm("@form.recipe.args.return.set"))
+            ->setButtons([
+                new Button("@form.back"),
+                new Button("@form.recipe.args.set"),
+                new Button("@form.recipe.returnValue.set"),
+            ])->onReceive(function (Player $player, int $data, Recipe $recipe) {
+                switch ($data) {
+                    case 0:
+                        $this->sendRecipeMenu($player, $recipe);
+                        break;
+                    case 1:
+                        $this->sendArgumentList($player, $recipe);
+                        break;
+                    case 2:
+                        $this->sendSetReturns($player, $recipe);
+                        break;
+                }
+            })->addArgs($recipe)->show($player);
     }
 
     public function sendArgumentList(Player $player, Recipe $recipe, array $messages = []): void {
@@ -440,6 +413,30 @@ class RecipeForm {
             }
             $this->sendRecipeMenu($player, $recipe, ["@form.changed"]);
         })->addArgs($recipe)->addErrors($errors)->show($player);
+    }
+
+    public function sendToggleEnable(Player $player, Recipe $recipe): void {
+        (new CustomForm(Language::get("form.recipe.enable.title", [$recipe->getName()])))
+            ->setContents([
+                new Toggle("@form.recipe.enable", $recipe->isEnabled(), result: $enabled),
+                new CancelToggle(fn() => $this->sendRecipeMenu($player, $recipe)),
+            ])->onReceive(function () use($player, $recipe, &$enabled) {
+                $recipe->setEnabled($enabled);
+                $this->sendRecipeMenu($player, $recipe, [Language::get("form.changed")]);
+            })->show($player);
+    }
+
+    public function sendConfirmDelete(Player $player, Recipe $recipe): void {
+        (new ModalForm(Language::get("form.recipe.delete.title", [$recipe->getName()])))
+            ->setContent(Language::get("form.delete.confirm", [$recipe->getName()]))
+            ->onYes(function() use ($player, $recipe) {
+                $manager = Mineflow::getRecipeManager();
+                $recipe->removeTriggerAll();
+                $manager->remove($recipe->getName(), $recipe->getGroup());
+                $this->sendRecipeList($player, $recipe->getGroup(), ["@form.deleted"]);
+            })->onNo(function() use($player, $recipe) {
+                $this->sendRecipeMenu($player, $recipe, ["@form.cancelled"]);
+            })->show($player);
     }
 
     public function confirmDeleteRecipeGroup(Player $player, string $path): void {
