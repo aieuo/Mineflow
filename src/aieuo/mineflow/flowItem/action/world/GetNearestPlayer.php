@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
@@ -24,11 +25,11 @@ class GetNearestPlayer extends GetNearestEntityBase {
         return Player::class;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleInput("@action.form.resultVariableName", "player", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function getAddingVariables(): array {

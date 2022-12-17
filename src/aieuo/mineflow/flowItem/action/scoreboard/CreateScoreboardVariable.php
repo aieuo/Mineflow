@@ -8,6 +8,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Scoreboard;
@@ -17,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 
 class CreateScoreboardVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -90,17 +94,16 @@ class CreateScoreboardVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.createScoreboard.form.id", "aieuo", $this->getBoardId(), true),
             new ExampleInput("@action.createScoreboard.form.displayName", "auieo", $this->getDisplayName(), true),
             new Dropdown("@action.createScoreboard.form.type", $this->displayTypes, array_search($this->getDisplayType(), $this->displayTypes, true)),
             new ExampleInput("@action.form.resultVariableName", "board", $this->getVariableName()),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[3], $data[0], $data[1], $this->displayTypes[$data[2]]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(2, fn($value) => $this->displayTypes[$value]);
+            $response->rearrange([3, 0, 1, 2]);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

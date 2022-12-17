@@ -7,12 +7,15 @@ namespace aieuo\mineflow\flowItem\action\math;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 
 abstract class TypeGetMathVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -45,10 +48,10 @@ abstract class TypeGetMathVariable extends FlowItem {
         return $this->getResultName() !== "";
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

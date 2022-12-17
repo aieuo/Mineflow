@@ -9,11 +9,14 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use SOFe\AwaitGenerator\Await;
 
 class RandomNumber extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $min = "",
@@ -68,12 +71,12 @@ class RandomNumber extends FlowItem implements Condition {
         return mt_rand(min($min, $max), max($min, $max)) === $value;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@condition.randomNumber.form.min", "0", $this->getMin(), true),
             new ExampleNumberInput("@condition.randomNumber.form.max", "10", $this->getMax(), true),
             new ExampleNumberInput("@condition.randomNumber.form.value", "0", $this->getValue(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

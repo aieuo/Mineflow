@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
@@ -23,6 +25,7 @@ use SOFe\AwaitGenerator\Await;
 class AddEnchantment extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -84,12 +87,12 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
             new ExampleInput("@action.addEnchant.form.id", "1", $this->getEnchantId(), true),
             new ExampleNumberInput("@action.addEnchant.form.level", "1", $this->getEnchantLevel(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

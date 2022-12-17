@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
@@ -22,6 +24,7 @@ use SOFe\AwaitGenerator\Await;
 class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
     use EntityFlowItemTrait, ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private array $slots = [
         "action.equipArmor.helmet",
@@ -69,12 +72,12 @@ class EquipArmor extends FlowItem implements EntityFlowItem, ItemFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new Dropdown("@action.equipArmor.form.index", array_map(fn(string $text) => Language::get($text), $this->slots), (int)$this->getIndex()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

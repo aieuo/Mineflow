@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
@@ -54,11 +57,11 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         return $config->getNested($key) !== null;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
             new ExampleInput("@condition.existsConfig.form.key", "aieuo", $this->getKey(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $player = "",
@@ -71,12 +74,12 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleNumberInput("@action.getTargetBlock.form.max", "100", $this->getMax(), true),
             new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

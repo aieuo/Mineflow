@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class SetItemName extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -58,11 +61,11 @@ class SetItemName extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

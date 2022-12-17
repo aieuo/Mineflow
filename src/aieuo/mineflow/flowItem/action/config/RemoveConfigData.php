@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     use ConfigFileFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
@@ -55,11 +58,11 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
             new ExampleInput("@action.setConfig.form.key", "aieuo", $this->getKey(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

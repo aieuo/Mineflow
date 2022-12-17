@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {
     use PlayerFlowItemTrait, ScoreboardFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         parent::__construct(self::SHOW_SCOREBOARD, FlowItemCategory::SCOREBOARD);
@@ -49,11 +52,11 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowI
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

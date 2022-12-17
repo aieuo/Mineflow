@@ -9,6 +9,8 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
@@ -19,6 +21,7 @@ use SOFe\AwaitGenerator\Await;
 
 class GetEntity extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -70,11 +73,11 @@ class GetEntity extends FlowItem {
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.getEntity.form.target", "aieuo", $this->getKey(), true),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

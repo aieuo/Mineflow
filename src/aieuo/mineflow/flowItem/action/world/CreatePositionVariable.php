@@ -9,17 +9,21 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\Server;
-use SOFe\AwaitGenerator\Await;
 use pocketmine\world\Position;
+use SOFe\AwaitGenerator\Await;
 
 class CreatePositionVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -106,18 +110,16 @@ class CreatePositionVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@action.createPosition.form.x", "0", $this->getX(), true),
             new ExampleNumberInput("@action.createPosition.form.y", "100", $this->getY(), true),
             new ExampleNumberInput("@action.createPosition.form.z", "16", $this->getZ(), true),
             new ExampleInput("@action.createPosition.form.world", "{target.level}", $this->getWorld(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[4], $data[0], $data[1], $data[2], $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->rearrange([4, 0, 1, 2, 3]);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

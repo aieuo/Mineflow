@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
@@ -21,6 +23,7 @@ use SOFe\AwaitGenerator\Await;
 class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
     use PlayerFlowItemTrait, ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "", string $item = "", private string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
@@ -60,12 +63,12 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

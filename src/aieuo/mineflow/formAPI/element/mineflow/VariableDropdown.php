@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\formAPI\element\mineflow;
 
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\formAPI\CustomForm;
@@ -10,12 +11,18 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\ui\FlowItemForm;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
+use function array_key_first;
+use function array_merge;
+use function array_search;
+use function array_shift;
+use function count;
+use function end;
 use function in_array;
 
 abstract class VariableDropdown extends Dropdown {
@@ -150,16 +157,18 @@ abstract class VariableDropdown extends Dropdown {
                 $action = FlowItemFactory::get($id);
 
                 return new Button($action->getName(), function () use ($player, $origin, $index, $action) {
-                    $parents = Session::getSession($player)->get("parents");
-                    /** @var FlowItemContainer $container */
-                    $container = end($parents);
-                    /** @var Recipe $recipe */
-                    $recipe = array_shift($parents);
-                    $variables = $recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION);
+                    Await::f2c(function () use($player, $origin, $index, $action) {
+                        $parents = Session::getSession($player)->get("parents");
+                        /** @var FlowItemContainer $container */
+                        $container = end($parents);
+                        /** @var Recipe $recipe */
+                        $recipe = array_shift($parents);
+                        $variables = $recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION);
 
-                    $form = $action->getEditForm($variables);
-                    $form->addArgs($form, $action, function ($result) use ($player, $origin, $index, $action, $parents, $recipe, $container) {
-                        if (!$result) {
+                        $result = yield from $action->edit($player, $variables, true);
+                        if ($result === FlowItem::EDIT_CLOSE) return;
+
+                        if ($result === FlowItem::EDIT_CANCELED) {
                             $origin->resend([], ["@form.cancelled"]);
                             return;
                         }
@@ -190,7 +199,7 @@ abstract class VariableDropdown extends Dropdown {
                         }
 
                         $origin->resend([], ["@form.added"], $indexes);
-                    })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
+                    });
                 });
             })->addButton(new Button("@form.cancelAndBack", fn() => $origin->resend()))
             ->show($player);

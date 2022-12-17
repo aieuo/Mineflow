@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\entity\Entity;
@@ -27,6 +29,7 @@ use SOFe\AwaitGenerator\Await;
 class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private static array $entityIds = [];
 
@@ -71,11 +74,11 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

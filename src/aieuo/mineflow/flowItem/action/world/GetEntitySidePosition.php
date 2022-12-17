@@ -11,6 +11,9 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -25,6 +28,7 @@ use SOFe\AwaitGenerator\Await;
 class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -156,17 +160,15 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
             new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], $this->directions[$data[1]] ?? "", $data[2], $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => $this->directions[$value] ?? "");
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -9,10 +9,13 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use SOFe\AwaitGenerator\Await;
 
 class ExitRecipe extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct() {
         parent::__construct(self::EXIT_RECIPE, FlowItemCategory::SCRIPT);
@@ -25,6 +28,9 @@ class ExitRecipe extends FlowItem {
 
     public function isDataValid(): bool {
         return true;
+    }
+
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
     }
 
     public function loadSaveData(array $content): FlowItem {

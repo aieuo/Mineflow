@@ -9,6 +9,8 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
@@ -19,6 +21,7 @@ use SOFe\AwaitGenerator\Await;
 
 class Calculate2 extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -124,13 +127,13 @@ class Calculate2 extends FlowItem {
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
             new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
             new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

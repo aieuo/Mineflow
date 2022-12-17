@@ -9,6 +9,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
@@ -20,6 +23,7 @@ use SOFe\AwaitGenerator\Await;
 
 class CreateItemVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -102,17 +106,15 @@ class CreateItemVariable extends FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.createItem.form.id", "1:0", $this->getItemId(), true),
             new ExampleNumberInput("@action.createItem.form.count", "64", $this->getItemCount(), false, 0),
             new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName()),
             new ExampleInput("@action.form.resultVariableName", "item", $this->getVariableName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[3], $data[0], $data[1], $data[2]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->rearrange([3, 0, 1, 2]);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

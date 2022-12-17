@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -17,6 +19,7 @@ use SOFe\AwaitGenerator\Await;
 class ClearInventory extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "") {
         parent::__construct(self::CLEAR_INVENTORY, FlowItemCategory::INVENTORY);
@@ -44,10 +47,10 @@ class ClearInventory extends FlowItem implements PlayerFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

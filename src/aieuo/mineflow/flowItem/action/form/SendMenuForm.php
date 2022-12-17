@@ -10,6 +10,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -23,11 +26,18 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_pop;
+use function array_shift;
+use function explode;
 use function implode;
 
 class SendMenuForm extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -113,7 +123,7 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             })->show($player);
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $contents = [
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
@@ -124,19 +134,22 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
         }
         $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
         $contents[] = new Toggle("@action.input.form.resendOnClose", $this->resendOnClose);
-        return $contents;
-    }
 
-    public function parseFromFormData(array $data): array {
-        $target = array_shift($data);
-        $resultName = array_shift($data);
-        $text = array_shift($data);
-        $resendOnClose = array_pop($data);
-        $add = array_filter(array_map("trim", explode(";", array_pop($data))), fn(string $o) => $o !== "");
+        $builder->elements($contents);
 
-        $options = array_filter($data, fn(string $o) => $o !== "");
-        $options = array_merge($options, $add);
-        return [$target, $resultName, $text, $options, $resendOnClose];
+        $builder->response(function (EditFormResponseProcessor $response) {
+            $response->preprocess(function (array $data) {
+                $target = array_shift($data);
+                $resultName = array_shift($data);
+                $text = array_shift($data);
+                $resendOnClose = array_pop($data);
+                $add = array_filter(array_map("trim", explode(";", array_pop($data))), fn(string $o) => $o !== "");
+
+                $options = array_filter($data, fn(string $o) => $o !== "");
+                $options = array_merge($options, $add);
+                return [$target, $resultName, $text, $options, $resendOnClose];
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

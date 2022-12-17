@@ -10,6 +10,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -20,10 +23,14 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 use function array_search;
+use function array_unique;
+use function array_values;
 use function is_int;
+use function is_numeric;
 
 class AddVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private string $variableType;
 
@@ -95,23 +102,23 @@ class AddVariable extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $index = array_search($this->variableType, $this->variableTypes, true);
-        return [
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.value", "aeiuo", $this->getVariableValue(), true),
             new Dropdown("@action.variable.form.type", array_values(array_unique($this->variableTypes)), $index === false ? 0 : $index),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocess(function (array $data) {
+                $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
+                if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
+                    throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
+                }
 
-    public function parseFromFormData(array $data): array {
-        $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
-        if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
-            throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
-        }
-
-        return [$data[0], $data[1], $data[2], !$data[3]];
+                return [$data[0], $data[1], $data[2], !$data[3]];
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

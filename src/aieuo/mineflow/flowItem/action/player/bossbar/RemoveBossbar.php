@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class RemoveBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "", private string $barId = "") {
         parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::BOSSBAR);
@@ -54,11 +57,11 @@ class RemoveBossbar extends FlowItem implements PlayerFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.showBossbar.form.id", "aieuo", $this->getBarId(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

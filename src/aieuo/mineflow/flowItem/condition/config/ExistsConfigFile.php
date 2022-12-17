@@ -10,6 +10,9 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Utils;
@@ -17,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 
 class ExistsConfigFile extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $fileName = "") {
         parent::__construct(self::EXISTS_CONFIG_FILE, FlowItemCategory::CONFIG);
@@ -50,15 +54,16 @@ class ExistsConfigFile extends FlowItem implements Condition {
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.createConfig.form.name", "config", $this->getFileName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        if (!Utils::isValidFileName($data[0])) throw new InvalidFormValueException("@form.recipe.invalidName", 0);
-        return [$data[0]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->validate(function (array $data) {
+                if (!Utils::isValidFileName($data[0])) {
+                    throw new InvalidFormValueException("@form.recipe.invalidName", 0);
+                }
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

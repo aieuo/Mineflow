@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Mineflow;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class GetItemData extends FlowItem implements ItemFlowItem {
     use ItemFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $id = self::GET_ITEM_DATA;
 
@@ -81,12 +84,12 @@ class GetItemData extends FlowItem implements ItemFlowItem {
         return $this->getItemVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ItemVariableDropdown($variables, $this->getItemVariableName()),
             new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

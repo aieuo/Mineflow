@@ -2,8 +2,6 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemContainer;
@@ -12,124 +10,93 @@ use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\Form;
+use aieuo\mineflow\formAPI\element\mineflow\FlowItemMenuButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
-use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
+use function array_search;
+use function array_shift;
 
 class FlowItemForm {
 
-    public function sendAddedItemMenu(Player $player, FlowItemContainer $container, string $type, FlowItem $action, array $messages = []): void {
-        if ($action->hasCustomMenu()) {
-            $this->sendFlowItemCustomMenu($player, $action, $type);
+    public function sendAddedItemMenu(Player $player, FlowItemContainer $parent, string $type, FlowItem $item, array $messages = []): void {
+        if ($item->hasCustomMenu()) {
+            $this->sendFlowItemCustomMenu($player, $item, $type);
             return;
         }
 
-        /** @var Recipe|FlowItem $container */
-        (new ListForm(Language::get("form.$type.addedItemMenu.title", [$container->getContainerName(), $action->getName()])))
-            ->setContent(trim($action->getCustomName()."\n\n".ltrim($action->getDetail())))
+        /** @var Recipe|FlowItem $parent */
+        (new ListForm(Language::get("form.$type.addedItemMenu.title", [$parent->getContainerName(), $item->getName()])))
+            ->setContent(trim($item->getCustomName()."\n\n".ltrim($item->getDetail())))
             ->addButtons([
-                new Button("@form.back"),
-                new Button("@form.edit"),
-                new Button("@form.home.rename.title"),
-                new Button("@form.move"),
-                new Button("@form.duplicate"),
-                new Button("@form.delete"),
-            ])->onReceive(function (Player $player, int $data) use($container, $type, $action) {
-                switch ($data) {
-                    case 0:
-                        Session::getSession($player)->pop("parents");
-                        (new FlowItemContainerForm)->sendActionList($player, $container, $type);
-                        break;
-                    case 1:
-                        $parents = Session::getSession($player)->get("parents");
-                        $recipe = array_shift($parents);
-                        $variables = $recipe->getAddingVariablesBefore($action, $parents, $type);
-                        $form = $action->getEditForm($variables);
-                        $form->addArgs($form, $action, function ($result) use ($player, $container, $type, $action) {
-                            $this->sendAddedItemMenu($player, $container, $type, $action, [$result ? "@form.changed" : "@form.cancelled"]);
-                        })->onReceive([$this, "onUpdateAction"])->show($player);
-                        break;
-                    case 2:
-                        $this->sendChangeName($player, $action, $container, $type);
-                        break;
-                    case 3:
-                        (new FlowItemContainerForm)->sendMoveAction($player, $container, $type, array_search($action, $container->getItems($type), true));
-                        break;
-                    case 4:
-                        $newItem = clone $action;
-                        $container->addItem($newItem, $type);
-                        Session::getSession($player)->pop("parents");
-                        (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.duplicate.success"]);
-                        break;
-                    case 5:
-                        $this->sendConfirmDelete($player, $action, $container, $type);
-                        break;
-                }
-            })->addMessages($messages)->show($player);
+                new FlowItemMenuButton("@form.back", $item, $parent, $type, [$this, "onSelectBack"]),
+                new FlowItemMenuButton("@form.edit", $item, $parent, $type, [$this, "onSelectEdit"]),
+                new FlowItemMenuButton("@form.home.rename.title", $item, $parent, $type, [$this, "onSelectChangeName"]),
+                new FlowItemMenuButton("@form.move", $item, $parent, $type, [$this, "onSelectMove"]),
+                new FlowItemMenuButton("@form.duplicate", $item, $parent, $type, [$this, "onSelectDuplicate"]),
+                new FlowItemMenuButton("@form.delete", $item, $parent, $type, [$this, "onSelectDelete"]),
+            ])->addMessages($messages)->show($player);
     }
 
-    public function sendFlowItemCustomMenu(Player $player, FlowItem $action, string $type, array $messages = []): void {
+    public function onSelectBack(Player $player, FlowItemContainer $parent, string $type): void {
+        Session::getSession($player)->pop("parents");
+        (new FlowItemContainerForm)->sendActionList($player, $parent, $type);
+    }
+
+    public function onSelectMove(Player $player, FlowItemContainer $parent, string $type, FlowItem $item): void {
+        (new FlowItemContainerForm)->sendMoveAction($player, $parent, $type, array_search($item, $parent->getItems($type), true));
+    }
+
+    public function onSelectEdit(Player $player, FlowItemContainer $parent, string $type, FlowItem $item): void {
+        Await::f2c(function () use($player, $parent, $type, $item) {
+            $parents = Session::getSession($player)->get("parents");
+            $recipe = array_shift($parents);
+            $variables = $recipe->getAddingVariablesBefore($item, $parents, $type);
+            $result = yield from $item->edit($player, $variables, false);
+            if ($result === FlowItem::EDIT_CLOSE) return;
+
+            $this->sendAddedItemMenu($player, $parent, $type, $item, [$result === FlowItem::EDIT_SUCCESS ? "@form.changed" : "@form.cancelled"]);
+        });
+    }
+
+    public function onSelectDuplicate(Player $player, FlowItemContainer $parent, string $type, FlowItem $item): void {
+        $newItem = clone $item;
+        $parent->addItem($newItem, $type);
+        Session::getSession($player)->pop("parents");
+        (new FlowItemContainerForm)->sendActionList($player, $parent, $type, ["@form.duplicate.success"]);
+    }
+
+    public function onSelectDelete(Player $player, FlowItemContainer $parent, string $type, FlowItem $item): void {
+        $this->sendConfirmDelete($player, $item, $parent, $type);
+    }
+
+    public function onSelectChangeName(Player $player, FlowItemContainer $parent, string $type, FlowItem $item): void {
+        $this->sendChangeName($player, $item, $parent, $type);
+    }
+
+    public function sendFlowItemCustomMenu(Player $player, FlowItem $item, string $type, array $messages = []): void {
         $session = Session::getSession($player);
         $parents = $session->get("parents");
         /** @var FlowItemContainer $parent */
         $parent = end($parents);
 
-        /** @var FlowItem|FlowItemContainer $action */
-        $detail = trim($action->getCustomName()."\n\n".ltrim($action->getDetail()));
-        (new ListForm($action->getName()))
+        /** @var FlowItem|FlowItemContainer $item */
+        $detail = trim($item->getCustomName()."\n\n".ltrim($item->getDetail()));
+        (new ListForm($item->getName()))
             ->setContent(empty($detail) ? "@recipe.noActions" : $detail)
-            ->addButton(
-                new Button("@form.back", function () use($player, $session, $parent, $type) {
-                    $session->pop("parents");
-                    (new FlowItemContainerForm)->sendActionList($player, $parent, $type);
-                }))
-            ->addButtons($action->getCustomMenuButtons())
-            ->addButton(new Button("@form.home.rename.title", fn() => $this->sendChangeName($player, $action, $parent, $type)))
-            ->addButton(new Button("@form.move", fn() => (new FlowItemContainerForm)->sendMoveAction($player, $parent, $type, array_search($action, $parent->getActions(), true))))
-            ->addButton(
-                new Button("@form.duplicate", function () use($player, $action, $parent, $type) {
-                    $newItem = clone $action;
-                    $parent->addItem($newItem, $type);
-                    Session::getSession($player)->pop("parents");
-                    (new FlowItemContainerForm)->sendActionList($player, $parent, $type, ["@form.duplicate.success"]);
-                }))
-            ->addButton(new Button("@form.delete", fn() => $this->sendConfirmDelete($player, $action, $parent, $type)))
+            ->addButton(new FlowItemMenuButton("@form.back", $item, $parent, $type, [$this, "onSelectBack"]))
+            ->addButtons($item->getCustomMenuButtons())
+            ->addButton(new FlowItemMenuButton("@form.home.rename.title", $item, $parent, $type, [$this, "onSelectChangeName"]))
+            ->addButton(new FlowItemMenuButton("@form.move", $item, $parent, $type, [$this, "onSelectMove"]))
+            ->addButton(new FlowItemMenuButton("@form.duplicate", $item, $parent, $type, [$this, "onSelectDuplicate"]))
+            ->addButton(new FlowItemMenuButton("@form.delete", $item, $parent, $type, [$this, "onSelectDelete"]))
             ->addMessages($messages)
             ->show($player);
-    }
-
-    public function onUpdateAction(Player $player, ?array $data, Form $form, FlowItem $action, callable $callback): void {
-        if ($data === null) return;
-
-        array_shift($data);
-        $cancelChecked = array_pop($data);
-
-        if ($cancelChecked) {
-            $callback(false);
-            return;
-        }
-
-        try {
-            $values = $action->parseFromFormData($data);
-        } catch (InvalidFormValueException $e) {
-            $form->resend([[$e->getMessage(), $e->getIndex() + 1]]);
-            return;
-        }
-
-        try {
-            $action->loadSaveData($values);
-        } catch (FlowItemLoadException|\ErrorException $e) {
-            $player->sendMessage(Language::get("action.error.recipe"));
-            Main::getInstance()->getLogger()->logException($e);
-            return;
-        }
-        $callback(true);
     }
 
     public function selectActionCategory(Player $player, FlowItemContainer $container, string $type): void {
@@ -252,19 +219,21 @@ class FlowItemForm {
                             return;
                         }
 
-                        $parents = Session::getSession($player)->get("parents");
-                        $recipe = array_shift($parents);
-                        $variables = $recipe->getAddingVariablesBefore($item, $parents, $type);
-                        $form = $item->getEditForm($variables);
-                        $form->addArgs($form, $item, function ($result) use ($player, $container, $type, $item) {
-                            if ($result) {
+                        Await::f2c(function () use($player, $container, $type, $item) {
+                            $parents = Session::getSession($player)->get("parents");
+                            $recipe = array_shift($parents);
+                            $variables = $recipe->getAddingVariablesBefore($item, $parents, $type);
+                            $result = yield from $item->edit($player, $variables, true);
+                            if ($result === FlowItem::EDIT_CLOSE) return;
+
+                            if ($result === FlowItem::EDIT_SUCCESS) {
                                 $container->addItem($item, $type);
                                 Session::getSession($player)->pop("parents");
                                 (new FlowItemContainerForm)->sendActionList($player, $container, $type, ["@form.added"]);
                             } else {
                                 $this->sendActionMenu($player, $container, $type, $item, ["@form.cancelled"]);
                             }
-                        })->onReceive([new FlowItemForm(), "onUpdateAction"])->show($player);
+                        });
                         break;
                     case 2:
                         $config = Mineflow::getPlayerSettings();

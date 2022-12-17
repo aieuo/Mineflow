@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     use ScoreboardFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $scoreboard = "", private string $scoreName = "") {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
@@ -54,11 +57,11 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
             new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), false),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -10,13 +10,19 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
+use function array_map;
+use function explode;
 
 abstract class ExecuteRecipeBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     /** @var string[] */
     private array $args;
@@ -94,15 +100,13 @@ abstract class ExecuteRecipeBase extends FlowItem {
         return $args;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
             new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], array_map("trim", explode(",", $data[1]))];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => array_map("trim", explode(",", $value)));
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

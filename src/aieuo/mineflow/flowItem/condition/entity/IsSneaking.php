@@ -9,6 +9,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use pocketmine\entity\Human;
 use SOFe\AwaitGenerator\Await;
@@ -16,6 +18,7 @@ use SOFe\AwaitGenerator\Await;
 class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
     use EntityFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $entity = "") {
         parent::__construct(self::IS_SNEAKING, FlowItemCategory::ENTITY);
@@ -42,10 +45,10 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
         return $entity instanceof Human and $entity->isSneaking();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

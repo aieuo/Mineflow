@@ -10,6 +10,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
@@ -23,6 +26,7 @@ use function array_search;
 class ShowBossbar extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private array $colors = [
         "pink" => BossBarColor::PINK,
@@ -113,20 +117,17 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
             new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
             new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
             new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
             new Dropdown("@action.showBossbar.form.color", array_keys($this->colors), (int)array_search($this->getColor(), array_keys($this->colors), true))
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        $data[5] = array_keys($this->colors)[$data[5]] ?? "purple";
-        return $data;
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(5, fn($value) => array_keys($this->colors)[$value] ?? "purple");
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

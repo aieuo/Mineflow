@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\math;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
@@ -66,12 +67,12 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return $rand;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.random.form.min", "0", $this->getMin(), true),
             new ExampleInput("@action.random.form.max", "10", $this->getMax(), true),
             new ExampleInput("@action.form.resultVariableName", "random", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

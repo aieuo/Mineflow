@@ -8,12 +8,16 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
+use function implode;
 
 class AddSpecificLanguageMapping extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $language = "",
@@ -69,13 +73,13 @@ class AddSpecificLanguageMapping extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $languages = implode(", ", Language::getAvailableLanguages());
-        return [
+        $builder->elements([
             new ExampleInput(Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), "eng", $this->getLanguage(), true),
             new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
             new ExampleInput("@action.addSpecificLanguageMapping.form.message", "Hello", $this->getMessage(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

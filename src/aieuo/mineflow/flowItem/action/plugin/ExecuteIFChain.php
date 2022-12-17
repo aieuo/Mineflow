@@ -13,6 +13,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -23,6 +25,7 @@ use SOFe\AwaitGenerator\Await;
 class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     /** @var string[] */
     private array $args = [];
@@ -83,11 +86,11 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.executeIFChain.form.name", "aieuo", $this->getChainName(), true),
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

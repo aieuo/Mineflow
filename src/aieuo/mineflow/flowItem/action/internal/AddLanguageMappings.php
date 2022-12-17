@@ -9,6 +9,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -18,10 +21,11 @@ use function implode;
 
 class AddLanguageMappings extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $key = "",
-        private array $mappings = [],
+        private array  $mappings = [],
     ) {
         parent::__construct(self::ADD_LANGUAGE_MAPPINGS, FlowItemCategory::INTERNAL);
     }
@@ -71,7 +75,7 @@ class AddLanguageMappings extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $elements = [
             new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
         ];
@@ -79,24 +83,26 @@ class AddLanguageMappings extends FlowItem {
         foreach (Language::getAvailableLanguages() as $name) {
             $elements[] = new ExampleInput(Language::get("action.addLanguageMappings.form.message", [$name]), "Hello", $mappings[$name] ?? "");
         }
-        return $elements;
-    }
 
-    public function parseFromFormData(array $data): array {
-        $messageKey = array_shift($data);
+        $builder->elements($elements);
+        $builder->response(function (EditFormResponseProcessor $response) {
+            $response->preprocess(function (array $data) {
+                $messageKey = array_shift($data);
 
-        $languages = Language::getAvailableLanguages();
-        $mapping = [];
-        foreach ($data as $key => $value) {
-            if (empty($value)) continue;
-            $mapping[$languages[$key]] = $value;
-        }
+                $languages = Language::getAvailableLanguages();
+                $mapping = [];
+                foreach ($data as $key => $value) {
+                    if (empty($value)) continue;
+                    $mapping[$languages[$key]] = $value;
+                }
 
-        if (count($mapping) === 0) {
-            throw new InvalidFormValueException("@action.addLanguageMappings.empty", 1);
-        }
+                if (count($mapping) === 0) {
+                    throw new InvalidFormValueException("@action.addLanguageMappings.empty", 1);
+                }
 
-        return [$messageKey, $mapping];
+                return [$messageKey, $mapping];
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

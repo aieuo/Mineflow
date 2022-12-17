@@ -8,10 +8,13 @@ use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 
 abstract class OnlinePlayerCount extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -41,10 +44,10 @@ abstract class OnlinePlayerCount extends FlowItem implements Condition {
         return $this->value !== "";
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleNumberInput("@condition.randomNumber.form.value", "5", $this->getValue(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

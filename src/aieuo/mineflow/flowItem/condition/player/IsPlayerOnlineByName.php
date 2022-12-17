@@ -9,6 +9,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\player\Player;
 use pocketmine\Server;
@@ -16,6 +18,7 @@ use SOFe\AwaitGenerator\Await;
 
 class IsPlayerOnlineByName extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $playerName = "target") {
         parent::__construct(self::IS_PLAYER_ONLINE_BY_NAME, FlowItemCategory::PLAYER);
@@ -50,10 +53,10 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
         return $player instanceof Player;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@condition.isPlayerOnline.form.name", "target", $this->getPlayerName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

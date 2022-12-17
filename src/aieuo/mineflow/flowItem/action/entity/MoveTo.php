@@ -13,6 +13,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -22,6 +24,7 @@ use SOFe\AwaitGenerator\Await;
 class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     use EntityFlowItemTrait, PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $entity = "",
@@ -94,14 +97,14 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleNumberInput("@action.moveTo.form.speedX", "0.1", $this->getSpeedX()),
             new ExampleNumberInput("@action.moveTo.form.speedY", "0", $this->getSpeedY()),
             new ExampleNumberInput("@action.moveTo.form.speedZ", "0.1", $this->getSpeedZ()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

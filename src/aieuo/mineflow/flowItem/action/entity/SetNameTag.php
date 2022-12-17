@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\player\Player;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class SetNameTag extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $entity = "", private string $newName = "") {
         parent::__construct(self::SET_NAME, FlowItemCategory::ENTITY);
@@ -55,11 +58,11 @@ class SetNameTag extends FlowItem implements EntityFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ExampleInput("@action.setName.form.name", "aieuo", $this->getNewName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

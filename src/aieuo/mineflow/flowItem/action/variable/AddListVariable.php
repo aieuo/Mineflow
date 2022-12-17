@@ -9,6 +9,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
@@ -16,10 +19,13 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use SOFe\AwaitGenerator\Await;
+use function array_map;
+use function explode;
 use function implode;
 
 class AddListVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     /** @var string[] */
     private array $variableValue;
@@ -83,16 +89,15 @@ class AddListVariable extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.value", "aiueo", implode(",", $this->getVariableValue()), false),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], array_map("trim", explode(",", $data[1])), !$data[2]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => array_map("trim", explode(",", $value)));
+            $response->logicalNOT(2);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -10,12 +10,15 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
 
 class CommandConsole extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $command = "") {
         parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
@@ -50,10 +53,10 @@ class CommandConsole extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

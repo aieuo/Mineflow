@@ -9,6 +9,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
@@ -19,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 
 class EditString extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -117,8 +121,8 @@ class EditString extends FlowItem {
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
             new Dropdown("@action.fourArithmeticOperations.form.operator",
                 array_map(fn(string $type) => Language::get("action.editString.".$type), $this->operators),
@@ -126,11 +130,9 @@ class EditString extends FlowItem {
             ),
             new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
             new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        return [$data[0], $this->operators[$data[1]], $data[2], $data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->preprocessAt(1, fn($value) => $this->operators[$value]);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

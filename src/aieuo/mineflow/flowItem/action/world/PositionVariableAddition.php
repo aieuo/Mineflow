@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -21,6 +23,7 @@ use SOFe\AwaitGenerator\Await;
 class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -97,14 +100,14 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         return $this->getResultName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables),
             new ExampleNumberInput("@action.positionAddition.form.x", "0", $this->getX(), true),
             new ExampleNumberInput("@action.positionAddition.form.y", "100", $this->getY(), true),
             new ExampleNumberInput("@action.positionAddition.form.z", "16", $this->getZ(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\network\mcpe\protocol\ToastRequestPacket;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class SendToast extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $player = "",
@@ -67,12 +70,12 @@ class SendToast extends FlowItem implements PlayerFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.sendToast.form.title", "aieuo", $this->getTitle()),
             new ExampleInput("@action.sendToast.form.subtitle", "aieuo", $this->getBody()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

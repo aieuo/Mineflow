@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\WorldFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\AxisAlignedBBVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
@@ -24,6 +26,7 @@ use function array_map;
 abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFlowItem, WorldFlowItem {
     use AxisAlignedBBFlowItemTrait, WorldFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -77,12 +80,12 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
      */
     abstract protected function filterEntities(array $entities): array;
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new AxisAlignedBBVariableDropdown($variables, $this->getAxisAlignedBBVariableName()),
             new WorldVariableDropdown($variables, $this->getWorldVariableName()),
             new ExampleInput("@action.form.resultVariableName", "entities", $this->getResultName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

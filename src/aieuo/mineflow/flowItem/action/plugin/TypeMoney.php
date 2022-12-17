@@ -7,11 +7,14 @@ namespace aieuo\mineflow\flowItem\action\plugin;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 
 abstract class TypeMoney extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -52,11 +55,11 @@ abstract class TypeMoney extends FlowItem {
         return $this->getPlayerName() !== "" and $this->getAmount() !== "";
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
             new ExampleNumberInput("@action.money.form.amount", "1000", $this->getAmount(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

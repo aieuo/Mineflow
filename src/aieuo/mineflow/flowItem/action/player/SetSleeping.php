@@ -12,6 +12,8 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
     use PlayerFlowItemTrait, PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "", string $position = "") {
         parent::__construct(self::SET_SLEEPING, FlowItemCategory::PLAYER);
@@ -49,11 +52,11 @@ class SetSleeping extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

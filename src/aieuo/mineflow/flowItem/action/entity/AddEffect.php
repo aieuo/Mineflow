@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
@@ -25,6 +27,7 @@ use SOFe\AwaitGenerator\Await;
 class AddEffect extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private bool $visible = false;
 
@@ -92,14 +95,14 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
             new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
             new ExampleNumberInput("@action.addEffect.form.time", "300", $this->getTime(), true, 1),
             new ExampleNumberInput("@action.addEffect.form.power", "1", $this->getPower(), true),
             new Toggle("@action.addEffect.form.visible", $this->visible),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     private array $gamemodes = [
         "action.gamemode.survival",
@@ -62,11 +65,11 @@ class Gamemode extends FlowItem implements Condition, PlayerFlowItem {
         return $player->getGamemode() === $gamemode;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new Dropdown("@condition.gamemode.form.gamemode", array_map(fn(string $mode) => Language::get($mode), $this->gamemodes), $this->getGamemode()),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\Vector3FlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\Vector3VariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
     use Vector3FlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -74,12 +77,12 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         return $this->getVariableName();
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos1"), "@action.createAABBByVector3Variable.form.pos1"),
             new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos2"), "@action.createAABBByVector3Variable.form.pos2"),
             new ExampleInput("@action.form.resultVariableName", "area", $this->getVariableName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

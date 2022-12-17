@@ -8,11 +8,14 @@ use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 
 abstract class TypeMoney extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -53,11 +56,11 @@ abstract class TypeMoney extends FlowItem implements Condition {
         return $this->getPlayerName() !== "" and $this->amount !== "";
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.money.form.target", "{target.name}", $this->getPlayerName(), true),
             new ExampleNumberInput("@action.money.form.amount", "1000", $this->getAmount(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

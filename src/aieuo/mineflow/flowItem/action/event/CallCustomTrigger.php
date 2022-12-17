@@ -9,6 +9,8 @@ use aieuo\mineflow\event\CustomTriggerCallEvent;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
@@ -17,6 +19,7 @@ use SOFe\AwaitGenerator\Await;
 
 class CallCustomTrigger extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(private string $triggerName = "") {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
@@ -52,10 +55,10 @@ class CallCustomTrigger extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.callTrigger.form.identifier", "aieuo", $this->getTriggerName(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

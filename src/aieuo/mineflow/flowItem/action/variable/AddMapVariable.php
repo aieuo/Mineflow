@@ -9,6 +9,9 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
@@ -19,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 
 class AddMapVariable extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         private string $variableName = "",
@@ -84,18 +88,15 @@ class AddMapVariable extends FlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
             new ExampleInput("@action.variable.form.key", "auieo", $this->getKey(), false),
             new ExampleInput("@action.variable.form.value", "aeiuo", $this->getVariableValue(), false),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        // TODO: AddListVariableのように区切って複数同時に追加できるようにする
-        return [$data[0], $data[1], $data[2], !$data[3]];
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->logicalNOT(3);
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

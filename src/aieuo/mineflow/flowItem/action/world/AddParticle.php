@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -21,6 +23,7 @@ use SOFe\AwaitGenerator\Await;
 class AddParticle extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $position = "",
@@ -78,12 +81,12 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $this->getParticle(), true),
             new ExampleNumberInput("@action.addParticle.form.amount", "1", $this->getAmount(), true, 1),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

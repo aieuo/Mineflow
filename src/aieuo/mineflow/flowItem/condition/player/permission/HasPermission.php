@@ -11,6 +11,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
@@ -18,6 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(string $player = "", private string $playerPermission = "") {
         parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER_PERMISSION);
@@ -53,11 +56,11 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
         return $player->hasPermission($permission);
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@condition.hasPermission.form.permission", "mineflow.customcommand.op", $this->getPlayerPermission(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
@@ -18,6 +20,7 @@ use function str_ends_with;
 
 class ComparisonString extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
@@ -93,12 +96,12 @@ class ComparisonString extends FlowItem implements Condition {
         return $result;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
             new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
             new ExampleInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), false),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -7,10 +7,13 @@ namespace aieuo\mineflow\flowItem\action\player\message;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 
 abstract class TypeMessage extends FlowItem {
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $id,
@@ -41,10 +44,10 @@ abstract class TypeMessage extends FlowItem {
         return $this->getMessage() !== "";
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new ExampleInput("@action.message.form.message", "aieuo", $this->getMessage(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {

@@ -11,6 +11,9 @@ use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
@@ -19,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class SendTitle extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $player = "",
@@ -81,22 +85,21 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
             new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
             new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),
             new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $this->stay, true, -1),
             new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $this->fadeout, true, -1),
-        ];
-    }
-
-    public function parseFromFormData(array $data): array {
-        if ($data[1] === "" and $data[2] === "") {
-            throw new InvalidFormValueException("@form.insufficient", 1);
-        }
-        return $data;
+        ])->response(function (EditFormResponseProcessor $response) {
+            $response->validate(function (array $data) {
+                if ($data[1] === "" and $data[2] === "") {
+                    throw new InvalidFormValueException("@form.insufficient", 1);
+                }
+            });
+        });
     }
 
     public function loadSaveData(array $content): FlowItem {

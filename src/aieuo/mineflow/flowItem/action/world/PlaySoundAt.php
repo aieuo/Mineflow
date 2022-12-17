@@ -10,6 +10,8 @@ use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -20,6 +22,7 @@ use SOFe\AwaitGenerator\Await;
 class PlaySoundAt extends FlowItem implements PositionFlowItem {
     use PositionFlowItemTrait;
     use ActionNameWithMineflowLanguage;
+    use HasSimpleEditForm;
 
     public function __construct(
         string         $position = "",
@@ -86,13 +89,13 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         yield Await::ALL;
     }
 
-    public function getEditFormElements(array $variables): array {
-        return [
+    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->elements([
             new PositionVariableDropdown($variables, $this->getPositionVariableName()),
             new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
             new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
             new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
-        ];
+        ]);
     }
 
     public function loadSaveData(array $content): FlowItem {
