@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\Recipe;
+use SOFe\AwaitGenerator\Await;
 use function array_map;
 use function substr;
 
@@ -61,8 +62,9 @@ class CustomAction extends FlowItem {
         $recipe = clone $this->getRecipe();
         $args = $this->getArgumentVariables($source);
 
-        $recipe->executeAllTargets($source->getTarget(), $source->getVariables(), $source->getEvent(), $args, $source);
-        yield false;
+        yield from Await::promise(fn($resolve) => $recipe->executeAllTargets(
+            $source->getTarget(), $source->getVariables(), $source->getEvent(), $args, $source, $resolve
+        ));
     }
 
     public function getArgumentVariables(FlowItemExecutor $executor): array {
