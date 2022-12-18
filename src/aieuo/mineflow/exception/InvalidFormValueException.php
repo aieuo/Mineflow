@@ -5,7 +5,7 @@ namespace aieuo\mineflow\exception;
 
 use Throwable;
 
-class InvalidFormValueException extends \RuntimeException {
+class InvalidFormValueException extends MineflowException {
 
     private string $errorMessage;
     private int $index;

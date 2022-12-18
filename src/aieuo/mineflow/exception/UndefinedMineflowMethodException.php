@@ -4,7 +4,7 @@ namespace aieuo\mineflow\exception;
 
 use Throwable;
 
-class UndefinedMineflowMethodException extends \InvalidArgumentException {
+class UndefinedMineflowMethodException extends MineflowException {
 
     private string $variableName;
     private string $methodName;

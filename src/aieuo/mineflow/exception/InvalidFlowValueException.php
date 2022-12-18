@@ -5,7 +5,7 @@ namespace aieuo\mineflow\exception;
 
 use Throwable;
 
-class InvalidFlowValueException extends \RuntimeException {
+class InvalidFlowValueException extends MineflowException {
     private string $flowItemName;
 
     public function __construct(string $flowItemName = "", string $message = "", int $code = 0, Throwable $previous = null) {
