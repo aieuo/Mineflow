@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\command;
 
+use aieuo\mineflow\command\subcommand\AddonCommand;
 use aieuo\mineflow\command\subcommand\CustomCommandCommand;
 use aieuo\mineflow\command\subcommand\LanguageCommand;
 use aieuo\mineflow\command\subcommand\PermissionCommand;
@@ -75,6 +76,9 @@ class MineflowCommand extends Command {
                 break;
             case "permission":
                 (new PermissionCommand)->execute($sender, $args);
+                break;
+            case "addon":
+                (new AddonCommand)->execute($sender, $args);
                 break;
             case "seerecipe":
                 if (!isset($args[0])) {
