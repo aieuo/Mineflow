@@ -72,4 +72,10 @@ interface FlowItemContainer {
      * @return array<string, DummyVariable>
      */
     public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array;
+
+    /**
+     * @param string $name
+     * @return FlowItem[]
+     */
+    public function getItemsFlatten(string $name): array;
 }
