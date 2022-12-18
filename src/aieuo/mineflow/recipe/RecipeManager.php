@@ -135,8 +135,7 @@ class RecipeManager {
 
                 /** @var FlowItemExecutor $executor */
                 $executor = yield from Await::promise(function ($resolve) use($manifestRecipe) {
-                    $executor = new FlowItemExecutor([], null, onComplete: $resolve);
-                    $manifestRecipe->execute(null, from: $executor);
+                    $manifestRecipe->execute(null, callback: $resolve);
                 });
 
                 $variables = $executor->getVariables();

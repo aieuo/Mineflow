@@ -44,8 +44,6 @@ class AddonManifestRecipeTemplate extends RecipeTemplate {
         $group->addAction(new AddMapVariable("recipe_data", "id", "§bEDIT HERE: action id§f", true));
         $group->addAction(new AddMapVariable("recipe_data", "category", "§bEDIT HERE: action category§f", true));
         $recipe->addAction($group);
-
-        $recipe->setReturnValues(["manifest"]);
         return $recipe;
     }
 }
