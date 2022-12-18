@@ -3,7 +3,13 @@
 namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\flowItem\action\command\Command;
+use aieuo\mineflow\flowItem\action\command\CommandConsole;
 use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
+use aieuo\mineflow\flowItem\action\form\SendForm;
+use aieuo\mineflow\flowItem\FlowItemContainer;
+use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
+use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\ConfigHolder;
@@ -58,13 +64,43 @@ class RecipePack implements \JsonSerializable {
 
     private function getLinkedCommands(): array {
         $commandManager = Mineflow::getCommandManager();
+        $formManager = Mineflow::getFormManager();
         $commands = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() !== Triggers::COMMAND) continue;
+                if ($trigger->getType() === Triggers::COMMAND) {
+                    $command = $trigger->getKey();
+                    if (!$commandManager->existsCommand($command)) continue;
 
-                $key = $trigger->getKey();
-                $commands[$key] = $commandManager->getCommand($key);
+                    $commands[$command] = $commandManager->getCommand($command);
+                }
+                if ($trigger->getType() === Triggers::FORM) {
+                    $form = $formManager->getForm($trigger->getKey());
+                    if (!$form instanceof ListForm) continue;
+
+                    foreach ($form->getButtons() as $button) {
+                        if (!$button instanceof CommandButton) continue;
+
+                        $command = $button->getCommand();
+                        if (!$commandManager->existsCommand($command)) continue;
+
+                        $commands[$command] = $commandManager->getCommand($command);
+                    }
+                }
+            }
+
+            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $item) {
+                $command = match (true) {
+                    $item instanceof Command => $item->getCommand(),
+                    $item instanceof CommandConsole => $item->getCommand(),
+                    default => null,
+                };
+                if ($command === null) continue;
+
+                $command = $commandManager->getOriginCommand($command);
+                if (!$commandManager->existsCommand($command)) continue;
+
+                $commands[$command] = $commandManager->getCommand($command);
             }
         }
         return $commands;
@@ -72,6 +108,7 @@ class RecipePack implements \JsonSerializable {
 
     private function getLinkedForms(): array {
         $formManager = Mineflow::getFormManager();
+        $variableHelper = Mineflow::getVariableHelper();
         $forms = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
@@ -80,6 +117,13 @@ class RecipePack implements \JsonSerializable {
                 $key = $trigger->getKey();
                 $forms[$key] = $formManager->getForm($key);
             }
+
+            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $item) {
+                if ($item instanceof SendForm and !$variableHelper->isVariableString($item->getFormName())) {
+                    $name = $item->getFormName();
+                    $forms[$name] = $formManager->getForm($name);
+                }
+            }
         }
         return $forms;
     }
@@ -87,7 +131,13 @@ class RecipePack implements \JsonSerializable {
     private function getLinkedConfigFiles(): array {
         $configData = [];
         foreach ($this->recipes as $recipe) {
-            foreach ($recipe->getActions() as $action) {
+            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
+                if ($action instanceof CreateConfigVariable) {
+                    $name = $action->getFileName();
+                    $configData[$name] = ConfigHolder::getConfig($name)->getAll();
+                }
+            }
+            foreach ($recipe->getItemsFlatten(FlowItemContainer::CONDITION) as $action) {
                 if ($action instanceof CreateConfigVariable) {
                     $name = $action->getFileName();
                     $configData[$name] = ConfigHolder::getConfig($name)->getAll();
