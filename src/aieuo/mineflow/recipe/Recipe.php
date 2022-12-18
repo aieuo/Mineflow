@@ -367,10 +367,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             if (isset($oldToNewTargetMap[$this->targetType])) {
                 $this->targetType = $oldToNewTargetMap[$this->targetType];
             }
-            foreach ($this->flattenFlowItems($this, FlowItemContainer::ACTION) as $action) {
+            foreach ($this->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
                 $this->replaceLevelToWorld($action);
             }
-            foreach ($this->flattenFlowItems($this, FlowItemContainer::CONDITION) as $condition) {
+            foreach ($this->getItemsFlatten(FlowItemContainer::CONDITION) as $condition) {
                 $this->replaceLevelToWorld($condition);
             }
 
@@ -407,25 +407,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $newContents[] = $data;
         }
         $action->loadSaveData($newContents);
-    }
-
-    /**
-     * @param FlowItemContainer $container
-     * @param string $type
-     * @return FlowItem[]
-     */
-    public function flattenFlowItems(FlowItemContainer $container, string $type): array {
-        $flat = [];
-        foreach ($container->getItems($type) as $item) {
-            if ($item instanceof FlowItemContainer) {
-                foreach ($this->flattenFlowItems($item, $type) as $item2) {
-                    $flat[] = $item2;
-                }
-            } else {
-                $flat[] = $item;
-            }
-        }
-        return $flat;
     }
 
     public function __clone() {

@@ -124,4 +124,22 @@ trait FlowItemContainerTrait {
         }
         return array_merge($variables, ...$variablesMerge);
     }
+
+    /**
+     * @param string $name
+     * @return FlowItem[]
+     */
+    public function getItemsFlatten(string $name): array {
+        $flat = [];
+        foreach ($this->getItems($name) as $item) {
+            if ($item instanceof FlowItemContainer) {
+                foreach ($item->getItemsFlatten($name) as $item2) {
+                    $flat[] = $item2;
+                }
+            } else {
+                $flat[] = $item;
+            }
+        }
+        return $flat;
+    }
 }
