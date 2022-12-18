@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow;
 
+use aieuo\mineflow\addon\AddonManager;
 use aieuo\mineflow\command\CommandManager;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemFactory;
@@ -27,6 +28,7 @@ class Mineflow {
     private static CommandManager $commandManager;
     private static FormManager $formManager;
     private static EventManager $eventManager;
+    private static AddonManager $addonManager;
     private static RecipeManager $recipeManager;
 
     private static VariableHelper $variableHelper;
@@ -54,7 +56,8 @@ class Mineflow {
         self::$commandManager = new CommandManager($main, new Config($main->getDataFolder()."commands.yml"));
         self::$formManager = new FormManager(new Config($main->getDataFolder()."forms.json"));
         self::$eventManager = new EventManager(new Config($main->getDataFolder()."events.yml"));
-        self::$recipeManager = new RecipeManager($main->getDataFolder()."recipes/", $main->getDataFolder()."addons/");
+        self::$recipeManager = new RecipeManager($main->getDataFolder()."recipes/");
+        self::$addonManager = new AddonManager($main->getDataFolder()."addons/", self::$recipeManager);
 
         self::$variableHelper = new VariableHelper(new Config($main->getDataFolder()."variables.json"));
         self::$variableHelper->initVariableProperties();
@@ -103,6 +106,10 @@ class Mineflow {
 
     public static function getEventManager(): EventManager {
         return self::$eventManager;
+    }
+
+    public static function getAddonManager(): AddonManager {
+        return self::$addonManager;
     }
 
     public static function getRecipeManager(): RecipeManager {

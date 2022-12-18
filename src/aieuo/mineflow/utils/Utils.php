@@ -44,4 +44,18 @@ class Utils {
         return preg_replace("#[.¥:?<>|*\"]#u", "", $name);
     }
 
+    /**
+     * @param string $path
+     * @return \Iterator<\SplFileInfo>
+     */
+    public static function getRecipeFiles(string $path): \Iterator {
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $path,
+                \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+            )
+        );
+        return new \RegexIterator($files, '/\.json$/', \RegexIterator::MATCH);
+    }
+
 }

@@ -54,7 +54,7 @@ class SendForm extends FlowItem implements PlayerFlowItem {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getFormName());
         $manager = Mineflow::getFormManager();
-        $form = $manager->getForm($name);
+        $form = $manager->getForm($name) ?? Mineflow::getAddonManager()->getForm($name);
         if ($form === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));
         }

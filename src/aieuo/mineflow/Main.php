@@ -39,8 +39,8 @@ class Main extends PluginBase {
 
         Mineflow::getVariableHelper()->loadVariables();
 
+        Mineflow::getAddonManager()->loadAddons();
         Mineflow::getRecipeManager()->loadRecipes();
-        Mineflow::getRecipeManager()->loadAddons();
         Mineflow::getRecipeManager()->addTemplates();
 
         (new EventListener())->registerEvents();

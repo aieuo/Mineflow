@@ -15,6 +15,8 @@ use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Filesystem;
+use function assert;
+use function is_a;
 use function json_last_error_msg;
 
 class RecipePack implements \JsonSerializable {
@@ -192,11 +194,14 @@ class RecipePack implements \JsonSerializable {
 
     /**
      * @param string $path
+     * @param class-string<Recipe> $recipeClass
      * @return RecipePack
      * @throws FlowItemLoadException
      * @throws \ErrorException
      */
-    public static function load(string $path): RecipePack {
+    public static function load(string $path, string $recipeClass = Recipe::class): RecipePack {
+        assert(is_a($recipeClass, Recipe::class, true));
+
         if (!file_exists($path)) {
             throw new \InvalidArgumentException("Recipe pack ".$path." is not exists.");
         }
@@ -212,7 +217,8 @@ class RecipePack implements \JsonSerializable {
 
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
-            $recipe = new Recipe($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? "0");
+            /** @var Recipe $recipe */
+            $recipe = new $recipeClass($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? "0");
             $recipe->loadSaveData($data);
             $recipe->checkVersion();
 

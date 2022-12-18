@@ -109,6 +109,10 @@ class EventManager {
         $this->events[$event] = false;
     }
 
+    public function getEventListener(): EventTriggerListener {
+        return $this->eventListener;
+    }
+
     public function getAssignedRecipes(string $event): array {
         $recipes = [];
         $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(EventTrigger::create($event));

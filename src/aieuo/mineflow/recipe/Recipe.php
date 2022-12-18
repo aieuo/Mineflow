@@ -71,6 +71,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     private string $rawData = "";
 
     private bool $enabled = true;
+    private bool $readonly = false;
 
     public function __construct(string $name, string $group = "", string $author = "", string $pluginVersion = null) {
         $this->name = $name;
@@ -117,6 +118,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function isEnabled(): bool {
         return $this->enabled;
+    }
+
+    public function setReadonly(bool $readonly): void {
+        $this->readonly = $readonly;
+    }
+
+    public function isReadonly(): bool {
+        return $this->readonly;
     }
 
     public function setRawData(string $rawData): void {

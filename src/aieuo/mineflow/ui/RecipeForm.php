@@ -92,7 +92,7 @@ class RecipeForm {
                 }
 
                 $recipe = new Recipe($name, $group, $player->getName());
-                if (file_exists($recipe->getFileName($manager->getRecipeDirectory()))) {
+                if (file_exists($recipe->getFileName($manager->getDirectory()))) {
                     $it->resend([[Language::get("form.recipe.exists", [$name]), 0]]);
                     return;
                 }
@@ -141,7 +141,7 @@ class RecipeForm {
 
     public function sendRecipeList(Player $player, string $path = "", array $messages = []): void {
         $manager = Mineflow::getRecipeManager();
-        $recipeGroups = $manager->getByPath($path);
+        $recipeGroups = $manager->getByPath($path, false);
         $buttons = [
             new Button("@form.back"),
             new Button("@recipe.add"),
@@ -230,7 +230,7 @@ class RecipeForm {
                 new Button("@form.recipe.changeTarget", fn() => $this->sendChangeTarget($player, $recipe)),
                 new Button("@form.recipe.recipeMenu.enable", fn() => $this->sendToggleEnable($player, $recipe)),
                 new Button("@form.recipe.recipeMenu.save", function () use($player, $recipe) {
-                    $recipe->save(Mineflow::getRecipeManager()->getRecipeDirectory());
+                    $recipe->save(Mineflow::getRecipeManager()->getDirectory());
                     $this->sendRecipeMenu($player, $recipe, ["@form.recipe.recipeMenu.save.success"]);
                 }),
                 new Button("@mineflow.export", fn() => (new ExportForm)->sendRecipeListByRecipe($player, $recipe)),
@@ -440,7 +440,7 @@ class RecipeForm {
     }
 
     public function confirmDeleteRecipeGroup(Player $player, string $path): void {
-        $recipes = Mineflow::getRecipeManager()->getByPath($path);
+        $recipes = Mineflow::getRecipeManager()->getByPath($path, true);
         $count = count($recipes) - 1 + count($recipes[$path] ?? []);
         if ($count >= 1) {
             $this->sendRecipeList($player, $path, ["@recipe.group.delete.not.empty"]);
