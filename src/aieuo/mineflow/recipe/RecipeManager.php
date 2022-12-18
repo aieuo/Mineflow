@@ -122,8 +122,10 @@ class RecipeManager {
     }
 
     public function remove(string $name, string $group = ""): void {
-        if (!$this->exists($name, $group)) return;
-        unlink($this->get($name, $group)->getFileName($this->getDirectory()));
+        $recipe = $this->get($name, $group);
+        if ($recipe === null) return;
+
+        $recipe->unlink($this->getDirectory());
         unset($this->recipes[$group][$name]);
     }
 

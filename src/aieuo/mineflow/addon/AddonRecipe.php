@@ -14,4 +14,7 @@ class AddonRecipe extends Recipe {
 
     public function save(string $dir): void {
     }
+
+    public function unlink(string $dir): void {
+    }
 }

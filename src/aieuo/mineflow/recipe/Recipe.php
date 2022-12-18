@@ -437,6 +437,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }
     }
 
+    public function unlink(string $dir): void {
+        unlink($this->getFileName($dir));
+    }
+
     public function checkVersion(): void {
         $createdVersion = $this->version;
         $currentVersion = Mineflow::getPluginVersion();
