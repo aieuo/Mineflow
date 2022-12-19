@@ -21,6 +21,8 @@ class CustomAction extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
+    private array $isObjectVariable = [];
+
     public function __construct(
         string         $id,
         string         $category,
@@ -28,6 +30,10 @@ class CustomAction extends FlowItem {
         private array  $arguments = [],
     ) {
         parent::__construct($id, $category);
+
+        foreach ($this->recipe->getArguments() as $i => $argument) {
+            $this->isObjectVariable[$i] = $argument->getDummyVariable()->isObjectVariableType();
+        }
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -70,9 +76,13 @@ class CustomAction extends FlowItem {
     public function getArgumentVariables(FlowItemExecutor $executor): array {
         $helper = Mineflow::getVariableHelper();
         $args = [];
-        foreach ($this->getArguments() as $arg) {
-            $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
-            $args[$name] = $helper->copyOrCreateVariable($arg, $executor);
+        foreach ($this->getArguments() as $i => $arg) {
+            if ($this->isObjectVariable[$i]) {
+                $args[$arg] = $executor->getVariable($executor->replaceVariables($arg));
+            } else {
+                $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
+                $args[$name] = $helper->copyOrCreateVariable($arg, $executor);
+            }
         }
         return $args;
     }
