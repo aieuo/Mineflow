@@ -4,6 +4,7 @@ namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\event\MineflowRecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\flowItem\custom\CustomAction;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
@@ -34,6 +35,7 @@ use pocketmine\Server;
 use pocketmine\utils\Filesystem;
 use function array_key_last;
 use function array_search;
+use function array_unique;
 use function explode;
 use function is_string;
 use function str_replace;
@@ -67,6 +69,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     private array $returnValues = [];
 
     private ?FlowItemExecutor $executor;
+
+    private array $lastPluginDependencies;
+    private array $lastAddonDependencies;
 
     private string $rawData = "";
 
@@ -134,6 +139,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getRawData(): string {
         return $this->rawData;
+    }
+
+    public function getLastPluginDependencies(): array {
+        return $this->lastPluginDependencies;
+    }
+
+    public function getLastAddonDependencies(): array {
+        return $this->lastAddonDependencies;
     }
 
     public function getDetail(): string {
@@ -359,6 +372,31 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return array_merge(array_merge($variables, ...$add), $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
     }
 
+    public function getAddonDependencies(): array {
+        $dependencies = [];
+        foreach ($this->getItemsFlatten(self::ACTION) as $action) {
+            if ($action instanceof CustomAction) {
+                $dependencies[] = $action->getAddonName();
+            }
+        }
+        return array_values(array_unique($dependencies));
+    }
+
+    public function getPluginDependencies(): array {
+        $dependencies = [];
+        foreach ($this->getItemsFlatten(self::ACTION) as $action) {
+            if ($action->getPlugin() !== null) {
+                $dependencies[] = $action->getPlugin()->getName();
+            }
+        }
+        foreach ($this->getItemsFlatten(self::CONDITION) as $condition) {
+            if ($condition->getPlugin() !== null) {
+                $dependencies[] = $condition->getPlugin()->getName();
+            }
+        }
+        return array_values(array_unique($dependencies));
+    }
+
     /**
      * @param array $contents
      * @return self
@@ -393,6 +431,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             }
         }
         $this->setArguments($arguments);
+
+        $this->lastPluginDependencies = $contents["dependency"]["plugin"] ?? [];
+        $this->lastAddonDependencies = $contents["dependency"]["addon"] ?? [];
         return $this;
     }
 
@@ -411,6 +452,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             ],
             "arguments" => $this->getArguments(),
             "returnValues" => $this->getReturnValues(),
+            "dependency" => [
+                "addon" => $this->getAddonDependencies(),
+                "plugin" => $this->getPluginDependencies(),
+            ],
         ];
     }
 

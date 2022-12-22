@@ -12,10 +12,10 @@ use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\recipe\RecipePack;
 use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\utils\ConfigHolder;
+use aieuo\mineflow\utils\dependency\DependencySolver;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Utils;
@@ -25,9 +25,12 @@ use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 use function basename;
 use function file_exists;
+use function implode;
 use function ltrim;
 use function mkdir;
+use function str_replace;
 use function str_starts_with;
+use function strtolower;
 use function version_compare;
 
 class AddonManager {
@@ -40,7 +43,6 @@ class AddonManager {
 
     public function __construct(
         private string        $directory,
-        private RecipeManager $recipeManager,
     ) {
         if (!file_exists($directory)) @mkdir($directory, 0777, true);
     }
@@ -51,16 +53,55 @@ class AddonManager {
 
     public function loadAddons(): void {
         Await::f2c(function () {
-            $files = Utils::getRecipeFiles($this->getDirectory());
-            /** @var \SplFileInfo $file */
-            foreach ($files as $file) {
-                try {
-                    yield from $this->loadAddon($file->getPathname());
-                } catch (MineflowException|\Exception $e) {
-                    Logger::warning($e->getMessage());
-                }
+            try {
+                yield from $this->loadAddonsGenerator();
+            } catch (MineflowException|\Exception $e) {
+                Logger::warning($e->getMessage());
             }
         });
+    }
+
+    private function loadAddonsGenerator(): \Generator {
+        $addons = [];
+        $dependency = new DependencySolver();
+        $files = Utils::getRecipeFiles($this->getDirectory());
+        /** @var \SplFileInfo $file */
+        foreach ($files as $file) {
+            /** @var Addon $addon */
+            $addon = yield from $this->preloadAddon($file->getPathname());
+            $addons[$addon->getName()] = $addon;
+        }
+
+        foreach ($addons as $name => $addon) {
+            $dependencies = $addon->getDependencies();
+            foreach ($dependencies as $dep) {
+                if (!isset($addons[$dep])) {
+                    Logger::warning(Language::get("dependency.addon.addon.not.found", [$name, $dep]));
+                    unset($addons[$name]);
+                    continue 2;
+                }
+
+                if ($name === $dep) {
+                    Logger::warning(Language::get("dependency.circular.dependency", [$name." <=> ".$name]));
+                    unset($addons[$name]);
+                    continue 2;
+                }
+            }
+            $dependency->add($addon->getName(), $dependencies);
+        }
+
+        $count = 0;
+        $order = $dependency->solve();
+        if ($order->hasCircularDependency()) {
+            $path = $order->getCircularPath();
+            Logger::warning(Language::get("dependency.circular.dependency", [implode(" => ", $path)]));
+            return 0;
+        }
+        foreach ($order->getOrder() as $name) {
+            $this->loadAddon($addons[$name]);
+            $count ++;
+        }
+        return $count;
     }
 
     public function reloadAddons(): \Generator {
@@ -70,110 +111,27 @@ class AddonManager {
             $this->unloadAddon($addon);
         }
 
-        $files = Utils::getRecipeFiles($this->getDirectory());
-        $count = 0;
-        /** @var \SplFileInfo $file */
-        foreach ($files as $file) {
-            yield from $this->loadAddon($file->getPathname());
-            $count ++;
-        }
-        return $count;
+        return yield from $this->loadAddonsGenerator();
     }
 
-    public function loadAddon(string $path): \Generator {
+    public function preloadAddon(string $path): \Generator {
         $pack = RecipePack::load($path, recipeClass: AddonRecipe::class);
 
         if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), ["import.plugin.outdated"]]));
         }
 
-        /** @var \SplObjectStorage|Recipe[] $recipes */
-        $recipes = new \SplObjectStorage();
-        foreach ($pack->getRecipes() as $recipe) {
-            $recipes->attach($recipe);
-        }
-
         $manifest = yield from $this->loadAddonManifest($pack, basename($path));
 
-        if ($manifest instanceof AddonManifest) {
-            $recipeManager = Mineflow::getRecipeManager();
-            foreach ($manifest->getRecipeInfos() as $recipeInfo) {
-                $recipePath = $recipeInfo->getRecipePath();
-                $id = $recipeInfo->getActionId();
-                $category = $recipeInfo->getCategory();
-
-                [$name, $group] = $recipeManager->parseName($recipePath);
-                $recipe = $pack->getRecipe($name, $group);
-                if ($recipe === null) {
-                    throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), Language::get("addon.manifest.recipe.notfound", [$recipePath])]));
-                }
-
-                $recipes->detach($recipe);
-
-                if (($item = FlowItemFactory::get($id)) !== null) {
-                    if ($item instanceof CustomAction and $item->getAddonId() === $manifest->getAddonId()) {
-                        continue;
-                    }
-
-                    throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), Language::get("addon.manifest.id.exists", [$id])]));
-                }
-
-                $action = new CustomAction($manifest->getAddonId(), $id, $category, clone $recipe);
-                FlowItemFactory::register($action);
-            }
-        }
-
-        $loadedRecipes = [];
-        $eventManager = Mineflow::getEventManager();
-        foreach ($recipes as $recipe) {
-            if ($recipe->getName()[0] === "_") continue;
-
-            $loadedRecipes[] = $recipe;
-
-            foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger instanceof EventTrigger and !$trigger->isEnabled()) {
-                    $trigger->setEnabled(true);
-                    $eventManager->getEventListener()->registerEvent($trigger->getEventClass());
-                }
-            }
-        }
-
-        $commandManager = Mineflow::getCommandManager();
-        foreach ($pack->getCommands() as $data) {
-            $command = $data["command"];
-            if (!$commandManager->existsCommand($command) and !$commandManager->isRegistered($command)) {
-                $commandManager->registerCommand($command, $data["permission"], $data["description"]);
-            }
-        }
-
-        foreach ($pack->getForms() as $name => $formData) {
-            $form = Form::createFromArray($formData, $name);
-            if ($form !== null) {
-                $this->addForm($name, $form);
-            }
-        }
-
-        foreach ($pack->getConfigs() as $name => $data) {
-            if (ConfigHolder::existsConfigFile($name)) {
-                $config = ConfigHolder::getConfig($name);
-                $config->setDefaults($data);
-                $config->save();
-            } else {
-                ConfigHolder::setConfig($name, $data, true);
-            }
-        }
-
-        $addon = new Addon(
+        return new Addon(
             $pack->getName(),
             $pack->getAuthor(),
             $manifest?->getVariable()?->getValueFromIndex("version")?->getValue() ?? "0.0.0",
-            $loadedRecipes,
+            [],
             $pack,
             $manifest,
             $path,
         );
-        $this->addAddon($addon);
-        return $addon;
     }
 
     public function loadAddonManifest(RecipePack $pack, string $filename): \Generator {
@@ -224,12 +182,98 @@ class AddonManager {
             }
 
             $recipeInfos[] = new RecipeInfoAttribute(
-                "addon.".$addonId.".".$recipeInfo->getValueFromIndex("id"),
+                "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getValueFromIndex("id"),
                 (string)$recipeInfo->getValueFromIndex("category"),
                 $path,
             );
         }
         return new AddonManifest((string)$addonId, $recipeInfos, $manifestVariable);
+    }
+
+    public function loadAddon(Addon $addon): void {
+        $pack = $addon->getPack();
+        $manifest = $addon->getManifest();
+
+        if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
+            throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($addon->getPath()), ["import.plugin.outdated"]]));
+        }
+
+        /** @var \SplObjectStorage|Recipe[] $recipes */
+        $recipes = new \SplObjectStorage();
+        foreach ($pack->getRecipes() as $recipe) {
+            $recipes->attach($recipe);
+        }
+
+        if ($manifest instanceof AddonManifest) {
+            $recipeManager = Mineflow::getRecipeManager();
+            foreach ($manifest->getRecipeInfos() as $recipeInfo) {
+                $recipePath = $recipeInfo->getRecipePath();
+                $id = $recipeInfo->getActionId();
+                $category = $recipeInfo->getCategory();
+
+                [$name, $group] = $recipeManager->parseName($recipePath);
+                $recipe = $pack->getRecipe($name, $group);
+                if ($recipe === null) {
+                    throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($addon->getPath()), Language::get("addon.manifest.recipe.notfound", [$recipePath])]));
+                }
+
+                $recipes->detach($recipe);
+
+                if (($item = FlowItemFactory::get($id)) !== null) {
+                    if ($item instanceof CustomAction and $item->getAddonName() === $addon->getName()) {
+                        continue;
+                    }
+
+                    throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($addon->getPath()), Language::get("addon.manifest.id.exists", [$id])]));
+                }
+
+                $action = new CustomAction($addon->getName(), $id, $category, clone $recipe);
+                FlowItemFactory::register($action);
+            }
+        }
+
+        $loadedRecipes = [];
+        $eventManager = Mineflow::getEventManager();
+        foreach ($recipes as $recipe) {
+            if ($recipe->getName()[0] === "_") continue;
+
+            $loadedRecipes[] = $recipe;
+
+            foreach ($recipe->getTriggers() as $trigger) {
+                if ($trigger instanceof EventTrigger and !$trigger->isEnabled()) {
+                    $trigger->setEnabled(true);
+                    $eventManager->getEventListener()->registerEvent($trigger->getEventClass());
+                }
+            }
+        }
+
+        $commandManager = Mineflow::getCommandManager();
+        foreach ($pack->getCommands() as $data) {
+            $command = $data["command"];
+            if (!$commandManager->existsCommand($command) and !$commandManager->isRegistered($command)) {
+                $commandManager->registerCommand($command, $data["permission"], $data["description"]);
+            }
+        }
+
+        foreach ($pack->getForms() as $name => $formData) {
+            $form = Form::createFromArray($formData, $name);
+            if ($form !== null) {
+                $this->addForm($name, $form);
+            }
+        }
+
+        foreach ($pack->getConfigs() as $name => $data) {
+            if (ConfigHolder::existsConfigFile($name)) {
+                $config = ConfigHolder::getConfig($name);
+                $config->setDefaults($data);
+                $config->save();
+            } else {
+                ConfigHolder::setConfig($name, $data, true);
+            }
+        }
+
+        $addon->setLoadedRecipes($loadedRecipes);
+        $this->addAddon($addon);
     }
 
     public function unloadAddon(Addon $addon): void {
@@ -265,13 +309,6 @@ class AddonManager {
         foreach ($this->addons as $addon) {
             $filename = basename($addon->getPath(), ".json");
             if ($filename === $name) return $addon;
-        }
-        return null;
-    }
-
-    public function getAddonById(string $id): ?Addon {
-        foreach ($this->addons as $addon) {
-            if ($addon->getManifest()?->getAddonId() === $id) return $addon;
         }
         return null;
     }

@@ -6,6 +6,7 @@ namespace aieuo\mineflow\addon;
 
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipePack;
+use function array_merge;
 
 class Addon {
     /**
@@ -28,6 +29,10 @@ class Addon {
     ) {
     }
 
+    public function getId(): string {
+        return $this->manifest?->getAddonId() ?? $this->name;
+    }
+
     public function getName(): string {
         return $this->name;
     }
@@ -44,6 +49,10 @@ class Addon {
         return $this->loadedRecipes;
     }
 
+    public function setLoadedRecipes(array $loadedRecipes): void {
+        $this->loadedRecipes = $loadedRecipes;
+    }
+
     public function getPack(): RecipePack {
         return $this->pack;
     }
@@ -54,5 +63,14 @@ class Addon {
 
     public function getPath(): string {
         return $this->path;
+    }
+
+    public function getDependencies(): array {
+        $dependencies = [];
+        foreach ($this->pack->getRecipes() as $recipe) {
+            $dependencies = array_merge($dependencies, $recipe?->getLastAddonDependencies() ?? []);
+        }
+
+        return array_values(array_unique($dependencies));
     }
 }

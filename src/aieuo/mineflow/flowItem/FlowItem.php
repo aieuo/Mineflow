@@ -10,6 +10,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use JsonSerializable;
 use pocketmine\player\Player;
+use pocketmine\plugin\Plugin;
 use SOFe\AwaitGenerator\GeneratorUtil;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
@@ -154,6 +155,10 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
      */
     public function getAddingVariables(): array {
         return [];
+    }
+
+    public function getPlugin(): ?Plugin {
+        return null;
     }
 
     abstract public function isDataValid(): bool;

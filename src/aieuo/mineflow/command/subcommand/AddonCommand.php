@@ -30,7 +30,12 @@ class AddonCommand extends MineflowSubcommand {
                 break;
             case "reload":
                 Await::f2c(function () use($manager, $sender) {
-                    $reloaded = yield from $manager->reloadAddons();
+                    try {
+                        $reloaded = yield from $manager->reloadAddons();
+                    } catch (MineflowException|\Exception $e) {
+                        $sender->sendMessage($e->getMessage());
+                        return;
+                    }
                     $sender->sendMessage(Language::get("command.addon.reload.success", [$reloaded, $reloaded > 1 ? "s" : ""]));
                 });
                 break;
@@ -53,7 +58,8 @@ class AddonCommand extends MineflowSubcommand {
 
                 Await::f2c(function () use($manager, $sender, $name) {
                     try {
-                        $addon = yield from $manager->loadAddon($manager->getDirectory().$name.".json");
+                        $addon = yield from $manager->preloadAddon($manager->getDirectory().$name.".json");
+                        $manager->loadAddon($addon);
                     } catch (MineflowException|\Exception $e) {
                         $sender->sendMessage(TextFormat::YELLOW.$e->getMessage());
                         return;

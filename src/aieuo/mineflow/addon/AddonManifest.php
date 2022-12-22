@@ -9,7 +9,7 @@ use aieuo\mineflow\variable\MapVariable;
 class AddonManifest {
     /**
      * @param string $addonId
-     * @param array $recipeInfos
+     * @param RecipeInfoAttribute[] $recipeInfos
      * @param MapVariable $manifestVariable
      */
     public function __construct(

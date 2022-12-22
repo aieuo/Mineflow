@@ -16,6 +16,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Utils;
 use ErrorException;
+use pocketmine\Server;
 use function file_get_contents;
 use function json_decode;
 use function json_last_error_msg;
@@ -42,6 +43,8 @@ class RecipeManager {
     }
 
     public function loadRecipes(): void {
+        $pluginManager = Server::getInstance()->getPluginManager();
+        $addonManager = Mineflow::getAddonManager();
         $files = Utils::getRecipeFiles($this->getDirectory());
         foreach ($files as $file) {
             /** @var \SplFileInfo $file */
@@ -61,6 +64,20 @@ class RecipeManager {
             if (!isset($data["name"]) or !isset($data["actions"])) {
                 Logger::warning(Language::get("recipe.json.decode.failed", [$pathname, ["recipe.json.key.missing"]]));
                 continue;
+            }
+
+            foreach ($data["dependency"]["plugin"] ?? [] as $dependency) {
+                if ($pluginManager->getPlugin($dependency) === null) {
+                    Logger::warning(Language::get("dependency.plugin.not.found", [$data["name"], $dependency]));
+                    continue 2;
+                }
+            }
+
+            foreach ($data["dependency"]["addon"] ?? [] as $dependency) {
+                if ($addonManager->getAddonByName($dependency) === null) {
+                    Logger::warning(Language::get("dependency.addon.not.found", [$data["name"], $dependency]));
+                    continue 2;
+                }
             }
 
             $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? "0");
