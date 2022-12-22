@@ -18,20 +18,20 @@ use function array_map;
 
 class VariableDeserializer {
 
-    /** @var array<string, callable(mixed): ?Variable> */
+    /** @var array<int|string, callable(mixed): ?Variable> */
     private static array $deserializers = [];
 
     public static function init(): void {
-        self::register(StringVariable::getTypeName(), static fn($data) => new StringVariable((string)$data));
-        self::register(NumberVariable::getTypeName(), static fn($data) => new NumberVariable((float)$data));
-        self::register(BooleanVariable::getTypeName(), static fn($data) => new BooleanVariable((bool)$data));
-        self::register(NullVariable::getTypeName(), static fn() => new NullVariable());
+        self::register(StringVariable::getTypeName(), static fn($data) => new StringVariable((string)$data), aliases: [0]);
+        self::register(NumberVariable::getTypeName(), static fn($data) => new NumberVariable((float)$data), aliases: [1]);
+        self::register(BooleanVariable::getTypeName(), static fn($data) => new BooleanVariable((bool)$data), aliases: [5]);
+        self::register(NullVariable::getTypeName(), static fn() => new NullVariable(), aliases: [6]);
         self::register(ListVariable::getTypeName(), static function ($data) {
             return new ListVariable(array_map(fn($v) => self::deserialize($v) ?? new NullVariable(), $data));
-        });
+        }, aliases: [2]);
         self::register(MapVariable::getTypeName(), static function ($data) {
             return new MapVariable(array_map(fn($v) => self::deserialize($v) ?? new NullVariable(), $data));
-        });
+        }, aliases: [3]);
 
         self::register(ItemVariable::getTypeName(), static fn($data) => new ItemVariable(Item::jsonDeserialize($data)));
         self::register(Vector3Variable::getTypeName(), static function ($data) {
@@ -51,14 +51,18 @@ class VariableDeserializer {
      * @param string $type
      * @param callable(mixed): ?Variable $deserializer
      * @param bool $override
+     * @param (int|string)[] $aliases
      * @return void
      */
-    public static function register(string $type, callable $deserializer, bool $override = false): void {
+    public static function register(string $type, callable $deserializer, bool $override = false, array $aliases = []): void {
         if (!$override and isset(self::$deserializers[$type])) {
             throw new \InvalidArgumentException("Variable deserializer ".$type." is already registered");
         }
 
         self::$deserializers[$type] = $deserializer;
+        foreach ($aliases as $alias) {
+            self::$deserializers[$alias] = $deserializer;
+        }
     }
 
     public static function deserialize(array $data): ?Variable {
