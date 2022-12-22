@@ -29,10 +29,6 @@ class Addon {
     ) {
     }
 
-    public function getId(): string {
-        return $this->manifest?->getAddonId() ?? $this->name;
-    }
-
     public function getName(): string {
         return $this->name;
     }

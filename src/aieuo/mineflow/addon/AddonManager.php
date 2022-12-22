@@ -21,7 +21,6 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
-use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 use function basename;
 use function file_exists;
@@ -154,12 +153,8 @@ class AddonManager {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.type.error")]));
         }
 
-        $addonId = $manifestVariable->getValueFromIndex("id");
         $recipeInfoVariable = $manifestVariable->getValueFromIndex("recipes");
 
-        if (!($addonId instanceof StringVariable)) {
-            throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.key.missing", ["id", "string"])]));
-        }
         if (!($recipeInfoVariable instanceof ListVariable)) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.key.missing", ["recipes", "list"])]));
         }
@@ -187,7 +182,7 @@ class AddonManager {
                 $path,
             );
         }
-        return new AddonManifest((string)$addonId, $recipeInfos, $manifestVariable);
+        return new AddonManifest($recipeInfos, $manifestVariable);
     }
 
     public function loadAddon(Addon $addon): void {

@@ -9,7 +9,6 @@ use aieuo\mineflow\flowItem\action\variable\AddListVariable;
 use aieuo\mineflow\flowItem\action\variable\AddMapVariable;
 use aieuo\mineflow\flowItem\action\variable\CreateListVariable;
 use aieuo\mineflow\flowItem\action\variable\CreateMapVariable;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 
@@ -22,10 +21,7 @@ class AddonManifestRecipeTemplate extends RecipeTemplate {
     }
 
     public function getSettingFormPart(): RecipeTemplateSettingFormPart {
-        return new RecipeTemplateSettingFormPart(
-            [
-                new ExampleInput("@recipe.template.addon.manifest.id", "aieuo", $this->addonId, true, result: $this->addonId),
-            ],
+        return new RecipeTemplateSettingFormPart([],
             messages: $this->getRecipeName() === "_manifest" ? [] : [Language::get("recipe.template.addon.manifest.name.change")]
         );
     }
@@ -36,7 +32,6 @@ class AddonManifestRecipeTemplate extends RecipeTemplate {
         $recipe->addAction(new CreateMapVariable("manifest", "", "", true));
         $recipe->addAction(new CreateListVariable("recipes", "", true));
         $recipe->addAction(new AddMapVariable("manifest", "recipes", "{recipes}", true));
-        $recipe->addAction(new AddMapVariable("manifest", "id", $this->addonId, true));
         $group = new ActionGroup();
         $group->addAction(new CreateMapVariable("recipe_data", "", "", true));
         $group->addAction(new AddListVariable("recipes", "{recipe_data}", true));
