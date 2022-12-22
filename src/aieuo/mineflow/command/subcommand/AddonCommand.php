@@ -53,7 +53,7 @@ class AddonCommand extends MineflowSubcommand {
 
                 Await::f2c(function () use($manager, $sender, $name) {
                     try {
-                        $addon = yield from $manager->loadAddon($manager->getDirectory().$name.".json", false);
+                        $addon = yield from $manager->loadAddon($manager->getDirectory().$name.".json");
                     } catch (MineflowException|\Exception $e) {
                         $sender->sendMessage(TextFormat::YELLOW.$e->getMessage());
                         return;

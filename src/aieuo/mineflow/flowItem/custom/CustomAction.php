@@ -24,6 +24,7 @@ class CustomAction extends FlowItem {
     private array $isObjectVariable = [];
 
     public function __construct(
+        private string $addonId,
         string         $id,
         string         $category,
         private Recipe $recipe,
@@ -42,6 +43,10 @@ class CustomAction extends FlowItem {
 
     public function getDetailReplaces(): array {
         return $this->arguments;
+    }
+
+    public function getAddonId(): string {
+        return $this->addonId;
     }
 
     public function getRecipe(): Recipe {

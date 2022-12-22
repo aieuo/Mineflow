@@ -74,13 +74,13 @@ class AddonManager {
         $count = 0;
         /** @var \SplFileInfo $file */
         foreach ($files as $file) {
-            yield from $this->loadAddon($file->getPathname(), false);
+            yield from $this->loadAddon($file->getPathname());
             $count ++;
         }
         return $count;
     }
 
-    public function loadAddon(string $path, bool $registerCustomAction = true): \Generator {
+    public function loadAddon(string $path): \Generator {
         $pack = RecipePack::load($path, recipeClass: AddonRecipe::class);
 
         if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
@@ -109,15 +109,17 @@ class AddonManager {
                 }
 
                 $recipes->detach($recipe);
-                if (!$registerCustomAction) continue;
 
-                if (FlowItemFactory::get($id) !== null) {
+                if (($item = FlowItemFactory::get($id)) !== null) {
+                    if ($item instanceof CustomAction and $item->getAddonId() === $manifest->getAddonId()) {
+                        continue;
+                    }
+
                     throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), Language::get("addon.manifest.id.exists", [$id])]));
                 }
 
-                $action = new CustomAction($id, $category, clone $recipe);
+                $action = new CustomAction($manifest->getAddonId(), $id, $category, clone $recipe);
                 FlowItemFactory::register($action);
-
             }
         }
 
@@ -263,6 +265,13 @@ class AddonManager {
         foreach ($this->addons as $addon) {
             $filename = basename($addon->getPath(), ".json");
             if ($filename === $name) return $addon;
+        }
+        return null;
+    }
+
+    public function getAddonById(string $id): ?Addon {
+        foreach ($this->addons as $addon) {
+            if ($addon->getManifest()?->getAddonId() === $id) return $addon;
         }
         return null;
     }
