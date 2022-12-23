@@ -57,7 +57,7 @@ class Mineflow {
         self::$formManager = new FormManager(new Config($main->getDataFolder()."forms.json"));
         self::$eventManager = new EventManager(new Config($main->getDataFolder()."events.yml"));
         self::$recipeManager = new RecipeManager($main->getDataFolder()."recipes/");
-        self::$addonManager = new AddonManager($main->getDataFolder()."addons/", self::$recipeManager);
+        self::$addonManager = new AddonManager($main->getDataFolder()."addons/");
 
         self::$variableHelper = new VariableHelper(new Config($main->getDataFolder()."variables.json"));
         self::$variableHelper->initVariableProperties();
