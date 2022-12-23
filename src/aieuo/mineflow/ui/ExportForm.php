@@ -45,7 +45,8 @@ class ExportForm {
                 $recipes = array_merge($recipes, Mineflow::getRecipeManager()->getWithLinkedRecipes($recipe, $recipe));
                 $this->sendRecipeList($player, $recipes, ["@form.added"]);
             },
-            fn() => $this->sendRecipeList($player, $recipes, ["@form.cancelled"])
+            fn() => $this->sendRecipeList($player, $recipes, ["@form.cancelled"]),
+            default: [1 => $recipes[0]?->getGroup()]
         );
     }
 
