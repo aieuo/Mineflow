@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -15,6 +16,7 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\world\World;
 use function array_map;
+use function microtime;
 
 class ServerObjectVariable extends ObjectVariable {
 
@@ -24,6 +26,7 @@ class ServerObjectVariable extends ObjectVariable {
 
     public function getValueFromIndex(string $index): ?Variable {
         $server = $this->getServer();
+        $now = new \DateTime(timezone: Mineflow::getTimeZone());
         switch ($index) {
             case "name":
                 return new StringVariable($server->getName());
@@ -37,6 +40,20 @@ class ServerObjectVariable extends ObjectVariable {
                 return new NumberVariable($server->getStartTime());
             case "tick":
                 return new NumberVariable($server->getTick());
+            case "microtime":
+                return new NumberVariable(microtime(true));
+            case "time":
+                return new MapVariable([
+                    "hours" => new NumberVariable((int)$now->format("H")),
+                    "minutes" => new NumberVariable((int)$now->format("i")),
+                    "seconds" => new NumberVariable((int)$now->format("s")),
+                ], $now->format("H:i:s"));
+            case "date":
+                return new MapVariable([
+                    "year" => new NumberVariable((int)$now->format("Y")),
+                    "month" => new NumberVariable((int)$now->format("m")),
+                    "day" => new NumberVariable((int)$now->format("d")),
+                ], $now->format("m/d"));
             case "default_world":
                 $world = $server->getWorldManager()->getDefaultWorld();
                 if ($world === null) return null;
