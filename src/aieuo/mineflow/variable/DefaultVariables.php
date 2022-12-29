@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\object\BlockObjectVariable;
 use aieuo\mineflow\variable\object\EntityObjectVariable;
@@ -18,11 +19,20 @@ class DefaultVariables {
     public static function getServerVariables(): array {
         $server = Server::getInstance();
         $onlines = array_map(fn(Player $player) => new StringVariable($player->getName()), array_values($server->getOnlinePlayers()));
+        $now = new \DateTime(timezone: Mineflow::getTimeZone());
         return [
             "server_name" => new StringVariable($server->getName()),
             "microtime" => new NumberVariable(microtime(true)),
-            "time" => new StringVariable(date("H:i:s")),
-            "date" => new StringVariable(date("m/d")),
+            "time" => new MapVariable([
+                "hours" => new NumberVariable((int)$now->format("H")),
+                "minutes" => new NumberVariable((int)$now->format("i")),
+                "seconds" => new NumberVariable((int)$now->format("s")),
+            ], $now->format("H:i:s")),
+            "date" => new MapVariable([
+                "year" => new NumberVariable((int)$now->format("Y")),
+                "month" => new NumberVariable((int)$now->format("m")),
+                "day" => new NumberVariable((int)$now->format("d")),
+            ], $now->format("m/d")),
             "default_world" => new StringVariable($server->getWorldManager()->getDefaultWorld()?->getFolderName() ?? ""),
             "onlines" => new ListVariable($onlines),
             "ops" => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true))),

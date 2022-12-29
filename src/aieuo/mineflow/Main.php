@@ -116,7 +116,7 @@ class Main extends PluginBase {
 
     #[Deprecated(replacement: "Mineflow::getTimeTriggerTimeZone()")]
     public function getTimeTriggerTimeZone(): ?\DateTimeZone {
-        return Mineflow::getTimeTriggerTimeZone();
+        return Mineflow::getTimeZone();
     }
 
     #[Deprecated(replacement: "Mineflow::setEnabledRecipeErrorInConsole(%parameter0%)")]
