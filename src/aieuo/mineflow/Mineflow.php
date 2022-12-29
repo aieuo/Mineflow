@@ -37,7 +37,7 @@ class Mineflow {
     private static PlayerConfig $playerSettings;
 
     private static bool $enabledRecipeErrorInConsole = true;
-    private static ?\DateTimeZone $timeTriggerTimeZone = null;
+    private static ?\DateTimeZone $timeZone = null;
     private static bool $debug = false;
 
     public static function init(Main $main): void {
@@ -80,7 +80,7 @@ class Mineflow {
 
         self::$enabledRecipeErrorInConsole = $config->get("show_recipe_errors_in_console", true);
         if (!empty($timezone = $config->get("time_trigger_timezone"))) {
-            self::$timeTriggerTimeZone = new \DateTimeZone($timezone);
+            self::$timeZone = new \DateTimeZone($timezone);
         }
 
         self::$debug = $config->get("debug", false);
@@ -120,8 +120,8 @@ class Mineflow {
         return self::$variableHelper;
     }
 
-    public static function getTimeTriggerTimeZone(): ?\DateTimeZone {
-        return self::$timeTriggerTimeZone;
+    public static function getTimeZone(): ?\DateTimeZone {
+        return self::$timeZone;
     }
 
     public static function isEnabledRecipeErrorInConsole(): bool {
