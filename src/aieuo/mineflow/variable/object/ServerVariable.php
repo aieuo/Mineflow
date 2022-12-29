@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\object;
 
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -17,6 +18,7 @@ use pocketmine\Server;
 use pocketmine\world\World;
 use function array_map;
 use function array_values;
+use function microtime;
 
 class ServerVariable extends ObjectVariable {
 
@@ -36,6 +38,7 @@ class ServerVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
+        $now = new \DateTime(timezone: Mineflow::getTimeZone());
         self::registerProperty(
             $class, "name", new DummyVariable(StringVariable::class),
             fn(Server $server) => new StringVariable($server->getName())
@@ -55,6 +58,26 @@ class ServerVariable extends ObjectVariable {
         self::registerProperty(
             $class, "tick", new DummyVariable(NumberVariable::class),
             fn(Server $server) => new NumberVariable($server->getTick())
+        );
+        self::registerProperty(
+            $class, "microtime", new DummyVariable(NumberVariable::class),
+            fn(Server $server) => new NumberVariable(microtime(true))
+        );
+        self::registerProperty(
+            $class, "time", new DummyVariable(MapVariable::class),
+            fn(Server $server) => new MapVariable([
+                "hours" => new NumberVariable((int)$now->format("H")),
+                "minutes" => new NumberVariable((int)$now->format("i")),
+                "seconds" => new NumberVariable((int)$now->format("s")),
+            ], $now->format("H:i:s"))
+        );
+        self::registerProperty(
+            $class, "date", new DummyVariable(MapVariable::class),
+            fn(Server $server) => new MapVariable([
+                "year" => new NumberVariable((int)$now->format("Y")),
+                "month" => new NumberVariable((int)$now->format("m")),
+                "day" => new NumberVariable((int)$now->format("d")),
+            ], $now->format("m/d"))
         );
         self::registerProperty(
             $class, "default_world", new DummyVariable(WorldVariable::class),
