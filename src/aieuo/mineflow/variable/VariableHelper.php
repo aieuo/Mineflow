@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable;
 
+use aieuo\mineflow\exception\MineflowMethodErrorException;
 use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
@@ -12,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
@@ -41,6 +43,7 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\nbt\tag\Tag;
 use pocketmine\utils\Config;
 use function array_is_list;
+use function array_map;
 use function is_array;
 use function is_bool;
 use function is_null;
@@ -326,7 +329,7 @@ class VariableHelper {
         if (is_string($left)) {
             if ($op === "()") {
                 if ($executor === null) throw new UnsupportedCalculationException();
-                return $this->runMethodCall($left, is_string($right) ? [$right] : $right, $executor, $variables, $global);
+                return $this->runMethodCall($left, !is_array($right) ? [$right] : $right, $executor, $variables, $global);
             }
 
             $left = $this->mustGetVariableNested($left, $variables, $global);

@@ -74,7 +74,7 @@ class StringVariable extends Variable implements \JsonSerializable {
         );
         self::registerMethod(
             $class, "substring", new DummyVariable(StringVariable::class),
-            fn(string $value, array $param) => new StringVariable(mb_substr($value, $param[0], $param[1] ?? null)),
+            fn(string $value, $start, $length = null) => new StringVariable(mb_substr($value, (int)$start, $length === null ? null : (int)$length)),
         );
     }
 }
