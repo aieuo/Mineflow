@@ -50,7 +50,7 @@ class DummyVariable extends Variable {
         /** @var string|Variable|ObjectVariable $class */
         $class = $this->getValueClass();
         if ($this->isObjectVariableType()) {
-            return $class::getValuesDummy();
+            return $class::getPropertyTypes();
         }
 
         return [];

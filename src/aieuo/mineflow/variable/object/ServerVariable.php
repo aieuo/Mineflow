@@ -34,7 +34,7 @@ class ServerVariable extends ObjectVariable {
     }
 
     public function __toString(): string {
-        return (string)(new MapVariable(self::getValuesDummy()));
+        return (string)(new MapVariable(self::getPropertyTypes()));
     }
 
     public static function registerProperties(string $class = self::class): void {

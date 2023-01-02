@@ -108,7 +108,7 @@ abstract class Variable {
         return self::$properties[static::class] ?? [];
     }
 
-    public static function getValuesDummy(): array {
+    public static function getPropertyTypes(): array {
         return self::$propertyTypes[static::class] ?? [];
     }
 

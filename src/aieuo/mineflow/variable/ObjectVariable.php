@@ -14,11 +14,4 @@ abstract class ObjectVariable extends Variable {
         }
         return $str;
     }
-
-    /**
-     * @return array<string, DummyVariable>
-     */
-    public static function getValuesDummy(): array {
-        return [];
-    }
 }
