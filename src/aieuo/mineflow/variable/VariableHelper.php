@@ -366,7 +366,20 @@ class VariableHelper {
         }
 
         $variable = $this->mustGetVariableNested($target, $variables, $global);
-        $result = $variable->callMethod($name, $right);
+        try {
+            $result = $variable->callMethod($name, array_map(function (mixed $arg) {
+                if ($arg instanceof Variable) {
+                    $arg = $this->variableArrayToArray([$arg])[0];
+                }
+                return $arg;
+            }, $right));
+        } catch (\Error $e) {
+            if (Mineflow::isDebug()) {
+                Main::getInstance()->getLogger()->logException($e);
+            }
+            throw new MineflowMethodErrorException($target, $name, $e->getMessage());
+        }
+
         if ($result === null) throw new UndefinedMineflowMethodException($target, $name);
         return $result;
     }
@@ -510,7 +523,7 @@ class VariableHelper {
         foreach ($variables as $name => $variable) {
             $value = $variable->getValue();
             if (is_array($value)) $value = $this->variableArrayToArray($value);
-            
+
             $result[$name] = $value;
         }
         return $result;
