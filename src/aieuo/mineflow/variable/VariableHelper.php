@@ -482,6 +482,25 @@ class VariableHelper {
         return new MapVariable($variableArray);
     }
 
+    public function tagToVariable(Tag $tag): Variable {
+        return match (true) {
+            $tag instanceof StringTag => new StringVariable($tag->getValue()),
+            $tag instanceof ByteTag => new BooleanVariable((bool)$tag->getValue()),
+            $tag instanceof FloatTag, $tag instanceof IntTag, $tag instanceof DoubleTag => new NumberVariable($tag->getValue()),
+            $tag instanceof ListTag => new ListVariable($this->listTagToVariableArray($tag)),
+            $tag instanceof CompoundTag => new MapVariable($this->listTagToVariableArray($tag)),
+            default => new NullVariable(),
+        };
+    }
+
+    public function listTagToVariableArray(ListTag|CompoundTag $tag): array {
+        $result = [];
+        foreach ($tag as $key => $value) {
+            $result[$key] = $this->tagToVariable($value);
+        }
+        return $result;
+    }
+
     public function initVariableProperties(): void {
         ListVariable::registerProperties();
         MapVariable::registerProperties();
@@ -504,24 +523,5 @@ class VariableHelper {
         UnknownVariable::registerProperties();
         Vector3Variable::registerProperties();
         WorldVariable::registerProperties();
-    }
-
-    public function tagToVariable(Tag $tag): Variable {
-        return match (true) {
-            $tag instanceof StringTag => new StringVariable($tag->getValue()),
-            $tag instanceof ByteTag => new BooleanVariable((bool)$tag->getValue()),
-            $tag instanceof FloatTag, $tag instanceof IntTag, $tag instanceof DoubleTag => new NumberVariable($tag->getValue()),
-            $tag instanceof ListTag => new ListVariable($this->listTagToVariableArray($tag)),
-            $tag instanceof CompoundTag => new MapVariable($this->listTagToVariableArray($tag)),
-            default => new NullVariable(),
-        };
-    }
-
-    public function listTagToVariableArray(ListTag|CompoundTag $tag): array {
-        $result = [];
-        foreach ($tag as $key => $value) {
-            $result[$key] = $this->tagToVariable($value);
-        }
-        return $result;
     }
 }
