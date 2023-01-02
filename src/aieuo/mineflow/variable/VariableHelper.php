@@ -501,6 +501,21 @@ class VariableHelper {
         return $result;
     }
 
+    /**
+     * @param array<string, Variable> $variables
+     * @return array
+     */
+    public function variableArrayToArray(array $variables): array {
+        $result = [];
+        foreach ($variables as $name => $variable) {
+            $value = $variable->getValue();
+            if (is_array($value)) $value = $this->variableArrayToArray($value);
+            
+            $result[$name] = $value;
+        }
+        return $result;
+    }
+
     public function initVariableProperties(): void {
         ListVariable::registerProperties();
         MapVariable::registerProperties();
