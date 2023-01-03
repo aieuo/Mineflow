@@ -62,16 +62,16 @@ class VariableSerializer {
 
     /**
      * @param string $type
-     * @param callable(array<string, mixed>): ?Variable $deserializer
+     * @param callable(Variable): mixed $serializer
      * @param bool $override
      * @return void
      */
-    public static function register(string $type, callable $deserializer, bool $override = false): void {
+    public static function register(string $type, callable $serializer, bool $override = false): void {
         if (!$override and isset(self::$serializers[$type])) {
             throw new \InvalidArgumentException("Variable serializer ".$type." is already registered");
         }
 
-        self::$serializers[$type] = $deserializer;
+        self::$serializers[$type] = $serializer;
     }
 
     public static function serialize(Variable $variable): ?array {
