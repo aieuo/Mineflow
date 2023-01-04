@@ -8,7 +8,7 @@
 
 ---
 
-### [Wiki](https://Mineflow.github.io/docs)
+### [Wiki](https://Mineflow.github.io/docs/jpn)
 
 ---
 
@@ -16,16 +16,16 @@
 
 ---
 
-# English
+# 日本語
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.</p>
+アクションを組み合わせてプラグインのようなものを作れます。  
+**いくつかのアクションはデフォルトの権限では使用できなくなっています． To show them all, please run `mineflow permission <your name> 2` from the console.</p>
 
 
 ## コマンド
 | コマンド                                            | 説明            |
 | ----------------------------------------------- | ------------- |
-| /mineflow language <eng &#124; jpn ind>         | 言語を変更する       |
+| /mineflow language<eng &#124; jpn ind>          | 言語を変更する       |
 | /mineflow recipe [add &#124; edit &#124; list]  | レシピを管理する      |
 | /mineflow command [add &#124; edit &#124; list] | コマンドトリガーを管理する |
 | /mineflow form                                  | フォームトリガーを管理する |
@@ -42,7 +42,7 @@ You can combine actions and create something like a plugin without any coding kn
 `{` と `}`で囲った文字は変数と認識されて置き換えられます。    
 例: `{target}`, `{item}`
 
-[詳しい説明](https://mineflow.github.io/docs/eng/#/variable/about)
+[詳しい説明](https://mineflow.github.io/docs/jpn/#/variable/about)
 
 ## チュートリアル
 ### レシピを作成する
@@ -50,20 +50,20 @@ You can combine actions and create something like a plugin without any coding kn
 レシピにいろいろなアクションを追加します
 
 ### レシピを実行する
-フォームの「トリガーを編集する」からトリガーを追加するとそのトリガーが起きた時レシピが実行されます。 Then, when the trigger occurs, the recipe will be executed.
+フォームの「トリガーを編集する」からトリガーを追加すると そのトリガーが起きた時レシピが実行されます。
 
 ### 実行者を変更する
 デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。 それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
 
-### Arguments and return values
+### 引数と戻り値
 アクションの「レシピを呼び出す」で呼び出されたときに元のレシピから受け入れる値と元のレシピに戻す値を設定できます。
 
 
 ## 例
 ### CheckIdコマンド
-Send the ID of the item in the player's hand to the chat field when execute `/id`. /id を実行したときに手に持っているアイテムのIDを表示する [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+`/id` を実行したときに手に持っているアイテムのIDを表示する /id を実行したときに手に持っているアイテムのIDを表示する [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
-##### Steps
+##### 手順
 1. `/mineflow command add` を実行してidコマンドを追加します。  
    ![コマンド追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. `/mineflow recipe add` を実行して好きな名前のレシピを追加します。  
@@ -73,7 +73,7 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
    ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true) (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
 5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。 ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
-##### To send more information of item
+##### 表示する情報を増やすには
 {target.hand}は[item変数](https://github.com/aieuo/Mineflow/wiki/Variable#item)です。 `{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。
 
 ##### op以外も使用できるようにするには
