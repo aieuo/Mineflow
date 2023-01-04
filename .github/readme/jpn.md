@@ -1,6 +1,5 @@
 # Mineflow
 
-
 [![GitHub license](https://img.shields.io/badge/license-UIUC/NCSA-blue.svg)](https://github.com/aieuo/Mineflow/blob/master/LICENSE) [![](https://poggit.pmmp.io/shield.state/Mineflow)](https://poggit.pmmp.io/p/Mineflow) [![](https://poggit.pmmp.io/shield.api/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
 
 [![](https://poggit.pmmp.io/shield.dl/Mineflow)](https://poggit.pmmp.io/p/Mineflow) [![](https://poggit.pmmp.io/shield.dl.total/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
@@ -9,21 +8,18 @@
 
 ---
 
-### [Wiki](https://github.com/aieuo/Mineflow/wiki)
+### [Wiki](https://Mineflow.github.io/docs)
 
 ---
 
-### [日本語](/.github/readme/jpn.md)
+### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md)
 
 ---
-
-### [Indonesia](/.github/readme/ind.md)
 
 # English
 
-アクションを組み合わせてプラグインのようなものを作れます。
-
-\* Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.
+You can combine actions and create something like a plugin without any coding knowledge.  
+**Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.**
 
 
 ## コマンド
@@ -40,43 +36,47 @@
 ## アクション権限
 | レベル | 使用できるようになるアクションの種類             |
 | --- | ------------------------------ |
-| 0   | -  | -                         |
+| 0   | -                              |
 | 1   | コンソールからコマンド, 権限操作, 飛行状態変更, ループ |
 | 2   | 設定ファイル                         |
 
-`/mineflow permission <name> <level>` で権限を変更できます。   
-与えることができる権限レベルは自分のレベル以下だけです。   
+`/mineflow permission <name> <level>` で権限を変更できます。    
+与えることができる権限レベルは自分のレベル以下だけです。    
 コンソールからは最大レベルを与えることができます。
 
 
 ## 変数
-`{` と `}`で囲った文字は変数と認識されて置き換えられます。   
+`{` と `}`で囲った文字は変数と認識されて置き換えられます。    
 例: `{target}`, `{item}`
 
-[詳しい説明](https://github.com/aieuo/Mineflow/wiki/Variable)
+[詳しい説明](https://mineflow.github.io/docs/eng/#/variable/about)
 
 ## チュートリアル
 ### レシピを作成する
-`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。   
+`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。    
 レシピにいろいろなアクションを追加します
+
 ### レシピを実行する
 フォームの「トリガーを編集する」からトリガーを追加するとそのトリガーが起きた時レシピが実行されます。 Then, when the trigger occurs, the recipe will be executed.
+
 ### 実行者を変更する
 デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。 それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
-### 引数と戻り値
+
+### Arguments and return values
 アクションの「レシピを呼び出す」で呼び出されたときに元のレシピから受け入れる値と元のレシピに戻す値を設定できます。
+
 
 ## 例
 ### CheckIdコマンド
 Send the ID of the item in the player's hand to the chat field when execute `/id`. /id を実行したときに手に持っているアイテムのIDを表示する [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
-##### 手順
+##### Steps
 1. `/mineflow command add` を実行してidコマンドを追加します。  
    ![コマンド追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. `/mineflow recipe add` を実行して好きな名前のレシピを追加します。  
    ![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
-4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。   
+4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。    
    ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true) (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
 5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。 ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
@@ -86,5 +86,5 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 ##### op以外も使用できるようにするには
 コマンドを追加するときかコマンドメニューからコマンドの権限を`誰でも実行できる`にします。
 
-## copyright
+## Copyright
 Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
