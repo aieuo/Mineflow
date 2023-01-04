@@ -35,7 +35,7 @@
 
 ## アクション権限
 
-`/mineflow permission <name> <level>` で権限を変更できます。 `/mineflow permission <add|remove|list> <player> <permission>` で権限を変更できます。 `権限`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。 You can give an all permission from the console.
+`/mineflow permission <name> <level>` で権限を変更できます。 `/mineflow permission <add|remove|list> <player> <permission>` で権限を変更できます。 `権限`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。 コンソールからは全ての権限を与えることができます。
 
 
 ## 変数
