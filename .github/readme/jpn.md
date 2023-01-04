@@ -68,8 +68,7 @@
 
 ## 例
 ### CheckIdコマンド
-`チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。     
-![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true) (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
+`チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。 [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### 手順
 1. `/mineflow command add` を実行してidコマンドを追加します。  
