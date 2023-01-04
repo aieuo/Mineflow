@@ -235,9 +235,8 @@ class AddonManager {
             $loadedRecipes[] = $recipe;
 
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger instanceof EventTrigger and !$trigger->isEnabled()) {
-                    $trigger->setEnabled(true);
-                    $eventManager->getEventListener()->registerEvent($trigger->getEventClass());
+                if ($trigger instanceof EventTrigger and !$eventManager->isTriggerEnabled($trigger)) {
+                    $eventManager->setTriggerEnabled($trigger);
                 }
             }
         }

@@ -24,6 +24,14 @@ class EventManager {
         $this->eventListener = new EventTriggerListener();
     }
 
+    public function getSetting(): Config {
+        return $this->setting;
+    }
+
+    public function getEventListener(): EventTriggerListener {
+        return $this->eventListener;
+    }
+
     public function addDefaultTriggers(): void {
         $this->addTrigger(new BlockBreakEventTrigger(), true);
         $this->addTrigger(new BlockPlaceEventTrigger(), true);
@@ -60,14 +68,14 @@ class EventManager {
     public function addTrigger(EventTrigger $trigger, bool $defaultEnabled): void {
         $key = $trigger->getKey();
         $eventClass = $trigger->getEventClass();
-        $trigger->setEnabled((bool)$this->setting->get($key, $this->setting->get($eventClass, $defaultEnabled)));
+        $enabled = (bool)$this->setting->get($key, $this->setting->get($eventClass, $defaultEnabled));
 
-        if ($trigger->isEnabled()) {
+        if ($enabled) {
             $this->eventListener->registerEvent($eventClass);
         }
 
         $this->triggers[$key][$trigger->getSubKey()] = $trigger;
-        $this->events[$key] = $trigger->isEnabled();
+        $this->events[$key] = $enabled;
         $this->keys[$eventClass][] = $key;
     }
 
@@ -91,26 +99,36 @@ class EventManager {
         return $this->events;
     }
 
+    public function isTriggerEnabled(EventTrigger $trigger): bool {
+        return $this->events[$trigger->getKey()] ?? false;
+    }
+
+    public function setTriggerEnabled(EventTrigger $trigger): void {
+        $this->events[$trigger->getKey()] = true;
+
+        $this->getEventListener()->registerEvent($trigger->getEventClass());
+    }
+
+    public function setTriggerDisabled(EventTrigger $trigger): void {
+        $this->events[$trigger->getKey()] = false;
+
+        $count = 0;
+        $keys = $this->getKeysFromEventClass($trigger->getEventClass());
+        foreach ($keys as $key) {
+            if ($trigger !== null and $this->isTriggerEnabledByEventName($key)) $count ++;
+        }
+
+        if ($count === 0) {
+            $this->getEventListener()->unregisterEvent($trigger->getEventClass());
+        }
+    }
+
+    public function isTriggerEnabledByEventName(string $name): bool {
+        return $this->events[$name] ?? false;
+    }
+
     public function getEnabledEvents(): array {
         return array_filter($this->events, fn(bool $v) => $v);
-    }
-
-    public function enableEvent(string $event): void {
-        $this->setting->set($event, true);
-        $this->setting->save();
-
-        $this->events[$event] = true;
-    }
-
-    public function disableEvent(string $event): void {
-        $this->setting->set($event, false);
-        $this->setting->save();
-
-        $this->events[$event] = false;
-    }
-
-    public function getEventListener(): EventTriggerListener {
-        return $this->eventListener;
     }
 
     public function getAssignedRecipes(string $event): array {

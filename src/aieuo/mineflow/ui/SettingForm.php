@@ -56,15 +56,21 @@ class SettingForm {
             ->setContents($contents)
             ->onReceive(function (Player $player, array $data) use ($events) {
                 $count = 0;
+                $eventManager = Mineflow::getEventManager();
                 foreach ($events as $name => $enabled) {
+                    $trigger = $eventManager->getTrigger($name);
+                    if ($trigger === null) continue;
+
                     if ($data[$count] and !$enabled) {
-                        Mineflow::getEventManager()->enableEvent($name);
+                        $eventManager->setTriggerEnabled($trigger);
+                        $eventManager->getSetting()->set($name, true);
                     } elseif (!$data[$count] and $enabled) {
-                        Mineflow::getEventManager()->disableEvent($name);
+                        $eventManager->setTriggerDisabled($trigger);
+                        $eventManager->getSetting()->set($name, false);
                     }
                     $count++;
                 }
-                $this->sendMenu($player, ["@setting.event.changed"]);
+                $this->sendMenu($player, ["@form.changed"]);
             })->show($player);
     }
 }

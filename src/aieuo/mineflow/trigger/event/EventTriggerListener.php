@@ -7,25 +7,37 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
-use pocketmine\event\Listener;
-use pocketmine\event\EventPriority;
 use pocketmine\event\Event;
+use pocketmine\event\EventPriority;
+use pocketmine\event\HandlerListManager;
+use pocketmine\event\Listener;
+use pocketmine\event\RegisteredListener;
 use pocketmine\Server;
 use function get_parent_class;
-use function in_array;
 
 class EventTriggerListener implements Listener {
 
-    /** @var string[] */
-    private array $registeredEvents = [];
+    /** @var array<string, RegisteredListener> */
+    private array $registeredListeners = [];
 
     public function registerEvent(string $event): void {
-        if (in_array($event, $this->registeredEvents, true)) return;
+        if (isset($this->registeredListeners[$event])) return;
 
         $pluginManager = Server::getInstance()->getPluginManager();
         /** @noinspection PhpUnhandledExceptionInspection */
-        $pluginManager->registerEvent($event, \Closure::fromCallable([$this, "onEvent"]), EventPriority::NORMAL, Main::getInstance(), true);
-        $this->registeredEvents[] = $event;
+        $registeredListener = $pluginManager->registerEvent($event, \Closure::fromCallable([$this, "onEvent"]), EventPriority::NORMAL, Main::getInstance(), true);
+        $this->registeredListeners[$event] = $registeredListener;
+    }
+
+    public function unregisterEvent(string $event): void {
+        if (!isset($this->registeredListeners[$event])) return;
+
+        HandlerListManager::global()->unregisterAll($this->registeredListeners[$event]);
+        unset($this->registeredListeners[$event]);
+    }
+
+    public function getRegisteredListener(string $event): ?RegisteredListener {
+        return $this->registeredListeners[$event] ?? null;
     }
 
     public function onEvent(Event $event): void {
@@ -36,7 +48,7 @@ class EventTriggerListener implements Listener {
             $keys = $manager->getKeysFromEventClass($class);
             foreach ($keys as $key) {
                 $trigger = $manager->getTrigger($key);
-                if ($trigger === null or !$trigger->filter($event)) continue;
+                if ($trigger === null or !$manager->isTriggerEnabled($trigger) or !$trigger->filter($event)) continue;
 
                 if ($holder->existsRecipeByString(Triggers::EVENT, $key)) {
                     $recipes = $holder->getRecipes($trigger);

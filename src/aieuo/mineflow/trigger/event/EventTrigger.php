@@ -19,7 +19,6 @@ use function explode;
 
 class EventTrigger extends Trigger {
 
-    private bool $enabled = true;
     private string $eventClass;
 
     public static function fromEventClass(string $class, string $subKey = ""): EventTrigger {
@@ -68,14 +67,6 @@ class EventTrigger extends Trigger {
 
     public function filter(Event $event): bool  {
         return true;
-    }
-
-    public function setEnabled(bool $enabled): void {
-        $this->enabled = $enabled;
-    }
-
-    public function isEnabled(): bool {
-        return $this->enabled;
     }
 
     public function getEventClass(): string {
