@@ -19,7 +19,7 @@
 # Inglés
 
 Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.  
-**Algunas de las acciones se ocultan por defecto para evitar abusos. To show them all, please run `mineflow permission <your name> 2` from the console.</p>
+**Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `permiso de mineflow <your name> 2` desde la consola.**
 
 
 ## Comando
@@ -35,7 +35,7 @@ Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de
 
 ## Permiso de acción
 
-To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console.
+Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. El nivel que usted da sólo puede ser utilizado por debajo de su nivel. Puedes dar un nivel máximo desde la consola.
 
 
 ## Variable
