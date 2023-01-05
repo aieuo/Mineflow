@@ -16,7 +16,7 @@
 
 ---
 
-# Inglés
+# Español
 
 Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.  
 **Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `permiso de mineflow <your name> 2` desde la consola.**
