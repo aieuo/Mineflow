@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\action\player\SetSitting;
 use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\ui\trigger\BlockTriggerForm;
+use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Utils;
 use pocketmine\command\Command;
@@ -51,12 +51,7 @@ class EventListener implements Listener {
                 case "add":
                     $recipe = $session->get("blockTriggerRecipe");
                     $trigger = new BlockTrigger($position);
-                    if ($recipe->existsTrigger($trigger)) {
-                        (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
-                        return;
-                    }
-                    $recipe->addTrigger($trigger);
-                    (new BlockTriggerForm)->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+                    (new BaseTriggerForm)->tryAddTriggerToRecipe($player, $recipe, $trigger);
                     break;
             }
             $session->remove("blockTriggerAction");

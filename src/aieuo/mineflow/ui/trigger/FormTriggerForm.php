@@ -14,35 +14,24 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
-use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
 
 class FormTriggerForm extends TriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        /** @var FormTrigger $trigger */
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getFormName()])))
-            ->setContent((string)$trigger)
-            ->addButtons([
-                new Button("@form.back"),
-                new Button("@form.delete"),
-                new Button("@trigger.form.edit.title"),
-            ])->onReceive(function (Player $player, int $data) use($recipe, $trigger) {
-                switch ($data) {
-                    case 0:
-                        (new RecipeForm)->sendTriggerList($player, $recipe);
-                        break;
-                    case 1:
-                        (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger);
-                        break;
-                    case 2:
-                        $manager = Mineflow::getFormManager();
-                        $form = $manager->getForm($trigger->getFormName());
-                        (new CustomFormForm)->sendFormMenu($player, $form);
-                        break;
-                }
-            })->addMessages($messages)->show($player);
+    public function buildAddedTriggerMenu(ListForm $form, Player $player, Recipe $recipe, Trigger $trigger): void {
+        if (!($trigger instanceof FormTrigger)) return;
+
+        $form->addButton(new Button("@trigger.form.edit.title", function () use($player, $trigger) {
+            $manager = Mineflow::getFormManager();
+            $form = $manager->getForm($trigger->getFormName());
+            if ($form === null) {
+                $player->sendMessage(Language::get("trigger.form.select.notFound"));
+                return;
+            }
+
+            (new CustomFormForm)->sendFormMenu($player, $form);
+        }));
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
@@ -53,13 +42,8 @@ class FormTriggerForm extends TriggerForm {
         (new CustomForm(Language::get("trigger.form.select.title", [$recipe->getName()])))
             ->setContents([
                 new Input("@trigger.form.select.input", "", $default[0] ?? "", true),
-                new CancelToggle(),
+                new CancelToggle(fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
-                if ($data[1]) {
-                    (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe);
-                    return;
-                }
-
                 $manager = Mineflow::getFormManager();
                 if (!$manager->existsForm($data[0])) {
                     $this->sendConfirmCreate($player, $data[0], function (bool $result) use ($player, $recipe, $data) {
@@ -95,12 +79,8 @@ class FormTriggerForm extends TriggerForm {
                                 $trigger->setExtraData("close");
                                 break;
                         }
-                        if ($recipe->existsTrigger($trigger)) {
-                            $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
-                            return;
-                        }
-                        $recipe->addTrigger($trigger);
-                        $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+
+                        (new BaseTriggerForm)->tryAddTriggerToRecipe($player, $recipe, $trigger);
                     })->addArgs($recipe, $form)->show($player);
                 break;
             case $form instanceof ModalForm:
@@ -123,12 +103,8 @@ class FormTriggerForm extends TriggerForm {
                                 $trigger->setExtraData("2");
                                 break;
                         }
-                        if ($recipe->existsTrigger($trigger)) {
-                            $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
-                            return;
-                        }
-                        $recipe->addTrigger($trigger);
-                        $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+
+                        (new BaseTriggerForm)->tryAddTriggerToRecipe($player, $recipe, $trigger);
                     })->addArgs($recipe, $form)->show($player);
                 break;
             case $form instanceof ListForm:
@@ -158,12 +134,8 @@ class FormTriggerForm extends TriggerForm {
                                 $trigger->setExtraData($button->getUUID());
                                 break;
                         }
-                        if ($recipe->existsTrigger($trigger)) {
-                            $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
-                            return;
-                        }
-                        $recipe->addTrigger($trigger);
-                        $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+
+                        (new BaseTriggerForm)->tryAddTriggerToRecipe($player, $recipe, $trigger);
                     })->addArgs($recipe, $form)->show($player);
                 break;
         }

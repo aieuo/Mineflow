@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\ui\trigger;
 
@@ -18,17 +19,13 @@ use pocketmine\player\Player;
 
 class EventTriggerForm extends TriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        /** @var EventTrigger $trigger */
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getEventName()])))
-            ->setContent((string)$trigger)
-            ->appendContent("@trigger.event.variable", true)
-            ->forEach($trigger->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
-                $form->appendContent("{".$name."} (type=".$var->getValueType().")");
-            })->addButtons([
-                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
-                new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
-            ])->addMessages($messages)->show($player);
+    public function buildAddedTriggerMenu(ListForm $form, Player $player, Recipe $recipe, Trigger $trigger): void {
+        if (!($trigger instanceof EventTrigger)) return;
+
+        $form->appendContent("@trigger.event.variable", true);
+        $form->forEach($trigger->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            $form->appendContent("{".$name."} (type=".$var->getValueType().")");
+        });
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
@@ -62,22 +59,14 @@ class EventTriggerForm extends TriggerForm {
             ->forEach(EventTrigger::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
                 $form->appendContent("{".$name."} (type = ".$var->getValueType().")");
             })->addButtons([
-                new Button("@form.back"),
-                new Button("@form.add"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe, string $eventName) {
-                if ($data === 0) {
-                    $this->sendEventTriggerList($player, $recipe);
-                    return;
-                }
+                new Button("@form.back", fn() => $this->sendEventTriggerList($player, $recipe)),
+                new Button("@form.add", function () use($player, $recipe, $eventName) {
+                    $trigger = EventTrigger::get($eventName);
+                    if ($trigger === null) return;
 
-                $trigger = EventTrigger::get($eventName);
-                if ($recipe->existsTrigger($trigger)) {
-                    $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
-                    return;
-                }
-                $recipe->addTrigger($trigger);
-                $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
-            })->addArgs($recipe, $eventName)->show($player);
+                    (new BaseTriggerForm)->tryAddTriggerToRecipe($player, $recipe, $trigger);
+                }),
+            ])->show($player);
     }
 
     public function sendSelectEvent(Player $player): void {
