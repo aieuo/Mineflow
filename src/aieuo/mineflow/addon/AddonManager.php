@@ -114,7 +114,7 @@ class AddonManager {
     }
 
     public function preloadAddon(string $path): \Generator {
-        $pack = RecipePack::load($path, recipeClass: AddonRecipe::class);
+        $pack = RecipePack::load($path, baseGroup: "_/mineflow/addon", recipeClass: AddonRecipe::class);
 
         if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), ["import.plugin.outdated"]]));
