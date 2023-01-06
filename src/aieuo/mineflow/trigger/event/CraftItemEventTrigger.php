@@ -11,8 +11,8 @@ use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\item\Item;
 
 class CraftItemEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("CraftItemEvent", $subKey, CraftItemEvent::class);
+    public function __construct() {
+        parent::__construct("CraftItemEvent", CraftItemEvent::class);
     }
 
     public function getVariables(mixed $event): array {

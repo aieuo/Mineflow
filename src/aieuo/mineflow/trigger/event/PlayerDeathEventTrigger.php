@@ -10,8 +10,8 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\player\Player;
 
 class PlayerDeathEventTrigger extends PlayerEventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("PlayerDeathEvent", $subKey, PlayerDeathEvent::class);
+    public function __construct() {
+        parent::__construct("PlayerDeathEvent", PlayerDeathEvent::class);
     }
 
     public function getVariables(mixed $event): array {

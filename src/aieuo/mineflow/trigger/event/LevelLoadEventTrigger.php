@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\event\world\WorldLoadEvent;
 
 class LevelLoadEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("LevelLoadEvent", $subKey, WorldLoadEvent::class);
+    public function __construct() {
+        parent::__construct("LevelLoadEvent", WorldLoadEvent::class);
     }
 
     public function getVariables(mixed $event): array {

@@ -32,7 +32,7 @@ class CustomTriggerForm extends TriggerForm {
                 new ExampleInput("@trigger.custom.name", "aieuo", "", true),
                 new CancelToggle(fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
             ])->onReceive(function (Player $player, array $data) use($recipe) {
-                $trigger = CustomTrigger::create($data[0]);
+                $trigger = new CustomTrigger($data[0]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;

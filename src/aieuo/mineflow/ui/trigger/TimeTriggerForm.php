@@ -18,7 +18,8 @@ use pocketmine\player\Player;
 class TimeTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey().":".$trigger->getSubKey()])))
+        /** @var TimeTrigger $trigger */
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getHours().":".$trigger->getMinutes()])))
             ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
@@ -33,7 +34,7 @@ class TimeTriggerForm extends TriggerForm {
                 new ExampleNumberInput("@trigger.time.minutes", "0", "", true, 0, 59),
                 new CancelToggle(fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
             ])->onReceive(function (Player $player, array $data) use($recipe) {
-                $trigger = TimeTrigger::create((string)((int)$data[0]), (string)((int)$data[1]));
+                $trigger = new TimeTrigger((int)$data[0], (int)$data[1]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;

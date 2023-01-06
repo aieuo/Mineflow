@@ -11,8 +11,8 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
 
 class BlockBreakEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("BlockBreakEvent", $subKey, BlockBreakEvent::class);
+    public function __construct() {
+        parent::__construct("BlockBreakEvent", BlockBreakEvent::class);
     }
 
     public function getTargetEntity(Event $event): ?Entity {

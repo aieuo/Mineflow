@@ -6,6 +6,7 @@ namespace aieuo\mineflow\utils;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
+use aieuo\mineflow\trigger\Triggers;
 use pocketmine\utils\Config;
 
 class FormManager {
@@ -61,12 +62,16 @@ class FormManager {
 
     public function getAssignedRecipes(string $formName): array {
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(FormTrigger::create($formName));
+        $containers = TriggerHolder::getInstance()->getRecipesByType(Triggers::FORM);
         foreach ($containers as $name => $container) {
             foreach ($container->getAllRecipe() as $recipe) {
+                $trigger = $recipe->getTriggerByHash(Triggers::FORM, $name);
+                if (!($trigger instanceof FormTrigger)) continue;
+                if ($trigger->getFormName() !== $formName) continue;
+
                 $path = $recipe->getGroup()."/".$recipe->getName();
                 if (!isset($recipes[$path])) $recipes[$path] = [];
-                $recipes[$path][] = $name;
+                $recipes[$path][] = $trigger->getExtraData();
             }
         }
         return $recipes;

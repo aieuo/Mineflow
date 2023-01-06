@@ -21,13 +21,14 @@ use pocketmine\player\Player;
 class FormTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
+        /** @var FormTrigger $trigger */
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getFormName()])))
             ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.form.edit.title"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
+            ])->onReceive(function (Player $player, int $data) use($recipe, $trigger) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -37,11 +38,11 @@ class FormTriggerForm extends TriggerForm {
                         break;
                     case 2:
                         $manager = Mineflow::getFormManager();
-                        $form = $manager->getForm($trigger->getKey());
+                        $form = $manager->getForm($trigger->getFormName());
                         (new CustomFormForm)->sendFormMenu($player, $form);
                         break;
                 }
-            })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
+            })->addMessages($messages)->show($player);
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
@@ -85,13 +86,13 @@ class FormTriggerForm extends TriggerForm {
                         new Button("@trigger.form.receive"),
                         new Button("@trigger.form.close"),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
-                        $trigger = FormTrigger::create($form->getName());
+                        $trigger = new FormTrigger($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
                                 return;
                             case 2:
-                                $trigger->setSubKey("close");
+                                $trigger->setExtraData("close");
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {
@@ -110,16 +111,16 @@ class FormTriggerForm extends TriggerForm {
                         new Button(Language::get("trigger.form.button", [$form->getButton1Text()])),
                         new Button(Language::get("trigger.form.button", [$form->getButton2Text()])),
                     ])->onReceive(function (Player $player, int $data, Recipe $recipe, Form $form) {
-                        $trigger = FormTrigger::create($form->getName());
+                        $trigger = new FormTrigger($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
                                 return;
                             case 2:
-                                $trigger->setSubKey("1");
+                                $trigger->setExtraData("1");
                                 break;
                             case 3:
-                                $trigger->setSubKey("2");
+                                $trigger->setExtraData("2");
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {
@@ -142,7 +143,7 @@ class FormTriggerForm extends TriggerForm {
                 (new ListForm(Language::get("trigger.form.type.select", [$form->getName()])))
                     ->addButtons($buttons)
                     ->onReceive(function (Player $player, int $data, Recipe $recipe, ListForm $form) {
-                        $trigger = FormTrigger::create($form->getName());
+                        $trigger = new FormTrigger($form->getName());
                         switch ($data) {
                             case 0:
                                 $this->sendSelectForm($player, $recipe);
@@ -150,11 +151,11 @@ class FormTriggerForm extends TriggerForm {
                             case 1:
                                 break;
                             case 2:
-                                $trigger->setSubKey("close");
+                                $trigger->setExtraData("close");
                                 break;
                             default:
                                 $button = $form->getButton($data - 3);
-                                $trigger->setSubKey($button->getUUID());
+                                $trigger->setExtraData($button->getUUID());
                                 break;
                         }
                         if ($recipe->existsTrigger($trigger)) {

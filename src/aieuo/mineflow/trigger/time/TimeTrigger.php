@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger\time;
 
@@ -11,12 +12,16 @@ use aieuo\mineflow\variable\Variable;
 
 class TimeTrigger extends Trigger {
 
-    public static function create(string $hour, string $minutes = ""): TimeTrigger {
-        return new TimeTrigger($hour, $minutes);
+    public function __construct(private int $hours, private int $minutes) {
+        parent::__construct(Triggers::TIME);
     }
 
-    public function __construct(string $hour, string $minutes = "") {
-        parent::__construct(Triggers::TIME, $hour, $minutes);
+    public function getHours(): int {
+        return $this->hours;
+    }
+
+    public function getMinutes(): int {
+        return $this->minutes;
     }
 
     /**
@@ -39,7 +44,22 @@ class TimeTrigger extends Trigger {
         ];
     }
 
+    public function hash(): string|int {
+        return ($this->hours * 60) + $this->minutes;
+    }
+
+    public function serialize(): array {
+        return [
+            "hours" => $this->hours,
+            "minutes" => $this->minutes,
+        ];
+    }
+
+    public static function deserialize(array $data): TimeTrigger {
+        return new TimeTrigger((int)($data["hours"] ?? $data["key"]), (int)($data["minutes"] ?? $data["subKey"]));
+    }
+
     public function __toString(): string {
-        return Language::get("trigger.time.string", [$this->getKey(), $this->getSubKey()]);
+        return Language::get("trigger.time.string", [$this->getHours(), $this->getMinutes()]);
     }
 }

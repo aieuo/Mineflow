@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 
 class PlayerToggleSneakEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("PlayerToggleSneakEvent", $subKey, PlayerToggleSneakEvent::class);
+    public function __construct() {
+        parent::__construct("PlayerToggleSneakEvent", PlayerToggleSneakEvent::class);
     }
 
     public function getVariables(mixed $event): array {

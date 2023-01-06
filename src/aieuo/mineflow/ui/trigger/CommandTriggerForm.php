@@ -4,8 +4,8 @@ namespace aieuo\mineflow\ui\trigger;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\CancelToggle;
+use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Mineflow;
@@ -20,13 +20,14 @@ use pocketmine\player\Player;
 class CommandTriggerForm extends TriggerForm {
 
     public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
+        /** @var CommandTrigger $trigger */
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getCommand()])))
             ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back"),
                 new Button("@form.delete"),
                 new Button("@trigger.command.edit.title"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe, Trigger $trigger) {
+            ])->onReceive(function (Player $player, int $data) use($recipe, $trigger) {
                 switch ($data) {
                     case 0:
                         (new RecipeForm)->sendTriggerList($player, $recipe);
@@ -36,11 +37,11 @@ class CommandTriggerForm extends TriggerForm {
                         break;
                     case 2:
                         $manager = Mineflow::getCommandManager();
-                        $command = $manager->getCommand($manager->getOriginCommand($trigger->getKey()));
+                        $command = $manager->getCommand($manager->getOriginCommand($trigger->getCommand()));
                         (new CommandForm)->sendCommandMenu($player, $command);
                         break;
                 }
-            })->addArgs($recipe, $trigger)->addMessages($messages)->show($player);
+            })->addMessages($messages)->show($player);
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
@@ -71,7 +72,7 @@ class CommandTriggerForm extends TriggerForm {
                     return;
                 }
 
-                $trigger = CommandTrigger::create(explode(" ", $data[0])[0], $data[0]);
+                $trigger = new CommandTrigger($data[0]);
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
                     return;

@@ -45,7 +45,7 @@ class EventTriggerListener implements Listener {
         $manager = Mineflow::getEventManager();
         $class = $event::class;
         do {
-            $keys = $manager->getKeysFromEventClass($class);
+            $keys = $manager->getEventNamesFromClass($class);
             foreach ($keys as $key) {
                 $trigger = $manager->getTrigger($key);
                 if ($trigger === null or !$manager->isTriggerEnabled($trigger) or !$trigger->filter($event)) continue;

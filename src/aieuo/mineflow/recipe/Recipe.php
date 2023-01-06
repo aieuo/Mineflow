@@ -215,6 +215,15 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->triggers;
     }
 
+    public function getTriggerByHash(string $type, string $hash): ?Trigger {
+        foreach ($this->triggers as $trigger) {
+            if ($trigger->getType() === $type and $trigger->hash() === $hash) {
+                return $trigger;
+            }
+        }
+        return null;
+    }
+
     public function addTrigger(Trigger $trigger): void {
         TriggerHolder::getInstance()->addRecipe($trigger, $this);
         $this->triggers[] = $trigger;
@@ -223,7 +232,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function setTriggersFromArray(array $triggers): void {
         $this->removeTriggerAll();
         foreach ($triggers as $triggerData) {
-            $trigger = Triggers::getTrigger($triggerData["type"], $triggerData["key"], $triggerData["subKey"] ?? "");
+            $trigger = Triggers::deserialize($triggerData);
             if ($trigger === null) throw new \UnexpectedValueException(Language::get("trigger.notFound", [$triggerData["type"]]));
             $this->addTrigger($trigger);
         }
@@ -521,9 +530,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             foreach ($this->getTriggers() as $trigger) {
                 if ($trigger instanceof EventTrigger) {
                     $this->removeTrigger($trigger);
-                    $tmp = explode("\\", str_replace("/", "\\", $trigger->getKey()));
+                    $tmp = explode("\\", str_replace("/", "\\", $trigger->getEventName()));
                     $key = $tmp[array_key_last($tmp)];
-                    $this->addTrigger($eventTriggers->getTrigger($key, $trigger->getSubKey()));
+                    $this->addTrigger($eventTriggers->getTrigger($key));
                 }
             }
 

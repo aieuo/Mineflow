@@ -24,12 +24,20 @@ use aieuo\mineflow\variable\StringVariable;
 
 class FormTrigger extends Trigger {
 
-    public static function create(string $key, string $subKey = ""): FormTrigger {
-        return new FormTrigger($key, $subKey);
+    public function __construct(private string $formName, private string $extraData = "") {
+        parent::__construct(Triggers::FORM);
     }
 
-    public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Triggers::FORM, $key, $subKey);
+    public function getFormName(): string {
+        return $this->formName;
+    }
+
+    public function getExtraData(): string {
+        return $this->extraData;
+    }
+
+    public function setExtraData(string $extraData): void {
+        $this->extraData = $extraData;
     }
 
     /**
@@ -88,21 +96,39 @@ class FormTrigger extends Trigger {
         return ["form" => $variable];
     }
 
+    public function hash(): string|int {
+        return $this->getFormName().";".$this->getExtraData();
+    }
+
+    public function serialize(): array {
+        return [
+            "formName" => $this->formName,
+            "extraData" => $this->extraData,
+        ];
+    }
+
+    public static function deserialize(array $data): FormTrigger {
+        return new FormTrigger($data["formName"] ?? $data["key"], $data["extraData"] ?? $data["subKey"]);
+    }
+
     public function __toString(): string {
-        switch ($this->getSubKey()) {
+        switch ($this->getExtraData()) {
             case "":
-                $content = Language::get("trigger.form.string.submit", [$this->getKey()]);
+                $content = Language::get("trigger.form.string.submit", [$this->getFormName()]);
                 break;
             case "close":
-                $content = Language::get("trigger.form.string.close", [$this->getKey()]);
+                $content = Language::get("trigger.form.string.close", [$this->getFormName()]);
                 break;
             default:
-                $form = Mineflow::getFormManager()->getForm($this->getKey());
+                $form = Mineflow::getFormManager()->getForm($this->getFormName());
                 if ($form instanceof ListForm) {
-                    $button = $form->getButtonByUUID($this->getSubKey());
-                    $content = Language::get("trigger.form.string.button", [$this->getKey(), $button instanceof Button ? $button->getText() : ""]);
+                    $button = $form->getButtonByUUID($this->getExtraData());
+                    $content = Language::get("trigger.form.string.button", [$this->getFormName(), $button instanceof Button ? $button->getText() : ""]);
+                } elseif ($form instanceof ModalForm) {
+                    $button = ($this->getExtraData() === "1" ? "yes" : "no");
+                    $content = Language::get("trigger.form.string.button", [$this->getFormName(), Language::get("form.".$button)]);
                 } else {
-                    $content = $this->getKey();
+                    $content = $this->getFormName();
                 }
                 break;
         }

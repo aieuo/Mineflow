@@ -50,7 +50,7 @@ class SettingForm {
         $events = Mineflow::getEventManager()->getEvents();
         $contents = [];
         foreach ($events as $name => $enabled) {
-            $contents[] = new Toggle((string)EventTrigger::create($name), $enabled);
+            $contents[] = new Toggle((string)EventTrigger::get($name), $enabled);
         }
         (new CustomForm("@setting.event"))
             ->setContents($contents)

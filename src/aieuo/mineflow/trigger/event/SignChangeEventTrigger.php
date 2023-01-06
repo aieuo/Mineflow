@@ -11,8 +11,8 @@ use aieuo\mineflow\variable\StringVariable;
 use pocketmine\event\block\SignChangeEvent;
 
 class SignChangeEventTrigger extends PlayerEventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("SignChangeEvent", $subKey, SignChangeEvent::class);
+    public function __construct() {
+        parent::__construct("SignChangeEvent", SignChangeEvent::class);
     }
 
     public function getVariables(mixed $event): array {

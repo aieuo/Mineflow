@@ -44,12 +44,17 @@ class Triggers {
         self::$forms[$type] = $form;
     }
 
-    public static function getTrigger(string $type, string $key = "", string $subKey = ""): ?Trigger {
+    public static function deserialize(array $data): ?Trigger {
+        $type = $data["type"];
+        $values = $data["values"] ?? [];
+        if (isset($data["key"])) $values["key"] ??= $data["key"];
+        if (isset($data["subKey"])) $values["subKey"] ??= $data["subKey"];
+
         $trigger = self::$list[$type] ?? null;
         if ($trigger === null) return null;
 
         /** @var Trigger $trigger */
-        return $trigger::create($key, $subKey);
+        return $trigger::deserialize($values);
     }
 
     /**

@@ -8,15 +8,29 @@ use aieuo\mineflow\utils\Language;
 
 class CustomTrigger extends Trigger {
 
-    public static function create(string $identifier, string $subKey = ""): CustomTrigger {
-        return new CustomTrigger($identifier, $subKey);
+    public function __construct(private string $identifier) {
+        parent::__construct(Triggers::CUSTOM);
     }
 
-    public function __construct(string $identifier, string $subKey = "") {
-        parent::__construct(Triggers::CUSTOM, $identifier, $subKey);
+    public function getIdentifier(): string {
+        return $this->identifier;
+    }
+
+    public function hash(): string|int {
+        return $this->identifier;
+    }
+
+    public function serialize(): array {
+        return [
+            "identifier" => $this->identifier,
+        ];
+    }
+
+    public static function deserialize(array $data): CustomTrigger {
+        return new CustomTrigger($data["identifier"] ?? $data["key"]);
     }
 
     public function __toString(): string {
-        return Language::get("trigger.custom.string", [$this->getKey()]);
+        return Language::get("trigger.custom.string", [$this->getIdentifier()]);
     }
 }

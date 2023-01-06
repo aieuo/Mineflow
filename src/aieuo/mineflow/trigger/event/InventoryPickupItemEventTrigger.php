@@ -10,8 +10,8 @@ use pocketmine\event\entity\EntityItemPickupEvent;
 use pocketmine\inventory\PlayerInventory;
 
 class InventoryPickupItemEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("InventoryPickupItemEvent", $subKey, EntityItemPickupEvent::class);
+    public function __construct() {
+        parent::__construct("InventoryPickupItemEvent", EntityItemPickupEvent::class);
     }
 
     public function getVariables(mixed $event): array {

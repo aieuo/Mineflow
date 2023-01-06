@@ -12,6 +12,8 @@ use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\trigger\command\CommandTrigger;
+use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Filesystem;
@@ -84,14 +86,14 @@ class RecipePack implements \JsonSerializable {
         $commands = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() === Triggers::COMMAND) {
-                    $command = $trigger->getKey();
+                if ($trigger instanceof CommandTrigger) {
+                    $command = $trigger->getCommand();
                     if (!$commandManager->existsCommand($command)) continue;
 
                     $commands[$command] = $commandManager->getCommand($command);
                 }
-                if ($trigger->getType() === Triggers::FORM) {
-                    $form = $formManager->getForm($trigger->getKey());
+                if ($trigger instanceof FormTrigger) {
+                    $form = $formManager->getForm($trigger->getFormName());
                     if (!$form instanceof ListForm) continue;
 
                     foreach ($form->getButtons() as $button) {
@@ -128,9 +130,9 @@ class RecipePack implements \JsonSerializable {
         $forms = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() !== Triggers::FORM) continue;
+                if (!($trigger instanceof FormTrigger)) continue;
 
-                $key = $trigger->getKey();
+                $key = $trigger->getFormName();
                 $forms[$key] = $formManager->getForm($key);
             }
 

@@ -17,7 +17,7 @@ class CheckTimeTriggerTask extends Task {
 
     public function onRun(): void {
         $date = new \DateTime("now", Mineflow::getTimeZone());
-        $trigger = TimeTrigger::create($date->format("H"), $date->format("i"));
+        $trigger = new TimeTrigger((int)$date->format("H"), (int)$date->format("i"));
         if ($this->triggerHolder->existsRecipe($trigger)) {
             $recipes = $this->triggerHolder->getRecipes($trigger);
             $variables = $trigger->getVariables((int)microtime(true));

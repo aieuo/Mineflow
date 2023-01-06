@@ -37,7 +37,7 @@ class CommandAliasRecipeTemplate extends RecipeTemplate {
     public function build(): Recipe {
         $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup());
         $recipe->addItem(new Command("target", $this->command), FlowItemContainer::ACTION);
-        $recipe->addTrigger(CommandTrigger::create(explode(" ", $this->alias)[0], $this->alias));
+        $recipe->addTrigger(new CommandTrigger($this->alias));
         return $recipe;
     }
 }

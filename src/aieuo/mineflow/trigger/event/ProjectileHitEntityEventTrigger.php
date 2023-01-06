@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\entity\ProjectileHitEntityEvent;
 
 class ProjectileHitEntityEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("ProjectileHitEntityEvent", $subKey, ProjectileHitEntityEvent::class);
+    public function __construct() {
+        parent::__construct("ProjectileHitEntityEvent", ProjectileHitEntityEvent::class);
     }
 
     public function getVariables(mixed $event): array {

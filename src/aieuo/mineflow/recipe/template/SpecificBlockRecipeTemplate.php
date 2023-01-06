@@ -52,7 +52,7 @@ class SpecificBlockRecipeTemplate extends RecipeTemplate {
                 default => "{block.name}"
             }, (string)ComparisonString::EQUALS, $this->block),
         ]), FlowItemContainer::ACTION);
-        $recipe->addTrigger(EventTrigger::create($this->events[$this->event]));
+        $recipe->addTrigger(EventTrigger::get($this->events[$this->event]));
         return $recipe;
     }
 }
