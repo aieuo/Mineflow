@@ -8,7 +8,13 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\Tag;
+use function abs;
+use function ceil;
+use function floor;
 use function is_int;
+use function round;
+use function str_pad;
+use const STR_PAD_LEFT;
 
 class NumberVariable extends Variable implements \JsonSerializable {
 
@@ -64,5 +70,44 @@ class NumberVariable extends Variable implements \JsonSerializable {
             "type" => static::getTypeName(),
             "value" => $this->getValue(),
         ];
+    }
+
+    public static function registerProperties(string $class = self::class): void {
+        self::registerProperty(
+            $class, "ceil", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(ceil($value)),
+        );
+        self::registerMethod(
+            $class, "ceil", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) =>  new NumberVariable(ceil($value)),
+        );
+        self::registerProperty(
+            $class, "floor", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(floor($value)),
+        );
+        self::registerMethod(
+            $class, "floor", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) =>  new NumberVariable(floor($value)),
+        );
+        self::registerProperty(
+            $class, "round", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(round($value)),
+        );
+        self::registerMethod(
+            $class, "round", new DummyVariable(NumberVariable::class),
+            fn(int|float $value, $precision) =>  new NumberVariable(round($value, (int)$precision)),
+        );
+        self::registerProperty(
+            $class, "abs", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(abs($value)),
+        );
+        self::registerMethod(
+            $class, "abs", new DummyVariable(NumberVariable::class),
+            fn(int|float $value) =>  new NumberVariable(abs($value)),
+        );
+        self::registerMethod(
+            $class, "pad", new DummyVariable(NumberVariable::class),
+            fn(int|float $value, $length) =>  new StringVariable(str_pad((string)$value, (int)$length, "0", STR_PAD_LEFT)),
+        );
     }
 }

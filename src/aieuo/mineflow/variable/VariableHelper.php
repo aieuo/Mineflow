@@ -536,6 +536,7 @@ class VariableHelper {
         ListVariable::registerProperties();
         MapVariable::registerProperties();
         StringVariable::registerProperties();
+        NumberVariable::registerProperties();
         AxisAlignedBBVariable::registerProperties();
         BlockVariable::registerProperties();
         ConfigVariable::registerProperties();
