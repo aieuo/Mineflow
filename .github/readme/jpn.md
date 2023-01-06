@@ -19,7 +19,7 @@
 # 日本語
 
 アクションを組み合わせてプラグインのようなものを作れます。   
-**いくつかのアクションはデフォルトの権限では使用できなくなっています． To show them all, please run `mineflow permission <your name> 2` from the console.</p>
+**いくつかのアクションはデフォルトの権限では使用できなくなっています． 全て表示するにはコンソールから`mineflow permission <your name> 2`を実行してください**
 
 
 ## コマンド
