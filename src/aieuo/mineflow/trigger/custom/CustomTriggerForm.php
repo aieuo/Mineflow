@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace aieuo\mineflow\ui\trigger;
+namespace aieuo\mineflow\trigger\custom;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\CancelToggle;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\custom\CustomTrigger;
+use aieuo\mineflow\trigger\BaseTriggerForm;
+use aieuo\mineflow\trigger\TriggerForm;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;

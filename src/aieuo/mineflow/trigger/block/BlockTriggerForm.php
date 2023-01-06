@@ -1,13 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace aieuo\mineflow\ui\trigger;
+namespace aieuo\mineflow\trigger\block;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\block\BlockTrigger;
+use aieuo\mineflow\trigger\BaseTriggerForm;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerForm;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;

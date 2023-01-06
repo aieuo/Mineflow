@@ -3,10 +3,10 @@
 namespace aieuo\mineflow;
 
 use aieuo\mineflow\flowItem\action\player\SetSitting;
+use aieuo\mineflow\trigger\BaseTriggerForm;
 use aieuo\mineflow\trigger\block\BlockTrigger;
 use aieuo\mineflow\trigger\command\CommandTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\ui\trigger\BaseTriggerForm;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Utils;
 use pocketmine\command\Command;

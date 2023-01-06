@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace aieuo\mineflow\ui\trigger;
+namespace aieuo\mineflow\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;

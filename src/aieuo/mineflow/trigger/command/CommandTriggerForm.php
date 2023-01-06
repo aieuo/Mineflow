@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace aieuo\mineflow\ui\trigger;
+namespace aieuo\mineflow\trigger\command;
 
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
@@ -11,8 +11,9 @@ use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\command\CommandTrigger;
+use aieuo\mineflow\trigger\BaseTriggerForm;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerForm;
 use aieuo\mineflow\ui\CommandForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;

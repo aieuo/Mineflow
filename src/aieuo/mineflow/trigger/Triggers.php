@@ -3,18 +3,17 @@
 namespace aieuo\mineflow\trigger;
 
 use aieuo\mineflow\trigger\block\BlockTrigger;
+use aieuo\mineflow\trigger\block\BlockTriggerForm;
 use aieuo\mineflow\trigger\command\CommandTrigger;
+use aieuo\mineflow\trigger\command\CommandTriggerForm;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
+use aieuo\mineflow\trigger\custom\CustomTriggerForm;
 use aieuo\mineflow\trigger\event\EventTrigger;
+use aieuo\mineflow\trigger\event\EventTriggerForm;
 use aieuo\mineflow\trigger\form\FormTrigger;
+use aieuo\mineflow\trigger\form\FormTriggerForm;
 use aieuo\mineflow\trigger\time\TimeTrigger;
-use aieuo\mineflow\ui\trigger\BlockTriggerForm;
-use aieuo\mineflow\ui\trigger\CommandTriggerForm;
-use aieuo\mineflow\ui\trigger\CustomTriggerForm;
-use aieuo\mineflow\ui\trigger\EventTriggerForm;
-use aieuo\mineflow\ui\trigger\FormTriggerForm;
-use aieuo\mineflow\ui\trigger\TimeTriggerForm;
-use aieuo\mineflow\ui\trigger\TriggerForm;
+use aieuo\mineflow\trigger\time\TimeTriggerForm;
 
 class Triggers {
 
