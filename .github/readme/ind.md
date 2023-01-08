@@ -35,7 +35,7 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 
 ## Izin Tindakan
 
-Untuk mengubah izin, jalankan `/mineflow permission <name> <permission>`. Hanya pemain yang memiliki `izin` izin dapat mengubah izin dari pemain lain. You can give an all permission from the console.
+Untuk mengubah izin, jalankan `/mineflow permission <name> <permission>`. Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
 
 
 ## Variabel
