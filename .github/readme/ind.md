@@ -19,7 +19,7 @@
 # Indonesia
 
 Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
-**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. To show them all, please run `mineflow permission add <your name> all` from the console.**
+**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission add <your name> all` dari konsol.**
 
 
 ## Perintah
@@ -35,7 +35,7 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 
 ## Izin Tindakan
 
-To change the permission, run `/mineflow permission <name> <permission>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
+Untuk mengubah izin, jalankan `/mineflow permission <name> <permission>`. Hanya pemain yang memiliki `izin` izin dapat mengubah izin dari pemain lain. You can give an all permission from the console.
 
 
 ## Variabel
