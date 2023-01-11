@@ -59,7 +59,7 @@ class Mineflow {
         self::$recipeManager = new RecipeManager($main->getDataFolder()."recipes/");
         self::$addonManager = new AddonManager($main->getDataFolder()."addons/");
 
-        self::$variableHelper = new VariableHelper(new Config($main->getDataFolder()."variables.json"));
+        self::$variableHelper = new VariableHelper(new Config($main->getDataFolder()."variables.json"), new Config($main->getDataFolder()."variable_custom_data.json"));
         self::$variableHelper->initVariableProperties();
     }
 

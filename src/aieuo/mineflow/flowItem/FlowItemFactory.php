@@ -142,6 +142,7 @@ use aieuo\mineflow\flowItem\action\variable\DeleteListVariableContentByValue;
 use aieuo\mineflow\flowItem\action\variable\DeleteVariable;
 use aieuo\mineflow\flowItem\action\variable\GetVariableNested;
 use aieuo\mineflow\flowItem\action\variable\JoinListVariableToString;
+use aieuo\mineflow\flowItem\action\variable\SetPlayerData;
 use aieuo\mineflow\flowItem\action\world\AddParticle;
 use aieuo\mineflow\flowItem\action\world\CreateAABB;
 use aieuo\mineflow\flowItem\action\world\CreateAABBByVector3Variable;
@@ -327,6 +328,7 @@ class FlowItemFactory {
         self::register(new AddListVariable);
         self::register(new CreateMapVariable);
         self::register(new AddMapVariable);
+        self::register(new SetPlayerData);
         self::register(new CreateMapVariableFromJson);
         self::register(new DeleteListVariableContent);
         self::register(new DeleteListVariableContentByValue);

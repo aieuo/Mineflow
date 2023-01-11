@@ -16,14 +16,16 @@ class PlayerVariable extends HumanVariable {
         return "player";
     }
 
-    public function __construct(Player $value) {
-        parent::__construct($value);
+    public function __construct(private Player $player) {
+        parent::__construct($player);
+    }
+
+    public function getPlayer(): Player {
+        return $this->player;
     }
 
     public function __toString(): string {
-        /** @var Player $player */
-        $player = $this->getValue();
-        return $player->getName();
+        return $this->getPlayer()->getName();
     }
 
     public static function registerProperties(string $class = self::class): void {
@@ -72,6 +74,10 @@ class PlayerVariable extends HumanVariable {
         self::registerProperty(
             $class, "last_played", new DummyVariable(NumberVariable::class),
             fn(Player $player) => new NumberVariable($player->getLastPlayed() ?? 0),
+        );
+        self::registerProperty(
+            $class, "data", new DummyVariable(CustomDataListVariable::class),
+            fn(Player $player) => new CustomDataListVariable(PlayerVariable::getTypeName(), $player->getName()),
         );
     }
 }

@@ -56,8 +56,12 @@ class VariableHelper {
     /** @var Variable[] */
     private array $variables = [];
 
-    public function __construct(private Config $file) {
+    /** @var array<string, array<string, CustomVariableData>> */
+    private array $customVariableData = [];
+
+    public function __construct(private Config $file, private Config $customDataFile) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+        $this->customDataFile->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
         VariableSerializer::init();
         VariableDeserializer::init();
@@ -73,6 +77,23 @@ class VariableHelper {
             }
 
             $this->variables[$name] = $variable;
+        }
+
+        foreach ($this->customDataFile as $type => $values) {
+            foreach ($values as $name => $data) {
+                $dataContainer = new CustomVariableData([], $data["default"] ?? null);
+                foreach ($data["values"] as $key => $value) {
+                    $variable = VariableDeserializer::deserialize($value);
+
+                    if ($variable === null) {
+                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7<{$type}({$key})>.${name}§f"]));
+                        continue;
+                    }
+
+                    $dataContainer->setData($key, $variable);
+                }
+                $this->customVariableData[$type][$name] = $dataContainer;
+            }
         }
     }
 
@@ -118,6 +139,32 @@ class VariableHelper {
             }
         }
         $this->file->save();
+
+        foreach ($this->customVariableData as $type => $values) {
+            foreach ($values as $name => $data) {
+                foreach ($data->getValues() as $key => $variable) {
+                    $serialized = VariableSerializer::serialize($variable);
+
+                    if ($serialized !== null) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.{$key}", $serialized);
+                    } elseif ($variable instanceof \JsonSerializable) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.{$key}", $variable);
+                    }
+                }
+
+                $default = $data->getDefault();
+                if ($default !== null) {
+                    $serialized = VariableSerializer::serialize($default);
+
+                    if ($serialized !== null) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.default", $serialized);
+                    } elseif ($default instanceof \JsonSerializable) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.default", $default);
+                    }
+                }
+            }
+        }
+        $this->customDataFile->save();
     }
 
     public function findVariables(string $string): array {
@@ -530,6 +577,22 @@ class VariableHelper {
             $result[$name] = $value;
         }
         return $result;
+    }
+
+    public function getAllCustomVariableData(string $variableType): array {
+        return $this->customVariableData[$variableType] ?? [];
+    }
+
+    public function getCustomVariableData(string $variableType, string $name): ?CustomVariableData {
+        return $this->customVariableData[$variableType][$name] ?? null;
+    }
+
+    public function setCustomVariableData(string $variableType, string $name, CustomVariableData $data): void {
+        $this->customVariableData[$variableType][$name] = $data;
+    }
+
+    public function removeCustomVariableData(string $variableType, string $name): void {
+        unset($this->customVariableData[$variableType][$name]);
     }
 
     public function initVariableProperties(): void {
