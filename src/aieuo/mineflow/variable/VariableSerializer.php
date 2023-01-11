@@ -74,6 +74,10 @@ class VariableSerializer {
         self::$serializers[$type] = $serializer;
     }
 
+    public static function isSerializable(string $type): bool {
+        return isset(self::$serializers[$type]);
+    }
+
     public static function serialize(Variable $variable): ?array {
         $type = $variable::getTypeName();
         if (!isset(self::$serializers[$type])) return null;
