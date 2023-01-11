@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem;
 
-use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\flowItem\action\alias\Calculate2Round;
 use aieuo\mineflow\flowItem\action\alias\CalculateCeil;
 use aieuo\mineflow\flowItem\action\alias\CalculateCos;
@@ -104,11 +103,7 @@ use aieuo\mineflow\flowItem\action\player\SetFood;
 use aieuo\mineflow\flowItem\action\player\SetGamemode;
 use aieuo\mineflow\flowItem\action\player\SetSitting;
 use aieuo\mineflow\flowItem\action\player\SetSleeping;
-use aieuo\mineflow\flowItem\action\plugin\AddMoney;
 use aieuo\mineflow\flowItem\action\plugin\ExecuteIFChain;
-use aieuo\mineflow\flowItem\action\plugin\GetMoney;
-use aieuo\mineflow\flowItem\action\plugin\SetMoney;
-use aieuo\mineflow\flowItem\action\plugin\TakeMoney;
 use aieuo\mineflow\flowItem\action\scoreboard\CreateScoreboardVariable;
 use aieuo\mineflow\flowItem\action\scoreboard\DecrementScoreboardScore;
 use aieuo\mineflow\flowItem\action\scoreboard\IncrementScoreboardScore;
@@ -197,9 +192,6 @@ use aieuo\mineflow\flowItem\condition\player\IsSwimming;
 use aieuo\mineflow\flowItem\condition\player\OnlinePlayerLessThan;
 use aieuo\mineflow\flowItem\condition\player\OnlinePlayerMoreThan;
 use aieuo\mineflow\flowItem\condition\player\permission\HasPermission;
-use aieuo\mineflow\flowItem\condition\plugin\LessMoney;
-use aieuo\mineflow\flowItem\condition\plugin\OverMoney;
-use aieuo\mineflow\flowItem\condition\plugin\TakeMoneyCondition;
 use aieuo\mineflow\flowItem\condition\script\AndScript;
 use aieuo\mineflow\flowItem\condition\script\ComparisonNumber;
 use aieuo\mineflow\flowItem\condition\script\ComparisonString;
@@ -382,13 +374,6 @@ class FlowItemFactory {
         self::register(new AddLanguageMappings);
         self::register(new AddSpecificLanguageMapping);
         self::register(new GetLanguage);
-        /* other plugins */
-        if (Economy::isPluginLoaded()) {
-            self::register(new AddMoney);
-            self::register(new TakeMoney);
-            self::register(new SetMoney);
-            self::register(new GetMoney);
-        }
         if (Server::getInstance()->getPluginManager()->getPlugin("if") !== null) {
             self::register(new ExecuteIFChain);
         }
@@ -404,10 +389,6 @@ class FlowItemFactory {
         self::register(new IsSwimming);
         self::register(new IsSprinting);
         self::register(new RandomNumber);
-        /* money */
-        self::register(new OverMoney);
-        self::register(new LessMoney);
-        self::register(new TakeMoneyCondition);
         /* item */
         self::register(new InHand);
         self::register(new ExistsItem);

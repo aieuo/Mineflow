@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow;
 
 use aieuo\mineflow\command\MineflowCommand;
-use aieuo\mineflow\economy\Economy;
 use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\trigger\time\CheckTimeTriggerTask;
@@ -28,8 +27,6 @@ class Main extends PluginBase {
 
     public function onEnable(): void {
         Mineflow::loadConfig();
-
-        (new Economy($this))->loadPlugin();
 
         EntityManager::init();
 
