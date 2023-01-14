@@ -17,6 +17,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\item\LegacyStringToItemParserException;
 use pocketmine\item\StringToItemParser;
 use SOFe\AwaitGenerator\Await;
 
@@ -66,7 +67,7 @@ class CreateBlockVariable extends FlowItem {
         $id = $source->replaceVariables($this->getBlockId());
         try {
             $item = StringToItemParser::getInstance()->getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
-        } catch (\InvalidArgumentException) {
+        } catch (\InvalidArgumentException|LegacyStringToItemParserException) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlock.block.notFound"));
         }
 

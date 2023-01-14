@@ -18,6 +18,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\item\LegacyStringToItemParserException;
 use pocketmine\item\StringToItemParser;
 use SOFe\AwaitGenerator\Await;
 
@@ -87,7 +88,7 @@ class CreateItemVariable extends FlowItem {
         $itemName = $source->replaceVariables($this->getItemName());
         try {
             $item = StringToItemParser::getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
-        } catch (\InvalidArgumentException) {
+        } catch (\InvalidArgumentException|LegacyStringToItemParserException) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createItem.item.notFound"));
         }
         if (!empty($count)) {
