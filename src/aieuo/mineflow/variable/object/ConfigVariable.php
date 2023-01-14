@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\object;
 
-use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
@@ -52,7 +51,7 @@ class ConfigVariable extends ObjectVariable {
         return $this->config;
     }
 
-    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+    public function map(string|array|Variable $target, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getValue()->getAll() as $key => $value) {
@@ -63,7 +62,7 @@ class ConfigVariable extends ObjectVariable {
                 default => new StringVariable($value),
             };
             $variables["it"] = $variable;
-            $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
+            $values[$key] = $variableHelper->runAST($target, $variables, $global);
         }
         return new MapVariable($values);
     }

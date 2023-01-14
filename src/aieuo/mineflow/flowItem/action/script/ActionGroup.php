@@ -75,10 +75,6 @@ class ActionGroup extends FlowItem implements FlowItemContainer {
         return $this->getActions();
     }
 
-    public function allowDirectCall(): bool {
-        return false;
-    }
-
     public function __clone() {
         $actions = [];
         foreach ($this->getActions() as $k => $action) {

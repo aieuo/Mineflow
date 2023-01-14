@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\Tag;
@@ -78,12 +77,12 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
+    public function map(string|array|Variable $target, array $variables = [], bool $global = false): MapVariable {
         $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $key => $value) {
             $variables["it"] = $value;
-            $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
+            $values[$key] = $variableHelper->runAST($target, $variables, $global);
         }
         return new MapVariable($values);
     }

@@ -9,9 +9,7 @@ use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -180,21 +178,20 @@ class VariableHelper {
     /**
      * @param string $string
      * @param Variable[] $variables
-     * @param FlowItemExecutor|null $executor
      * @param bool $global
      * @return string
      */
-    public function replaceVariables(string $string, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
+    public function replaceVariables(string $string, array $variables = [], bool $global = true): string {
         $limit = 10;
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/u", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (str_contains($name, "{") and str_contains($name, "}")) {
-                    $replaced = $this->replaceVariables($name, $variables, $executor, $global);
+                    $replaced = $this->replaceVariables($name, $variables, $global);
                     $string = str_replace($name, $replaced, $string);
                     $name = $replaced;
                 }
-                $string = $this->replaceVariable($string, $name, $variables, $executor, $global);
+                $string = $this->replaceVariable($string, $name, $variables, $global);
             }
             if (--$limit < 0) break;
         }
@@ -204,29 +201,27 @@ class VariableHelper {
     /**
      * @param string $string
      * @param string $replace
-     * @param FlowItemExecutor|null $executor
      * @param Variable[] $variables
      * @param bool $global
      * @return string
      */
-    public function replaceVariable(string $string, string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
+    public function replaceVariable(string $string, string $replace, array $variables = [], bool $global = true): string {
         if (!str_contains($string, "{".$replace."}") or preg_match("/%\d+/u", $replace)) return $string;
 
-        $result = (string)$this->runVariableStatement($replace, $variables, $executor, $global);
+        $result = (string)$this->runVariableStatement($replace, $variables, $global);
         return str_replace("{".$replace."}", $result, $string);
     }
 
     /**
      * @param string $replace
      * @param Variable[] $variables
-     * @param FlowItemExecutor|null $executor
      * @param bool $global
      * @return Variable
      */
-    public function runVariableStatement(string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): Variable {
+    public function runVariableStatement(string $replace, array $variables = [], bool $global = true): Variable {
         $tokens = $this->lexer($replace);
         $ast = $this->parse($tokens);
-        return $this->runAST($ast, $executor, $variables, $global);
+        return $this->runAST($ast, $variables, $global);
     }
 
     public function lexer(string $source): array {
@@ -347,43 +342,41 @@ class VariableHelper {
 
     /**
      * @param string|array|Variable $ast
-     * @param FlowItemExecutor|null $executor
      * @param array<string, Variable> $variables
      * @param bool $global
      * @return Variable
      */
-    public function runAST(string|array|Variable $ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+    public function runAST(string|array|Variable $ast, array $variables = [], bool $global = false): Variable {
         if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
         if ($ast instanceof Variable) return $ast;
 
         if (!isset($ast["left"])) {
             $result = "";
             foreach ($ast as $value) {
-                if (is_array($value)) $result .= (",".$this->runAST($value, $executor, $variables, $global));
+                if (is_array($value)) $result .= (",".$this->runAST($value, $variables, $global));
                 else $result .= (",".$value);
             }
             return $this->mustGetVariableNested(substr($result, 1), $variables, $global);
         }
 
         $op = $ast["op"];
-        $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $executor, $variables, $global) : $ast["left"];
+        $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $variables, $global) : $ast["left"];
         if (is_array($ast["right"]) and $op !== ">" and ($op !== "()" or isset($ast["right"]["op"]))) {
-            $right = $this->runAST($ast["right"], $executor, $variables, $global);
+            $right = $this->runAST($ast["right"], $variables, $global);
         } else {
             $right = $ast["right"];
         }
 
         if (is_string($left)) {
             if ($op === "()") {
-                if ($executor === null) throw new UnsupportedCalculationException();
-                return $this->runMethodCall($left, !is_array($right) ? [$right] : $right, $executor, $variables, $global);
+                return $this->runMethodCall($left, !is_array($right) ? [$right] : $right, $variables, $global);
             }
 
             $left = $this->mustGetVariableNested($left, $variables, $global);
         }
 
         if ($op === ">") {
-            return $left->map($right, $executor, $variables, $global);
+            return $left->map($right, $variables, $global);
         }
 
         if (is_string($right)) {
@@ -399,20 +392,13 @@ class VariableHelper {
         };
     }
 
-    public function runMethodCall(string $left, array $right, FlowItemExecutor $executor, array $variables, bool $global): Variable {
+    public function runMethodCall(string $left, array $right, array $variables, bool $global): Variable {
         $tmp = explode(".", $left);
         $name = array_pop($tmp);
         $target = implode(".", $tmp);
 
         if ($target === "") {
-            try {
-                $result = $this->runAction($name, $right, $executor);
-                if (is_bool($result)) return new BooleanVariable($result);
-                if (is_numeric($result)) return new NumberVariable($result);
-                return new StringVariable($result);
-            } catch (\UnexpectedValueException $e) {
-                return new StringVariable($e->getMessage());
-            }
+            throw new UndefinedMineflowMethodException($target, $name);
         }
 
         $variable = $this->mustGetVariableNested($target, $variables, $global);
@@ -432,24 +418,6 @@ class VariableHelper {
 
         if ($result === null) throw new UndefinedMineflowMethodException($target, $name);
         return $result;
-    }
-
-    public function runAction(string $name, array $parameters, FlowItemExecutor $executor) {
-        $action = FlowItemFactory::get($name, true);
-        if ($action === null) throw new \UnexpectedValueException("§cUnknown action id {$name}");
-        if (!$action->allowDirectCall()) throw new \UnexpectedValueException("§cCannot call direct {$name}");
-
-        $class = get_class($action);
-
-        /** @var FlowItem $newAction */
-        $newAction = new $class(...$parameters);
-        $generator = $newAction->execute($executor);
-        /** @noinspection PhpStatementHasEmptyBodyInspection */
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        /** @noinspection LoopWhichDoesNotLoopInspection */
-        foreach ($generator as $_) {
-        }
-        return $generator->getReturn();
     }
 
     public function mustGetVariableNested(string $name, array $variables = [], bool $global = false): Variable {

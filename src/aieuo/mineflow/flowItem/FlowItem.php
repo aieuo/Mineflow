@@ -146,10 +146,6 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return [];
     }
 
-    public function allowDirectCall(): bool {
-        return true;
-    }
-
     /**
      * @return array<string, DummyVariable>
      */

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\nbt\tag\Tag;
 
 abstract class Variable {
@@ -60,7 +59,7 @@ abstract class Variable {
         throw new UnsupportedCalculationException();
     }
 
-    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
+    public function map(string|array|Variable $target, array $variables = [], bool $global = false): ListVariable {
         throw new UnsupportedCalculationException();
     }
 

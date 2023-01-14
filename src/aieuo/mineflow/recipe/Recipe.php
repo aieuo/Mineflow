@@ -12,7 +12,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\argument\RecipeArgument;
-use aieuo\mineflow\trigger\event\EventTrigger;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
@@ -33,13 +32,9 @@ use pocketmine\event\Event;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\Filesystem;
-use function array_key_last;
 use function array_search;
 use function array_unique;
-use function explode;
 use function is_string;
-use function str_replace;
-use function version_compare;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
     use FlowItemContainerTrait {
@@ -115,6 +110,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getPluginVersion(): string {
         return $this->version;
+    }
+
+    public function setPluginVersion(string $version): void {
+        $this->version = $version;
     }
 
     public function setEnabled(bool $enabled): void {
@@ -493,69 +492,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function unlink(string $dir): void {
         unlink($this->getFileName($dir));
-    }
-
-    public function checkVersion(): void {
-        $createdVersion = $this->version;
-        $currentVersion = Mineflow::getPluginVersion();
-
-        if ($createdVersion !== null and version_compare($createdVersion, $currentVersion, "=")) return;
-
-        $this->upgrade($createdVersion, $currentVersion);
-    }
-
-    public function upgrade(?string $from, string $to): void {
-        if ($this->needUpgrade($from, $to, "2.0.0")) {
-            $oldToNewTargetMap = [
-                4 => self::TARGET_NONE,
-                0 => self::TARGET_DEFAULT,
-                1 => self::TARGET_SPECIFIED,
-                2 => self::TARGET_BROADCAST,
-                3 => self::TARGET_RANDOM,
-            ];
-            if (isset($oldToNewTargetMap[$this->targetType])) {
-                $this->targetType = $oldToNewTargetMap[$this->targetType];
-            }
-            foreach ($this->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
-                $this->replaceLevelToWorld($action);
-            }
-            foreach ($this->getItemsFlatten(FlowItemContainer::CONDITION) as $condition) {
-                $this->replaceLevelToWorld($condition);
-            }
-
-            $from = "2.0.0";
-        }
-        if ($this->needUpgrade($from, $to, "2.6.0")) {
-            $eventTriggers = Mineflow::getEventManager();
-            foreach ($this->getTriggers() as $trigger) {
-                if ($trigger instanceof EventTrigger) {
-                    $this->removeTrigger($trigger);
-                    $tmp = explode("\\", str_replace("/", "\\", $trigger->getEventName()));
-                    $key = $tmp[array_key_last($tmp)];
-                    $this->addTrigger($eventTriggers->getTrigger($key));
-                }
-            }
-
-            $from = "2.6.0";
-        }
-
-        $this->version = $from;
-    }
-
-    private function needUpgrade(?string $from, string $current, string $target): bool {
-        return version_compare($target, $current, "<=") and ($from === null or version_compare($from, $target, "<"));
-    }
-
-    private function replaceLevelToWorld(FlowItem $action): void {
-        $newContents = [];
-        foreach ($action->serializeContents() as $data) {
-            if (is_string($data)) {
-                $data = str_replace(["origin_level", "target_level"], ["origin_world", "target_world"], $data);
-                $data = preg_replace("/({.+\.)level((\.?.+)*})/u", "$1world$2", $data);
-            }
-            $newContents[] = $data;
-        }
-        $action->loadSaveData($newContents);
     }
 
     public function __clone() {

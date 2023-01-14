@@ -83,10 +83,6 @@ abstract class IFActionBase extends FlowItem implements FlowItemContainer {
         ];
     }
 
-    public function allowDirectCall(): bool {
-        return false;
-    }
-
     public function __clone() {
         $conditions = [];
         foreach ($this->getConditions() as $k => $condition) {

@@ -65,10 +65,6 @@ class CustomAction extends FlowItem {
         return true;
     }
 
-    public function allowDirectCall(): bool {
-        return false;
-    }
-
     public function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe();
         $args = $this->getArgumentVariables($source);

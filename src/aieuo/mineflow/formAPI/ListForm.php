@@ -113,7 +113,7 @@ class ListForm extends Form {
         foreach ($this->getButtons() as $button) {
             if ($helper->isVariableString($button->getText())) {
                 $variableName = substr($button->getText(), 1, -1);
-                $variable = $helper->runVariableStatement($variableName, $executor->getVariables(), $executor);
+                $variable = $helper->runVariableStatement($variableName, $executor->getVariables());
                 if ($variable instanceof ListVariable) {
                     foreach ($variable->getValue() as $value) {
                         $buttons[] = new Button((string)$value);

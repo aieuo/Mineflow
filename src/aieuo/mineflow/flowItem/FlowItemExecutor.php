@@ -98,7 +98,7 @@ class FlowItemExecutor {
     }
 
     public function replaceVariables(string $text): string {
-        return Mineflow::getVariableHelper()->replaceVariables($text, $this->getVariables(), $this);
+        return Mineflow::getVariableHelper()->replaceVariables($text, $this->getVariables());
     }
 
     public function getVariable(string $name): ?Variable {

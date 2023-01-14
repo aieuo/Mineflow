@@ -215,12 +215,14 @@ class RecipePack implements \JsonSerializable {
         $author = $packData["author"];
         $detail = $packData["detail"];
 
+        $upgrader = new RecipeUpgrader();
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
+            $data = $upgrader->upgradeBeforeLoad($data);
             /** @var Recipe $recipe */
             $recipe = new $recipeClass($data["name"], ltrim($baseGroup."/".$data["group"], "/"), $data["author"], $data["plugin_version"] ?? "0");
             $recipe->loadSaveData($data);
-            $recipe->checkVersion();
+            $upgrader->upgradeAfterLoad($recipe);
 
             $recipes[] = $recipe;
         }

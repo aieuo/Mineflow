@@ -7,8 +7,8 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
-use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
+use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StringResponseDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
@@ -121,7 +121,7 @@ class CustomForm extends Form {
                 foreach ($content->getOptions() as $option) {
                     if ($helper->isVariableString($option)) {
                         $variableName = substr($option, 1, -1);
-                        $variable = $helper->runVariableStatement($variableName, $executor->getVariables(), $executor);
+                        $variable = $helper->runVariableStatement($variableName, $executor->getVariables());
                         if ($variable instanceof ListVariable) {
                             foreach ($variable->getValue() as $value) {
                                 $options[] = $executor->replaceVariables((string)$value);

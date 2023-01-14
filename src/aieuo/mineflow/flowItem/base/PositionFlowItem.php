@@ -12,6 +12,8 @@ use pocketmine\world\Position;
 
 interface PositionFlowItem {
 
+    public function getPositionVariableNames(): array;
+
     public function getPositionVariableName(string $name = ""): string;
 
     public function setPositionVariableName(string $position, string $name = ""): void;

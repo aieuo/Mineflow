@@ -158,10 +158,6 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         return true;
     }
 
-    public function allowDirectCall(): bool {
-        return false;
-    }
-
     public function __clone() {
         $conditions = [];
         foreach ($this->getConditions() as $k => $condition) {

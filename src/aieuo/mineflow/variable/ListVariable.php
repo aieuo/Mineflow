@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
@@ -112,12 +111,12 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
+    public function map(string|array|Variable $target, array $variables = [], bool $global = false): ListVariable {
         $variableHelper = Mineflow::getVariableHelper();
         $values = [];
         foreach ($this->getValue() as $value) {
             $variables["it"] = $value;
-            $values[] = $variableHelper->runAST($target, $executor, $variables, $global);
+            $values[] = $variableHelper->runAST($target, $variables, $global);
         }
         return new ListVariable($values);
     }
