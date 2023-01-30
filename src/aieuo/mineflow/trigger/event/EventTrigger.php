@@ -75,7 +75,6 @@ class EventTrigger extends Trigger {
     public function serialize(): array {
         return [
             "event" => $this->eventName,
-            "class" => $this->eventClass,
         ];
     }
 
