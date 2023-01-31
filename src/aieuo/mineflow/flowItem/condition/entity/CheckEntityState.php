@@ -47,9 +47,8 @@ abstract class CheckEntityState extends FlowItem implements Condition, EntityFlo
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

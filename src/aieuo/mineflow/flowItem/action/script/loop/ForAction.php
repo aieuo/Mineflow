@@ -48,18 +48,16 @@ class ForAction extends FlowItem implements FlowItemContainer {
         return $this->endIndex;
     }
 
-    public function setStartIndex(string $startIndex): self {
+    public function setStartIndex(string $startIndex): void {
         $this->startIndex = $startIndex;
-        return $this;
     }
 
     public function getStartIndex(): string {
         return $this->startIndex;
     }
 
-    public function setCounterName(string $counterName): self {
+    public function setCounterName(string $counterName): void {
         $this->counterName = $counterName;
-        return $this;
     }
 
     public function getCounterName(): string {
@@ -134,7 +132,7 @@ class ForAction extends FlowItem implements FlowItemContainer {
             })->show($player);
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         foreach ($contents[0] as $content) {
             $action = FlowItem::loadEachSaveData($content);
             $this->addAction($action);
@@ -144,7 +142,6 @@ class ForAction extends FlowItem implements FlowItemContainer {
         $this->setStartIndex($contents[2]);
         $this->setEndIndex($contents[3]);
         $this->setFluctuation($contents[4]);
-        return $this;
     }
 
     public function serializeContents(): array {

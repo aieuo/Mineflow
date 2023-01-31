@@ -67,10 +67,9 @@ class SetWorldTime extends FlowItem implements WorldFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setWorldVariableName($content[0]);
         $this->setTime($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

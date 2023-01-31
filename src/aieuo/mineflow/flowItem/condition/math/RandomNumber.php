@@ -79,11 +79,10 @@ class RandomNumber extends FlowItem implements Condition {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setMin($content[0]);
         $this->setMax($content[1]);
         $this->setValue($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

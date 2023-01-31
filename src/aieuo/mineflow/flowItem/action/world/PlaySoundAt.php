@@ -98,12 +98,11 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPositionVariableName($content[0]);
         $this->setSound($content[1]);
         $this->setVolume($content[2]);
         $this->setPitch($content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {

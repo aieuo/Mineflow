@@ -130,14 +130,13 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1]);
         $this->setMax($content[2]);
         $this->setValue($content[3]);
         $this->setBarId($content[4]);
         $this->setColor($content[5] ?? "purple");
-        return $this;
     }
 
     public function serializeContents(): array {

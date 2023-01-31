@@ -60,10 +60,9 @@ class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPositionVariableName($content[0]);
         $this->setBlockVariableName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -178,10 +178,9 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setInputItemVariableNames($content[0]);
         $this->setItemVariableName($content[1], "output");
-        return $this;
     }
 
     public function serializeContents(): array {

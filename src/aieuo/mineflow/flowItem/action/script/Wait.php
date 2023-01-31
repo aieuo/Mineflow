@@ -31,9 +31,8 @@ class Wait extends FlowItem {
         return [$this->getTime()];
     }
 
-    public function setTime(string $time): self {
+    public function setTime(string $time): void {
         $this->time = $time;
-        return $this;
     }
 
     public function getTime(): string {
@@ -58,9 +57,8 @@ class Wait extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setTime($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

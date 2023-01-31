@@ -35,9 +35,8 @@ abstract class TypeGetMathVariable extends FlowItem {
         return [$this->getResultName()];
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -54,9 +53,8 @@ abstract class TypeGetMathVariable extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         if (isset($content[0])) $this->setResultName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

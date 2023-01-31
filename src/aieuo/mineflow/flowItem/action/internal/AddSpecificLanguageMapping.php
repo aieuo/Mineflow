@@ -82,11 +82,10 @@ class AddSpecificLanguageMapping extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setLanguage($content[0]);
         $this->setKey($content[1]);
         $this->setMessage($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

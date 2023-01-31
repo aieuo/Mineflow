@@ -47,9 +47,8 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -87,11 +86,10 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPositionVariableName($content[0], "pos1");
         $this->setPositionVariableName($content[1], "pos2");
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

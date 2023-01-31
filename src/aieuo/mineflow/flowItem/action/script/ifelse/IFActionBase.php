@@ -63,7 +63,7 @@ abstract class IFActionBase extends FlowItem implements FlowItemContainer {
         ];
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         foreach ($contents[0] as $content) {
             $condition = FlowItem::loadEachSaveData($content);
             $this->addItem($condition, FlowItemContainer::CONDITION);
@@ -73,7 +73,6 @@ abstract class IFActionBase extends FlowItem implements FlowItemContainer {
             $action = FlowItem::loadEachSaveData($content);
             $this->addItem($action, FlowItemContainer::ACTION);
         }
-        return $this;
     }
 
     public function serializeContents(): array {

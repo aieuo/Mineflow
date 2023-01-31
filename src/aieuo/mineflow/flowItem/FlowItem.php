@@ -135,7 +135,8 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         }
 
         $action->setCustomName($content["customName"] ?? "");
-        return $action->loadSaveData($content["contents"]);
+        $action->loadSaveData($content["contents"]);
+        return $action;
     }
 
     public function hasCustomMenu(): bool {
@@ -163,10 +164,11 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     /**
      * @param array $content
-     * @return FlowItem
-     * @throws FlowItemLoadException|\ErrorException
+     * @return void
+     * @throws FlowItemLoadException
+     * @throws \ErrorException
      */
-    abstract public function loadSaveData(array $content): FlowItem;
+    abstract public function loadSaveData(array $content): void;
 
     /**
      * @param FlowItemExecutor $source

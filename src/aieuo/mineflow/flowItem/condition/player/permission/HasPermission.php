@@ -63,10 +63,9 @@ class HasPermission extends FlowItem implements Condition, PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setPlayerPermission($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

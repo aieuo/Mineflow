@@ -40,18 +40,16 @@ class GetPlayerByName extends FlowItem {
         return [$this->getPlayerName(), $this->getResultName()];
     }
 
-    public function setPlayerName(string $name): self {
+    public function setPlayerName(string $name): void {
         $this->playerName = $name;
-        return $this;
     }
 
     public function getPlayerName(): string {
         return $this->playerName;
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -85,10 +83,9 @@ class GetPlayerByName extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerName($content[0]);
         $this->setResultName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

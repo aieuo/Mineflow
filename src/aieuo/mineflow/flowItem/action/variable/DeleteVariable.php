@@ -67,10 +67,9 @@ class DeleteVariable extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->isLocal = $content[1];
-        return $this;
     }
 
     public function serializeContents(): array {

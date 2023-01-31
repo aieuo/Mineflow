@@ -88,11 +88,10 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setAxisAlignedBBVariableName($content[0]);
         $this->setWorldVariableName($content[1]);
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

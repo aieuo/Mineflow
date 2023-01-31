@@ -97,9 +97,8 @@ class CustomAction extends FlowItem {
         $builder->elements($elements);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setArguments($content);
-        return $this;
     }
 
     public function serializeContents(): array {

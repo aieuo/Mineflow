@@ -85,11 +85,10 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setWorldName($content[1]);
         $this->setSafeSpawn($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

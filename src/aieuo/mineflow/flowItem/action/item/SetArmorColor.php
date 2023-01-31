@@ -98,12 +98,11 @@ class SetArmorColor extends FlowItem implements ItemFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setItemVariableName($content[0]);
         $this->setRed($content[1]);
         $this->setGreen($content[2]);
         $this->setBlue($content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {

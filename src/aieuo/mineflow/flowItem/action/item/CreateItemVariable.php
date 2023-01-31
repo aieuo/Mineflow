@@ -118,12 +118,11 @@ class CreateItemVariable extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setItemId($content[1]);
         $this->setItemCount($content[2]);
         $this->setItemName($content[3] ?? "");
-        return $this;
     }
 
     public function serializeContents(): array {

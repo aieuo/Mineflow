@@ -95,11 +95,10 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setItemVariableName($content[0]);
         $this->setEnchantId($content[1]);
         $this->setEnchantLevel($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

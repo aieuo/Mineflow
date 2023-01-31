@@ -42,11 +42,10 @@ class Motion extends FlowItem implements EntityFlowItem {
         return array_merge([$this->getEntityVariableName()], $this->getPosition());
     }
 
-    public function setPosition(string $x, string $y, string $z): self {
+    public function setPosition(string $x, string $y, string $z): void {
         $this->x = $x;
         $this->y = $y;
         $this->z = $z;
-        return $this;
     }
 
     public function getPosition(): array {
@@ -76,10 +75,9 @@ class Motion extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setPosition($content[1], $content[2], $content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {

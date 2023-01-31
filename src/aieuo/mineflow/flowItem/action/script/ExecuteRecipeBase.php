@@ -48,9 +48,8 @@ abstract class ExecuteRecipeBase extends FlowItem {
         return [$this->getRecipeName()];
     }
 
-    public function setRecipeName(string $name): self {
+    public function setRecipeName(string $name): void {
         $this->recipeName = $name;
-        return $this;
     }
 
     public function getRecipeName(): string {
@@ -106,10 +105,9 @@ abstract class ExecuteRecipeBase extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setRecipeName($content[0]);
         $this->setArgs($content[1] ?? []);
-        return $this;
     }
 
     public function serializeContents(): array {

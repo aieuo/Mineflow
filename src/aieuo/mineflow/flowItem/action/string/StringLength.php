@@ -36,18 +36,16 @@ class StringLength extends FlowItem {
         return [$this->getValue(), $this->getResultName()];
     }
 
-    public function setValue(string $value1): self {
+    public function setValue(string $value1): void {
         $this->value = $value1;
-        return $this;
     }
 
     public function getValue(): string {
         return $this->value;
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -76,10 +74,9 @@ class StringLength extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setValue($content[0]);
         $this->setResultName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

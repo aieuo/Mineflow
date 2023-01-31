@@ -123,7 +123,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
             })->show($player);
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         foreach ($contents[0] as $content) {
             $condition = FlowItem::loadEachSaveData($content);
             $this->addCondition($condition);
@@ -136,7 +136,6 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
 
         $this->setInterval($contents[2] ?? 20);
         $this->setLimit($contents[3] ?? -1);
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -60,9 +60,8 @@ class CallCustomTrigger extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setTriggerName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

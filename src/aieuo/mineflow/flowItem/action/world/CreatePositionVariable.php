@@ -122,13 +122,12 @@ class CreatePositionVariable extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setX($content[1]);
         $this->setY($content[2]);
         $this->setZ($content[3]);
         $this->setWorld($content[4]);
-        return $this;
     }
 
     public function serializeContents(): array {

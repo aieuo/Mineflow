@@ -33,8 +33,7 @@ class CheckNothing extends FlowItem implements Condition {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
     }
 
-    public function loadSaveData(array $content): FlowItem {
-        return $this;
+    public function loadSaveData(array $content): void {
     }
 
     public function serializeContents(): array {

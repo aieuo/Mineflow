@@ -32,9 +32,8 @@ abstract class CheckEntityStateById extends FlowItem implements Condition {
         return [$this->getEntityId()];
     }
 
-    public function setEntityId(string $id): self {
+    public function setEntityId(string $id): void {
         $this->entityId = $id;
-        return $this;
     }
 
     public function getEntityId(): string {
@@ -51,9 +50,8 @@ abstract class CheckEntityStateById extends FlowItem implements Condition {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityId($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

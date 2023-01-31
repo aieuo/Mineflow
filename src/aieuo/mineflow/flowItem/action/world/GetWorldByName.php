@@ -78,10 +78,9 @@ class GetWorldByName extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setWorldName($content[0]);
         $this->setResultName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

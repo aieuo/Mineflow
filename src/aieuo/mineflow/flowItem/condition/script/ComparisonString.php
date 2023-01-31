@@ -51,10 +51,9 @@ class ComparisonString extends FlowItem implements Condition {
         return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()];
     }
 
-    public function setValues(string $value1, string $value2): self {
+    public function setValues(string $value1, string $value2): void {
         $this->value1 = $value1;
         $this->value2 = $value2;
-        return $this;
     }
 
     public function getValue1(): string {
@@ -104,10 +103,9 @@ class ComparisonString extends FlowItem implements Condition {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setValues($content[0], $content[2]);
         $this->setOperator($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

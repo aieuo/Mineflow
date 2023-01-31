@@ -53,9 +53,8 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setConfigVariableName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

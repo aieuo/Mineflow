@@ -53,7 +53,6 @@ class Kick extends FlowItem implements PlayerFlowItem {
         return $this->getPlayerVariableName() !== "" and $this->reason !== "";
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $reason = $source->replaceVariables($this->getReason());
         $player = $this->getOnlinePlayer($source);
@@ -72,10 +71,9 @@ class Kick extends FlowItem implements PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setReason($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

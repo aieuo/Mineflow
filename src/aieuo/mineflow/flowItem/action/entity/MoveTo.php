@@ -107,13 +107,12 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         $this->setSpeedX($content[2]);
         $this->setSpeedY($content[3]);
         $this->setSpeedZ($content[4]);
-        return $this;
     }
 
     public function serializeContents(): array {

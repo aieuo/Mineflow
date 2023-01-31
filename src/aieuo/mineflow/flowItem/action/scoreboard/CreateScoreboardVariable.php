@@ -106,12 +106,11 @@ class CreateScoreboardVariable extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setBoardId($content[1]);
         $this->setDisplayName($content[2]);
         $this->setDisplayType($content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {

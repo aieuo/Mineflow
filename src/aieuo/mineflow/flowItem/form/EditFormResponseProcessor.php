@@ -18,18 +18,16 @@ class EditFormResponseProcessor {
         $this->loader = $loader ?? function () {};
     }
 
-    public function clear(): self {
+    public function clear(): void {
         $this->processors = [];
-        return $this;
     }
 
     /**
      * @param callable(array): array $processor
      * @return EditFormResponseProcessor
      */
-    public function preprocess(callable $processor): self {
+    public function preprocess(callable $processor): void {
         $this->processors[] = $processor;
-        return $this;
     }
 
     /**
@@ -37,12 +35,11 @@ class EditFormResponseProcessor {
      * @param callable(mixed): mixed $processor
      * @return EditFormResponseProcessor
      */
-    public function preprocessAt(int $index, callable $processor): self {
+    public function preprocessAt(int $index, callable $processor): void {
         $this->preprocess(function (array $data) use($index, $processor) {
             $data[$index] = $processor($data[$index]);
             return $data;
         });
-        return $this;
     }
 
     public function shift(): self {
@@ -99,9 +96,8 @@ class EditFormResponseProcessor {
         return $this;
     }
 
-    public function setLoader(callable $callback): self {
+    public function setLoader(callable $callback): void {
         $this->loader = $callback;
-        return $this;
     }
 
     public function getLoader(): \Closure {

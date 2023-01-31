@@ -31,9 +31,8 @@ abstract class TypeMessage extends FlowItem {
         return [$this->getMessage()];
     }
 
-    public function setMessage(string $message): self {
+    public function setMessage(string $message): void {
         $this->message = $message;
-        return $this;
     }
 
     public function getMessage(): string {
@@ -50,9 +49,8 @@ abstract class TypeMessage extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setMessage($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

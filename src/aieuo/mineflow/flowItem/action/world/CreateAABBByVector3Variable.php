@@ -85,11 +85,10 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVector3VariableName($content[0], "pos1");
         $this->setVector3VariableName($content[1], "pos2");
         $this->setVariableName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -78,11 +78,10 @@ class SendToast extends FlowItem implements PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1]);
         $this->setBody($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

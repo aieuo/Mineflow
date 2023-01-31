@@ -93,11 +93,10 @@ abstract class GetNearestEntityBase extends FlowItem implements PositionFlowItem
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPositionVariableName($content[0]);
         $this->setMaxDistance($content[1]);
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

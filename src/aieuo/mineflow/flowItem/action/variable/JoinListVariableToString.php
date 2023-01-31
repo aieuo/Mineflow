@@ -98,11 +98,10 @@ class JoinListVariableToString extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setSeparator($content[1]);
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

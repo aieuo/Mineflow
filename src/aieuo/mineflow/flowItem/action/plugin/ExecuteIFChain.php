@@ -45,9 +45,8 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         return [$this->getChainName(), $this->getPlayerVariableName()];
     }
 
-    public function setChainName(string $name): self {
+    public function setChainName(string $name): void {
         $this->chainName = $name;
-        return $this;
     }
 
     public function getChainName(): string {
@@ -93,10 +92,9 @@ class ExecuteIFChain extends FlowItem implements PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setChainName($content[0]);
         $this->setPlayerVariableName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

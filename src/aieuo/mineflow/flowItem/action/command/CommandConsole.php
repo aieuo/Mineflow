@@ -59,9 +59,8 @@ class CommandConsole extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setCommand($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

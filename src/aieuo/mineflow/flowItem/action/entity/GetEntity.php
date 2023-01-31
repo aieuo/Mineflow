@@ -37,18 +37,16 @@ class GetEntity extends FlowItem {
         return [$this->getEntityId(), $this->getResultName()];
     }
 
-    public function setEntityId(string $name): self {
+    public function setEntityId(string $name): void {
         $this->entityId = $name;
-        return $this;
     }
 
     public function getEntityId(): string {
         return $this->entityId;
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -80,10 +78,9 @@ class GetEntity extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityId($content[0]);
         $this->setResultName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -100,11 +100,10 @@ class SetItemData extends FlowItem implements ItemFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setItemVariableName($content[0]);
         $this->setKey($content[1]);
         $this->setValue($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

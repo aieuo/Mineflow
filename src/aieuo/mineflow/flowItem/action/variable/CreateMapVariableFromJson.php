@@ -96,11 +96,10 @@ class CreateMapVariableFromJson extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setJson($content[1]);
         $this->isLocal = $content[2];
-        return $this;
     }
 
     public function serializeContents(): array {

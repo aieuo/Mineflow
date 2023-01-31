@@ -38,9 +38,8 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
         return [$this->getPlayerVariableName(), $this->getMessage()];
     }
 
-    public function setMessage(string $message): self {
+    public function setMessage(string $message): void {
         $this->message = $message;
-        return $this;
     }
 
     public function getMessage(): string {
@@ -58,10 +57,9 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName((string)$content[0]);
         $this->setMessage((string)$content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

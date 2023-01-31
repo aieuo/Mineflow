@@ -92,10 +92,9 @@ class CreateBlockVariable extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setBlockId($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

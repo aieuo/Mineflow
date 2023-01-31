@@ -45,10 +45,9 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         return [$this->getPlayerVariableName(), $this->getTitle(), $this->getSubTitle(), $this->fadein, $this->stay, $this->fadeout];
     }
 
-    public function setTitle(string $title, string $subtitle = ""): self {
+    public function setTitle(string $title, string $subtitle = ""): void {
         $this->title = $title;
         $this->subtitle = $subtitle;
-        return $this;
     }
 
     public function getTitle(): string {
@@ -59,11 +58,10 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         return $this->subtitle;
     }
 
-    public function setTime(string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1"): self {
+    public function setTime(string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1"): void {
         $this->fadein = $fadeIn;
         $this->stay = $stay;
         $this->fadeout = $fadeOut;
-        return $this;
     }
 
     public function getTime(): array {
@@ -102,13 +100,12 @@ class SendTitle extends FlowItem implements PlayerFlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setTitle($content[1], $content[2]);
         if (isset($content[5])) {
             $this->setTime($content[3], $content[4], $content[5]);
         }
-        return $this;
     }
 
     public function serializeContents(): array {
