@@ -8,7 +8,8 @@ After joining, please select the language you want to translate, open `Mineflow/
 
 ## Contributors
 
-| Language   | Contributors  |
-|------------|---------------|
-| Indonesian | @keenanyafiqy |
-| Vietnamese | @NhanAZ       |
+| Language   | Contributors                                     |
+|------------|--------------------------------------------------|
+| Indonesian | [@keenanyafiqy](https://github.com/keenanyafiqy) |
+| Vietnamese | [@NhanAZ](https://github.com/NhanAZ)             |
+| Spanish    | [@Tweaky349](https://github.com/Tweaky349)       |

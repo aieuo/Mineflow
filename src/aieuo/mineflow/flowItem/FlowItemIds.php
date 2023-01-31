@@ -86,6 +86,7 @@ interface FlowItemIds {
     public const GET_ITEM_DATA = "getItemData";
     public const REMOVE_ITEM_DATA = "removeItemData";
     public const HAS_ITEM_DATA = "hasItemData";
+    public const SET_ARMOR_COLOR = "setArmorColor";
 
     public const EQUIP_ARMOR = "equipArmor";
     public const GET_INVENTORY_CONTENTS = "getInventory";

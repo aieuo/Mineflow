@@ -63,6 +63,7 @@ use aieuo\mineflow\flowItem\action\item\CreateItemVariable;
 use aieuo\mineflow\flowItem\action\item\GetItemData;
 use aieuo\mineflow\flowItem\action\item\RegisterCraftingRecipe;
 use aieuo\mineflow\flowItem\action\item\RemoveItemData;
+use aieuo\mineflow\flowItem\action\item\SetArmorColor;
 use aieuo\mineflow\flowItem\action\item\SetItemCount;
 use aieuo\mineflow\flowItem\action\item\SetItemDamage;
 use aieuo\mineflow\flowItem\action\item\SetItemData;
@@ -287,6 +288,7 @@ class FlowItemFactory {
         self::register(new GetItemData);
         self::register(new RemoveItemData);
         self::register(new ClearInventory);
+        self::register(new SetArmorColor);
         self::register(new GetInventoryContents);
         self::register(new GetArmorInventoryContents);
         /* script */

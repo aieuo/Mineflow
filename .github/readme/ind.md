@@ -12,7 +12,7 @@
 
 ---
 
-### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md)
+### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md), [Español](/.github/readme/spa.md)
 
 ---
 
@@ -23,7 +23,7 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 
 
 ## Perintah
-| command                                         | description              |
+| perintah                                        | deskripsi                |
 | ----------------------------------------------- | ------------------------ |
 | /mineflow language<eng &#124; jpn ind>          | Ubah bahasa              |
 | /mineflow recipe [add &#124; edit &#124; list]  | Kelola resep             |
@@ -33,14 +33,14 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 | /mineflow setting                               | Pengaturan               |
 
 
-## AksiIzin
-| level | jenis tindakan yang akan tersedia                               |
-| ----- | --------------------------------------------------------------- |
-| 0     | -                                                               |
-| 1     | perintah dari konsol, kelola izin, (tidak)izinkan terbang, loop |
-| 2     | file konfigurasi                                                |
+## Izin Tindakan
+| tingkat | jenis tindakan yang akan tersedia                               |
+| ------- | --------------------------------------------------------------- |
+| 0       | -                                                               |
+| 1       | perintah dari konsol, kelola izin, (tidak)izinkan terbang, loop |
+| 2       | file konfigurasi                                                |
 
-Untuk mengubah izin, jalankan `/mineflow permission <name> <level>`. Level yang Anda berikan hanya dapat digunakan di bawah level Anda. Anda dapat memberikan level maksimum dari konsol.
+Untuk mengubah izin, jalankan `/mineflow permission <name> <level>`. Tingkat yang Anda berikan hanya dapat digunakan di bawah tingkat Anda. Anda dapat memberikan level maksimum dari konsol.
 
 
 ## Variabel
@@ -51,7 +51,7 @@ contoh: `{target}`, `{item}`
 
 ## Tutorial
 ### Buat resep
-Jalankan "/mineflow resep add" dan masukkan nama resep dan nama grup.  (Nama grup boleh dikosongkan.)  
+Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (Nama grup boleh dikosongkan.)  
 Tambahkan berbagai tindakan ke resep.
 
 ### Jalankan resep
@@ -69,20 +69,20 @@ Anda dapat menyetel nilai yang akan diwarisi dari tindakan asli, dan nilai yang 
 Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`. [Unduh](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Langkah
-1. Jalankan perintah `/mineflow add` dan tambahkan perintah /id.  
-   ![tambahkanPerintah](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
+1. Jalankan perintah `/mineflow command add` dan tambahkan perintah /id.  
+   ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Jalankan `/mineflow recipe add` dan tambahkan resep dengan nama pilihan Anda.  
-   ![tambahkanResep](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
-3. Klik `Edit tindakan > Tambah tindakan > Pemain` untuk menambahkan `bidang Kirim pesan ke obrolan` ke resep yang telah Anda buat.
-4. Masukkan `{target.hand.id}:{target.hand.damage}` di bidang pesan `bidang Kirim pesan ke obrolan`.  
+   ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
+3. Klik `Edit tindakan > Tambah tindakan > Pemain` untuk menambahkan `Bidang Kirim pesan ke obrolan` ke resep yang telah Anda buat.
+4. Masukkan `{target.hand.id}:{target.hand.damage}` di bidang pesan `Bidang Kirim pesan ke obrolan`.  
    ![tambahkanTindakan](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` berisi informasi tentang item di tangan pemain.)
-5. Klik `Edit pemicu > Tambahkan pemicu > Perintah` dan masukkan `id` di bidang `name of command`. ![tambahkanPemicu](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+5. Klik `Edit pemicu > Tambahkan pemicu > Perintah` dan masukkan `id` di bidang `nama perintah`. ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Untuk mengirim informasi lebih lanjut tentang barang
-{target.hand} adalah [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` diganti dengan nama item dan `{target.hand.count}` dengan jumlah item.
+{target.hand} adalah [variabel barang](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` diganti dengan nama barang dan `{target.hand.count}` dengan jumlah barang.
 
 ##### Untuk dapat menggunakannya non-OP
 Setel izin perintah ke `Siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
 
 ## Hak Cipta
-Setel izin perintah ke `Siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
+Ikon dibuat oleh [Pause08](https://www.flaticon.com/authors/pause08) dari [www.flaticon.com](https://www.flaticon.com/)
