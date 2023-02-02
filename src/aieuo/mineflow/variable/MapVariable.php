@@ -33,7 +33,7 @@ class MapVariable extends ListVariable {
         unset($this->values[$index]);
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    protected function getValueFromIndex(string $index): ?Variable {
         return $this->values[$index] ?? null;
     }
 

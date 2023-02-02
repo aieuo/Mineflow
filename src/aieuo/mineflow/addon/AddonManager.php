@@ -153,7 +153,7 @@ class AddonManager {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.type.error")]));
         }
 
-        $recipeInfoVariable = $manifestVariable->getValueFromIndex("recipes");
+        $recipeInfoVariable = $manifestVariable->getProperty("recipes");
 
         if (!($recipeInfoVariable instanceof ListVariable)) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.key.missing", ["recipes", "list"])]));
@@ -166,19 +166,19 @@ class AddonManager {
             }
 
             foreach (["id", "category", "path"] as $key) {
-                if ($recipeInfo->getValueFromIndex($key) === null) {
+                if ($recipeInfo->getProperty($key) === null) {
                     throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.info.key.missing", [$i, $key])]));
                 }
             }
 
-            $path = (string)$recipeInfo->getValueFromIndex("path");
+            $path = (string)$recipeInfo->getProperty("path");
             if (!str_starts_with($path, $manifestRecipe->getGroup())) {
                 $path = ltrim($manifestRecipe->getGroup()."/".$path, "/");
             }
 
             $recipeInfos[] = new RecipeInfoAttribute(
-                "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getValueFromIndex("id"),
-                (string)$recipeInfo->getValueFromIndex("category"),
+                "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getProperty("id"),
+                (string)$recipeInfo->getProperty("category"),
                 $path,
             );
         }

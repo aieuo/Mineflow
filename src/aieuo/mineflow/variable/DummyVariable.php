@@ -38,7 +38,7 @@ class DummyVariable extends Variable {
         return $class::getTypeName();
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    protected function getValueFromIndex(string $index): ?Variable {
         $variables = $this->getObjectValuesDummy();
         return $variables[$index] ?? null;
     }

@@ -67,7 +67,7 @@ class ListVariable extends Variable implements \JsonSerializable {
         return null;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
+    protected function getValueFromIndex(string $index): ?Variable {
         return $this->values[(int)$index] ?? null;
     }
 
