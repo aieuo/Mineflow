@@ -20,7 +20,7 @@ class DefaultVariables {
 
     public static function getServerVariables(): array {
         $server = Server::getInstance();
-        $onlines = array_map(fn(Player $player) => new PlayerVariable($player->getName()), array_values($server->getOnlinePlayers()));
+        $onlines = array_map(fn(Player $player) => new PlayerVariable($player), array_values($server->getOnlinePlayers()));
         $now = new \DateTime(timezone: Mineflow::getTimeZone());
         return [
             "server_name" => new StringVariable($server->getName()),
