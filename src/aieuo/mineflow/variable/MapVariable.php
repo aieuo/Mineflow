@@ -33,10 +33,6 @@ class MapVariable extends ListVariable {
         unset($this->values[$index]);
     }
 
-    protected function getValueFromIndex(string $index): ?Variable {
-        return $this->values[$index] ?? null;
-    }
-
     public function add(Variable $target): MapVariable {
         if ($target instanceof MapVariable) throw new UnsupportedCalculationException();
 
@@ -73,16 +69,6 @@ class MapVariable extends ListVariable {
         $values = [];
         foreach ($this->getValue() as $key => $value) {
             $values[$key] = $value->div($target);
-        }
-        return new MapVariable($values);
-    }
-
-    public function map(string|array|Variable $target, array $variables = [], bool $global = false): MapVariable {
-        $variableHelper = Mineflow::getVariableHelper();
-        $values = [];
-        foreach ($this->getValue() as $key => $value) {
-            $variables["it"] = $value;
-            $values[$key] = $variableHelper->runAST($target, $variables, $global);
         }
         return new MapVariable($values);
     }

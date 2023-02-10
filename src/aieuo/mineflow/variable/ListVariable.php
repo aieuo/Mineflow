@@ -13,7 +13,8 @@ use function array_search;
 use function array_values;
 use function count;
 
-class ListVariable extends Variable implements \JsonSerializable {
+class ListVariable extends Variable implements IteratorVariable, \JsonSerializable {
+    use IteratorVariableTrait;
 
     private ?string $showString;
 
@@ -31,6 +32,12 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     public function getValue(): array {
         return $this->values;
+    }
+
+    public function getIterator(): \Traversable {
+        foreach ($this->values as $key => $value) {
+            yield $key => $value;
+        }
     }
 
     public function appendValue(Variable $value): void {
@@ -68,7 +75,7 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     protected function getValueFromIndex(string $index): ?Variable {
-        return $this->values[(int)$index] ?? null;
+        return $this->values[$index] ?? $this->pluck($index);
     }
 
     public function add(Variable $target): ListVariable {
@@ -107,16 +114,6 @@ class ListVariable extends Variable implements \JsonSerializable {
         $values = [];
         foreach ($this->getValue() as $value) {
             $values[] = $value->div($target);
-        }
-        return new ListVariable($values);
-    }
-
-    public function map(string|array|Variable $target, array $variables = [], bool $global = false): ListVariable {
-        $variableHelper = Mineflow::getVariableHelper();
-        $values = [];
-        foreach ($this->getValue() as $value) {
-            $variables["it"] = $value;
-            $values[] = $variableHelper->runAST($target, $variables, $global);
         }
         return new ListVariable($values);
     }

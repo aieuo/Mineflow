@@ -90,9 +90,11 @@ class RecipeUpgrader {
 
             foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
                 $this->replacePositionVariable($action);
+                $this->replaceMapOperator($action);
             }
             foreach ($recipe->getItemsFlatten(FlowItemContainer::CONDITION) as $condition) {
                 $this->replacePositionVariable($condition);
+                $this->replaceMapOperator($condition);
             }
 
             $recipe->setPluginVersion("3.0.0");
@@ -208,5 +210,16 @@ class RecipeUpgrader {
                 $item->setPositionVariableName($variable, $name);
             }
         }
+    }
+
+    private function replaceMapOperator(FlowItem $action): void {
+        $newContents = [];
+        foreach ($action->serializeContents() as $data) {
+            if (is_string($data)) {
+                $data = preg_replace("/>\s*it\./u", ".", $data);
+            }
+            $newContents[] = $data;
+        }
+        $action->loadSaveData($newContents);
     }
 }

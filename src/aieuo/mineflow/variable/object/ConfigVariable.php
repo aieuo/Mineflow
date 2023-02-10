@@ -7,6 +7,8 @@ namespace aieuo\mineflow\variable\object;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\IteratorVariable;
+use aieuo\mineflow\variable\IteratorVariableTrait;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -22,7 +24,8 @@ use function is_array;
 use function is_bool;
 use function is_numeric;
 
-class ConfigVariable extends ObjectVariable {
+class ConfigVariable extends ObjectVariable implements IteratorVariable {
+    use IteratorVariableTrait;
 
     public static function getTypeName(): string {
         return "config";
@@ -34,7 +37,7 @@ class ConfigVariable extends ObjectVariable {
     protected function getValueFromIndex(string $index): ?Variable {
         $config = $this->getValue();
         $data = $config->get($index);
-        if ($data === null) return null;
+        if ($data === null) return $this->pluck($index);
         if (is_string($data)) return new StringVariable($data);
         if (is_numeric($data)) return new NumberVariable($data);
         if (!is_array($data)) return null;
@@ -51,9 +54,8 @@ class ConfigVariable extends ObjectVariable {
         return $this->config;
     }
 
-    public function map(string|array|Variable $target, array $variables = [], bool $global = false): MapVariable {
+    public function getIterator(): \Traversable {
         $variableHelper = Mineflow::getVariableHelper();
-        $values = [];
         foreach ($this->getValue()->getAll() as $key => $value) {
             $variable = match (true) {
                 is_array($value) => $variableHelper->arrayToListVariable($value),
@@ -61,10 +63,8 @@ class ConfigVariable extends ObjectVariable {
                 is_bool($value) => new BooleanVariable($value),
                 default => new StringVariable($value),
             };
-            $variables["it"] = $variable;
-            $values[$key] = $variableHelper->runAST($target, $variables, $global);
+            yield $key => $variable;
         }
-        return new MapVariable($values);
     }
 
     public function __toString(): string {

@@ -247,7 +247,6 @@ class VariableHelper {
                 case "-":
                 case "*":
                 case "/":
-                case ">":
                 case "(":
                 case ")":
                     $tokens[] = trim($token);
@@ -281,7 +280,6 @@ class VariableHelper {
     public function parse(array &$tokens, int $priority = 0): string|array|Variable {
         $rules = [
             ["type" => 1, "ops" => [","]],
-            ["type" => 0, "ops" => [">"]],
             ["type" => 0, "ops" => ["+", "-"]], // 1 + 2, 1 - 2
             ["type" => 0, "ops" => ["*", "/"]], // 1 * 2, 1 / 2
             ["type" => 2, "ops" => ["+", "-"]], // +1, -1
@@ -361,7 +359,7 @@ class VariableHelper {
 
         $op = $ast["op"];
         $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $variables, $global) : $ast["left"];
-        if (is_array($ast["right"]) and $op !== ">" and ($op !== "()" or isset($ast["right"]["op"]))) {
+        if (is_array($ast["right"]) and ($op !== "()" or isset($ast["right"]["op"]))) {
             $right = $this->runAST($ast["right"], $variables, $global);
         } else {
             $right = $ast["right"];
@@ -373,10 +371,6 @@ class VariableHelper {
             }
 
             $left = $this->mustGetVariableNested($left, $variables, $global);
-        }
-
-        if ($op === ">") {
-            return $left->map($right, $variables, $global);
         }
 
         if (is_string($right)) {

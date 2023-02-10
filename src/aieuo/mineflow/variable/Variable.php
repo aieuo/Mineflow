@@ -59,10 +59,6 @@ abstract class Variable {
         throw new UnsupportedCalculationException();
     }
 
-    public function map(string|array|Variable $target, array $variables = [], bool $global = false): ListVariable {
-        throw new UnsupportedCalculationException();
-    }
-
     final public function getProperty(string $name): ?Variable {
         $property = self::getProperties()[$name] ?? null;
         if ($property !== null) {
