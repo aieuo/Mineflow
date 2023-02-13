@@ -37,17 +37,13 @@ class EventVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "name", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                fn(Event $event) => new StringVariable($this->getEventName($event)),
-            ),
-        );
-        self::registerProperty(
-            $class, "canceled", new VariableProperty(
-                new DummyVariable(BooleanVariable::class),
-                fn(Event $event) => new BooleanVariable($event instanceof Cancellable and $event->isCancelled()),
-            ), aliases: ["isCanceled"],
-        );
+        self::registerProperty($class, "name", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            fn(Event $event) => new StringVariable($this->getEventName($event)),
+        ));
+        self::registerProperty($class, "canceled", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Event $event) => new BooleanVariable($event instanceof Cancellable and $event->isCancelled()),
+        ), aliases: ["isCanceled"]);
     }
 }

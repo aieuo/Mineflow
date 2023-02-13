@@ -87,37 +87,27 @@ class Vector3Variable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "x", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Vector3 $position) => new NumberVariable($position->x),
-            ),
-        );
-        self::registerProperty(
-            $class, "y", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Vector3 $position) => new NumberVariable($position->y),
-            ),
-        );
-        self::registerProperty(
-            $class, "z", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Vector3 $position) => new NumberVariable($position->z),
-            ),
-        );
-        self::registerProperty(
-            $class, "xyz", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                fn(Vector3 $position) => new StringVariable($position->x.",".$position->y.",".$position->z),
-            ),
-        );
+        self::registerProperty($class, "x", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Vector3 $position) => new NumberVariable($position->x),
+        ));
+        self::registerProperty($class, "y", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Vector3 $position) => new NumberVariable($position->y),
+        ));
+        self::registerProperty($class, "z", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Vector3 $position) => new NumberVariable($position->z),
+        ));
+        self::registerProperty($class, "xyz", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            fn(Vector3 $position) => new StringVariable($position->x.",".$position->y.",".$position->z),
+        ));
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
-            self::registerProperty(
-                $class, $name, new VariableProperty(
-                    new DummyVariable(Vector3Variable::class),
-                    fn(Vector3 $position) => new Vector3Variable($position->getSide($facing)),
-                ),
-            );
+            self::registerProperty($class, $name, new VariableProperty(
+                new DummyVariable(Vector3Variable::class),
+                fn(Vector3 $position) => new Vector3Variable($position->getSide($facing)),
+            ));
         }
     }
 }

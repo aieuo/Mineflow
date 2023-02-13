@@ -161,17 +161,13 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod(
-            $class, "count", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(array $values) => new NumberVariable(count($values)),
-            ),
-        );
-        self::registerMethod(
-            $class, "reverse", new VariableMethod(
-                new DummyVariable(ListVariable::class),
-                fn(array $values) => new ListVariable(array_reverse($values)),
-            ), aliases: ["reversed"],
-        );
+        self::registerMethod($class, "count", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(array $values) => new NumberVariable(count($values)),
+        ));
+        self::registerMethod($class, "reverse", new VariableMethod(
+            new DummyVariable(ListVariable::class),
+            fn(array $values) => new ListVariable(array_reverse($values)),
+        ), aliases: ["reversed"]);
     }
 }

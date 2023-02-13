@@ -50,41 +50,29 @@ class StringVariable extends Variable implements \JsonSerializable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod(
-            $class, "length", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(string $value) => new NumberVariable(mb_strlen($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "toLowerCase", new VariableMethod(
-                new DummyVariable(StringVariable::class),
-                fn(string $value) => new StringVariable(mb_strtolower($value)),
-            ), aliases: ["lowercase"],
-        );
-        self::registerProperty(
-            $class, "lowercase", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                fn(string $value) => new StringVariable(mb_strtolower($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "toUpperCase", new VariableMethod(
-                new DummyVariable(StringVariable::class),
-                fn(string $value) => new StringVariable(mb_strtoupper($value)),
-            ), aliases: ["uppercase"],
-        );
-        self::registerProperty(
-            $class, "uppercase", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                fn(string $value) => new StringVariable(mb_strtoupper($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "substring", new VariableMethod(
-                new DummyVariable(StringVariable::class),
-                fn(string $value, $start, $length = null) => new StringVariable(mb_substr($value, (int)$start, $length === null ? null : (int)$length)),
-            ),
-        );
+        self::registerMethod($class, "length", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(string $value) => new NumberVariable(mb_strlen($value)),
+        ));
+        self::registerMethod($class, "toLowerCase", new VariableMethod(
+            new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtolower($value)),
+        ), aliases: ["lowercase"]);
+        self::registerProperty($class, "lowercase", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtolower($value)),
+        ));
+        self::registerMethod($class, "toUpperCase", new VariableMethod(
+            new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtoupper($value)),
+        ), aliases: ["uppercase"]);
+        self::registerProperty($class, "uppercase", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            fn(string $value) => new StringVariable(mb_strtoupper($value)),
+        ));
+        self::registerMethod($class, "substring", new VariableMethod(
+            new DummyVariable(StringVariable::class),
+            fn(string $value, $start, $length = null) => new StringVariable(mb_substr($value, (int)$start, $length === null ? null : (int)$length)),
+        ));
     }
 }

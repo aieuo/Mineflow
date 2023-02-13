@@ -46,121 +46,85 @@ class EntityVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "id", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getId()),
-            ),
-        );
-        self::registerProperty(
-            $class, "saveId", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                function (Entity $entity) {
-                    try {
-                        return new StringVariable(EntityFactory::getInstance()->getSaveId($entity::class));
-                    } catch (\InvalidArgumentException) {
-                        return new StringVariable("");
-                    }
+        self::registerProperty($class, "id", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getId()),
+        ));
+        self::registerProperty($class, "saveId", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            function (Entity $entity) {
+                try {
+                    return new StringVariable(EntityFactory::getInstance()->getSaveId($entity::class));
+                } catch (\InvalidArgumentException) {
+                    return new StringVariable("");
                 }
-            ),
-        );
-        self::registerProperty(
-            $class, "nameTag", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                fn(Entity $entity) => new StringVariable($entity->getNameTag()),
-            ),
-        );
-        self::registerProperty(
-            $class, "health", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getHealth()),
-            ),
-        );
-        self::registerProperty(
-            $class, "maxHealth", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getMaxHealth()),
-            ),
-        );
-        self::registerProperty(
-            $class, "direction", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getHorizontalFacing()),
-            ),
-        );
-        self::registerProperty(
-            $class, "onGround", new VariableProperty(
-                new DummyVariable(BooleanVariable::class),
-                fn(Entity $entity) => new BooleanVariable($entity->isOnGround()),
-            ),
-        );
-        self::registerProperty(
-            $class, "bounding_box", new VariableProperty(
-                new DummyVariable(AxisAlignedBBVariable::class),
-                fn(Entity $entity) => new AxisAlignedBBVariable($entity->getBoundingBox()),
-            ),
-        );
-        self::registerProperty(
-            $class, "location", new VariableProperty(
-                new DummyVariable(LocationVariable::class),
-                fn(Entity $entity) => new LocationVariable($entity->getLocation()),
-            ),
-        );
-        self::registerProperty(
-            $class, "yaw", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getLocation()->getYaw()),
-            ),
-        );
-        self::registerProperty(
-            $class, "pitch", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getLocation()->getPitch()),
-            ),
-        );
-        self::registerProperty(
-            $class, "position", new VariableProperty(
-                new DummyVariable(LocationVariable::class),
-                fn(Entity $entity) => new PositionVariable($entity->getLocation()->asPosition()),
-            ),
-        );
-        self::registerProperty(
-            $class, "world", new VariableProperty(
-                new DummyVariable(WorldVariable::class),
-                fn(Entity $entity) => new WorldVariable($entity->getWorld()),
-            ),
-        );
-        self::registerProperty(
-            $class, "x", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getLocation()->getX()),
-            ),
-        );
-        self::registerProperty(
-            $class, "y", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getLocation()->getY()),
-            ),
-        );
-        self::registerProperty(
-            $class, "z", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Entity $entity) => new NumberVariable($entity->getLocation()->getZ()),
-            ),
-        );
-        self::registerProperty(
-            $class, "xyz", new VariableProperty(
-                new DummyVariable(StringVariable::class),
-                fn(Entity $entity) => new StringVariable($entity->getLocation()->getX().",".$entity->getLocation()->getY().",".$entity->getLocation()->getZ()),
-            ),
-        );
+            }
+        ));
+        self::registerProperty($class, "nameTag", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            fn(Entity $entity) => new StringVariable($entity->getNameTag()),
+        ));
+        self::registerProperty($class, "health", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getHealth()),
+        ));
+        self::registerProperty($class, "maxHealth", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getMaxHealth()),
+        ));
+        self::registerProperty($class, "direction", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getHorizontalFacing()),
+        ));
+        self::registerProperty($class, "onGround", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Entity $entity) => new BooleanVariable($entity->isOnGround()),
+        ));
+        self::registerProperty($class, "bounding_box", new VariableProperty(
+            new DummyVariable(AxisAlignedBBVariable::class),
+            fn(Entity $entity) => new AxisAlignedBBVariable($entity->getBoundingBox()),
+        ));
+        self::registerProperty($class, "location", new VariableProperty(
+            new DummyVariable(LocationVariable::class),
+            fn(Entity $entity) => new LocationVariable($entity->getLocation()),
+        ));
+        self::registerProperty($class, "yaw", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getYaw()),
+        ));
+        self::registerProperty($class, "pitch", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getPitch()),
+        ));
+        self::registerProperty($class, "position", new VariableProperty(
+            new DummyVariable(LocationVariable::class),
+            fn(Entity $entity) => new PositionVariable($entity->getLocation()->asPosition()),
+        ));
+        self::registerProperty($class, "world", new VariableProperty(
+            new DummyVariable(WorldVariable::class),
+            fn(Entity $entity) => new WorldVariable($entity->getWorld()),
+        ));
+        self::registerProperty($class, "x", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getX()),
+        ));
+        self::registerProperty($class, "y", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getY()),
+        ));
+        self::registerProperty($class, "z", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new NumberVariable($entity->getLocation()->getZ()),
+        ));
+        self::registerProperty($class, "xyz", new VariableProperty(
+            new DummyVariable(StringVariable::class),
+            fn(Entity $entity) => new StringVariable($entity->getLocation()->getX().",".$entity->getLocation()->getY().",".$entity->getLocation()->getZ()),
+        ));
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
-            self::registerProperty(
-                $class, $name, new VariableProperty(
-                    new DummyVariable(LocationVariable::class),
-                    fn(Entity $entity) => new LocationVariable(self::getSideLocation($entity, $facing)),
-                ),
-            );
+            self::registerProperty($class, $name, new VariableProperty(
+                new DummyVariable(LocationVariable::class),
+                fn(Entity $entity) => new LocationVariable(self::getSideLocation($entity, $facing)),
+            ));
         }
     }
 

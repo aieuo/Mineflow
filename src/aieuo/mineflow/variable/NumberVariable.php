@@ -73,59 +73,41 @@ class NumberVariable extends Variable implements \JsonSerializable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "ceil", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) => new NumberVariable(ceil($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "ceil", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) => new NumberVariable(ceil($value)),
-            ),
-        );
-        self::registerProperty(
-            $class, "floor", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) => new NumberVariable(floor($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "floor", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) =>  new NumberVariable(floor($value)),
-            ),
-        );
-        self::registerProperty(
-            $class, "round", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) => new NumberVariable(round($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "round", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value, $precision) =>  new NumberVariable(round($value, (int)$precision)),
-            ),
-        );
-        self::registerProperty(
-            $class, "abs", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) => new NumberVariable(abs($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "abs", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value) =>  new NumberVariable(abs($value)),
-            ),
-        );
-        self::registerMethod(
-            $class, "pad", new VariableMethod(
-                new DummyVariable(NumberVariable::class),
-                fn(int|float $value, $length) =>  new StringVariable(str_pad((string)$value, (int)$length, "0", STR_PAD_LEFT)),
-            ),
-        );
+        self::registerProperty($class, "ceil", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(ceil($value)),
+        ));
+        self::registerMethod($class, "ceil", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(ceil($value)),
+        ));
+        self::registerProperty($class, "floor", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(floor($value)),
+        ));
+        self::registerMethod($class, "floor", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) =>  new NumberVariable(floor($value)),
+        ));
+        self::registerProperty($class, "round", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(round($value)),
+        ));
+        self::registerMethod($class, "round", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value, $precision) =>  new NumberVariable(round($value, (int)$precision)),
+        ));
+        self::registerProperty($class, "abs", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) => new NumberVariable(abs($value)),
+        ));
+        self::registerMethod($class, "abs", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value) =>  new NumberVariable(abs($value)),
+        ));
+        self::registerMethod($class, "pad", new VariableMethod(
+            new DummyVariable(NumberVariable::class),
+            fn(int|float $value, $length) =>  new StringVariable(str_pad((string)$value, (int)$length, "0", STR_PAD_LEFT)),
+        ));
     }
 }

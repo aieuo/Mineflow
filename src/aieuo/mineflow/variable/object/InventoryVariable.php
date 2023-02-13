@@ -38,17 +38,13 @@ class InventoryVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "all", new VariableProperty(
-                new DummyVariable(ListVariable::class, ItemVariable::getTypeName()),
-                fn(Inventory $inventory) => new ListVariable(array_values(array_map(fn(Item $item) => new ItemVariable($item), $inventory->getContents()))),
-            ),
-        );
-        self::registerProperty(
-            $class, "size", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Inventory $inventory) => new NumberVariable($inventory->getSize()),
-            ),
-        );
+        self::registerProperty($class, "all", new VariableProperty(
+            new DummyVariable(ListVariable::class, ItemVariable::getTypeName()),
+            fn(Inventory $inventory) => new ListVariable(array_values(array_map(fn(Item $item) => new ItemVariable($item), $inventory->getContents()))),
+        ));
+        self::registerProperty($class, "size", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Inventory $inventory) => new NumberVariable($inventory->getSize()),
+        ));
     }
 }

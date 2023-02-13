@@ -29,25 +29,19 @@ class LocationVariable extends PositionVariable {
     public static function registerProperties(string $class = self::class): void {
         PositionVariable::registerProperties($class);
 
-        self::registerProperty(
-            $class, "yaw", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Location $location) => new NumberVariable($location->yaw),
-            ),
-        );
-        self::registerProperty(
-            $class, "pitch", new VariableProperty(
-                new DummyVariable(NumberVariable::class),
-                fn(Location $location) => new NumberVariable($location->pitch),
-            ),
-        );
+        self::registerProperty($class, "yaw", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Location $location) => new NumberVariable($location->yaw),
+        ));
+        self::registerProperty($class, "pitch", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Location $location) => new NumberVariable($location->pitch),
+        ));
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
-            self::registerProperty(
-                $class, $name, new VariableProperty(
-                    new DummyVariable(LocationVariable::class),
-                    fn(Location $location) => new LocationVariable(Location::fromObject($location->getSide($facing), $location->world, $location->yaw, $location->pitch)),
-                ), override: true
-            );
+            self::registerProperty($class, $name, new VariableProperty(
+                new DummyVariable(LocationVariable::class),
+                fn(Location $location) => new LocationVariable(Location::fromObject($location->getSide($facing), $location->world, $location->yaw, $location->pitch)),
+            ), override: true);
         }
     }
 }

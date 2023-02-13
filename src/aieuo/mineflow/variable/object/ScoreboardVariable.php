@@ -35,11 +35,9 @@ class ScoreboardVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod(
-            $class, "scores", new VariableMethod(
-                new DummyVariable(MapVariable::class),
-                fn(Scoreboard $scoreboard) => new MapVariable(array_map(fn(int $score) => new NumberVariable($score), $scoreboard->getScores())),
-            ),
-        );
+        self::registerMethod($class, "scores", new VariableMethod(
+            new DummyVariable(MapVariable::class),
+            fn(Scoreboard $scoreboard) => new MapVariable(array_map(fn(int $score) => new NumberVariable($score), $scoreboard->getScores())),
+        ));
     }
 }

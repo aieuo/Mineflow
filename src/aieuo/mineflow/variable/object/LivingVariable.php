@@ -22,35 +22,25 @@ class LivingVariable extends EntityVariable {
     public static function registerProperties(string $class = self::class): void {
         EntityVariable::registerProperties($class);
 
-        self::registerProperty(
-            $class, "armor", new VariableProperty(
-                new DummyVariable(InventoryVariable::class),
-                fn(Living $living) => new InventoryVariable($living->getArmorInventory()),
-            ),
-        );
-        self::registerProperty(
-            $class, "sprinting", new VariableProperty(
-                new DummyVariable(BooleanVariable::class),
-                fn(Living $living) => new BooleanVariable($living->isSprinting()),
-            ),
-        );
-        self::registerProperty(
-            $class, "sneaking", new VariableProperty(
-                new DummyVariable(BooleanVariable::class),
-                fn(Living $living) => new BooleanVariable($living->isSneaking()),
-            ),
-        );
-        self::registerProperty(
-            $class, "gliding", new VariableProperty(
-                new DummyVariable(BooleanVariable::class),
-                fn(Living $living) => new BooleanVariable($living->isGliding()),
-            ),
-        );
-        self::registerProperty(
-            $class, "swimming", new VariableProperty(
-                new DummyVariable(BooleanVariable::class),
-                fn(Living $living) => new BooleanVariable($living->isSwimming()),
-            ),
-        );
+        self::registerProperty($class, "armor", new VariableProperty(
+            new DummyVariable(InventoryVariable::class),
+            fn(Living $living) => new InventoryVariable($living->getArmorInventory()),
+        ));
+        self::registerProperty($class, "sprinting", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isSprinting()),
+        ));
+        self::registerProperty($class, "sneaking", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isSneaking()),
+        ));
+        self::registerProperty($class, "gliding", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isGliding()),
+        ));
+        self::registerProperty($class, "swimming", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Living $living) => new BooleanVariable($living->isSwimming()),
+        ));
     }
 }

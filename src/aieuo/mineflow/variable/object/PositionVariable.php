@@ -28,19 +28,15 @@ class PositionVariable extends Vector3Variable {
     public static function registerProperties(string $class = self::class): void {
         Vector3Variable::registerProperties($class);
 
-        self::registerProperty(
-            $class, "world", new VariableProperty(
-                new DummyVariable(WorldVariable::class),
-                fn(Position $position) => new WorldVariable($position->world),
-            ),
-        );
+        self::registerProperty($class, "world", new VariableProperty(
+            new DummyVariable(WorldVariable::class),
+            fn(Position $position) => new WorldVariable($position->world),
+        ));
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
-            self::registerProperty(
-                $class, $name, new VariableProperty(
-                    new DummyVariable(PositionVariable::class),
-                    fn(Position $position) => new PositionVariable($position->getSide($facing)),
-                ), override: true
-            );
+            self::registerProperty($class, $name, new VariableProperty(
+                new DummyVariable(PositionVariable::class),
+                fn(Position $position) => new PositionVariable($position->getSide($facing)),
+            ), override: true);
         }
     }
 }
