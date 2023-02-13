@@ -8,6 +8,7 @@ use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\player\Player;
 
 class PlayerVariable extends HumanVariable {
@@ -32,52 +33,76 @@ class PlayerVariable extends HumanVariable {
         HumanVariable::registerProperties($class);
 
         self::registerProperty(
-            $class, "name", new DummyVariable(StringVariable::class),
-            fn(Player $player) => new StringVariable($player->getName()),
+            $class, "name", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(Player $player) => new StringVariable($player->getName()),
+            ),
         );
         self::registerProperty(
-            $class, "display_name", new DummyVariable(StringVariable::class),
-            fn(Player $player) => new StringVariable($player->getDisplayName()),
+            $class, "display_name", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(Player $player) => new StringVariable($player->getDisplayName()),
+            ),
         );
         self::registerProperty(
-            $class, "locale", new DummyVariable(StringVariable::class),
-            fn(Player $player) => new StringVariable($player->getLocale()),
+            $class, "locale", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(Player $player) => new StringVariable($player->getLocale()),
+            ),
         );
         self::registerProperty(
-            $class, "ping", new DummyVariable(NumberVariable::class),
-            fn(Player $player) => new NumberVariable($player->getNetworkSession()->getPing()),
+            $class, "ping", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(Player $player) => new NumberVariable($player->getNetworkSession()->getPing()),
+            ),
         );
         self::registerProperty(
-            $class, "ip", new DummyVariable(StringVariable::class),
-            fn(Player $player) => new StringVariable($player->getNetworkSession()->getIp()),
+            $class, "ip", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(Player $player) => new StringVariable($player->getNetworkSession()->getIp()),
+            ),
         );
         self::registerProperty(
-            $class, "port", new DummyVariable(NumberVariable::class),
-            fn(Player $player) => new NumberVariable($player->getNetworkSession()->getPort()),
+            $class, "port", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(Player $player) => new NumberVariable($player->getNetworkSession()->getPort()),
+            ),
         );
         self::registerProperty(
-            $class, "uuid", new DummyVariable(StringVariable::class),
-            fn(Player $player) => new StringVariable($player->getUniqueId()->toString()),
+            $class, "uuid", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(Player $player) => new StringVariable($player->getUniqueId()->toString()),
+            ),
         );
         self::registerProperty(
-            $class, "spawn_point", new DummyVariable(PositionVariable::class),
-            fn(Player $player) => new PositionVariable($player->getSpawn()),
+            $class, "spawn_point", new VariableProperty(
+                new DummyVariable(PositionVariable::class),
+                fn(Player $player) => new PositionVariable($player->getSpawn()),
+            ),
         );
         self::registerProperty(
-            $class, "flying", new DummyVariable(BooleanVariable::class),
-            fn(Player $player) => new BooleanVariable($player->isFlying()),
+            $class, "flying", new VariableProperty(
+                new DummyVariable(BooleanVariable::class),
+                fn(Player $player) => new BooleanVariable($player->isFlying()),
+            ),
         );
         self::registerProperty(
-            $class, "first_played", new DummyVariable(NumberVariable::class),
-            fn(Player $player) => new NumberVariable($player->getFirstPlayed() ?? 0),
+            $class, "first_played", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(Player $player) => new NumberVariable($player->getFirstPlayed() ?? 0),
+            ),
         );
         self::registerProperty(
-            $class, "last_played", new DummyVariable(NumberVariable::class),
-            fn(Player $player) => new NumberVariable($player->getLastPlayed() ?? 0),
+            $class, "last_played", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(Player $player) => new NumberVariable($player->getLastPlayed() ?? 0),
+            ),
         );
         self::registerProperty(
-            $class, "data", new DummyVariable(CustomDataListVariable::class),
-            fn(Player $player) => new CustomDataListVariable(PlayerVariable::getTypeName(), $player->getName()),
+            $class, "data", new VariableProperty(
+                new DummyVariable(CustomDataListVariable::class),
+                fn(Player $player) => new CustomDataListVariable(PlayerVariable::getTypeName(), $player->getName()),
+            ),
         );
     }
 }

@@ -10,6 +10,7 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\Variable;
+use aieuo\mineflow\variable\VariableMethod;
 use function array_map;
 
 class ScoreboardVariable extends ObjectVariable {
@@ -35,8 +36,10 @@ class ScoreboardVariable extends ObjectVariable {
 
     public static function registerProperties(string $class = self::class): void {
         self::registerMethod(
-            $class, "scores", new DummyVariable(MapVariable::class),
-            fn(Scoreboard $scoreboard) => new MapVariable(array_map(fn(int $score) => new NumberVariable($score), $scoreboard->getScores())),
+            $class, "scores", new VariableMethod(
+                new DummyVariable(MapVariable::class),
+                fn(Scoreboard $scoreboard) => new MapVariable(array_map(fn(int $score) => new NumberVariable($score), $scoreboard->getScores())),
+            ),
         );
     }
 }

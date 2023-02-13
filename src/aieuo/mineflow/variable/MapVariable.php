@@ -92,21 +92,28 @@ class MapVariable extends ListVariable {
 
     public static function registerProperties(string $class = self::class): void {
         self::registerMethod(
-            $class, "count", new DummyVariable(NumberVariable::class),
-            fn(array $values) => new NumberVariable(count($values)),
+            $class, "count", new VariableMethod(
+                new DummyVariable(NumberVariable::class),
+                fn(array $values) => new NumberVariable(count($values)),
+            ),
         );
         self::registerMethod(
-            $class, "reverse", new DummyVariable(ListVariable::class),
-            fn(array $values) => new ListVariable(array_reverse($values)),
-            aliases: ["reversed"],
+            $class, "reverse", new VariableMethod(
+                new DummyVariable(ListVariable::class),
+                fn(array $values) => new ListVariable(array_reverse($values)),
+            ), aliases: ["reversed"],
         );
         self::registerMethod(
-            $class, "keys", new DummyVariable(ListVariable::class),
-            fn(array $values) => Mineflow::getVariableHelper()->arrayToListVariable(array_keys($values)),
+            $class, "keys", new VariableMethod(
+                new DummyVariable(ListVariable::class),
+                fn(array $values) => Mineflow::getVariableHelper()->arrayToListVariable(array_keys($values)),
+            ),
         );
         self::registerMethod(
-            $class, "values", new DummyVariable(ListVariable::class),
-            fn(array $values) => new ListVariable(array_values($values)),
+            $class, "values", new VariableMethod(
+                new DummyVariable(ListVariable::class),
+                fn(array $values) => new ListVariable(array_values($values)),
+            ),
         );
     }
 }

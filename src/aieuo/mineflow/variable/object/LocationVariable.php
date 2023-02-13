@@ -6,6 +6,7 @@ namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\entity\Location;
 use pocketmine\math\Facing;
 
@@ -29,18 +30,23 @@ class LocationVariable extends PositionVariable {
         PositionVariable::registerProperties($class);
 
         self::registerProperty(
-            $class, "yaw", new DummyVariable(NumberVariable::class),
-            fn(Location $location) => new NumberVariable($location->yaw),
+            $class, "yaw", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(Location $location) => new NumberVariable($location->yaw),
+            ),
         );
         self::registerProperty(
-            $class, "pitch", new DummyVariable(NumberVariable::class),
-            fn(Location $location) => new NumberVariable($location->pitch),
+            $class, "pitch", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(Location $location) => new NumberVariable($location->pitch),
+            ),
         );
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
             self::registerProperty(
-                $class, $name, new DummyVariable(LocationVariable::class),
-                fn(Location $location) => new LocationVariable(Location::fromObject($location->getSide($facing), $location->world, $location->yaw, $location->pitch)),
-                override: true
+                $class, $name, new VariableProperty(
+                    new DummyVariable(LocationVariable::class),
+                    fn(Location $location) => new LocationVariable(Location::fromObject($location->getSide($facing), $location->world, $location->yaw, $location->pitch)),
+                ), override: true
             );
         }
     }

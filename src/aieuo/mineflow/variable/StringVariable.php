@@ -51,30 +51,40 @@ class StringVariable extends Variable implements \JsonSerializable {
 
     public static function registerProperties(string $class = self::class): void {
         self::registerMethod(
-            $class, "length", new DummyVariable(NumberVariable::class),
-            fn(string $value) => new NumberVariable(mb_strlen($value)),
+            $class, "length", new VariableMethod(
+                new DummyVariable(NumberVariable::class),
+                fn(string $value) => new NumberVariable(mb_strlen($value)),
+            ),
         );
         self::registerMethod(
-            $class, "toLowerCase", new DummyVariable(StringVariable::class),
-            fn(string $value) => new StringVariable(mb_strtolower($value)),
-            aliases: ["lowercase"],
+            $class, "toLowerCase", new VariableMethod(
+                new DummyVariable(StringVariable::class),
+                fn(string $value) => new StringVariable(mb_strtolower($value)),
+            ), aliases: ["lowercase"],
         );
         self::registerProperty(
-            $class, "lowercase", new DummyVariable(StringVariable::class),
-            fn(string $value) => new StringVariable(mb_strtolower($value)),
+            $class, "lowercase", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(string $value) => new StringVariable(mb_strtolower($value)),
+            ),
         );
         self::registerMethod(
-            $class, "toUpperCase", new DummyVariable(StringVariable::class),
-            fn(string $value) => new StringVariable(mb_strtoupper($value)),
-            aliases: ["uppercase"],
+            $class, "toUpperCase", new VariableMethod(
+                new DummyVariable(StringVariable::class),
+                fn(string $value) => new StringVariable(mb_strtoupper($value)),
+            ), aliases: ["uppercase"],
         );
         self::registerProperty(
-            $class, "uppercase", new DummyVariable(StringVariable::class),
-            fn(string $value) => new StringVariable(mb_strtoupper($value)),
+            $class, "uppercase", new VariableProperty(
+                new DummyVariable(StringVariable::class),
+                fn(string $value) => new StringVariable(mb_strtoupper($value)),
+            ),
         );
         self::registerMethod(
-            $class, "substring", new DummyVariable(StringVariable::class),
-            fn(string $value, $start, $length = null) => new StringVariable(mb_substr($value, (int)$start, $length === null ? null : (int)$length)),
+            $class, "substring", new VariableMethod(
+                new DummyVariable(StringVariable::class),
+                fn(string $value, $start, $length = null) => new StringVariable(mb_substr($value, (int)$start, $length === null ? null : (int)$length)),
+            ),
         );
     }
 }

@@ -8,6 +8,7 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use function max;
@@ -108,36 +109,52 @@ class AxisAlignedBBVariable extends ObjectVariable {
 
     public static function registerProperties(string $class = self::class): void {
         self::registerProperty(
-            $class, "min_x", new DummyVariable(NumberVariable::class),
-            fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->minX),
+            $class, "min_x", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->minX),
+            )
         );
         self::registerProperty(
-            $class, "min_y", new DummyVariable(NumberVariable::class),
-            fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->minY),
+            $class, "min_y", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->minY),
+            )
         );
         self::registerProperty(
-            $class, "min_z", new DummyVariable(NumberVariable::class),
-            fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->minZ),
+            $class, "min_z", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->minZ),
+            )
         );
         self::registerProperty(
-            $class, "max_x", new DummyVariable(NumberVariable::class),
-            fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->maxX),
+            $class, "max_x", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->maxX),
+            )
         );
         self::registerProperty(
-            $class, "max_y", new DummyVariable(NumberVariable::class),
-            fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->maxY),
+            $class, "max_y", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->maxY),
+            )
         );
         self::registerProperty(
-            $class, "max_z", new DummyVariable(NumberVariable::class),
-            fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->maxZ),
+            $class, "max_z", new VariableProperty(
+                new DummyVariable(NumberVariable::class),
+                fn(AxisAlignedBB $aabb) => new NumberVariable($aabb->maxZ),
+            )
         );
         self::registerProperty(
-            $class, "min", new DummyVariable(Vector3Variable::class),
-            fn(AxisAlignedBB $aabb) => new Vector3($aabb->minX, $aabb->minY, $aabb->minZ),
+            $class, "min", new VariableProperty(
+                new DummyVariable(Vector3Variable::class),
+                fn(AxisAlignedBB $aabb) => new Vector3($aabb->minX, $aabb->minY, $aabb->minZ),
+            )
         );
         self::registerProperty(
-            $class, "max", new DummyVariable(Vector3Variable::class),
-            fn(AxisAlignedBB $aabb) => new Vector3($aabb->maxX, $aabb->maxY, $aabb->maxZ),
+            $class, "max", new VariableProperty(
+                new DummyVariable(Vector3Variable::class),
+                fn(AxisAlignedBB $aabb) => new Vector3($aabb->maxX, $aabb->maxY, $aabb->maxZ),
+            )
         );
     }
 

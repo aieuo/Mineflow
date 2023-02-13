@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\variable\object\UnknownVariable;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
@@ -162,13 +162,16 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
 
     public static function registerProperties(string $class = self::class): void {
         self::registerMethod(
-            $class, "count", new DummyVariable(NumberVariable::class),
-            fn(array $values) => new NumberVariable(count($values)),
+            $class, "count", new VariableMethod(
+                new DummyVariable(NumberVariable::class),
+                fn(array $values) => new NumberVariable(count($values)),
+            ),
         );
         self::registerMethod(
-            $class, "reverse", new DummyVariable(ListVariable::class),
-            fn(array $values) => new ListVariable(array_reverse($values)),
-            aliases: ["reversed"],
+            $class, "reverse", new VariableMethod(
+                new DummyVariable(ListVariable::class),
+                fn(array $values) => new ListVariable(array_reverse($values)),
+            ), aliases: ["reversed"],
         );
     }
 }

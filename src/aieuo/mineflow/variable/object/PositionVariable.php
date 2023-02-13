@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable\object;
 
 use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\math\Facing;
 use pocketmine\world\Position;
 
@@ -28,14 +29,17 @@ class PositionVariable extends Vector3Variable {
         Vector3Variable::registerProperties($class);
 
         self::registerProperty(
-            $class, "world", new DummyVariable(WorldVariable::class),
-            fn(Position $position) => new WorldVariable($position->world),
+            $class, "world", new VariableProperty(
+                new DummyVariable(WorldVariable::class),
+                fn(Position $position) => new WorldVariable($position->world),
+            ),
         );
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
             self::registerProperty(
-                $class, $name, new DummyVariable(PositionVariable::class),
-                fn(Position $position) => new PositionVariable($position->getSide($facing)),
-                override: true
+                $class, $name, new VariableProperty(
+                    new DummyVariable(PositionVariable::class),
+                    fn(Position $position) => new PositionVariable($position->getSide($facing)),
+                ), override: true
             );
         }
     }
