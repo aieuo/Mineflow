@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\variable\object\UnknownVariable;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
 use function array_search;
 use function array_values;
-use function count;
 
 class ListVariable extends Variable implements IteratorVariable, \JsonSerializable {
     use IteratorVariableTrait;
@@ -118,10 +116,6 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
         return new ListVariable($values);
     }
 
-    public function getCount(): int {
-        return count($this->values);
-    }
-
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
 
@@ -161,13 +155,11 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod($class, "count", new VariableMethod(
-            new DummyVariable(NumberVariable::class),
-            fn(array $values) => new NumberVariable(count($values)),
-        ));
         self::registerMethod($class, "reverse", new VariableMethod(
             new DummyVariable(ListVariable::class),
             fn(array $values) => new ListVariable(array_reverse($values)),
         ), aliases: ["reversed"]);
+
+        self::registerIteratorMethods($class);
     }
 }

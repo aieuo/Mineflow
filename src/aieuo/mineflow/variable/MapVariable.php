@@ -5,16 +5,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\Mineflow;
-use aieuo\mineflow\variable\object\UnknownVariable;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\Tag;
-use function array_key_first;
-use function array_key_last;
-use function array_keys;
 use function array_reverse;
-use function array_values;
-use function count;
 
 class MapVariable extends ListVariable {
 
@@ -94,21 +87,11 @@ class MapVariable extends ListVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod($class, "count", new VariableMethod(
-            new DummyVariable(NumberVariable::class),
-            fn(array $values) => new NumberVariable(count($values)),
-        ));
         self::registerMethod($class, "reverse", new VariableMethod(
             new DummyVariable(ListVariable::class),
             fn(array $values) => new ListVariable(array_reverse($values)),
         ), aliases: ["reversed"]);
-        self::registerMethod($class, "keys", new VariableMethod(
-            new DummyVariable(ListVariable::class),
-            fn(array $values) => Mineflow::getVariableHelper()->arrayToListVariable(array_keys($values)),
-        ));
-        self::registerMethod($class, "values", new VariableMethod(
-            new DummyVariable(ListVariable::class),
-            fn(array $values) => new ListVariable(array_values($values)),
-        ));
+
+        self::registerIteratorMethods($class);
     }
 }

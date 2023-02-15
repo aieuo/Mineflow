@@ -17,10 +17,7 @@ use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
 use aieuo\mineflow\variable\VariableMethod;
 use pocketmine\utils\Config;
-use function array_keys;
 use function array_reverse;
-use function array_values;
-use function count;
 use function is_array;
 use function is_bool;
 use function is_numeric;
@@ -73,25 +70,15 @@ class ConfigVariable extends ObjectVariable implements IteratorVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod($class, "count", new VariableMethod(
-            new DummyVariable(NumberVariable::class),
-            fn(Config $config) => new NumberVariable(count($config->getAll())),
-        ));
         self::registerMethod($class, "reverse", new VariableMethod(
             new DummyVariable(MapVariable::class),
             fn(Config $config) => new MapVariable(array_reverse($config->getAll())),
         ), aliases: ["reversed"]);
-        self::registerMethod($class, "keys", new VariableMethod(
-            new DummyVariable(ListVariable::class),
-            fn(Config $config) => Mineflow::getVariableHelper()->arrayToListVariable(array_keys($config->getAll())),
-        ));
-        self::registerMethod($class, "values", new VariableMethod(
-            new DummyVariable(ListVariable::class),
-            fn(Config $config) => Mineflow::getVariableHelper()->arrayToListVariable(array_values($config->getAll())),
-        ));
         self::registerMethod($class, "all", new VariableMethod(
             new DummyVariable(ListVariable::class),
             fn(Config $config) => Mineflow::getVariableHelper()->arrayToListVariable($config->getAll()),
         ));
+
+        self::registerIteratorMethods($class);
     }
 }
