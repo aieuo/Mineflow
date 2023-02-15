@@ -21,12 +21,12 @@ class VariableMethod {
         return $this->closure;
     }
 
-    public function call(Variable $variable, array $arguments): void {
+    public function call(Variable $variable, array $arguments): Variable {
         if ($this->passVariable) {
-            ($this->closure)($variable, ...$arguments);
-        } else {
-            ($this->closure)($variable->getValue(), ...$arguments);
+            return ($this->closure)($variable, ...$arguments);
         }
+
+        return ($this->closure)($variable->getValue(), ...$arguments);
     }
 
 }

@@ -56,12 +56,11 @@ abstract class Variable {
     }
 
     final public function getProperty(string $name): ?Variable {
-        $property = self::getPropertyObject($name);
-        return $property?->get($this->getValue()) ?? $this->getValueFromIndex($name);
+        return self::getPropertyObject($name)?->get($this) ?? $this->getValueFromIndex($name);
     }
 
     final public function callMethod(string $name, array $parameters = []): ?Variable {
-        return self::getMethod($name)?->call($this->getValue(), $parameters);
+        return self::getMethod($name)?->call($this, $parameters);
     }
 
     /**
