@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\global\DefaultGlobalMethodVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
@@ -392,10 +393,11 @@ class VariableHelper {
         $target = implode(".", $tmp);
 
         if ($target === "") {
-            throw new UndefinedMineflowMethodException($target, $name);
+            $variable = new DefaultGlobalMethodVariable();
+        } else {
+            $variable = $this->mustGetVariableNested($target, $variables, $global);
         }
 
-        $variable = $this->mustGetVariableNested($target, $variables, $global);
         try {
             $result = $variable->callMethod($name, array_map(function (mixed $arg) {
                 if ($arg instanceof Variable) {
@@ -580,5 +582,6 @@ class VariableHelper {
         UnknownVariable::registerProperties();
         Vector3Variable::registerProperties();
         WorldVariable::registerProperties();
+        DefaultGlobalMethodVariable::registerProperties();
     }
 }
