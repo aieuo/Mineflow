@@ -117,6 +117,10 @@ class VariableHelper {
         return $variable;
     }
 
+    public function getAll(): array {
+        return $this->variables;
+    }
+
     public function add(string $name, Variable $variable): void {
         $this->variables[$name] = $variable;
     }

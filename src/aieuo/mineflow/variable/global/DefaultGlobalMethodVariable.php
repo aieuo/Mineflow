@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\global;
 
+use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
@@ -51,6 +52,10 @@ class DefaultGlobalMethodVariable extends ObjectVariable {
         self::registerMethod($class, "bool", new VariableMethod(
             new DummyVariable(BooleanVariable::class),
             fn($_ = null, $str = "") => new BooleanVariable(in_array(strtolower((string)$str), ["1", "true", "yes"], true)),
+        ));
+        self::registerMethod($class, "vars", new VariableMethod(
+            new DummyVariable(MapVariable::class),
+            fn($_ = null) => new MapVariable(Mineflow::getVariableHelper()->getAll()),
         ));
     }
 }
