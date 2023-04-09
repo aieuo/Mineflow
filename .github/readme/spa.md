@@ -18,8 +18,8 @@
 
 # Español
 
-Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.  
-**Algunas de las acciones se ocultan por defecto para evitar abusos.** **Para mostrarlas todas, por favor ejecuta `permiso de mineflow <your name> 2` desde la consola.**
+You can combine actions and create something like a plugin without any coding knowledge.  
+**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission <your name> 2` from the console.**
 
 ## Comando
 
@@ -53,8 +53,8 @@ ejemplos: `{target}`, `{item}`
 
 ### Crear una receta
 
-Ejecuta "/mineflow recipe add" e introduce el nombre de la receta y el nombre del grupo. (El nombre del grupo puede dejarse en blanco.)  
-Añade una variedad de acciones a la receta.
+Ejecuta "/mineflow recipe add" e introduce el nombre de la receta y el nombre del grupo. (The group name can be left blank.)    
+Add a variety of actions to the recipe.
 
 ### Ejecutar una receta
 
