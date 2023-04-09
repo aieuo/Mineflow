@@ -19,7 +19,7 @@
 # Indonesia
 
 You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
+**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 ## Perintah
 
@@ -47,7 +47,7 @@ contoh: `{target}`, `{item}`
 
 ### Buat resep
 
-Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup. (The group name can be left blank.)    
+Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (The group name can be left blank.)    
 Add a variety of actions to the recipe.
 
 ### Jalankan resep
