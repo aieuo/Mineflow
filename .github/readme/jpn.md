@@ -22,8 +22,7 @@
 # 日本語
 
 アクションを組み合わせてプラグインのようなものを作れます。   
-**いくつかのアクションはデフォルトの権限では使用できなくなっています．**
-**全て表示するにはコンソールから`mineflow permission add <your name> all`を実行してください**
+**いくつかのアクションはデフォルトの権限では使用できなくなっています．全て表示するにはコンソールから`mineflow permission add <your name> all`を実行してください**
 
 ## コマンド
 
@@ -84,15 +83,13 @@ It can be changed from "Change the target" on the form to any of the specified p
    ![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
 4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。       
-   ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true)
-   (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
+   ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true) (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
 5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。
    ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### 表示する情報を増やすには
 
-{target.hand}は[item変数](https://github.com/aieuo/Mineflow/wiki/Variable#item)です。
-`{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。
+{target.hand}は[item変数](https://github.com/aieuo/Mineflow/wiki/Variable#item)です。 `{target.hand.name}`でアイテム名、`{target.hand.count}`でアイテム数と置き換えます。
 
 ##### op以外も使用できるようにするには
 

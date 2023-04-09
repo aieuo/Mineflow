@@ -22,8 +22,7 @@
 # Indonesia
 
 Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
-**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan.**
-**Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**  
+**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**  
 
 ## Perintah
 
@@ -38,9 +37,7 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 
 ## Izin Tindakan
 
-Untuk mengubah izin, jalankan `/mineflow permission <add|remove|list> <name> <permission>`.
-Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain.
-Kamu dapat memberikan semua izin dari konsol.
+Untuk mengubah izin, jalankan `/mineflow permission <add|remove|list> <name> <permission>`. Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
 
 ## Variabel
 
@@ -53,8 +50,7 @@ contoh: `{target}`, `{item}`
 
 ### Buat resep
 
-Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.
-(Nama grup boleh dikosongkan.)    
+Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup. (Nama grup boleh dikosongkan.)    
 Tambahkan berbagai tindakan ke resep.
 
 ### Jalankan resep
@@ -85,15 +81,13 @@ Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`.
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Klik `Edit tindakan > Tambah tindakan > Pemain` untuk menambahkan `Bidang Kirim pesan ke obrolan` ke resep yang telah Anda buat.
 4. Masukkan `{target.hand.id}:{target.hand.damage}` di bidang pesan `Bidang Kirim pesan ke obrolan`.  
-   ![tambahkanTindakan](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true)
-   (`{target.hand}` berisi informasi tentang item di tangan pemain.)
+   ![tambahkanTindakan](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` berisi informasi tentang item di tangan pemain.)
 5. Klik `Edit pemicu > Tambahkan pemicu > Perintah` dan masukkan `id` di bidang `nama perintah`.
    ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Untuk mengirim informasi lebih lanjut tentang barang
 
-{target.hand} adalah [variabel barang](https://github.com/aieuo/Mineflow/wiki/Variable#item).
-`{target.hand.name}` diganti dengan nama barang dan `{target.hand.count}` dengan jumlah barang.
+{target.hand} adalah [variabel barang](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` diganti dengan nama barang dan `{target.hand.count}` dengan jumlah barang.
 
 ##### Untuk dapat menggunakannya non-OP
 

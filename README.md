@@ -22,8 +22,7 @@
 # English
 
 You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse.**
-**To show them all, please run `mineflow permission add <your name> all` from the console.**  
+**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**  
 
 ## Command
 
@@ -38,9 +37,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## ActionPermission
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`.
-Only the player who has `permission` permission can change the permissions of the other players.
-You can give an all permission from the console.
+To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
 
 ## Variable
 
@@ -53,8 +50,7 @@ examples: `{target}`, `{item}`
 
 ### Create a recipe
 
-Execute "/mineflow recipe add" and enter the recipe name and group name.
-(The group name can be left blank.)    
+Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)    
 Add a variety of actions to the recipe.  
 
 ### Execute a recipe
@@ -85,15 +81,13 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
 4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.  
-   ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true)
-   (`{target.hand}` contains information about the item in the player's hand.)
+   ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contains information about the item in the player's hand.)
 5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.
    ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### To send more information of item
 
-{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item).
-`{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
+{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
 
 ##### To be able to use it non-OP
 
