@@ -19,7 +19,7 @@
 # English
 
 You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
+**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 ## Command
 
