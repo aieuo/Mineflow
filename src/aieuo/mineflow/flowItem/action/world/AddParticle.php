@@ -89,11 +89,10 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPositionVariableName($content[0]);
         $this->setParticle($content[1]);
         $this->setAmount($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

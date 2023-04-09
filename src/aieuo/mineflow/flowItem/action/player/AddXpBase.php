@@ -57,10 +57,9 @@ abstract class AddXpBase extends FlowItem implements PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setXp($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

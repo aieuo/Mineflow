@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\player\PlayerExhaustEvent;
 
 class PlayerExhaustEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("PlayerExhaustEvent", $subKey, PlayerExhaustEvent::class);
+    public function __construct() {
+        parent::__construct("PlayerExhaustEvent", PlayerExhaustEvent::class);
     }
 
     public function getVariables(mixed $event): array {

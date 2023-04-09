@@ -11,8 +11,8 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Event;
 
 class EntityAttackEventTrigger extends PlayerEventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("EntityAttackEvent", $subKey, EntityDamageByEntityEvent::class);
+    public function __construct() {
+        parent::__construct("EntityAttackEvent", EntityDamageByEntityEvent::class);
     }
 
     public function getTargetEntity(Event $event): ?Entity {

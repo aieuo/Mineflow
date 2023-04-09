@@ -11,6 +11,7 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\entity\Living;
 use pocketmine\permission\BanEntry;
 use pocketmine\player\Player;
@@ -39,64 +40,64 @@ class ServerVariable extends ObjectVariable {
 
     public static function registerProperties(string $class = self::class): void {
         $now = new \DateTime(timezone: Mineflow::getTimeZone());
-        self::registerProperty(
-            $class, "name", new DummyVariable(StringVariable::class),
+        self::registerProperty($class, "name", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Server $server) => new StringVariable($server->getName())
-        );
-        self::registerProperty(
-            $class, "motd", new DummyVariable(StringVariable::class),
+        ));
+        self::registerProperty($class, "motd", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Server $server) => new StringVariable($server->getMotd())
-        );
-        self::registerProperty(
-            $class, "ip", new DummyVariable(StringVariable::class),
+        ));
+        self::registerProperty($class, "ip", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Server $server) => new StringVariable($server->getIp())
-        );
-        self::registerProperty(
-            $class, "port", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "port", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Server $server) => new NumberVariable($server->getPort())
-        );
-        self::registerProperty(
-            $class, "tick", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "tick", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Server $server) => new NumberVariable($server->getTick())
-        );
-        self::registerProperty(
-            $class, "microtime", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "microtime", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Server $server) => new NumberVariable(microtime(true))
-        );
-        self::registerProperty(
-            $class, "time", new DummyVariable(MapVariable::class),
+        ));
+        self::registerProperty($class, "time", new VariableProperty(
+            new DummyVariable(MapVariable::class),
             fn(Server $server) => new MapVariable([
                 "hours" => new NumberVariable((int)$now->format("H")),
                 "minutes" => new NumberVariable((int)$now->format("i")),
                 "seconds" => new NumberVariable((int)$now->format("s")),
-            ], $now->format("H:i:s"))
-        );
-        self::registerProperty(
-            $class, "date", new DummyVariable(MapVariable::class),
+            ], $now->format("H:i:s")),
+        ));
+        self::registerProperty($class, "date", new VariableProperty(
+            new DummyVariable(MapVariable::class),
             fn(Server $server) => new MapVariable([
                 "year" => new NumberVariable((int)$now->format("Y")),
                 "month" => new NumberVariable((int)$now->format("m")),
                 "day" => new NumberVariable((int)$now->format("d")),
-            ], $now->format("m/d"))
-        );
-        self::registerProperty(
-            $class, "default_world", new DummyVariable(WorldVariable::class),
+            ], $now->format("m/d")),
+        ));
+        self::registerProperty($class, "default_world", new VariableProperty(
+            new DummyVariable(WorldVariable::class),
             function (Server $server) {
                 $world = $server->getWorldManager()->getDefaultWorld();
                 if ($world === null) return null;
                 return new WorldVariable($world);
-            }
-        );
-        self::registerProperty(
-            $class, "worlds", new DummyVariable(ListVariable::class, WorldVariable::getTypeName()),
+            },
+        ));
+        self::registerProperty($class, "worlds", new VariableProperty(
+            new DummyVariable(ListVariable::class, WorldVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(World $world) => new WorldVariable($world), $server->getWorldManager()->getWorlds()))
-        );
-        self::registerProperty(
-            $class, "players", new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
+        ));
+        self::registerProperty($class, "players", new VariableProperty(
+            new DummyVariable(ListVariable::class, PlayerVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(Player $player) => new PlayerVariable($player), array_values($server->getOnlinePlayers())))
-        );
-        self::registerProperty(
-            $class, "entities", new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+        ));
+        self::registerProperty($class, "entities", new VariableProperty(
+            new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
             function (Server $server) {
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
@@ -105,10 +106,10 @@ class ServerVariable extends ObjectVariable {
                     }
                 }
                 return new ListVariable($entities);
-            }
-        );
-        self::registerProperty(
-            $class, "livings", new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
+            },
+        ));
+        self::registerProperty($class, "livings", new VariableProperty(
+            new DummyVariable(ListVariable::class, EntityVariable::getTypeName()),
             function (Server $server) {
                 $entities = [];
                 foreach ($server->getWorldManager()->getWorlds() as $world) {
@@ -120,23 +121,23 @@ class ServerVariable extends ObjectVariable {
                     }
                 }
                 return new ListVariable($entities);
-            }
-        );
-        self::registerProperty(
-            $class, "ops", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+            },
+        ));
+        self::registerProperty($class, "ops", new VariableProperty(
+            new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getOps()->getAll(true)))
-        );
-        self::registerProperty(
-            $class, "bans", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+        ));
+        self::registerProperty($class, "bans", new VariableProperty(
+            new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getNameBans()->getEntries()))
-        );
-        self::registerProperty(
-            $class, "ip_bans", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+        ));
+        self::registerProperty($class, "ip_bans", new VariableProperty(
+            new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(BanEntry $entry) => new StringVariable($entry->getName()), $server->getIPBans()->getEntries()))
-        );
-        self::registerProperty(
-            $class, "whitelist", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+        ));
+        self::registerProperty($class, "whitelist", new VariableProperty(
+            new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
             fn(Server $server) => new ListVariable(array_map(fn(string $name) => new StringVariable($name), $server->getWhitelisted()->getAll(true)))
-        );
+        ));
     }
 }

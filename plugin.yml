@@ -1,12 +1,9 @@
 name: Mineflow
 main: aieuo\mineflow\Main
-version: 2.11.0
+version: 3.0.0
 api: 4.5.0
 load: POSTWORLD
 softdepend:
-  - EconomyAPI
-  - MoneySystem
-  - PocketMoney
   - if
 author: aieuo
 permissions:

@@ -8,6 +8,7 @@ use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\event\Cancellable;
 use pocketmine\event\Event;
 use function end;
@@ -36,14 +37,13 @@ class EventVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "name", new DummyVariable(StringVariable::class),
+        self::registerProperty($class, "name", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Event $event) => new StringVariable($this->getEventName($event)),
-        );
-        self::registerProperty(
-            $class, "canceled", new DummyVariable(BooleanVariable::class),
+        ));
+        self::registerProperty($class, "canceled", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
             fn(Event $event) => new BooleanVariable($event instanceof Cancellable and $event->isCancelled()),
-            aliases: ["isCanceled"],
-        );
+        ), aliases: ["isCanceled"]);
     }
 }

@@ -65,6 +65,10 @@ class VariableDeserializer {
         }
     }
 
+    public static function isDeserializable(string $type): bool {
+        return isset(self::$deserializers[$type]);
+    }
+
     public static function deserialize(array $data): ?Variable {
         if (!isset($data["value"]) or !isset($data["type"])) return null;
         if (!isset(self::$deserializers[$data["type"]])) return null;

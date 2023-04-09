@@ -53,9 +53,8 @@ class UnsetImmobile extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

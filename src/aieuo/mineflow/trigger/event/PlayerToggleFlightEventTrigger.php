@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\player\PlayerToggleFlightEvent;
 
 class PlayerToggleFlightEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("PlayerToggleFlightEvent", $subKey, PlayerToggleFlightEvent::class);
+    public function __construct() {
+        parent::__construct("PlayerToggleFlightEvent", PlayerToggleFlightEvent::class);
     }
 
     public function getVariables(mixed $event): array {

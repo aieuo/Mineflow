@@ -54,10 +54,9 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setRecipeName($content[0]);
         $this->setEntityVariableName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

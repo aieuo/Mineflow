@@ -64,10 +64,9 @@ class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setScoreboardVariableName($content[0]);
         $this->setScore($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

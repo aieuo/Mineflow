@@ -3,6 +3,7 @@
 namespace aieuo\mineflow\trigger\event;
 
 
+use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\event\Event;
 use pocketmine\utils\Config;
@@ -11,17 +12,25 @@ class EventManager {
 
     private Config $setting;
 
-    /** @var EventTrigger[][] */
+    /** @var EventTrigger[] */
     private array $triggers = [];
     /** @var array<string, bool> */
     private array $events = [];
     /** @var array<class-string<Event>, string[]> */
-    private array $keys = [];
+    private array $names = [];
     private EventTriggerListener $eventListener;
 
     public function __construct(Config $setting) {
         $this->setting = $setting;
         $this->eventListener = new EventTriggerListener();
+    }
+
+    public function getSetting(): Config {
+        return $this->setting;
+    }
+
+    public function getEventListener(): EventTriggerListener {
+        return $this->eventListener;
     }
 
     public function addDefaultTriggers(): void {
@@ -58,29 +67,29 @@ class EventManager {
     }
 
     public function addTrigger(EventTrigger $trigger, bool $defaultEnabled): void {
-        $key = $trigger->getKey();
+        $eventName = $trigger->getEventName();
         $eventClass = $trigger->getEventClass();
-        $trigger->setEnabled((bool)$this->setting->get($key, $this->setting->get($eventClass, $defaultEnabled)));
+        $enabled = (bool)$this->setting->get($eventName, $this->setting->get($eventClass, $defaultEnabled));
 
-        if ($trigger->isEnabled()) {
+        if ($enabled) {
             $this->eventListener->registerEvent($eventClass);
         }
 
-        $this->triggers[$key][$trigger->getSubKey()] = $trigger;
-        $this->events[$key] = $trigger->isEnabled();
-        $this->keys[$eventClass][] = $key;
+        $this->triggers[$eventName] = $trigger;
+        $this->events[$eventName] = $enabled;
+        $this->names[$eventClass][] = $eventName;
     }
 
-    public function getKeysFromEventClass(string $class): array {
-        return $this->keys[$class] ?? [];
+    public function getEventNamesFromClass(string $class): array {
+        return $this->names[$class] ?? [];
     }
 
-    public function getTrigger(string $key, string $subKey = ""): ?EventTrigger {
-        return $this->triggers[$key][$subKey] ?? null;
+    public function getTrigger(string $eventName): ?EventTrigger {
+        return $this->triggers[$eventName] ?? null;
     }
 
-    public function existsTrigger(string $key, string $subKey = ""): bool {
-        return isset($this->triggers[$key][$subKey]);
+    public function existsTrigger(string $eventName): bool {
+        return isset($this->triggers[$eventName]);
     }
 
     public function getAll(): array {
@@ -91,38 +100,47 @@ class EventManager {
         return $this->events;
     }
 
+    public function isTriggerEnabled(EventTrigger $trigger): bool {
+        return $this->events[$trigger->getEventName()] ?? false;
+    }
+
+    public function setTriggerEnabled(EventTrigger $trigger): void {
+        $this->events[$trigger->getEventName()] = true;
+
+        $this->getEventListener()->registerEvent($trigger->getEventClass());
+    }
+
+    public function setTriggerDisabled(EventTrigger $trigger): void {
+        $this->events[$trigger->getEventName()] = false;
+
+        $count = 0;
+        $keys = $this->getEventNamesFromClass($trigger->getEventClass());
+        foreach ($keys as $key) {
+            if ($trigger !== null and $this->isTriggerEnabledByEventName($key)) $count ++;
+        }
+
+        if ($count === 0) {
+            $this->getEventListener()->unregisterEvent($trigger->getEventClass());
+        }
+    }
+
+    public function isTriggerEnabledByEventName(string $name): bool {
+        return $this->events[$name] ?? false;
+    }
+
     public function getEnabledEvents(): array {
         return array_filter($this->events, fn(bool $v) => $v);
     }
 
-    public function enableEvent(string $event): void {
-        $this->setting->set($event, true);
-        $this->setting->save();
-
-        $this->events[$event] = true;
-    }
-
-    public function disableEvent(string $event): void {
-        $this->setting->set($event, false);
-        $this->setting->save();
-
-        $this->events[$event] = false;
-    }
-
-    public function getEventListener(): EventTriggerListener {
-        return $this->eventListener;
-    }
-
+    /**
+     * @param string $event
+     * @return Recipe[]
+     */
     public function getAssignedRecipes(string $event): array {
-        $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesWithSubKey(EventTrigger::create($event));
-        foreach ($containers as $name => $container) {
-            foreach ($container->getAllRecipe() as $recipe) {
-                $path = $recipe->getGroup()."/".$recipe->getName();
-                if (!isset($recipes[$path])) $recipes[$path] = [];
-                $recipes[$path][] = $name;
-            }
-        }
-        return $recipes;
+        $trigger = EventTrigger::get($event);
+        if ($trigger === null) return [];
+
+        $container = TriggerHolder::getInstance()->getRecipes($trigger);
+        return $container?->getAllRecipe() ?? [];
     }
 }

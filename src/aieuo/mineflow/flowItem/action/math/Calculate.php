@@ -64,27 +64,24 @@ class Calculate extends FlowItem {
         return [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
     }
 
-    public function setValue(string $value): self {
+    public function setValue(string $value): void {
         $this->value = $value;
-        return $this;
     }
 
     public function getValue(): string {
         return $this->value;
     }
 
-    public function setOperator(int $operator): self {
+    public function setOperator(int $operator): void {
         $this->operator = $operator;
-        return $this;
     }
 
     public function getOperator(): int {
         return $this->operator;
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -142,11 +139,10 @@ class Calculate extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setValue($content[0]);
         $this->setOperator($content[1]);
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

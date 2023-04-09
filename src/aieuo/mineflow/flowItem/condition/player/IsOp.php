@@ -53,9 +53,8 @@ class IsOp extends FlowItem implements Condition, PlayerFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         if (isset($content[0])) $this->setPlayerVariableName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

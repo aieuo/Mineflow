@@ -36,9 +36,8 @@ class SetPitch extends FlowItem implements EntityFlowItem {
         return [$this->getEntityVariableName(), $this->getPitch()];
     }
 
-    public function setPitch(string $pitch): self {
+    public function setPitch(string $pitch): void {
         $this->pitch = $pitch;
-        return $this;
     }
 
     public function getPitch(): string {
@@ -66,10 +65,9 @@ class SetPitch extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setPitch($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -60,10 +60,9 @@ abstract class GetInventoryContentsBase extends FlowItem implements PlayerFlowIt
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setResultName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

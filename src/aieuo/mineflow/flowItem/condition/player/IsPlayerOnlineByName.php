@@ -59,9 +59,8 @@ class IsPlayerOnlineByName extends FlowItem implements Condition {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -7,8 +7,8 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\RecipeVariable;
 
 class MineflowRecipeLoadEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("MineflowRecipeLoadEvent", $subKey, MineflowRecipeLoadEvent::class);
+    public function __construct() {
+        parent::__construct("MineflowRecipeLoadEvent", MineflowRecipeLoadEvent::class);
     }
 
     public function getVariables(mixed $event): array {

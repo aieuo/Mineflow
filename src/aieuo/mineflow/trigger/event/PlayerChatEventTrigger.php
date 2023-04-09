@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\StringVariable;
 use pocketmine\event\player\PlayerChatEvent;
 
 class PlayerChatEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("PlayerChatEvent", $subKey, PlayerChatEvent::class);
+    public function __construct() {
+        parent::__construct("PlayerChatEvent", PlayerChatEvent::class);
     }
 
     public function getVariables(mixed $event): array {

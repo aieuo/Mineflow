@@ -61,10 +61,9 @@ class InWorld extends FlowItem implements Condition, EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setWorld($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

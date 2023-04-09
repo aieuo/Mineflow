@@ -10,8 +10,8 @@ use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Event;
 
 class EntityLevelChangeEventTrigger extends PlayerEventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("EntityLevelChangeEvent", $subKey, EntityTeleportEvent::class);
+    public function __construct() {
+        parent::__construct("EntityLevelChangeEvent", EntityTeleportEvent::class);
     }
 
     public function filter(Event $event): bool {

@@ -86,6 +86,7 @@ interface FlowItemIds {
     public const GET_ITEM_DATA = "getItemData";
     public const REMOVE_ITEM_DATA = "removeItemData";
     public const HAS_ITEM_DATA = "hasItemData";
+    public const SET_ARMOR_COLOR = "setArmorColor";
 
     public const EQUIP_ARMOR = "equipArmor";
     public const GET_INVENTORY_CONTENTS = "getInventory";
@@ -147,6 +148,7 @@ interface FlowItemIds {
     public const CREATE_POSITION_VARIABLE = "createPosition";
     public const CREATE_BLOCK_VARIABLE = "createBlock";
     public const GET_VARIABLE_NESTED = "getVariable";
+    public const SET_PLAYER_DATA = "setPlayerData";
     public const COUNT_LIST_VARIABLE = "count";
     public const GET_LIST_KEYS = "keys";
     public const GET_LIST_VALUES = "values";

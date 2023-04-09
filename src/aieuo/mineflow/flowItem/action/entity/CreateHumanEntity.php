@@ -45,9 +45,8 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         return [$this->getPlayerVariableName(), $this->getPositionVariableName(), $this->getResultName()];
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -83,11 +82,10 @@ class CreateHumanEntity extends FlowItem implements PlayerFlowItem, PositionFlow
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

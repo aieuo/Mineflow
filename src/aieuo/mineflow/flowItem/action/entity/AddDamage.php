@@ -78,11 +78,10 @@ class AddDamage extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setDamage($content[1]);
         if (isset($content[2])) $this->setCause((int)$content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

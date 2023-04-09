@@ -34,9 +34,8 @@ class ExistsConfigFile extends FlowItem implements Condition {
         return [$this->getFileName()];
     }
 
-    public function setFileName(string $name): self {
+    public function setFileName(string $name): void {
         $this->fileName = $name;
-        return $this;
     }
 
     public function getFileName(): string {
@@ -66,9 +65,8 @@ class ExistsConfigFile extends FlowItem implements Condition {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setFileName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

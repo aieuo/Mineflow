@@ -42,38 +42,33 @@ class SimpleEditFormBuilder {
      * @param Element[] $elements
      * @return $this
      */
-    public function elements(array $elements): self {
+    public function elements(array $elements): void {
         $this->elements = array_merge($this->elements, $elements);
-        return $this;
     }
 
     /**
      * @param Element[] $elements
      * @return $this
      */
-    public function setElements(array $elements): self {
+    public function setElements(array $elements): void {
         $this->elements = $elements;
-        return $this;
     }
 
-    public function appendElement(Element $element): self {
+    public function appendElement(Element $element): void {
         $this->elements[] = $element;
-        return $this;
     }
 
-    public function prependElement(Element $element): self {
+    public function prependElement(Element $element): void {
         array_unshift($this->elements, $element);
         $this->elements = array_values($this->elements);
-        return $this;
     }
 
     /**
      * @param callable(EditFormResponseProcessor $response): void $callback
      * @return $this
      */
-    public function response(callable $callback): self {
+    public function response(callable $callback): void {
         $callback($this->responseProcessor);
-        return $this;
     }
 
     /**

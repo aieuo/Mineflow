@@ -50,10 +50,9 @@ class FourArithmeticOperations extends FlowItem {
         return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()] ?? "?", $this->getValue2(), $this->getResultName()];
     }
 
-    public function setValues(string $value1, string $value2): self {
+    public function setValues(string $value1, string $value2): void {
         $this->value1 = $value1;
         $this->value2 = $value2;
-        return $this;
     }
 
     public function getValue1(): string {
@@ -64,18 +63,16 @@ class FourArithmeticOperations extends FlowItem {
         return $this->value2;
     }
 
-    public function setOperator(int $operator): self {
+    public function setOperator(int $operator): void {
         $this->operator = $operator;
-        return $this;
     }
 
     public function getOperator(): int {
         return $this->operator;
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -116,11 +113,10 @@ class FourArithmeticOperations extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setValues($content[0], $content[2]);
         $this->setOperator($content[1]);
         $this->setResultName($content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {

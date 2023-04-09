@@ -19,28 +19,26 @@ use function explode;
 
 class EventTrigger extends Trigger {
 
-    private bool $enabled = true;
-    private string $eventClass;
-
-    public static function fromEventClass(string $class, string $subKey = ""): EventTrigger {
+    public static function fromEventClass(string $class): EventTrigger {
         $names = explode("\\", $class);
-        $key = $names[array_key_last($names)];
-        return self::create($key, $subKey);
+        $name = $names[array_key_last($names)];
+        return self::get($name) ?? new EventTrigger($name, $class);
     }
 
-    public static function create(string $key, string $subKey = ""): EventTrigger {
-        return Mineflow::getEventManager()->getTrigger($key) ?? new EventTrigger($key, $subKey, "");
+    public static function get(string $eventName): ?EventTrigger {
+        return Mineflow::getEventManager()->getTrigger($eventName);
     }
 
-    public function __construct(string $key, string $subKey, string $eventClass = null) {
-        if ($eventClass === null) {
-            $eventClass = $key;
-            $names = explode("\\", $key);
-            $key = $names[array_key_last($names)];
-        }
-        $this->eventClass = $eventClass;
+    public function __construct(private string $eventName, private string $eventClass) {
+        parent::__construct(Triggers::EVENT);
+    }
 
-        parent::__construct(Triggers::EVENT, $key, $subKey);
+    public function getEventName(): string {
+        return $this->eventName;
+    }
+
+    public function getEventClass(): string {
+        return $this->eventClass;
     }
 
     public function getTargetEntity(Event $event): ?Entity {
@@ -70,19 +68,21 @@ class EventTrigger extends Trigger {
         return true;
     }
 
-    public function setEnabled(bool $enabled): void {
-        $this->enabled = $enabled;
+    public function hash(): string|int {
+        return $this->eventName;
     }
 
-    public function isEnabled(): bool {
-        return $this->enabled;
+    public function serialize(): array {
+        return [
+            "event" => $this->eventName,
+        ];
     }
 
-    public function getEventClass(): string {
-        return $this->eventClass;
+    public static function deserialize(array $data): ?EventTrigger {
+        return self::get($data["event"] ?? $data["key"]);
     }
 
     public function __toString(): string {
-        return Language::exists("trigger.event.".$this->getKey()) ? Language::get("trigger.event.".$this->getKey()) : $this->getKey();
+        return Language::exists("trigger.event.".$this->getEventName()) ? Language::get("trigger.event.".$this->getEventName()) : $this->getEventName();
     }
 }

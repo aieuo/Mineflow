@@ -76,11 +76,10 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPositionVariableName($content[0], "pos1");
         $this->setPositionVariableName($content[1], "pos2");
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

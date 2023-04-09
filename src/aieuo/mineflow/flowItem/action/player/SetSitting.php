@@ -81,10 +81,9 @@ class SetSitting extends FlowItem implements PlayerFlowItem, PositionFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setPositionVariableName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

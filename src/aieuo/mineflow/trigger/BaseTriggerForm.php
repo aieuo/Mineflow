@@ -1,13 +1,12 @@
 <?php
+declare(strict_types=1);
 
-namespace aieuo\mineflow\ui\trigger;
+namespace aieuo\mineflow\trigger;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\Trigger;
-use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\ui\RecipeForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\player\Player;
@@ -20,12 +19,24 @@ class BaseTriggerForm {
             $form->sendAddedTriggerMenu($player, $recipe, $trigger);
             return;
         }
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), (string)$trigger])))
+
+        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getType()])))
             ->setContent((string)$trigger)
             ->addButtons([
                 new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
                 new Button("@form.delete", fn() => $this->sendConfirmDelete($player, $recipe, $trigger)),
             ])->addMessages($messages)->show($player);
+    }
+
+    public function tryAddTriggerToRecipe(Player $player, Recipe $recipe, Trigger $trigger): bool {
+        if ($recipe->existsTrigger($trigger)) {
+            $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
+            return false;
+        }
+
+        $recipe->addTrigger($trigger);
+        $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
+        return true;
     }
 
     public function sendSelectTriggerType(Player $player, Recipe $recipe): void {

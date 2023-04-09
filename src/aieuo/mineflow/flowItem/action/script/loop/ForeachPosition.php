@@ -112,7 +112,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
             })->show($player);
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         foreach ($contents[0] as $content) {
             $action = FlowItem::loadEachSaveData($content);
             $this->addAction($action);
@@ -121,7 +121,6 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
         $this->setPositionVariableName($contents[1], "pos1");
         $this->setPositionVariableName($contents[2], "pos2");
         $this->counterName = $contents[3];
-        return $this;
     }
 
     public function serializeContents(): array {
@@ -141,10 +140,6 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
 
     public function isDataValid(): bool {
         return true;
-    }
-
-    public function allowDirectCall(): bool {
-        return false;
     }
 
     public function __clone() {

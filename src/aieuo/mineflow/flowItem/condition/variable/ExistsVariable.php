@@ -57,9 +57,8 @@ class ExistsVariable extends FlowItem implements Condition {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

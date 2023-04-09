@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\event;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\event\CustomTriggerCallEvent;
+use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -14,7 +14,6 @@ use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class CallCustomTrigger extends FlowItem {
@@ -47,7 +46,7 @@ class CallCustomTrigger extends FlowItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getTriggerName());
-        $trigger = CustomTrigger::create($name);
+        $trigger = new CustomTrigger($name);
         $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
         $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
 
@@ -61,9 +60,8 @@ class CallCustomTrigger extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setTriggerName($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

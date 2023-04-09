@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger\block;
 
@@ -12,12 +13,12 @@ use pocketmine\block\Block;
 
 class BlockTrigger extends Trigger {
 
-    public static function create(string $key, string $subKey = ""): BlockTrigger {
-        return new BlockTrigger($key, $subKey);
+    public function __construct(private string $position) {
+        parent::__construct(Triggers::BLOCK);
     }
 
-    public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Triggers::BLOCK, $key, $subKey);
+    public function getPositionString(): string {
+        return $this->position;
     }
 
     /**
@@ -34,7 +35,21 @@ class BlockTrigger extends Trigger {
         ];
     }
 
+    public function hash(): string|int {
+        return $this->position;
+    }
+
+    public function serialize(): array {
+        return [
+            "position" => $this->position,
+        ];
+    }
+
+    public static function deserialize(array $data): BlockTrigger {
+        return new BlockTrigger($data["position"] ?? $data["key"]);
+    }
+
     public function __toString(): string {
-        return Language::get("trigger.block.string", [$this->getKey()]);
+        return Language::get("trigger.block.string", [$this->getPositionString()]);
     }
 }

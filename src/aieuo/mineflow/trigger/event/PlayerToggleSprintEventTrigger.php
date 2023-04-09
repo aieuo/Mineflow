@@ -9,8 +9,8 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\event\player\PlayerToggleSprintEvent;
 
 class PlayerToggleSprintEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("PlayerToggleSprintEvent", $subKey, PlayerToggleSprintEvent::class);
+    public function __construct() {
+        parent::__construct("PlayerToggleSprintEvent", PlayerToggleSprintEvent::class);
     }
 
     public function getVariables(mixed $event): array {

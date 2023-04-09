@@ -17,6 +17,10 @@ trait PositionFlowItemTrait {
     /* @var string[] */
     private array $positionVariableNames = [];
 
+    public function getPositionVariableNames(): array {
+        return $this->positionVariableNames;
+    }
+
     public function getPositionVariableName(string $name = ""): string {
         return $this->positionVariableNames[$name] ?? "";
     }

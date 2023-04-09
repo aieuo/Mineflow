@@ -48,12 +48,11 @@ abstract class LogicalOperation extends FlowItem implements Condition, FlowItemC
         ];
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         foreach ($contents as $content) {
             $condition = FlowItem::loadEachSaveData($content);
             $this->addCondition($condition);
         }
-        return $this;
     }
 
     public function serializeContents(): array {

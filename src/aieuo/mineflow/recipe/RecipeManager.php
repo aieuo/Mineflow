@@ -80,10 +80,14 @@ class RecipeManager {
                 }
             }
 
-            $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? "0");
-            $recipe->setRawData($json);
+
+            $upgrader = new RecipeUpgrader();
             try {
+                $data = $upgrader->upgradeBeforeLoad($data);
+                $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? "0");
+                $recipe->setRawData($json);
                 $recipe->loadSaveData($data);
+                $upgrader->upgradeAfterLoad($recipe);
             } catch (\ErrorException|\UnexpectedValueException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
@@ -92,7 +96,6 @@ class RecipeManager {
                 Logger::warning($e->getMessage().PHP_EOL);
                 continue;
             }
-            $recipe->checkVersion();
 
             (new MineflowRecipeLoadEvent(Main::getInstance(), $recipe))->call();
 

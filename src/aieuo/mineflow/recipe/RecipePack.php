@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\recipe;
 
-use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\flowItem\action\command\Command;
 use aieuo\mineflow\flowItem\action\command\CommandConsole;
 use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
@@ -11,7 +10,8 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Mineflow;
-use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\trigger\command\CommandTrigger;
+use aieuo\mineflow\trigger\form\FormTrigger;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\utils\Filesystem;
@@ -84,14 +84,14 @@ class RecipePack implements \JsonSerializable {
         $commands = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() === Triggers::COMMAND) {
-                    $command = $trigger->getKey();
+                if ($trigger instanceof CommandTrigger) {
+                    $command = $trigger->getCommand();
                     if (!$commandManager->existsCommand($command)) continue;
 
                     $commands[$command] = $commandManager->getCommand($command);
                 }
-                if ($trigger->getType() === Triggers::FORM) {
-                    $form = $formManager->getForm($trigger->getKey());
+                if ($trigger instanceof FormTrigger) {
+                    $form = $formManager->getForm($trigger->getFormName());
                     if (!$form instanceof ListForm) continue;
 
                     foreach ($form->getButtons() as $button) {
@@ -128,9 +128,9 @@ class RecipePack implements \JsonSerializable {
         $forms = [];
         foreach ($this->recipes as $recipe) {
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger->getType() !== Triggers::FORM) continue;
+                if (!($trigger instanceof FormTrigger)) continue;
 
-                $key = $trigger->getKey();
+                $key = $trigger->getFormName();
                 $forms[$key] = $formManager->getForm($key);
             }
 
@@ -194,12 +194,12 @@ class RecipePack implements \JsonSerializable {
 
     /**
      * @param string $path
-     * @param class-string<Recipe> $recipeClass
+     * @param string $baseGroup
+     * @param class-string $recipeClass
      * @return RecipePack
-     * @throws FlowItemLoadException
      * @throws \ErrorException
      */
-    public static function load(string $path, string $recipeClass = Recipe::class): RecipePack {
+    public static function load(string $path, string $baseGroup = "", string $recipeClass = Recipe::class): RecipePack {
         assert(is_a($recipeClass, Recipe::class, true));
 
         if (!file_exists($path)) {
@@ -215,12 +215,14 @@ class RecipePack implements \JsonSerializable {
         $author = $packData["author"];
         $detail = $packData["detail"];
 
+        $upgrader = new RecipeUpgrader();
         $recipes = [];
         foreach ($packData["recipes"] as $data) {
+            $data = $upgrader->upgradeBeforeLoad($data);
             /** @var Recipe $recipe */
-            $recipe = new $recipeClass($data["name"], $data["group"], $data["author"], $data["plugin_version"] ?? "0");
+            $recipe = new $recipeClass($data["name"], ltrim($baseGroup."/".$data["group"], "/"), $data["author"], $data["plugin_version"] ?? "0");
             $recipe->loadSaveData($data);
-            $recipe->checkVersion();
+            $upgrader->upgradeAfterLoad($recipe);
 
             $recipes[] = $recipe;
         }

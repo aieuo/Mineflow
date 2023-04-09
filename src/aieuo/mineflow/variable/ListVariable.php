@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Mineflow;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
 use function array_search;
 use function array_values;
-use function count;
 
-class ListVariable extends Variable implements \JsonSerializable {
+class ListVariable extends Variable implements IteratorVariable, \JsonSerializable {
+    use IteratorVariableTrait;
 
     private ?string $showString;
 
@@ -32,6 +30,12 @@ class ListVariable extends Variable implements \JsonSerializable {
 
     public function getValue(): array {
         return $this->values;
+    }
+
+    public function getIterator(): \Traversable {
+        foreach ($this->values as $key => $value) {
+            yield $key => $value;
+        }
     }
 
     public function appendValue(Variable $value): void {
@@ -68,8 +72,8 @@ class ListVariable extends Variable implements \JsonSerializable {
         return null;
     }
 
-    public function getValueFromIndex(string $index): ?Variable {
-        return $this->values[(int)$index] ?? null;
+    protected function getValueFromIndex(string $index): ?Variable {
+        return $this->values[$index] ?? $this->pluck($index);
     }
 
     public function add(Variable $target): ListVariable {
@@ -112,20 +116,6 @@ class ListVariable extends Variable implements \JsonSerializable {
         return new ListVariable($values);
     }
 
-    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): ListVariable {
-        $variableHelper = Mineflow::getVariableHelper();
-        $values = [];
-        foreach ($this->getValue() as $value) {
-            $variables["it"] = $value;
-            $values[] = $variableHelper->runAST($target, $executor, $variables, $global);
-        }
-        return new ListVariable($values);
-    }
-
-    public function getCount(): int {
-        return count($this->values);
-    }
-
     public function __toString(): string {
         if (!empty($this->getShowString())) return $this->getShowString();
 
@@ -165,14 +155,11 @@ class ListVariable extends Variable implements \JsonSerializable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod(
-            $class, "count", new DummyVariable(NumberVariable::class),
-            fn(array $values) => new NumberVariable(count($values)),
-        );
-        self::registerMethod(
-            $class, "reverse", new DummyVariable(ListVariable::class),
+        self::registerMethod($class, "reverse", new VariableMethod(
+            new DummyVariable(ListVariable::class),
             fn(array $values) => new ListVariable(array_reverse($values)),
-            aliases: ["reversed"],
-        );
+        ), aliases: ["reversed"]);
+
+        self::registerIteratorMethods($class);
     }
 }

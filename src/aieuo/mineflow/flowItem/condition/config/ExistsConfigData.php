@@ -64,10 +64,9 @@ class ExistsConfigData extends FlowItem implements Condition, ConfigFileFlowItem
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setConfigVariableName($content[0]);
         $this->setKey($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

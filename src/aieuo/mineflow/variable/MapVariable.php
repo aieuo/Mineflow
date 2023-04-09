@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\variable;
 
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Mineflow;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\Tag;
-use function array_keys;
 use function array_reverse;
-use function array_values;
-use function count;
 
 class MapVariable extends ListVariable {
 
@@ -32,10 +27,6 @@ class MapVariable extends ListVariable {
 
     public function removeValueAt(int|string $index): void {
         unset($this->values[$index]);
-    }
-
-    public function getValueFromIndex(string $index): ?Variable {
-        return $this->values[$index] ?? null;
     }
 
     public function add(Variable $target): MapVariable {
@@ -78,16 +69,6 @@ class MapVariable extends ListVariable {
         return new MapVariable($values);
     }
 
-    public function map(string|array|Variable $target, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): MapVariable {
-        $variableHelper = Mineflow::getVariableHelper();
-        $values = [];
-        foreach ($this->getValue() as $key => $value) {
-            $variables["it"] = $value;
-            $values[$key] = $variableHelper->runAST($target, $executor, $variables, $global);
-        }
-        return new MapVariable($values);
-    }
-
     public function toNBTTag(): Tag {
         $tag = CompoundTag::create();
         foreach ($this->getValue() as $key => $value) {
@@ -106,22 +87,11 @@ class MapVariable extends ListVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerMethod(
-            $class, "count", new DummyVariable(NumberVariable::class),
-            fn(array $values) => new NumberVariable(count($values)),
-        );
-        self::registerMethod(
-            $class, "reverse", new DummyVariable(ListVariable::class),
+        self::registerMethod($class, "reverse", new VariableMethod(
+            new DummyVariable(ListVariable::class),
             fn(array $values) => new ListVariable(array_reverse($values)),
-            aliases: ["reversed"],
-        );
-        self::registerMethod(
-            $class, "keys", new DummyVariable(ListVariable::class),
-            fn(array $values) => Mineflow::getVariableHelper()->arrayToListVariable(array_keys($values)),
-        );
-        self::registerMethod(
-            $class, "values", new DummyVariable(ListVariable::class),
-            fn(array $values) => new ListVariable(array_values($values)),
-        );
+        ), aliases: ["reversed"]);
+
+        self::registerIteratorMethods($class);
     }
 }

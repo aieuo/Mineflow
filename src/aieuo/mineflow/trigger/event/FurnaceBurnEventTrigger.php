@@ -7,8 +7,8 @@ use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\event\inventory\FurnaceBurnEvent;
 
 class FurnaceBurnEventTrigger extends EventTrigger {
-    public function __construct(string $subKey = "") {
-        parent::__construct("FurnaceBurnEvent", $subKey, FurnaceBurnEvent::class);
+    public function __construct() {
+        parent::__construct("FurnaceBurnEvent", FurnaceBurnEvent::class);
     }
 
     public function getVariables(mixed $event): array {

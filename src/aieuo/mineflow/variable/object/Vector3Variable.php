@@ -10,6 +10,7 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\math\Facing;
 use pocketmine\math\Vector3;
 
@@ -86,27 +87,27 @@ class Vector3Variable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "x", new DummyVariable(NumberVariable::class),
+        self::registerProperty($class, "x", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Vector3 $position) => new NumberVariable($position->x),
-        );
-        self::registerProperty(
-            $class, "y", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "y", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Vector3 $position) => new NumberVariable($position->y),
-        );
-        self::registerProperty(
-            $class, "z", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "z", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Vector3 $position) => new NumberVariable($position->z),
-        );
-        self::registerProperty(
-            $class, "xyz", new DummyVariable(StringVariable::class),
+        ));
+        self::registerProperty($class, "xyz", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Vector3 $position) => new StringVariable($position->x.",".$position->y.",".$position->z),
-        );
+        ));
         foreach (["down" => Facing::DOWN, "up" => Facing::UP, "north" => Facing::NORTH, "south" => Facing::SOUTH, "west" => Facing::WEST, "east" => Facing::EAST] as $name => $facing) {
-            self::registerProperty(
-                $class, $name, new DummyVariable(Vector3Variable::class),
+            self::registerProperty($class, $name, new VariableProperty(
+                new DummyVariable(Vector3Variable::class),
                 fn(Vector3 $position) => new Vector3Variable($position->getSide($facing)),
-            );
+            ));
         }
     }
 }

@@ -121,12 +121,11 @@ class AddVariable extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setVariableValue($content[1]);
         $this->variableType = is_int($content[2]) ? $this->variableTypes[$content[2]] : $content[2];
         $this->isLocal = $content[3];
-        return $this;
     }
 
     public function serializeContents(): array {

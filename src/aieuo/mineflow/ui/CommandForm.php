@@ -220,7 +220,7 @@ class CommandForm {
                         if ($recipe === null) continue;
 
                         foreach ($commands as $cmd) {
-                            $recipe->removeTrigger(CommandTrigger::create(explode(" ", $cmd)[0], $cmd));
+                            $recipe->removeTrigger(new CommandTrigger($cmd));
                         }
                     }
                     $commandManager->removeCommand($command["command"]);

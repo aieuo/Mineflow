@@ -9,15 +9,23 @@ use aieuo\mineflow\variable\DefaultVariables;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
+use function explode;
 
 class CommandTrigger extends Trigger {
 
-    public static function create(string $key, string $subKey = ""): CommandTrigger {
-        return new CommandTrigger($key, $subKey);
+    private string $command;
+
+    public function __construct(private string $fullCommand = "") {
+        $this->command = explode(" ", $this->fullCommand)[0];
+        parent::__construct(Triggers::COMMAND);
     }
 
-    public function __construct(string $key, string $subKey = "") {
-        parent::__construct(Triggers::COMMAND, $key, $subKey);
+    public function getCommand(): string {
+        return $this->command;
+    }
+
+    public function getFullCommand(): string {
+        return $this->fullCommand;
     }
 
     /**
@@ -35,7 +43,22 @@ class CommandTrigger extends Trigger {
         ];
     }
 
+    public function hash(): string|int {
+        return $this->fullCommand;
+    }
+
+    public function serialize(): array {
+        return [
+            "command" => $this->command,
+            "full" => $this->fullCommand,
+        ];
+    }
+
+    public static function deserialize(array $data): CommandTrigger {
+        return new CommandTrigger($data["full"] ?? $data["subKey"]);
+    }
+
     public function __toString(): string {
-        return Language::get("trigger.command.string", [$this->getSubKey()]);
+        return Language::get("trigger.command.string", [$this->getFullCommand()]);
     }
 }

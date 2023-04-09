@@ -107,12 +107,11 @@ class GetLanguage extends FlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setLanguage($content[0]);
         $this->setKey($content[1]);
         $this->setParameters($content[2]);
         $this->setResultName($content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {

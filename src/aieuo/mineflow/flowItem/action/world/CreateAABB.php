@@ -139,7 +139,7 @@ class CreateAABB extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setMinX($content[0]);
         $this->setMinY($content[1]);
         $this->setMinZ($content[2]);
@@ -147,7 +147,6 @@ class CreateAABB extends FlowItem {
         $this->setMaxY($content[4]);
         $this->setMaxZ($content[5]);
         $this->setVariableName($content[6]);
-        return $this;
     }
 
     public function serializeContents(): array {

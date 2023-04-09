@@ -40,18 +40,16 @@ class CountListVariable extends FlowItem {
         return [$this->getVariableName(), $this->getResultName()];
     }
 
-    public function setVariableName(string $name): self {
+    public function setVariableName(string $name): void {
         $this->variableName = $name;
-        return $this;
     }
 
     public function getVariableName(): string {
         return $this->variableName;
     }
 
-    public function setResultName(string $name): self {
+    public function setResultName(string $name): void {
         $this->resultName = $name;
-        return $this;
     }
 
     public function getResultName(): string {
@@ -86,10 +84,9 @@ class CountListVariable extends FlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setResultName($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

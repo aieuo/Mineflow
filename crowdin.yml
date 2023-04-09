@@ -3,4 +3,6 @@ files:
     translation: /resources/language/%three_letters_code%.ini
   - source: /.github/changelogs/eng/*.md
     translation: /.github/changelogs/%three_letters_code%/%file_name%.md
-commit_message: "[ci skip] New translations %original_file_name% (%language%)"
+  - source: README.md
+    translation: /.github/readme/%three_letters_code%.md
+commit_message: '[ci skip] New translations %original_file_name% (%language%)'

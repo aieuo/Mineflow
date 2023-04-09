@@ -50,9 +50,8 @@ abstract class OnlinePlayerCount extends FlowItem implements Condition {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setValue($content[0]);
-        return $this;
     }
 
     public function serializeContents(): array {

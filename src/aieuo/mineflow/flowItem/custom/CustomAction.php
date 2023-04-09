@@ -65,10 +65,6 @@ class CustomAction extends FlowItem {
         return true;
     }
 
-    public function allowDirectCall(): bool {
-        return false;
-    }
-
     public function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe();
         $args = $this->getArgumentVariables($source);
@@ -101,9 +97,8 @@ class CustomAction extends FlowItem {
         $builder->elements($elements);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setArguments($content);
-        return $this;
     }
 
     public function serializeContents(): array {

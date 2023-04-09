@@ -51,18 +51,16 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         return $this->valueVariableName;
     }
 
-    public function setKeyVariableName(string $keyVariableName): self {
+    public function setKeyVariableName(string $keyVariableName): void {
         $this->keyVariableName = $keyVariableName;
-        return $this;
     }
 
     public function getKeyVariableName(): string {
         return $this->keyVariableName;
     }
 
-    public function setListVariableName(string $listVariableName): self {
+    public function setListVariableName(string $listVariableName): void {
         $this->listVariableName = $listVariableName;
-        return $this;
     }
 
     public function getListVariableName(): string {
@@ -132,7 +130,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
             })->show($player);
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         foreach ($contents[0] as $content) {
             $action = FlowItem::loadEachSaveData($content);
             $this->addAction($action);
@@ -141,7 +139,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         $this->setListVariableName($contents[1]);
         $this->setKeyVariableName($contents[2]);
         $this->setValueVariableName($contents[3]);
-        return $this;
     }
 
     public function getAddingVariables(): array {
@@ -157,10 +154,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     public function isDataValid(): bool {
         return true;
-    }
-
-    public function allowDirectCall(): bool {
-        return false;
     }
 
     public function __clone() {

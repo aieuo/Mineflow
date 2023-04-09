@@ -11,6 +11,7 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\StringVariable;
+use aieuo\mineflow\variable\VariableProperty;
 use pocketmine\item\Item;
 use function array_map;
 
@@ -37,42 +38,41 @@ class ItemVariable extends ObjectVariable {
     }
 
     public static function registerProperties(string $class = self::class): void {
-        self::registerProperty(
-            $class, "name", new DummyVariable(StringVariable::class),
+        self::registerProperty($class, "name", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Item $item) => new StringVariable($item->getName()),
-        );
-        self::registerProperty(
-            $class, "vanilla_name", new DummyVariable(StringVariable::class),
+        ));
+        self::registerProperty($class, "vanilla_name", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Item $item) => new StringVariable($item->getVanillaName()),
-        );
-        self::registerProperty(
-            $class, "custom_name", new DummyVariable(StringVariable::class),
+        ));
+        self::registerProperty($class, "custom_name", new VariableProperty(
+            new DummyVariable(StringVariable::class),
             fn(Item $item) => new StringVariable($item->getCustomName()),
-        );
-        self::registerProperty(
-            $class, "id", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "id", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Item $item) => new NumberVariable($item->getId()),
-        );
-        self::registerProperty(
-            $class, "damage", new DummyVariable(NumberVariable::class),
+        ));
+        self::registerProperty($class, "damage", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Item $item) => new NumberVariable($item->getMeta()),
-            aliases: ["meta"],
-        );
-        self::registerProperty(
-            $class, "count", new DummyVariable(NumberVariable::class),
+        ), aliases: ["meta"]);
+        self::registerProperty($class, "count", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
             fn(Item $item) => new NumberVariable($item->getCount()),
-        );
-        self::registerProperty(
-            $class, "lore", new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
+        ));
+        self::registerProperty($class, "lore", new VariableProperty(
+            new DummyVariable(ListVariable::class, StringVariable::getTypeName()),
             fn(Item $item) => new ListVariable(array_map(fn(string $lore) => new StringVariable($lore), $item->getLore())),
-        );
-        self::registerProperty(
-            $class, "block", new DummyVariable(BlockVariable::class),
+        ));
+        self::registerProperty($class, "block", new VariableProperty(
+            new DummyVariable(BlockVariable::class),
             fn(Item $item) => new BlockVariable($item->getBlock()),
-        );
-        self::registerProperty(
-            $class, "tag", new DummyVariable(MapVariable::class),
+        ));
+        self::registerProperty($class, "tag", new VariableProperty(
+            new DummyVariable(MapVariable::class),
             fn(Item $item) => Mineflow::getVariableHelper()->tagToVariable($item->getNamedTag()),
-        );
+        ));
     }
 }

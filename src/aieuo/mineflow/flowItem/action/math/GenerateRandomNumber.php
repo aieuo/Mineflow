@@ -33,18 +33,16 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         return [$this->getMin(), $this->getMax(), $this->getResultName()];
     }
 
-    public function setMin(string $min): self {
+    public function setMin(string $min): void {
         $this->min = $min;
-        return $this;
     }
 
     public function getMin(): string {
         return $this->min;
     }
 
-    public function setMax(string $max): self {
+    public function setMax(string $max): void {
         $this->max = $max;
-        return $this;
     }
 
     public function getMax(): string {
@@ -75,11 +73,10 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setMin($content[0]);
         $this->setMax($content[1]);
         $this->setResultName($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

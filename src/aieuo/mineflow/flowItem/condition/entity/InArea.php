@@ -65,11 +65,10 @@ class InArea extends FlowItem implements Condition, EntityFlowItem, PositionFlow
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setPositionVariableName($content[1], "pos1");
         $this->setPositionVariableName($content[2], "pos2");
-        return $this;
     }
 
     public function serializeContents(): array {

@@ -1,13 +1,15 @@
 <?php
+declare(strict_types=1);
 
-namespace aieuo\mineflow\ui\trigger;
+namespace aieuo\mineflow\trigger\event;
 
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
-use aieuo\mineflow\trigger\event\EventTrigger;
+use aieuo\mineflow\trigger\BaseTriggerForm;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\trigger\TriggerForm;
 use aieuo\mineflow\ui\HomeForm;
 use aieuo\mineflow\ui\MineflowForm;
 use aieuo\mineflow\ui\RecipeForm;
@@ -18,16 +20,13 @@ use pocketmine\player\Player;
 
 class EventTriggerForm extends TriggerForm {
 
-    public function sendAddedTriggerMenu(Player $player, Recipe $recipe, Trigger $trigger, array $messages = []): void {
-        (new ListForm(Language::get("form.trigger.addedTriggerMenu.title", [$recipe->getName(), $trigger->getKey()])))
-            ->setContent((string)$trigger)
-            ->appendContent("@trigger.event.variable", true)
-            ->forEach($trigger->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
-                $form->appendContent("{".$name."} (type=".$var->getValueType().")");
-            })->addButtons([
-                new Button("@form.back", fn() => (new RecipeForm)->sendTriggerList($player, $recipe)),
-                new Button("@form.delete", fn() => (new BaseTriggerForm)->sendConfirmDelete($player, $recipe, $trigger)),
-            ])->addMessages($messages)->show($player);
+    public function buildAddedTriggerMenu(ListForm $form, Player $player, Recipe $recipe, Trigger $trigger): void {
+        if (!($trigger instanceof EventTrigger)) return;
+
+        $form->appendContent("@trigger.event.variable", true);
+        $form->forEach($trigger->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            $form->appendContent("{".$name."} (type=".$var->getValueType().")");
+        });
     }
 
     public function sendMenu(Player $player, Recipe $recipe): void {
@@ -38,7 +37,7 @@ class EventTriggerForm extends TriggerForm {
         $events = Mineflow::getEventManager()->getEnabledEvents();
         $buttons = [new Button("@form.back")];
         foreach ($events as $event => $value) {
-            $buttons[] = new Button((string)EventTrigger::create($event));
+            $buttons[] = new Button((string)EventTrigger::get($event));
         }
         (new ListForm(Language::get("trigger.event.list.title", [$recipe->getName()])))
             ->addButtons($buttons)
@@ -56,34 +55,26 @@ class EventTriggerForm extends TriggerForm {
 
     public function sendSelectEventTrigger(Player $player, Recipe $recipe, string $eventName): void {
         (new ListForm(Language::get("trigger.event.select.title", [$recipe->getName(), $eventName])))
-            ->setContent((string)EventTrigger::create($eventName))
+            ->setContent((string)EventTrigger::get($eventName))
             ->appendContent("@trigger.event.variable", true)
-            ->forEach(EventTrigger::create($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
+            ->forEach(EventTrigger::get($eventName)->getVariablesDummy(), function (ListForm $form, DummyVariable $var, string $name) {
                 $form->appendContent("{".$name."} (type = ".$var->getValueType().")");
             })->addButtons([
-                new Button("@form.back"),
-                new Button("@form.add"),
-            ])->onReceive(function (Player $player, int $data, Recipe $recipe, string $eventName) {
-                if ($data === 0) {
-                    $this->sendEventTriggerList($player, $recipe);
-                    return;
-                }
+                new Button("@form.back", fn() => $this->sendEventTriggerList($player, $recipe)),
+                new Button("@form.add", function () use($player, $recipe, $eventName) {
+                    $trigger = EventTrigger::get($eventName);
+                    if ($trigger === null) return;
 
-                $trigger = EventTrigger::create($eventName);
-                if ($recipe->existsTrigger($trigger)) {
-                    $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.alreadyExists"]);
-                    return;
-                }
-                $recipe->addTrigger($trigger);
-                $this->sendAddedTriggerMenu($player, $recipe, $trigger, ["@trigger.add.success"]);
-            })->addArgs($recipe, $eventName)->show($player);
+                    (new BaseTriggerForm)->tryAddTriggerToRecipe($player, $recipe, $trigger);
+                }),
+            ])->show($player);
     }
 
     public function sendSelectEvent(Player $player): void {
         $events = Mineflow::getEventManager()->getEnabledEvents();
         $buttons = [];
         foreach ($events as $event => $value) {
-            $buttons[] = new Button((string)EventTrigger::create($event), fn() => $this->sendRecipeList($player, $event));
+            $buttons[] = new Button((string)EventTrigger::get($event), fn() => $this->sendRecipeList($player, $event));
         }
         (new ListForm("@form.event.list.title"))
             ->addButton(new Button("@form.back", fn() => (new HomeForm)->sendMenu($player)))
@@ -95,12 +86,12 @@ class EventTriggerForm extends TriggerForm {
         $buttons = [new Button("@form.back"), new Button("@form.add")];
 
         $recipes = Mineflow::getEventManager()->getAssignedRecipes($event);
-        foreach ($recipes as $name => $events) {
-            $buttons[] = new Button($name);
+        foreach ($recipes as $recipe) {
+            $buttons[] = new Button($recipe->getPathname());
         }
-        (new ListForm(Language::get("form.recipes.title", [(string)EventTrigger::create($event)])))
+        (new ListForm(Language::get("form.recipes.title", [(string)EventTrigger::get($event)])))
             ->setButtons($buttons)
-            ->onReceive(function (Player $player, int $data, string $event, array $recipes) {
+            ->onReceive(function (Player $player, int $data) use($event, $recipes) {
                 switch ($data) {
                     case 0:
                         $this->sendSelectEvent($player);
@@ -108,7 +99,7 @@ class EventTriggerForm extends TriggerForm {
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [Language::get("trigger.event.".$event)]),
                             function (Recipe $recipe) use ($player, $event) {
-                                $trigger = EventTrigger::create($event);
+                                $trigger = EventTrigger::get($event);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $event, ["@trigger.alreadyExists"]);
                                     return;
@@ -122,16 +113,17 @@ class EventTriggerForm extends TriggerForm {
                 }
                 $data -= 2;
 
-                $this->sendRecipeMenu($player, $event, array_keys($recipes)[$data]);
-            })->addMessages($messages)->addArgs($event, $recipes)->show($player);
+                $recipe = $recipes[$data];
+                $this->sendRecipeMenu($player, $event, $recipe->getPathname());
+            })->addMessages($messages)->show($player);
     }
 
     public function sendRecipeMenu(Player $player, string $event, string $recipeName): void {
-        (new ListForm(Language::get("form.recipes.title", [(string)(EventTrigger::create($event))])))
+        (new ListForm(Language::get("form.recipes.title", [(string)EventTrigger::get($event)])))
             ->setButtons([
                 new Button("@form.back"),
                 new Button("@form.edit")
-            ])->onReceive(function (Player $player, int $data, string $event, string $recipeName) {
+            ])->onReceive(function (Player $player, int $data) use($event, $recipeName) {
                 if ($data === 0) {
                     $this->sendRecipeList($player, $event);
                 } elseif ($data === 1) {
@@ -142,6 +134,6 @@ class EventTriggerForm extends TriggerForm {
                     $recipe = Mineflow::getRecipeManager()->get($name, $group);
                     (new RecipeForm())->sendTriggerList($player, $recipe);
                 }
-            })->addArgs($event, $recipeName)->show($player);
+            })->show($player);
     }
 }

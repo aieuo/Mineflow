@@ -9,12 +9,11 @@ use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UndefinedMineflowVariableException;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\variable\global\DefaultGlobalMethodVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
@@ -56,8 +55,12 @@ class VariableHelper {
     /** @var Variable[] */
     private array $variables = [];
 
-    public function __construct(private Config $file) {
+    /** @var array<string, array<string, CustomVariableData>> */
+    private array $customVariableData = [];
+
+    public function __construct(private Config $file, private Config $customDataFile) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
+        $this->customDataFile->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
         VariableSerializer::init();
         VariableDeserializer::init();
@@ -73,6 +76,23 @@ class VariableHelper {
             }
 
             $this->variables[$name] = $variable;
+        }
+
+        foreach ($this->customDataFile as $type => $values) {
+            foreach ($values as $name => $data) {
+                $dataContainer = new CustomVariableData([], $data["default"] ?? null);
+                foreach ($data["values"] as $key => $value) {
+                    $variable = VariableDeserializer::deserialize($value);
+
+                    if ($variable === null) {
+                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7<{$type}({$key})>.${name}§f"]));
+                        continue;
+                    }
+
+                    $dataContainer->setData($key, $variable);
+                }
+                $this->customVariableData[$type][$name] = $dataContainer;
+            }
         }
     }
 
@@ -97,6 +117,10 @@ class VariableHelper {
         return $variable;
     }
 
+    public function getAll(): array {
+        return $this->variables;
+    }
+
     public function add(string $name, Variable $variable): void {
         $this->variables[$name] = $variable;
     }
@@ -118,6 +142,32 @@ class VariableHelper {
             }
         }
         $this->file->save();
+
+        foreach ($this->customVariableData as $type => $values) {
+            foreach ($values as $name => $data) {
+                foreach ($data->getValues() as $key => $variable) {
+                    $serialized = VariableSerializer::serialize($variable);
+
+                    if ($serialized !== null) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.{$key}", $serialized);
+                    } elseif ($variable instanceof \JsonSerializable) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.{$key}", $variable);
+                    }
+                }
+
+                $default = $data->getDefault();
+                if ($default !== null) {
+                    $serialized = VariableSerializer::serialize($default);
+
+                    if ($serialized !== null) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.default", $serialized);
+                    } elseif ($default instanceof \JsonSerializable) {
+                        $this->customDataFile->setNested("{$type}.{$name}.values.default", $default);
+                    }
+                }
+            }
+        }
+        $this->customDataFile->save();
     }
 
     public function findVariables(string $string): array {
@@ -133,21 +183,20 @@ class VariableHelper {
     /**
      * @param string $string
      * @param Variable[] $variables
-     * @param FlowItemExecutor|null $executor
      * @param bool $global
      * @return string
      */
-    public function replaceVariables(string $string, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
+    public function replaceVariables(string $string, array $variables = [], bool $global = true): string {
         $limit = 10;
         while (preg_match_all("/({(?:[^{}]+|(?R))*})/u", $string, $matches)) {
             foreach ($matches[0] as $name) {
                 $name = substr($name, 1, -1);
                 if (str_contains($name, "{") and str_contains($name, "}")) {
-                    $replaced = $this->replaceVariables($name, $variables, $executor, $global);
+                    $replaced = $this->replaceVariables($name, $variables, $global);
                     $string = str_replace($name, $replaced, $string);
                     $name = $replaced;
                 }
-                $string = $this->replaceVariable($string, $name, $variables, $executor, $global);
+                $string = $this->replaceVariable($string, $name, $variables, $global);
             }
             if (--$limit < 0) break;
         }
@@ -157,29 +206,27 @@ class VariableHelper {
     /**
      * @param string $string
      * @param string $replace
-     * @param FlowItemExecutor|null $executor
      * @param Variable[] $variables
      * @param bool $global
      * @return string
      */
-    public function replaceVariable(string $string, string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): string {
+    public function replaceVariable(string $string, string $replace, array $variables = [], bool $global = true): string {
         if (!str_contains($string, "{".$replace."}") or preg_match("/%\d+/u", $replace)) return $string;
 
-        $result = (string)$this->runVariableStatement($replace, $variables, $executor, $global);
+        $result = (string)$this->runVariableStatement($replace, $variables, $global);
         return str_replace("{".$replace."}", $result, $string);
     }
 
     /**
      * @param string $replace
      * @param Variable[] $variables
-     * @param FlowItemExecutor|null $executor
      * @param bool $global
      * @return Variable
      */
-    public function runVariableStatement(string $replace, array $variables = [], ?FlowItemExecutor $executor = null, bool $global = true): Variable {
+    public function runVariableStatement(string $replace, array $variables = [], bool $global = true): Variable {
         $tokens = $this->lexer($replace);
         $ast = $this->parse($tokens);
-        return $this->runAST($ast, $executor, $variables, $global);
+        return $this->runAST($ast, $variables, $global);
     }
 
     public function lexer(string $source): array {
@@ -205,7 +252,6 @@ class VariableHelper {
                 case "-":
                 case "*":
                 case "/":
-                case ">":
                 case "(":
                 case ")":
                     $tokens[] = trim($token);
@@ -239,7 +285,6 @@ class VariableHelper {
     public function parse(array &$tokens, int $priority = 0): string|array|Variable {
         $rules = [
             ["type" => 1, "ops" => [","]],
-            ["type" => 0, "ops" => [">"]],
             ["type" => 0, "ops" => ["+", "-"]], // 1 + 2, 1 - 2
             ["type" => 0, "ops" => ["*", "/"]], // 1 * 2, 1 / 2
             ["type" => 2, "ops" => ["+", "-"]], // +1, -1
@@ -300,43 +345,37 @@ class VariableHelper {
 
     /**
      * @param string|array|Variable $ast
-     * @param FlowItemExecutor|null $executor
      * @param array<string, Variable> $variables
      * @param bool $global
      * @return Variable
      */
-    public function runAST(string|array|Variable $ast, ?FlowItemExecutor $executor = null, array $variables = [], bool $global = false): Variable {
+    public function runAST(string|array|Variable $ast, array $variables = [], bool $global = false): Variable {
         if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
         if ($ast instanceof Variable) return $ast;
 
         if (!isset($ast["left"])) {
             $result = "";
             foreach ($ast as $value) {
-                if (is_array($value)) $result .= (",".$this->runAST($value, $executor, $variables, $global));
+                if (is_array($value)) $result .= (",".$this->runAST($value, $variables, $global));
                 else $result .= (",".$value);
             }
             return $this->mustGetVariableNested(substr($result, 1), $variables, $global);
         }
 
         $op = $ast["op"];
-        $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $executor, $variables, $global) : $ast["left"];
-        if (is_array($ast["right"]) and $op !== ">" and ($op !== "()" or isset($ast["right"]["op"]))) {
-            $right = $this->runAST($ast["right"], $executor, $variables, $global);
+        $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $variables, $global) : $ast["left"];
+        if (is_array($ast["right"]) and ($op !== "()" or isset($ast["right"]["op"]))) {
+            $right = $this->runAST($ast["right"], $variables, $global);
         } else {
             $right = $ast["right"];
         }
 
         if (is_string($left)) {
             if ($op === "()") {
-                if ($executor === null) throw new UnsupportedCalculationException();
-                return $this->runMethodCall($left, !is_array($right) ? [$right] : $right, $executor, $variables, $global);
+                return $this->runMethodCall($left, !is_array($right) ? [$right] : $right, $variables, $global);
             }
 
             $left = $this->mustGetVariableNested($left, $variables, $global);
-        }
-
-        if ($op === ">") {
-            return $left->map($right, $executor, $variables, $global);
         }
 
         if (is_string($right)) {
@@ -352,23 +391,17 @@ class VariableHelper {
         };
     }
 
-    public function runMethodCall(string $left, array $right, FlowItemExecutor $executor, array $variables, bool $global): Variable {
+    public function runMethodCall(string $left, array $right, array $variables, bool $global): Variable {
         $tmp = explode(".", $left);
         $name = array_pop($tmp);
         $target = implode(".", $tmp);
 
         if ($target === "") {
-            try {
-                $result = $this->runAction($name, $right, $executor);
-                if (is_bool($result)) return new BooleanVariable($result);
-                if (is_numeric($result)) return new NumberVariable($result);
-                return new StringVariable($result);
-            } catch (\UnexpectedValueException $e) {
-                return new StringVariable($e->getMessage());
-            }
+            $variable = new DefaultGlobalMethodVariable();
+        } else {
+            $variable = $this->mustGetVariableNested($target, $variables, $global);
         }
 
-        $variable = $this->mustGetVariableNested($target, $variables, $global);
         try {
             $result = $variable->callMethod($name, array_map(function (mixed $arg) {
                 if ($arg instanceof Variable) {
@@ -385,24 +418,6 @@ class VariableHelper {
 
         if ($result === null) throw new UndefinedMineflowMethodException($target, $name);
         return $result;
-    }
-
-    public function runAction(string $name, array $parameters, FlowItemExecutor $executor) {
-        $action = FlowItemFactory::get($name, true);
-        if ($action === null) throw new \UnexpectedValueException("§cUnknown action id {$name}");
-        if (!$action->allowDirectCall()) throw new \UnexpectedValueException("§cCannot call direct {$name}");
-
-        $class = get_class($action);
-
-        /** @var FlowItem $newAction */
-        $newAction = new $class(...$parameters);
-        $generator = $newAction->execute($executor);
-        /** @noinspection PhpStatementHasEmptyBodyInspection */
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        /** @noinspection LoopWhichDoesNotLoopInspection */
-        foreach ($generator as $_) {
-        }
-        return $generator->getReturn();
     }
 
     public function mustGetVariableNested(string $name, array $variables = [], bool $global = false): Variable {
@@ -532,10 +547,27 @@ class VariableHelper {
         return $result;
     }
 
+    public function getAllCustomVariableData(string $variableType): array {
+        return $this->customVariableData[$variableType] ?? [];
+    }
+
+    public function getCustomVariableData(string $variableType, string $name): ?CustomVariableData {
+        return $this->customVariableData[$variableType][$name] ?? null;
+    }
+
+    public function setCustomVariableData(string $variableType, string $name, CustomVariableData $data): void {
+        $this->customVariableData[$variableType][$name] = $data;
+    }
+
+    public function removeCustomVariableData(string $variableType, string $name): void {
+        unset($this->customVariableData[$variableType][$name]);
+    }
+
     public function initVariableProperties(): void {
         ListVariable::registerProperties();
         MapVariable::registerProperties();
         StringVariable::registerProperties();
+        NumberVariable::registerProperties();
         AxisAlignedBBVariable::registerProperties();
         BlockVariable::registerProperties();
         ConfigVariable::registerProperties();
@@ -554,5 +586,6 @@ class VariableHelper {
         UnknownVariable::registerProperties();
         Vector3Variable::registerProperties();
         WorldVariable::registerProperties();
+        DefaultGlobalMethodVariable::registerProperties();
     }
 }

@@ -105,13 +105,12 @@ class AddEffect extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setEffectId($content[1]);
         $this->setTime($content[2]);
         $this->setPower($content[3]);
         $this->visible = $content[4];
-        return $this;
     }
 
     public function serializeContents(): array {

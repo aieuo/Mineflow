@@ -48,18 +48,16 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         return $this->repeatCount;
     }
 
-    public function setStartIndex(string $startIndex): self {
+    public function setStartIndex(string $startIndex): void {
         $this->startIndex = $startIndex;
-        return $this;
     }
 
     public function getStartIndex(): string {
         return $this->startIndex;
     }
 
-    public function setCounterName(string $counterName): self {
+    public function setCounterName(string $counterName): void {
         $this->counterName = $counterName;
-        return $this;
     }
 
     public function getCounterName(): string {
@@ -126,7 +124,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
             })->show($player);
     }
 
-    public function loadSaveData(array $contents): FlowItem {
+    public function loadSaveData(array $contents): void {
         $this->setRepeatCount((string)$contents[0]);
 
         foreach ($contents[1] as $content) {
@@ -136,7 +134,6 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
         if (isset($contents[2])) $this->startIndex = (string)$contents[2];
         if (isset($contents[3])) $this->counterName = $contents[3];
-        return $this;
     }
 
     public function serializeContents(): array {
@@ -156,10 +153,6 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
 
     public function isDataValid(): bool {
         return true;
-    }
-
-    public function allowDirectCall(): bool {
-        return false;
     }
 
     public function __clone() {

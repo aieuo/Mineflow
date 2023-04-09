@@ -114,7 +114,7 @@ class AddonManager {
     }
 
     public function preloadAddon(string $path): \Generator {
-        $pack = RecipePack::load($path, recipeClass: AddonRecipe::class);
+        $pack = RecipePack::load($path, baseGroup: "_/mineflow/addon", recipeClass: AddonRecipe::class);
 
         if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), ["import.plugin.outdated"]]));
@@ -153,7 +153,7 @@ class AddonManager {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.type.error")]));
         }
 
-        $recipeInfoVariable = $manifestVariable->getValueFromIndex("recipes");
+        $recipeInfoVariable = $manifestVariable->getProperty("recipes");
 
         if (!($recipeInfoVariable instanceof ListVariable)) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.variable.key.missing", ["recipes", "list"])]));
@@ -166,19 +166,19 @@ class AddonManager {
             }
 
             foreach (["id", "category", "path"] as $key) {
-                if ($recipeInfo->getValueFromIndex($key) === null) {
+                if ($recipeInfo->getProperty($key) === null) {
                     throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.info.key.missing", [$i, $key])]));
                 }
             }
 
-            $path = (string)$recipeInfo->getValueFromIndex("path");
+            $path = (string)$recipeInfo->getProperty("path");
             if (!str_starts_with($path, $manifestRecipe->getGroup())) {
                 $path = ltrim($manifestRecipe->getGroup()."/".$path, "/");
             }
 
             $recipeInfos[] = new RecipeInfoAttribute(
-                "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getValueFromIndex("id"),
-                (string)$recipeInfo->getValueFromIndex("category"),
+                "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getProperty("id"),
+                (string)$recipeInfo->getProperty("category"),
                 $path,
             );
         }
@@ -235,9 +235,8 @@ class AddonManager {
             $loadedRecipes[] = $recipe;
 
             foreach ($recipe->getTriggers() as $trigger) {
-                if ($trigger instanceof EventTrigger and !$trigger->isEnabled()) {
-                    $trigger->setEnabled(true);
-                    $eventManager->getEventListener()->registerEvent($trigger->getEventClass());
+                if ($trigger instanceof EventTrigger and !$eventManager->isTriggerEnabled($trigger)) {
+                    $eventManager->setTriggerEnabled($trigger);
                 }
             }
         }

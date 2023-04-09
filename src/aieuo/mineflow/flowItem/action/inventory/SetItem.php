@@ -71,11 +71,10 @@ class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
         $this->setItemVariableName($content[1]);
         $this->setIndex($content[2]);
-        return $this;
     }
 
     public function serializeContents(): array {

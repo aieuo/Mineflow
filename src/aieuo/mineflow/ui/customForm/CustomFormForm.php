@@ -239,7 +239,7 @@ class CustomFormForm {
                     return;
                 }
 
-                $trigger = FormTrigger::create($form->getName());
+                $trigger = new FormTrigger($form->getName());
                 if ($recipe->existsTrigger($trigger)) {
                     $this->sendRecipeList($player, $form, ["@trigger.alreadyExists"]);
                     return;
@@ -260,6 +260,10 @@ class CustomFormForm {
                     if ($form instanceof ListForm) {
                         $button = $form->getButtonByUUID($key);
                         return Language::get("trigger.form.button", [$button instanceof Button ? $button->getText() : ""]);
+                    }
+                    if ($form instanceof ModalForm) {
+                        $button = ($key === "1" ? "yes" : "no");
+                        return Language::get("trigger.form.button", [Language::get("form.".$button)]);
                     }
                     return "";
             }
@@ -297,7 +301,7 @@ class CustomFormForm {
 
     public function onReceive(Player $player, $data, Form $form, Recipe $from = null): void {
         $holder = TriggerHolder::getInstance();
-        $trigger = FormTrigger::create($form->getName());
+        $trigger = new FormTrigger($form->getName());
         $variables = $trigger->getVariables($form, $data, $from);
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
@@ -306,7 +310,7 @@ class CustomFormForm {
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */
-                $trigger->setSubKey($data ? "1" : "2");
+                $trigger->setExtraData($data ? "1" : "2");
                 if ($holder->existsRecipe($trigger)) {
                     $recipes = $holder->getRecipes($trigger);
                     $recipes->executeAll($player, $variables);
@@ -315,7 +319,7 @@ class CustomFormForm {
             case $form instanceof ListForm:
                 /** @var int $data */
                 $button = $form->getButton($data);
-                $trigger->setSubKey($button->getUUID());
+                $trigger->setExtraData($button->getUUID());
                 if ($holder->existsRecipe($trigger)) {
                     $recipes = $holder->getRecipes($trigger);
                     $recipes->executeAll($player, $variables);
@@ -327,7 +331,7 @@ class CustomFormForm {
 
     public function onClose(Player $player, Form $form): void {
         $holder = TriggerHolder::getInstance();
-        $trigger = FormTrigger::create($form->getName(), "close");
+        $trigger = new FormTrigger($form->getName(), "close");
         if ($holder->existsRecipe($trigger)) {
             $recipes = $holder->getRecipes($trigger);
             $recipes->executeAll($player);

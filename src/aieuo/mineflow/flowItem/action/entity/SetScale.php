@@ -64,10 +64,9 @@ class SetScale extends FlowItem implements EntityFlowItem {
         ]);
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setScale($content[1]);
-        return $this;
     }
 
     public function serializeContents(): array {

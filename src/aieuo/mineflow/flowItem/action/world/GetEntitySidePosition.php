@@ -92,9 +92,8 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         return [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
     }
 
-    public function setDirection(string $direction): self {
+    public function setDirection(string $direction): void {
         $this->direction = $direction;
-        return $this;
     }
 
     public function getDirection(): string {
@@ -171,12 +170,11 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         });
     }
 
-    public function loadSaveData(array $content): FlowItem {
+    public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
         $this->setDirection($content[1]);
         $this->setSteps($content[2]);
         $this->setResultName($content[3]);
-        return $this;
     }
 
     public function serializeContents(): array {
