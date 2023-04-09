@@ -40,7 +40,7 @@ You can combine actions and create something like a plugin without any coding kn
 | 1     | command from console, manage permission, (dis)allow fly, loop |
 | 2     | configuration file                                            |
 
-To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console. The level you give can only be used below your level. You can give a maximum level from the console.
+To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console. The level you give can only be used below your level. You can give a maximum level from the console. The level you give can only be used below your level. You can give a maximum level from the console. The level you give can only be used below your level. You can give a maximum level from the console. The level you give can only be used below your level. You can give a maximum level from the console. The level you give can only be used below your level. You can give a maximum level from the console.
 
 ## Variable
 
@@ -57,7 +57,7 @@ Execute "/mineflow recipe add" and enter the recipe name and group name. Execute
 Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
 Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
 Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
-Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)    
+Add a variety of actions to the recipe. (The group name can be left blank.)    
 Add a variety of actions to the recipe.
 
 ### Execute a recipe
@@ -91,7 +91,7 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 
 ##### To send more information of item
 
-{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
+{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
 
 ##### To be able to use it non-OP
 
