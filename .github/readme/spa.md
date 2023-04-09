@@ -34,11 +34,6 @@ Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de
 
 
 ## Permiso de acción
-| Mundo | tipos de acciones que estarán disponibles                                |
-| ----- | ------------------------------------------------------------------------ |
-| 0     | -                                                                        |
-| 1     | comando desde la consola, administrar permiso, (in)permitir vuelo, bucle |
-| 2     | archivo de configuración                                                 |
 
 Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. El nivel que usted da sólo puede ser utilizado por debajo de su nivel. Puedes dar un nivel máximo desde la consola.
 

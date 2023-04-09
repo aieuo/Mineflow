@@ -19,7 +19,7 @@
 # Indonesia
 
 Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
-**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**
+**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission add <your name> all` dari konsol.**
 
 
 ## Perintah
@@ -34,13 +34,8 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 
 
 ## Izin Tindakan
-| tingkat | jenis tindakan yang akan tersedia                               |
-| ------- | --------------------------------------------------------------- |
-| 0       | -                                                               |
-| 1       | perintah dari konsol, kelola izin, (tidak)izinkan terbang, loop |
-| 2       | file konfigurasi                                                |
 
-Untuk mengubah izin, jalankan `/mineflow permission <name> <level>`. Tingkat yang Anda berikan hanya dapat digunakan di bawah tingkat Anda. Anda dapat memberikan level maksimum dari konsol.
+Untuk mengubah izin, jalankan `/mineflow permission <name> <permission>`. Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
 
 
 ## Variabel

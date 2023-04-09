@@ -34,11 +34,6 @@ You can combine actions and create something like a plugin without any coding kn
 
 
 ## ActionPermission
-| level | types of actions that will be available                       |
-| ----- | ------------------------------------------------------------- |
-| 0     | -                                                             |
-| 1     | command from console, manage permission, (dis)allow fly, loop |
-| 2     | configuration file                                            |
 
 To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console.
 
