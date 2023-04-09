@@ -18,8 +18,8 @@
 
 # Indonesia
 
-Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
-**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission add <your name> all` dari konsol.**
+You can combine actions and create something like a plugin without any coding knowledge.  
+**Some of the actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 
 ## Perintah
@@ -53,7 +53,8 @@ Tambahkan berbagai tindakan ke resep.
 Tambahkan pemicu dari "Edit pemicu" dari bentuk. Kemudian, ketika pemicu terjadi, resep akan dieksekusi.
 
 ### Ubah pelaksananya
-Secara default, pemain yang memicu pemicu masuk ke variabel {target} resep. Itu dapat diubah dari "Ubah target" pada formulir ke salah satu pemain yang ditentukan, semua pemain, secara acak
+By default, the player who fired the trigger goes into the {target} variable of the recipe.  
+It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Argumen dan mengembalikan nilai
 Anda dapat menyetel nilai yang akan diwarisi dari tindakan asli, dan nilai yang akan dikembalikan saat menjalankan tindakan "Panggil balik resep lainnya".
