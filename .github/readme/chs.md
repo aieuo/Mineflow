@@ -79,7 +79,7 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field. ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### To send more information of item
-{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
+{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
 
 ##### To be able to use it non-OP
 Set the permissions of the command to `anyone can execute` on the form to add the command or in the command menu.
