@@ -19,8 +19,7 @@
 # Indonesia
 
 Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
-**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan.**
-**Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**  
+**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan.** **Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**
 
 
 ## Perintah
