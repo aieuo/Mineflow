@@ -18,8 +18,8 @@
 
 # 日本語
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission <your name> 2` from the console.**
+アクションを組み合わせてプラグインのようなものを作れます。    
+**いくつかのアクションはデフォルトの権限では使用できなくなっています． 全て表示するにはコンソールから`mineflow permission <your name> 2`を実行してください**
 
 ## コマンド
 
@@ -40,13 +40,11 @@ You can combine actions and create something like a plugin without any coding kn
 | 1   | コンソールからコマンド, 権限操作, 飛行状態変更, ループ |
 | 2   | 設定ファイル                         |
 
-`/mineflow permission <name> <level>` で権限を変更できます。          
-与えることができる権限レベルは自分のレベル以下だけです。        
-コンソールからは最大レベルを与えることができます。
+`/mineflow permission <name> <level>` で権限を変更できます。 与えることができる権限レベルは自分のレベル以下だけです。 コンソールからは最大レベルを与えることができます。
 
 ## 変数
 
-`{` と `}`で囲った文字は変数と認識されて置き換えられます。        
+`{` と `}`で囲った文字は変数と認識されて置き換えられます。         
 例: `{target}`, `{item}`
 
 [詳しい説明](https://mineflow.github.io/docs/jpn/#/variable/about)
@@ -55,8 +53,8 @@ You can combine actions and create something like a plugin without any coding kn
 
 ### レシピを作成する
 
-`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。 (The group name can be left blank.)    
-Add a variety of actions to the recipe.
+`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。         
+レシピにいろいろなアクションを追加します
 
 ### レシピを実行する
 
@@ -83,8 +81,7 @@ Add a variety of actions to the recipe.
 2. `/mineflow recipe add` を実行して好きな名前のレシピを追加します。  
    ![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
-4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。       
-   ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true) (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
+4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。 [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。 ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### 表示する情報を増やすには
