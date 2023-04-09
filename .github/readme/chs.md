@@ -20,7 +20,7 @@
 
 You can combine actions and create something like a plugin without any coding knowledge.  
 **Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.** You can combine actions and create something like a plugin without any coding knowledge.  
-**Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.** \* Some of the actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.  
+**Some of the actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 
 ## Command
@@ -36,7 +36,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## ActionPermission
 
-To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.  The level you give can only be used below your level. You can give a maximum level from the console.
+To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.The level you give can only be used below your level. You can give a maximum level from the console.
 
 
 ## Variable
@@ -54,7 +54,8 @@ Add a variety of actions to the recipe.
 Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed.
 
 ### Change the executor
-By default, the player who fired the trigger goes into the {target} variable of the recipe. By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none. By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none. By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none. By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none. By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+By default, the player who fired the trigger goes into the {target} variable of the recipe.  
+It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Arguments and return values
 You can set the value to be inherited from the original action, and the value to be returned when executing in the "Callback the other recipe" action.

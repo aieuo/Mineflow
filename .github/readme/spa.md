@@ -18,8 +18,8 @@
 
 # Español
 
-Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.  
-**Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `permiso de mineflow <your name> 2` desde la consola.**
+You can combine actions and create something like a plugin without any coding knowledge.  
+**Some of the actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 
 ## Comando
@@ -53,7 +53,8 @@ Añade una variedad de acciones a la receta.
 Añadir un accionador de "Editar accionador" del formulario. Luego, cuando el accionador ocurre, la receta será ejecutada.
 
 ### Cambiar el ejecutor
-De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta. Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
+By default, the player who fired the trigger goes into the {target} variable of the recipe.  
+It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Argumentos y devolver valores
 Puede establecer el valor a heredar de la acción original, y el valor a devolver cuando se ejecuta en la acción "Callback the other recet".

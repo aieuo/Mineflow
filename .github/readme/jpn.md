@@ -18,8 +18,8 @@
 
 # 日本語
 
-アクションを組み合わせてプラグインのようなものを作れます。   
-**いくつかのアクションはデフォルトの権限では使用できなくなっています． 全て表示するにはコンソールから`mineflow permission <your name> 2`を実行してください**
+You can combine actions and create something like a plugin without any coding knowledge.  
+**Some of the actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 
 ## コマンド
@@ -53,7 +53,8 @@
 フォームの「トリガーを編集する」からトリガーを追加すると そのトリガーが起きた時レシピが実行されます。 そのトリガーが起きた時レシピが実行されます。
 
 ### 実行者を変更する
-デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。 それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
+By default, the player who fired the trigger goes into the {target} variable of the recipe.  
+It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### 引数と戻り値
 アクションの「レシピを呼び出す」で呼び出されたときに元のレシピから受け入れる値と元のレシピに戻す値を設定できます。
