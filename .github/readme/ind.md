@@ -18,11 +18,11 @@
 
 # Indonesia
 
-Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
-**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan.** **Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**
-
+You can combine actions and create something like a plugin without any coding knowledge.  
+**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 ## Perintah
+
 | perintah                                        | deskripsi                |
 | ----------------------------------------------- | ------------------------ |
 | /mineflow language<eng &#124; jpn ind>          | Ubah bahasa              |
@@ -32,39 +32,45 @@ Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa penge
 | /mineflow permission <name> <level>             | Ubah tingkat izin pemain |
 | /mineflow setting                               | Pengaturan               |
 
-
 ## Izin Tindakan
 
-Untuk mengubah izin, jalankan `/mineflow permission <name> <permission>`. Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
-
+To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
 
 ## Variabel
+
 Karakter yang diapit oleh "{" dan "}" dikenali sebagai variabel dan akan diganti.  
 contoh: `{target}`, `{item}`
 
 [Detail lebih lanjut](https://mineflow.github.io/docs/eng/#/variable/about)
 
 ## Tutorial
+
 ### Buat resep
-Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (Nama grup boleh dikosongkan.)  
-Tambahkan berbagai tindakan ke resep.
+
+Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup. (The group name can be left blank.)    
+Add a variety of actions to the recipe.
 
 ### Jalankan resep
+
 Tambahkan pemicu dari "Edit pemicu" dari bentuk. Kemudian, ketika pemicu terjadi, resep akan dieksekusi.
 
 ### Ubah pelaksananya
+
 By default, the player who fired the trigger goes into the {target} variable of the recipe.  
 It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Argumen dan mengembalikan nilai
+
 Anda dapat menyetel nilai yang akan diwarisi dari tindakan asli, dan nilai yang akan dikembalikan saat menjalankan tindakan "Panggil balik resep lainnya".
 
-
 ## Contoh
+
 ### Perintah CheckId
+
 Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`. [Unduh](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Langkah
+
 1. Jalankan perintah `/mineflow command add` dan tambahkan perintah /id.  
    ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Jalankan `/mineflow recipe add` dan tambahkan resep dengan nama pilihan Anda.  
@@ -75,10 +81,13 @@ Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`. [Unduh](htt
 5. Klik `Edit pemicu > Tambahkan pemicu > Perintah` dan masukkan `id` di bidang `nama perintah`. ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Untuk mengirim informasi lebih lanjut tentang barang
+
 {target.hand} adalah [variabel barang](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` diganti dengan nama barang dan `{target.hand.count}` dengan jumlah barang.
 
 ##### Untuk dapat menggunakannya non-OP
+
 Setel izin perintah ke `Siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
 
 ## Hak Cipta
+
 Ikon dibuat oleh [Pause08](https://www.flaticon.com/authors/pause08) dari [www.flaticon.com](https://www.flaticon.com/)
