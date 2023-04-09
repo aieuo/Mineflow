@@ -18,8 +18,8 @@
 
 # Español
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
+Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.  
+**Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `mineflow permission add <your name> all` desde la consola.**
 
 ## Comando
 
@@ -34,7 +34,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## Permiso de acción
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. El nivel que usted da sólo puede ser utilizado por debajo de su nivel. Puedes dar un nivel máximo desde la consola.
+Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. El nivel que usted da sólo puede ser utilizado por debajo de su nivel. Puedes dar un nivel máximo desde la consola.
 
 ## Variable
 
@@ -47,8 +47,8 @@ ejemplos: `{target}`, `{item}`
 
 ### Crear una receta
 
-Ejecuta "/mineflow recipe add" e introduce el nombre de la receta y el nombre del grupo. (The group name can be left blank.)    
-Add a variety of actions to the recipe.
+Ejecuta "/mineflow recipe add" e introduce el nombre de la receta y el nombre del grupo. (El nombre del grupo puede dejarse en blanco.)  
+Añade una variedad de acciones a la receta.
 
 ### Ejecutar una receta
 
@@ -56,8 +56,7 @@ Añadir un accionador de "Editar accionador" del formulario. Luego, cuando el ac
 
 ### Cambiar el ejecutor
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.  
-It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta. Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
 
 ### Argumentos y devolver valores
 
