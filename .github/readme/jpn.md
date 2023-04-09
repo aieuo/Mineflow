@@ -18,8 +18,8 @@
 
 # 日本語
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse.** **To show them all, please run `mineflow permission add <your name> all` from the console.**
+アクションを組み合わせてプラグインのようなものを作れます。    
+**いくつかのアクションはデフォルトの権限では使用できなくなっています． 全て表示するにはコンソールから`mineflow permission add <your name> all`を実行してください**
 
 ## コマンド
 
@@ -34,11 +34,11 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## アクション権限
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. `権限`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。
+`/mineflow permission <name> <level>` で権限を変更できます。 `/mineflow permission <add|remove|list> <player> <permission>` で権限を変更できます。 `<permission>`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。 コンソールからは全ての権限を与えることができます。
 
 ## 変数
 
-`{` と `}`で囲った文字は変数と認識されて置き換えられます。        
+`{` と `}`で囲った文字は変数と認識されて置き換えられます。         
 例: `{target}`, `{item}`
 
 [詳しい説明](https://mineflow.github.io/docs/jpn/#/variable/about)
@@ -47,8 +47,8 @@ To change the permission, run `/mineflow permission <add|remove|list> <name> <pe
 
 ### レシピを作成する
 
-`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。 (The group name can be left blank.)    
-Add a variety of actions to the recipe.
+`/mineflow recipe add`を実行してレシピ名とグループ名を入力します。         
+レシピにいろいろなアクションを追加します
 
 ### レシピを実行する
 
@@ -56,8 +56,7 @@ Add a variety of actions to the recipe.
 
 ### 実行者を変更する
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.  
-It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。 それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
 
 ### 引数と戻り値
 
@@ -76,8 +75,7 @@ It can be changed from "Change the target" on the form to any of the specified p
 2. `/mineflow recipe add` を実行して好きな名前のレシピを追加します。  
    ![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
-4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。       
-   ![アクション追加](https://github.com/aieuo/images/blob/master/mineflow/jpn/CheckId_3.png?raw=true) (`{target.hand}`は変数にはプレイヤーの手に持っているアイテムの情報が入っています。
+4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。 [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。 ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### 表示する情報を増やすには
