@@ -38,7 +38,6 @@ Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de
 ## Permiso de acción
 
 Para cambiar el permiso, ejecute `/mineflow permission <add|remove|list> <name> <permission>`. El nivel que usted da sólo puede ser utilizado por debajo de su nivel. Puedes dar un nivel máximo desde la consola.
-
 ## Variable
 
 Los caracteres encerrados por "{" y "}" son reconocidos como variables y serán reemplazados.  
@@ -59,8 +58,7 @@ Añadir un accionador de "Editar accionador" del formulario. Luego, cuando el ac
 
 ### Cambiar el ejecutor
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.  
-It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta. Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
 
 ### Argumentos y devolver valores
 
