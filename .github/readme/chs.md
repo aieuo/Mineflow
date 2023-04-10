@@ -47,16 +47,12 @@ examples: `{target}`, `{item}`
 
 ### Create a recipe
 
-Execute "/mineflow recipe add" and enter the recipe name and group name. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
-Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
-Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
-Add a variety of actions to the recipe. Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)  
-Add a variety of actions to the recipe. (The group name can be left blank.)    
+Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)    
 Add a variety of actions to the recipe.
 
 ### Execute a recipe
 
-Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed. Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed. Then, when the trigger occurs, the recipe will be executed.
+Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, the recipe will be executed.
 
 ### Change the executor
 
@@ -71,7 +67,7 @@ You can set the value to be inherited from the original action, and the value to
 
 ### CheckId command
 
-Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json) Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json) Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json) Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json) [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Steps
 
@@ -86,7 +82,7 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 
 ##### To send more information of item
 
-{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items. `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
+{target.hand} is [item variable](https://github.com/aieuo/Mineflow/wiki/Variable#item). `{target.hand.name}` is replaced by the item name and `{target.hand.count}` by the number of items.
 
 ##### To be able to use it non-OP
 
