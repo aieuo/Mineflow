@@ -7,8 +7,6 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class AxisAlignedBBVariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::AXIS_ALIGNED_BB;
-
     protected array $actions = [
         FlowItemIds::CREATE_AABB,
         FlowItemIds::CREATE_AABB_BY_VECTOR3_VARIABLE,

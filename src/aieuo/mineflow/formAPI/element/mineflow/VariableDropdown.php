@@ -19,8 +19,6 @@ use function in_array;
 
 abstract class VariableDropdown extends Dropdown {
 
-    protected string $variableType;
-
     private string $defaultText;
 
     /** @var string[] */
@@ -91,8 +89,8 @@ abstract class VariableDropdown extends Dropdown {
         $this->setDefaultIndex($this->findDefaultKey($default));
     }
 
-    public function getVariableType(): string {
-        return $this->variableType;
+    public function getVariableTypes(): array {
+        return $this->variableTypes;
     }
 
     public function getDefaultText(): string {
@@ -195,7 +193,7 @@ abstract class VariableDropdown extends Dropdown {
 
         if ($selectedIndex === $this->inputManuallyOptionIndex) {
             $response->setResend(true);
-            $response->overrideElement(new ExampleInput($this->getText(), $this->getVariableType(), $this->getDefaultText(), !$this->isOptional()), $this->getDefaultText());
+            $response->overrideElement(new ExampleInput($this->getText(), implode(", ", $this->variableTypes), $this->getDefaultText(), !$this->isOptional()), $this->getDefaultText());
             return;
         }
 

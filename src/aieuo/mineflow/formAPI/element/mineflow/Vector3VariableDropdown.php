@@ -6,8 +6,6 @@ use aieuo\mineflow\variable\DummyVariable;
 
 class Vector3VariableDropdown extends VariableDropdown {
 
-    protected string $variableType = DummyVariable::VECTOR3;
-
     protected array $actions = [
     ];
 
