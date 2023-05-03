@@ -14,6 +14,8 @@ interface FlowItemIds {
     public const SEND_MESSAGE = "sendMessage";
     public const SEND_TIP = "sendTip";
     public const SEND_POPUP = "sendPopup";
+    public const SEND_JUKEBOX_POPUP = "sendJukeboxPopup";
+    public const SEND_ACTION_BAR_MESSAGE = "sendActionBarMessage";
     public const BROADCAST_MESSAGE = "broadcastMessage";
     public const SEND_MESSAGE_TO_OP = "sendMessageToOp";
     public const SEND_MESSAGE_TO_CONSOLE = "sendMessageToConsole";
@@ -29,6 +31,7 @@ interface FlowItemIds {
     public const ADD_DAMAGE = "addDamage";
     public const SET_IMMOBILE = "setImmobile";
     public const UNSET_IMMOBILE = "unsetImmobile";
+    public const SET_INVISIBLE = "setInvisible";
     public const SET_HEALTH = "setHealth";
     public const SET_MAX_HEALTH = "setMaxHealth";
     public const SET_NAME = "setName";
@@ -52,6 +55,7 @@ interface FlowItemIds {
     public const SET_SLEEPING = "setSleeping";
     public const SET_SITTING = "setSitting";
     public const KICK = "kick";
+    public const TRANSFER_SERVER = "transfer";
     public const CLEAR_INVENTORY = "clearInventory";
     public const SET_FOOD = "setFood";
     public const SET_GAMEMODE = "setGamemode";
@@ -65,6 +69,7 @@ interface FlowItemIds {
     public const REMOVE_PERMISSION = "removePermission";
     public const ALLOW_FLIGHT = "allowFlight";
     public const ALLOW_CLIMB_WALLS = "allowClimbWalls";
+    public const EMOTE = "emote";
 
     public const ADD_MONEY = "addMoney";
     public const SET_MONEY = "setMoney";

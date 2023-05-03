@@ -55,6 +55,8 @@ class EntityObjectVariable extends PositionObjectVariable {
                 return new BoolVariable($entity->isOnGround());
             case "bounding_box":
                 return new AxisAlignedBBObjectVariable($entity->getBoundingBox());
+            case "isVisible":
+                return new BoolVariable($entity->isInvisible());
             default:
                 return parent::getValueFromIndex($index);
         }
@@ -76,6 +78,7 @@ class EntityObjectVariable extends PositionObjectVariable {
             "direction" => new DummyVariable(DummyVariable::NUMBER),
             "onGround" => new DummyVariable(DummyVariable::BOOLEAN),
             "bounding_box" => new DummyVariable(DummyVariable::AXIS_ALIGNED_BB),
+            "isVisible" => new DummyVariable(DummyVariable::BOOLEAN),
         ]);
     }
 
