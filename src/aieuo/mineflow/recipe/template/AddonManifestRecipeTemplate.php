@@ -14,8 +14,6 @@ use aieuo\mineflow\utils\Language;
 
 class AddonManifestRecipeTemplate extends RecipeTemplate {
 
-    private string $addonId = "";
-
     public static function getName(): string {
         return Language::get("recipe.template.addon.manifest");
     }
