@@ -120,12 +120,13 @@ class AddonManager {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), ["import.plugin.outdated"]]));
         }
 
+        /** @var AddonManifest $manifest */
         $manifest = yield from $this->loadAddonManifest($pack, basename($path));
 
         return new Addon(
             $pack->getName(),
             $pack->getAuthor(),
-            $manifest?->getVariable()?->getValueFromIndex("version")?->getValue() ?? "0.0.0",
+            $manifest?->getVariable()?->getProperty("version")?->getValue() ?? "0.0.0",
             [],
             $pack,
             $manifest,
