@@ -25,10 +25,9 @@ use SOFe\AwaitGenerator\Await;
 use function basename;
 use function file_exists;
 use function implode;
-use function ltrim;
 use function mkdir;
+use function preg_quote;
 use function str_replace;
-use function str_starts_with;
 use function strtolower;
 use function version_compare;
 
@@ -39,6 +38,8 @@ class AddonManager {
 
     /** @var Form[] */
     private array $forms = [];
+
+    private const RECIPE_GROUP_PREFIX = "_/mineflow/addon";
 
     public function __construct(
         private string        $directory,
@@ -114,7 +115,7 @@ class AddonManager {
     }
 
     public function preloadAddon(string $path): \Generator {
-        $pack = RecipePack::load($path, baseGroup: "_/mineflow/addon", recipeClass: AddonRecipe::class);
+        $pack = RecipePack::load($path, baseGroup: self::RECIPE_GROUP_PREFIX, recipeClass: AddonRecipe::class);
 
         if (version_compare(Main::getInstance()->getDescription()->getVersion(), $pack->getVersion()) < 0) {
             throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($path), ["import.plugin.outdated"]]));
@@ -173,9 +174,9 @@ class AddonManager {
             }
 
             $path = (string)$recipeInfo->getProperty("path");
-            if (!str_starts_with($path, $manifestRecipe->getGroup())) {
-                $path = ltrim($manifestRecipe->getGroup()."/".$path, "/");
-            }
+            $prefix = preg_quote(ltrim(str_replace(self::RECIPE_GROUP_PREFIX, "", $manifestRecipe->getGroup()), "/"), "/@#~");
+            $path = ltrim(preg_replace("/^{$prefix}/", "", $path), "/");
+            $path = $manifestRecipe->getGroup()."/".$path;
 
             $recipeInfos[] = new RecipeInfoAttribute(
                 "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getProperty("id"),
