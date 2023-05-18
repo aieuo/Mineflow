@@ -40,7 +40,7 @@ class SimpleEditFormBuilder {
 
     /**
      * @param Element[] $elements
-     * @return $this
+     * @return void
      */
     public function elements(array $elements): void {
         $this->elements = array_merge($this->elements, $elements);
@@ -48,7 +48,7 @@ class SimpleEditFormBuilder {
 
     /**
      * @param Element[] $elements
-     * @return $this
+     * @return void
      */
     public function setElements(array $elements): void {
         $this->elements = $elements;
@@ -65,7 +65,7 @@ class SimpleEditFormBuilder {
 
     /**
      * @param callable(EditFormResponseProcessor $response): void $callback
-     * @return $this
+     * @return void
      */
     public function response(callable $callback): void {
         $callback($this->responseProcessor);
