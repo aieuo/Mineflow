@@ -167,7 +167,7 @@ class AddonManager {
                 throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.info.type.error", [$i])]));
             }
 
-            foreach (["id", "category", "path"] as $key) {
+            foreach (["id", "category", "path", "name", "description"] as $key) {
                 if ($recipeInfo->getProperty($key) === null) {
                     throw new \UnexpectedValueException(Language::get("addon.load.failed", [$filename, Language::get("addon.manifest.info.key.missing", [$i, $key])]));
                 }
@@ -182,6 +182,8 @@ class AddonManager {
                 "addon.".strtolower(str_replace(" ", "_", $pack->getName())).".".$recipeInfo->getProperty("id"),
                 (string)$recipeInfo->getProperty("category"),
                 $path,
+                (string)$recipeInfo->getProperty("name"),
+                (string)$recipeInfo->getProperty("description"),
             );
         }
         return new AddonManifest($recipeInfos, $manifestVariable);
@@ -207,6 +209,8 @@ class AddonManager {
                 $recipePath = $recipeInfo->getRecipePath();
                 $id = $recipeInfo->getActionId();
                 $category = $recipeInfo->getCategory();
+                $actionName = $recipeInfo->getName();
+                $actionDescription = $recipeInfo->getDescription();
 
                 [$name, $group] = $recipeManager->parseName($recipePath);
                 $recipe = $pack->getRecipe($name, $group);
@@ -224,7 +228,7 @@ class AddonManager {
                     throw new \UnexpectedValueException(Language::get("addon.load.failed", [basename($addon->getPath()), Language::get("addon.manifest.id.exists", [$id])]));
                 }
 
-                $action = new CustomAction($addon->getName(), $id, $category, clone $recipe);
+                $action = new CustomAction($addon->getName(), $id, $category, $actionName, $actionDescription, clone $recipe);
                 FlowItemFactory::register($action);
             }
         }

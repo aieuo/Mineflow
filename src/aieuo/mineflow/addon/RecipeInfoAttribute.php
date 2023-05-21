@@ -10,6 +10,8 @@ class RecipeInfoAttribute {
         private string $actionId,
         private string $category,
         private string $recipePath,
+        private string $name,
+        private string $description,
     ) {
     }
 
@@ -23,5 +25,13 @@ class RecipeInfoAttribute {
 
     public function getRecipePath(): string {
         return $this->recipePath;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getDescription(): string {
+        return $this->description;
     }
 }

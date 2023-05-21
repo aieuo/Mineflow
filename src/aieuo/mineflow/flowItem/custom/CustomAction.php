@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\custom;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
@@ -15,10 +14,10 @@ use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\Recipe;
 use SOFe\AwaitGenerator\Await;
 use function array_map;
+use function str_replace;
 use function substr;
 
 class CustomAction extends FlowItem {
-    use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     private array $isObjectVariable = [];
@@ -27,6 +26,8 @@ class CustomAction extends FlowItem {
         private string $addonName,
         string         $id,
         string         $category,
+        private string $actionName,
+        private string $actionDescription,
         private Recipe $recipe,
         private array  $arguments = [],
     ) {
@@ -35,6 +36,27 @@ class CustomAction extends FlowItem {
         foreach ($this->recipe->getArguments() as $i => $argument) {
             $this->isObjectVariable[$i] = $argument->getDummyVariable()->isObjectVariableType();
         }
+    }
+
+    public function getName(): string {
+        return $this->actionName;
+    }
+
+    public function getDescription(): string {
+        $description = $this->actionDescription;
+        $replaces = array_map(fn($replace) => "§7<".$replace.">§f", $this->getDetailDefaultReplaces());
+        foreach ($replaces as $cnt => $value) {
+            $description = str_replace("{%".$cnt."}", $value, $description);
+        }
+        return $description;
+    }
+
+    public function getDetail(): string {
+        $detail = $this->actionDescription;
+        foreach ($this->getDetailReplaces() as $cnt => $value) {
+            $detail = str_replace("{%".$cnt."}", $value, $detail);
+        }
+        return $detail;
     }
 
     public function getDetailDefaultReplaces(): array {
