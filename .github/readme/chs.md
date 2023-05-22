@@ -34,7 +34,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## ActionPermission
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
+To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
 
 ## Variable
 
@@ -56,8 +56,7 @@ Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, th
 
 ### Change the executor
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.  
-It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Arguments and return values
 
