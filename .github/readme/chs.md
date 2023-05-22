@@ -56,7 +56,8 @@ Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, th
 
 ### Change the executor
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe. It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+By default, the player who fired the trigger goes into the {target} variable of the recipe.  
+It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Arguments and return values
 
