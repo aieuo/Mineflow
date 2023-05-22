@@ -19,7 +19,7 @@
 # English
 
 You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission <your name> 2` from the console.**
+**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 ## Command
 
@@ -34,7 +34,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## ActionPermission
 
-To change the permission, run `/mineflow permission <name> <level>`. The level you give can only be used below your level. You can give a maximum level from the console.
+To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. The level you give can only be used below your level. You can give a maximum level from the console.
 
 ## Variable
 
