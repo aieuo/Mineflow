@@ -18,8 +18,8 @@
 
 # Indonesia
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
+Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
+**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission add <your name> all` dari konsol.**
 
 ## Perintah
 
@@ -34,7 +34,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## Izin Tindakan
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Hanya pemain yang memiliki izin `izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
+Untuk mengubah izin, jalankan `/mineflow permission &lt;add|remove|list&gt; &lt;name&gt;&lt;permission&gt;. Hanya pemain yang memiliki izin <code>izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
 
 ## Variabel
 
@@ -47,8 +47,8 @@ contoh: `{target}`, `{item}`
 
 ### Buat resep
 
-Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (The group name can be left blank.)    
-Add a variety of actions to the recipe.
+Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (Nama grup boleh dikosongkan.)    
+Tambahkan berbagai tindakan ke resep.
 
 ### Jalankan resep
 
