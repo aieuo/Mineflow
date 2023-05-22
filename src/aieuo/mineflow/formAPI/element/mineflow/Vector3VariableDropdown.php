@@ -16,8 +16,6 @@ use aieuo\mineflow\variable\object\Vector3Variable;
 
 class Vector3VariableDropdown extends VariableDropdown {
 
-    protected string $variableClass = Vector3Variable::class;
-
     protected array $actions = [
     ];
 

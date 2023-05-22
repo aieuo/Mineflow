@@ -10,8 +10,6 @@ use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 class ScoreboardVariableDropdown extends VariableDropdown {
 
-    protected string $variableClass = ScoreboardVariable::class;
-
     protected array $actions = [
         FlowItemIds::CREATE_CONFIG_VARIABLE,
     ];

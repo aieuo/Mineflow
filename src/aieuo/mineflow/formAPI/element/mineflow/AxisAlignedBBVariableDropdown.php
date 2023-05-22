@@ -10,8 +10,6 @@ use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 
 class AxisAlignedBBVariableDropdown extends VariableDropdown {
 
-    protected string $variableClass = AxisAlignedBBVariable::class;
-
     protected array $actions = [
         FlowItemIds::CREATE_AABB,
         FlowItemIds::CREATE_AABB_BY_VECTOR3_VARIABLE,

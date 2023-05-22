@@ -13,8 +13,6 @@ use aieuo\mineflow\variable\object\PlayerVariable;
 
 class EntityVariableDropdown extends VariableDropdown {
 
-    protected string $variableClass = EntityVariable::class;
-
     protected array $actions = [
         FlowItemIds::GET_ENTITY,
         FlowItemIds::CREATE_HUMAN_ENTITY,

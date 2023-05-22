@@ -14,7 +14,7 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\ObjectVariable;
+use aieuo\mineflow\variable\Variable;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
 use function array_key_first;
@@ -26,8 +26,6 @@ use function end;
 use function in_array;
 
 abstract class VariableDropdown extends Dropdown {
-
-    protected string $variableClass;
 
     private string $defaultText;
 
@@ -103,14 +101,8 @@ abstract class VariableDropdown extends Dropdown {
         $this->setDefaultIndex($this->findDefaultKey($default));
     }
 
-    public function getVariableClass(): string {
-        return $this->variableClass;
-    }
-
-    public function getVariableType(): string {
-        /** @var ObjectVariable $class */
-        $class = $this->variableClass;
-        return $class::getTypeName();
+    public function getVariableClasses(): array {
+        return $this->variableClasses;
     }
 
     public function getDefaultText(): string {
@@ -215,7 +207,9 @@ abstract class VariableDropdown extends Dropdown {
 
         if ($selectedIndex === $this->inputManuallyOptionIndex) {
             $response->setResend(true);
-            $response->overrideElement(new ExampleInput($this->getText(), $this->getVariableType(), $this->getDefaultText(), !$this->isOptional()), $this->getDefaultText());
+            /** @var class-string<Variable>|Variable $class */
+            $types = array_map(fn($class) => $class::getTypeName(), $this->variableClasses);
+            $response->overrideElement(new ExampleInput($this->getText(), implode(", ", $types), $this->getDefaultText(), !$this->isOptional()), $this->getDefaultText());
             return;
         }
 

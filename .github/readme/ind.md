@@ -18,8 +18,8 @@
 
 # Indonesia
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
+Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
+**Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission <nama mu> 2` dari konsol.**
 
 ## Perintah
 

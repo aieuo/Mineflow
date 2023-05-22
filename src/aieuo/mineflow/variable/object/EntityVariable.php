@@ -84,6 +84,10 @@ class EntityVariable extends ObjectVariable {
             new DummyVariable(AxisAlignedBBVariable::class),
             fn(Entity $entity) => new AxisAlignedBBVariable($entity->getBoundingBox()),
         ));
+        self::registerProperty($class, "isVisible", new VariableProperty(
+            new DummyVariable(BooleanVariable::class),
+            fn(Entity $entity) => new BooleanVariable($entity->isInvisible()),
+        ));
         self::registerProperty($class, "location", new VariableProperty(
             new DummyVariable(LocationVariable::class),
             fn(Entity $entity) => new LocationVariable($entity->getLocation()),

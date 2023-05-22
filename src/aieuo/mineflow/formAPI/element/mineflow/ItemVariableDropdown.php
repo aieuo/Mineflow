@@ -10,8 +10,6 @@ use aieuo\mineflow\variable\object\ItemVariable;
 
 class ItemVariableDropdown extends VariableDropdown {
 
-    protected string $variableClass = ItemVariable::class;
-
     protected array $actions = [
         FlowItemIds::CREATE_ITEM_VARIABLE,
     ];

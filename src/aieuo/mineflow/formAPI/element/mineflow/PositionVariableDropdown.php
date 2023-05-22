@@ -16,8 +16,6 @@ use aieuo\mineflow\variable\object\PositionVariable;
 
 class PositionVariableDropdown extends VariableDropdown {
 
-    protected string $variableClass = PositionVariable::class;
-
     protected array $actions = [
         FlowItemIds::CREATE_POSITION_VARIABLE,
         FlowItemIds::GET_ENTITY_SIDE,
