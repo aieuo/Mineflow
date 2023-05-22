@@ -56,7 +56,7 @@ class EntityObjectVariable extends PositionObjectVariable {
             case "bounding_box":
                 return new AxisAlignedBBObjectVariable($entity->getBoundingBox());
             case "isVisible":
-                return new BoolVariable($entity->isInvisible());
+                return new BoolVariable(!$entity->isInvisible());
             default:
                 return parent::getValueFromIndex($index);
         }
