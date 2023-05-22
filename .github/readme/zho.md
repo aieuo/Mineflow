@@ -67,7 +67,7 @@ You can set the value to be inherited from the original action, and the value to
 
 ### CheckId command
 
-Send the ID of the item in the player's hand to the chat field when execute `/id`. Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json) [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Steps
 

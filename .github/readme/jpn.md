@@ -1,11 +1,8 @@
 # Mineflow
 
-[![GitHub license](https://img.shields.io/badge/license-UIUC/NCSA-blue.svg)](https://github.com/aieuo/Mineflow/blob/master/LICENSE)
-[![](https://poggit.pmmp.io/shield.state/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
-[![](https://poggit.pmmp.io/shield.api/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
+[![GitHub license](https://img.shields.io/badge/license-UIUC/NCSA-blue.svg)](https://github.com/aieuo/Mineflow/blob/master/LICENSE) [![](https://poggit.pmmp.io/shield.state/Mineflow)](https://poggit.pmmp.io/p/Mineflow) [![](https://poggit.pmmp.io/shield.api/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
 
-[![](https://poggit.pmmp.io/shield.dl/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
-[![](https://poggit.pmmp.io/shield.dl.total/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
+[![](https://poggit.pmmp.io/shield.dl/Mineflow)](https://poggit.pmmp.io/p/Mineflow) [![](https://poggit.pmmp.io/shield.dl.total/Mineflow)](https://poggit.pmmp.io/p/Mineflow)
 
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
@@ -37,8 +34,7 @@
 
 ## アクション権限
 
-`/mineflow permission <add|remove|list> <name> <permission>` で権限を変更できます。
-`<permission>`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。
+`/mineflow permission <add|remove|list> <name> <permission>` で権限を変更できます。 `権限`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。
 
 ## 変数
 
@@ -60,7 +56,6 @@
 
 ### 実行者を変更する
 
-
 デフォルトではトリガーを発火したプレイヤーが{target}変数に入ります。  
 それはフォームの「ターゲット変更」から指定したプレイヤー,全てのプレイヤー,ランダムなプレイヤー,なしのどれかに変更できます。
 
@@ -72,8 +67,7 @@
 
 ### CheckIdコマンド
 
-`チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。
-[ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+`チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。 [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### 手順
 
@@ -83,8 +77,7 @@
    ![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
 4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。 [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
-5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。
-   ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前に`id`と入力します。 ![トリガー追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### 表示する情報を増やすには
 
