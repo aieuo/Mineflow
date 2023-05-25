@@ -116,7 +116,6 @@ interface FlowItemIds {
     public const SET_WORLD_TIME = "setWorldTime";
 
     public const EXECUTE_RECIPE = "executeRecipe";
-    public const EXECUTE_IF_CHAIN = "executeIFChain";
     public const EXECUTE_RECIPE_WITH_ENTITY = "executeRecipeWithEntity";
     public const CALL_RECIPE = "callRecipe";
 

@@ -23,7 +23,6 @@ class FlowItemCategory {
     public const BOSSBAR = "bossbar";
     public const PLAYER_PERMISSION = "player_permission";
     public const PLUGIN = "plugin";
-    public const PLUGIN_IF_PLUGIN = "if_plugin";
     public const MATH = "math";
     public const STRING = "string";
     public const VARIABLE = "variable";

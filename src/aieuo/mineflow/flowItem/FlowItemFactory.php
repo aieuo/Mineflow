@@ -208,7 +208,6 @@ use aieuo\mineflow\flowItem\condition\script\NotScript;
 use aieuo\mineflow\flowItem\condition\script\ORScript;
 use aieuo\mineflow\flowItem\condition\variable\ExistsListVariableKey;
 use aieuo\mineflow\flowItem\condition\variable\ExistsVariable;
-use pocketmine\Server;
 use function in_array;
 
 class FlowItemFactory {
@@ -388,9 +387,6 @@ class FlowItemFactory {
         self::register(new AddLanguageMappings);
         self::register(new AddSpecificLanguageMapping);
         self::register(new GetLanguage);
-        if (Server::getInstance()->getPluginManager()->getPlugin("if") !== null) {
-            self::register(new ExecuteIFChain);
-        }
 
 
         /** conditions **/
