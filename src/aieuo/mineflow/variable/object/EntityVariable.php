@@ -86,7 +86,7 @@ class EntityVariable extends ObjectVariable {
         ));
         self::registerProperty($class, "isVisible", new VariableProperty(
             new DummyVariable(BooleanVariable::class),
-            fn(Entity $entity) => new BooleanVariable($entity->isInvisible()),
+            fn(Entity $entity) => new BooleanVariable(!$entity->isInvisible()),
         ));
         self::registerProperty($class, "location", new VariableProperty(
             new DummyVariable(LocationVariable::class),
