@@ -31,7 +31,7 @@ class FourArithmeticOperations extends FlowItem {
     public const DIVISION = 3;
     public const MODULO = 4;
 
-    private array $operatorSymbols = ["+", "-", "*", "/", "％"];
+    private array $operatorSymbols = ["+", "-", "*", "/", "%%"];
 
     public function __construct(
         private string $value1 = "",
