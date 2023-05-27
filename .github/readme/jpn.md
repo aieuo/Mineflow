@@ -8,11 +8,12 @@
 
 ---
 
-### [Wiki](https://Mineflow.github.io/docs/jpn)
+[![Crowdin](https://badges.crowdin.net/mineflow/localized.svg)](https://crowdin.com/project/mineflow)
+### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md), [Español](/.github/readme/spa.md)
 
 ---
 
-### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md), [Español](/.github/readme/spa.md)
+### [Wiki](https://Mineflow.github.io/docs/jpn)
 
 ---
 
