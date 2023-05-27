@@ -26,7 +26,7 @@ class CustomDataListVariable extends Variable {
 
     protected function getValueFromIndex(string $index): ?Variable {
         $list = $this->getValue();
-        return $list[$index]?->getData($this->key);
+        return ($list[$index] ?? null)?->getData($this->key);
     }
 
     public function __toString(): string {
