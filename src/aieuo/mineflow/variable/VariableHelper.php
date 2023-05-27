@@ -78,9 +78,9 @@ class VariableHelper {
             $this->variables[$name] = $variable;
         }
 
-        foreach ($this->customDataFile as $type => $values) {
+        foreach ($this->customDataFile->getAll() as $type => $values) {
             foreach ($values as $name => $data) {
-                $dataContainer = new CustomVariableData([], $data["default"] ?? null);
+                $dataContainer = new CustomVariableData([]);
                 foreach ($data["values"] as $key => $value) {
                     $variable = VariableDeserializer::deserialize($value);
 
@@ -90,6 +90,17 @@ class VariableHelper {
                     }
 
                     $dataContainer->setData($key, $variable);
+                }
+
+                if (isset($data["default"])) {
+                    $variable = VariableDeserializer::deserialize($data["default"]);
+
+                    if ($variable === null) {
+                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7<{$type}({$key})>.${name}§f"]));
+                        continue;
+                    }
+
+                    $dataContainer->setDefault($variable);
                 }
                 $this->customVariableData[$type][$name] = $dataContainer;
             }
@@ -160,9 +171,9 @@ class VariableHelper {
                     $serialized = VariableSerializer::serialize($default);
 
                     if ($serialized !== null) {
-                        $this->customDataFile->setNested("{$type}.{$name}.values.default", $serialized);
+                        $this->customDataFile->setNested("{$type}.{$name}.default", $serialized);
                     } elseif ($default instanceof \JsonSerializable) {
-                        $this->customDataFile->setNested("{$type}.{$name}.values.default", $default);
+                        $this->customDataFile->setNested("{$type}.{$name}.default", $default);
                     }
                 }
             }
