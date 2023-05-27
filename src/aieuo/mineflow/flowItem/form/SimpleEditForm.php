@@ -28,7 +28,7 @@ class SimpleEditForm {
 
     public function show(Player $player): \Generator {
         return yield from Await::promise(function ($resolve) use ($player) {
-            $this->form->onReceiveWithoutPlayer(function (array $data) use ($resolve) {
+            $this->form->onReceiveWithoutPlayer(function (array $data) use ($resolve, $player) {
                 array_shift($data);
                 if (array_pop($data)) {
                     $resolve(FlowItem::EDIT_CANCELED);
