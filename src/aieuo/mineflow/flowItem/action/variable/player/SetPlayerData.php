@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\action\variable;
+namespace aieuo\mineflow\flowItem\action\variable\player;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
@@ -28,9 +28,8 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
         string         $player = "",
         private string $dataName = "",
         private string $data = "",
-        private string $defaultValue = ""
     ) {
-        parent::__construct(self::SET_PLAYER_DATA, FlowItemCategory::VARIABLE);
+        parent::__construct(self::SET_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
         $this->setPlayerVariableName($player);
     }
 
@@ -58,14 +57,6 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
         $this->data = $data;
     }
 
-    public function getDefaultValue(): string {
-        return $this->defaultValue;
-    }
-
-    public function setDefaultValue(string $defaultValue): void {
-        $this->defaultValue = $defaultValue;
-    }
-
     public function isDataValid(): bool {
         return $this->getPlayerVariableName() !== "" and $this->dataName !== "" and $this->data !== "";
     }
@@ -76,7 +67,6 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
         $player = $this->getPlayer($source);
         $name = $source->replaceVariables($this->getDataName());
         $variable = $helper->copyOrCreateVariable($this->getData(), $source);
-        $default = $this->getDefaultValue() === "" ? null : $helper->copyOrCreateVariable($this->getDefaultValue(), $source);
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {
@@ -84,7 +74,6 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
         }
 
         $data->setData($player->getName(), $variable);
-        $data->setDefault($default);
 
         yield Await::ALL;
     }
@@ -94,7 +83,6 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
             new ExampleInput("@action.setPlayerData.form.name", "tag", $this->getDataName(), true),
             new ExampleInput("@action.setPlayerData.form.data", "aieuo", $this->getData(), true),
-            new ExampleInput("@action.setPlayerData.form.default", "aieuo", $this->getDefaultValue(), false),
         ]);
     }
 
@@ -102,10 +90,9 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
         $this->setPlayerVariableName($content[0]);
         $this->setDataName($content[1]);
         $this->setData($content[2]);
-        $this->setDefaultValue($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getDataName(), $this->getData(), $this->getDefaultValue()];
+        return [$this->getPlayerVariableName(), $this->getDataName(), $this->getData()];
     }
 }

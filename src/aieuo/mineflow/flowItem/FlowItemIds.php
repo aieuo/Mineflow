@@ -153,6 +153,7 @@ interface FlowItemIds {
     public const CREATE_BLOCK_VARIABLE = "createBlock";
     public const GET_VARIABLE_NESTED = "getVariable";
     public const SET_PLAYER_DATA = "setPlayerData";
+    public const SET_DEFAULT_PLAYER_DATA = "setDefaultPlayerData";
     public const COUNT_LIST_VARIABLE = "count";
     public const GET_LIST_KEYS = "keys";
     public const GET_LIST_VALUES = "values";

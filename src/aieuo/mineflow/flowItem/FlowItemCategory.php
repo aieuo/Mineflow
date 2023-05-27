@@ -25,7 +25,10 @@ class FlowItemCategory {
     public const PLUGIN = "plugin";
     public const MATH = "math";
     public const STRING = "string";
+
     public const VARIABLE = "variable";
+
+    public const PLAYER_DATA = "player_data";
     public const SCRIPT = "script";
     public const SCRIPT_IF = "if";
     public const SCRIPT_LOOP = "loop";
@@ -59,6 +62,7 @@ class FlowItemCategory {
         self::add(self::SCRIPT_LOOP, self::SCRIPT);
         self::add(self::MATH);
         self::add(self::VARIABLE);
+        self::add(self::PLAYER_DATA, self::VARIABLE);
         self::add(self::CONFIG);
         self::add(self::STRING);
         self::add(self::FORM);
