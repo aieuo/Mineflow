@@ -40,10 +40,11 @@ class SimpleEditFormBuilder {
 
     /**
      * @param Element[] $elements
-     * @return void
+     * @return SimpleEditFormBuilder
      */
-    public function elements(array $elements): void {
+    public function elements(array $elements): self {
         $this->elements = array_merge($this->elements, $elements);
+        return $this;
     }
 
     /**
@@ -65,18 +66,19 @@ class SimpleEditFormBuilder {
 
     /**
      * @param callable(EditFormResponseProcessor $response): void $callback
-     * @return void
+     * @return SimpleEditFormBuilder
      */
-    public function response(callable $callback): void {
+    public function response(callable $callback): self {
         $callback($this->responseProcessor);
+        return $this;
     }
 
     /**
      * @param int $number
      * @param callable(SimpleEditFormBuilder $builder): void $callback
-     * @return void
+     * @return SimpleEditFormBuilder
      */
-    public function page(int $number, callable $callback): void {
+    public function page(int $number, callable $callback): self {
         $page = $this->pageManager->get($number);
         if ($page === null) {
             $page = new self($this->item, isNew: $this->isNew, pageManager: $this->pageManager);
@@ -84,6 +86,7 @@ class SimpleEditFormBuilder {
         }
 
         $callback($page);
+        return $this;
     }
 
     /**
