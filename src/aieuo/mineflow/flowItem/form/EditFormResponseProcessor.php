@@ -59,6 +59,20 @@ class EditFormResponseProcessor {
         });
     }
 
+    public function unshift(mixed $value): self {
+        return $this->preprocess(function (array $data) use($value) {
+            array_unshift($data, $value);
+            return $data;
+        });
+    }
+
+    public function push(mixed $value): self {
+        return $this->preprocess(function (array $data) use($value) {
+            $data[] = $value;
+            return $data;
+        });
+    }
+
     public function discard(int $index): self {
         return $this->preprocess(function (array $data) use ($index) {
             unset($data[$index]);
