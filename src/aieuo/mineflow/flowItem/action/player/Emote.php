@@ -52,7 +52,7 @@ class Emote extends FlowItem implements HumanFlowItem {
 
         $player = $this->getOnlineHuman($source);
         $player->emote($emoteId);
-        Await::ALL;
+        yield Await::ALL;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {

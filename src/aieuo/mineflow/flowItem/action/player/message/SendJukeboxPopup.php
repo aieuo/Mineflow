@@ -18,6 +18,6 @@ class SendJukeboxPopup extends TypePlayerMessage {
 
         $player = $this->getOnlinePlayer($source);
         $player->sendJukeboxPopup($message, []);
-        Await::ALL;
+        yield Await::ALL;
     }
 }

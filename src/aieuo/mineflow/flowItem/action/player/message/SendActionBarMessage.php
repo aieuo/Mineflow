@@ -18,6 +18,6 @@ class SendActionBarMessage extends TypePlayerMessage {
 
         $player = $this->getOnlinePlayer($source);
         $player->sendActionBarMessage($message);
-        Await::ALL;
+        yield Await::ALL;
     }
 }

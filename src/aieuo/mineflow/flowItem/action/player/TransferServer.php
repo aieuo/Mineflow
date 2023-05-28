@@ -60,7 +60,7 @@ class TransferServer extends FlowItem implements PlayerFlowItem {
 
         $player = $this->getOnlinePlayer($source);
         $player->transfer($ip, $port);
-        Await::ALL;
+        yield Await::ALL;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
