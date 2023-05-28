@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\utils\Language;
 use function in_array;
 
 class FlowItemCategory {
@@ -43,6 +44,9 @@ class FlowItemCategory {
     /** @var array<string, string[]>  */
     private static array $children = [];
 
+    /** @var array<string, string> */
+    private static array $names = [];
+
     public static function registerDefaults(): void {
         self::add(self::COMMON);
         self::add(self::PLAYER);
@@ -79,12 +83,13 @@ class FlowItemCategory {
         return in_array($category, self::$categories, true);
     }
 
-    public static function add(string $category, string $parent = null): bool {
+    public static function add(string $category, string $parent = null, string $nameKey = null): bool {
         if (self::exists($category)) return false;
 
         self::$categories[] = $category;
         self::$parents[$category] = $parent;
         self::$children[$parent][] = $category;
+        self::$names[$category] = $nameKey ?? "category.".$category;
         return true;
     }
 
@@ -102,6 +107,11 @@ class FlowItemCategory {
 
     public static function getChildren(?string $category): array {
         return self::$children[$category] ?? [];
+    }
+
+    public static function name(string $category): ?string {
+        if (!isset(self::$names[$category])) return null;
+        return Language::get(self::$names[$category]);
     }
 
     public static function root(): array {

@@ -37,7 +37,7 @@ class AddonManifestRecipeTemplate extends RecipeTemplate {
                 new ExampleInput("@recipe.template.addon_manifest.id", "aieuo_addon_main", required: true, result: $this->id),
                 new Dropdown(
                     "@recipe.template.addon_manifest.category",
-                    array_map(fn($category) => Language::get("category.{$category}"), FlowItemCategory::all()),
+                    array_map(fn($category) => FlowItemCategory::name($category), FlowItemCategory::all()),
                     result: $this->category
                 ),
                 new ExampleInput("@recipe.template.addon_manifest.name", "aieuo", required: true, result: $this->name),

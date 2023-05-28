@@ -120,7 +120,7 @@ class FlowItemForm {
         ];
 
         foreach (FlowItemCategory::root() as $category) {
-            $buttons[] = $this->getCategoryButton($player, $category, "@category.".$category, $container, $type);
+            $buttons[] = $this->getCategoryButton($player, $category, FlowItemCategory::name($category), $container, $type);
         }
 
         $buttons[] = new Button("@form.search", fn() => $this->sendSearchAction($player, $container, $type));
@@ -141,7 +141,7 @@ class FlowItemForm {
         $isCondition = $type === FlowItemContainer::CONDITION;
         $actions = FlowItemFactory::getByFilter($category, Mineflow::getPlayerSettings()->getPlayerActionPermissions($player->getName()), !$isCondition, $isCondition);
 
-        Session::getSession($player)->set("flowItem_category", Language::get("category.".$category));
+        Session::getSession($player)->set("flowItem_category", FlowItemCategory::name($category));
         $this->sendSelectAction($player, $container, $type, $actions, $category);
     }
 
@@ -175,7 +175,7 @@ class FlowItemForm {
         $subCategoryCount = 0;
         if ($category !== null) {
             foreach (FlowItemCategory::getChildren($category) as $child) {
-                $buttons[] = $this->getCategoryButton($player, $child, "[@category.".$child."]", $container, $type);
+                $buttons[] = $this->getCategoryButton($player, $child, "[".FlowItemCategory::name($child)."]", $container, $type);
                 $subCategoryCount ++;
             }
         }
