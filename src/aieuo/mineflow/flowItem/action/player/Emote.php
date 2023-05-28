@@ -14,6 +14,7 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use SOFe\AwaitGenerator\Await;
 
 class Emote extends FlowItem implements HumanFlowItem {
     use HumanFlowItemTrait;
@@ -51,7 +52,7 @@ class Emote extends FlowItem implements HumanFlowItem {
 
         $player = $this->getOnlineHuman($source);
         $player->emote($emoteId);
-        yield true;
+        Await::ALL;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {

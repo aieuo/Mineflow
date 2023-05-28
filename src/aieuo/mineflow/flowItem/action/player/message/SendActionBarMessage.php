@@ -5,6 +5,7 @@ namespace aieuo\mineflow\flowItem\action\player\message;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SendActionBarMessage extends TypePlayerMessage {
 
@@ -17,6 +18,6 @@ class SendActionBarMessage extends TypePlayerMessage {
 
         $player = $this->getOnlinePlayer($source);
         $player->sendActionBarMessage($message);
-        yield true;
+        Await::ALL;
     }
 }

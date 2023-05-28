@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
+use SOFe\AwaitGenerator\Await;
 
 class TransferServer extends FlowItem implements PlayerFlowItem {
     use PlayerFlowItemTrait;
@@ -59,7 +60,7 @@ class TransferServer extends FlowItem implements PlayerFlowItem {
 
         $player = $this->getOnlinePlayer($source);
         $player->transfer($ip, $port);
-        yield true;
+        Await::ALL;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {

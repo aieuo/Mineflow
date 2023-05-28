@@ -14,6 +14,7 @@ use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
+use SOFe\AwaitGenerator\Await;
 
 class SetInvisible extends FlowItem implements EntityFlowItem {
     use EntityFlowItemTrait;
@@ -52,7 +53,7 @@ class SetInvisible extends FlowItem implements EntityFlowItem {
     public function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getEntity($source);
         $entity->setInvisible($this->isInvisible());
-        yield true;
+        yield Await::ALL;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
