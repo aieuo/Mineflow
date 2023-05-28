@@ -6,6 +6,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\form;
 
 use function array_pop;
+use function array_shift;
+use function array_unshift;
 use function array_values;
 
 class EditFormResponseProcessor {
@@ -26,8 +28,9 @@ class EditFormResponseProcessor {
      * @param callable(array): array $processor
      * @return EditFormResponseProcessor
      */
-    public function preprocess(callable $processor): void {
+    public function preprocess(callable $processor): self {
         $this->processors[] = $processor;
+        return $this;
     }
 
     /**
@@ -35,8 +38,8 @@ class EditFormResponseProcessor {
      * @param callable(mixed): mixed $processor
      * @return EditFormResponseProcessor
      */
-    public function preprocessAt(int $index, callable $processor): void {
-        $this->preprocess(function (array $data) use($index, $processor) {
+    public function preprocessAt(int $index, callable $processor): self {
+        return $this->preprocess(function (array $data) use($index, $processor) {
             $data[$index] = $processor($data[$index]);
             return $data;
         });
