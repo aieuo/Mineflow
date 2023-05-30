@@ -46,6 +46,7 @@ use aieuo\mineflow\flowItem\action\entity\TeleportToWorld;
 use aieuo\mineflow\flowItem\action\entity\UnsetImmobile;
 use aieuo\mineflow\flowItem\action\event\CallCustomTrigger;
 use aieuo\mineflow\flowItem\action\event\EventCancel;
+use aieuo\mineflow\flowItem\action\event\playerChatEvent\PlayerChatEventSetMessage;
 use aieuo\mineflow\flowItem\action\form\SendForm;
 use aieuo\mineflow\flowItem\action\form\SendInputForm;
 use aieuo\mineflow\flowItem\action\form\SendMenuForm;
@@ -104,6 +105,7 @@ use aieuo\mineflow\flowItem\action\player\message\SendToast;
 use aieuo\mineflow\flowItem\action\player\permission\AddPermission;
 use aieuo\mineflow\flowItem\action\player\permission\RemovePermission;
 use aieuo\mineflow\flowItem\action\player\PlaySound;
+use aieuo\mineflow\flowItem\action\player\SendGameRule;
 use aieuo\mineflow\flowItem\action\player\SetFood;
 use aieuo\mineflow\flowItem\action\player\SetGamemode;
 use aieuo\mineflow\flowItem\action\player\SetSitting;
@@ -273,6 +275,7 @@ class FlowItemFactory {
         self::register(new HideScoreboard);
         self::register(new PlaySound);
         self::register(new Emote);
+        self::register(new SendGameRule);
         self::register(new AddPermission);
         self::register(new RemovePermission);
         self::register(new AddXpProgress);
@@ -389,6 +392,8 @@ class FlowItemFactory {
         self::register(new AddLanguageMappings);
         self::register(new AddSpecificLanguageMapping);
         self::register(new GetLanguage);
+        /* event */
+        self::register(new PlayerChatEventSetMessage);
 
 
         /** conditions **/

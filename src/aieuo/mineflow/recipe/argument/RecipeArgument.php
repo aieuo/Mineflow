@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\AxisAlignedBBVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\formAPI\element\mineflow\EventVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
@@ -26,6 +27,7 @@ use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
+use aieuo\mineflow\variable\object\EventVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -57,6 +59,7 @@ class RecipeArgument implements \JsonSerializable {
         self::addType(WorldVariable::class, fn(string $text, array $variables) => new WorldVariableDropdown($variables, text: $text));
         self::addType(AxisAlignedBBVariable::class, fn(string $text, array $variables) => new AxisAlignedBBVariableDropdown($variables, text: $text));
         self::addType(ScoreboardVariable::class, fn(string $text, array $variables) => new ScoreboardVariableDropdown($variables, text: $text));
+        self::addType(EventVariable::class, fn(string $text, array $variables) => new EventVariableDropdown($variables, text: $text));
     }
 
     /**

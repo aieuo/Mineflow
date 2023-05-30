@@ -37,6 +37,8 @@ class FlowItemCategory {
     public const SCOREBOARD = "scoreboard";
     public const INTERNAL = "internal";
 
+    public const PLAYER_CHAT_EVENT = "event.player_chat_event";
+
     /** @var string[]  */
     private static array $categories = [];
     /** @var array<string, ?string>  */
@@ -61,6 +63,7 @@ class FlowItemCategory {
         self::add(self::BLOCK);
         self::add(self::WORLD);
         self::add(self::EVENT);
+        self::add(self::PLAYER_CHAT_EVENT, self::EVENT, "trigger.event.PlayerChatEvent");
         self::add(self::SCRIPT);
         self::add(self::SCRIPT_IF, self::SCRIPT);
         self::add(self::SCRIPT_LOOP, self::SCRIPT);

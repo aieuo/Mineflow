@@ -8,6 +8,7 @@ interface FlowItemIds {
     public const DO_NOTHING = "doNothing";
     public const GET_DATE = "getDate";
     public const EVENT_CANCEL = "eventCancel";
+    public const PLAYER_CHAT_EVENT_SET_MESSAGE = "playerChatEventSetMessage";
     public const CALL_CUSTOM_TRIGGER = "callTrigger";
     public const SEND_FORM = "sendForm";
 
@@ -70,6 +71,7 @@ interface FlowItemIds {
     public const ALLOW_FLIGHT = "allowFlight";
     public const ALLOW_CLIMB_WALLS = "allowClimbWalls";
     public const EMOTE = "emote";
+    public const SEND_BOOL_GAMERULE = "sendBoolGamerule";
 
     public const ADD_MONEY = "addMoney";
     public const SET_MONEY = "setMoney";
