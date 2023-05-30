@@ -9,7 +9,10 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
 use function array_search;
+use function array_slice;
 use function array_values;
+use function iterator_to_array;
+use function shuffle;
 
 class ListVariable extends Variable implements IteratorVariable, \JsonSerializable {
     use IteratorVariableTrait;
@@ -36,6 +39,22 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
         foreach ($this->values as $key => $value) {
             yield $key => $value;
         }
+    }
+
+    public function shuffle(): ListVariable {
+        $values = iterator_to_array($this->getIterator());
+        shuffle($values);
+        return new ListVariable(array_values($values));
+    }
+
+    public function take(int $amount): IteratorVariable {
+        $values = iterator_to_array($this->getIterator());
+        return new ListVariable(array_values(array_slice($values, 0, $amount)));
+    }
+
+    public function takeLast(int $amount): IteratorVariable {
+        $values = iterator_to_array($this->getIterator());
+        return new ListVariable(array_values(array_slice($values, -$amount, $amount)));
     }
 
     public function appendValue(Variable $value): void {

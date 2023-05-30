@@ -20,5 +20,13 @@ interface IteratorVariable extends \IteratorAggregate {
 
     public function values(): ListVariable;
 
+    public function random(): ?Variable;
+
+    public function shuffle(): IteratorVariable;
+
+    public function take(int $amount): IteratorVariable;
+
+    public function takeLast(int $amount): IteratorVariable;
+
     public function count(): NumberVariable;
 }

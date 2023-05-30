@@ -9,9 +9,12 @@ use function array_is_list;
 use function array_key_first;
 use function array_keys;
 use function array_map;
+use function array_rand;
+use function array_slice;
 use function is_int;
 use function is_string;
 use function iterator_to_array;
+use function shuffle;
 
 trait IteratorVariableTrait {
 
@@ -55,6 +58,29 @@ trait IteratorVariableTrait {
     public function values(): ListVariable {
         $values = iterator_to_array($this->getIterator());
         return new ListVariable(array_values($values));
+    }
+
+    public function random(): ?Variable {
+        $values = iterator_to_array($this->getIterator());
+        if (count($values) === 0) return null;
+
+        return $values[array_rand($values)];
+    }
+
+    public function shuffle(): IteratorVariable {
+        $values = iterator_to_array($this->getIterator());
+        shuffle($values);
+        return new MapVariable($values);
+    }
+
+    public function take(int $amount): IteratorVariable {
+        $values = iterator_to_array($this->getIterator());
+        return new MapVariable(array_slice($values, 0, $amount));
+    }
+
+    public function takeLast(int $amount): IteratorVariable {
+        $values = iterator_to_array($this->getIterator());
+        return new MapVariable(array_slice($values, -$amount, $amount));
     }
 
     public function count(): NumberVariable {
@@ -110,6 +136,26 @@ trait IteratorVariableTrait {
             fn(IteratorVariable $var, string $name) => $var->pluck($name) ?? new NullVariable(),
             passVariable: true,
         ));
+        self::registerMethod($class, "random", new VariableMethod(
+            new DummyVariable(UnknownVariable::class),
+            fn(IteratorVariable $var) => $var->random() ?? new NullVariable(),
+            passVariable: true,
+        ));
+        self::registerMethod($class, "shuffle", new VariableMethod(
+            new DummyVariable(ListVariable::class),
+            fn(IteratorVariable $var) => $var->shuffle(),
+            passVariable: true,
+        ), aliases: ["shuffled"]);
+        self::registerMethod($class, "take", new VariableMethod(
+            new DummyVariable(ListVariable::class),
+            fn(IteratorVariable $var, int|float $amount) => $var->take((int)$amount),
+            passVariable: true,
+        ));
+        self::registerMethod($class, "take_last", new VariableMethod(
+            new DummyVariable(ListVariable::class),
+            fn(IteratorVariable $var, int|float $amount) => $var->takeLast((int)$amount),
+            passVariable: true,
+        ), aliases: ["takeLast"]);
     }
 
 }
