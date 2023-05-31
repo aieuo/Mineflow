@@ -71,7 +71,7 @@ abstract class GetInventoryContentsBase extends FlowItem implements PlayerFlowIt
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(ListVariable::getTypeName(), ItemVariable::getTypeName())
+            $this->getResultName() => new DummyVariable(ListVariable::class, ItemVariable::getTypeName())
         ];
     }
 }
