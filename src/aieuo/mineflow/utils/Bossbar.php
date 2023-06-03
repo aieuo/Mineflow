@@ -12,6 +12,7 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 use pocketmine\network\mcpe\protocol\types\entity\LongMetadataProperty;
+use pocketmine\network\mcpe\protocol\types\entity\PropertySyncData;
 use pocketmine\network\mcpe\protocol\types\entity\StringMetadataProperty;
 use pocketmine\player\Player;
 
@@ -89,6 +90,7 @@ class Bossbar {
                 ),
                 EntityMetadataProperties::NAMETAG => new StringMetadataProperty($title)
             ],
+            new PropertySyncData([], []),
             []
         );
         $player->getNetworkSession()->sendDataPacket($pk);
