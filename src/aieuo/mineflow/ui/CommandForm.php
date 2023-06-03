@@ -248,7 +248,7 @@ class CommandForm {
                     case 1:
                         (new MineflowForm)->selectRecipe($player, Language::get("form.recipes.add", [$command["command"]]),
                             function (Recipe $recipe) use ($player, $command) {
-                                $trigger = new CommandTrigger($command["command"], $command["command"]);
+                                $trigger = new CommandTrigger($command["command"]);
                                 if ($recipe->existsTrigger($trigger)) {
                                     $this->sendRecipeList($player, $command, ["@trigger.alreadyExists"]);
                                     return;

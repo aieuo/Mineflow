@@ -47,11 +47,11 @@ class DefaultVariables {
     }
 
     public static function getPlayerVariables(Player $target, string $name = "target"): array {
-        return [$name => new PlayerVariable($target, $target->getName())];
+        return [$name => new PlayerVariable($target)];
     }
 
     public static function getBlockVariables(Block $block, string $name = "block"): array {
-        $variables = [$name => new BlockVariable($block, $block->getId().":".$block->getMeta())];
+        $variables = [$name => new BlockVariable($block)];
         if ($block instanceof BaseSign) {
             $variables["sign_lines"] = new ListVariable(array_map(fn(string $text) => new StringVariable($text), $block->getText()->getLines()));
         }

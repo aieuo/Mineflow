@@ -76,7 +76,7 @@ class CreateBlockVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createBlock.block.notFound"));
         }
 
-        $variable = new BlockVariable($block, $name);
+        $variable = new BlockVariable($block);
         $source->addVariable($name, $variable);
 
         yield Await::ALL;

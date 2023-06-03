@@ -73,7 +73,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
                     $pos = new Position($x, $y, $z, $pos1->getWorld());
 
                     yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [
-                        $counterName => new PositionVariable($pos, $counterName)
+                        $counterName => new PositionVariable($pos)
                     ], $source))->getGenerator();
                 }
             }

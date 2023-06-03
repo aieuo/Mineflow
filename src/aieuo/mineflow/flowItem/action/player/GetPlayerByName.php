@@ -69,7 +69,7 @@ class GetPlayerByName extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.getPlayer.player.notFound"));
         }
 
-        $result = new PlayerVariable($player, $player->getName());
+        $result = new PlayerVariable($player);
         $source->addVariable($resultName, $result);
 
         yield Await::ALL;
