@@ -6,12 +6,12 @@ use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
-use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\Label;
+use aieuo\mineflow\formAPI\element\mineflow\NumberInputPlaceholder;
+use aieuo\mineflow\formAPI\element\mineflow\SliderPlaceholder;
 use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StepSlider;
@@ -163,7 +163,6 @@ class CustomCustomFormForm {
                 $contents[] = new Input("@customForm.default", "", $element->getDefault(), true);
                 break;
             case $element instanceof Dropdown:
-            case $element instanceof StepSlider:
                 $dropdown = array_search($element, array_values(array_filter($form->getContents(), fn(Element $element) => $element instanceof Dropdown)), true);
                 array_unshift($messages, Language::get("customForm.receive.custom.dropdown.text", [$dropdown]));
                 array_unshift($messages, Language::get("customForm.receive.custom.dropdown", [$index]));
@@ -223,7 +222,6 @@ class CustomCustomFormForm {
                         $element->setDefaultStr($data[3]);
                         break;
                     case $element instanceof Dropdown:
-                    case $element instanceof StepSlider:
                         $add = [];
                         $options = [];
                         foreach (explode(";", array_pop($data)) as $item) {

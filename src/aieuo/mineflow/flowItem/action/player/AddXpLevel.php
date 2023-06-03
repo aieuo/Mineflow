@@ -19,7 +19,7 @@ class AddXpLevel extends AddXpBase {
 
         $new = $player->getXpManager()->getXpLevel() + $xp;
         if ($new < 0) $xp = -$player->getXpManager()->getXpLevel();
-        $player->getXpManager()->addXpLevels((int)$xp);
+        $player->getXpManager()->addXpLevels($xp);
 
         yield Await::ALL;
     }

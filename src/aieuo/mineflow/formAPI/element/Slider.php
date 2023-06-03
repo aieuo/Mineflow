@@ -91,7 +91,6 @@ class Slider extends Element {
             return SliderPlaceholder::fromSerializedArray($data);
         }
 
-        if (!isset($data["min"]) or !isset($data["max"])) return null;
         return new Slider($data["text"], $data["min"], $data["max"], $data["step"] ?? 1, $data["default"] ?? null);
     }
 }

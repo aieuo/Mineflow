@@ -39,7 +39,7 @@ class StringVariable extends Variable implements \JsonSerializable {
     }
 
     public function toNBTTag(): Tag {
-        return new StringTag((string)$this->value);
+        return new StringTag($this->value);
     }
 
     public function jsonSerialize(): array {

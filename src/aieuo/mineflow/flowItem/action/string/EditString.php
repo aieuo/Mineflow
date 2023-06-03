@@ -95,22 +95,13 @@ class EditString extends FlowItem {
         $resultName = $source->replaceVariables($this->getResultName());
         $operator = $this->getOperator();
 
-        switch ($operator) {
-            case self::TYPE_JOIN:
-                $result = new StringVariable($value1.$value2);
-                break;
-            case self::TYPE_DELETE:
-                $result = new StringVariable(str_replace($value2, "", $value1));
-                break;
-            case self::TYPE_REPEAT:
-                $result = new StringVariable(str_repeat($value1, $this->getInt($value2, 1)));
-                break;
-            case self::TYPE_SPLIT:
-                $result = new ListVariable(array_map(fn(string $str) => new StringVariable($str), explode($value2, $value1)));
-                break;
-            default:
-                throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator]));
-        }
+        $result = match ($operator) {
+            self::TYPE_JOIN => new StringVariable($value1.$value2),
+            self::TYPE_DELETE => new StringVariable(str_replace($value2, "", $value1)),
+            self::TYPE_REPEAT => new StringVariable(str_repeat($value1, $this->getInt($value2, 1))),
+            self::TYPE_SPLIT => new ListVariable(array_map(fn(string $str) => new StringVariable($str), explode($value2, $value1))),
+            default => throw new InvalidFlowValueException($this->getName(), Language::get("action.calculate.operator.unknown", [$operator])),
+        };
 
         $source->addVariable($resultName, $result);
 

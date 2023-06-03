@@ -37,7 +37,7 @@ class Dropdown extends Element {
     }
 
     public function setDefaultIndex(int $default): self {
-        $this->default = $default >= 0 ? $default : 0;
+        $this->default = max($default, 0);
         return $this;
     }
 

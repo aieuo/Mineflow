@@ -88,7 +88,7 @@ class RecipeManager {
                 $recipe->setRawData($json);
                 $recipe->loadSaveData($data);
                 $upgrader->upgradeAfterLoad($recipe);
-            } catch (\ErrorException|\UnexpectedValueException $e) {
+            } catch (ErrorException|\UnexpectedValueException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
                 continue;
             } catch (FlowItemLoadException $e) {
