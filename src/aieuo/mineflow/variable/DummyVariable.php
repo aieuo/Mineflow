@@ -8,7 +8,7 @@ use function assert;
 use function is_subclass_of;
 
 /**
- * @template T of aieuo\mineflow\variable\Variable
+ * @template T of Variable
  */
 class DummyVariable extends Variable {
 

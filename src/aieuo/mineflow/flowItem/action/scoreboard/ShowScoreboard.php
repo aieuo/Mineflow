@@ -16,7 +16,6 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class ShowScoreboard extends FlowItem implements PlayerFlowItem, ScoreboardFlowItem {

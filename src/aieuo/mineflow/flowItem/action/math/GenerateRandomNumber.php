@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;

@@ -6,7 +6,6 @@ namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;

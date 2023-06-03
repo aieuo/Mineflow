@@ -111,7 +111,6 @@ use aieuo\mineflow\flowItem\action\player\SetGamemode;
 use aieuo\mineflow\flowItem\action\player\SetSitting;
 use aieuo\mineflow\flowItem\action\player\SetSleeping;
 use aieuo\mineflow\flowItem\action\player\TransferServer;
-use aieuo\mineflow\flowItem\action\plugin\ExecuteIFChain;
 use aieuo\mineflow\flowItem\action\scoreboard\CreateScoreboardVariable;
 use aieuo\mineflow\flowItem\action\scoreboard\DecrementScoreboardScore;
 use aieuo\mineflow\flowItem\action\scoreboard\IncrementScoreboardScore;

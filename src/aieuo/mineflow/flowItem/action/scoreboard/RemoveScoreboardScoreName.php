@@ -14,7 +14,6 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class RemoveScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {

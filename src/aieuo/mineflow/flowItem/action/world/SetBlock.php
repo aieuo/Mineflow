@@ -16,7 +16,6 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class SetBlock extends FlowItem implements PositionFlowItem, BlockFlowItem {

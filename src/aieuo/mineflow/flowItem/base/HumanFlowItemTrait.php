@@ -8,7 +8,6 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\object\HumanObjectVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Human;
 use pocketmine\player\Player;

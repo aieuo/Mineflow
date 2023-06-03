@@ -14,7 +14,6 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class SetScale extends FlowItem implements EntityFlowItem {
