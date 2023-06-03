@@ -85,7 +85,7 @@ class VariableHelper {
                     $variable = VariableDeserializer::deserialize($value);
 
                     if ($variable === null) {
-                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7<{$type}({$key})>.${name}§f"]));
+                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7<{$type}({$key})>.{$name}§f"]));
                         continue;
                     }
 
@@ -96,7 +96,7 @@ class VariableHelper {
                     $variable = VariableDeserializer::deserialize($data["default"]);
 
                     if ($variable === null) {
-                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7<{$type}({$key})>.${name}§f"]));
+                        Main::getInstance()->getLogger()->warning(Language::get("variable.load.failed", ["§7(default)<{$type}>§f"]));
                         continue;
                     }
 
