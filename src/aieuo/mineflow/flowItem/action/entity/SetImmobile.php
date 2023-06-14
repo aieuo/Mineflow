@@ -40,7 +40,7 @@ class SetImmobile extends FlowItem implements EntityFlowItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
-        $entity->setImmobile(true);
+        $entity->setNoClientPredictions(true);
 
         yield Await::ALL;
     }

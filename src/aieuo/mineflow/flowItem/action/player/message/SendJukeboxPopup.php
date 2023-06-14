@@ -17,7 +17,7 @@ class SendJukeboxPopup extends TypePlayerMessage {
         $message = Language::replace($source->replaceVariables($this->getMessage()));
 
         $player = $this->getOnlinePlayer($source);
-        $player->sendJukeboxPopup($message, []);
+        $player->sendJukeboxPopup($message);
         yield Await::ALL;
     }
 }

@@ -17,15 +17,16 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginOwned;
 
-class MineflowCommand extends Command {
+class MineflowCommand extends Command implements PluginOwned {
 
     public function __construct() {
         parent::__construct("mineflow", Language::get("command.mineflow.description"), Language::get("command.mineflow.usage"), ["mf"]);
         $this->setPermission('mineflow.command.mineflow');
     }
 
-    public function getPlugin(): Plugin {
+    public function getOwningPlugin(): Plugin {
         return Main::getInstance();
     }
 

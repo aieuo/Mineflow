@@ -23,7 +23,7 @@ class BlockPlaceEventTrigger extends EventTrigger {
     public function getVariables(mixed $event): array {
         /** @var BlockPlaceEvent $event */
         $target = $event->getPlayer();
-        $block = $event->getBlock();
+        $block = $event->getBlockAgainst();
         return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($block));
     }
 

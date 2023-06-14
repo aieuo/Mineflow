@@ -10,8 +10,11 @@ use aieuo\mineflow\variable\object\LocationVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use aieuo\mineflow\variable\object\Vector3Variable;
 use pocketmine\entity\Location;
+use pocketmine\nbt\BigEndianNbtSerializer;
+use pocketmine\nbt\TreeRoot;
 use pocketmine\world\Position;
 use function array_map;
+use function base64_encode;
 
 class VariableSerializer {
 
@@ -30,7 +33,10 @@ class VariableSerializer {
             return array_map(fn(Variable $v) => self::serialize($v) ?? self::fallback($v), $var->getValue());
         });
 
-        self::register(ItemVariable::getTypeName(), static fn(ItemVariable $var) => $var->getValue()->jsonSerialize());
+        self::register(ItemVariable::getTypeName(), static function(ItemVariable $var) {
+            $nbt = $var->getValue()->nbtSerialize();
+            return base64_encode((new BigEndianNbtSerializer())->write(new TreeRoot($nbt)));
+        });
         self::register(Vector3Variable::getTypeName(), static fn(Vector3Variable $var) => [
             "x" => $var->getValue()->getX(),
             "y" => $var->getValue()->getY(),

@@ -12,9 +12,12 @@ use aieuo\mineflow\variable\object\Vector3Variable;
 use pocketmine\entity\Location;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
+use pocketmine\nbt\BigEndianNbtSerializer;
 use pocketmine\Server;
 use pocketmine\world\Position;
 use function array_map;
+use function base64_decode;
+use function is_array;
 
 class VariableDeserializer {
 
@@ -33,7 +36,14 @@ class VariableDeserializer {
             return new MapVariable(array_map(fn($v) => self::deserialize($v) ?? new NullVariable(), $data));
         }, aliases: [3]);
 
-        self::register(ItemVariable::getTypeName(), static fn($data) => new ItemVariable(Item::jsonDeserialize($data)));
+        self::register(ItemVariable::getTypeName(), static function($data) {
+            if (is_array($data)) {
+                return new ItemVariable(Item::legacyJsonDeserialize($data));
+            }
+
+            $tag = (new BigEndianNbtSerializer())->read(base64_decode($data))->mustGetCompoundTag();
+            return new ItemVariable(Item::nbtDeserialize($tag));
+        });
         self::register(Vector3Variable::getTypeName(), static function ($data) {
             return new Vector3Variable(new Vector3($data["x"], $data["y"], $data["z"]));
         });

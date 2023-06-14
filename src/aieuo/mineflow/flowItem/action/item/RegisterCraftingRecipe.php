@@ -108,7 +108,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         for ($i = 0; $i < 9; $i++) {
             try {
                 $input = $this->getItem($source, "input".$i);
-                $itemId = $input->getId().":".$input->getMeta();
+                $itemId = $input->getStateId();
                 if (isset($items[$itemId])) {
                     $key = $keys[$items[$itemId]];
                 } else {

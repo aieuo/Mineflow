@@ -13,7 +13,9 @@ use aieuo\mineflow\recipe\argument\RecipeArgument;
 use aieuo\mineflow\recipe\RecipeManager;
 use aieuo\mineflow\trigger\event\EventManager;
 use aieuo\mineflow\trigger\Triggers;
+use aieuo\mineflow\utils\BlockStateIdToLegacyIdMap;
 use aieuo\mineflow\utils\FormManager;
+use aieuo\mineflow\utils\ItemStateIdToLegacyIdMap;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\PlayerConfig;
 use aieuo\mineflow\variable\VariableHelper;
@@ -36,12 +38,18 @@ class Mineflow {
     private static Config $config;
     private static PlayerConfig $playerSettings;
 
+    private static ItemStateIdToLegacyIdMap $itemStateIdToLegacyIdMap;
+    private static BlockStateIdToLegacyIdMap $blockStateIdToLegacyIdMap;
+
     private static bool $enabledRecipeErrorInConsole = true;
     private static ?\DateTimeZone $timeZone = null;
     private static bool $debug = false;
 
     public static function init(Main $main): void {
         self::$pluginVersion = $main->getDescription()->getVersion();
+
+        self::$itemStateIdToLegacyIdMap = new ItemStateIdToLegacyIdMap();
+        self::$blockStateIdToLegacyIdMap = new BlockStateIdToLegacyIdMap();
 
         FlowItemCategory::registerDefaults();
         FlowItemPermission::registerDefaults();
@@ -118,6 +126,14 @@ class Mineflow {
 
     public static function getVariableHelper(): VariableHelper {
         return self::$variableHelper;
+    }
+
+    public static function getItemStateIdToLegacyIdMap(): ItemStateIdToLegacyIdMap {
+        return self::$itemStateIdToLegacyIdMap;
+    }
+
+    public static function getBlockStateIdToLegacyIdMap(): BlockStateIdToLegacyIdMap {
+        return self::$blockStateIdToLegacyIdMap;
     }
 
     public static function getTimeZone(): ?\DateTimeZone {

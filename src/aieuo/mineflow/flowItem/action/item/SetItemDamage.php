@@ -14,7 +14,7 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use pocketmine\item\ItemFactory;
+use pocketmine\world\format\io\GlobalItemDataHandlers;
 use SOFe\AwaitGenerator\Await;
 
 class SetItemDamage extends FlowItem implements ItemFlowItem {
@@ -54,7 +54,9 @@ class SetItemDamage extends FlowItem implements ItemFlowItem {
         $damage = $this->getInt($source->replaceVariables($this->getDamage()), 0);
         $item = $this->getItem($source);
 
-        $newItem = ItemFactory::getInstance()->get($item->getId(), $damage, $item->getCount(), $item->getNamedTag());
+        $itemType = GlobalItemDataHandlers::getSerializer()->serializeType($item);
+        $itemStack = GlobalItemDataHandlers::getUpgrader()->upgradeItemTypeDataString($itemType->getName(), $damage, $item->getCount(), $item->getNamedTag());
+        $newItem = GlobalItemDataHandlers::getDeserializer()->deserializeStack($itemStack);
         $this->getItemVariable($source)->setItem($newItem);
 
         yield Await::ALL;

@@ -20,12 +20,6 @@ class InHand extends TypeItem {
         $hand = $player->getInventory()->getItemInHand();
 
         yield Await::ALL;
-        return ($hand->getId() === $item->getId()
-            and $hand->getMeta() === $item->getMeta()
-            and $hand->getCount() >= $item->getCount()
-            and (!$item->hasCustomName() or $hand->getName() === $item->getName())
-            and (empty($item->getLore()) or $item->getLore() === $hand->getLore())
-            and (empty($item->getEnchantments()) or $item->getEnchantments() === $hand->getEnchantments())
-        );
+        return $hand->equals($item, true, true) and $hand->getCount() >= $item->getCount();
     }
 }
