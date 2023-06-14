@@ -20,7 +20,7 @@ class PositionVariable extends Vector3Variable {
     }
 
     public function __toString(): string {
-        /** @var Position $position */
+        /** @var Position $value */
         $value = $this->getValue();
         return $value->x.",".$value->y.",".$value->z.",".$value->world->getFolderName();
     }
