@@ -254,4 +254,7 @@ interface FlowItemIds {
 
     public const ONLINE_PLAYER_LESS_THAN = "onlinePlayerLessThan";
     public const ONLINE_PLAYER_MORE_THAN = "onlinePlayerMoreThan";
+
+    public const IS_SAME_ITEM = "isSameItem";
+    public const IS_SAME_BLOCk = "isSameBlock";
 }

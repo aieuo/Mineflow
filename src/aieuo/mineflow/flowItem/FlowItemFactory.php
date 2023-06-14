@@ -170,6 +170,7 @@ use aieuo\mineflow\flowItem\action\world\PlaySoundAt;
 use aieuo\mineflow\flowItem\action\world\PositionVariableAddition;
 use aieuo\mineflow\flowItem\action\world\SetBlock;
 use aieuo\mineflow\flowItem\action\world\SetWorldTime;
+use aieuo\mineflow\flowItem\condition\block\IsSameBlock;
 use aieuo\mineflow\flowItem\condition\common\CheckNothing;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\condition\config\ExistsConfigData;
@@ -186,6 +187,7 @@ use aieuo\mineflow\flowItem\condition\item\ExistsArmor;
 use aieuo\mineflow\flowItem\condition\item\ExistsItem;
 use aieuo\mineflow\flowItem\condition\item\HasItemData;
 use aieuo\mineflow\flowItem\condition\item\InHand;
+use aieuo\mineflow\flowItem\condition\item\IsSameItem;
 use aieuo\mineflow\flowItem\condition\item\RemoveItemCondition;
 use aieuo\mineflow\flowItem\condition\math\RandomNumber;
 use aieuo\mineflow\flowItem\condition\player\Gamemode;
@@ -405,7 +407,10 @@ class FlowItemFactory {
         self::register(new IsSwimming);
         self::register(new IsSprinting);
         self::register(new RandomNumber);
+        /* block */
+        self::register(new IsSameBlock);
         /* item */
+        self::register(new IsSameItem);
         self::register(new InHand);
         self::register(new ExistsItem);
         self::register(new CanAddItem);
