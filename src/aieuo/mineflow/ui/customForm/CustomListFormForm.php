@@ -137,7 +137,12 @@ class CustomListFormForm {
                 } else {
                     $button->setText($data[1]);
                     $button->setCommand($data[2]);
-                    $button->setImage($data[3] === "" ? null : new ButtonImage($data[3], ButtonImage::TYPE_PATH));
+                    if ($data[3] !== "") {
+                        $buttonType = str_starts_with($data[3], "http") ? ButtonImage::TYPE_URL : ButtonImage::TYPE_PATH;
+                        $button->setImage(new ButtonImage($data[3], $buttonType));
+                    } else {
+                        $button->setImage(null);
+                    }
                 }
                 Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$data[3] ? "@form.deleted" : "@form.changed"]);
