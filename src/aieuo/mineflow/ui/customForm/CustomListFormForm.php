@@ -16,6 +16,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
+use function str_starts_with;
 
 class CustomListFormForm {
 
@@ -65,7 +66,8 @@ class CustomListFormForm {
                 new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), ""),
                 new CancelToggle(fn() => $this->sendButtonList($player, $form, ["@form.canceled"])),
             ])->onReceive(function (Player $player, array $data, ListForm $form) {
-                $image = $data[1] === "" ? null : new ButtonImage($data[1], ButtonImage::TYPE_PATH);
+                $imageType = str_starts_with($data[1], "http") ? ButtonImage::TYPE_URL : ButtonImage::TYPE_PATH;
+                $image = $data[1] === "" ? null : new ButtonImage($data[1], $imageType);
                 $form->addButton(new Button($data[0], null, $image));
                 Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, ["@form.added"]);
@@ -80,7 +82,8 @@ class CustomListFormForm {
                 new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), "", false, $imagePath),
                 new CancelToggle(fn() => $this->sendButtonList($player, $form, ["@form.canceled"])),
             ])->onReceive(function () use($player, $form, $consoleCommandButton, &$buttonText, &$command, &$imagePath) {
-                $image = $imagePath === "" ? null : new ButtonImage($imagePath, ButtonImage::TYPE_PATH);
+                $imageType = str_starts_with($imagePath, "http") ? ButtonImage::TYPE_URL : ButtonImage::TYPE_PATH;
+                $image = $imagePath === "" ? null : new ButtonImage($imagePath, $imageType);
                 $button = $consoleCommandButton
                     ? new CommandConsoleButton($command, $buttonText, null, $image)
                     : new CommandButton($command, $buttonText, null, $image);
@@ -101,14 +104,19 @@ class CustomListFormForm {
             ->setContents([
                 new Label(Language::get("customForm.receive", [$index])."\n".Language::get("customForm.receive.list.button", [$button->getText()])),
                 new Input("@customForm.text", "", $button->getText(), true, $buttonText),
-                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), $button->getImage() === null ? "" : $button->getImage()->getData(), false, $iconPath),
+                new Input("@customForm.image", Language::get("form.example", ["textures/items/apple"]), $button->getImage()?->getData() ?? "", false, $iconPath),
                 new CancelToggle(null, "@form.delete", false, $delete),
             ])->onReceive(function () use($player, $form, $index, $button, &$buttonText, &$iconPath, &$delete) {
                 if ($delete) {
                     $form->removeButton($index);
                 } else {
                     $button->setText($buttonText);
-                    $button->setImage($iconPath === "" ? null : new ButtonImage($iconPath, ButtonImage::TYPE_PATH));
+                    if ($iconPath !== "") {
+                        $buttonType = str_starts_with($iconPath, "http") ? ButtonImage::TYPE_URL : ButtonImage::TYPE_PATH;
+                        $button->setImage(new ButtonImage($iconPath, $buttonType));
+                    } else {
+                        $button->setImage(null);
+                    }
                 }
                 Mineflow::getFormManager()->addForm($form->getName(), $form);
                 $this->sendButtonList($player, $form, [$delete ? "@form.deleted" : "@form.changed"]);
