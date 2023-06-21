@@ -210,6 +210,10 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $targets;
     }
 
+    public function getTriggerHolder(): TriggerHolder {
+        return TriggerHolder::global();
+    }
+
     public function getTriggers(): array {
         return $this->triggers;
     }
@@ -223,17 +227,20 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return null;
     }
 
-    public function addTrigger(Trigger $trigger): void {
-        TriggerHolder::getInstance()->addRecipe($trigger, $this);
+    public function addTrigger(Trigger $trigger, bool $updateTriggerHolder = true): void {
         $this->triggers[] = $trigger;
+
+        if ($updateTriggerHolder) {
+            $this->getTriggerHolder()->addRecipe($trigger, $this);
+        }
     }
 
-    public function setTriggersFromArray(array $triggers): void {
+    public function setTriggersFromArray(array $triggers, bool $updateTriggerHolder = true): void {
         $this->removeTriggerAll();
         foreach ($triggers as $triggerData) {
             $trigger = Triggers::deserialize($triggerData);
             if ($trigger === null) throw new \UnexpectedValueException(Language::get("trigger.notFound", [$triggerData["type"]]));
-            $this->addTrigger($trigger);
+            $this->addTrigger($trigger, $updateTriggerHolder);
         }
     }
 
@@ -241,16 +248,19 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return in_array($trigger, $this->getTriggers());
     }
 
-    public function removeTrigger(Trigger $trigger): void {
-        TriggerHolder::getInstance()->removeRecipe($trigger, $this);
+    public function removeTrigger(Trigger $trigger, bool $updateTriggerHolder = true): void {
         $index = array_search($trigger, $this->triggers, true);
         unset($this->triggers[$index]);
         $this->triggers = array_values($this->triggers);
+
+        if ($updateTriggerHolder) {
+            $this->getTriggerHolder()->removeRecipe($trigger, $this);
+        }
     }
 
-    public function removeTriggerAll(): void {
+    public function removeTriggerAll(bool $updateTriggerHolder = true): void {
         foreach ($this->getTriggers() as $trigger) {
-            $this->removeTrigger($trigger);
+            $this->removeTrigger($trigger, $updateTriggerHolder);
         }
     }
 
