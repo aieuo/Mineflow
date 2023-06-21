@@ -42,7 +42,7 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         $block = $event->getBlock();
         $session = Session::getSession($player);
-        $holder = TriggerHolder::getInstance();
+        $holder = TriggerHolder::global();
         $pos = $block->getPosition();
         $position = $pos->x.",".$pos->y.",".$pos->z.",".$pos->world->getFolderName();
 
@@ -59,11 +59,8 @@ class EventListener implements Listener {
         }
 
         $trigger = new BlockTrigger($position);
-        if ($holder->existsRecipe($trigger)) {
-            $recipes = $holder->getRecipes($trigger);
-            $variables = $trigger->getVariables($block);
-            $recipes->executeAll($player, $variables, $event);
-        }
+        $variables = $trigger->getVariables($block);
+        TriggerHolder::executeRecipeAll($trigger, $player, $variables, $event);
     }
 
     public function command(CommandEvent $event): void {
@@ -72,7 +69,6 @@ class EventListener implements Listener {
         if ($event->isCancelled()) return;
 
         $cmd = $event->getCommand();
-        $holder = TriggerHolder::getInstance();
 
         $commands = Utils::parseCommandString($cmd);
 
@@ -84,12 +80,11 @@ class EventListener implements Listener {
         for ($i = 0; $i < $count; $i++) {
             $command = implode(" ", $commands);
             $trigger = new CommandTrigger($command);
-            if ($holder->existsRecipe($trigger)) {
-                $recipes = $holder->getRecipes($trigger);
-                $variables = $trigger->getVariables($event->getCommand());
-                $recipes->executeAll($sender, $variables, $event);
-                break;
-            }
+            $variables = $trigger->getVariables($event->getCommand());
+
+            $executed = TriggerHolder::executeRecipeAll($trigger, $sender, $variables, $event);
+            if ($executed > 0) break;
+
             array_pop($commands);
         }
     }

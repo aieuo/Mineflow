@@ -47,8 +47,8 @@ class CallCustomTrigger extends FlowItem {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getTriggerName());
         $trigger = new CustomTrigger($name);
-        $recipes = TriggerHolder::getInstance()->getRecipes($trigger);
-        $recipes?->executeAll($source->getTarget(), [], $source->getEvent());
+
+        TriggerHolder::executeRecipeAll($trigger, $source->getTarget(), [], $source->getEvent());
 
         (new CustomTriggerCallEvent($trigger, $source))->call();
         yield Await::ALL;

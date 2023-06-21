@@ -41,11 +41,14 @@ class RecipeContainer {
         return count($this->getAllRecipe());
     }
 
-    public function executeAll(Entity $target = null, array $variables = [], ?Event $event = null): void {
+    public function executeAll(Entity $target = null, array $variables = [], ?Event $event = null): int {
+        $executed = 0;
         foreach ($this->getAllRecipe() as $recipe) {
             if ($recipe->isEnabled()) {
                 $recipe->executeAllTargets($target, $variables, $event);
+                $executed ++;
             }
         }
+        return $executed;
     }
 }

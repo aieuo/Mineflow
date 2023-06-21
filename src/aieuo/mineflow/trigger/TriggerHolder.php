@@ -4,17 +4,64 @@ namespace aieuo\mineflow\trigger;
 
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\RecipeContainer;
+use aieuo\mineflow\variable\Variable;
+use pocketmine\entity\Entity;
+use pocketmine\event\Event;
 
 class TriggerHolder {
+
+    public const GLOBAL_INSTANCE_KEY = "global";
 
     /** @var RecipeContainer[][] */
     private array $recipes = [];
 
-    private static ?TriggerHolder $instance = null;
+    private static ?TriggerHolder $globalInstance = null;
 
-    public static function getInstance(): self {
-        if (self::$instance === null) self::$instance = new self();
-        return self::$instance;
+    /** @var TriggerHolder[] */
+    private static array $instances = [];
+
+    public static function global(): self {
+        if (self::$globalInstance === null) {
+            self::$globalInstance = self::create(self::GLOBAL_INSTANCE_KEY);
+        }
+        return self::$globalInstance;
+    }
+
+    public static function create(string $name): self {
+        if (isset(self::$instances[$name])) {
+            throw new \InvalidArgumentException("TriggerHolder {$name} is already created.");
+        }
+
+        $holder = new self();
+        self::addInstance($name, $holder);
+        return $holder;
+    }
+
+    public static function getInstance(string $name = self::GLOBAL_INSTANCE_KEY): ?self {
+        return self::$instances[$name] ?? null;
+    }
+
+    public static function addInstance(string $name, self $holder): void {
+        self::$instances[$name] = $holder;
+    }
+
+    public static function getInstances(): array {
+        return self::$instances;
+    }
+
+    /**
+     * @param Trigger $trigger
+     * @param Entity|null $target
+     * @param array<string, Variable> $variables
+     * @param Event|null $event
+     * @return int
+     */
+    public static function executeRecipeAll(Trigger $trigger, ?Entity $target, array $variables, ?Event $event): int {
+        $executed = 0;
+        foreach (self::getInstances() as $holder) {
+            $executed += $holder->getRecipes($trigger)?->executeAll($target, $variables, $event);
+        }
+        return $executed;
     }
 
     public function createContainer(Trigger $trigger): void {

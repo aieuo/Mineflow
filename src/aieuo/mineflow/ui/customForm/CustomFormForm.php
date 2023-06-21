@@ -300,42 +300,29 @@ class CustomFormForm {
     }
 
     public function onReceive(Player $player, $data, Form $form, Recipe $from = null): void {
-        $holder = TriggerHolder::getInstance();
         $trigger = new FormTrigger($form->getName());
         $variables = $trigger->getVariables($form, $data, $from);
-        if ($holder->existsRecipe($trigger)) {
-            $recipes = $holder->getRecipes($trigger);
-            $recipes->executeAll($player, $variables);
-        }
+
+        TriggerHolder::executeRecipeAll($trigger, $player, $variables, null);
         switch ($form) {
             case $form instanceof ModalForm:
                 /** @var bool $data */
                 $trigger->setExtraData($data ? "1" : "2");
-                if ($holder->existsRecipe($trigger)) {
-                    $recipes = $holder->getRecipes($trigger);
-                    $recipes->executeAll($player, $variables);
-                }
+                TriggerHolder::executeRecipeAll($trigger, $player, $variables, null);
                 break;
             case $form instanceof ListForm:
                 /** @var int $data */
                 $button = $form->getButton($data);
                 $trigger->setExtraData($button->getUUID());
-                if ($holder->existsRecipe($trigger)) {
-                    $recipes = $holder->getRecipes($trigger);
-                    $recipes->executeAll($player, $variables);
-                }
+                TriggerHolder::executeRecipeAll($trigger, $player, $variables, null);
                 break;
         }
         $form->resetErrors();
     }
 
     public function onClose(Player $player, Form $form): void {
-        $holder = TriggerHolder::getInstance();
         $trigger = new FormTrigger($form->getName(), "close");
-        if ($holder->existsRecipe($trigger)) {
-            $recipes = $holder->getRecipes($trigger);
-            $recipes->executeAll($player);
-        }
+        TriggerHolder::executeRecipeAll($trigger, $player, [], null);
         $form->resetErrors();
     }
 

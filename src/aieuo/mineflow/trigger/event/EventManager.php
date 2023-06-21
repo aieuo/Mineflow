@@ -140,7 +140,7 @@ class EventManager {
         $trigger = EventTrigger::get($event);
         if ($trigger === null) return [];
 
-        $container = TriggerHolder::getInstance()->getRecipes($trigger);
+        $container = TriggerHolder::global()->getRecipes($trigger);
         return $container?->getAllRecipe() ?? [];
     }
 }

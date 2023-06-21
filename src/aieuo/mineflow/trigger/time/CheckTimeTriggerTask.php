@@ -6,23 +6,16 @@ use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\TriggerHolder;
 use pocketmine\scheduler\Task;
+use function microtime;
 
 class CheckTimeTriggerTask extends Task {
-
-    private TriggerHolder $triggerHolder;
-
-    public function __construct() {
-        $this->triggerHolder = TriggerHolder::getInstance();
-    }
 
     public function onRun(): void {
         $date = new \DateTime("now", Mineflow::getTimeZone());
         $trigger = new TimeTrigger((int)$date->format("H"), (int)$date->format("i"));
-        if ($this->triggerHolder->existsRecipe($trigger)) {
-            $recipes = $this->triggerHolder->getRecipes($trigger);
-            $variables = $trigger->getVariables((int)microtime(true));
-            $recipes->executeAll(null, $variables);
-        }
+        $variables = $trigger->getVariables((int)microtime(true));
+        
+        TriggerHolder::executeRecipeAll($trigger, null, $variables, null);
     }
 
     public static function start(Main $owner): void {
