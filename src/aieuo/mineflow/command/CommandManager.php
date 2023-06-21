@@ -5,6 +5,7 @@ namespace aieuo\mineflow\command;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\trigger\TriggerHolder;
 use aieuo\mineflow\trigger\Triggers;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\command\PluginCommand;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
@@ -44,7 +45,7 @@ class CommandManager {
     }
 
     public function registerCommand(string $commandStr, string $permission, string $description = ""): bool {
-        if ($this->isSubcommand($commandStr)) $commandStr = $this->getOriginCommand($commandStr);
+        if ($this->isSubcommand($commandStr)) $commandStr = $this->getCommandLabel($commandStr);
 
         if (!$this->isRegistered($commandStr)) {
             if (!PermissionManager::getInstance()->getPermission($permission) === null) {
@@ -74,7 +75,7 @@ class CommandManager {
     }
 
     public function addCommand(string $commandStr, string $permission, string $description = ""): void {
-        $origin = $this->getOriginCommand($commandStr);
+        $origin = $this->getCommandLabel($commandStr);
         $subCommands = $this->getSubcommandsFromCommand($commandStr);
 
         $command = [
@@ -98,7 +99,7 @@ class CommandManager {
     }
 
     public function removeCommand(string $commandStr): void {
-        $this->unregisterCommand($this->getOriginCommand($commandStr));
+        $this->unregisterCommand($this->getCommandLabel($commandStr));
         $this->config->remove($commandStr);
         $this->config->save();
     }
@@ -118,7 +119,7 @@ class CommandManager {
 
     public function getAssignedRecipes(string $command): array {
         $recipes = [];
-        $containers = TriggerHolder::getInstance()->getRecipesByType(Triggers::COMMAND);
+        $containers = TriggerHolder::global()->getRecipesByType(Triggers::COMMAND);
         foreach ($containers as $name => $container) {
             if ($command !== explode(" ", $name)[0]) continue;
 
@@ -155,11 +156,16 @@ class CommandManager {
         $commands = explode(" ", $command);
         array_shift($commands);
         $command = implode(" ", $commands);
-        $subCommands[$this->getOriginCommand($command)] = $this->getSubcommandsFromCommand($command);
+        $subCommands[$this->getCommandLabel($command)] = $this->getSubcommandsFromCommand($command);
         return $subCommands;
     }
 
+    #[Deprecated(replacement: "%class%->getCommandLabel(%parameter0%)")]
     public function getOriginCommand(string $command): string {
+        return $this->getCommandLabel($command);
+    }
+
+    public function getCommandLabel(string $command): string {
         $commands = explode(" ", $command);
         return $commands[0];
     }

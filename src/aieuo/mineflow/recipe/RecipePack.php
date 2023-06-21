@@ -113,7 +113,7 @@ class RecipePack implements \JsonSerializable {
                 };
                 if ($command === null) continue;
 
-                $command = $commandManager->getOriginCommand($command);
+                $command = $commandManager->getCommandLabel($command);
                 if (!$commandManager->existsCommand($command)) continue;
 
                 $commands[$command] = $commandManager->getCommand($command);

@@ -25,7 +25,7 @@ class CommandTriggerForm extends TriggerForm {
 
         $form->addButton(new Button("@trigger.command.edit.title", function () use($player, $trigger) {
             $manager = Mineflow::getCommandManager();
-            $command = $manager->getCommand($manager->getOriginCommand($trigger->getCommand()));
+            $command = $manager->getCommand($manager->getCommandLabel($trigger->getCommand()));
             if ($command === null) {
                 $player->sendMessage(Language::get("trigger.command.select.notFound"));
                 return;
@@ -46,7 +46,7 @@ class CommandTriggerForm extends TriggerForm {
                 new CancelToggle(fn() => (new BaseTriggerForm)->sendSelectTriggerType($player, $recipe)),
             ])->onReceive(function (Player $player, array $data, Recipe $recipe) {
                 $manager = Mineflow::getCommandManager();
-                $original = $manager->getOriginCommand($data[0]);
+                $original = $manager->getCommandLabel($data[0]);
                 if (!$manager->existsCommand($original)) {
                     $this->sendConfirmCreate($player, $original, function (bool $result) use ($player, $recipe, $data) {
                         if ($result) {

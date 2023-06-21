@@ -42,7 +42,7 @@ class CommandForm {
                 new CancelToggle(fn() => $callback === null ? $this->sendMenu($player) : $callback(false)),
             ])->onReceive(function (Player $player, array $data) use($callback) {
                 $manager = Mineflow::getCommandManager();
-                $original = $manager->getOriginCommand($data[0]);
+                $original = $manager->getCommandLabel($data[0]);
                 if (!$manager->isSubcommand($data[0]) and $manager->existsCommand($original)) {
                     throw new InvalidFormValueException("@form.command.alreadyExists", 0);
                 }
@@ -75,7 +75,7 @@ class CommandForm {
                 new CancelToggle(fn() => $this->sendMenu($player)),
             ])->onReceive(function (Player $player, array $data) {
                 $manager = Mineflow::getCommandManager();
-                if (!$manager->existsCommand($manager->getOriginCommand($data[0]))) {
+                if (!$manager->existsCommand($manager->getCommandLabel($data[0]))) {
                     throw new InvalidFormValueException("@form.command.notFound", 0);
                 }
 
