@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
-use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\ScoreboardPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
-    use ScoreboardFlowItemTrait;
+class SetScoreboardScoreName extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private ScoreboardPlaceholder $scoreboard;
 
     public function __construct(
         string         $scoreboard = "",
@@ -28,15 +27,19 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     ) {
         parent::__construct(self::SET_SCOREBOARD_SCORE_NAME, FlowItemCategory::SCOREBOARD);
 
-        $this->setScoreboardVariableName($scoreboard);
+        $this->scoreboard = new ScoreboardPlaceholder("scoreboard", $scoreboard);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["scoreboard", "name", "score"];
+        return [$this->scoreboard->getName(), "name", "score"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()];
+        return [$this->scoreboard->get(), $this->getScoreName(), $this->getScore()];
+    }
+
+    public function getScoreboard(): ScoreboardPlaceholder {
+        return $this->scoreboard;
     }
 
     public function getScoreName(): string {
@@ -56,13 +59,13 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getScoreboardVariableName() !== "" and $this->getScore() !== "";
+        return $this->scoreboard->isNotEmpty() and $this->getScore() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getScoreName());
         $score = $this->getInt($source->replaceVariables($this->getScore()));
-        $board = $this->getScoreboard($source);
+        $board = $this->scoreboard->getScoreboard($source);
 
         $board->setScoreName($name, $score);
 
@@ -71,19 +74,19 @@ class SetScoreboardScoreName extends FlowItem implements ScoreboardFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
+            $this->scoreboard->createFormElement($variables),
             new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), false),
             new ExampleInput("@action.setScore.form.score", "100", $this->getScore(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setScoreboardVariableName($content[0]);
+        $this->scoreboard->set($content[0]);
         $this->setScoreName($content[1]);
         $this->setScore($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()];
+        return [$this->scoreboard->get(), $this->getScoreName(), $this->getScore()];
     }
 }

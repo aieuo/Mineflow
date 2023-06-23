@@ -5,34 +5,37 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
-use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\ScoreboardPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
-    use ScoreboardFlowItemTrait;
+class RemoveScoreboardScore extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private ScoreboardPlaceholder $scoreboard;
 
     public function __construct(string $scoreboard = "", private string $scoreName = "") {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
-        $this->setScoreboardVariableName($scoreboard);
+        $this->scoreboard = new ScoreboardPlaceholder("scoreboard", $scoreboard);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["scoreboard", "name"];
+        return [$this->scoreboard->getName(), "name"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getScoreboardVariableName(), $this->getScoreName()];
+        return [$this->scoreboard->get(), $this->getScoreName()];
+    }
+
+    public function getScoreboard(): ScoreboardPlaceholder {
+        return $this->scoreboard;
     }
 
     public function getScoreName(): string {
@@ -44,12 +47,12 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getScoreboardVariableName() !== "";
+        return $this->scoreboard->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getScoreName());
-        $board = $this->getScoreboard($source);
+        $board = $this->scoreboard->getScoreboard($source);
 
         $board->removeScore($name);
 
@@ -58,17 +61,17 @@ class RemoveScoreboardScore extends FlowItem implements ScoreboardFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
+            $this->scoreboard->createFormElement($variables),
             new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), false),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setScoreboardVariableName($content[0]);
+        $this->scoreboard->set($content[0]);
         $this->setScoreName($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getScoreboardVariableName(), $this->getScoreName()];
+        return [$this->scoreboard->get(), $this->getScoreName()];
     }
 }
