@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\block;
 
-use aieuo\mineflow\flowItem\base\BlockFlowItem;
-use aieuo\mineflow\flowItem\base\BlockFlowItemTrait;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -14,39 +12,46 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\BlockPlaceholder;
 use SOFe\AwaitGenerator\GeneratorUtil;
 
-class IsSameBlock extends FlowItem implements Condition, BlockFlowItem {
-    use BlockFlowItemTrait;
+class IsSameBlock extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private const KEY_BLOCK1 = "block1";
-    private const KEY_BLOCK2 = "block2";
+    private BlockPlaceholder $block1;
+    private BlockPlaceholder $block2;
 
     public function __construct(string $block1 = "", string $block2 = "") {
         parent::__construct(FlowItemIds::IS_SAME_BLOCk, FlowItemCategory::BLOCK);
 
-        $this->setBlockVariableName($block1, self::KEY_BLOCK1);
-        $this->setBlockVariableName($block2, self::KEY_BLOCK2);
+        $this->block1 = new BlockPlaceholder("block1", $block1, "@action.form.target.block (1)");
+        $this->block2 = new BlockPlaceholder("block2", $block2, "@action.form.target.block (2)");
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["block1", "block2"];
+        return [$this->block1->getName(), $this->block2->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getBlockVariableName(self::KEY_BLOCK1), $this->getBlockVariableName(self::KEY_BLOCK2)];
+        return [$this->block1->get(), $this->block2->get()];
+    }
+
+    public function getBlock1(): BlockPlaceholder {
+        return $this->block1;
+    }
+
+    public function getBlock2(): BlockPlaceholder {
+        return $this->block2;
     }
 
     public function isDataValid(): bool {
-        return $this->getBlockVariableName(self::KEY_BLOCK1) !== "" and $this->getBlockVariableName(self::KEY_BLOCK2) !== "";
+        return $this->block1->isNotEmpty() and $this->block2->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $block1 = $this->getBlock($source, self::KEY_BLOCK1);
-        $block2 = $this->getBlock($source, self::KEY_BLOCK2);
+        $block1 = $this->block1->getBlock($source);
+        $block2 = $this->block2->getBlock($source);
 
         yield from GeneratorUtil::empty();
 
@@ -55,17 +60,17 @@ class IsSameBlock extends FlowItem implements Condition, BlockFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new BlockVariableDropdown($variables, $this->getBlockVariableName(self::KEY_BLOCK1), "@action.form.target.block (1)"),
-            new BlockVariableDropdown($variables, $this->getBlockVariableName(self::KEY_BLOCK2), "@action.form.target.block (2)"),
+            $this->block1->createFormElement($variables),
+            $this->block2->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setBlockVariableName($content[0], self::KEY_BLOCK1);
-        $this->setBlockVariableName($content[1], self::KEY_BLOCK2);
+        $this->block1->set($content[0]);
+        $this->block2->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getBlockVariableName(self::KEY_BLOCK1), $this->getBlockVariableName(self::KEY_BLOCK2)];
+        return [$this->block1->get(), $this->block2->get()];
     }
 }
