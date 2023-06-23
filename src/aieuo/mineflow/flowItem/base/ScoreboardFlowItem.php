@@ -9,7 +9,12 @@ namespace aieuo\mineflow\flowItem\base;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Scoreboard;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
+/**
+ * @see ScoreboardPlaceholder
+ */
 interface ScoreboardFlowItem {
 
     public function getScoreboardVariableName(string $name = ""): string;

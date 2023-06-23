@@ -64,7 +64,7 @@ class FlowItemExecutor {
         Await::f2c(function () {
             try {
                 yield from $this->getGenerator();
-            } catch (InvalidFlowValueException $e) {
+            } catch (FlowItemExecutionException $e) {
                 Logger::warning(Language::get("action.error", [$e->getFlowItemName(), $e->getMessage()]), $this->target);
                 if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
             } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|MineflowMethodErrorException|UnsupportedCalculationException $e) {

@@ -8,8 +8,13 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\math\AxisAlignedBB;
 
+#[Deprecated]
+/**
+ * @see AxisAlignedBBPlaceholder
+ */
 trait AxisAlignedBBFlowItemTrait {
 
     /** @var string[] */

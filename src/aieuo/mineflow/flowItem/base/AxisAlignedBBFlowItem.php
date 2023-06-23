@@ -6,8 +6,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\math\AxisAlignedBB;
 
+#[Deprecated]
+/**
+ * @see AxisAlignedBBPlaceholder
+ */
 interface AxisAlignedBBFlowItem {
 
     public function getAxisAlignedBBVariableName(string $name = ""): string;

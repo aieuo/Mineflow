@@ -9,6 +9,10 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\entity\Human;
 
+#[Deprecated]
+/**
+ * @see HumanPlaceholder
+ */
 interface HumanFlowItem {
 
     public function getHumanVariableName(string $name = ""): string;

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\exception\FlowItemExecutionException;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\placeholder\NumberPlaceholder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
+use JetBrains\PhpStorm\Deprecated;
 use JsonSerializable;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
@@ -88,6 +91,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $data;
     }
 
+    #[Deprecated(replacement: "aieuo\mineflow\utils\Utils::validateNumberString(%parametersList%)")]
     private function throwIfInvalidNumber(string|float|int $number, float|int|null $min = null, float|int|null $max = null, array $exclude = []): void {
         if (!is_numeric($number)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$number]));
@@ -105,11 +109,19 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         }
     }
 
+    #[Deprecated]
+    /**
+     * @see NumberPlaceholder
+     */
     protected function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
         $this->throwIfInvalidNumber($number, $min, $max, $exclude);
         return (int)$number;
     }
 
+    #[Deprecated]
+    /**
+     * @see NumberPlaceholder
+     */
     protected function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
         $this->throwIfInvalidNumber($number, $min, $max, $exclude);
         return (float)$number;
@@ -178,10 +190,14 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     final public function execute(FlowItemExecutor $source): \Generator {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents");
-            throw new InvalidFlowValueException($this->getName(), $message);
+            throw new FlowItemExecutionException($this->getName(), $message);
         }
 
-        return yield from $this->onExecute($source);
+        try {
+            return yield from $this->onExecute($source);
+        } catch (\RuntimeException $e) {
+            throw new FlowItemExecutionException($this->getName(), $e->getMessage(), previous: $e);
+        }
     }
 
     abstract protected function onExecute(FlowItemExecutor $source): \Generator;

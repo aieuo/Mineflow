@@ -8,8 +8,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\item\Item;
 
+#[Deprecated]
+/**
+ * @see ItemPlaceholder
+ */
 interface ItemFlowItem {
 
     public function getItemVariableName(string $name = ""): string;

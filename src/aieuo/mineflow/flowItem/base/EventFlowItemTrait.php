@@ -10,8 +10,13 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EventVariable;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\event\Event;
 
+#[Deprecated]
+/**
+ * @see EventPlaceholder
+ */
 trait EventFlowItemTrait {
 
     /* @var string[] */

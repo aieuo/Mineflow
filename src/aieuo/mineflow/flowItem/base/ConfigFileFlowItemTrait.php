@@ -10,8 +10,13 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ConfigVariable;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\utils\Config;
 
+#[Deprecated]
+/**
+ * @see ConfigPlaceholder
+ */
 trait ConfigFileFlowItemTrait {
 
     /* @var string[] */

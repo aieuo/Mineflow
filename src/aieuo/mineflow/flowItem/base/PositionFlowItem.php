@@ -8,8 +8,14 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\world\Position;
 
+#[Deprecated]
+/**
+ * @see PositionPlaceholder
+ */
 interface PositionFlowItem {
 
     public function getPositionVariableNames(): array;

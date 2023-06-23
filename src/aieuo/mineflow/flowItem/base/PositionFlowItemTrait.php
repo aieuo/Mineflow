@@ -10,8 +10,13 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionVariable;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\world\Position;
 
+#[Deprecated]
+/**
+ * @see PositionPlaceholder
+ */
 trait PositionFlowItemTrait {
 
     /* @var string[] */

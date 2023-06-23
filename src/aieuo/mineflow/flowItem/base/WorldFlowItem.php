@@ -8,8 +8,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\world\World;
 
+#[Deprecated]
+/**
+ * @see WorldPlaceholder
+ */
 interface WorldFlowItem {
 
     public function getWorldVariableName(string $name = ""): string;

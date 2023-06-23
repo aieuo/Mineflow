@@ -8,8 +8,14 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\player\Player;
 
+#[Deprecated]
+/**
+ * @see PlayerPlaceholder
+ */
 interface PlayerFlowItem {
 
     public function getPlayerVariableName(string $name = ""): string;

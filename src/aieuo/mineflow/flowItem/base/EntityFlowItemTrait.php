@@ -10,9 +10,14 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EntityVariable;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\entity\Entity;
 use pocketmine\player\Player;
 
+#[Deprecated]
+/**
+ * @see EntityPlaceholder
+ */
 trait EntityFlowItemTrait {
 
     /* @var string[] */

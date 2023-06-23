@@ -8,10 +8,16 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\flowItem\placeholder\ScoreboardPlaceholder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\object\ScoreboardVariable;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
+/**
+ * @see ScoreboardPlaceholder
+ */
 trait ScoreboardFlowItemTrait {
 
     /* @var string[] */

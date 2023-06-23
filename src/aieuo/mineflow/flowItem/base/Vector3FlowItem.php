@@ -6,8 +6,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\math\Vector3;
 
+#[Deprecated]
+/**
+ * @see Vector3Placeholder
+ */
 interface Vector3FlowItem {
 
     public function getVector3VariableName(string $name = ""): string;
