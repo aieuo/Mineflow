@@ -5,34 +5,37 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\HumanFlowItem;
-use aieuo\mineflow\flowItem\base\HumanFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\HumanPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class Emote extends FlowItem implements HumanFlowItem {
-    use HumanFlowItemTrait;
+class Emote extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private HumanPlaceholder $human;
 
     public function __construct(string $player = "", private string $emote = "") {
         parent::__construct(self::EMOTE, FlowItemCategory::PLAYER);
 
-        $this->setHumanVariableName($player);
+        $this->human = new HumanPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "id"];
+        return [$this->human->getName(), "id"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getHumanVariableName(), $this->getEmote()];
+        return [$this->human->get(), $this->getEmote()];
+    }
+
+    public function getHuman(): HumanPlaceholder {
+        return $this->human;
     }
 
     public function setEmote(string $emote): void {
@@ -44,30 +47,30 @@ class Emote extends FlowItem implements HumanFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getHumanVariableName() !== "" and $this->emote !== "";
+        return $this->human->isNotEmpty() and $this->emote !== "";
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
         $emoteId = $source->replaceVariables($this->getEmote());
 
-        $player = $this->getOnlineHuman($source);
+        $player = $this->human->getOnlineHuman($source);
         $player->emote($emoteId);
         yield Await::ALL;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getHumanVariableName()),
+            $this->human->createFormElement($variables),
             new ExampleInput("@action.emote.form.id", "18891e6c-bb3d-47f6-bc15-265605d86525", $this->getEmote(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setHumanVariableName($content[0]);
+        $this->human->set($content[0]);
         $this->setEmote($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getHumanVariableName(), $this->getEmote()];
+        return [$this->human->get(), $this->getEmote()];
     }
 }
