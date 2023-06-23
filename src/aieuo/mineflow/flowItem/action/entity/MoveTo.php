@@ -7,24 +7,24 @@ namespace aieuo\mineflow\flowItem\action\entity;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\EntityFlowItem;
 use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\math\Vector3;
 use SOFe\AwaitGenerator\Await;
 
-class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
-    use EntityFlowItemTrait, PositionFlowItemTrait;
+class MoveTo extends FlowItem implements EntityFlowItem {
+    use EntityFlowItemTrait;
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private PositionPlaceholder $position;
 
     public function __construct(
         string         $entity = "",
@@ -37,19 +37,23 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setEntityVariableName($entity);
-        $this->setPositionVariableName($position);
+        $this->position = new PositionPlaceholder("position", $position);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity", "position", "speedX", "speedY", "speedZ"];
+        return ["entity", $this->position->getName(), "speedX", "speedY", "speedZ"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getPositionVariableName(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
+        return [$this->getEntityVariableName(), $this->position->get(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->getPositionVariableName() !== "" and $this->getSpeedX() !== "" and $this->getSpeedY() !== "" and $this->getSpeedZ() !== "";
+        return $this->getEntityVariableName() !== "" and $this->position->isNotEmpty() and $this->getSpeedX() !== "" and $this->getSpeedY() !== "" and $this->getSpeedZ() !== "";
+    }
+
+    public function getPosition(): PositionPlaceholder {
+        return $this->position;
     }
 
     public function setSpeedX(string $speedX): void {
@@ -78,7 +82,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getOnlineEntity($source);
-        $position = $this->getPosition($source);
+        $position = $this->position->getPosition($source);
         $entityPosition = $entity->getLocation();
 
         $speedX = $this->getFloat($source->replaceVariables($this->getSpeedX()), min: 0);
@@ -100,7 +104,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+            $this->position->createFormElement($variables),
             new ExampleNumberInput("@action.moveTo.form.speedX", "0.1", $this->getSpeedX()),
             new ExampleNumberInput("@action.moveTo.form.speedY", "0", $this->getSpeedY()),
             new ExampleNumberInput("@action.moveTo.form.speedZ", "0.1", $this->getSpeedZ()),
@@ -109,13 +113,13 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
 
     public function loadSaveData(array $content): void {
         $this->setEntityVariableName($content[0]);
-        $this->setPositionVariableName($content[1]);
+        $this->position->set($content[1]);
         $this->setSpeedX($content[2]);
         $this->setSpeedY($content[3]);
         $this->setSpeedZ($content[4]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getPositionVariableName(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
+        return [$this->getEntityVariableName(), $this->position->get(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
     }
 }

@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use SOFe\AwaitGenerator\Await;
 
-class PlaySoundAt extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
+class PlaySoundAt extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private PositionPlaceholder $position;
 
     public function __construct(
         string         $position = "",
@@ -32,15 +31,19 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
     ) {
         parent::__construct(self::PLAY_SOUND_AT, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($position);
+        $this->position = new PositionPlaceholder("position", $position);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["position", "sound", "volume", "pitch"];
+        return [$this->position->getName(), "sound", "volume", "pitch"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()];
+        return [$this->position->get(), $this->getSound(), $this->getVolume(), $this->getPitch()];
+    }
+
+    public function getPosition(): PositionPlaceholder {
+        return $this->position;
     }
 
     public function setSound(string $health): void {
@@ -68,14 +71,14 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
+        return $this->position->isNotEmpty() and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $sound = $source->replaceVariables($this->getSound());
         $volume = $this->getFloat($source->replaceVariables($this->getVolume()));
         $pitch = $this->getFloat($source->replaceVariables($this->getPitch()));
-        $position = $this->getPosition($source);
+        $position = $this->position->getPosition($source);
 
         $pk = new PlaySoundPacket();
         $pk->soundName = $sound;
@@ -91,7 +94,7 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+            $this->position->createFormElement($variables),
             new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
             new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
             new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
@@ -99,13 +102,13 @@ class PlaySoundAt extends FlowItem implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0]);
+        $this->position->set($content[0]);
         $this->setSound($content[1]);
         $this->setVolume($content[2]);
         $this->setPitch($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()];
+        return [$this->position->get(), $this->getSound(), $this->getVolume(), $this->getPitch()];
     }
 }

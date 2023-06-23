@@ -5,30 +5,29 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class PositionVariableAddition extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
+class PositionVariableAddition extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
+    private PositionPlaceholder $position;
+
     public function __construct(
-        string         $name = "pos",
+        string         $position = "pos",
         private string $x = "",
         private string $y = "",
         private string $z = "",
@@ -36,15 +35,19 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     ) {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($name);
+        $this->position = new PositionPlaceholder("position", $position);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["position", "x", "y", "z", "result"];
+        return [$this->position->getName(), "x", "y", "z", "result"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
+        return [$this->position->get(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
+    }
+
+    public function getPosition(): PositionPlaceholder {
+        return $this->position;
     }
 
     public function setX(string $x): void {
@@ -80,11 +83,11 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "" and $this->resultName !== "";
+        return $this->position->isNotEmpty() and $this->x !== "" and $this->y !== "" and $this->z !== "" and $this->resultName !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos = $this->getPosition($source);
+        $pos = $this->position->getPosition($source);
 
         $x = $this->getFloat($source->replaceVariables($this->getX()));
         $y = $this->getFloat($source->replaceVariables($this->getY()));
@@ -102,7 +105,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PositionVariableDropdown($variables),
+            $this->position->createFormElement($variables),
             new ExampleNumberInput("@action.positionAddition.form.x", "0", $this->getX(), true),
             new ExampleNumberInput("@action.positionAddition.form.y", "100", $this->getY(), true),
             new ExampleNumberInput("@action.positionAddition.form.z", "16", $this->getZ(), true),
@@ -111,7 +114,7 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0]);
+        $this->position->set($content[0]);
         $this->setX($content[1]);
         $this->setY($content[2]);
         $this->setZ($content[3]);
@@ -119,11 +122,11 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
     }
 
     public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
+        return [$this->position->get(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
     }
 
     public function getAddingVariables(): array {
-        $desc = $this->getPositionVariableName()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
+        $desc = $this->position->get()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
         return [
             $this->getResultName() => new DummyVariable(PositionVariable::class, $desc)
         ];

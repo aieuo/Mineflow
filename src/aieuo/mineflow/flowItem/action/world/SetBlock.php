@@ -5,37 +5,39 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\flowItem\placeholder\BlockPlaceholder;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
 use SOFe\AwaitGenerator\Await;
 
-class SetBlock extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
+class SetBlock extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     private BlockPlaceholder $block;
+    private PositionPlaceholder $position;
 
     public function __construct(string $position = "", string $block = "") {
         parent::__construct(self::SET_BLOCK, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($position);
+        $this->position = new PositionPlaceholder("position", $position);
         $this->block = new BlockPlaceholder("block", $block);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["position", $this->block->getName()];
+        return [$this->position->getName(), $this->block->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName(), $this->block->get()];
+        return [$this->position->get(), $this->block->get()];
+    }
+
+    public function getPosition(): PositionPlaceholder {
+        return $this->position;
     }
 
     public function getBlock(): BlockPlaceholder {
@@ -43,11 +45,11 @@ class SetBlock extends FlowItem implements PositionFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->block->isNotEmpty();
+        return $this->position->isNotEmpty() and $this->block->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $position = $this->getPosition($source);
+        $position = $this->position->getPosition($source);
 
         $block = $this->block->getBlock($source);
 
@@ -58,17 +60,17 @@ class SetBlock extends FlowItem implements PositionFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
+            $this->position->createFormElement($variables),
             $this->block->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0]);
+        $this->position->set($content[0]);
         $this->block->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->block->get()];
+        return [$this->position->get(), $this->block->get()];
     }
 }
