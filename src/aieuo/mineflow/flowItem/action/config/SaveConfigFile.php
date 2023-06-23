@@ -5,43 +5,46 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
-use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\ConfigPlaceholder;
 use SOFe\AwaitGenerator\Await;
 
-class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
-    use ConfigFileFlowItemTrait;
+class SaveConfigFile extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private ConfigPlaceholder $config;
 
     public function __construct(string $config = "") {
         parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
-        $this->setConfigVariableName($config);
+        $this->config = new ConfigPlaceholder("config", $config);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["config"];
+        return [$this->config->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getConfigVariableName()];
+        return [$this->config->get()];
+    }
+
+    public function getConfig(): ConfigPlaceholder {
+        return $this->config;
     }
 
     public function isDataValid(): bool {
-        return $this->getConfigVariableName() !== "";
+        return $this->config->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $config = $this->getConfig($source);
+        $config = $this->config->getConfig($source);
         $config->save();
 
         yield Await::ALL;
@@ -49,15 +52,15 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
+            $this->config->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setConfigVariableName($content[0]);
+        $this->config->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getConfigVariableName()];
+        return [$this->config->get()];
     }
 }
