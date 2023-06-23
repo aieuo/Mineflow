@@ -422,6 +422,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
      * @throws FlowItemLoadException|\ErrorException
      */
     public function loadSaveData(array $contents): self {
+        $actions = [];
         foreach ($contents["actions"] as $i => $content) {
             try {
                 $action = FlowItem::loadEachSaveData($content);
@@ -430,8 +431,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 throw new FlowItemLoadException(Language::get("recipe.load.failed.action", [$i, $content["id"] ?? "id?", ["recipe.json.key.missing"]]));
             }
 
-            $this->addAction($action);
+            $actions[] = $action;
         }
+        $this->setActions($actions);
 
         $this->setEnabled($contents["enabled"] ?? true);
         $this->setTargetSetting(
@@ -511,5 +513,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $actions[$k] = clone $action;
         }
         $this->setActions($actions);
+
+        $arguments = [];
+        foreach ($this->getArguments() as $k => $arg) {
+            $arguments[$k] = clone $arg;
+        }
+        $this->setArguments($arguments);
     }
 }
