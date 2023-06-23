@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\entity\Human;
 
 #[Deprecated]
