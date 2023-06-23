@@ -5,28 +5,26 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\WorldFlowItem;
-use aieuo\mineflow\flowItem\base\WorldFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\flowItem\placeholder\AxisAlignedBBPlaceholder;
+use aieuo\mineflow\flowItem\placeholder\WorldPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 use SOFe\AwaitGenerator\Await;
 use function array_map;
 
-abstract class GetEntitiesInAreaBase extends FlowItem implements WorldFlowItem {
-    use WorldFlowItemTrait;
+abstract class GetEntitiesInAreaBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     private AxisAlignedBBPlaceholder $aabb;
+    private WorldPlaceholder $world;
 
     public function __construct(
         string         $id,
@@ -38,19 +36,23 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements WorldFlowItem {
         parent::__construct($id, $category);
 
         $this->aabb = new AxisAlignedBBPlaceholder("aabb", $aabb);
-        $this->setWorldVariableName($worldName);
+        $this->world = new WorldPlaceholder("world", $worldName);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return [$this->aabb->getName(), "world", "result"];
+        return [$this->aabb->getName(), $this->world->getName(), "result"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->aabb->get(), $this->getWorldVariableName(), $this->getResultName()];
+        return [$this->aabb->get(), $this->world->get(), $this->getResultName()];
     }
 
     public function getAxisAlignedBB(): AxisAlignedBBPlaceholder {
         return $this->aabb;
+    }
+
+    public function getWorld(): WorldPlaceholder {
+        return $this->world;
     }
 
     public function getResultName(): string {
@@ -62,12 +64,12 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements WorldFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->aabb->isNotEmpty() and $this->getWorldVariableName() !== "" and $this->getResultName() !== "";
+        return $this->aabb->isNotEmpty() and $this->world->isNotEmpty() and $this->getResultName() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $aabb = $this->aabb->getAxisAlignedBB($source);
-        $world = $this->getWorld($source);
+        $world = $this->world->getWorld($source);
         $result = $source->replaceVariables($this->getResultName());
 
         $entities = $this->filterEntities($world->getNearbyEntities($aabb));
@@ -87,18 +89,18 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements WorldFlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->aabb->createFormElement($variables),
-            new WorldVariableDropdown($variables, $this->getWorldVariableName()),
+            $this->world->createFormElement($variables),
             new ExampleInput("@action.form.resultVariableName", "entities", $this->getResultName(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->aabb->set($content[0]);
-        $this->setWorldVariableName($content[1]);
+        $this->world->set($content[1]);
         $this->setResultName($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->aabb->get(), $this->getWorldVariableName(), $this->getResultName()];
+        return [$this->aabb->get(), $this->world->get(), $this->getResultName()];
     }
 }
