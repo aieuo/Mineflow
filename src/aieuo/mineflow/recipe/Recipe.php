@@ -32,6 +32,7 @@ use pocketmine\event\Event;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use function array_search;
 use function array_unique;
 use function is_string;
@@ -480,8 +481,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function getFileName(string $baseDir): string {
         $group = Utils::getValidGroupName($this->getGroup());
         $name = Utils::getValidFileName($this->getName());
-        if (!empty($group)) $baseDir .= $group."/";
-        return $baseDir.$name.".json";
+        if (!empty($group)) $baseDir = Path::join($baseDir, $group);
+        return Path::join($baseDir, $name.".json");
     }
 
     public function save(string $dir): void {

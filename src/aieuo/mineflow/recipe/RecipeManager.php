@@ -17,6 +17,7 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Utils;
 use ErrorException;
 use pocketmine\Server;
+use Symfony\Component\Filesystem\Path;
 use function file_get_contents;
 use function json_decode;
 use function json_last_error_msg;
@@ -33,7 +34,7 @@ class RecipeManager {
     private array $templates = [];
 
     public function __construct(
-        private string $directory,
+        private readonly string $directory,
     ) {
         if (!file_exists($directory)) @mkdir($directory, 0777, true);
     }
@@ -151,7 +152,7 @@ class RecipeManager {
 
     public function deleteGroup(string $group): bool {
         try {
-            $deleted = rmdir($this->getDirectory().$group);
+            $deleted = rmdir(Path::join($this->getDirectory(), $group));
             if ($deleted) {
                 unset($this->recipes[$group]);
             }
