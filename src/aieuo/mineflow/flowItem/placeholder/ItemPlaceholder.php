@@ -14,8 +14,8 @@ use pocketmine\item\Item;
 
 class ItemPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.item");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.item", $optional);
     }
 
     /**
@@ -45,6 +45,6 @@ class ItemPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new ItemVariableDropdown($variables, $this->get());
+        return new ItemVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

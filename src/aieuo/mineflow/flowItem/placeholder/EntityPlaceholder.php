@@ -15,8 +15,8 @@ use pocketmine\player\Player;
 
 class EntityPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.entity");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.entity", $optional);
     }
 
     /**
@@ -45,6 +45,6 @@ class EntityPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new EntityVariableDropdown($variables, $this->get());
+        return new EntityVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

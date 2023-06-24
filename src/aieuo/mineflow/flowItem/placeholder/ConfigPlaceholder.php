@@ -14,8 +14,8 @@ use pocketmine\utils\Config;
 
 class ConfigPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.config");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.config", $optional);
     }
 
     /**
@@ -33,6 +33,6 @@ class ConfigPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new ConfigVariableDropdown($variables, $this->get());
+        return new ConfigVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

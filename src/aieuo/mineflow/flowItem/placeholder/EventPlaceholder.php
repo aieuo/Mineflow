@@ -14,8 +14,8 @@ use pocketmine\event\Event;
 
 class EventPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.event");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.event", $optional);
     }
 
     /**
@@ -40,6 +40,6 @@ class EventPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new EventVariableDropdown($variables, $this->get());
+        return new EventVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

@@ -15,8 +15,8 @@ use pocketmine\player\Player;
 
 class HumanPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.human");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.human", $optional);
     }
 
     /**
@@ -45,6 +45,6 @@ class HumanPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new HumanVariableDropdown($variables, $this->get());
+        return new HumanVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

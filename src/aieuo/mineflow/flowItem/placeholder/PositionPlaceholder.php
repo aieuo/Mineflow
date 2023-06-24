@@ -14,8 +14,8 @@ use pocketmine\world\Position;
 
 class PositionPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.position");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.position", $optional);
     }
 
     /**
@@ -33,6 +33,6 @@ class PositionPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new PositionVariableDropdown($variables, $this->get());
+        return new PositionVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

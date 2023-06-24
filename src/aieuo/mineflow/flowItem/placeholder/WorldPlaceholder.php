@@ -14,8 +14,8 @@ use pocketmine\world\World;
 
 class WorldPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.world");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.world", $optional);
     }
 
     /**
@@ -33,6 +33,6 @@ class WorldPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new WorldVariableDropdown($variables, $this->get());
+        return new WorldVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

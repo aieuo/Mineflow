@@ -36,7 +36,7 @@ class StringPlaceholder extends Placeholder {
             $this->getDescription(),
             $this->getExample(),
             $this->get(),
-            required: true
+            required: !$this->isOptional()
         );
     }
 }

@@ -14,8 +14,8 @@ use pocketmine\math\AxisAlignedBB;
 
 class AxisAlignedBBPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.aabb");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.aabb", $optional);
     }
 
     /**
@@ -33,6 +33,6 @@ class AxisAlignedBBPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new AxisAlignedBBVariableDropdown($variables, $this->get());
+        return new AxisAlignedBBVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

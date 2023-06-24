@@ -14,8 +14,8 @@ use pocketmine\block\Block;
 
 class BlockPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.block");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.block", $optional);
     }
 
     /**
@@ -33,6 +33,6 @@ class BlockPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new BlockVariableDropdown($variables, $this->get());
+        return new BlockVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }

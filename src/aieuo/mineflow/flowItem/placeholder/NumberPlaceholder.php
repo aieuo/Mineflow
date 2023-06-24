@@ -91,7 +91,7 @@ class NumberPlaceholder extends Placeholder {
             $this->getDescription(),
             $this->getExample(),
             $this->get(),
-            required: true,
+            required: !$this->isOptional(),
             min: (float)$this->getMin(),
             max: (float)$this->getMax(),
             excludes: $this->getExcludes(),

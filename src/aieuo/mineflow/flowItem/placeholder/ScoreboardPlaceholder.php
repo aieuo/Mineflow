@@ -14,8 +14,8 @@ use aieuo\mineflow\variable\object\ScoreboardVariable;
 
 class ScoreboardPlaceholder extends Placeholder {
 
-    public function __construct(string $name, string $value = "", string $description = null) {
-        parent::__construct($name, $value, $description ?? "@action.form.target.scoreboard");
+    public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
+        parent::__construct($name, $value, $description ?? "@action.form.target.scoreboard", $optional);
     }
 
     /**
@@ -33,6 +33,6 @@ class ScoreboardPlaceholder extends Placeholder {
     }
 
     public function createFormElement(array $variables): Element {
-        return new ScoreboardVariableDropdown($variables, $this->get());
+        return new ScoreboardVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
     }
 }
