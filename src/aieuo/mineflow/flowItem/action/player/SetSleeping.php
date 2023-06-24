@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
 use SOFe\AwaitGenerator\Await;
 
-class SetSleeping extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetSleeping extends SimpleAction {
 
     private PlayerPlaceholder $player;
     private PositionPlaceholder $position;
@@ -24,20 +19,10 @@ class SetSleeping extends FlowItem {
     public function __construct(string $player = "", string $position = "") {
         parent::__construct(self::SET_SLEEPING, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
-        $this->position = new PositionPlaceholder("position", $position);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->player->getName(), $this->position->getName()];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->position->get()];
-    }
-
-    public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->position->isNotEmpty();
+        $this->setPlaceholders([
+            $this->player = new PlayerPlaceholder("player", $player),
+            $this->position = new PositionPlaceholder("position", $position),
+        ]);
     }
 
     public function getPlayer(): PlayerPlaceholder {
@@ -55,21 +40,5 @@ class SetSleeping extends FlowItem {
         $player->sleepOn($position);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->player->createFormElement($variables),
-            $this->position->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->position->set($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->player->get(), $this->position->get()];
     }
 }

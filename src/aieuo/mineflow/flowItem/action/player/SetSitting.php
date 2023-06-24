@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
 use pocketmine\entity\Entity;
@@ -22,9 +19,7 @@ use pocketmine\network\mcpe\protocol\types\entity\LongMetadataProperty;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
 
-class SetSitting extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetSitting extends SimpleAction {
 
     private static array $entityIds = [];
 
@@ -34,20 +29,10 @@ class SetSitting extends FlowItem {
     public function __construct(string $player = "", string $position = "") {
         parent::__construct(self::SET_SITTING, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
-        $this->position = new PositionPlaceholder("position", $position);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->player->getName(), $this->position->getName()];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->position->get()];
-    }
-
-    public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->position->isNotEmpty();
+        $this->setPlaceholders([
+            $this->player = new PlayerPlaceholder("player", $player),
+            $this->position = new PositionPlaceholder("position", $position),
+        ]);
     }
 
     public function getPlayer(): PlayerPlaceholder {
@@ -78,22 +63,6 @@ class SetSitting extends FlowItem {
         self::$entityIds[$player->getName()] = $pk->actorRuntimeId;
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->player->createFormElement($variables),
-            $this->position->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->position->set($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->player->get(), $this->position->get()];
     }
 
     public static function leave(Player $player): void {
