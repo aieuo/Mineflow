@@ -24,7 +24,7 @@ class IsOp extends FlowItem implements Condition {
     public function __construct(string $player = "") {
         parent::__construct(self::IS_OP, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder($this->player->getName(), $player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
