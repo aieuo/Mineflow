@@ -11,19 +11,19 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use SOFe\AwaitGenerator\Await;
 
 class IsPlayerOnline extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(string $player = "") {
         parent::__construct(self::IS_PLAYER_ONLINE, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -38,7 +38,7 @@ class IsPlayerOnline extends FlowItem implements Condition {
         return $this->player->get() !== null;
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

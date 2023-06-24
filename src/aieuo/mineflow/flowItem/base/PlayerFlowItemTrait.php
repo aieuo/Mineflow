@@ -15,7 +15,7 @@ use pocketmine\player\Player;
 
 #[Deprecated]
 /**
- * @see PlayerPlaceholder
+ * @see PlayerArgument
  */
 trait PlayerFlowItemTrait {
 

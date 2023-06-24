@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\placeholder;
+namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\Item;
 
-class ItemPlaceholder extends Placeholder {
+class ItemArgument extends FlowItemArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.item", $optional);

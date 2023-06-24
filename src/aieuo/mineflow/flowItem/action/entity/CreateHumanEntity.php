@@ -8,9 +8,9 @@ use aieuo\mineflow\entity\MineflowHuman;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\StringPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
@@ -21,27 +21,27 @@ class CreateHumanEntity extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private PlayerPlaceholder $player;
-    private PositionPlaceholder $position;
-    private StringPlaceholder $resultName;
+    private PlayerArgument $player;
+    private PositionArgument $position;
+    private StringArgument $resultName;
 
     public function __construct(string $name = "", string $pos = "", string $resultName = "human") {
         parent::__construct(self::CREATE_HUMAN_ENTITY, FlowItemCategory::ENTITY);
 
-        $this->player = new PlayerPlaceholder("skin", $name, "@action.createHuman.form.skin");
-        $this->position = new PositionPlaceholder("pos", $pos);
-        $this->resultName = new StringPlaceholder("result", $resultName, example: "entity");
+        $this->player = new PlayerArgument("skin", $name, "@action.createHuman.form.skin");
+        $this->position = new PositionArgument("pos", $pos);
+        $this->resultName = new StringArgument("result", $resultName, example: "entity");
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 
-    public function getResultName(): StringPlaceholder {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 

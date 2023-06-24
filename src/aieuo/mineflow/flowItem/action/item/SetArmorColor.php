@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use pocketmine\color\Color;
@@ -24,7 +24,7 @@ class SetArmorColor extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemPlaceholder $armor;
+    private ItemArgument $armor;
 
     public function __construct(
         string         $item = "",
@@ -34,7 +34,7 @@ class SetArmorColor extends FlowItem {
     ) {
         parent::__construct(self::SET_ARMOR_COLOR, FlowItemCategory::ITEM);
 
-        $this->armor = new ItemPlaceholder("armor", $item);
+        $this->armor = new ItemArgument("armor", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -45,7 +45,7 @@ class SetArmorColor extends FlowItem {
         return [$this->armor->get(), $this->getRed(), $this->getGreen(), $this->getBlue()];
     }
 
-    public function getArmor(): ItemPlaceholder {
+    public function getArmor(): ItemArgument {
         return $this->armor;
     }
 

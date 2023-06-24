@@ -8,13 +8,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\BlockPlaceholder;
+use aieuo\mineflow\flowItem\argument\BlockArgument;
 use JetBrains\PhpStorm\Deprecated;
 use pocketmine\block\Block;
 
 #[Deprecated]
 /**
- * @see BlockPlaceholder
+ * @see BlockArgument
  */
 interface BlockFlowItem {
 

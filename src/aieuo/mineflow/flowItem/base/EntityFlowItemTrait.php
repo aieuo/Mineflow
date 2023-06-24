@@ -16,7 +16,7 @@ use pocketmine\player\Player;
 
 #[Deprecated]
 /**
- * @see EntityPlaceholder
+ * @see EntityArgument
  */
 trait EntityFlowItemTrait {
 

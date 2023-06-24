@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\StringPlaceholder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
 use pocketmine\entity\effect\StringToEffectParser;
@@ -22,23 +22,23 @@ class ClearEffect extends SimpleAction {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private EntityPlaceholder $entity;
-    private StringPlaceholder $effectId;
+    private EntityArgument $entity;
+    private StringArgument $effectId;
 
     public function __construct(string $entity = "", string $effectId = "") {
         parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
 
-        $this->setPlaceholders([
-            $this->entity = new EntityPlaceholder("entity", $entity),
-            $this->effectId = new StringPlaceholder("id", $effectId, example: "1"),
+        $this->setArguments([
+            $this->entity = new EntityArgument("entity", $entity),
+            $this->effectId = new StringArgument("id", $effectId, example: "1"),
         ]);
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function getEffectId(): StringPlaceholder {
+    public function getEffectId(): StringArgument {
         return $this->effectId;
     }
 

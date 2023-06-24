@@ -11,7 +11,7 @@ use pocketmine\math\Vector3;
 
 #[Deprecated]
 /**
- * @see Vector3Placeholder
+ * @see Vector3Argument
  */
 interface Vector3FlowItem {
 

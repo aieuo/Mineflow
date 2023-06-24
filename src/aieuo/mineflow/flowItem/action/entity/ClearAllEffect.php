@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use pocketmine\entity\Living;
 use SOFe\AwaitGenerator\Await;
 
 class ClearAllEffect extends SimpleAction {
 
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "") {
         parent::__construct(self::CLEAR_ALL_EFFECT, FlowItemCategory::ENTITY);
 
-        $this->setPlaceholders([
-            $this->entity = new EntityPlaceholder("entity", $entity),
+        $this->setArguments([
+            $this->entity = new EntityArgument("entity", $entity),
         ]);
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

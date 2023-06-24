@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\NumberPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\StringPlaceholder;
 use aieuo\mineflow\utils\EntityHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -21,15 +21,15 @@ class GetEntity extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private NumberPlaceholder $entityId;
-    private StringPlaceholder $resultName;
+    private NumberArgument $entityId;
+    private StringArgument $resultName;
 
     public function __construct(int $entityId = null, string $resultName = "entity") {
         parent::__construct(self::GET_ENTITY, FlowItemCategory::ENTITY);
 
-        $this->setPlaceholders([
-            $this->entityId = new NumberPlaceholder("id", $entityId ?? "", "@action.getEntity.form.target", example: "1", min: 0),
-            $this->resultName = new StringPlaceholder("result", $resultName, example: "entity"),
+        $this->setArguments([
+            $this->entityId = new NumberArgument("id", $entityId ?? "", "@action.getEntity.form.target", example: "1", min: 0),
+            $this->resultName = new StringArgument("result", $resultName, example: "entity"),
         ]);
     }
 

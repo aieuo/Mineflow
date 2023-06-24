@@ -10,22 +10,22 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\BlockPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\BlockArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use SOFe\AwaitGenerator\Await;
 
 class SetBlock extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private BlockPlaceholder $block;
-    private PositionPlaceholder $position;
+    private BlockArgument $block;
+    private PositionArgument $position;
 
     public function __construct(string $position = "", string $block = "") {
         parent::__construct(self::SET_BLOCK, FlowItemCategory::WORLD);
 
-        $this->position = new PositionPlaceholder("position", $position);
-        $this->block = new BlockPlaceholder("block", $block);
+        $this->position = new PositionArgument("position", $position);
+        $this->block = new BlockArgument("block", $block);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,11 +36,11 @@ class SetBlock extends FlowItem {
         return [$this->position->get(), $this->block->get()];
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 
-    public function getBlock(): BlockPlaceholder {
+    public function getBlock(): BlockArgument {
         return $this->block;
     }
 

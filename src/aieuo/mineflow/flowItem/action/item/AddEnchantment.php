@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
@@ -27,7 +27,7 @@ class AddEnchantment extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemPlaceholder $item;
+    private ItemArgument $item;
 
     public function __construct(
         string         $item = "",
@@ -36,7 +36,7 @@ class AddEnchantment extends FlowItem {
     ) {
         parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
 
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -47,7 +47,7 @@ class AddEnchantment extends FlowItem {
         return [$this->item->get(), $this->getEnchantId(), $this->getEnchantLevel()];
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

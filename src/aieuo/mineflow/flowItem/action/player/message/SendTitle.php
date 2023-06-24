@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use SOFe\AwaitGenerator\Await;
@@ -21,7 +21,7 @@ class SendTitle extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(
         string         $player = "",
@@ -33,7 +33,7 @@ class SendTitle extends FlowItem {
     ) {
         parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER_MESSAGE);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -71,7 +71,7 @@ class SendTitle extends FlowItem {
         return $this->player->get() !== "" and ($this->getTitle() !== "" or $this->getSubTitle() !== "");
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

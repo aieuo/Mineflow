@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
@@ -26,7 +26,7 @@ class SetItemDataFromNBTJson extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemPlaceholder $item;
+    private ItemArgument $item;
 
     public function __construct(
         string         $item = "",
@@ -34,7 +34,7 @@ class SetItemDataFromNBTJson extends FlowItem {
     ) {
         parent::__construct(self::SET_ITEM_DATA_FROM_NBT_JSON, FlowItemCategory::ITEM);
 
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -45,7 +45,7 @@ class SetItemDataFromNBTJson extends FlowItem {
         return [$this->item->get(), $this->getJson()];
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

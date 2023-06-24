@@ -11,24 +11,24 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use SOFe\AwaitGenerator\Await;
 
 class InArea extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PositionPlaceholder $position1;
-    private PositionPlaceholder $position2;
-    private EntityPlaceholder $entity;
+    private PositionArgument $position1;
+    private PositionArgument $position2;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         parent::__construct(self::IN_AREA, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("target", $entity);
-        $this->position1 = new PositionPlaceholder("pos1", $pos1, "@condition.inArea.form.pos1");
-        $this->position2 = new PositionPlaceholder("pos2", $pos2, "@condition.inArea.form.pos2");
+        $this->entity = new EntityArgument("target", $entity);
+        $this->position1 = new PositionArgument("pos1", $pos1, "@condition.inArea.form.pos1");
+        $this->position2 = new PositionArgument("pos2", $pos2, "@condition.inArea.form.pos2");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -43,15 +43,15 @@ class InArea extends FlowItem implements Condition {
         return $this->entity->isNotEmpty() and $this->position1->isNotEmpty() and $this->position2->isNotEmpty();
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function getPosition1(): PositionPlaceholder {
+    public function getPosition1(): PositionArgument {
         return $this->position1;
     }
 
-    public function getPosition2(): PositionPlaceholder {
+    public function getPosition2(): PositionArgument {
         return $this->position2;
     }
 

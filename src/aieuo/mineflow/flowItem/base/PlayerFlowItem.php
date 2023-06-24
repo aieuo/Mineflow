@@ -8,13 +8,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use JetBrains\PhpStorm\Deprecated;
 use pocketmine\player\Player;
 
 #[Deprecated]
 /**
- * @see PlayerPlaceholder
+ * @see PlayerArgument
  */
 interface PlayerFlowItem {
 

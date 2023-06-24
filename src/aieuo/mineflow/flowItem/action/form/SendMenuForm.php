@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -41,7 +41,7 @@ class SendMenuForm extends FlowItem {
     private array $options;
     private bool $resendOnClose = false;
     
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(
         string         $player = "",
@@ -51,7 +51,7 @@ class SendMenuForm extends FlowItem {
     ) {
         parent::__construct(self::SEND_MENU, FlowItemCategory::FORM);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
         $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
     }
 
@@ -91,7 +91,7 @@ class SendMenuForm extends FlowItem {
         return $this->player->get() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

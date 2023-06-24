@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\AxisAlignedBBPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\WorldPlaceholder;
+use aieuo\mineflow\flowItem\argument\AxisAlignedBBArgument;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
@@ -23,8 +23,8 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private AxisAlignedBBPlaceholder $aabb;
-    private WorldPlaceholder $world;
+    private AxisAlignedBBArgument $aabb;
+    private WorldArgument $world;
 
     public function __construct(
         string         $id,
@@ -35,8 +35,8 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->aabb = new AxisAlignedBBPlaceholder("aabb", $aabb);
-        $this->world = new WorldPlaceholder("world", $worldName);
+        $this->aabb = new AxisAlignedBBArgument("aabb", $aabb);
+        $this->world = new WorldArgument("world", $worldName);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -47,11 +47,11 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
         return [$this->aabb->get(), $this->world->get(), $this->getResultName()];
     }
 
-    public function getAxisAlignedBB(): AxisAlignedBBPlaceholder {
+    public function getAxisAlignedBB(): AxisAlignedBBArgument {
         return $this->aabb;
     }
 
-    public function getWorld(): WorldPlaceholder {
+    public function getWorld(): WorldArgument {
         return $this->world;
     }
 

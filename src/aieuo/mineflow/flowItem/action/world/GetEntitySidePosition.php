@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
@@ -69,7 +69,7 @@ class GetEntitySidePosition extends FlowItem {
         Facing::WEST,
         Facing::NORTH,
     ];
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(
         string         $entity = "",
@@ -79,7 +79,7 @@ class GetEntitySidePosition extends FlowItem {
     ) {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -90,7 +90,7 @@ class GetEntitySidePosition extends FlowItem {
         return [$this->entity->get(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

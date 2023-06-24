@@ -15,7 +15,7 @@ use pocketmine\world\Position;
 
 #[Deprecated]
 /**
- * @see PositionPlaceholder
+ * @see PositionArgument
  */
 trait PositionFlowItemTrait {
 

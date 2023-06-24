@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -27,7 +27,7 @@ class AddEffect extends FlowItem {
     use HasSimpleEditForm;
 
     private bool $visible = false;
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(
         string         $entity = "",
@@ -37,7 +37,7 @@ class AddEffect extends FlowItem {
     ) {
         parent::__construct(self::ADD_EFFECT, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -48,7 +48,7 @@ class AddEffect extends FlowItem {
         return [$this->entity->get(), $this->getEffectId(), $this->getPower(), $this->getTime()];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

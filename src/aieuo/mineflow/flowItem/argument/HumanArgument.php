@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\placeholder;
+namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -13,7 +13,7 @@ use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Human;
 use pocketmine\player\Player;
 
-class HumanPlaceholder extends Placeholder {
+class HumanArgument extends FlowItemArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.human", $optional);

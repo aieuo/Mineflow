@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
@@ -21,8 +21,8 @@ use function implode;
 
 class RegisterCraftingRecipe extends FlowItem {
 
-    private ItemPlaceholder $output;
-    /** @var ItemPlaceholder[] */
+    private ItemArgument $output;
+    /** @var ItemArgument[] */
     private array $ingredients;
 
     /**
@@ -35,14 +35,14 @@ class RegisterCraftingRecipe extends FlowItem {
         $characters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
         $this->ingredients = [];
         for ($i = 0; $i < 9; $i ++) {
-            $this->ingredients[] = new ItemPlaceholder(
+            $this->ingredients[] = new ItemArgument(
                 "input".$i,
                 $ingredients[$i] ?? "",
                 "@action.registerShapedRecipe.ingredients ".$characters[$i],
                 true
             );
         }
-        $this->output = new ItemPlaceholder("output", $output, "@action.registerShapedRecipe.results RESULT");
+        $this->output = new ItemArgument("output", $output, "@action.registerShapedRecipe.results RESULT");
     }
 
     public function getName(): string {
@@ -102,7 +102,7 @@ class RegisterCraftingRecipe extends FlowItem {
         return $this->ingredients;
     }
 
-    public function getOutput(): ItemPlaceholder {
+    public function getOutput(): ItemArgument {
         return $this->output;
     }
 

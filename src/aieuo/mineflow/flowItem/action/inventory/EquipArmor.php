@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\entity\Living;
@@ -28,14 +28,14 @@ class EquipArmor extends FlowItem {
         "action.equipArmor.boots",
     ];
 
-    private ItemPlaceholder $item;
-    private EntityPlaceholder $entity;
+    private ItemArgument $item;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "", string $item = "", private string $index = "") {
         parent::__construct(self::EQUIP_ARMOR, FlowItemCategory::INVENTORY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->entity = new EntityArgument("entity", $entity);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -46,11 +46,11 @@ class EquipArmor extends FlowItem {
         return [$this->entity->get(), $this->item->get(), Language::get($this->slots[$this->getIndex()])];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

@@ -8,26 +8,26 @@ use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\placeholder\NumberPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\StringPlaceholder;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use SOFe\AwaitGenerator\Await;
 
 class AddParticle extends SimpleAction {
 
-    private PositionPlaceholder $position;
-    private StringPlaceholder $particle;
-    private NumberPlaceholder $amount;
+    private PositionArgument $position;
+    private StringArgument $particle;
+    private NumberArgument $amount;
 
     public function __construct(string $position = "", string $particle = "", int $amount = 1) {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
-        $this->position = new PositionPlaceholder("position", $position);
-        $this->particle = new StringPlaceholder("particle", $particle, example: "minecraft:explosion_particle");
-        $this->amount = new NumberPlaceholder("amount", $amount, example: "1", min: 1);
+        $this->position = new PositionArgument("position", $position);
+        $this->particle = new StringArgument("particle", $particle, example: "minecraft:explosion_particle");
+        $this->amount = new NumberArgument("amount", $amount, example: "1", min: 1);
     }
 
     public function getDetailDefaultReplaces(): array {

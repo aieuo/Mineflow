@@ -10,22 +10,22 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\ScoreboardPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
 use SOFe\AwaitGenerator\Await;
 
 class ShowScoreboard extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
-    private ScoreboardPlaceholder $scoreboard;
+    private PlayerArgument $player;
+    private ScoreboardArgument $scoreboard;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         parent::__construct(self::SHOW_SCOREBOARD, FlowItemCategory::SCOREBOARD);
 
-        $this->player = new PlayerPlaceholder("player", $player);
-        $this->scoreboard = new ScoreboardPlaceholder("scoreboard", $scoreboard);
+        $this->player = new PlayerArgument("player", $player);
+        $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,7 +36,7 @@ class ShowScoreboard extends FlowItem {
         return [$this->player->get(), $this->scoreboard->get()];
     }
 
-    public function getScoreboard(): ScoreboardPlaceholder {
+    public function getScoreboard(): ScoreboardArgument {
         return $this->scoreboard;
     }
 
@@ -44,7 +44,7 @@ class ShowScoreboard extends FlowItem {
         return $this->player->get() !== "" and $this->scoreboard->isNotEmpty();
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

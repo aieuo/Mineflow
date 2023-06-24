@@ -10,19 +10,19 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use SOFe\AwaitGenerator\Await;
 
 class ClearInventory extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(string $player = "") {
         parent::__construct(self::CLEAR_INVENTORY, FlowItemCategory::INVENTORY);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,7 +37,7 @@ class ClearInventory extends FlowItem {
         return $this->player->get() !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

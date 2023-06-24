@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
@@ -22,12 +22,12 @@ class GetBlock extends FlowItem {
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
-    private PositionPlaceholder $position;
+    private PositionArgument $position;
 
     public function __construct(string $position = "", private string $resultName = "block") {
         parent::__construct(self::GET_BLOCK, FlowItemCategory::WORLD);
 
-        $this->position = new PositionPlaceholder("position", $position);
+        $this->position = new PositionArgument("position", $position);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -38,7 +38,7 @@ class GetBlock extends FlowItem {
         return [$this->position->get(), $this->getResultName()];
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 

@@ -11,20 +11,20 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ConfigPlaceholder;
+use aieuo\mineflow\flowItem\argument\ConfigArgument;
 use SOFe\AwaitGenerator\Await;
 
 class SaveConfigFile extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private ConfigPlaceholder $config;
+    private ConfigArgument $config;
 
     public function __construct(string $config = "") {
         parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
-        $this->config = new ConfigPlaceholder("config", $config);
+        $this->config = new ConfigArgument("config", $config);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,7 +35,7 @@ class SaveConfigFile extends FlowItem {
         return [$this->config->get()];
     }
 
-    public function getConfig(): ConfigPlaceholder {
+    public function getConfig(): ConfigArgument {
         return $this->config;
     }
 

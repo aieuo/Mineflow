@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use pocketmine\entity\Living;
 use SOFe\AwaitGenerator\Await;
 
@@ -19,14 +19,14 @@ class LookAt extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PositionPlaceholder $position;
-    private EntityPlaceholder $entity;
+    private PositionArgument $position;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "", string $position = "") {
         parent::__construct(self::LOOK_AT, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
-        $this->position = new PositionPlaceholder("position", $position);
+        $this->entity = new EntityArgument("entity", $entity);
+        $this->position = new PositionArgument("position", $position);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,11 +37,11 @@ class LookAt extends FlowItem {
         return [$this->entity->get(), $this->position->get()];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 

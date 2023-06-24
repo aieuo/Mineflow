@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -19,14 +19,14 @@ class SetItem extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
-    private ItemPlaceholder $item;
+    private PlayerArgument $player;
+    private ItemArgument $item;
 
     public function __construct(string $player = "", string $item = "", private string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
-        $this->player = new PlayerPlaceholder("player", $player);
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->player = new PlayerArgument("player", $player);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,7 +37,7 @@ class SetItem extends FlowItem {
         return [$this->player->get(), $this->item->get(), $this->getIndex()];
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 
@@ -53,7 +53,7 @@ class SetItem extends FlowItem {
         return $this->player->get() !== "" and $this->item->isNotEmpty() and $this->index !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

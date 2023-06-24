@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\Vector3Placeholder;
+use aieuo\mineflow\flowItem\argument\Vector3Argument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
@@ -23,8 +23,8 @@ class CreateAABBByVector3Variable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private Vector3Placeholder $pos1;
-    private Vector3Placeholder $pos2;
+    private Vector3Argument $pos1;
+    private Vector3Argument $pos2;
 
     public function __construct(
         string         $pos1 = "",
@@ -33,8 +33,8 @@ class CreateAABBByVector3Variable extends FlowItem {
     ) {
         parent::__construct(self::CREATE_AABB_BY_VECTOR3_VARIABLE, FlowItemCategory::WORLD);
 
-        $this->pos1 = new Vector3Placeholder("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1");
-        $this->pos2 = new Vector3Placeholder("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1");
+        $this->pos1 = new Vector3Argument("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1");
+        $this->pos2 = new Vector3Argument("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1");
     }
 
     public function getDetailDefaultReplaces(): array {

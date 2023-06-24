@@ -15,7 +15,7 @@ use pocketmine\utils\Config;
 
 #[Deprecated]
 /**
- * @see ConfigPlaceholder
+ * @see ConfigArgument
  */
 trait ConfigFileFlowItemTrait {
 

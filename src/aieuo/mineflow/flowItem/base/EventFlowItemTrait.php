@@ -15,7 +15,7 @@ use pocketmine\event\Event;
 
 #[Deprecated]
 /**
- * @see EventPlaceholder
+ * @see EventArgument
  */
 trait EventFlowItemTrait {
 

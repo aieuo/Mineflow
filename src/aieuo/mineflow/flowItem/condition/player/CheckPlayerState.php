@@ -10,13 +10,13 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 
 abstract class CheckPlayerState extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    protected PlayerPlaceholder $player;
+    protected PlayerArgument $player;
 
     public function __construct(
         string $id,
@@ -25,7 +25,7 @@ abstract class CheckPlayerState extends FlowItem implements Condition {
     ) {
         parent::__construct($id, $category);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -40,7 +40,7 @@ abstract class CheckPlayerState extends FlowItem implements Condition {
         return $this->player->get() !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

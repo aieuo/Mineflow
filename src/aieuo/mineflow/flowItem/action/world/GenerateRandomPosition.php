@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -25,8 +25,8 @@ class GenerateRandomPosition extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private PositionPlaceholder $position1;
-    private PositionPlaceholder $position2;
+    private PositionArgument $position1;
+    private PositionArgument $position2;
 
     public function __construct(
         string         $min = "",
@@ -35,8 +35,8 @@ class GenerateRandomPosition extends FlowItem {
     ) {
         parent::__construct(self::GENERATE_RANDOM_POSITION, FlowItemCategory::WORLD);
 
-        $this->position1 = new PositionPlaceholder("min", $min, "@action.form.target.position 1");
-        $this->position2 = new PositionPlaceholder("max", $max, "@action.form.target.position 2");
+        $this->position1 = new PositionArgument("min", $min, "@action.form.target.position 1");
+        $this->position2 = new PositionArgument("max", $max, "@action.form.target.position 2");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -47,11 +47,11 @@ class GenerateRandomPosition extends FlowItem {
         return [$this->position1->get(), $this->position2->get(), $this->getResultName()];
     }
 
-    public function getPosition1(): PositionPlaceholder {
+    public function getPosition1(): PositionArgument {
         return $this->position1;
     }
 
-    public function getPosition2(): PositionPlaceholder {
+    public function getPosition2(): PositionArgument {
         return $this->position2;
     }
 

@@ -10,22 +10,22 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use SOFe\AwaitGenerator\Await;
 
 class DropItem extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PositionPlaceholder $position;
-    private ItemPlaceholder $item;
+    private PositionArgument $position;
+    private ItemArgument $item;
 
     public function __construct(string $position = "", string $item = "") {
         parent::__construct(self::DROP_ITEM, FlowItemCategory::WORLD);
 
-        $this->position = new PositionPlaceholder("position", $position);
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->position = new PositionArgument("position", $position);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -40,11 +40,11 @@ class DropItem extends FlowItem {
         return $this->position->isNotEmpty() and $this->item->isNotEmpty();
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 

@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -22,8 +22,8 @@ class GetDistance extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private PositionPlaceholder $position1;
-    private PositionPlaceholder $position2;
+    private PositionArgument $position1;
+    private PositionArgument $position2;
 
     public function __construct(
         string         $pos1 = "",
@@ -32,8 +32,8 @@ class GetDistance extends FlowItem {
     ) {
         parent::__construct(self::GET_DISTANCE, FlowItemCategory::WORLD);
 
-        $this->position1 = new PositionPlaceholder("pos1", $pos1);
-        $this->position2 = new PositionPlaceholder("pos2", $pos2);
+        $this->position1 = new PositionArgument("pos1", $pos1);
+        $this->position2 = new PositionArgument("pos2", $pos2);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -44,11 +44,11 @@ class GetDistance extends FlowItem {
         return [$this->position1->get(), $this->position2->get(), $this->getResultName()];
     }
 
-    public function getPosition1(): PositionPlaceholder {
+    public function getPosition1(): PositionArgument {
         return $this->position1;
     }
 
-    public function getPosition2(): PositionPlaceholder {
+    public function getPosition2(): PositionArgument {
         return $this->position2;
     }
 

@@ -6,7 +6,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\Vector3Placeholder;
+use aieuo\mineflow\flowItem\argument\Vector3Argument;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\Vector3Variable;
 use JetBrains\PhpStorm\Deprecated;
@@ -14,7 +14,7 @@ use pocketmine\math\Vector3;
 
 #[Deprecated]
 /**
- * @see Vector3Placeholder
+ * @see Vector3Argument
  */
 trait Vector3FlowItemTrait {
 

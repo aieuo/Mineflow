@@ -2,14 +2,14 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\placeholder;
+namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Utils;
 
-class NumberPlaceholder extends Placeholder {
+class NumberArgument extends FlowItemArgument {
 
     /**
      * @param string $name

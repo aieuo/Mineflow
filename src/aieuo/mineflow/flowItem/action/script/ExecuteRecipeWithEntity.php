@@ -7,18 +7,18 @@ namespace aieuo\mineflow\flowItem\action\script;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
 
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
 
-        $this->entity = new EntityPlaceholder("target", $entity);
+        $this->entity = new EntityArgument("target", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -29,7 +29,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
         return [$this->getRecipeName(), $this->entity->get()];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

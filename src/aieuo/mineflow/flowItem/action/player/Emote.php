@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\HumanPlaceholder;
+use aieuo\mineflow\flowItem\argument\HumanArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -18,12 +18,12 @@ class Emote extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private HumanPlaceholder $human;
+    private HumanArgument $human;
 
     public function __construct(string $player = "", private string $emote = "") {
         parent::__construct(self::EMOTE, FlowItemCategory::PLAYER);
 
-        $this->human = new HumanPlaceholder("player", $player);
+        $this->human = new HumanArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -34,7 +34,7 @@ class Emote extends FlowItem {
         return [$this->human->get(), $this->getEmote()];
     }
 
-    public function getHuman(): HumanPlaceholder {
+    public function getHuman(): HumanArgument {
         return $this->human;
     }
 

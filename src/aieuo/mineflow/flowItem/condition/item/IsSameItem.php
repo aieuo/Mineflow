@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\GeneratorUtil;
@@ -21,14 +21,14 @@ class IsSameItem extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private ItemPlaceholder $item1;
-    private ItemPlaceholder $item2;
+    private ItemArgument $item1;
+    private ItemArgument $item2;
 
     public function __construct(string $item1 = "", string $item2 = "", private bool $checkCompound = false) {
         parent::__construct(FlowItemIds::IS_SAME_ITEM, FlowItemCategory::ITEM);
 
-        $this->item1 = new ItemPlaceholder("item1", $item1, "@action.form.target.item (1)");
-        $this->item2 = new ItemPlaceholder("item2", $item2, "@action.form.target.item (2)");
+        $this->item1 = new ItemArgument("item1", $item1, "@action.form.target.item (1)");
+        $this->item2 = new ItemArgument("item2", $item2, "@action.form.target.item (2)");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -47,11 +47,11 @@ class IsSameItem extends FlowItem implements Condition {
         return $this->item1->isNotEmpty() and $this->item2->isNotEmpty();
     }
 
-    public function getItem1(): ItemPlaceholder {
+    public function getItem1(): ItemArgument {
         return $this->item1;
     }
 
-    public function getItem2(): ItemPlaceholder {
+    public function getItem2(): ItemArgument {
         return $this->item2;
     }
 

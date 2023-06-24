@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\player;
 
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,7 +12,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
 
@@ -19,12 +19,12 @@ class IsOp extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(string $player = "") {
         parent::__construct(self::IS_OP, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -39,7 +39,7 @@ class IsOp extends FlowItem implements Condition {
         return $this->player->get() !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -20,7 +20,7 @@ class AllowFlight extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
     
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     private bool $allow;
 
@@ -28,7 +28,7 @@ class AllowFlight extends FlowItem {
         parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
         $this->setPermissions([FlowItemPermission::CHEAT]);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
         $this->allow = $allow === "true";
     }
 
@@ -52,7 +52,7 @@ class AllowFlight extends FlowItem {
         return $this->player->get() !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

@@ -6,13 +6,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\EventPlaceholder;
+use aieuo\mineflow\flowItem\argument\EventArgument;
 use JetBrains\PhpStorm\Deprecated;
 use pocketmine\event\Event;
 
 #[Deprecated]
 /**
- * @see EventPlaceholder
+ * @see EventArgument
  */
 interface EventFlowItem {
 

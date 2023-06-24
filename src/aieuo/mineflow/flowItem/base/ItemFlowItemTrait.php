@@ -8,7 +8,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ItemVariable;
 use JetBrains\PhpStorm\Deprecated;
@@ -16,7 +16,7 @@ use pocketmine\item\Item;
 
 #[Deprecated]
 /**
- * @see ItemPlaceholder
+ * @see ItemArgument
  */
 trait ItemFlowItemTrait {
 

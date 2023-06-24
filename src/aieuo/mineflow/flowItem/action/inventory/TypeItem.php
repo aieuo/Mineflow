@@ -9,15 +9,15 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 
 abstract class TypeItem extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    protected PlayerPlaceholder $player;
-    protected ItemPlaceholder $item;
+    protected PlayerArgument $player;
+    protected ItemArgument $item;
 
     public function __construct(
         string $id,
@@ -27,8 +27,8 @@ abstract class TypeItem extends FlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->player = new PlayerPlaceholder("player", $player);
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->player = new PlayerArgument("player", $player);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -43,11 +43,11 @@ abstract class TypeItem extends FlowItem {
         return $this->player->get() !== "" and $this->item->isNotEmpty();
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

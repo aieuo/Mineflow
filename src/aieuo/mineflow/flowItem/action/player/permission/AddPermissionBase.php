@@ -10,14 +10,14 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 
 abstract class AddPermissionBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    protected PlayerPlaceholder $player;
+    protected PlayerArgument $player;
 
     public function __construct(
         string $id,
@@ -28,7 +28,7 @@ abstract class AddPermissionBase extends FlowItem {
         parent::__construct($id, $category);
         $this->setPermissions([FlowItemPermission::PERMISSION]);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -51,7 +51,7 @@ abstract class AddPermissionBase extends FlowItem {
         return $this->player->get() !== "" and $this->playerPermission !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

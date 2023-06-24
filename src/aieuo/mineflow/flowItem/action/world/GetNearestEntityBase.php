@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\variable\DummyVariable;
@@ -23,7 +23,7 @@ abstract class GetNearestEntityBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    protected PositionPlaceholder $position;
+    protected PositionArgument $position;
 
     public function __construct(
         string         $id,
@@ -34,7 +34,7 @@ abstract class GetNearestEntityBase extends FlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->position = new PositionPlaceholder("position", $position);
+        $this->position = new PositionArgument("position", $position);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -45,7 +45,7 @@ abstract class GetNearestEntityBase extends FlowItem {
         return [$this->position->get(), $this->getResultName()];
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 

@@ -4,47 +4,47 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\NumberPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
-use aieuo\mineflow\flowItem\placeholder\StringPlaceholder;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use SOFe\AwaitGenerator\Await;
 
 class PlaySoundAt extends SimpleAction {
 
-    private PositionPlaceholder $position;
-    private StringPlaceholder $sound;
-    private NumberPlaceholder $volume;
-    private NumberPlaceholder $pitch;
+    private PositionArgument $position;
+    private StringArgument $sound;
+    private NumberArgument $volume;
+    private NumberArgument $pitch;
 
     public function __construct(string $position = "", string $sound = "", float $volume = 1, float $pitch = 1) {
         parent::__construct(self::PLAY_SOUND_AT, FlowItemCategory::WORLD);
 
-        $this->setPlaceholders([
-            $this->position = new PositionPlaceholder("position", $position),
-            $this->sound = new StringPlaceholder("sound", $sound, example: "random.levelup"),
-            $this->volume = new NumberPlaceholder("volume", $volume, example: "1"),
-            $this->pitch = new NumberPlaceholder("pitch", $pitch, example: "1"),
+        $this->setArguments([
+            $this->position = new PositionArgument("position", $position),
+            $this->sound = new StringArgument("sound", $sound, example: "random.levelup"),
+            $this->volume = new NumberArgument("volume", $volume, example: "1"),
+            $this->pitch = new NumberArgument("pitch", $pitch, example: "1"),
         ]);
     }
 
-    public function getPosition(): PositionPlaceholder {
+    public function getPosition(): PositionArgument {
         return $this->position;
     }
 
-    public function getSound(): StringPlaceholder {
+    public function getSound(): StringArgument {
         return $this->sound;
     }
 
-    public function getVolume(): NumberPlaceholder {
+    public function getVolume(): NumberArgument {
         return $this->volume;
     }
 
-    public function getPitch(): NumberPlaceholder {
+    public function getPitch(): NumberArgument {
         return $this->pitch;
     }
 

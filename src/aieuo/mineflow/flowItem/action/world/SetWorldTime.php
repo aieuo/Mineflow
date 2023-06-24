@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\WorldPlaceholder;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\world\World;
 use SOFe\AwaitGenerator\Await;
@@ -19,7 +19,7 @@ class SetWorldTime extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private WorldPlaceholder $world;
+    private WorldArgument $world;
 
     public function __construct(
         string         $worldName = "",
@@ -27,7 +27,7 @@ class SetWorldTime extends FlowItem {
     ) {
         parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
 
-        $this->world = new WorldPlaceholder("world", $worldName);
+        $this->world = new WorldArgument("world", $worldName);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -38,7 +38,7 @@ class SetWorldTime extends FlowItem {
         return [$this->world->get(), $this->getTime()];
     }
 
-    public function getWorld(): WorldPlaceholder {
+    public function getWorld(): WorldArgument {
         return $this->world;
     }
 

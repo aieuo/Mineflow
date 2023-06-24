@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -28,7 +28,7 @@ class SendInputForm extends FlowItem {
 
     private bool $resendOnClose = false;
     
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(
         string         $player = "",
@@ -37,7 +37,7 @@ class SendInputForm extends FlowItem {
     ) {
         parent::__construct(self::SEND_INPUT, FlowItemCategory::FORM);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -68,7 +68,7 @@ class SendInputForm extends FlowItem {
         return $this->player->get() !== "" and $this->formText !== "" and $this->resultName !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

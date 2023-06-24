@@ -13,7 +13,7 @@ use JetBrains\PhpStorm\Deprecated;
 
 #[Deprecated]
 /**
- * @see ScoreboardPlaceholder
+ * @see ScoreboardArgument
  */
 interface ScoreboardFlowItem {
 

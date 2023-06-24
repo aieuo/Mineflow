@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\placeholder\PositionPlaceholder;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -30,15 +30,15 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
 
     private string $counterName = "pos";
 
-    private PositionPlaceholder $position1;
-    private PositionPlaceholder $position2;
+    private PositionArgument $position1;
+    private PositionArgument $position2;
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
         parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
-        $this->position1 = new PositionPlaceholder("pos1", $pos1, "@action.foreachPosition.form.pos1");
-        $this->position2 = new PositionPlaceholder("pos2", $pos2, "@action.foreachPosition.form.pos2");
+        $this->position1 = new PositionArgument("pos1", $pos1, "@action.foreachPosition.form.pos1");
+        $this->position2 = new PositionArgument("pos2", $pos2, "@action.foreachPosition.form.pos2");
         $this->setActions($actions);
         $this->setCustomName($customName);
     }
@@ -54,11 +54,11 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
         return implode("\n", $details);
     }
 
-    public function getPosition1(): PositionPlaceholder {
+    public function getPosition1(): PositionArgument {
         return $this->position1;
     }
 
-    public function getPosition2(): PositionPlaceholder {
+    public function getPosition2(): PositionArgument {
         return $this->position2;
     }
 

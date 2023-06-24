@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -20,12 +20,12 @@ class SetItemName extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemPlaceholder $item;
+    private ItemArgument $item;
 
     public function __construct(string $item = "", private string $itemName = "") {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,7 +36,7 @@ class SetItemName extends FlowItem {
         return [$this->item->get(), $this->getItemName()];
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

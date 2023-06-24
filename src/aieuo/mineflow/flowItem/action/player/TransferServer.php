@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -17,12 +17,12 @@ class TransferServer extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(string $player = "", private string $ip = "", private string $port = "19132") {
         parent::__construct(self::TRANSFER_SERVER, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -53,7 +53,7 @@ class TransferServer extends FlowItem {
         return $this->player->get() !== "" and $this->ip !== "" and $this->port !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

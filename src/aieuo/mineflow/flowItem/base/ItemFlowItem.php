@@ -13,7 +13,7 @@ use pocketmine\item\Item;
 
 #[Deprecated]
 /**
- * @see ItemPlaceholder
+ * @see ItemArgument
  */
 interface ItemFlowItem {
 

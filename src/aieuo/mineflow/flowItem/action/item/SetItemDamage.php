@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 use SOFe\AwaitGenerator\Await;
@@ -21,12 +21,12 @@ class SetItemDamage extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemPlaceholder $item;
+    private ItemArgument $item;
 
     public function __construct(string $item = "", private string $damage = "") {
         parent::__construct(self::SET_ITEM_DAMAGE, FlowItemCategory::ITEM);
 
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->item = new ItemArgument("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,7 +37,7 @@ class SetItemDamage extends FlowItem {
         return [$this->item->get(), $this->getDamage()];
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

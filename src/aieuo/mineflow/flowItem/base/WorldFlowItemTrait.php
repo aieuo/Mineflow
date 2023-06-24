@@ -8,7 +8,7 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\WorldPlaceholder;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\WorldVariable;
 use JetBrains\PhpStorm\Deprecated;
@@ -16,7 +16,7 @@ use pocketmine\world\World;
 
 #[Deprecated]
 /**
- * @see WorldPlaceholder
+ * @see WorldArgument
  */
 trait WorldFlowItemTrait {
 

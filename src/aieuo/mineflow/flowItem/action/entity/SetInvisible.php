@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -18,12 +18,12 @@ class SetInvisible extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "", private bool $invisible = true) {
         parent::__construct(self::SET_INVISIBLE, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,7 +37,7 @@ class SetInvisible extends FlowItem {
         ];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

@@ -9,14 +9,14 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 
 abstract class AddXpBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    protected PlayerPlaceholder $player;
+    protected PlayerArgument $player;
 
     public function __construct(
         string $id,
@@ -26,7 +26,7 @@ abstract class AddXpBase extends FlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -49,7 +49,7 @@ abstract class AddXpBase extends FlowItem {
         return $this->xp !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

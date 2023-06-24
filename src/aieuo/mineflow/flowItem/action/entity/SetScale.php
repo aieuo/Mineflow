@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -18,12 +18,12 @@ class SetScale extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "", private string $scale = "") {
         parent::__construct(self::SET_SCALE, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -34,7 +34,7 @@ class SetScale extends FlowItem {
         return [$this->entity->get(), $this->getScale()];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

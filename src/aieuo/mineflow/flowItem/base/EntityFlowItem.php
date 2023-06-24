@@ -8,13 +8,13 @@ namespace aieuo\mineflow\flowItem\base;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use JetBrains\PhpStorm\Deprecated;
 use pocketmine\entity\Entity;
 
 #[Deprecated]
 /**
- * @see EntityPlaceholder
+ * @see EntityArgument
  */
 interface EntityFlowItem {
 

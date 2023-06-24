@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EventPlaceholder;
+use aieuo\mineflow\flowItem\argument\EventArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\event\PlayerChatEventTrigger;
 use pocketmine\event\player\PlayerChatEvent;
@@ -20,12 +20,12 @@ class PlayerChatEventSetMessage extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private EventPlaceholder $event;
+    private EventArgument $event;
 
     public function __construct(string $event = "event", private string $message = "") {
         parent::__construct(self::PLAYER_CHAT_EVENT_SET_MESSAGE, FlowItemCategory::PLAYER_CHAT_EVENT);
 
-        $this->event = new EventPlaceholder("event", $event);
+        $this->event = new EventArgument("event", $event);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,7 +36,7 @@ class PlayerChatEventSetMessage extends FlowItem {
         return [$this->event->get(), $this->getMessage()];
     }
 
-    public function getEvent(): EventPlaceholder {
+    public function getEvent(): EventArgument {
         return $this->event;
     }
 

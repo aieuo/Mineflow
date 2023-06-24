@@ -12,7 +12,7 @@ use pocketmine\entity\Human;
 
 #[Deprecated]
 /**
- * @see HumanPlaceholder
+ * @see HumanArgument
  */
 interface HumanFlowItem {
 

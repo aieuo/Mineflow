@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\java\GameModeIdMap;
@@ -28,12 +28,12 @@ class Gamemode extends FlowItem implements Condition {
         "action.gamemode.spectator"
     ];
 
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     public function __construct(string $player = "", private int $gamemode = 0) {
         parent::__construct(self::GAMEMODE, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -44,7 +44,7 @@ class Gamemode extends FlowItem implements Condition {
         return [$this->player->get(), Language::get($this->gamemodes[$this->getGamemode()])];
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

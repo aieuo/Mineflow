@@ -2,14 +2,14 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\placeholder;
+namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 
-class StringPlaceholder extends Placeholder {
+class StringArgument extends FlowItemArgument {
 
     public function __construct(
         string                  $name,

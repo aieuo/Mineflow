@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\placeholder;
+namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\variable\Variable;
 
-abstract class Placeholder {
+abstract class FlowItemArgument {
 
     public function __construct(
         private readonly string $name,

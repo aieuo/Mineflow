@@ -13,7 +13,7 @@ use pocketmine\math\AxisAlignedBB;
 
 #[Deprecated]
 /**
- * @see AxisAlignedBBPlaceholder
+ * @see AxisAlignedBBArgument
  */
 trait AxisAlignedBBFlowItemTrait {
 

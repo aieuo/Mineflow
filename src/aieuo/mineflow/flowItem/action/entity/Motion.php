@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\math\Vector3;
 use SOFe\AwaitGenerator\Await;
@@ -23,12 +23,12 @@ class Motion extends FlowItem {
     private string $x = "0";
     private string $y = "0";
     private string $z = "0";
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(string $entity = "", string $x = "0", string $y = "0", string $z = "0") {
         parent::__construct(self::MOTION, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
         $this->setPosition($x, $y, $z);
     }
 
@@ -40,7 +40,7 @@ class Motion extends FlowItem {
         return array_merge([$this->entity->get()], $this->getPosition());
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

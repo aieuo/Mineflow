@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ScoreboardPlaceholder;
+use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -18,12 +18,12 @@ class RemoveScoreboardScore extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private ScoreboardPlaceholder $scoreboard;
+    private ScoreboardArgument $scoreboard;
 
     public function __construct(string $scoreboard = "", private string $scoreName = "") {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
-        $this->scoreboard = new ScoreboardPlaceholder("scoreboard", $scoreboard);
+        $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -34,7 +34,7 @@ class RemoveScoreboardScore extends FlowItem {
         return [$this->scoreboard->get(), $this->getScoreName()];
     }
 
-    public function getScoreboard(): ScoreboardPlaceholder {
+    public function getScoreboard(): ScoreboardArgument {
         return $this->scoreboard;
     }
 

@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 use function array_filter;
@@ -25,14 +25,14 @@ class SetItemLore extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemPlaceholder $item;
+    private ItemArgument $item;
 
     private array $lore;
 
     public function __construct(string $item = "", string $lore = "") {
         parent::__construct(self::SET_ITEM_LORE, FlowItemCategory::ITEM);
 
-        $this->item = new ItemPlaceholder("item", $item);
+        $this->item = new ItemArgument("item", $item);
         $this->lore = array_filter(array_map("trim", explode(";", $lore)), fn(string $t) => $t !== "");
     }
 
@@ -44,7 +44,7 @@ class SetItemLore extends FlowItem {
         return [$this->item->get(), implode(";", $this->getLore())];
     }
 
-    public function getItem(): ItemPlaceholder {
+    public function getItem(): ItemArgument {
         return $this->item;
     }
 

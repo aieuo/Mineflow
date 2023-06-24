@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -19,14 +19,14 @@ class AllowClimbWalls extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
     
-    private PlayerPlaceholder $player;
+    private PlayerArgument $player;
 
     private bool $allow;
 
     public function __construct(string $player = "", string $allow = "true") {
         parent::__construct(self::ALLOW_CLIMB_WALLS, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerPlaceholder("player", $player);
+        $this->player = new PlayerArgument("player", $player);
         $this->allow = $allow === "true";
     }
 
@@ -50,7 +50,7 @@ class AllowClimbWalls extends FlowItem {
         return $this->player->get() !== "";
     }
 
-    public function getPlayer(): PlayerPlaceholder {
+    public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 

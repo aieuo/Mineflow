@@ -10,13 +10,13 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 
 abstract class CheckEntityState extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    protected EntityPlaceholder $entity;
+    protected EntityArgument $entity;
 
     public function __construct(
         string $id,
@@ -25,7 +25,7 @@ abstract class CheckEntityState extends FlowItem implements Condition {
     ) {
         parent::__construct($id, $category);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -40,7 +40,7 @@ abstract class CheckEntityState extends FlowItem implements Condition {
         return $this->entity->get() !== null;
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

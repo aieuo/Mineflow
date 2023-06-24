@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\ConfigPlaceholder;
+use aieuo\mineflow\flowItem\argument\ConfigArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
@@ -19,12 +19,12 @@ class ExistsConfigData extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private ConfigPlaceholder $config;
+    private ConfigArgument $config;
 
     public function __construct(string $config = "", private string $key = "") {
         parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
 
-        $this->config = new ConfigPlaceholder("config", $config);
+        $this->config = new ConfigArgument("config", $config);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,7 +35,7 @@ class ExistsConfigData extends FlowItem implements Condition {
         return [$this->config->get(), $this->getKey()];
     }
 
-    public function getConfig(): ConfigPlaceholder {
+    public function getConfig(): ConfigArgument {
         return $this->config;
     }
 

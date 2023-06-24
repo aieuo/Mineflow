@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use pocketmine\event\entity\EntityDamageEvent;
 use SOFe\AwaitGenerator\Await;
 
@@ -19,7 +19,7 @@ class AddDamage extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private EntityPlaceholder $entity;
+    private EntityArgument $entity;
 
     public function __construct(
         string         $entity = "",
@@ -28,7 +28,7 @@ class AddDamage extends FlowItem {
     ) {
         parent::__construct(self::ADD_DAMAGE, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityPlaceholder("entity", $entity);
+        $this->entity = new EntityArgument("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -39,7 +39,7 @@ class AddDamage extends FlowItem {
         return [$this->entity->get(), $this->getDamage()];
     }
 
-    public function getEntity(): EntityPlaceholder {
+    public function getEntity(): EntityArgument {
         return $this->entity;
     }
 

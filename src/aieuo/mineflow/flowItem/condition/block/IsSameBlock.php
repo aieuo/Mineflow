@@ -12,21 +12,21 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\placeholder\BlockPlaceholder;
+use aieuo\mineflow\flowItem\argument\BlockArgument;
 use SOFe\AwaitGenerator\GeneratorUtil;
 
 class IsSameBlock extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private BlockPlaceholder $block1;
-    private BlockPlaceholder $block2;
+    private BlockArgument $block1;
+    private BlockArgument $block2;
 
     public function __construct(string $block1 = "", string $block2 = "") {
         parent::__construct(FlowItemIds::IS_SAME_BLOCk, FlowItemCategory::BLOCK);
 
-        $this->block1 = new BlockPlaceholder("block1", $block1, "@action.form.target.block (1)");
-        $this->block2 = new BlockPlaceholder("block2", $block2, "@action.form.target.block (2)");
+        $this->block1 = new BlockArgument("block1", $block1, "@action.form.target.block (1)");
+        $this->block2 = new BlockArgument("block2", $block2, "@action.form.target.block (2)");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,11 +37,11 @@ class IsSameBlock extends FlowItem implements Condition {
         return [$this->block1->get(), $this->block2->get()];
     }
 
-    public function getBlock1(): BlockPlaceholder {
+    public function getBlock1(): BlockArgument {
         return $this->block1;
     }
 
-    public function getBlock2(): BlockPlaceholder {
+    public function getBlock2(): BlockArgument {
         return $this->block2;
     }
 

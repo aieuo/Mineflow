@@ -15,7 +15,7 @@ use pocketmine\block\Block;
 
 #[Deprecated]
 /**
- * @see BlockPlaceholder
+ * @see BlockArgument
  */
 trait BlockFlowItemTrait {
 

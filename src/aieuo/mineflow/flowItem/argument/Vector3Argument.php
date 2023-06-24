@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace aieuo\mineflow\flowItem\placeholder;
+namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\Vector3Variable;
 use pocketmine\math\Vector3;
 
-class Vector3Placeholder extends Placeholder {
+class Vector3Argument extends FlowItemArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.vector3", $optional);

@@ -13,7 +13,7 @@ use pocketmine\world\World;
 
 #[Deprecated]
 /**
- * @see WorldPlaceholder
+ * @see WorldArgument
  */
 interface WorldFlowItem {
 
