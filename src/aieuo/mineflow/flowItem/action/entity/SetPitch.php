@@ -5,35 +5,38 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
 
-class SetPitch extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class SetPitch extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $entity = "", private string $pitch = "") {
         parent::__construct(self::SET_PITCH, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity", "pitch"];
+        return [$this->entity->getName(), "pitch"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getPitch()];
+        return [$this->entity->get(), $this->getPitch()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function setPitch(string $pitch): void {
@@ -45,12 +48,12 @@ class SetPitch extends FlowItem implements EntityFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->pitch !== "";
+        return $this->entity->isNotEmpty() and $this->pitch !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $pitch = $this->getFloat($source->replaceVariables($this->getPitch()));
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         $entity->setRotation($entity->getLocation()->getYaw(), $pitch);
         if ($entity instanceof Player) $entity->teleport($entity->getPosition(), $entity->getLocation()->getYaw(), $pitch);
@@ -60,17 +63,17 @@ class SetPitch extends FlowItem implements EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
             new ExampleNumberInput("@action.setPitch.form.pitch", "180", $this->getPitch(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
         $this->setPitch($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getPitch()];
+        return [$this->entity->get(), $this->getPitch()];
     }
 }

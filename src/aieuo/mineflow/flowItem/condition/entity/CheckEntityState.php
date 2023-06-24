@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 
-abstract class CheckEntityState extends FlowItem implements Condition, EntityFlowItem {
-    use EntityFlowItemTrait;
+abstract class CheckEntityState extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    protected EntityPlaceholder $entity;
 
     public function __construct(
         string $id,
@@ -26,32 +25,36 @@ abstract class CheckEntityState extends FlowItem implements Condition, EntityFlo
     ) {
         parent::__construct($id, $category);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity"];
+        return [$this->entity->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName()];
+        return [$this->entity->get()];
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== null;
+        return $this->entity->get() !== null;
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables),
+            $this->entity->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName()];
+        return [$this->entity->get()];
     }
 }

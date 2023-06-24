@@ -3,43 +3,46 @@
 namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use pocketmine\entity\Human;
 use SOFe\AwaitGenerator\Await;
 
-class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
-    use EntityFlowItemTrait;
+class IsSneaking extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $entity = "") {
         parent::__construct(self::IS_SNEAKING, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("target", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["target"];
+        return [$this->entity->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName()];
+        return [$this->entity->get()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "";
+        return $this->entity->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         yield Await::ALL;
         return $entity instanceof Human and $entity->isSneaking();
@@ -47,15 +50,15 @@ class IsSneaking extends FlowItem implements Condition, EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        if (isset($content[0])) $this->setEntityVariableName($content[0]);
+        if (isset($content[0])) $this->entity->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName()];
+        return [$this->entity->get()];
     }
 }

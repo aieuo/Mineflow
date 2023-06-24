@@ -4,40 +4,43 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
-class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("target", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["name", "target"];
+        return ["name", $this->entity->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getRecipeName(), $this->getEntityVariableName()];
+        return [$this->getRecipeName(), $this->entity->get()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function isDataValid(): bool {
-        return $this->getRecipeName() !== "" and $this->getEntityVariableName() !== "";
+        return $this->getRecipeName() !== "" and $this->entity->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe($source);
 
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         $recipe->execute($entity, $source->getEvent(), $source->getVariables());
 
@@ -47,7 +50,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->clear();
         });
@@ -55,10 +58,10 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase implements EntityFlowIte
 
     public function loadSaveData(array $content): void {
         $this->setRecipeName($content[0]);
-        $this->setEntityVariableName($content[1]);
+        $this->entity->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getRecipeName(), $this->getEntityVariableName()];
+        return [$this->getRecipeName(), $this->entity->get()];
     }
 }

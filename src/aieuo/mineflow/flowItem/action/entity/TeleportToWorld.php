@@ -6,37 +6,40 @@ namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
 
-class TeleportToWorld extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class TeleportToWorld extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $entity = "", private string $worldName = "", private bool $safeSpawn = true) {
         parent::__construct(self::TELEPORT_TO_WORLD, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity", "world"];
+        return [$this->entity->getName(), "world"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getWorldName()];
+        return [$this->entity->get(), $this->getWorldName()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function setWorldName(string $worldName): void {
@@ -56,7 +59,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->worldName !== "";
+        return $this->entity->isNotEmpty() and $this->worldName !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -69,7 +72,7 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         $pos = $this->safeSpawn ? $world->getSafeSpawn() : $world->getSpawnLocation();
         $entity->teleport($pos);
@@ -79,19 +82,19 @@ class TeleportToWorld extends FlowItem implements EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
             new ExampleInput("@action.createPosition.form.world", "world", $this->getWorldName(), true),
             new Toggle("@action.teleportToWorld.form.safespawn", $this->isSafeSpawn()),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
         $this->setWorldName($content[1]);
         $this->setSafeSpawn($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getWorldName(), $this->isSafeSpawn()];
+        return [$this->entity->get(), $this->getWorldName(), $this->isSafeSpawn()];
     }
 }

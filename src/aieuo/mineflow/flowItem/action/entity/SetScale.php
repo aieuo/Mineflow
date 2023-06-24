@@ -5,34 +5,37 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use SOFe\AwaitGenerator\Await;
 
-class SetScale extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class SetScale extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $entity = "", private string $scale = "") {
         parent::__construct(self::SET_SCALE, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity", "scale"];
+        return [$this->entity->getName(), "scale"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getScale()];
+        return [$this->entity->get(), $this->getScale()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function setScale(string $scale): void {
@@ -44,12 +47,12 @@ class SetScale extends FlowItem implements EntityFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->scale !== "";
+        return $this->entity->isNotEmpty() and $this->scale !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $scale = $this->getFloat($source->replaceVariables($this->getScale()), min: 0, exclude: [0]);
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         $entity->setScale($scale);
 
@@ -58,17 +61,17 @@ class SetScale extends FlowItem implements EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
             new ExampleNumberInput("@action.setScale.form.scale", "1", $this->getScale(), true, 0, excludes: [0]),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
         $this->setScale($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getScale()];
+        return [$this->entity->get(), $this->getScale()];
     }
 }

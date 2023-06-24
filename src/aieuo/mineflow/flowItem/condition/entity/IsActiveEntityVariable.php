@@ -16,7 +16,7 @@ class IsActiveEntityVariable extends CheckEntityState {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         yield Await::ALL;
         return $entity->isAlive() and !$entity->isClosed() and !($entity instanceof Player and !$entity->isOnline());

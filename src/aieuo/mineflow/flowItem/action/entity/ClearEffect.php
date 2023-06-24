@@ -6,14 +6,12 @@ namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
@@ -21,23 +19,28 @@ use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
 use SOFe\AwaitGenerator\Await;
 
-class ClearEffect extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class ClearEffect extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $entity = "", private string $effectId = "") {
         parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity", "id"];
+        return [$this->entity->getName(), "id"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getEffectId()];
+        return [$this->entity->get(), $this->getEffectId()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function setEffectId(string $effectId): void {
@@ -49,7 +52,7 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->effectId !== "";
+        return $this->entity->isNotEmpty() and $this->effectId !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -59,7 +62,7 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
         if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         if ($entity instanceof Living) {
             $entity->getEffects()->remove($effect);
@@ -70,17 +73,17 @@ class ClearEffect extends FlowItem implements EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
             new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
         $this->setEffectId($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getEffectId()];
+        return [$this->entity->get(), $this->getEffectId()];
     }
 }

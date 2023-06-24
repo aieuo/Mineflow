@@ -15,7 +15,7 @@ class IsCreatureVariable extends CheckEntityState {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         yield Await::ALL;
         return $entity instanceof Living;

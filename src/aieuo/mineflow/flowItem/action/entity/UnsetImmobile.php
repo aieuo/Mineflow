@@ -5,41 +5,44 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use SOFe\AwaitGenerator\Await;
 
-class UnsetImmobile extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class UnsetImmobile extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private EntityPlaceholder $entity;
 
     public function __construct(string $entity = "") {
         parent::__construct(self::UNSET_IMMOBILE, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity"];
+        return [$this->entity->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName()];
+        return [$this->entity->get()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "";
+        return $this->entity->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         $entity->setNoClientPredictions(false);
 
@@ -48,15 +51,15 @@ class UnsetImmobile extends FlowItem implements EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName()];
+        return [$this->entity->get()];
     }
 }

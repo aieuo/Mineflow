@@ -6,16 +6,14 @@ namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\EntityPlaceholder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
@@ -25,8 +23,7 @@ use pocketmine\math\Facing;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
+class GetEntitySidePosition extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
@@ -72,6 +69,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         Facing::WEST,
         Facing::NORTH,
     ];
+    private EntityPlaceholder $entity;
 
     public function __construct(
         string         $entity = "",
@@ -81,15 +79,19 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     ) {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
-        $this->setEntityVariableName($entity);
+        $this->entity = new EntityPlaceholder("entity", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["entity", "direction", "step", "result"];
+        return [$this->entity->getName(), "direction", "step", "result"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+        return [$this->entity->get(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+    }
+
+    public function getEntity(): EntityPlaceholder {
+        return $this->entity;
     }
 
     public function setDirection(string $direction): void {
@@ -117,11 +119,11 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
+        return $this->entity->isNotEmpty() and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
         $side = $source->replaceVariables($this->getDirection());
         $step = $this->getInt($source->replaceVariables($this->getSteps()));
         $resultName = $source->replaceVariables($this->getResultName());
@@ -161,7 +163,7 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
+           $this->entity->createFormElement($variables),
             new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
             new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
@@ -171,14 +173,14 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
+        $this->entity->set($content[0]);
         $this->setDirection($content[1]);
         $this->setSteps($content[2]);
         $this->setResultName($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+        return [$this->entity->get(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
     }
 
     public function getAddingVariables(): array {

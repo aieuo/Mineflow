@@ -15,7 +15,7 @@ class SetHealth extends SetHealthBase {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $health = $this->getFloat($source->replaceVariables($this->getHealth()), min: 0);
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->entity->getOnlineEntity($source);
 
         $entity->setHealth($health);
 
