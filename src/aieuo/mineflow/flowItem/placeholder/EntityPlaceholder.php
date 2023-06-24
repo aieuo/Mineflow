@@ -22,7 +22,7 @@ class EntityPlaceholder extends Placeholder {
     /**
      * @throws InvalidPlaceholderValueException
      */
-    public function getHuman(FlowItemExecutor $executor): Entity {
+    public function getEntity(FlowItemExecutor $executor): Entity {
         $entity = $executor->replaceVariables($this->get());
 
         $variable = $executor->getVariable($entity);
@@ -37,7 +37,7 @@ class EntityPlaceholder extends Placeholder {
      * @throws InvalidPlaceholderValueException
      */
     public function getOnlineEntity(FlowItemExecutor $executor): Entity {
-        $entity = $this->getHuman($executor);
+        $entity = $this->getEntity($executor);
         if ($entity instanceof Player and !$entity->isOnline()) {
             throw new InvalidPlaceholderValueException(Language::get("action.error.entity.offline"));
         }
