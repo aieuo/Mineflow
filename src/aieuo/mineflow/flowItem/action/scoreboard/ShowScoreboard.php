@@ -5,37 +5,35 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\flowItem\placeholder\ScoreboardPlaceholder;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class ShowScoreboard extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class ShowScoreboard extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
+    private PlayerPlaceholder $player;
     private ScoreboardPlaceholder $scoreboard;
 
     public function __construct(string $player = "", string $scoreboard = "") {
         parent::__construct(self::SHOW_SCOREBOARD, FlowItemCategory::SCOREBOARD);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
         $this->scoreboard = new ScoreboardPlaceholder("scoreboard", $scoreboard);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", $this->scoreboard->getName()];
+        return [$this->player->getName(), $this->scoreboard->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->scoreboard->get()];
+        return [$this->player->get(), $this->scoreboard->get()];
     }
 
     public function getScoreboard(): ScoreboardPlaceholder {
@@ -43,11 +41,15 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->scoreboard->isNotEmpty();
+        return $this->player->get() !== "" and $this->scoreboard->isNotEmpty();
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
         $board = $this->scoreboard->getScoreboard($source);
 
         $board->show($player);
@@ -57,17 +59,17 @@ class ShowScoreboard extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             $this->scoreboard->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->scoreboard->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->scoreboard->get()];
+        return [$this->player->get(), $this->scoreboard->get()];
     }
 }

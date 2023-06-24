@@ -15,7 +15,7 @@ class CanAddItem extends TypeItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->item->getItem($source);
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         yield Await::ALL;
         return $player->getInventory()->canAddItem($item);

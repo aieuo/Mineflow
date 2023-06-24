@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player\message;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 
-abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+abstract class TypePlayerMessage extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    protected PlayerPlaceholder $player;
 
     public function __construct(
         string         $id,
@@ -27,15 +26,15 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "message"];
+        return [$this->player->getName(), "message"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getMessage()];
+        return [$this->player->get(), $this->getMessage()];
     }
 
     public function setMessage(string $message): void {
@@ -47,22 +46,26 @@ abstract class TypePlayerMessage extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->getMessage() !== "";
+        return $this->player->get() !== "" and $this->getMessage() !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleInput("@action.message.form.message", "aieuo", $this->getMessage(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName((string)$content[0]);
+        $this->player->set((string)$content[0]);
         $this->setMessage((string)$content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getMessage()];
+        return [$this->player->get(), $this->getMessage()];
     }
 }

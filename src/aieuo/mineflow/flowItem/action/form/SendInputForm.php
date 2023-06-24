@@ -5,31 +5,30 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\form;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
 
-class SendInputForm extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class SendInputForm extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
     private bool $resendOnClose = false;
+    
+    private PlayerPlaceholder $player;
 
     public function __construct(
         string         $player = "",
@@ -38,15 +37,15 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     ) {
         parent::__construct(self::SEND_INPUT, FlowItemCategory::FORM);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "text", "result"];
+        return [$this->player->getName(), "text", "result"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getFormText(), $this->getResultName()];
+        return [$this->player->get(), $this->getFormText(), $this->getResultName()];
     }
 
     public function setFormText(string $formText): void {
@@ -66,13 +65,17 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
+        return $this->player->get() !== "" and $this->formText !== "" and $this->resultName !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $text = $source->replaceVariables($this->getFormText());
         $resultName = $source->replaceVariables($this->getResultName());
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
             $this->sendForm($source, $player, $text, $resultName, $resolve);
@@ -94,7 +97,7 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
             new ExampleInput("@action.input.form.text", "aieuo", $this->getFormText(), true), // TODO: placeholder, default
             new Toggle("@action.input.form.resendOnClose", $this->resendOnClose),
@@ -102,14 +105,14 @@ class SendInputForm extends FlowItem implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->setResultName($content[1]);
         $this->setFormText($content[2]);
         $this->resendOnClose = $content[3];
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getResultName(), $this->getFormText(), $this->resendOnClose];
+        return [$this->player->get(), $this->getResultName(), $this->getFormText(), $this->resendOnClose];
     }
 
     public function getAddingVariables(): array {

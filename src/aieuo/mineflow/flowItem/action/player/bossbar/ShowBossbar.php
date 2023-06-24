@@ -5,26 +5,23 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player\bossbar;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
 use pocketmine\network\mcpe\protocol\types\BossBarColor;
 use SOFe\AwaitGenerator\Await;
 use function array_keys;
 use function array_search;
 
-class ShowBossbar extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class ShowBossbar extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
@@ -37,6 +34,8 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         "purple" => BossBarColor::PURPLE,
         "white" => BossBarColor::WHITE,
     ];
+    
+    private PlayerPlaceholder $player;
 
     public function __construct(
         string         $player = "",
@@ -48,15 +47,15 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     ) {
         parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::BOSSBAR);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "title", "max", "value", "color", "id"];
+        return [$this->player->getName(), "title", "max", "value", "color", "id"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getColor(), $this->getBarId()];
+        return [$this->player->get(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getColor(), $this->getBarId()];
     }
 
     public function setTitle(string $health): void {
@@ -100,7 +99,11 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->title !== "";
+        return $this->player->get() !== "" and $this->title !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -110,7 +113,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
         $id = $source->replaceVariables($this->getBarId());
         $color = $this->colors[$source->replaceVariables($this->getColor())] ?? BossBarColor::PURPLE;
 
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         Bossbar::add($player, $id, $title, $max, $value / $max, $color);
 
@@ -119,7 +122,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
             new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
             new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
@@ -131,7 +134,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->setTitle($content[1]);
         $this->setMax($content[2]);
         $this->setValue($content[3]);
@@ -141,7 +144,7 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
 
     public function serializeContents(): array {
         return [
-            $this->getPlayerVariableName(),
+            $this->player->get(),
             $this->getTitle(),
             $this->getMax(),
             $this->getValue(),

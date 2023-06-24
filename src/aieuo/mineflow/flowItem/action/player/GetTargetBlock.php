@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use SOFe\AwaitGenerator\Await;
 
-class GetTargetBlock extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class GetTargetBlock extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private PlayerPlaceholder $player;
 
     public function __construct(
         string         $player = "",
@@ -31,15 +30,15 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     ) {
         parent::__construct(self::GET_TARGET_BLOCK, FlowItemCategory::PLAYER);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "maxDistance", "result"];
+        return [$this->player->getName(), "maxDistance", "result"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()];
+        return [$this->player->get(), $this->getMax(), $this->getResultName()];
     }
 
     public function setMax(string $max): void {
@@ -59,13 +58,17 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->max !== "" and $this->resultName !== "";
+        return $this->player->get() !== "" and $this->max !== "" and $this->resultName !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $max = $this->getInt($source->replaceVariables($this->getMax()), 1);
         $result = $source->replaceVariables($this->getResultName());
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         $block = $player->getTargetBlock($max);
         $source->addVariable($result, new BlockVariable($block));
@@ -76,20 +79,20 @@ class GetTargetBlock extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleNumberInput("@action.getTargetBlock.form.max", "100", $this->getMax(), true),
             new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->setMax($content[1]);
         $this->setResultName($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getMax(), $this->getResultName()];
+        return [$this->player->get(), $this->getMax(), $this->getResultName()];
     }
 
     public function getAddingVariables(): array {

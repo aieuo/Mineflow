@@ -5,38 +5,36 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\inventory;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class SetItem extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class SetItem extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
+    private PlayerPlaceholder $player;
     private ItemPlaceholder $item;
 
     public function __construct(string $player = "", string $item = "", private string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
         $this->item = new ItemPlaceholder("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", $this->item->getName(), "index"];
+        return [$this->player->getName(), $this->item->getName(), "index"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->item->get(), $this->getIndex()];
+        return [$this->player->get(), $this->item->get(), $this->getIndex()];
     }
 
     public function getItem(): ItemPlaceholder {
@@ -52,12 +50,16 @@ class SetItem extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->item->isNotEmpty() and $this->index !== "";
+        return $this->player->get() !== "" and $this->item->isNotEmpty() and $this->index !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $index = $this->getInt($source->replaceVariables($this->getIndex()), 0);
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         $item = $this->item->getItem($source);
 
@@ -68,19 +70,19 @@ class SetItem extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             $this->item->createFormElement($variables),
             new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->item->set($content[1]);
         $this->setIndex($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->item->get(), $this->getIndex()];
+        return [$this->player->get(), $this->item->get(), $this->getIndex()];
     }
 }

@@ -5,35 +5,34 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\command;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
 
-class Command extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class Command extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private PlayerPlaceholder $player;
 
     public function __construct(string $player = "", private string $command = "") {
         parent::__construct(self::COMMAND, FlowItemCategory::COMMAND);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "command"];
+        return [$this->player->getName(), "command"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getCommand()];
+        return [$this->player->get(), $this->getCommand()];
     }
 
     public function setCommand(string $command): void {
@@ -45,12 +44,16 @@ class Command extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->command !== "";
+        return $this->player->get() !== "" and $this->command !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $command = $source->replaceVariables($this->getCommand());
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         Server::getInstance()->dispatchCommand($player, $command);
 
@@ -59,17 +62,17 @@ class Command extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleInput("@action.command.form.command", "command", $this->getCommand(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->setCommand($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getCommand()];
+        return [$this->player->get(), $this->getCommand()];
     }
 }

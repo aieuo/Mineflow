@@ -5,34 +5,33 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class SetFood extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+class SetFood extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    private PlayerPlaceholder $player;
 
     public function __construct(string $player = "", private string $food = "") {
         parent::__construct(self::SET_FOOD, FlowItemCategory::PLAYER);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "food"];
+        return [$this->player->getName(), "food"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getFood()];
+        return [$this->player->get(), $this->getFood()];
     }
 
     public function setFood(string $health): void {
@@ -44,12 +43,16 @@ class SetFood extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->food !== "";
+        return $this->player->get() !== "" and $this->food !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $health = $this->getInt($source->replaceVariables($this->getFood()), 0, 20);
-        $entity = $this->getOnlinePlayer($source);
+        $entity = $this->player->getOnlinePlayer($source);
 
         $entity->getHungerManager()->setFood((float)$health);
 
@@ -58,17 +61,17 @@ class SetFood extends FlowItem implements PlayerFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleNumberInput("@action.setFood.form.food", "20", $this->getFood(), true, 0, 20),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->setFood($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getFood()];
+        return [$this->player->get(), $this->getFood()];
     }
 }

@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player\permission;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\PlayerPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 
-abstract class AddPermissionBase extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
+abstract class AddPermissionBase extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    protected PlayerPlaceholder $player;
 
     public function __construct(
         string $id,
@@ -29,15 +28,15 @@ abstract class AddPermissionBase extends FlowItem implements PlayerFlowItem {
         parent::__construct($id, $category);
         $this->setPermissions([FlowItemPermission::PERMISSION]);
 
-        $this->setPlayerVariableName($player);
+        $this->player = new PlayerPlaceholder("player", $player);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "permission"];
+        return [$this->player->getName(), "permission"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getPlayerPermission()];
+        return [$this->player->get(), $this->getPlayerPermission()];
     }
 
     public function setPlayerPermission(string $playerPermission): void {
@@ -49,22 +48,26 @@ abstract class AddPermissionBase extends FlowItem implements PlayerFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->playerPermission !== "";
+        return $this->player->get() !== "" and $this->playerPermission !== "";
+    }
+
+    public function getPlayer(): PlayerPlaceholder {
+        return $this->player;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
+            $this->player->createFormElement($variables),
             new ExampleInput("@condition.hasPermission.form.permission", "mineflow.customcommand.op", $this->getPlayerPermission(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
+        $this->player->set($content[0]);
         $this->setPlayerPermission($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getPlayerPermission()];
+        return [$this->player->get(), $this->getPlayerPermission()];
     }
 }

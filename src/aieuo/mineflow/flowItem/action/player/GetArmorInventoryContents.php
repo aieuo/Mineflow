@@ -16,7 +16,7 @@ class GetArmorInventoryContents extends GetInventoryContentsBase {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $resultName = $source->replaceVariables($this->getResultName());
-        $entity = $this->getOnlinePlayer($source);
+        $entity = $this->player->getOnlinePlayer($source);
         $variable = new InventoryVariable($entity->getArmorInventory());
 
         $source->addVariable($resultName, $variable);

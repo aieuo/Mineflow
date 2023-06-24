@@ -15,7 +15,7 @@ class AddXpLevel extends AddXpBase {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $xp = $this->getInt($source->replaceVariables($this->getXp()));
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->player->getOnlinePlayer($source);
 
         $new = $player->getXpManager()->getXpLevel() + $xp;
         if ($new < 0) $xp = -$player->getXpManager()->getXpLevel();
