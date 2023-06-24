@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class HasItemData extends FlowItem implements Condition, ItemFlowItem {
-    use ItemFlowItemTrait;
+class HasItemData extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
+    private ItemPlaceholder $item;
 
     public function __construct(
         string         $item = "",
@@ -30,15 +28,19 @@ class HasItemData extends FlowItem implements Condition, ItemFlowItem {
     ) {
         parent::__construct(self::HAS_ITEM_DATA, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->item = new ItemPlaceholder("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["item", "key"];
+        return [$this->item->getName(), "key"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getKey()];
+        return [$this->item->get(), $this->getKey()];
+    }
+
+    public function getItem(): ItemPlaceholder {
+        return $this->item;
     }
 
     public function setKey(string $key): void {
@@ -50,11 +52,11 @@ class HasItemData extends FlowItem implements Condition, ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->getKey() !== "";
+        return $this->item->isNotEmpty() and $this->getKey() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
+        $item = $this->item->getItem($source);
         $key = $source->replaceVariables($this->getKey());
         $tags = $item->getNamedTag();
 
@@ -64,17 +66,17 @@ class HasItemData extends FlowItem implements Condition, ItemFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
+            $this->item->createFormElement($variables),
             new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
+        $this->item->set($content[0]);
         $this->setKey($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getKey()];
+        return [$this->item->get(), $this->getKey()];
     }
 }

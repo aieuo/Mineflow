@@ -6,13 +6,12 @@ namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
@@ -22,12 +21,13 @@ use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\StringToEnchantmentParser;
 use SOFe\AwaitGenerator\Await;
 
-class AddEnchantment extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
+class AddEnchantment extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
+
+    private ItemPlaceholder $item;
 
     public function __construct(
         string         $item = "",
@@ -36,15 +36,19 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
     ) {
         parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->item = new ItemPlaceholder("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["item", "id", "world"];
+        return [$this->item->getName(), "id", "world"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
+        return [$this->item->get(), $this->getEnchantId(), $this->getEnchantLevel()];
+    }
+
+    public function getItem(): ItemPlaceholder {
+        return $this->item;
     }
 
     public function setEnchantId(string $enchantId): void {
@@ -64,11 +68,11 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->enchantId !== "" and $this->enchantLevel !== "";
+        return $this->item->isNotEmpty() and $this->enchantId !== "" and $this->enchantLevel !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
+        $item = $this->item->getItem($source);
 
         $id = $source->replaceVariables($this->getEnchantId());
         if (is_numeric($id)) {
@@ -84,24 +88,24 @@ class AddEnchantment extends FlowItem implements ItemFlowItem {
         $item->addEnchantment(new EnchantmentInstance($enchant, $level));
 
         yield Await::ALL;
-        return $this->getItemVariableName();
+        return $this->item->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.form.target.item", "item", $this->getItemVariableName(), true),
+            new ExampleInput("@action.form.target.item", "item", $this->item->get(), true),
             new ExampleInput("@action.addEnchant.form.id", "1", $this->getEnchantId(), true),
             new ExampleNumberInput("@action.addEnchant.form.level", "1", $this->getEnchantLevel(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
+        $this->item->set($content[0]);
         $this->setEnchantId($content[1]);
         $this->setEnchantLevel($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getEnchantId(), $this->getEnchantLevel()];
+        return [$this->item->get(), $this->getEnchantId(), $this->getEnchantLevel()];
     }
 }

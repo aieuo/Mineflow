@@ -14,7 +14,7 @@ class RemoveItemCondition extends TypeItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
+        $item = $this->item->getItem($source);
         $player = $this->getOnlinePlayer($source);
 
         if (!$player->getInventory()->contains($item)) return false;

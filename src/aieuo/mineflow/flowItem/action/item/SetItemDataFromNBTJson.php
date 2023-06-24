@@ -6,15 +6,13 @@ namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -22,12 +20,13 @@ use pocketmine\nbt\JsonNbtParser;
 use pocketmine\nbt\NbtException;
 use SOFe\AwaitGenerator\Await;
 
-class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
+class SetItemDataFromNBTJson extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
+
+    private ItemPlaceholder $item;
 
     public function __construct(
         string         $item = "",
@@ -35,15 +34,19 @@ class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
     ) {
         parent::__construct(self::SET_ITEM_DATA_FROM_NBT_JSON, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->item = new ItemPlaceholder("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["item", "json"];
+        return [$this->item->getName(), "json"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getJson()];
+        return [$this->item->get(), $this->getJson()];
+    }
+
+    public function getItem(): ItemPlaceholder {
+        return $this->item;
     }
 
     public function setJson(string $json): void {
@@ -55,11 +58,11 @@ class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->getJson() !== "";
+        return $this->item->isNotEmpty() and $this->getJson() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
+        $item = $this->item->getItem($source);
         $json = $this->getJson();
 
         try {
@@ -71,22 +74,22 @@ class SetItemDataFromNBTJson extends FlowItem implements ItemFlowItem {
         }
 
         yield Await::ALL;
-        return $this->getItemVariableName();
+        return $this->item->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
+            $this->item->createFormElement($variables),
             new ExampleInput("@action.setItemData.form.value", "{display:{Lore:}", $this->getJson(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
+        $this->item->set($content[0]);
         $this->setJson($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getJson()];
+        return [$this->item->get(), $this->getJson()];
     }
 }

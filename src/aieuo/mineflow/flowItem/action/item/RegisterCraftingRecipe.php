@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
@@ -21,14 +19,30 @@ use function array_pop;
 use function floor;
 use function implode;
 
-class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
+class RegisterCraftingRecipe extends FlowItem {
 
-    public function __construct(string $i1 = "", string $i2 = "", string $i3 = "", string $i4 = "", string $i5 = "", string $i6 = "", string $i7 = "", string $i8 = "", string $i9 = "", string $o = "") {
+    private ItemPlaceholder $output;
+    /** @var ItemPlaceholder[] */
+    private array $ingredients;
+
+    /**
+     * @param string[] $ingredients
+     * @param string $output
+     */
+    public function __construct(array $ingredients = [], string $output = "") {
         parent::__construct(self::REGISTER_SHAPED_RECIPE, FlowItemCategory::ITEM);
 
-        $this->setInputItemVariableNames([$i1, $i2, $i3, $i4, $i5, $i6, $i7, $i8, $i9]);
-        $this->setItemVariableName($o, "output");
+        $characters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+        $this->ingredients = [];
+        for ($i = 0; $i < 9; $i ++) {
+            $this->ingredients[] = new ItemPlaceholder(
+                "input".$i,
+                $ingredients[$i] ?? "",
+                "@action.registerShapedRecipe.ingredients ".$characters[$i],
+                true
+            );
+        }
+        $this->output = new ItemPlaceholder("output", $output, "@action.registerShapedRecipe.results RESULT");
     }
 
     public function getName(): string {
@@ -48,7 +62,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $index = -1;
         $items = [];
         for ($i = 0; $i < 9; $i++) {
-            $input = $this->getItemVariableName("input".$i);
+            $input = $this->ingredients[$i]->get();
             if ($input !== "") {
                 if (isset($items[$input])) {
                     $key = $keys[$items[$input]];
@@ -75,31 +89,25 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
             $details[] = "- ".$key." = ".$ingredient;
         }
         $details[] = Language::get("action.registerShapedRecipe.results");
-        $details[] = "- ".$this->getItemVariableName("output");
+        $details[] = "- ".$this->output->get();
         $details[] = "------------------------";
         return implode("\n", $details);
     }
 
     public function isDataValid(): bool {
-        return $this->getItemVariableName("output") !== "";
+        return $this->output->isNotEmpty();
     }
 
-    public function setInputItemVariableNames(array $items): void {
-        for ($i = 0; $i < 9; $i++) {
-            $this->setItemVariableName($items[$i], "input".$i);
-        }
+    public function getIngredients(): array {
+        return $this->ingredients;
     }
 
-    public function getInputItemVariableNames(): array {
-        $items = [];
-        for ($i = 0; $i < 9; $i++) {
-            $items[] = $this->getItemVariableName("input".$i);
-        }
-        return $items;
+    public function getOutput(): ItemPlaceholder {
+        return $this->output;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $output = $this->getItem($source, "output");
+        $output = $this->output->getItem($source);
         $shape = ["", "", ""];
         $ingredients = [];
         $keys = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
@@ -107,7 +115,7 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
         $items = [];
         for ($i = 0; $i < 9; $i++) {
             try {
-                $input = $this->getItem($source, "input".$i);
+                $input = $this->ingredients[$i]->getItem($source);
                 $itemId = $input->getStateId();
                 if (isset($items[$itemId])) {
                     $key = $keys[$items[$itemId]];
@@ -160,16 +168,16 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input0"), "@action.registerShapedRecipe.ingredients A", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input1"), "@action.registerShapedRecipe.ingredients B", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input2"), "@action.registerShapedRecipe.ingredients C", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input3"), "@action.registerShapedRecipe.ingredients D", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input4"), "@action.registerShapedRecipe.ingredients E", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input5"), "@action.registerShapedRecipe.ingredients F", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input6"), "@action.registerShapedRecipe.ingredients G", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input7"), "@action.registerShapedRecipe.ingredients H", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("input8"), "@action.registerShapedRecipe.ingredients I", true),
-            new ItemVariableDropdown($variables, $this->getItemVariableName("output"), "@action.registerShapedRecipe.results RESULT"),
+            $this->ingredients[0]->createFormElement($variables),
+            $this->ingredients[1]->createFormElement($variables),
+            $this->ingredients[2]->createFormElement($variables),
+            $this->ingredients[3]->createFormElement($variables),
+            $this->ingredients[4]->createFormElement($variables),
+            $this->ingredients[5]->createFormElement($variables),
+            $this->ingredients[6]->createFormElement($variables),
+            $this->ingredients[7]->createFormElement($variables),
+            $this->ingredients[8]->createFormElement($variables),
+            $this->output->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->preprocess(function (array $data) {
                 $result = array_pop($data);
@@ -179,11 +187,17 @@ class RegisterCraftingRecipe extends FlowItem implements ItemFlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setInputItemVariableNames($content[0]);
-        $this->setItemVariableName($content[1], "output");
+        for ($i = 0; $i < 9; $i++) {
+            $this->ingredients[$i]->set($content[0][$i] ?? "");
+        }
+        $this->output->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getInputItemVariableNames(), $this->getItemVariableName("output")];
+        $items = [];
+        for ($i = 0; $i < 9; $i++) {
+            $items[] = $this->ingredients[$i]->get();
+        }
+        return [$items, $this->output->get()];
     }
 }

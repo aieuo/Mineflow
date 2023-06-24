@@ -6,15 +6,13 @@ namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -22,12 +20,12 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\nbt\NbtException;
 use SOFe\AwaitGenerator\Await;
 
-class SetItemData extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
+class SetItemData extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
+    private ItemPlaceholder $item;
 
     public function __construct(
         string         $item = "",
@@ -36,15 +34,19 @@ class SetItemData extends FlowItem implements ItemFlowItem {
     ) {
         parent::__construct(self::SET_ITEM_DATA, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->item = new ItemPlaceholder("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["item", "key", "value"];
+        return [$this->item->getName(), "key", "value"];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getKey(), $this->getValue()];
+        return [$this->item->get(), $this->getKey(), $this->getValue()];
+    }
+
+    public function getItem(): ItemPlaceholder {
+        return $this->item;
     }
 
     public function setKey(string $key): void {
@@ -64,11 +66,11 @@ class SetItemData extends FlowItem implements ItemFlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->getKey() !== "";
+        return $this->item->isNotEmpty() and $this->getKey() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
+        $item = $this->item->getItem($source);
         $key = $source->replaceVariables($this->getKey());
         $variable = $this->getValueVariable($source);
 
@@ -82,7 +84,7 @@ class SetItemData extends FlowItem implements ItemFlowItem {
         }
 
         yield Await::ALL;
-        return $this->getItemVariableName();
+        return $this->item->get();
     }
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
@@ -94,19 +96,19 @@ class SetItemData extends FlowItem implements ItemFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
+            $this->item->createFormElement($variables),
             new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
             new ExampleInput("@action.setItemData.form.value", "100", $this->getValue(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
+        $this->item->set($content[0]);
         $this->setKey($content[1]);
         $this->setValue($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getKey(), $this->getValue()];
+        return [$this->item->get(), $this->getKey(), $this->getValue()];
     }
 }

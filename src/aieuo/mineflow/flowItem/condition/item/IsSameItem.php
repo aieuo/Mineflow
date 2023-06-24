@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -14,40 +12,47 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\GeneratorUtil;
 
-class IsSameItem extends FlowItem implements Condition, ItemFlowItem {
-    use ItemFlowItemTrait;
+class IsSameItem extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    private const KEY_ITEM1 = "item1";
-    private const KEY_ITEM2 = "item2";
+    private ItemPlaceholder $item1;
+    private ItemPlaceholder $item2;
 
     public function __construct(string $item1 = "", string $item2 = "", private bool $checkCompound = false) {
         parent::__construct(FlowItemIds::IS_SAME_ITEM, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item1, self::KEY_ITEM1);
-        $this->setItemVariableName($item2, self::KEY_ITEM2);
+        $this->item1 = new ItemPlaceholder("item1", $item1, "@action.form.target.item (1)");
+        $this->item2 = new ItemPlaceholder("item2", $item2, "@action.form.target.item (2)");
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["item1", "item2", "tag"];
+        return [$this->item1->getName(), $this->item2->getName(), "tag"];
     }
 
     public function getDetailReplaces(): array {
         return [
-            $this->getItemVariableName(self::KEY_ITEM1),
-            $this->getItemVariableName(self::KEY_ITEM2),
+            $this->item1->get(),
+            $this->item2->get(),
             Language::get($this->checkCompound ? "form.yes" : "form.no"),
         ];
     }
 
     public function isDataValid(): bool {
-        return $this->getItemVariableName(self::KEY_ITEM1) !== "" and $this->getItemVariableName(self::KEY_ITEM2) !== "";
+        return $this->item1->isNotEmpty() and $this->item2->isNotEmpty();
+    }
+
+    public function getItem1(): ItemPlaceholder {
+        return $this->item1;
+    }
+
+    public function getItem2(): ItemPlaceholder {
+        return $this->item2;
     }
 
     public function getCheckCompound(): bool {
@@ -59,8 +64,8 @@ class IsSameItem extends FlowItem implements Condition, ItemFlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item1 = $this->getItem($source, self::KEY_ITEM1);
-        $item2 = $this->getItem($source, self::KEY_ITEM2);
+        $item1 = $this->item1->getItem($source);
+        $item2 = $this->item2->getItem($source);
 
         yield from GeneratorUtil::empty();
         return $item1->equals($item2, checkCompound: $this->checkCompound);
@@ -68,19 +73,19 @@ class IsSameItem extends FlowItem implements Condition, ItemFlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName(self::KEY_ITEM1), "@action.form.target.item (1)"),
-            new ItemVariableDropdown($variables, $this->getItemVariableName(self::KEY_ITEM2), "@action.form.target.item (2)"),
+            $this->item1->createFormElement($variables),
+            $this->item2->createFormElement($variables),
             new Toggle("@condition.isSameItem.form.checkCompound", $this->getCheckCompound()),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0], self::KEY_ITEM1);
-        $this->setItemVariableName($content[1], self::KEY_ITEM2);
+        $this->item1->set($content[0]);
+        $this->item2->set($content[1]);
         $this->setCheckCompound($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getItemVariableName(self::KEY_ITEM1), $this->getItemVariableName(self::KEY_ITEM2), $this->getCheckCompound()];
+        return [$this->item1->get(), $this->item2->get(), $this->getCheckCompound()];
     }
 }

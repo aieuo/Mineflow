@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\inventory;
 
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
 use aieuo\mineflow\flowItem\base\PlayerFlowItem;
 use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
+use aieuo\mineflow\flowItem\placeholder\ItemPlaceholder;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 
-abstract class TypeItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
-    use PlayerFlowItemTrait, ItemFlowItemTrait;
+abstract class TypeItem extends FlowItem implements PlayerFlowItem {
+    use PlayerFlowItemTrait;
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
+
+    protected ItemPlaceholder $item;
 
     public function __construct(
         string $id,
@@ -30,34 +30,38 @@ abstract class TypeItem extends FlowItem implements PlayerFlowItem, ItemFlowItem
         parent::__construct($id, $category);
 
         $this->setPlayerVariableName($player);
-        $this->setItemVariableName($item);
+        $this->item = new ItemPlaceholder("item", $item);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["player", "item"];
+        return ["player", $this->item->getName()];
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName()];
+        return [$this->getPlayerVariableName(), $this->item->get()];
     }
 
     public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "";
+        return $this->getPlayerVariableName() !== "" and $this->item->isNotEmpty();
+    }
+
+    public function getItem(): ItemPlaceholder {
+        return $this->item;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
+            $this->item->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->setPlayerVariableName($content[0]);
-        $this->setItemVariableName($content[1]);
+        $this->item->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName()];
+        return [$this->getPlayerVariableName(), $this->item->get()];
     }
 }
