@@ -11,7 +11,7 @@ abstract class FlowItemArgument {
 
     public function __construct(
         private readonly string $name,
-        private string          $value = "",
+        private mixed           $value = null,
         private string          $description = "",
         private readonly bool   $optional = false,
     ) {
@@ -21,11 +21,11 @@ abstract class FlowItemArgument {
         return $this->name;
     }
 
-    public function set(string $value): void {
+    public function set(mixed $value): void {
         $this->value = $value;
     }
 
-    public function get(): string {
+    public function get(): mixed {
         return $this->value;
     }
 
@@ -42,11 +42,11 @@ abstract class FlowItemArgument {
     }
 
     public function isEmpty(): bool {
-        return $this->value === "";
+        return $this->value === null;
     }
 
     public function isNotEmpty(): bool {
-        return $this->value !== "";
+        return $this->value !== null;
     }
 
     /**

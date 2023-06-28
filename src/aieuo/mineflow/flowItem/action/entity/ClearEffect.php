@@ -7,11 +7,9 @@ namespace aieuo\mineflow\flowItem\action\entity;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
 use pocketmine\entity\effect\StringToEffectParser;
@@ -19,8 +17,6 @@ use pocketmine\entity\Living;
 use SOFe\AwaitGenerator\Await;
 
 class ClearEffect extends SimpleAction {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
 
     private EntityArgument $entity;
     private StringArgument $effectId;

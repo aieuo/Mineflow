@@ -5,85 +5,65 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\BooleanArgument;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
+use pocketmine\utils\Limits;
 use SOFe\AwaitGenerator\Await;
 
-class AddEffect extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class AddEffect extends SimpleAction {
 
-    private bool $visible = false;
     private EntityArgument $entity;
+    private StringArgument $effectId;
+    private NumberArgument $time;
+    private NumberArgument $power;
+    private BooleanArgument $visible;
 
-    public function __construct(
-        string         $entity = "",
-        private string $effectId = "",
-        private string $time = "300",
-        private string $power = "1"
-    ) {
+    public function __construct(string $entity = "", string $effectId = "", int $time = 300, int $power = 1, bool $visible = false) {
         parent::__construct(self::ADD_EFFECT, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityArgument("entity", $entity);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->entity->getName(), "id", "power", "time"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->getEffectId(), $this->getPower(), $this->getTime()];
+        $this->setArguments([
+            $this->entity = new EntityArgument("entity", $entity),
+            $this->effectId = new StringArgument("effect", $effectId, example: "1"),
+            $this->time = new NumberArgument("time", $time, example: "300", min: 0, max: Limits::INT32_MAX),
+            $this->power = new NumberArgument("power", $power, example: "1", min: 0, max: 255),
+            $this->visible = new BooleanArgument("visible", $visible),
+        ]);
     }
 
     public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function setEffectId(string $effectId): void {
-        $this->effectId = $effectId;
-    }
-
-    public function getEffectId(): string {
+    public function getEffectId(): StringArgument {
         return $this->effectId;
     }
 
-    public function setPower(string $power): void {
-        $this->power = $power;
-    }
-
-    public function getPower(): string {
+    public function getPower(): NumberArgument {
         return $this->power;
     }
 
-    public function setTime(string $time): void {
-        $this->time = $time;
-    }
-
-    public function getTime(): string {
+    public function getTime(): NumberArgument {
         return $this->time;
     }
 
-    public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->effectId !== "" and $this->power !== "" and $this->time !== "";
+    public function getVisible(): BooleanArgument {
+        return $this->visible;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $effectId = $source->replaceVariables($this->getEffectId());
-        $time = $this->getInt($source->replaceVariables($this->getTime()));
-        $power = $this->getInt($source->replaceVariables($this->getPower()));
+        $effectId = $this->effectId->getString($source);
+        $time = $this->time->getInt($source);
+        $power = $this->power->getInt($source);
         $entity = $this->entity->getOnlineEntity($source);
 
         $effect = StringToEffectParser::getInstance()->parse($effectId);
@@ -91,31 +71,9 @@ class AddEffect extends FlowItem {
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
         if ($entity instanceof Living) {
-            $entity->getEffects()->add(new EffectInstance($effect, $time * 20, $power - 1, $this->visible));
+            $entity->getEffects()->add(new EffectInstance($effect, $time * 20, $power - 1, $this->visible->getBool()));
         }
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-           $this->entity->createFormElement($variables),
-            new ExampleInput("@action.addEffect.form.effect", "1", $this->getEffectId(), true),
-            new ExampleNumberInput("@action.addEffect.form.time", "300", $this->getTime(), true, 1),
-            new ExampleNumberInput("@action.addEffect.form.power", "1", $this->getPower(), true),
-            new Toggle("@action.addEffect.form.visible", $this->visible),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->entity->set($content[0]);
-        $this->setEffectId($content[1]);
-        $this->setTime($content[2]);
-        $this->setPower($content[3]);
-        $this->visible = $content[4];
-    }
-
-    public function serializeContents(): array {
-        return [$this->entity->get(), $this->getEffectId(), $this->getTime(), $this->getPower(), $this->visible];
     }
 }

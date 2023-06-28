@@ -26,6 +26,18 @@ class RandomNumber extends SimpleCondition {
         ]);
     }
 
+    public function getMin(): NumberArgument {
+        return $this->min;
+    }
+
+    public function getMax(): NumberArgument {
+        return $this->max;
+    }
+
+    public function getValue(): NumberArgument {
+        return $this->value;
+    }
+
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $min = $this->min->getInt($source);
         $max = $this->max->getInt($source);

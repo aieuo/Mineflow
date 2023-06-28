@@ -13,23 +13,25 @@ class NumberArgument extends FlowItemArgument {
 
     /**
      * @param string $name
-     * @param string|float|int $value
+     * @param string|float|int|null $value
      * @param string $description
      * @param string $example
      * @param float|null $min
      * @param float|null $max
      * @param float[] $excludes
+     * @param bool $optional
      */
     public function __construct(
-        string           $name,
-        string|float|int $value = "",
-        string           $description = "",
-        private string   $example = "",
-        private ?float   $min = null,
-        private ?float   $max = null,
-        private array    $excludes = [],
+        string                $name,
+        string|float|int|null $value = "",
+        string                $description = "",
+        private string        $example = "",
+        private ?float        $min = null,
+        private ?float        $max = null,
+        private array         $excludes = [],
+        bool                  $optional = false,
     ) {
-        parent::__construct($name, (string)$value, $description);
+        parent::__construct($name, (string)$value, $description, $optional);
     }
 
     public function setExample(string $example): void {

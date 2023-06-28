@@ -21,12 +21,18 @@ abstract class SimpleFlowItem extends FlowItem {
         return $this->arguments;
     }
 
+    /**
+     * @param FlowItemArgument[] $placeholders
+     * @param bool $updateDescription
+     * @return void
+     */
     public function setArguments(array $placeholders, bool $updateDescription = true): void {
         $this->arguments = $placeholders;
 
         if ($updateDescription) {
             $type = $this instanceof Condition ? "condition" : "action";
             foreach ($placeholders as $placeholder) {
+                if ($placeholder->getDescription() !== "") continue;
                 $placeholder->setDescription("@{$type}.{$this->getId()}.form.{$placeholder->getName()}");
             }
         }
@@ -43,7 +49,7 @@ abstract class SimpleFlowItem extends FlowItem {
 
     public function isDataValid(): bool {
         foreach ($this->getArguments() as $placeholder) {
-            if (!$placeholder->isNotEmpty()) return false;
+            if (!$placeholder->isOptional() and !$placeholder->isNotEmpty()) return false;
         }
         return true;
     }

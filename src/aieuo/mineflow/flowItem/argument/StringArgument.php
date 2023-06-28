@@ -15,9 +15,10 @@ class StringArgument extends FlowItemArgument {
         string                  $name,
         string                  $value = "",
         string                  $description = "",
-        private readonly string $example = ""
+        private readonly string $example = "",
+        bool                    $optional = false,
     ) {
-        parent::__construct($name, $value, $description);
+        parent::__construct($name, $value, $description, $optional);
     }
 
     public function getExample(): string {

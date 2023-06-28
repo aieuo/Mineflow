@@ -4,50 +4,33 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\math\Vector3;
 use SOFe\AwaitGenerator\Await;
 
-class MoveTo extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class MoveTo extends SimpleAction {
 
     private PositionArgument $position;
     private EntityArgument $entity;
+    private NumberArgument $speedX;
+    private NumberArgument $speedY;
+    private NumberArgument $speedZ;
 
-    public function __construct(
-        string         $entity = "",
-        string         $position = "",
-        private string $speedX = "0.1",
-        private string $speedY = "0",
-        private string $speedZ = "0.1"
-    ) {
+    public function __construct(string $entity = "", string $position = "", float $speedX = 0.1, float $speedY = 0, float $speedZ = 0.1) {
         parent::__construct(self::MOVE_TO, FlowItemCategory::ENTITY);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->entity = new EntityArgument("entity", $entity);
         $this->position = new PositionArgument("position", $position);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->entity->getName(), $this->position->getName(), "speedX", "speedY", "speedZ"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->position->get(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
-    }
-
-    public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->position->isNotEmpty() and $this->getSpeedX() !== "" and $this->getSpeedY() !== "" and $this->getSpeedZ() !== "";
+        $this->speedX = new NumberArgument("speedX", $speedX, example: "0.1", min: 0);
+        $this->speedY = new NumberArgument("speedY", $speedY, example: "0", min: 0);
+        $this->speedZ = new NumberArgument("speedZ", $speedZ, example: "0.1", min: 0);
     }
 
     public function getEntity(): EntityArgument {
@@ -58,27 +41,15 @@ class MoveTo extends FlowItem {
         return $this->position;
     }
 
-    public function setSpeedX(string $speedX): void {
-        $this->speedX = $speedX;
-    }
-
-    public function getSpeedX(): string {
+    public function getSpeedX(): NumberArgument {
         return $this->speedX;
     }
 
-    public function setSpeedY(string $moveY): void {
-        $this->speedY = $moveY;
-    }
-
-    public function getSpeedY(): string {
+    public function getSpeedY(): NumberArgument {
         return $this->speedY;
     }
 
-    public function setSpeedZ(string $speedZ): void {
-        $this->speedZ = $speedZ;
-    }
-
-    public function getSpeedZ(): string {
+    public function getSpeedZ(): NumberArgument {
         return $this->speedZ;
     }
 
@@ -87,9 +58,9 @@ class MoveTo extends FlowItem {
         $position = $this->position->getPosition($source);
         $entityPosition = $entity->getLocation();
 
-        $speedX = $this->getFloat($source->replaceVariables($this->getSpeedX()), min: 0);
-        $speedY = $this->getFloat($source->replaceVariables($this->getSpeedY()), min: 0);
-        $speedZ = $this->getFloat($source->replaceVariables($this->getSpeedZ()), min: 0);
+        $speedX = $this->speedX->getFloat($source);
+        $speedY = $this->speedY->getFloat($source);
+        $speedZ = $this->speedZ->getFloat($source);
 
         $dis = $entityPosition->distance($position);
         if ($dis > 1) {
@@ -101,27 +72,5 @@ class MoveTo extends FlowItem {
         }
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-           $this->entity->createFormElement($variables),
-            $this->position->createFormElement($variables),
-            new ExampleNumberInput("@action.moveTo.form.speedX", "0.1", $this->getSpeedX()),
-            new ExampleNumberInput("@action.moveTo.form.speedY", "0", $this->getSpeedY()),
-            new ExampleNumberInput("@action.moveTo.form.speedZ", "0.1", $this->getSpeedZ()),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->entity->set($content[0]);
-        $this->position->set($content[1]);
-        $this->setSpeedX($content[2]);
-        $this->setSpeedY($content[3]);
-        $this->setSpeedZ($content[4]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->entity->get(), $this->position->get(), $this->getSpeedX(), $this->getSpeedY(), $this->getSpeedZ()];
     }
 }
