@@ -17,8 +17,10 @@ abstract class AddXpBase extends SimpleAction {
     public function __construct(string $id, string $category = FlowItemCategory::PLAYER, string $player = "", int $xp = null) {
         parent::__construct($id, $category);
 
-        $this->player = new PlayerArgument("player", $player);
-        $this->xp = new NumberArgument("xp", $xp ?? "", example: "10");
+        $this->setArguments([
+            $this->player = new PlayerArgument("player", $player),
+            $this->xp = new NumberArgument("xp", $xp, example: "10"),
+        ]);
     }
 
     public function getPlayer(): PlayerArgument {
