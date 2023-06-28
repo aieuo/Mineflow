@@ -4,68 +4,30 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\flowItem\FlowItemCategory;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\FlowItemCategory;
 
-abstract class SetHealthBase extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+abstract class SetHealthBase extends SimpleAction {
 
     protected EntityArgument $entity;
+    protected NumberArgument $health;
 
-    public function __construct(
-        string $id,
-        string $category = FlowItemCategory::ENTITY,
-        string $entity = "",
-        private string $health = ""
-    ) {
+    public function __construct(string $id, string $category = FlowItemCategory::ENTITY, string $entity = "", int $health = null) {
         parent::__construct($id, $category);
 
-        $this->entity = new EntityArgument("entity", $entity);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->entity->getName(), "health"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->getHealth()];
+        $this->setArguments([
+            $this->entity = new EntityArgument("entity", $entity),
+            $this->health = new NumberArgument("health", $health ?? "", "@action.setHealth.form.health", example: "20", min: 0),
+        ]);
     }
 
     public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function setHealth(string $health): void {
-        $this->health = $health;
-    }
-
-    public function getHealth(): string {
+    public function getHealth(): NumberArgument {
         return $this->health;
-    }
-
-    public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->health !== "";
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-           $this->entity->createFormElement($variables),
-            new ExampleNumberInput("@action.setHealth.form.health", "20", $this->getHealth(), true, 1),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->entity->set($content[0]);
-        $this->setHealth($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->entity->get(), $this->getHealth()];
     }
 }

@@ -9,12 +9,12 @@ use SOFe\AwaitGenerator\Await;
 
 class AddXpProgress extends AddXpBase {
 
-    public function __construct(string $player = "", string $xp = "") {
+    public function __construct(string $player = "", int $xp = null) {
         parent::__construct(self::ADD_XP_PROGRESS, player: $player, xp: $xp);
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $xp = $this->getInt($source->replaceVariables($this->getXp()));
+        $xp = $this->xp->getInt($source);
         $player = $this->player->getOnlinePlayer($source);
 
         $new = $player->getXpManager()->getCurrentTotalXp() + $xp;
