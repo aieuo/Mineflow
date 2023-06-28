@@ -17,8 +17,10 @@ use aieuo\mineflow\utils\BlockStateIdToLegacyIdMap;
 use aieuo\mineflow\utils\FormManager;
 use aieuo\mineflow\utils\ItemStateIdToLegacyIdMap;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\PlayerConfig;
 use aieuo\mineflow\variable\VariableHelper;
+use JetBrains\PhpStorm\Deprecated;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 use function in_array;
@@ -86,7 +88,7 @@ class Mineflow {
         ]);
         $config->save();
 
-        self::$enabledRecipeErrorInConsole = $config->get("show_recipe_errors_in_console", true);
+        Logger::setEnabledRecipeErrorInConsole($config->get("show_recipe_errors_in_console", true));
         if (!empty($timezone = $config->get("time_trigger_timezone"))) {
             self::$timeZone = new \DateTimeZone($timezone);
         }
@@ -140,13 +142,14 @@ class Mineflow {
         return self::$timeZone;
     }
 
+    #[Deprecated(replacement: "aieuo\\mineflow\\utils\\Logger::isEnabledRecipeErrorInConsole()")]
     public static function isEnabledRecipeErrorInConsole(): bool {
-        return self::$enabledRecipeErrorInConsole;
+        return Logger::isEnabledRecipeErrorInConsole();
     }
 
+    #[Deprecated(replacement: "aieuo\\mineflow\\utils\\Logger::setEnabledRecipeErrorInConsole(%parametersList%)")]
     public static function setEnabledRecipeErrorInConsole(bool $enabledRecipeErrorInConsole): void {
-        self::$enabledRecipeErrorInConsole = $enabledRecipeErrorInConsole;
-        self::$config->set("show_recipe_errors_in_console", $enabledRecipeErrorInConsole);
+        Logger::setEnabledRecipeErrorInConsole($enabledRecipeErrorInConsole);
     }
 
     public static function isDebug(): bool {
