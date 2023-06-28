@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
@@ -24,17 +24,19 @@ abstract class GetNearestEntityBase extends FlowItem {
     use HasSimpleEditForm;
 
     protected PositionArgument $position;
+    private NumberArgument $maxDistance;
 
     public function __construct(
         string         $id,
         string         $category = FlowItemCategory::WORLD,
         string         $position = "",
-        private string $maxDistance = "100",
+        int            $maxDistance = 100,
         private string $resultName = "entity"
     ) {
         parent::__construct($id, $category);
 
         $this->position = new PositionArgument("position", $position);
+        $this->maxDistance = new NumberArgument("maxDistance", $maxDistance, "@action.getNearestEntity.form.maxDistance", example: "100");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -47,6 +49,10 @@ abstract class GetNearestEntityBase extends FlowItem {
 
     public function getPosition(): PositionArgument {
         return $this->position;
+    }
+
+    public function getMaxDistance(): NumberArgument {
+        return $this->maxDistance;
     }
 
     /**
@@ -62,14 +68,6 @@ abstract class GetNearestEntityBase extends FlowItem {
         return $this->resultName;
     }
 
-    public function setMaxDistance(string $maxDistance): void {
-        $this->maxDistance = $maxDistance;
-    }
-
-    public function getMaxDistance(): string {
-        return $this->maxDistance;
-    }
-
     public function isDataValid(): bool {
         return $this->position->isNotEmpty() and $this->getResultName() !== "";
     }
@@ -77,7 +75,7 @@ abstract class GetNearestEntityBase extends FlowItem {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->position->getPosition($source);
         $result = $source->replaceVariables($this->getResultName());
-        $maxDistance = $this->getFloat($source->replaceVariables($this->getMaxDistance()));
+        $maxDistance = $this->maxDistance->getFloat($source);
 
         $entity = $position->world->getNearestEntity($position, $maxDistance, $this->getTargetClass());
 
@@ -91,19 +89,19 @@ abstract class GetNearestEntityBase extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->position->createFormElement($variables),
-            new ExampleNumberInput("@action.getNearestEntity.form.maxDistance", "100", $this->getMaxDistance(), true),
+            $this->maxDistance->createFormElement($variables),
             new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->position->set($content[0]);
-        $this->setMaxDistance($content[1]);
+        $this->maxDistance->set($content[1]);
         $this->setResultName($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->position->get(), $this->getMaxDistance(), $this->getResultName()];
+        return [$this->position->get(), $this->maxDistance->get(), $this->getResultName()];
     }
 
     public function getAddingVariables(): array {

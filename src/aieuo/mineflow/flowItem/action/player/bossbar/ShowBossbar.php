@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player\bossbar;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -11,10 +13,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Bossbar;
 use pocketmine\network\mcpe\protocol\types\BossBarColor;
 use SOFe\AwaitGenerator\Await;
@@ -34,20 +34,24 @@ class ShowBossbar extends FlowItem {
         "purple" => BossBarColor::PURPLE,
         "white" => BossBarColor::WHITE,
     ];
-    
+
     private PlayerArgument $player;
+    private NumberArgument $max;
+    private NumberArgument $value;
 
     public function __construct(
         string         $player = "",
         private string $title = "",
-        private string $max = "",
-        private string $value = "",
+        float          $max = 0,
+        float          $value = 0,
         private string $color = "purple",
         private string $barId = ""
     ) {
         parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->max = new NumberArgument("max", $max, example: "20", min: 1);
+        $this->value = new NumberArgument("value", $value, example: "20");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -55,7 +59,7 @@ class ShowBossbar extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getColor(), $this->getBarId()];
+        return [$this->player->get(), $this->getTitle(), $this->max->get(), $this->value->get(), $this->getColor(), $this->getBarId()];
     }
 
     public function setTitle(string $health): void {
@@ -66,19 +70,11 @@ class ShowBossbar extends FlowItem {
         return $this->title;
     }
 
-    public function setMax(string $max): void {
-        $this->max = $max;
-    }
-
-    public function getMax(): string {
+    public function getMax(): NumberArgument {
         return $this->max;
     }
 
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
+    public function getValue(): NumberArgument {
         return $this->value;
     }
 
@@ -108,8 +104,8 @@ class ShowBossbar extends FlowItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $title = $source->replaceVariables($this->getTitle());
-        $max = $this->getFloat($source->replaceVariables($this->getMax()), 1);
-        $value = $this->getFloat($source->replaceVariables($this->getValue()));
+        $max = $this->max->getFloat($source);
+        $value = $this->value->getFloat($source);
         $id = $source->replaceVariables($this->getBarId());
         $color = $this->colors[$source->replaceVariables($this->getColor())] ?? BossBarColor::PURPLE;
 
@@ -124,8 +120,8 @@ class ShowBossbar extends FlowItem {
         $builder->elements([
             $this->player->createFormElement($variables),
             new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
-            new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
-            new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
+            $this->max->createFormElement($variables),
+            $this->value->createFormElement($variables),
             new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
             new Dropdown("@action.showBossbar.form.color", array_keys($this->colors), (int)array_search($this->getColor(), array_keys($this->colors), true))
         ])->response(function (EditFormResponseProcessor $response) {
@@ -136,8 +132,8 @@ class ShowBossbar extends FlowItem {
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
         $this->setTitle($content[1]);
-        $this->setMax($content[2]);
-        $this->setValue($content[3]);
+        $this->max->set($content[2]);
+        $this->value->set($content[3]);
         $this->setBarId($content[4]);
         $this->setColor($content[5] ?? "purple");
     }
@@ -146,8 +142,8 @@ class ShowBossbar extends FlowItem {
         return [
             $this->player->get(),
             $this->getTitle(),
-            $this->getMax(),
-            $this->getValue(),
+            $this->max->get(),
+            $this->value->get(),
             $this->getBarId(),
             $this->getColor(),
         ];

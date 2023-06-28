@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 use SOFe\AwaitGenerator\Await;
 
@@ -22,11 +22,13 @@ class SetItemDamage extends FlowItem {
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private ItemArgument $item;
+    private NumberArgument $damage;
 
-    public function __construct(string $item = "", private string $damage = "") {
+    public function __construct(string $item = "", int $damage = null) {
         parent::__construct(self::SET_ITEM_DAMAGE, FlowItemCategory::ITEM);
 
         $this->item = new ItemArgument("item", $item);
+        $this->damage = new NumberArgument("damage", $damage, example: "0", min: 0);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -34,27 +36,23 @@ class SetItemDamage extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->item->get(), $this->getDamage()];
+        return [$this->item->get(), $this->damage->get()];
     }
 
     public function getItem(): ItemArgument {
         return $this->item;
     }
 
-    public function setDamage(string $damage): void {
-        $this->damage = $damage;
-    }
-
-    public function getDamage(): string {
+    public function getDamage(): NumberArgument {
         return $this->damage;
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->damage !== "";
+        return $this->item->isNotEmpty() and $this->damage->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $damage = $this->getInt($source->replaceVariables($this->getDamage()), 0);
+        $damage = $this->damage->getInt($source);
         $item = $this->item->getItem($source);
 
         $itemType = GlobalItemDataHandlers::getSerializer()->serializeType($item);
@@ -69,16 +67,16 @@ class SetItemDamage extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->item->createFormElement($variables),
-            new ExampleNumberInput("@action.setDamage.form.damage", "0", $this->getDamage(), true, 0),
+            $this->damage->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->item->set($content[0]);
-        $this->setDamage($content[1]);
+        $this->damage->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->item->get(), $this->getDamage()];
+        return [$this->item->get(), $this->damage->get()];
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -12,10 +14,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -70,16 +70,18 @@ class GetEntitySidePosition extends FlowItem {
         Facing::NORTH,
     ];
     private EntityArgument $entity;
+    private NumberArgument $steps;
 
     public function __construct(
         string         $entity = "",
         private string $direction = "",
-        private string $steps = "1",
+        int            $steps = 1,
         private string $resultName = "pos"
     ) {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
         $this->entity = new EntityArgument("entity", $entity);
+        $this->steps = new NumberArgument("steps", $steps, example: "1");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -87,7 +89,7 @@ class GetEntitySidePosition extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+        return [$this->entity->get(), $this->getDirection(), $this->steps->get(), $this->getResultName()];
     }
 
     public function getEntity(): EntityArgument {
@@ -102,11 +104,7 @@ class GetEntitySidePosition extends FlowItem {
         return $this->direction;
     }
 
-    public function setSteps(string $steps): void {
-        $this->steps = $steps;
-    }
-
-    public function getSteps(): string {
+    public function getSteps(): NumberArgument {
         return $this->steps;
     }
 
@@ -119,13 +117,13 @@ class GetEntitySidePosition extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
+        return $this->entity->isNotEmpty() and $this->direction !== "" and $this->steps->get() !== "" and $this->resultName !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->entity->getOnlineEntity($source);
         $side = $source->replaceVariables($this->getDirection());
-        $step = $this->getInt($source->replaceVariables($this->getSteps()));
+        $step = $this->steps->getInt($source);
         $resultName = $source->replaceVariables($this->getResultName());
 
         $direction = $entity->getHorizontalFacing();
@@ -163,9 +161,9 @@ class GetEntitySidePosition extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-           $this->entity->createFormElement($variables),
+            $this->entity->createFormElement($variables),
             new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
-            new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
+            $this->steps->createFormElement($variables),
             new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->preprocessAt(1, fn($value) => $this->directions[$value] ?? "");
@@ -175,12 +173,12 @@ class GetEntitySidePosition extends FlowItem {
     public function loadSaveData(array $content): void {
         $this->entity->set($content[0]);
         $this->setDirection($content[1]);
-        $this->setSteps($content[2]);
+        $this->steps->set($content[2]);
         $this->setResultName($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->entity->get(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+        return [$this->entity->get(), $this->getDirection(), $this->steps->get(), $this->getResultName()];
     }
 
     public function getAddingVariables(): array {

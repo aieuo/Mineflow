@@ -12,7 +12,7 @@ use pocketmine\player\Player;
 
 class GetNearestPlayer extends GetNearestEntityBase {
 
-    public function __construct(string $position = "", string $maxDistance = "100", string $resultName = "player") {
+    public function __construct(string $position = "", int $maxDistance = 100, string $resultName = "player") {
         parent::__construct(self::GET_NEAREST_PLAYER, position: $position, maxDistance: $maxDistance, resultName: $resultName);
     }
 

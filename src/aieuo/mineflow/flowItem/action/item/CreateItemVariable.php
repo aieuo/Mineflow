@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -15,6 +16,7 @@ use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\LegacyStringToItemParser;
@@ -28,13 +30,17 @@ class CreateItemVariable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
+    private NumberArgument $itemCount;
+
     public function __construct(
         private string $itemId = "",
-        private string $itemCount = "",
+        int            $itemCount = 0,
         private string $itemName = "",
         private string $variableName = "item"
     ) {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
+
+        $this->itemCount = new NumberArgument("count", $itemCount, example: "64");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -42,7 +48,7 @@ class CreateItemVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()];
+        return [$this->getVariableName(), $this->getItemId(), $this->itemCount->get(), $this->getItemName()];
     }
 
     public function setVariableName(string $variableName): void {
@@ -61,11 +67,7 @@ class CreateItemVariable extends FlowItem {
         return $this->itemId;
     }
 
-    public function setItemCount(string $count): void {
-        $this->itemCount = $count;
-    }
-
-    public function getItemCount(): string {
+    public function getItemCount(): NumberArgument {
         return $this->itemCount;
     }
 
@@ -84,7 +86,7 @@ class CreateItemVariable extends FlowItem {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $source->replaceVariables($this->getVariableName());
         $id = $source->replaceVariables($this->getItemId());
-        $count = $source->replaceVariables($this->getItemCount());
+        $count = $source->replaceVariables($this->itemCount->get());
         $itemName = $source->replaceVariables($this->getItemName());
         try {
             $item = StringToItemParser::getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
@@ -92,7 +94,7 @@ class CreateItemVariable extends FlowItem {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createItem.item.notFound"));
         }
         if (!empty($count)) {
-            $item->setCount($this->getInt($count, 0));
+            $item->setCount(Utils::getInt($count, 0));
         } else {
             $item->setCount($item->getMaxStackSize());
         }
@@ -110,7 +112,7 @@ class CreateItemVariable extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             new ExampleInput("@action.createItem.form.id", "1:0", $this->getItemId(), true),
-            new ExampleNumberInput("@action.createItem.form.count", "64", $this->getItemCount(), false, 0),
+            new ExampleNumberInput("@action.createItem.form.count", "64", $this->itemCount->get(), false, 0),
             new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName()),
             new ExampleInput("@action.form.resultVariableName", "item", $this->getVariableName(), true),
         ])->response(function (EditFormResponseProcessor $response) {
@@ -121,12 +123,12 @@ class CreateItemVariable extends FlowItem {
     public function loadSaveData(array $content): void {
         $this->setVariableName($content[0]);
         $this->setItemId($content[1]);
-        $this->setItemCount($content[2]);
+        $this->itemCount->set($content[2]);
         $this->setItemName($content[3] ?? "");
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getItemId(), $this->getItemCount(), $this->getItemName()];
+        return [$this->getVariableName(), $this->getItemId(), $this->itemCount->get(), $this->getItemName()];
     }
 
     public function getAddingVariables(): array {

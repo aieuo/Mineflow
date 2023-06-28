@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use SOFe\AwaitGenerator\Await;
 
@@ -21,16 +21,20 @@ class PlaySound extends FlowItem {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private NumberArgument $volume;
+    private NumberArgument $pitch;
 
     public function __construct(
         string         $player = "",
         private string $sound = "",
-        private string $volume = "1",
-        private string $pitch = "1"
+        float          $volume = 1,
+        float          $pitch = 1
     ) {
         parent::__construct(self::PLAY_SOUND, FlowItemCategory::PLAYER);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->volume = new NumberArgument("volume", $volume, example: "1");
+        $this->pitch = new NumberArgument("pitch", $pitch, example: "1");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -38,7 +42,7 @@ class PlaySound extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getSound(), $this->getVolume(), $this->getPitch()];
+        return [$this->player->get(), $this->getSound(), $this->volume->get(), $this->pitch->get()];
     }
 
     public function setSound(string $health): void {
@@ -49,24 +53,16 @@ class PlaySound extends FlowItem {
         return $this->sound;
     }
 
-    public function setVolume(string $volume): void {
-        $this->volume = $volume;
-    }
-
-    public function getVolume(): string {
+    public function getVolume(): NumberArgument {
         return $this->volume;
     }
 
-    public function setPitch(string $pitch): void {
-        $this->pitch = $pitch;
-    }
-
-    public function getPitch(): string {
+    public function getPitch(): NumberArgument {
         return $this->pitch;
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
+        return $this->player->get() !== "" and $this->sound !== "" and $this->volume->get() !== "" and $this->pitch->get() !== "";
     }
 
     public function getPlayer(): PlayerArgument {
@@ -75,8 +71,8 @@ class PlaySound extends FlowItem {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $sound = $source->replaceVariables($this->getSound());
-        $volume = $this->getInt($source->replaceVariables($this->getVolume()));
-        $pitch = $this->getInt($source->replaceVariables($this->getPitch()));
+        $volume = $this->volume->getInt($source);
+        $pitch = $this->pitch->getInt($source);
         $player = $this->player->getOnlinePlayer($source);
 
         $pk = new PlaySoundPacket();
@@ -95,19 +91,19 @@ class PlaySound extends FlowItem {
         $builder->elements([
             $this->player->createFormElement($variables),
             new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
-            new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
-            new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
+            $this->volume->createFormElement($variables),
+            $this->pitch->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
         $this->setSound($content[1]);
-        $this->setVolume($content[2]);
-        $this->setPitch($content[3]);
+        $this->volume->set($content[2]);
+        $this->pitch->set($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->getSound(), $this->getVolume(), $this->getPitch()];
+        return [$this->player->get(), $this->getSound(), $this->volume->get(), $this->pitch->get()];
     }
 }
