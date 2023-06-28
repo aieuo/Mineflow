@@ -39,7 +39,7 @@ class CommandForm {
                     Language::get("form.command.addCommand.permission.true"),
                     Language::get("form.command.addCommand.permission.custom"),
                 ], $defaults[2] ?? 0),
-                new CancelToggle(fn() => $callback === null ? $this->sendMenu($player) : $callback(false)),
+                new CancelToggle(fn() => $callback === null ? $this->sendMenu($player) : $callback(false, null)),
             ])->onReceive(function (Player $player, array $data) use($callback) {
                 $manager = Mineflow::getCommandManager();
                 $original = $manager->getCommandLabel($data[0]);
@@ -63,7 +63,7 @@ class CommandForm {
                 if ($callback === null) {
                     $this->sendCommandMenu($player, $command);
                 } else {
-                    $callback(true);
+                    $callback(true, $command);
                 }
             })->show($player);
     }
@@ -79,9 +79,8 @@ class CommandForm {
                     throw new InvalidFormValueException("@form.command.notFound", 0);
                 }
 
-                $command = $manager->getCommand($manager->getOriginCommand($data[0]));
-                Session::getSession($player)
-                    ->set("command_menu_prev", [$this, "sendSelectCommand"]);
+                $command = $manager->getCommand($manager->getCommandLabel($data[0]));
+                Session::getSession($player)->set("command_menu_prev", $this->sendSelectCommand(...));
                 $this->sendCommandMenu($player, $command);
             })->show($player);
     }
