@@ -38,18 +38,18 @@ abstract class SimpleFlowItem extends FlowItem {
         }
     }
 
-    public function addPlaceholder(FlowItemArgument $placeholder, bool $updateDescription = true): void {
-        $this->arguments[] = $placeholder;
+    public function addArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
+        $this->arguments[] = $argument;
 
-        if ($updateDescription and $placeholder->getDescription() === "") {
+        if ($updateDescription and $argument->getDescription() === "") {
             $type = $this instanceof Condition ? "condition" : "action";
-            $placeholder->setDescription("@{$type}.{$this->getId()}.form.{$placeholder->getName()}");
+            $argument->setDescription("@{$type}.{$this->getId()}.form.{$argument->getName()}");
         }
     }
 
     public function isDataValid(): bool {
-        foreach ($this->getArguments() as $placeholder) {
-            if (!$placeholder->isOptional() and !$placeholder->isNotEmpty()) return false;
+        foreach ($this->getArguments() as $argument) {
+            if (!$argument->isOptional() and !$argument->isNotEmpty()) return false;
         }
         return true;
     }
