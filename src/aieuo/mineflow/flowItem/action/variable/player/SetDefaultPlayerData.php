@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\variable\player;
 
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\CustomVariableData;
 use aieuo\mineflow\variable\object\PlayerVariable;
@@ -20,11 +20,14 @@ class SetDefaultPlayerData extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    public function __construct(
-        private string $dataName = "",
-        private string $defaultValue = ""
-    ) {
+    private StringArgument $dataName;
+    private StringArgument $defaultValue;
+
+    public function __construct(string $dataName = "", string $defaultValue = "") {
         parent::__construct(self::SET_DEFAULT_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
+
+        $this->dataName = new StringArgument("name", $dataName, "@action.setPlayerData.form.name", example: "tag");
+        $this->defaultValue = new StringArgument("default", $defaultValue, "@action.setPlayerData.form.default", example: "aieuo", optional: true);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -32,34 +35,26 @@ class SetDefaultPlayerData extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getDataName(), $this->getDefaultValue()];
+        return [$this->dataName->get(), $this->defaultValue->get()];
     }
 
-    public function getDataName(): string {
+    public function getDataName(): StringArgument {
         return $this->dataName;
     }
 
-    public function setDataName(string $dataName): void {
-        $this->dataName = $dataName;
-    }
-
-    public function getDefaultValue(): string {
+    public function getDefaultValue(): StringArgument {
         return $this->defaultValue;
     }
 
-    public function setDefaultValue(string $defaultValue): void {
-        $this->defaultValue = $defaultValue;
-    }
-
     public function isDataValid(): bool {
-        return $this->dataName !== "" and $this->defaultValue !== "";
+        return $this->dataName->isNotEmpty() and $this->defaultValue->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
 
-        $name = $source->replaceVariables($this->getDataName());
-        $default = $this->getDefaultValue() === "" ? null : $helper->copyOrCreateVariable($this->getDefaultValue(), $source);
+        $name = $this->dataName->getString($source);
+        $default = $this->defaultValue->get() === "" ? null : $helper->copyOrCreateVariable($this->defaultValue->get(), $source);
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {
@@ -72,17 +67,17 @@ class SetDefaultPlayerData extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.setPlayerData.form.name", "tag", $this->getDataName(), true),
-            new ExampleInput("@action.setPlayerData.form.default", "aieuo", $this->getDefaultValue(), false),
+            $this->dataName->createFormElement($variables),
+            $this->defaultValue->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setDataName($content[0]);
-        $this->setDefaultValue($content[1]);
+        $this->dataName->set($content[0]);
+        $this->defaultValue->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getDataName(), $this->getDefaultValue()];
+        return [$this->dataName->get(), $this->defaultValue->get()];
     }
 }

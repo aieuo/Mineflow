@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -24,12 +24,16 @@ class GetVariableNested extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        private string $variableName = "",
-        private string $resultName = "var",
-        private string $fallbackValue = "",
-    ) {
+    private StringArgument $variableName;
+    private StringArgument $resultName;
+    private StringArgument $fallbackValue;
+
+    public function __construct(string $variableName = "", string $resultName = "var",string $fallbackValue = "") {
         parent::__construct(self::GET_VARIABLE_NESTED, FlowItemCategory::VARIABLE);
+
+        $this->variableName = new StringArgument("name", $variableName, example: "target.hand");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "item");
+        $this->fallbackValue = new StringArgument("fallbackValue", $fallbackValue, example: "optional", optional: true);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,44 +41,32 @@ class GetVariableNested extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getResultName()];
+        return [$this->variableName->get(), $this->resultName->get()];
     }
 
-    public function setVariableName(string $name): void {
-        $this->variableName = $name;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
-    public function setFallbackValue(string $fallbackValue): void {
-        $this->fallbackValue = $fallbackValue;
-    }
-
-    public function getFallbackValue(): string {
+    public function getFallbackValue(): StringArgument {
         return $this->fallbackValue;
     }
 
     public function isDataValid(): bool {
-        return $this->getVariableName() !== "" and !empty($this->getResultName());
+        return $this->variableName->isNotEmpty() and !empty($this->resultName->get());
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $variableName = $source->replaceVariables($this->getVariableName());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $variableName = $this->variableName->getString($source);
+        $resultName = $this->resultName->getString($source);
 
         $variable = $source->getVariable($variableName) ?? Mineflow::getVariableHelper()->getNested($variableName);
 
-        $fallbackValue = $this->getFallbackValue();
+        $fallbackValue = $this->fallbackValue->get();
         if ($fallbackValue !== "" and $variable === null) {
             $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
         }
@@ -86,30 +78,30 @@ class GetVariableNested extends FlowItem {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return $this->resultName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.getVariable.form.target", "target.hand", $this->getVariableName(), true),
-            new ExampleInput("@action.form.resultVariableName", "item", $this->getResultName(), true),
-            new ExampleInput("@action.getVariable.form.fallbackValue", "optional", $this->getFallbackValue(), false),
+            $this->variableName->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
+            $this->fallbackValue->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setResultName($content[1]);
-        $this->setFallbackValue($content[2] ?? "");
+        $this->variableName->set($content[0]);
+        $this->resultName->set($content[1]);
+        $this->fallbackValue->set($content[2] ?? "");
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getResultName(), $this->getFallbackValue()];
+        return [$this->variableName->get(), $this->resultName->get(), $this->fallbackValue->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(UnknownVariable::class)
+            $this->resultName->get() => new DummyVariable(UnknownVariable::class)
         ];
     }
 }

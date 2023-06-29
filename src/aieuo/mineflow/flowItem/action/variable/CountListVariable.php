@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -25,11 +25,14 @@ class CountListVariable extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    public function __construct(
-        private string $variableName = "",
-        private string $resultName = "count"
-    ) {
+    private StringArgument $variableName;
+    private StringArgument $resultName;
+
+    public function __construct(string $variableName = "", string $resultName = "count") {
         parent::__construct(self::COUNT_LIST_VARIABLE, FlowItemCategory::VARIABLE);
+
+        $this->variableName = new StringArgument("name", $variableName, example: "list");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,32 +40,24 @@ class CountListVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getResultName()];
+        return [$this->variableName->get(), $this->resultName->get()];
     }
 
-    public function setVariableName(string $name): void {
-        $this->variableName = $name;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getVariableName() !== "" and !empty($this->getResultName());
+        return $this->variableName->isNotEmpty() and !empty($this->resultName->get());
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $name = $this->variableName->getString($source);
+        $resultName = $this->resultName->getString($source);
 
         $variable = $source->getVariable($name) ?? Mineflow::getVariableHelper()->getNested($name);
 
@@ -79,23 +74,23 @@ class CountListVariable extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.count.form.name", "list", $this->getVariableName(), true),
-            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+            $this->variableName->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setResultName($content[1]);
+        $this->variableName->set($content[0]);
+        $this->resultName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getResultName()];
+        return [$this->variableName->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            $this->resultName->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

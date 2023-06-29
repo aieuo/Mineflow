@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\script;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
 
+    private StringArgument $recipeName;
     private EntityArgument $entity;
 
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
 
+        $this->recipeName = new StringArgument("name", $name, "@action.executeRecipe.form.name", example: "aieuo");
         $this->entity = new EntityArgument("target", $entity);
     }
 
@@ -26,7 +29,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getRecipeName(), $this->entity->get()];
+        return [$this->recipeName->get(), $this->entity->get()];
     }
 
     public function getEntity(): EntityArgument {
@@ -34,7 +37,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     }
 
     public function isDataValid(): bool {
-        return $this->getRecipeName() !== "" and $this->entity->isNotEmpty();
+        return $this->recipeName->isNotEmpty() and $this->entity->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -49,7 +52,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
+            new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->recipeName->get(), true),
            $this->entity->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->clear();
@@ -57,11 +60,11 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setRecipeName($content[0]);
+        $this->recipeName->set($content[0]);
         $this->entity->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getRecipeName(), $this->entity->get()];
+        return [$this->recipeName->get(), $this->entity->get()];
     }
 }

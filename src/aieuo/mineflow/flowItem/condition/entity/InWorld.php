@@ -2,6 +2,8 @@
 
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -9,8 +11,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class InWorld extends FlowItem implements Condition {
@@ -18,11 +18,13 @@ class InWorld extends FlowItem implements Condition {
     use HasSimpleEditForm;
 
     private EntityArgument $entity;
+    private StringArgument $world;
 
-    public function __construct(string $entity = "", private string $world = "") {
+    public function __construct(string $entity = "", string $world = "") {
         parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
 
         $this->entity = new EntityArgument("target", $entity);
+        $this->world = new StringArgument("world", $world, "@action.createPosition.form.world", example: "world");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -30,28 +32,24 @@ class InWorld extends FlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->getWorld()];
+        return [$this->entity->get(), $this->world->get()];
     }
 
     public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function setWorld(string $world): void {
-        $this->world = $world;
-    }
-
-    public function getWorld(): string {
+    public function getWorld(): StringArgument {
         return $this->world;
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->getWorld() !== "";
+        return $this->entity->isNotEmpty() and $this->world->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->entity->getOnlineEntity($source);
-        $world = $source->replaceVariables($this->getWorld());
+        $world = $this->world->getString($source);
 
         yield Await::ALL;
         return $entity->getPosition()->getWorld()->getFolderName() === $world;
@@ -60,16 +58,16 @@ class InWorld extends FlowItem implements Condition {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
            $this->entity->createFormElement($variables),
-            new ExampleInput("@action.createPosition.form.world", "world", $this->getWorld(), true),
+           $this->world->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->entity->set($content[0]);
-        $this->setWorld($content[1]);
+        $this->world->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->entity->get(), $this->getWorld()];
+        return [$this->entity->get(), $this->world->get()];
     }
 }

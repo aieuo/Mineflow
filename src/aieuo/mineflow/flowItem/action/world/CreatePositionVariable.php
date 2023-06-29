@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -13,7 +14,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -30,19 +30,17 @@ class CreatePositionVariable extends FlowItem {
     private NumberArgument $x;
     private NumberArgument $y;
     private NumberArgument $z;
+    private StringArgument $world;
+    private StringArgument $variableName;
 
-    public function __construct(
-        float          $x = 0,
-        float          $y = 0,
-        float          $z = 0,
-        private string $world = "{target.world.name}",
-        private string $variableName = "pos"
-    ) {
+    public function __construct(float $x = 0, float $y = 0, float $z = 0, string $world = "{target.world.name}", string $variableName = "pos") {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
 
+        $this->variableName = new StringArgument("position", $variableName, "@action.form.resultVariableName", example: "pos");
         $this->x = new NumberArgument("x", $x, example: "0");
         $this->y = new NumberArgument("y", $y, example: "100");
         $this->z = new NumberArgument("z", $z, example: "16");
+        $this->world = new StringArgument("world", $world, example: "{target.level}");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -50,14 +48,10 @@ class CreatePositionVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->x->get(), $this->y->get(), $this->z->get(), $this->getWorld()];
+        return [$this->variableName->get(), $this->x->get(), $this->y->get(), $this->z->get(), $this->world->get()];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
@@ -73,24 +67,20 @@ class CreatePositionVariable extends FlowItem {
         return $this->z;
     }
 
-    public function setWorld(string $world): void {
-        $this->world = $world;
-    }
-
-    public function getWorld(): string {
+    public function getWorld(): StringArgument {
         return $this->world;
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "";
+        return $this->variableName->isNotEmpty() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
+        $name = $this->variableName->getString($source);
         $x = $this->x->getFloat($source);
         $y = $this->y->getFloat($source);
         $z = $this->z->getFloat($source);
-        $levelName = $source->replaceVariables($this->getWorld());
+        $levelName = $this->world->getString($source);
         $level = Server::getInstance()->getWorldManager()->getWorldByName($levelName);
 
         if ($level === null) {
@@ -103,7 +93,7 @@ class CreatePositionVariable extends FlowItem {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getVariableName();
+        return $this->variableName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
@@ -111,29 +101,29 @@ class CreatePositionVariable extends FlowItem {
             $this->x->createFormElement($variables),
             $this->y->createFormElement($variables),
             $this->z->createFormElement($variables),
-            new ExampleInput("@action.createPosition.form.world", "{target.level}", $this->getWorld(), true),
-            new ExampleInput("@action.form.resultVariableName", "pos", $this->getVariableName(), true),
+            $this->world->createFormElement($variables),
+            $this->variableName->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([4, 0, 1, 2, 3]);
         });
     }
 
     public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
+        $this->variableName->set($content[0]);
         $this->x->set($content[1]);
         $this->y->set($content[2]);
         $this->z->set($content[3]);
-        $this->setWorld($content[4]);
+        $this->world->set($content[4]);
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->x->get(), $this->y->get(), $this->z->get(), $this->getWorld()];
+        return [$this->variableName->get(), $this->x->get(), $this->y->get(), $this->z->get(), $this->world->get()];
     }
 
     public function getAddingVariables(): array {
-        $pos = $this->x->get().", ".$this->y->get().", ".$this->z->get().", ".$this->getWorld();
+        $pos = $this->x->get().", ".$this->y->get().", ".$this->z->get().", ".$this->world->get();
         return [
-            $this->getVariableName() => new DummyVariable(PositionVariable::class, $pos)
+            $this->variableName->get() => new DummyVariable(PositionVariable::class, $pos)
         ];
     }
 }

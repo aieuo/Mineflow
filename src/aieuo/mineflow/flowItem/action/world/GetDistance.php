@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
@@ -24,16 +24,14 @@ class GetDistance extends FlowItem {
 
     private PositionArgument $position1;
     private PositionArgument $position2;
+    private StringArgument $resultName;
 
-    public function __construct(
-        string         $pos1 = "",
-        string         $pos2 = "",
-        private string $resultName = "distance"
-    ) {
+    public function __construct(string         $pos1 = "", string         $pos2 = "", string $resultName = "distance") {
         parent::__construct(self::GET_DISTANCE, FlowItemCategory::WORLD);
 
         $this->position1 = new PositionArgument("pos1", $pos1);
         $this->position2 = new PositionArgument("pos2", $pos2);
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "distance");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -41,7 +39,7 @@ class GetDistance extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->position1->get(), $this->position2->get(), $this->getResultName()];
+        return [$this->position1->get(), $this->position2->get(), $this->resultName->get()];
     }
 
     public function getPosition1(): PositionArgument {
@@ -52,22 +50,18 @@ class GetDistance extends FlowItem {
         return $this->position2;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->position1->isNotEmpty() and $this->position2->isNotEmpty() and $this->resultName !== "";
+        return $this->position1->isNotEmpty() and $this->position2->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $pos1 = $this->position1->getPosition($source);
         $pos2 = $this->position2->getPosition($source);
-        $result = $source->replaceVariables($this->getResultName());
+        $result = $this->resultName->getString($source);
 
         $distance = $pos1->distance($pos2);
 
@@ -81,23 +75,23 @@ class GetDistance extends FlowItem {
         $builder->elements([
             $this->position1->createFormElement($variables),
             $this->position2->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "distance", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->position1->set($content[0]);
         $this->position2->set($content[1]);
-        $this->setResultName($content[2]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->position1->get(), $this->position2->get(), $this->getResultName()];
+        return [$this->position1->get(), $this->position2->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            $this->resultName->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

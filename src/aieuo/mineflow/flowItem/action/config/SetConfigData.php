@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\config;
 
+use aieuo\mineflow\flowItem\argument\ConfigArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -11,8 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ConfigArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -23,12 +23,16 @@ class SetConfigData extends FlowItem {
     use HasSimpleEditForm;
 
     private ConfigArgument $config;
+    private StringArgument $key;
+    private StringArgument $value;
 
-    public function __construct(string $config = "", private string $key = "", private string $value = "") {
+    public function __construct(string $config = "", string $key = "", string $value = "") {
         parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->config = new ConfigArgument("config", $config);
+        $this->key = new StringArgument("key", $key, example: "aieuo");
+        $this->value = new StringArgument("value", $value, example: "100");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,36 +40,28 @@ class SetConfigData extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->config->get(), $this->getKey(), $this->getValue()];
+        return [$this->config->get(), $this->key->get(), $this->value->get()];
     }
 
     public function getConfig(): ConfigArgument {
         return $this->config;
     }
 
-    public function setKey(string $health): void {
-        $this->key = $health;
-    }
-
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
     }
 
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
+    public function getValue(): StringArgument {
         return $this->value;
     }
 
     public function isDataValid(): bool {
-        return $this->config->isNotEmpty() and $this->key !== "" and $this->value !== "";
+        return $this->config->isNotEmpty() and $this->key->isNotEmpty() and $this->value->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $key = $source->replaceVariables($this->getKey());
-        $value = $this->getValue();
+        $key = $this->key->getString($source);
+        $value = $this->value->get();
 
         $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
@@ -91,18 +87,18 @@ class SetConfigData extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->config->createFormElement($variables),
-            new ExampleInput("@action.setConfig.form.key", "aieuo", $this->getKey(), true),
-            new ExampleInput("@action.setConfig.form.value", "100", $this->getValue(), true),
+            $this->key->createFormElement($variables),
+            $this->value->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->config->set($content[0]);
-        $this->setKey($content[1]);
-        $this->setValue($content[2]);
+        $this->key->set($content[1]);
+        $this->value->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->config->get(), $this->getKey(), $this->getValue()];
+        return [$this->config->get(), $this->key->get(), $this->value->get()];
     }
 }

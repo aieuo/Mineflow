@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
@@ -23,12 +23,16 @@ class JoinListVariableToString extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    public function __construct(
-        private string $variableName = "",
-        private string $separator = "",
-        private string $resultName = "result"
-    ) {
+    private StringArgument $variableName;
+    private StringArgument $separator;
+    private StringArgument $resultName;
+
+    public function __construct(string $variableName = "", string $separator = "", string $resultName = "result") {
         parent::__construct(self::JOIN_LIST_VARIABLE_TO_STRING, FlowItemCategory::VARIABLE);
+
+        $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo");
+        $this->separator = new StringArgument("separator", $separator, example: ", ", optional: true);
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "string");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,42 +40,30 @@ class JoinListVariableToString extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getSeparator(), $this->getResultName()];
+        return [$this->variableName->get(), $this->separator->get(), $this->resultName->get()];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
-    public function setSeparator(string $separator): void {
-        $this->separator = $separator;
-    }
-
-    public function getSeparator(): string {
+    public function getSeparator(): StringArgument {
         return $this->separator;
     }
 
-    public function setResultName(string $result): void {
-        $this->resultName = $result;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->separator !== "";
+        return $this->variableName->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $source->replaceVariables($this->getVariableName());
-        $separator = $source->replaceVariables($this->getSeparator());
-        $result = $source->replaceVariables($this->getResultName());
+        $name = $this->variableName->getString($source);
+        $separator = $this->separator->getString($source);
+        $result = $this->resultName->getString($source);
 
         $variable = $source->getVariable($name) ?? $helper->getNested($name);
         if ($variable === null) {
@@ -92,25 +84,25 @@ class JoinListVariableToString extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-            new ExampleInput("@action.joinToString.form.separator", ", ", $this->getSeparator(), false),
-            new ExampleInput("@action.form.resultVariableName", "string", $this->getResultName(), true),
+            $this->variableName->createFormElement($variables),
+            $this->separator->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setSeparator($content[1]);
-        $this->setResultName($content[2]);
+        $this->variableName->set($content[0]);
+        $this->separator->set($content[1]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getSeparator(), $this->getResultName()];
+        return [$this->variableName->get(), $this->separator->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(StringVariable::class)
+            $this->resultName->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

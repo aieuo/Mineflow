@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -13,7 +14,6 @@ use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
@@ -26,13 +26,16 @@ class CreateConfigVariable extends FlowItem {
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
+    
+    private StringArgument $fileName;
+    private StringArgument $variableName;
 
-    public function __construct(
-        private string $fileName = "",
-        private string $variableName = "config"
-    ) {
+    public function __construct(string $fileName = "", string $variableName = "config") {
         parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
+
+        $this->variableName = new StringArgument("config", $variableName, "@action.form.resultVariableName", example: "config");
+        $this->fileName = new StringArgument("name", $fileName, example: "config");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -40,32 +43,24 @@ class CreateConfigVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getFileName()];
+        return [$this->variableName->get(), $this->fileName->get()];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
-    public function setFileName(string $id): void {
-        $this->fileName = $id;
-    }
-
-    public function getFileName(): string {
+    public function getFileName(): StringArgument {
         return $this->fileName;
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->fileName !== "";
+        return $this->variableName->isNotEmpty() and $this->fileName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
-        $file = $source->replaceVariables($this->getFileName());
+        $name = $this->variableName->getString($source);
+        $file = $this->fileName->getString($source);
         if (!Utils::isValidFileName($file)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
@@ -74,30 +69,30 @@ class CreateConfigVariable extends FlowItem {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getVariableName();
+        return $this->variableName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.createConfig.form.name", "config", $this->getFileName(), true),
-            new ExampleInput("@action.form.resultVariableName", "config", $this->getVariableName(), true),
+            $this->fileName->isNotEmpty(),
+            $this->variableName->isNotEmpty(),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([1, 0]);
         });
     }
 
     public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setFileName($content[1]);
+        $this->variableName->set($content[0]);
+        $this->fileName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getFileName()];
+        return [$this->variableName->get(), $this->fileName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(ConfigVariable::class, $this->getFileName())
+            $this->variableName->get() => new DummyVariable(ConfigVariable::class, $this->fileName->get())
         ];
     }
 }

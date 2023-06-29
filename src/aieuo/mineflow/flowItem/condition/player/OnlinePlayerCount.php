@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\player;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 
 abstract class OnlinePlayerCount extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
+    protected NumberArgument $value;
+
     public function __construct(
-        string         $id,
-        string         $category = FlowItemCategory::PLAYER,
-        private string $value = ""
+        string $id,
+        string $category = FlowItemCategory::PLAYER,
+        string $value = ""
     ) {
         parent::__construct($id, $category);
+
+        $this->value = new NumberArgument("value", $value, "@condition.randomNumber.form.value", example: "5");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -29,32 +33,28 @@ abstract class OnlinePlayerCount extends FlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getValue()];
+        return [$this->value->get()];
     }
 
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
+    public function getValue(): NumberArgument {
         return $this->value;
     }
 
     public function isDataValid(): bool {
-        return $this->value !== "";
+        return $this->value->isNotEmpty();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleNumberInput("@condition.randomNumber.form.value", "5", $this->getValue(), true),
+            $this->value->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setValue($content[0]);
+        $this->value->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getValue()];
+        return [$this->value->get()];
     }
 }

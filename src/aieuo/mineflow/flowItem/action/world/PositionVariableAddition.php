@@ -6,13 +6,13 @@ namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
@@ -28,20 +28,16 @@ class PositionVariableAddition extends FlowItem {
     private NumberArgument $x;
     private NumberArgument $y;
     private NumberArgument $z;
+    private StringArgument $resultName;
 
-    public function __construct(
-        string         $position = "pos",
-        string         $x = null,
-        string         $y = null,
-        string         $z = null,
-        private string $resultName = "pos"
-    ) {
+    public function __construct(string $position = "pos", float $x = null, float $y = null, float $z = null, string $resultName = "pos") {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
         $this->position = new PositionArgument("position", $position);
         $this->x = new NumberArgument("x", $x, example: "0");
         $this->y = new NumberArgument("y", $y, example: "100");
         $this->z = new NumberArgument("z", $z, example: "16");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -49,7 +45,7 @@ class PositionVariableAddition extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->position->get(), $this->x->get(), $this->y->get(), $this->z->get(), $this->getResultName()];
+        return [$this->position->get(), $this->x->get(), $this->y->get(), $this->z->get(), $this->resultName->get()];
     }
 
     public function getPosition(): PositionArgument {
@@ -68,16 +64,12 @@ class PositionVariableAddition extends FlowItem {
         return $this->z;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "" and $this->resultName !== "";
+        return $this->position->isNotEmpty() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "" and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -86,7 +78,7 @@ class PositionVariableAddition extends FlowItem {
         $x = $this->x->getFloat($source);
         $y = $this->y->getFloat($source);
         $z = $this->z->getFloat($source);
-        $name = $source->replaceVariables($this->getResultName());
+        $name = $this->resultName->getString($source);
 
         $position = Position::fromObject($pos->add($x, $y, $z), $pos->getWorld());
 
@@ -94,7 +86,7 @@ class PositionVariableAddition extends FlowItem {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return $this->resultName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
@@ -103,7 +95,7 @@ class PositionVariableAddition extends FlowItem {
             $this->x->createFormElement($variables),
             $this->y->createFormElement($variables),
             $this->z->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
@@ -112,17 +104,17 @@ class PositionVariableAddition extends FlowItem {
         $this->x->set($content[1]);
         $this->y->set($content[2]);
         $this->z->set($content[3]);
-        $this->setResultName($content[4]);
+        $this->resultName->set($content[4]);
     }
 
     public function serializeContents(): array {
-        return [$this->position->get(), $this->x->get(), $this->y->get(), $this->z->get(), $this->getResultName()];
+        return [$this->position->get(), $this->x->get(), $this->y->get(), $this->z->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         $desc = $this->position->get()." + (".$this->x->get().",".$this->y->get().",".$this->z->get().")";
         return [
-            $this->getResultName() => new DummyVariable(PositionVariable::class, $desc)
+            $this->resultName->get() => new DummyVariable(PositionVariable::class, $desc)
         ];
     }
 }

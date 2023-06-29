@@ -6,13 +6,13 @@ namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
@@ -24,19 +24,21 @@ abstract class GetNearestEntityBase extends FlowItem {
     use HasSimpleEditForm;
 
     protected PositionArgument $position;
-    private NumberArgument $maxDistance;
+    protected NumberArgument $maxDistance;
+    protected StringArgument $resultName;
 
     public function __construct(
-        string         $id,
-        string         $category = FlowItemCategory::WORLD,
-        string         $position = "",
-        int            $maxDistance = 100,
-        private string $resultName = "entity"
+        string $id,
+        string $category = FlowItemCategory::WORLD,
+        string $position = "",
+        int    $maxDistance = 100,
+        string $resultName = "entity"
     ) {
         parent::__construct($id, $category);
 
         $this->position = new PositionArgument("position", $position);
         $this->maxDistance = new NumberArgument("maxDistance", $maxDistance, "@action.getNearestEntity.form.maxDistance", example: "100");
+        $this->resultName = new StringArgument("entity", $resultName, "@action.form.resultVariableName", example: "entity");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -44,7 +46,7 @@ abstract class GetNearestEntityBase extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->position->get(), $this->getResultName()];
+        return [$this->position->get(), $this->resultName->get()];
     }
 
     public function getPosition(): PositionArgument {
@@ -60,21 +62,17 @@ abstract class GetNearestEntityBase extends FlowItem {
      */
     abstract public function getTargetClass(): string;
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->getResultName() !== "";
+        return $this->position->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->position->getPosition($source);
-        $result = $source->replaceVariables($this->getResultName());
+        $result = $this->resultName->getString($source);
         $maxDistance = $this->maxDistance->getFloat($source);
 
         $entity = $position->world->getNearestEntity($position, $maxDistance, $this->getTargetClass());
@@ -90,23 +88,23 @@ abstract class GetNearestEntityBase extends FlowItem {
         $builder->elements([
             $this->position->createFormElement($variables),
             $this->maxDistance->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->position->set($content[0]);
         $this->maxDistance->set($content[1]);
-        $this->setResultName($content[2]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->position->get(), $this->maxDistance->get(), $this->getResultName()];
+        return [$this->position->get(), $this->maxDistance->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(EntityVariable::class, "nullable")
+            $this->resultName->get() => new DummyVariable(EntityVariable::class, "nullable")
         ];
     }
 }

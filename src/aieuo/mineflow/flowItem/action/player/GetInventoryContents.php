@@ -15,7 +15,7 @@ class GetInventoryContents extends GetInventoryContentsBase {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $resultName = $source->replaceVariables($this->getResultName());
+        $resultName = $this->resultName->getString($source);
         $entity = $this->player->getOnlinePlayer($source);
 
         $variable = new InventoryVariable($entity->getInventory());

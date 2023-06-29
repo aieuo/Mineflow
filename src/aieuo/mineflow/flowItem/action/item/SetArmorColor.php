@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use pocketmine\color\Color;
 use pocketmine\item\Armor;
@@ -25,16 +25,17 @@ class SetArmorColor extends FlowItem {
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private ItemArgument $armor;
+    private NumberArgument $red;
+    private NumberArgument $green;
+    private NumberArgument $blue;
 
-    public function __construct(
-        string         $item = "",
-        private string $red = "",
-        private string $green = "",
-        private string $blue = ""
-    ) {
+    public function __construct(string $item = "", string $red = "", string $green = "", string $blue = "") {
         parent::__construct(self::SET_ARMOR_COLOR, FlowItemCategory::ITEM);
 
         $this->armor = new ItemArgument("armor", $item);
+        $this->red = new NumberArgument("red", $red, example: "0", min: 0, max: 255);
+        $this->green = new NumberArgument("green", $green, example: "255", min: 0, max: 255);
+        $this->blue = new NumberArgument("blue", $blue, example: "0", min: 0, max: 255);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -42,45 +43,33 @@ class SetArmorColor extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->armor->get(), $this->getRed(), $this->getGreen(), $this->getBlue()];
+        return [$this->armor->get(), $this->red->get(), $this->green->get(), $this->blue->get()];
     }
 
     public function getArmor(): ItemArgument {
         return $this->armor;
     }
 
-    public function setRed(string $red): void {
-        $this->red = $red;
-    }
-
-    public function getRed(): string {
+    public function getRed(): NumberArgument {
         return $this->red;
     }
 
-    public function setGreen(string $green): void {
-        $this->green = $green;
-    }
-
-    public function getGreen(): string {
+    public function getGreen(): NumberArgument {
         return $this->green;
     }
 
-    public function setBlue(string $blue): void {
-        $this->blue = $blue;
-    }
-
-    public function getBlue(): string {
+    public function getBlue(): NumberArgument {
         return $this->blue;
     }
 
     public function isDataValid(): bool {
-        return $this->armor->isNotEmpty() and $this->red !== "" and $this->green !== "" and $this->blue !== "";
+        return $this->armor->isNotEmpty() and $this->red->isNotEmpty() and $this->green->isNotEmpty() and $this->blue->isNotEmpty();
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $r = $this->getInt($source->replaceVariables($this->getRed()), 0, 255);
-        $g = $this->getInt($source->replaceVariables($this->getGreen()), 0, 255);
-        $b = $this->getInt($source->replaceVariables($this->getBlue()), 0, 255);
+        $r = $this->red->getInt($source);
+        $g = $this->green->getInt($source);
+        $b = $this->blue->getInt($source);
 
         $item = $this->armor->getItem($source);
         if (!($item instanceof Armor)) {
@@ -95,20 +84,20 @@ class SetArmorColor extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->armor->createFormElement($variables),
-            new ExampleInput("@action.setArmorColor.form.red", "0", $this->getRed(), true),
-            new ExampleInput("@action.setArmorColor.form.green", "255", $this->getGreen(), true),
-            new ExampleInput("@action.setArmorColor.form.blue", "0", $this->getBlue(), true),
+            $this->red->createFormElement($variables),
+            $this->green->createFormElement($variables),
+            $this->blue->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->armor->set($content[0]);
-        $this->setRed($content[1]);
-        $this->setGreen($content[2]);
-        $this->setBlue($content[3]);
+        $this->red->set($content[1]);
+        $this->green->set($content[2]);
+        $this->blue->set($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->armor->get(), $this->getRed(), $this->getGreen(), $this->getBlue()];
+        return [$this->armor->get(), $this->red->get(), $this->green->get(), $this->blue->get()];
     }
 }

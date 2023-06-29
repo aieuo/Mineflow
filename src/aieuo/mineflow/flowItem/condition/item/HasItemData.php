@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\item;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,8 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class HasItemData extends FlowItem implements Condition {
@@ -20,15 +20,15 @@ class HasItemData extends FlowItem implements Condition {
     use HasSimpleEditForm;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
-    private ItemArgument $item;
 
-    public function __construct(
-        string         $item = "",
-        private string $key = "",
-    ) {
+    private ItemArgument $item;
+    private StringArgument $key;
+
+    public function __construct(string $item = "", string $key = "") {
         parent::__construct(self::HAS_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->item = new ItemArgument("item", $item);
+        $this->key = new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -36,28 +36,24 @@ class HasItemData extends FlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->item->get(), $this->getKey()];
+        return [$this->item->get(), $this->key->get()];
     }
 
     public function getItem(): ItemArgument {
         return $this->item;
     }
 
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->getKey() !== "";
+        return $this->item->isNotEmpty() and $this->key->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->item->getItem($source);
-        $key = $source->replaceVariables($this->getKey());
+        $key = $this->key->getString($source);
         $tags = $item->getNamedTag();
 
         yield Await::ALL;
@@ -67,16 +63,16 @@ class HasItemData extends FlowItem implements Condition {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->item->createFormElement($variables),
-            new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
+            $this->key->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->item->set($content[0]);
-        $this->setKey($content[1]);
+        $this->key->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->item->get(), $this->getKey()];
+        return [$this->item->get(), $this->key->get()];
     }
 }

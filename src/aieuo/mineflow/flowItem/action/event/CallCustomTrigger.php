@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\event;
 
 use aieuo\mineflow\event\CustomTriggerCallEvent;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
 use SOFe\AwaitGenerator\Await;
@@ -20,8 +20,12 @@ class CallCustomTrigger extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    public function __construct(private string $triggerName = "") {
+    private StringArgument $triggerName;
+
+    public function __construct(string $triggerName = "") {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
+
+        $this->triggerName = new StringArgument("identifier", $triggerName, example: "aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -29,23 +33,19 @@ class CallCustomTrigger extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getTriggerName()];
+        return [$this->triggerName->get()];
     }
 
-    public function setTriggerName(string $formName): void {
-        $this->triggerName = $formName;
-    }
-
-    public function getTriggerName(): string {
+    public function getTriggerName(): StringArgument {
         return $this->triggerName;
     }
 
     public function isDataValid(): bool {
-        return $this->triggerName !== "";
+        return $this->triggerName->get();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getTriggerName());
+        $name = $this->triggerName->getString($source);
         $trigger = new CustomTrigger($name);
 
         TriggerHolder::executeRecipeAll($trigger, $source->getTarget(), [], $source->getEvent());
@@ -56,15 +56,15 @@ class CallCustomTrigger extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.callTrigger.form.identifier", "aieuo", $this->getTriggerName(), true),
+            $this->triggerName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setTriggerName($content[0]);
+        $this->triggerName->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getTriggerName()];
+        return [$this->triggerName->get()];
     }
 }

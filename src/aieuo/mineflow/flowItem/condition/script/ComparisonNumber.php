@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -13,7 +14,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
@@ -30,12 +30,18 @@ class ComparisonNumber extends FlowItem implements Condition {
 
     private array $operatorSymbols = ["==", "!=", ">", "<", ">=", "<="];
 
+    private NumberArgument $value1;
+    private NumberArgument $value2;
+
     public function __construct(
-        private string $value1 = "",
-        private int    $operator = self::EQUAL,
-        private string $value2 = ""
+        string      $value1 = "",
+        private int $operator = self::EQUAL,
+        string      $value2 = ""
     ) {
         parent::__construct(self::COMPARISON_NUMBER, FlowItemCategory::SCRIPT);
+
+        $this->value1 = new NumberArgument("value1", $value1, example: "10");
+        $this->value2 = new NumberArgument("value2", $value2, example: "50");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -43,19 +49,14 @@ class ComparisonNumber extends FlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()];
+        return [$this->value1->get(), $this->operatorSymbols[$this->getOperator()], $this->value2->get()];
     }
 
-    public function setValues(string $value1, string $value2): void {
-        $this->value1 = $value1;
-        $this->value2 = $value2;
-    }
-
-    public function getValue1(): ?string {
+    public function getValue1(): NumberArgument {
         return $this->value1;
     }
 
-    public function getValue2(): ?string {
+    public function getValue2(): NumberArgument {
         return $this->value2;
     }
 
@@ -68,12 +69,12 @@ class ComparisonNumber extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->value1 !== "" and $this->value2 !== "";
+        return $this->value1->isNotEmpty() and $this->value2->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
-        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
+        $value1 = $this->value1->getFloat($source);
+        $value2 = $this->value2->getFloat($source);
         $operator = $this->getOperator();
 
         $result = match ($operator) {
@@ -92,18 +93,19 @@ class ComparisonNumber extends FlowItem implements Condition {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleNumberInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
+            $this->value1->createFormElement($variables),
             new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
-            new ExampleNumberInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), true),
+            $this->value2->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setValues($content[0], $content[2]);
+        $this->value1->set($content[0]);
         $this->setOperator($content[1]);
+        $this->value2->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getValue1(), $this->getOperator(), $this->getValue2()];
+        return [$this->value1->get(), $this->getOperator(), $this->value2->get()];
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -12,7 +14,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -46,14 +47,15 @@ class Calculate extends FlowItem {
 
     private array $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
-    public function __construct(
-        private string $value = "",
-        string         $operator = null,
-        private string $resultName = "result"
-    ) {
+    private NumberArgument $value;
+    private StringArgument $resultName;
+
+    public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
         parent::__construct(self::CALCULATE, FlowItemCategory::MATH);
 
+        $this->value = new NumberArgument("value", $value, example: "10");
         $this->operator = (int)($operator ?? self::SQUARE);
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -61,14 +63,10 @@ class Calculate extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getValue(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
+        return [$this->value->get(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
     }
 
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
+    public function getValue(): NumberArgument {
         return $this->value;
     }
 
@@ -80,21 +78,17 @@ class Calculate extends FlowItem {
         return $this->operator;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getValue() !== "";
+        return $this->value->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value = $this->getFloat($source->replaceVariables($this->getValue()));
-        $resultName = $source->replaceVariables($this->getResultName());
+        $value = $this->value->getFloat($source);
+        $resultName = $this->resultName->getString($source);
         $operator = $this->getOperator();
 
         $result = match ($operator) {
@@ -133,25 +127,25 @@ class Calculate extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.calculate.form.value", "10", $this->getValue(), true),
+            $this->value->createFormElement($variables),
             new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setValue($content[0]);
+        $this->value->set($content[0]);
         $this->setOperator($content[1]);
-        $this->setResultName($content[2]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getValue(), $this->getOperator(), $this->getResultName()];
+        return [$this->value->get(), $this->getOperator(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            $this->resultName->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

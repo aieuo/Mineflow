@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\command;
 
 use aieuo\mineflow\command\MineflowConsoleCommandSender;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -20,9 +21,13 @@ class CommandConsole extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    public function __construct(private string $command = "") {
+    private StringArgument $command;
+
+    public function __construct(string $command = "") {
         parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
         $this->setPermissions([FlowItemPermission::CONSOLE]);
+
+        $this->command = new StringArgument("command", $command, "@action.command.form.command", example: "mineflow");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -30,23 +35,19 @@ class CommandConsole extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getCommand()];
+        return [$this->command->get()];
     }
 
-    public function setCommand(string $command): void {
-        $this->command = $command;
-    }
-
-    public function getCommand(): string {
+    public function getCommand(): StringArgument {
         return $this->command;
     }
 
     public function isDataValid(): bool {
-        return $this->command !== "";
+        return $this->command->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $command = $source->replaceVariables($this->getCommand());
+        $command = $this->command->getString($source);
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage()), $command);
 
@@ -55,15 +56,15 @@ class CommandConsole extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.command.form.command", "mineflow", $this->getCommand(), true),
+            new ExampleInput("@action.command.form.command", "mineflow", $this->command->get(), true),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setCommand($content[0]);
+        $this->command->set($content[0]);
     }
 
     public function serializeContents(): array {
-        return [$this->getCommand()];
+        return [$this->command->get()];
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -13,7 +14,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 use function str_ends_with;
@@ -33,14 +33,15 @@ class ComparisonString extends FlowItem implements Condition {
 
     private array $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
-    public function __construct(
-        private string $value1 = "",
-        string         $operator = null,
-        private string $value2 = ""
-    ) {
+    private StringArgument $value1;
+    private StringArgument $value2;
+
+    public function __construct(string $value1 = "", string $operator = null, string $value2 = "") {
         parent::__construct(self::COMPARISON_STRING, FlowItemCategory::SCRIPT);
 
+        $this->value1 = new StringArgument("value1", $value1, "@condition.comparisonNumber.form.value1", example: "10");
         $this->operator = (int)($operator ?? self::EQUALS);
+        $this->value2 = new StringArgument("value2", $value2, "@condition.comparisonNumber.form.value2", example: "50", optional: true);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -48,19 +49,14 @@ class ComparisonString extends FlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()];
+        return [$this->value1->get(), $this->operatorSymbols[$this->getOperator()], $this->value2->get()];
     }
 
-    public function setValues(string $value1, string $value2): void {
-        $this->value1 = $value1;
-        $this->value2 = $value2;
-    }
-
-    public function getValue1(): string {
+    public function getValue1(): StringArgument {
         return $this->value1;
     }
 
-    public function getValue2(): string {
+    public function getValue2(): StringArgument {
         return $this->value2;
     }
 
@@ -73,12 +69,12 @@ class ComparisonString extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->value1 !== "";
+        return $this->value1->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
+        $value1 = $this->value1->getString($source);
+        $value2 = $this->value2->getString($source);
         $operator = $this->getOperator();
 
         $result = match ($operator) {
@@ -97,18 +93,19 @@ class ComparisonString extends FlowItem implements Condition {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
+            $this->value1->createFormElement($variables),
             new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
-            new ExampleInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), false),
+            $this->value2->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setValues($content[0], $content[2]);
+        $this->value1->set($content[0]);
         $this->setOperator($content[1]);
+        $this->value2->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getValue1(), $this->getOperator(), $this->getValue2()];
+        return [$this->value1->get(), $this->getOperator(), $this->value2->get()];
     }
 }

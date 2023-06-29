@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -26,15 +26,15 @@ class SetItemData extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
     private ItemArgument $item;
+    private StringArgument $key;
+    private StringArgument $value;
 
-    public function __construct(
-        string         $item = "",
-        private string $key = "",
-        private string $value = "",
-    ) {
+    public function __construct(string $item = "", string $key = "", string $value = "") {
         parent::__construct(self::SET_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->item = new ItemArgument("item", $item);
+        $this->key = new StringArgument("key", $key, example: "aieuo");
+        $this->value = new StringArgument("value", $value, example: "100");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -42,36 +42,28 @@ class SetItemData extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->item->get(), $this->getKey(), $this->getValue()];
+        return [$this->item->get(), $this->key->get(), $this->value->get()];
     }
 
     public function getItem(): ItemArgument {
         return $this->item;
     }
 
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
     }
 
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
+    public function getValue(): StringArgument {
         return $this->value;
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->getKey() !== "";
+        return $this->item->isNotEmpty() and $this->key->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->item->getItem($source);
-        $key = $source->replaceVariables($this->getKey());
+        $key = $this->key->getString($source);
         $variable = $this->getValueVariable($source);
 
         $tags = $item->getNamedTag();
@@ -89,7 +81,7 @@ class SetItemData extends FlowItem {
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
         $helper = Mineflow::getVariableHelper();
-        $value = $this->getValue();
+        $value = $this->value->get();
 
         return $helper->copyOrCreateVariable($value, $source);
     }
@@ -97,18 +89,18 @@ class SetItemData extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->item->createFormElement($variables),
-            new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
-            new ExampleInput("@action.setItemData.form.value", "100", $this->getValue(), true),
+            $this->key->createFormElement($variables),
+            $this->value->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->item->set($content[0]);
-        $this->setKey($content[1]);
-        $this->setValue($content[2]);
+        $this->key->set($content[1]);
+        $this->value->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->item->get(), $this->getKey(), $this->getValue()];
+        return [$this->item->get(), $this->key->get(), $this->value->get()];
     }
 }

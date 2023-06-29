@@ -6,6 +6,7 @@ namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -14,7 +15,6 @@ use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -38,15 +38,21 @@ class AddVariable extends FlowItem {
     private array $variableTypes = [0 => "string", "string" => "string", 1 => "number", "number" => "number"];
     private array $variableClasses = ["string" => StringVariable::class, "number" => NumberVariable::class];
 
+    private StringArgument $variableName;
+    private StringArgument $variableValue;
+
     public function __construct(
-        private string $variableName = "",
-        private string $variableValue = "",
-        string         $type = null,
-        private bool   $isLocal = true
+        string       $variableName = "",
+        string       $variableValue = "",
+        string       $type = null,
+        private bool $isLocal = true
     ) {
         parent::__construct(self::ADD_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->variableType = $type ?? StringVariable::getTypeName();
+
+        $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo");
+        $this->variableValue = new StringArgument("value", $variableValue, "@action.variable.form.value", example: "aeiuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -54,32 +60,24 @@ class AddVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getVariableValue(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"];
+        return [$this->variableName->get(), $this->variableValue->get(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
-    public function setVariableValue(string $variableValue): void {
-        $this->variableValue = $variableValue;
-    }
-
-    public function getVariableValue(): string {
+    public function getVariableValue(): StringArgument {
         return $this->variableValue;
     }
 
     public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->variableValue !== "";
+        return $this->variableName->isNotEmpty() and $this->variableValue->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
-        $value = $source->replaceVariables($this->getVariableValue());
+        $name = $this->variableName->getString($source);
+        $value = $this->variableValue->getString($source);
 
         switch ($this->variableType) {
             case StringVariable::getTypeName():
@@ -105,8 +103,8 @@ class AddVariable extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $index = array_search($this->variableType, $this->variableTypes, true);
         $builder->elements([
-            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-            new ExampleInput("@action.variable.form.value", "aeiuo", $this->getVariableValue(), true),
+            $this->variableName->createFormElement($variables),
+            $this->variableValue->createFormElement($variables),
             new Dropdown("@action.variable.form.type", array_values(array_unique($this->variableTypes)), $index === false ? 0 : $index),
             new Toggle("@action.variable.form.global", !$this->isLocal),
         ])->response(function (EditFormResponseProcessor $response) {
@@ -122,20 +120,20 @@ class AddVariable extends FlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setVariableValue($content[1]);
+        $this->variableName->set($content[0]);
+        $this->variableValue->set($content[1]);
         $this->variableType = is_int($content[2]) ? $this->variableTypes[$content[2]] : $content[2];
         $this->isLocal = $content[3];
     }
 
     public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getVariableValue(), $this->variableType, $this->isLocal];
+        return [$this->variableName->get(), $this->variableValue->get(), $this->variableType, $this->isLocal];
     }
 
     public function getAddingVariables(): array {
         $class = $this->variableClasses[$this->variableType];
         return [
-            $this->getVariableName() => new DummyVariable($class, $this->getVariableValue())
+            $this->variableName->get() => new DummyVariable($class, $this->variableValue->get())
         ];
     }
 }

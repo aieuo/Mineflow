@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\form;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\ui\customForm\CustomFormForm;
 use aieuo\mineflow\utils\Language;
@@ -23,11 +23,13 @@ class SendForm extends FlowItem {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private StringArgument $formName;
 
-    public function __construct(string $player = "", private string $formName = "") {
+    public function __construct(string $player = "", string $formName = "") {
         parent::__construct(self::SEND_FORM, FlowItemCategory::FORM);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->formName = new StringArgument("name", $formName, example: "aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,19 +37,15 @@ class SendForm extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getFormName()];
+        return [$this->player->get(), $this->formName->get()];
     }
 
-    public function setFormName(string $formName): void {
-        $this->formName = $formName;
-    }
-
-    public function getFormName(): string {
+    public function getFormName(): StringArgument {
         return $this->formName;
     }
 
     public function isDataValid(): bool {
-        return $this->formName !== "";
+        return $this->formName->isNotEmpty();
     }
 
     public function getPlayer(): PlayerArgument {
@@ -55,7 +53,7 @@ class SendForm extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getFormName());
+        $name = $this->formName->getString($source);
         $manager = Mineflow::getFormManager();
         $form = $manager->getForm($name) ?? Mineflow::getAddonManager()->getForm($name);
         if ($form === null) {
@@ -74,16 +72,16 @@ class SendForm extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->player->createFormElement($variables),
-            new ExampleInput("@action.sendForm.form.name", "aieuo", $this->getFormName(), true),
+            $this->formName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setFormName($content[1]);
+        $this->formName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->getFormName()];
+        return [$this->player->get(), $this->formName->get()];
     }
 }

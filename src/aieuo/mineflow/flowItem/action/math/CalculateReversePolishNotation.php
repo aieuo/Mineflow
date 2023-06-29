@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
@@ -23,11 +23,14 @@ class CalculateReversePolishNotation extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    public function __construct(
-        private string $formula = "",
-        private string $resultName = "result"
-    ) {
+    private StringArgument $formula;
+    private StringArgument $resultName;
+
+    public function __construct(string $formula = "", string $resultName = "result") {
         parent::__construct(self::REVERSE_POLISH_NOTATION, FlowItemCategory::MATH);
+
+        $this->formula = new StringArgument("formula", $formula, example: "1 2 + 3 -");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,32 +38,24 @@ class CalculateReversePolishNotation extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getFormula(), $this->getResultName()];
+        return [$this->formula->get(), $this->resultName->get()];
     }
 
-    public function setFormula(string $formula): void {
-        $this->formula = $formula;
-    }
-
-    public function getFormula(): string {
+    public function getFormula(): StringArgument {
         return $this->formula;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getFormula() !== "" and $this->getResultName() !== "";
+        return $this->formula->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $formula = $source->replaceVariables($this->getFormula());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $formula = $this->formula->getString($source);
+        $resultName = $this->resultName->getString($source);
 
         $stack = [];
         foreach (explode(" ", $formula) as $token) {
@@ -91,23 +86,23 @@ class CalculateReversePolishNotation extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.calculateRPN.form.value", "1 2 + 3 -", $this->getFormula(), true),
-            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+            $this->formula->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setFormula($content[0]);
-        $this->setResultName($content[1]);
+        $this->formula->set($content[0]);
+        $this->resultName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getFormula(), $this->getResultName()];
+        return [$this->formula->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            $this->resultName->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

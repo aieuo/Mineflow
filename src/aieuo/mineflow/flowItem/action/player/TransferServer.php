@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class TransferServer extends FlowItem {
@@ -18,11 +19,15 @@ class TransferServer extends FlowItem {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private StringArgument $ip;
+    private NumberArgument $port;
 
-    public function __construct(string $player = "", private string $ip = "", private string $port = "19132") {
+    public function __construct(string $player = "", string $ip = "", int $port = 19132) {
         parent::__construct(self::TRANSFER_SERVER, FlowItemCategory::PLAYER);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->ip = new StringArgument("ip", $ip, example: "aieuo.tokyo");
+        $this->port = new NumberArgument("port", $port, example: "19132", min: 1, max: 65535);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -30,36 +35,28 @@ class TransferServer extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getIp(), $this->getPort()];
-    }
-
-    public function setIp(string $ip): void {
-        $this->ip = $ip;
-    }
-
-    public function getIp(): string {
-        return $this->ip;
-    }
-
-    public function setPort(string $port): void {
-        $this->port = $port;
-    }
-
-    public function getPort(): string {
-        return $this->port;
+        return [$this->player->get(), $this->ip->get(), $this->getPort()];
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->ip !== "" and $this->port !== "";
+        return $this->player->get() !== "" and $this->ip->isNotEmpty() and $this->port->isNotEmpty();
     }
 
     public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 
+    public function getIp(): StringArgument {
+        return $this->ip;
+    }
+
+    public function getPort(): NumberArgument {
+        return $this->port;
+    }
+
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $ip = $source->replaceVariables($this->getIp());
-        $port = $this->getInt($source->replaceVariables($this->getPort()), 1, 65535);
+        $ip = $this->ip->getString($source);
+        $port = $this->port->getInt($source);
 
         $player = $this->player->getOnlinePlayer($source);
         $player->transfer($ip, $port);
@@ -69,18 +66,18 @@ class TransferServer extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->player->createFormElement($variables),
-            new ExampleInput("@action.transfer.form.ip", "aieuo.tokyo", $this->getIp()),
-            new ExampleInput("@action.transfer.form.port", "19132", $this->getIp()),
+            $this->ip->createFormElement($variables),
+            $this->port->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setIp($content[1]);
-        $this->setPort($content[2]);
+        $this->ip->set($content[1]);
+        $this->port->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->getIp(), $this->getPort()];
+        return [$this->player->get(), $this->ip->get(), $this->port->get()];
     }
 }

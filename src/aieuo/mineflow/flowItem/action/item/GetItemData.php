@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
@@ -25,15 +25,15 @@ class GetItemData extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
     private ItemArgument $item;
+    private StringArgument $key;
+    private StringArgument $resultName;
 
-    public function __construct(
-        string         $item = "",
-        private string $key = "",
-        private string $resultName = "data",
-    ) {
+    public function __construct(string         $item = "", string $key = "", string $resultName = "data") {
         parent::__construct(self::GET_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->item = new ItemArgument("item", $item);
+        $this->key = new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entity");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -41,37 +41,29 @@ class GetItemData extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->item->get(), $this->getKey()];
+        return [$this->item->get(), $this->key->get()];
     }
 
     public function getItem(): ItemArgument {
         return $this->item;
     }
 
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->getKey() !== "" and $this->getResultName() !== "";
+        return $this->item->isNotEmpty() and $this->key->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $item = $this->item->getItem($source);
-        $key = $source->replaceVariables($this->getKey());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $key = $this->key->getString($source);
+        $resultName = $this->resultName->getString($source);
 
         $tags = $item->getNamedTag();
         $tag = $tags->getTag($key);
@@ -89,18 +81,18 @@ class GetItemData extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->item->createFormElement($variables),
-            new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
-            new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
+            $this->key->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->item->set($content[0]);
-        $this->setKey($content[1]);
-        $this->setResultName($content[2]);
+        $this->key->set($content[1]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->item->get(), $this->getKey(), $this->getResultName()];
+        return [$this->item->get(), $this->key->get(), $this->resultName->get()];
     }
 }

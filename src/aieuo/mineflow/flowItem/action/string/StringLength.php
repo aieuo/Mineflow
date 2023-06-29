@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\string;
 
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
@@ -21,11 +21,14 @@ class StringLength extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    public function __construct(
-        private string $value = "",
-        private string $resultName = "length"
-    ) {
+    private StringArgument $value;
+    private StringArgument $resultName;
+
+    public function __construct(string $value = "", string $resultName = "length") {
         parent::__construct(self::STRING_LENGTH, FlowItemCategory::STRING);
+
+        $this->value = new StringArgument("string", $value, example: "aieuo");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "length");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -33,32 +36,24 @@ class StringLength extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getValue(), $this->getResultName()];
+        return [$this->value->get(), $this->resultName->get()];
     }
 
-    public function setValue(string $value1): void {
-        $this->value = $value1;
-    }
-
-    public function getValue(): string {
+    public function getValue(): StringArgument {
         return $this->value;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getValue() !== "" and $this->getResultName() !== "";
+        return $this->value->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value = $source->replaceVariables($this->getValue());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $value = $this->value->getString($source);
+        $resultName = $this->resultName->getString($source);
 
         $length = mb_strlen($value);
         $source->addVariable($resultName, new NumberVariable($length));
@@ -69,23 +64,23 @@ class StringLength extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.strlen.form.value", "aieuo", $this->getValue(), true),
-            new ExampleInput("@action.form.resultVariableName", "length", $this->getResultName(), true),
+            $this->value->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setValue($content[0]);
-        $this->setResultName($content[1]);
+        $this->value->set($content[0]);
+        $this->resultName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getValue(), $this->getResultName()];
+        return [$this->value->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            $this->resultName->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

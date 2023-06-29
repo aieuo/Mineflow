@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\command;
 
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
 
@@ -20,11 +20,13 @@ class Command extends FlowItem {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private StringArgument $command;
 
-    public function __construct(string $player = "", private string $command = "") {
+    public function __construct(string $player = "", string $command = "") {
         parent::__construct(self::COMMAND, FlowItemCategory::COMMAND);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->command = new StringArgument("command", $command, example: "command");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -32,19 +34,15 @@ class Command extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getCommand()];
+        return [$this->player->get(), $this->command->get()];
     }
 
-    public function setCommand(string $command): void {
-        $this->command = $command;
-    }
-
-    public function getCommand(): string {
+    public function getCommand(): StringArgument {
         return $this->command;
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->command !== "";
+        return $this->player->get() !== "" and $this->command->isNotEmpty();
     }
 
     public function getPlayer(): PlayerArgument {
@@ -52,7 +50,7 @@ class Command extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $command = $source->replaceVariables($this->getCommand());
+        $command = $this->command->getString($source);
         $player = $this->player->getOnlinePlayer($source);
 
         Server::getInstance()->dispatchCommand($player, $command);
@@ -63,16 +61,16 @@ class Command extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->player->createFormElement($variables),
-            new ExampleInput("@action.command.form.command", "command", $this->getCommand(), true),
+            $this->command->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setCommand($content[1]);
+        $this->command->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->getCommand()];
+        return [$this->player->get(), $this->command->get()];
     }
 }

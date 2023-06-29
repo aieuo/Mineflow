@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
@@ -27,13 +26,13 @@ class GetNearestPlayer extends GetNearestEntityBase {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->position->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "player", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(PlayerVariable::class)
+            $this->resultName->get() => new DummyVariable(PlayerVariable::class)
         ];
     }
 }

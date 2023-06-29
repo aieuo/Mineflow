@@ -2,13 +2,13 @@
 
 namespace aieuo\mineflow\flowItem\action\common;
 
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
@@ -19,11 +19,14 @@ class GetDate extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    public function __construct(
-        private string $format = "H:i:s",
-        private string $resultName = "date"
-    ) {
+    private StringArgument $format;
+    private StringArgument $resultName;
+
+    public function __construct(string $format = "H:i:s", string $resultName = "date") {
         parent::__construct(self::GET_DATE, FlowItemCategory::COMMON);
+
+        $this->format = new StringArgument("format", $format, example: "H:i:s");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "date");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -31,32 +34,24 @@ class GetDate extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getFormat(), $this->getResultName()];
+        return [$this->format->get(), $this->resultName->get()];
     }
 
-    public function setFormat(string $format): void {
-        $this->format = $format;
-    }
-
-    public function getFormat(): string {
+    public function getFormat(): StringArgument {
         return $this->format;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getFormat() !== "" and $this->getResultName();
+        return $this->format->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $format = $source->replaceVariables($this->getFormat());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $format = $this->format->getString($source);
+        $resultName = $this->resultName->getString($source);
 
         $date = date($format);
         $source->addVariable($resultName, new StringVariable($date));
@@ -67,23 +62,23 @@ class GetDate extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.getDate.form.format", "H:i:s", $this->getFormat(), true),
-            new ExampleInput("@action.form.resultVariableName", "date", $this->getResultName(), true),
+            $this->format->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setFormat($content[0]);
-        $this->setResultName($content[1]);
+        $this->format->set($content[0]);
+        $this->resultName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getFormat(), $this->getResultName()];
+        return [$this->format->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(StringVariable::class)
+            $this->resultName->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
 
@@ -20,11 +20,13 @@ class SetNameTag extends FlowItem {
     use HasSimpleEditForm;
 
     private EntityArgument $entity;
+    private StringArgument $newName;
 
-    public function __construct(string $entity = "", private string $newName = "") {
+    public function __construct(string $entity = "", string $newName = "") {
         parent::__construct(self::SET_NAME, FlowItemCategory::ENTITY);
 
         $this->entity = new EntityArgument("entity", $entity);
+        $this->newName = new StringArgument("name", $newName, example: "aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -32,27 +34,23 @@ class SetNameTag extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->getNewName()];
+        return [$this->entity->get(), $this->newName->get()];
     }
 
     public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function setNewName(string $newName): void {
-        $this->newName = $newName;
-    }
-
-    public function getNewName(): string {
+    public function getNewName(): StringArgument {
         return $this->newName;
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->newName !== "";
+        return $this->entity->isNotEmpty() and $this->newName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getNewName());
+        $name = $this->newName->getString($source);
         $entity = $this->entity->getOnlineEntity($source);
 
         $entity->setNameTag($name);
@@ -64,16 +62,16 @@ class SetNameTag extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
            $this->entity->createFormElement($variables),
-            new ExampleInput("@action.setName.form.name", "aieuo", $this->getNewName(), true),
+           $this->newName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->entity->set($content[0]);
-        $this->setNewName($content[1]);
+        $this->newName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->entity->get(), $this->getNewName()];
+        return [$this->entity->get(), $this->newName->get()];
     }
 }

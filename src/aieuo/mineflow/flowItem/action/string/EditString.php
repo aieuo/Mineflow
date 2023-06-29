@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\string;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -13,7 +14,6 @@ use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
@@ -39,13 +39,21 @@ class EditString extends FlowItem {
         self::TYPE_SPLIT,
     ];
 
+    private StringArgument $value1;
+    private StringArgument $value2;
+    private StringArgument $resultName;
+
     public function __construct(
-        private string $value1 = "",
+        string $value1 = "",
         private string $operator = self::TYPE_JOIN,
-        private string $value2 = "",
-        private string $resultName = "result"
+        string $value2 = "",
+        string $resultName = "result"
     ) {
         parent::__construct(self::EDIT_STRING, FlowItemCategory::STRING);
+
+        $this->value1 = new StringArgument("value1", $value1, "@action.fourArithmeticOperations.form.value1", example: "10");
+        $this->value2 = new StringArgument("value2", $value2, "@action.fourArithmeticOperations.form.value2", example: "50");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -53,19 +61,14 @@ class EditString extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getValue1(), ["action.editString.".$this->getOperator()], $this->getValue2(), $this->getResultName()];
+        return [$this->value1->get(), ["action.editString.".$this->getOperator()], $this->value2->get(), $this->resultName->get()];
     }
 
-    public function setValues(string $value1, string $value2): void {
-        $this->value1 = $value1;
-        $this->value2 = $value2;
-    }
-
-    public function getValue1(): string {
+    public function getValue1(): StringArgument {
         return $this->value1;
     }
 
-    public function getValue2(): string {
+    public function getValue2(): StringArgument {
         return $this->value2;
     }
 
@@ -77,22 +80,18 @@ class EditString extends FlowItem {
         return $this->operator;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getValue1() !== "" and $this->getValue2() !== "" and $this->getOperator() !== "";
+        return $this->value1->isNotEmpty() and $this->value2->isNotEmpty() and $this->getOperator() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $value1 = $this->value1->getString($source);
+        $value2 = $this->value2->getString($source);
+        $resultName = $this->resultName->getString($source);
         $operator = $this->getOperator();
 
         $result = match ($operator) {
@@ -111,31 +110,32 @@ class EditString extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.fourArithmeticOperations.form.value1", "10", $this->getValue1(), true),
+            $this->value1->createFormElement($variables),
             new Dropdown("@action.fourArithmeticOperations.form.operator",
                 array_map(fn(string $type) => Language::get("action.editString.".$type), $this->operators),
                 array_search($this->operator, $this->operators, true)
             ),
-            new ExampleInput("@action.fourArithmeticOperations.form.value2", "50", $this->getValue2(), true),
-            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
+            $this->value2->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->preprocessAt(1, fn($value) => $this->operators[$value]);
         });
     }
 
     public function loadSaveData(array $content): void {
-        $this->setValues($content[0], $content[2]);
+        $this->value1->set($content[0]);
         $this->setOperator((string)$content[1]);
-        $this->setResultName($content[3]);
+        $this->value2->set($content[2]);
+        $this->resultName->set($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->getValue1(), $this->getOperator(), $this->getValue2(), $this->getResultName()];
+        return [$this->value1->get(), $this->getOperator(), $this->value2->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(StringVariable::class)
+            $this->resultName->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

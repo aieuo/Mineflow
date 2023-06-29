@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\AxisAlignedBBArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\AxisAlignedBBArgument;
-use aieuo\mineflow\flowItem\argument\WorldArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
@@ -25,18 +25,20 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
 
     private AxisAlignedBBArgument $aabb;
     private WorldArgument $world;
+    private StringArgument $resultName;
 
     public function __construct(
-        string         $id,
-        string         $category = FlowItemCategory::WORLD,
-        string         $aabb = "",
-        string         $worldName = "",
-        private string $resultName = "entities"
+        string $id,
+        string $category = FlowItemCategory::WORLD,
+        string $aabb = "",
+        string $worldName = "",
+        string $resultName = "entities"
     ) {
         parent::__construct($id, $category);
 
         $this->aabb = new AxisAlignedBBArgument("aabb", $aabb);
         $this->world = new WorldArgument("world", $worldName);
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entitites");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -44,7 +46,7 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->aabb->get(), $this->world->get(), $this->getResultName()];
+        return [$this->aabb->get(), $this->world->get(), $this->resultName->get()];
     }
 
     public function getAxisAlignedBB(): AxisAlignedBBArgument {
@@ -55,22 +57,18 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
         return $this->world;
     }
 
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
     public function isDataValid(): bool {
-        return $this->aabb->isNotEmpty() and $this->world->isNotEmpty() and $this->getResultName() !== "";
+        return $this->aabb->isNotEmpty() and $this->world->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $aabb = $this->aabb->getAxisAlignedBB($source);
         $world = $this->world->getWorld($source);
-        $result = $source->replaceVariables($this->getResultName());
+        $result = $this->resultName->getString($source);
 
         $entities = $this->filterEntities($world->getNearbyEntities($aabb));
         $variable = new ListVariable(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $entities));
@@ -90,17 +88,17 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
         $builder->elements([
             $this->aabb->createFormElement($variables),
             $this->world->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "entities", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->aabb->set($content[0]);
         $this->world->set($content[1]);
-        $this->setResultName($content[2]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->aabb->get(), $this->world->get(), $this->getResultName()];
+        return [$this->aabb->get(), $this->world->get(), $this->resultName->get()];
     }
 }

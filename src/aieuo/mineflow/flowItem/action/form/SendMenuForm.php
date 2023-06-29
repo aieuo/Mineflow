@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\form;
 
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -11,7 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Input;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
@@ -40,19 +41,18 @@ class SendMenuForm extends FlowItem {
 
     private array $options;
     private bool $resendOnClose = false;
-    
-    private PlayerArgument $player;
 
-    public function __construct(
-        string         $player = "",
-        private string $formText = "",
-        string         $options = "",
-        private string $resultName = "menu"
-    ) {
+    private PlayerArgument $player;
+    private StringArgument $formText;
+    private StringArgument $resultName;
+
+    public function __construct(string $player = "", string $formText = "", string $options = "", string $resultName = "menu") {
         parent::__construct(self::SEND_MENU, FlowItemCategory::FORM);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->formText = new StringArgument("text", $formText, "@action.input.form.text", example: "aieuo");
         $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "input");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -60,14 +60,10 @@ class SendMenuForm extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getFormText(), implode(";", $this->getOptions()), $this->getResultName()];
+        return [$this->player->get(), $this->formText->get(), implode(";", $this->getOptions()), $this->resultName->get()];
     }
 
-    public function setFormText(string $formText): void {
-        $this->formText = $formText;
-    }
-
-    public function getFormText(): string {
+    public function getFormText(): StringArgument {
         return $this->formText;
     }
 
@@ -79,16 +75,12 @@ class SendMenuForm extends FlowItem {
         return $this->options;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->formText !== "" and $this->resultName !== "";
+        return $this->player->get() !== "" and $this->formText->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     public function getPlayer(): PlayerArgument {
@@ -96,11 +88,11 @@ class SendMenuForm extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $text = $source->replaceVariables($this->getFormText());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $text = $this->formText->getString($source);
+        $resultName = $this->resultName->getString($source);
         $player = $this->player->getOnlinePlayer($source);
 
-        yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
+        yield from Await::promise(function ($resolve) use ($source, $player, $text, $resultName) {
             $this->sendForm($source, $player, $text, $resultName, $resolve);
         });
     }
@@ -129,8 +121,8 @@ class SendMenuForm extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $contents = [
             $this->player->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
-            new ExampleInput("@action.input.form.text", "aieuo", $this->getFormText(), true),
+            $this->resultName->createFormElement($variables),
+            $this->formText->createFormElement($variables),
         ];
         foreach ($this->getOptions() as $i => $option) {
             $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), Language::get("form.example", ["aieuo"]), $option);
@@ -157,8 +149,8 @@ class SendMenuForm extends FlowItem {
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setResultName($content[1]);
-        $this->setFormText($content[2]);
+        $this->resultName->set($content[1]);
+        $this->formText->set($content[2]);
         $this->setOptions($content[3]);
         $this->resendOnClose = $content[4];
     }
@@ -166,8 +158,8 @@ class SendMenuForm extends FlowItem {
     public function serializeContents(): array {
         return [
             $this->player->get(),
-            $this->getResultName(),
-            $this->getFormText(),
+            $this->resultName->get(),
+            $this->formText->get(),
             $this->getOptions(),
             $this->resendOnClose
         ];
@@ -175,7 +167,7 @@ class SendMenuForm extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(MapVariable::class)
+            $this->resultName->get() => new DummyVariable(MapVariable::class)
         ];
     }
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class SetItemName extends FlowItem {
@@ -21,11 +21,13 @@ class SetItemName extends FlowItem {
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     private ItemArgument $item;
+    private StringArgument $itemName;
 
-    public function __construct(string $item = "", private string $itemName = "") {
+    public function __construct(string $item = "", string $itemName = "") {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
         $this->item = new ItemArgument("item", $item);
+        $this->itemName = new StringArgument("name", $itemName, "@action.createItem.form.name", example: "aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -33,18 +35,14 @@ class SetItemName extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->item->get(), $this->getItemName()];
+        return [$this->item->get(), $this->itemName->get()];
     }
 
     public function getItem(): ItemArgument {
         return $this->item;
     }
 
-    public function setItemName(string $itemName): void {
-        $this->itemName = $itemName;
-    }
-
-    public function getItemName(): string {
+    public function getItemName(): StringArgument {
         return $this->itemName;
     }
 
@@ -53,7 +51,7 @@ class SetItemName extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getItemName());
+        $name = $this->itemName->getString($source);
 
         $item = $this->item->getItem($source);
 
@@ -66,16 +64,16 @@ class SetItemName extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->item->createFormElement($variables),
-            new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName(), true),
+            $this->itemName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->item->set($content[0]);
-        $this->setItemName($content[1]);
+        $this->itemName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->item->get(), $this->getItemName()];
+        return [$this->item->get(), $this->itemName->get()];
     }
 }

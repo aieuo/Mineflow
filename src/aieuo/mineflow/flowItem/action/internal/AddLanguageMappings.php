@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\internal;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -23,11 +24,12 @@ class AddLanguageMappings extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    public function __construct(
-        private string $key = "",
-        private array  $mappings = [],
-    ) {
+    private StringArgument $key;
+
+    public function __construct(string $key = "", private array $mappings = []) {
         parent::__construct(self::ADD_LANGUAGE_MAPPINGS, FlowItemCategory::INTERNAL);
+
+        $this->key = new StringArgument("key", $key, example: "mineflow.action.aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -40,15 +42,11 @@ class AddLanguageMappings extends FlowItem {
             if (empty($message)) continue;
             $messages[] = $language.": ".$message;
         }
-        return [$this->getKey(), implode("\n§7-§f ", $messages)];
+        return [$this->key->get(), implode("\n§7-§f ", $messages)];
     }
 
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
-    }
-
-    public function setKey(string $key): void {
-        $this->key = $key;
     }
 
     public function getMappings(): array {
@@ -60,11 +58,11 @@ class AddLanguageMappings extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getKey() !== "" and count($this->mappings) > 0;
+        return $this->key->isNotEmpty() and count($this->mappings) > 0;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $key = $source->replaceVariables($this->getKey());
+        $key = $this->key->getString($source);
         foreach ($this->getMappings() as $language => $message) {
             $message = $source->replaceVariables($message);
             if (empty($message)) continue;
@@ -77,7 +75,7 @@ class AddLanguageMappings extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $elements = [
-            new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
+            $this->key->createFormElement($variables),
         ];
         $mappings = $this->getMappings();
         foreach (Language::getAvailableLanguages() as $name) {
@@ -106,11 +104,11 @@ class AddLanguageMappings extends FlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->setKey($content[0]);
+        $this->key->set($content[0]);
         $this->setMappings($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getKey(), $this->getMappings()];
+        return [$this->key->get(), $this->getMappings()];
     }
 }

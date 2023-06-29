@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -27,16 +27,14 @@ class GenerateRandomPosition extends FlowItem {
 
     private PositionArgument $position1;
     private PositionArgument $position2;
+    private StringArgument $resultName;
 
-    public function __construct(
-        string         $min = "",
-        string         $max = "",
-        private string $resultName = "position"
-    ) {
+    public function __construct(string $min = "", string $max = "", string $resultName = "position") {
         parent::__construct(self::GENERATE_RANDOM_POSITION, FlowItemCategory::WORLD);
 
         $this->position1 = new PositionArgument("min", $min, "@action.form.target.position 1");
         $this->position2 = new PositionArgument("max", $max, "@action.form.target.position 2");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "position");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -44,7 +42,7 @@ class GenerateRandomPosition extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->position1->get(), $this->position2->get(), $this->getResultName()];
+        return [$this->position1->get(), $this->position2->get(), $this->resultName->get()];
     }
 
     public function getPosition1(): PositionArgument {
@@ -55,22 +53,18 @@ class GenerateRandomPosition extends FlowItem {
         return $this->position2;
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->getResultName() !== "";
+        return $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $pos1 = $this->position1->getPosition($source);
         $pos2 = $this->position2->getPosition($source);
-        $resultName = $source->replaceVariables($this->getResultName());
+        $resultName = $this->resultName->getString($source);
 
         if ($pos1->getWorld()->getFolderName() !== $pos2->getWorld()->getFolderName()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
@@ -83,30 +77,30 @@ class GenerateRandomPosition extends FlowItem {
         $source->addVariable($resultName, new PositionVariable($rand));
 
         yield Await::ALL;
-        return $this->getResultName();
+        return $this->resultName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->position1->createFormElement($variables),
             $this->position2->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "position", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->position1->set($content[0]);
         $this->position2->set($content[1]);
-        $this->setResultName($content[2]);
+        $this->resultName->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->position1->get(), $this->position2->get(), $this->getResultName()];
+        return [$this->position1->get(), $this->position2->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(PositionVariable::class)
+            $this->resultName->get() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

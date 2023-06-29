@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\player\message;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -12,9 +15,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use SOFe\AwaitGenerator\Await;
 
 class SendTitle extends FlowItem {
@@ -22,18 +22,28 @@ class SendTitle extends FlowItem {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private StringArgument $title;
+    private StringArgument $subtitle;
+    private NumberArgument $fadein;
+    private NumberArgument $stay;
+    private NumberArgument $fadeout;
 
     public function __construct(
-        string         $player = "",
-        private string $title = "",
-        private string $subtitle = "",
-        private string $fadein = "-1",
-        private string $stay = "-1",
-        private string $fadeout = "-1"
+        string $player = "",
+        string $title = "",
+        string $subtitle = "",
+        string $fadein = "-1",
+        string $stay = "-1",
+        string $fadeout = "-1"
     ) {
         parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER_MESSAGE);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->title = new StringArgument("title", $title, example: "aieuo", optional: true);
+        $this->subtitle = new StringArgument("subtitle", $subtitle, example: "aieuo", optional: true);
+        $this->fadein = new NumberArgument("fadein", $fadein, example: "-1", min: -1);
+        $this->stay = new NumberArgument("stay", $stay, example: "-1", min: -1);
+        $this->fadeout = new NumberArgument("fadeout", $fadeout, example: "-1", min: -1);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -41,26 +51,27 @@ class SendTitle extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getTitle(), $this->getSubTitle(), $this->fadein, $this->stay, $this->fadeout];
+        return [$this->player->get(), $this->title->get(), $this->subtitle->get(), $this->fadein->get(), $this->stay->get(), $this->fadeout->get()];
     }
 
-    public function setTitle(string $title, string $subtitle = ""): void {
-        $this->title = $title;
-        $this->subtitle = $subtitle;
-    }
-
-    public function getTitle(): string {
+    public function getTitle(): StringArgument {
         return $this->title;
     }
 
-    public function getSubTitle(): string {
+    public function getSubTitle(): StringArgument {
         return $this->subtitle;
     }
 
-    public function setTime(string $fadeIn = "-1", string $stay = "-1", string $fadeOut = "-1"): void {
-        $this->fadein = $fadeIn;
-        $this->stay = $stay;
-        $this->fadeout = $fadeOut;
+    public function getFadein(): NumberArgument {
+        return $this->fadein;
+    }
+
+    public function getStay(): NumberArgument {
+        return $this->stay;
+    }
+
+    public function getFadeout(): NumberArgument {
+        return $this->fadeout;
     }
 
     public function getTime(): array {
@@ -68,7 +79,7 @@ class SendTitle extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and ($this->getTitle() !== "" or $this->getSubTitle() !== "");
+        return $this->player->get() !== "" and ($this->title->isNotEmpty() or $this->subtitle->isNotEmpty());
     }
 
     public function getPlayer(): PlayerArgument {
@@ -76,12 +87,14 @@ class SendTitle extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $title = $source->replaceVariables($this->getTitle());
-        $subtitle = $source->replaceVariables($this->getSubTitle());
-        $times = array_map(fn($time) => $this->getInt($source->replaceVariables($time)), $this->getTime());
+        $title = $this->title->getString($source);
+        $subtitle = $this->subtitle->getString($source);
+        $fadein = $this->fadein->getInt($source);
+        $stay = $this->stay->getInt($source);
+        $fadeout = $this->fadeout->getInt($source);
         $player = $this->player->getOnlinePlayer($source);
 
-        $player->sendTitle($title, $subtitle, ...$times);
+        $player->sendTitle($title, $subtitle, $fadein, $stay, $fadeout);
 
         yield Await::ALL;
     }
@@ -89,11 +102,10 @@ class SendTitle extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->player->createFormElement($variables),
-            new ExampleInput("@action.sendTitle.form.title", "aieuo", $this->getTitle()),
-            new ExampleInput("@action.sendTitle.form.subtitle", "aieuo", $this->getSubTitle()),
-            new ExampleNumberInput("@action.sendTitle.form.fadein", "-1", $this->fadein, true, -1),
-            new ExampleNumberInput("@action.sendTitle.form.stay", "-1", $this->stay, true, -1),
-            new ExampleNumberInput("@action.sendTitle.form.fadeout", "-1", $this->fadeout, true, -1),
+            $this->title->createFormElement($variables),
+            $this->fadein->createFormElement($variables),
+            $this->stay->createFormElement($variables),
+            $this->fadeout->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->validate(function (array $data) {
                 if ($data[1] === "" and $data[2] === "") {
@@ -105,13 +117,16 @@ class SendTitle extends FlowItem {
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setTitle($content[1], $content[2]);
+        $this->title->set($content[1]);
+        $this->subtitle->set($content[2]);
         if (isset($content[5])) {
-            $this->setTime($content[3], $content[4], $content[5]);
+            $this->fadein->set($content[3]);
+            $this->stay->set($content[3]);
+            $this->fadeout->set($content[3]);
         }
     }
 
     public function serializeContents(): array {
-        return array_merge([$this->player->get(), $this->getTitle(), $this->getSubTitle()], $this->getTime());
+        return [$this->player->get(), $this->title->get(), $this->subtitle->get(), $this->fadein->get(), $this->stay->get(), $this->fadeout->get()];
     }
 }

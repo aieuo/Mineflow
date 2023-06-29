@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Main;
 use pocketmine\scheduler\ClosureTask;
 use SOFe\AwaitGenerator\Await;
@@ -21,15 +21,13 @@ class Kick extends FlowItem {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private StringArgument $reason;
 
-    public function __construct(
-        string         $player = "",
-        private string $reason = "",
-        private bool   $isAdmin = false
-    ) {
+    public function __construct(string         $player = "", string $reason = "", private bool   $isAdmin = false) {
         parent::__construct(self::KICK, FlowItemCategory::PLAYER);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->reason = new StringArgument("reason", $reason, example: "aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -37,19 +35,15 @@ class Kick extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getReason()];
+        return [$this->player->get(), $this->reason->get()];
     }
 
-    public function setReason(string $reason): void {
-        $this->reason = $reason;
-    }
-
-    public function getReason(): string {
+    public function getReason(): StringArgument {
         return $this->reason;
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->reason !== "";
+        return $this->player->get() !== "" and $this->reason->isNotEmpty();
     }
 
     public function getPlayer(): PlayerArgument {
@@ -57,7 +51,7 @@ class Kick extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $reason = $source->replaceVariables($this->getReason());
+        $reason = $this->reason->getString($source);
         $player = $this->player->getOnlinePlayer($source);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
@@ -70,16 +64,16 @@ class Kick extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->player->createFormElement($variables),
-            new ExampleInput("@action.kick.form.reason", "aieuo", $this->getReason()),
+            $this->reason->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setReason($content[1]);
+        $this->reason->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->getReason()];
+        return [$this->player->get(), $this->reason->get()];
     }
 }

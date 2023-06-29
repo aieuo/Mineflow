@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\player\permission;
 
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,8 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class HasPermission extends FlowItem implements Condition {
@@ -20,11 +20,13 @@ class HasPermission extends FlowItem implements Condition {
     use HasSimpleEditForm;
 
     private PlayerArgument $player;
+    private StringArgument $playerPermission;
 
-    public function __construct(string $player = "", private string $playerPermission = "") {
+    public function __construct(string $player = "", string $playerPermission = "") {
         parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER_PERMISSION);
 
         $this->player = new PlayerArgument("player", $player);
+        $this->playerPermission = new StringArgument("permission", $playerPermission, example: "mineflow.customcommand.op");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -32,19 +34,15 @@ class HasPermission extends FlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getPlayerPermission()];
+        return [$this->player->get(), $this->playerPermission->get()];
     }
 
-    public function setPlayerPermission(string $playerPermission): void {
-        $this->playerPermission = $playerPermission;
-    }
-
-    public function getPlayerPermission(): string {
+    public function getPlayerPermission(): StringArgument {
         return $this->playerPermission;
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->getPlayerPermission() !== "";
+        return $this->player->get() !== "" and $this->playerPermission->isNotEmpty();
     }
 
     public function getPlayer(): PlayerArgument {
@@ -53,7 +51,7 @@ class HasPermission extends FlowItem implements Condition {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->player->getOnlinePlayer($source);
-        $permission = $this->getPlayerPermission();
+        $permission = $this->playerPermission->get();
 
         yield Await::ALL;
         return $player->hasPermission($permission);
@@ -62,16 +60,16 @@ class HasPermission extends FlowItem implements Condition {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->player->createFormElement($variables),
-            new ExampleInput("@condition.hasPermission.form.permission", "mineflow.customcommand.op", $this->getPlayerPermission(), true),
+            $this->playerPermission->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->player->set($content[0]);
-        $this->setPlayerPermission($content[1]);
+        $this->playerPermission->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->getPlayerPermission()];
+        return [$this->player->get(), $this->playerPermission->get()];
     }
 }

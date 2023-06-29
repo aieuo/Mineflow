@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\WorldVariable;
@@ -23,11 +23,14 @@ class GetWorldByName extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        private string $worldName = "",
-        private string $resultName = "world"
-    ) {
+    private StringArgument $worldName;
+    private StringArgument $resultName;
+
+    public function __construct(string $worldName = "", string $resultName = "world") {
         parent::__construct(self::GET_WORLD_BY_NAME, FlowItemCategory::WORLD);
+
+        $this->worldName = new StringArgument("name", $worldName, example: "world");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "world");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,32 +38,24 @@ class GetWorldByName extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getWorldName(), $this->getResultName()];
+        return [$this->worldName->get(), $this->resultName->get()];
     }
 
-    public function getWorldName(): string {
+    public function getWorldName(): StringArgument {
         return $this->worldName;
     }
 
-    public function setWorldName(string $worldName): void {
-        $this->worldName = $worldName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
     public function isDataValid(): bool {
-        return $this->getWorldName() !== "" and $this->getResultName() !== "";
+        return $this->worldName->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $worldName = $source->replaceVariables($this->getWorldName());
-        $result = $source->replaceVariables($this->getResultName());
+        $worldName = $this->worldName->getString($source);
+        $result = $this->resultName->getString($source);
 
         $world = Server::getInstance()->getWorldManager()->getWorldByName($worldName);
 
@@ -68,28 +63,28 @@ class GetWorldByName extends FlowItem {
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return $this->resultName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.getWorldByName.form.worldName", "world", $this->getWorldName(), true),
-            new ExampleInput("@action.form.resultVariableName", "world", $this->getResultName(), true),
+            $this->worldName->createFormElement($variables),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
-        $this->setWorldName($content[0]);
-        $this->setResultName($content[1]);
+        $this->worldName->set($content[0]);
+        $this->resultName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->getWorldName(), $this->getResultName()];
+        return [$this->worldName->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(WorldVariable::class)
+            $this->resultName->get() => new DummyVariable(WorldVariable::class)
         ];
     }
 }

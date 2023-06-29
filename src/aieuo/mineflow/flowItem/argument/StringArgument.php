@@ -31,6 +31,10 @@ class StringArgument extends FlowItemArgument {
     public function getString(FlowItemExecutor $executor): string {
         return $executor->replaceVariables($this->get());
     }
+    
+    public function getRawString(): string {
+        return $this->get();
+    }
 
     public function createFormElement(array $variables): Element {
         return new ExampleInput(

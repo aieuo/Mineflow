@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\internal;
 
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -19,12 +20,14 @@ class AddSpecificLanguageMapping extends FlowItem {
     use ActionNameWithMineflowLanguage;
     use HasSimpleEditForm;
 
-    public function __construct(
-        private string $language = "",
-        private string $key = "",
-        private string $message = ""
-    ) {
+    private StringArgument $key;
+    private StringArgument $message;
+
+    public function __construct(private string $language = "", string $key = "", string $message = "") {
         parent::__construct(self::ADD_SPECIFIC_LANGUAGE_MAPPING, FlowItemCategory::INTERNAL);
+
+        $this->key = new StringArgument("key", $key, "@action.addLanguageMappings.form.key", example: "mineflow.action.aieuo");
+        $this->message = new StringArgument("message", $message, example: "Hello");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -32,7 +35,7 @@ class AddSpecificLanguageMapping extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getLanguage(), $this->getKey(), $this->getMessage()];
+        return [$this->getLanguage(), $this->key->get(), $this->message->get()];
     }
 
     public function getLanguage(): string {
@@ -43,30 +46,22 @@ class AddSpecificLanguageMapping extends FlowItem {
         $this->language = $language;
     }
 
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
     }
 
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getMessage(): string {
+    public function getMessage(): StringArgument {
         return $this->message;
     }
 
-    public function setMessage(string $message): void {
-        $this->message = $message;
-    }
-
     public function isDataValid(): bool {
-        return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getMessage() !== "";
+        return $this->getLanguage() !== "" and $this->key->isNotEmpty() and $this->message->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $language = $source->replaceVariables($this->getLanguage());
-        $key = $source->replaceVariables($this->getKey());
-        $message = $source->replaceVariables($this->getMessage());
+        $key = $this->key->getString($source);
+        $message = $this->message->getString($source);
 
         Language::add([$key => $message], $language);
 
@@ -77,18 +72,18 @@ class AddSpecificLanguageMapping extends FlowItem {
         $languages = implode(", ", Language::getAvailableLanguages());
         $builder->elements([
             new ExampleInput(Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), "eng", $this->getLanguage(), true),
-            new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
-            new ExampleInput("@action.addSpecificLanguageMapping.form.message", "Hello", $this->getMessage(), true),
+            $this->key->createFormElement($variables),
+            $this->message->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->setLanguage($content[0]);
-        $this->setKey($content[1]);
-        $this->setMessage($content[2]);
+        $this->key->set($content[1]);
+        $this->message->set($content[2]);
     }
 
     public function serializeContents(): array {
-        return [$this->getLanguage(), $this->getKey(), $this->getMessage()];
+        return [$this->getLanguage(), $this->key->get(), $this->message->get()];
     }
 }

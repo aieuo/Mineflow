@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\internal;
 
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -27,13 +28,19 @@ class GetLanguage extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
+    private StringArgument $key;
+    private StringArgument $resultName;
+
     public function __construct(
         private string $language = "",
-        private string $key = "",
+        string         $key = "",
         private array  $parameters = [],
-        private string $resultName = "message"
+        string         $resultName = "message"
     ) {
         parent::__construct(self::GET_LANGUAGE_MESSAGE, FlowItemCategory::INTERNAL);
+
+        $this->key = new StringArgument("key", $key, "@action.addLanguageMappings.form.key", example: "mineflow.action.aieuo");
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "message");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -41,8 +48,8 @@ class GetLanguage extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        $parameters = implode(", ", $this->getParameters());
-        return [$this->getLanguage(), $this->getKey(), $parameters, $this->getResultName()];
+        $parameters = implode(", ", $this->parameters);
+        return [$this->getLanguage(), $this->key->get(), $parameters, $this->resultName->get()];
     }
 
     public function getLanguage(): string {
@@ -53,12 +60,8 @@ class GetLanguage extends FlowItem {
         $this->language = $language;
     }
 
-    public function getKey(): string {
+    public function getKey(): StringArgument {
         return $this->key;
-    }
-
-    public function setKey(string $key): void {
-        $this->key = $key;
     }
 
     public function getParameters(): array {
@@ -69,23 +72,19 @@ class GetLanguage extends FlowItem {
         $this->parameters = $parameters;
     }
 
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
     public function isDataValid(): bool {
-        return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getResultName() !== "";
+        return $this->getLanguage() !== "" and $this->key->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $language = $source->replaceVariables($this->getLanguage());
-        $key = $source->replaceVariables($this->getKey());
-        $parameters = array_map(fn($parameter) => $source->replaceVariables($parameter), $this->getParameters());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $key = $this->key->getString($source);
+        $parameters = array_map(fn($parameter) => $source->replaceVariables($parameter), $this->parameters);
+        $resultName = $this->resultName->getString($source);
 
         $variable = new StringVariable(Language::get($key, $parameters, $language));
         $source->addVariable($resultName, $variable);
@@ -97,9 +96,9 @@ class GetLanguage extends FlowItem {
         $languages = implode(", ", Language::getAvailableLanguages());
         $builder->elements([
             new ExampleInput(Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), "eng", $this->getLanguage(), true),
-            new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
-            new ExampleInput("@action.getLanguageMessage.form.parameters", "aieuo, 123", implode(", ", $this->getParameters())),
-            new ExampleInput("@action.form.resultVariableName", "message", $this->getResultName(), true),
+            $this->key->createFormElement($variables),
+            new ExampleInput("@action.getLanguageMessage.form.parameters", "aieuo, 123", implode(", ", $this->parameters)),
+            $this->resultName->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->preprocessAt(3, function ($value) {
                 return array_map(fn($parameter) => trim($parameter), explode(",", $value));
@@ -109,18 +108,18 @@ class GetLanguage extends FlowItem {
 
     public function loadSaveData(array $content): void {
         $this->setLanguage($content[0]);
-        $this->setKey($content[1]);
+        $this->key->set($content[1]);
         $this->setParameters($content[2]);
-        $this->setResultName($content[3]);
+        $this->resultName->set($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->getLanguage(), $this->getKey(), $this->getParameters(), $this->getResultName()];
+        return [$this->getLanguage(), $this->key->get(), $this->parameters, $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(StringVariable::class)
+            $this->resultName->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

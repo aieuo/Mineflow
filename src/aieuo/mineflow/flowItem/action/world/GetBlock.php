@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\world\Position;
@@ -23,11 +23,13 @@ class GetBlock extends FlowItem {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
     private PositionArgument $position;
+    private StringArgument $resultName;
 
-    public function __construct(string $position = "", private string $resultName = "block") {
+    public function __construct(string $position = "", string $resultName = "block") {
         parent::__construct(self::GET_BLOCK, FlowItemCategory::WORLD);
 
         $this->position = new PositionArgument("position", $position);
+        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block");
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -35,28 +37,24 @@ class GetBlock extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->position->get(), $this->getResultName()];
+        return [$this->position->get(), $this->resultName->get()];
     }
 
     public function getPosition(): PositionArgument {
         return $this->position;
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
+    public function getResultName(): StringArgument {
         return $this->resultName;
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->getResultName() !== "";
+        return $this->position->isNotEmpty() and $this->resultName->isNotEmpty();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $position = $this->position->getPosition($source);
-        $result = $source->replaceVariables($this->getResultName());
+        $result = $this->resultName->getString($source);
 
         /** @var Position $position */
         $block = $position->world->getBlock($position);
@@ -65,28 +63,28 @@ class GetBlock extends FlowItem {
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return $this->resultName->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
             $this->position->createFormElement($variables),
-            new ExampleInput("@action.form.resultVariableName", "block", $this->getResultName(), true),
+            $this->resultName->createFormElement($variables),
         ]);
     }
 
     public function loadSaveData(array $content): void {
         $this->position->set($content[0]);
-        $this->setResultName($content[1]);
+        $this->resultName->set($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->position->get(), $this->getResultName()];
+        return [$this->position->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(BlockVariable::class)
+            $this->resultName->get() => new DummyVariable(BlockVariable::class)
         ];
     }
 }
