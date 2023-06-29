@@ -49,7 +49,7 @@ class SetWorldTime extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->world->isNotEmpty() and $this->time->isNotEmpty();
+        return $this->world->isValid() and $this->time->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

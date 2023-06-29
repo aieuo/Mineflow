@@ -77,7 +77,7 @@ class GetLanguage extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getLanguage() !== "" and $this->key->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->getLanguage() !== "" and $this->key->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

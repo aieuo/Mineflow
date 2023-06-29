@@ -47,7 +47,7 @@ abstract class GetInventoryContentsBase extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->resultName->isNotEmpty();
+        return $this->player->get() !== "" and $this->resultName->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

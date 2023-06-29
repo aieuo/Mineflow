@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\item;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -12,7 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\GeneratorUtil;
@@ -44,7 +44,7 @@ class IsSameItem extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->item1->isNotEmpty() and $this->item2->isNotEmpty();
+        return $this->item1->isValid() and $this->item2->isValid();
     }
 
     public function getItem1(): ItemArgument {

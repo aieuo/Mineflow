@@ -42,7 +42,7 @@ class RemoveBossbar extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->barId->isNotEmpty();
+        return $this->player->get() !== "" and $this->barId->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

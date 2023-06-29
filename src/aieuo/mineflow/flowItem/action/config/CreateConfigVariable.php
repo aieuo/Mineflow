@@ -55,7 +55,7 @@ class CreateConfigVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->fileName->isNotEmpty();
+        return $this->variableName->isValid() and $this->fileName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

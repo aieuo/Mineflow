@@ -48,7 +48,7 @@ class StringLength extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->value->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->value->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

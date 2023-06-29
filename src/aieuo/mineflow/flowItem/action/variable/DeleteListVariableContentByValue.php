@@ -51,7 +51,7 @@ class DeleteListVariableContentByValue extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->variableValue->isNotEmpty();
+        return $this->variableName->isValid() and $this->variableValue->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

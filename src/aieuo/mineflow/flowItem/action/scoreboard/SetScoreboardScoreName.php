@@ -52,7 +52,7 @@ class SetScoreboardScoreName extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->scoreboard->isNotEmpty() and $this->score->isNotEmpty();
+        return $this->scoreboard->isValid() and $this->score->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

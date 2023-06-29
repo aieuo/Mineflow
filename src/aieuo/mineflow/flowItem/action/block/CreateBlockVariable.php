@@ -56,7 +56,7 @@ class CreateBlockVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->blockId->isNotEmpty();
+        return $this->variableName->isValid() and $this->blockId->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

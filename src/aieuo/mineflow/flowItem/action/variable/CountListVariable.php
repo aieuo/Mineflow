@@ -52,7 +52,7 @@ class CountListVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and !empty($this->resultName->get());
+        return $this->variableName->isValid() and !empty($this->resultName->get());
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

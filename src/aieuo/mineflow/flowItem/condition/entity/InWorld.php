@@ -44,7 +44,7 @@ class InWorld extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->world->isNotEmpty();
+        return $this->entity->isValid() and $this->world->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

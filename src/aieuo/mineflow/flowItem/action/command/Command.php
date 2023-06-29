@@ -42,7 +42,7 @@ class Command extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->command->isNotEmpty();
+        return $this->player->get() !== "" and $this->command->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

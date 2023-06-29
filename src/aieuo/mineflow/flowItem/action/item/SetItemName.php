@@ -47,7 +47,7 @@ class SetItemName extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty();
+        return $this->item->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

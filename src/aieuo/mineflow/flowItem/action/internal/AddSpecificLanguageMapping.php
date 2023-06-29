@@ -55,7 +55,7 @@ class AddSpecificLanguageMapping extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->getLanguage() !== "" and $this->key->isNotEmpty() and $this->message->isNotEmpty();
+        return $this->getLanguage() !== "" and $this->key->isValid() and $this->message->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -46,7 +46,7 @@ class SetNameTag extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->newName->isNotEmpty();
+        return $this->entity->isValid() and $this->newName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

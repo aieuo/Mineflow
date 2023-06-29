@@ -58,7 +58,7 @@ class GenerateRandomPosition extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->resultName->isNotEmpty();
+        return $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

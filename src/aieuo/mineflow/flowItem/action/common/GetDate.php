@@ -46,7 +46,7 @@ class GetDate extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->format->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->format->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

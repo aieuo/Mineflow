@@ -72,7 +72,7 @@ class CreateScoreboardVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->boardId->isNotEmpty() and $this->displayName->isNotEmpty() and in_array($this->displayType, $this->displayTypes, true);
+        return $this->variableName->isValid() and $this->boardId->isValid() and $this->displayName->isValid() and in_array($this->displayType, $this->displayTypes, true);
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

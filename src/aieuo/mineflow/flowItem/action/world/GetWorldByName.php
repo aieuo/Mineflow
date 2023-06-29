@@ -50,7 +50,7 @@ class GetWorldByName extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->worldName->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->worldName->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

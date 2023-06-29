@@ -56,7 +56,7 @@ class JoinListVariableToString extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->variableName->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

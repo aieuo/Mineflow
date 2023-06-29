@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -11,8 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
 use SOFe\AwaitGenerator\Await;
 
 class InArea extends FlowItem implements Condition {
@@ -40,7 +40,7 @@ class InArea extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->position1->isNotEmpty() and $this->position2->isNotEmpty();
+        return $this->entity->isValid() and $this->position1->isValid() and $this->position2->isValid();
     }
 
     public function getEntity(): EntityArgument {

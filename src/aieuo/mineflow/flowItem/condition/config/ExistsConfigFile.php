@@ -43,7 +43,7 @@ class ExistsConfigFile extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->fileName->isNotEmpty();
+        return $this->fileName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

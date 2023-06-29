@@ -57,7 +57,7 @@ class TeleportToWorld extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->worldName->isNotEmpty();
+        return $this->entity->isValid() and $this->worldName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

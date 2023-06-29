@@ -52,7 +52,7 @@ class GetPlayerByName extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->playerName->isNotEmpty() and !empty($this->resultName->get());
+        return $this->playerName->isValid() and !empty($this->resultName->get());
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

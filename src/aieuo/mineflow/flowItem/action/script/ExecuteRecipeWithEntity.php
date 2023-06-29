@@ -37,7 +37,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     }
 
     public function isDataValid(): bool {
-        return $this->recipeName->isNotEmpty() and $this->entity->isNotEmpty();
+        return $this->recipeName->isValid() and $this->entity->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

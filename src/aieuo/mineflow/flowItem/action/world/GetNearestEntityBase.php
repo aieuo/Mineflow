@@ -67,7 +67,7 @@ abstract class GetNearestEntityBase extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->position->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

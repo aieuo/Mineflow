@@ -40,7 +40,7 @@ class ExistsVariable extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty();
+        return $this->variableName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

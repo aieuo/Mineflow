@@ -49,7 +49,7 @@ abstract class SimpleFlowItem extends FlowItem {
 
     public function isDataValid(): bool {
         foreach ($this->getArguments() as $argument) {
-            if (!$argument->isOptional() and !$argument->isNotEmpty()) return false;
+            if (!$argument->isValid()) return false;
         }
         return true;
     }

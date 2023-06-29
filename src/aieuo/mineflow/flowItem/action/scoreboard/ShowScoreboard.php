@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
 use SOFe\AwaitGenerator\Await;
 
 class ShowScoreboard extends FlowItem {
@@ -41,7 +41,7 @@ class ShowScoreboard extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->scoreboard->isNotEmpty();
+        return $this->player->get() !== "" and $this->scoreboard->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

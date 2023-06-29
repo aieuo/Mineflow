@@ -57,7 +57,7 @@ class AddMapVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->variableKey->isNotEmpty();
+        return $this->variableName->isValid() and $this->variableKey->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -79,7 +79,7 @@ class SendTitle extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and ($this->title->isNotEmpty() or $this->subtitle->isNotEmpty());
+        return $this->player->get() !== "" and ($this->title->isValid() or $this->subtitle->isValid());
     }
 
     public function getPlayer(): PlayerArgument {

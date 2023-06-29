@@ -40,7 +40,7 @@ class Wait extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->time->isNotEmpty();
+        return $this->time->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

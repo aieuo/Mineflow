@@ -46,7 +46,7 @@ class IsSameBlock extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->block1->isNotEmpty() and $this->block2->isNotEmpty();
+        return $this->block1->isValid() and $this->block2->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

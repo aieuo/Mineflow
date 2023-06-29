@@ -58,7 +58,7 @@ class AddLanguageMappings extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->key->isNotEmpty() and count($this->mappings) > 0;
+        return $this->key->isValid() and count($this->mappings) > 0;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

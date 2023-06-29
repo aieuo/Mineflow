@@ -69,7 +69,7 @@ class ComparisonString extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->value1->isNotEmpty();
+        return $this->value1->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

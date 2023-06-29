@@ -43,7 +43,7 @@ class Kick extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->reason->isNotEmpty();
+        return $this->player->get() !== "" and $this->reason->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

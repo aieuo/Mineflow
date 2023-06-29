@@ -45,8 +45,8 @@ abstract class FlowItemArgument {
         return $this->value === null;
     }
 
-    public function isNotEmpty(): bool {
-        return $this->value !== null;
+    public function isValid(): bool {
+        return $this->isOptional() or !$this->isEmpty();
     }
 
     /**

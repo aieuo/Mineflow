@@ -59,7 +59,7 @@ class PlaySound extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->sound->isNotEmpty() and $this->volume->get() !== "" and $this->pitch->get() !== "";
+        return $this->player->get() !== "" and $this->sound->isValid() and $this->volume->get() !== "" and $this->pitch->get() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

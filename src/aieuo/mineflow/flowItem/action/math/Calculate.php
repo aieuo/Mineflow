@@ -83,7 +83,7 @@ class Calculate extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->value->isNotEmpty();
+        return $this->value->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

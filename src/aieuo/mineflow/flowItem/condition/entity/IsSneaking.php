@@ -2,6 +2,7 @@
 
 namespace aieuo\mineflow\flowItem\condition\entity;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -9,7 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
 use pocketmine\entity\Human;
 use SOFe\AwaitGenerator\Await;
 
@@ -38,7 +38,7 @@ class IsSneaking extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty();
+        return $this->entity->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

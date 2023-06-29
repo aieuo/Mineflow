@@ -63,7 +63,7 @@ class EquipArmor extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->item->isNotEmpty() and $this->index !== "";
+        return $this->entity->isValid() and $this->item->isValid() and $this->index->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

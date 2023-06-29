@@ -52,7 +52,7 @@ class RemoveItemData extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->key->isNotEmpty();
+        return $this->item->isValid() and $this->key->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

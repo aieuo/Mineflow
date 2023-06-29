@@ -41,7 +41,7 @@ abstract class OnlinePlayerCount extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->value->isNotEmpty();
+        return $this->value->isValid();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {

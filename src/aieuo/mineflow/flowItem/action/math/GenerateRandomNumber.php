@@ -45,7 +45,7 @@ class GenerateRandomNumber extends TypeGetMathVariable {
     }
 
     public function isDataValid(): bool {
-        return $this->min->isNotEmpty() and $this->max->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->min->isValid() and $this->max->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

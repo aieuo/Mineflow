@@ -63,7 +63,7 @@ class SetArmorColor extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->armor->isNotEmpty() and $this->red->isNotEmpty() and $this->green->isNotEmpty() and $this->blue->isNotEmpty();
+        return $this->armor->isValid() and $this->red->isValid() and $this->green->isValid() and $this->blue->isValid();
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {

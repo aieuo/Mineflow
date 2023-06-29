@@ -55,7 +55,7 @@ class GetDistance extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->position1->isNotEmpty() and $this->position2->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->position1->isValid() and $this->position2->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\EntityArgument;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
 use SOFe\AwaitGenerator\Await;
 
 class Teleport extends FlowItem {
@@ -37,7 +37,7 @@ class Teleport extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->position->isNotEmpty();
+        return $this->entity->isValid() and $this->position->isValid();
     }
 
     public function getEntity(): EntityArgument {

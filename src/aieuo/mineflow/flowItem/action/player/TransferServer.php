@@ -39,7 +39,7 @@ class TransferServer extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->ip->isNotEmpty() and $this->port->isNotEmpty();
+        return $this->player->get() !== "" and $this->ip->isValid() and $this->port->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

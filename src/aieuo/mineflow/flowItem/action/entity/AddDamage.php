@@ -58,7 +58,7 @@ class AddDamage extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->damage->isNotEmpty();
+        return $this->damage->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

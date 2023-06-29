@@ -46,7 +46,7 @@ class ExistsConfigData extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->config->isNotEmpty() and $this->key->isNotEmpty();
+        return $this->config->isValid() and $this->key->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

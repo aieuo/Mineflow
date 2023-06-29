@@ -52,7 +52,7 @@ class CreateMapVariableFromJson extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->json->isNotEmpty();
+        return $this->variableName->isValid() and $this->json->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

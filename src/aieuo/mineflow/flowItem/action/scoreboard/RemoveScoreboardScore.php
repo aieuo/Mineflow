@@ -45,7 +45,7 @@ class RemoveScoreboardScore extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->scoreboard->isNotEmpty();
+        return $this->scoreboard->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

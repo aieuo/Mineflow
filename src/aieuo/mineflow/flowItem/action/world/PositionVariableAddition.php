@@ -69,7 +69,7 @@ class PositionVariableAddition extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "" and $this->resultName->isNotEmpty();
+        return $this->position->isValid() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "" and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

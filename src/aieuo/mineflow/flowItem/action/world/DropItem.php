@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
 use SOFe\AwaitGenerator\Await;
 
 class DropItem extends FlowItem {
@@ -37,7 +37,7 @@ class DropItem extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->item->isNotEmpty();
+        return $this->position->isValid() and $this->item->isValid();
     }
 
     public function getItem(): ItemArgument {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -11,7 +12,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 use function array_filter;
@@ -57,7 +57,7 @@ class SetItemLore extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty();
+        return $this->item->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

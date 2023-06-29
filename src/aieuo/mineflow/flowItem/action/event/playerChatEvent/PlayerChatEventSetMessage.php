@@ -47,7 +47,7 @@ class PlayerChatEventSetMessage extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->event->isNotEmpty();
+        return $this->event->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

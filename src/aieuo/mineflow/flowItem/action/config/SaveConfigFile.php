@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\config;
 
+use aieuo\mineflow\flowItem\argument\ConfigArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -11,7 +12,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ConfigArgument;
 use SOFe\AwaitGenerator\Await;
 
 class SaveConfigFile extends FlowItem {
@@ -40,7 +40,7 @@ class SaveConfigFile extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->config->isNotEmpty();
+        return $this->config->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

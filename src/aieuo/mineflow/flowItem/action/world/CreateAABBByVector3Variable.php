@@ -48,7 +48,7 @@ class CreateAABBByVector3Variable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->get() !== "" and $this->pos1->isNotEmpty() and $this->pos2->isNotEmpty();
+        return $this->variableName->get() !== "" and $this->pos1->isValid() and $this->pos2->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

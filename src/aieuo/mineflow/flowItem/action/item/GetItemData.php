@@ -57,7 +57,7 @@ class GetItemData extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->key->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->item->isValid() and $this->key->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

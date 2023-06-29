@@ -53,7 +53,7 @@ class SetItemDataFromNBTJson extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->json->isNotEmpty();
+        return $this->item->isValid() and $this->json->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

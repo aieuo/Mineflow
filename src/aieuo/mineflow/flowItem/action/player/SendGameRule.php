@@ -52,7 +52,7 @@ class SendGameRule extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->gamerule->isNotEmpty();
+        return $this->player->get() !== "" and $this->gamerule->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

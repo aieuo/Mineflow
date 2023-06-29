@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\item;
 
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
 
 abstract class TypeItem extends FlowItem implements Condition {
     use ConditionNameWithMineflowLanguage;
@@ -45,7 +45,7 @@ abstract class TypeItem extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->item->isNotEmpty();
+        return $this->player->get() !== "" and $this->item->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

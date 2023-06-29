@@ -48,7 +48,7 @@ class SetItemDamage extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->item->isNotEmpty() and $this->damage->isNotEmpty();
+        return $this->item->isValid() and $this->damage->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

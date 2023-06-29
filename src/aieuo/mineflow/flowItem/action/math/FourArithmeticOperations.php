@@ -80,7 +80,7 @@ class FourArithmeticOperations extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->value1->isNotEmpty() and $this->value2->isNotEmpty();
+        return $this->value1->isValid() and $this->value2->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

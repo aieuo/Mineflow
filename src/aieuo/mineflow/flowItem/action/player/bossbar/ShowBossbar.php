@@ -91,7 +91,7 @@ class ShowBossbar extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->title->isNotEmpty();
+        return $this->player->get() !== "" and $this->title->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

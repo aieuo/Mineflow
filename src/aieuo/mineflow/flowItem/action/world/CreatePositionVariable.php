@@ -72,7 +72,7 @@ class CreatePositionVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "";
+        return $this->variableName->isValid() and $this->x->get() !== "" and $this->y->get() !== "" and $this->z->get() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

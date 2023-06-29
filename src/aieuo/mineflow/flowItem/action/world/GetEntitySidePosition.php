@@ -115,7 +115,7 @@ class GetEntitySidePosition extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isNotEmpty() and $this->direction !== "" and $this->steps->get() !== "" and $this->resultName->isNotEmpty();
+        return $this->entity->isValid() and $this->direction !== "" and $this->steps->get() !== "" and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

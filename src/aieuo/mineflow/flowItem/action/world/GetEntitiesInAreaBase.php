@@ -62,7 +62,7 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->aabb->isNotEmpty() and $this->world->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->aabb->isValid() and $this->world->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -43,7 +43,7 @@ class CommandConsole extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->command->isNotEmpty();
+        return $this->command->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

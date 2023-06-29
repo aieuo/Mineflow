@@ -42,7 +42,7 @@ class HasPermission extends FlowItem implements Condition {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->playerPermission->isNotEmpty();
+        return $this->player->get() !== "" and $this->playerPermission->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

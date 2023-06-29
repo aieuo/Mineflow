@@ -47,7 +47,7 @@ class SetDefaultPlayerData extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->dataName->isNotEmpty() and $this->defaultValue->isNotEmpty();
+        return $this->dataName->isValid() and $this->defaultValue->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

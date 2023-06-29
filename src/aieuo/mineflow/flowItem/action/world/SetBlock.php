@@ -45,7 +45,7 @@ class SetBlock extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->position->isNotEmpty() and $this->block->isNotEmpty();
+        return $this->position->isValid() and $this->block->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

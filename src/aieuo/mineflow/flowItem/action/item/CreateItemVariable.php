@@ -68,7 +68,7 @@ class CreateItemVariable extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->variableName->isNotEmpty() and $this->itemId->isNotEmpty();
+        return $this->variableName->isValid() and $this->itemId->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

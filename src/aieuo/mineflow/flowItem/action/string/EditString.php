@@ -85,7 +85,7 @@ class EditString extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->value1->isNotEmpty() and $this->value2->isNotEmpty() and $this->getOperator() !== "";
+        return $this->value1->isValid() and $this->value2->isValid() and $this->getOperator() !== "";
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

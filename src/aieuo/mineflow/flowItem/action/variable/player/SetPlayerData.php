@@ -50,7 +50,7 @@ class SetPlayerData extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->dataName->isNotEmpty() and $this->data->isNotEmpty();
+        return $this->player->get() !== "" and $this->dataName->isValid() and $this->data->isValid();
     }
 
     public function getPlayer(): PlayerArgument {

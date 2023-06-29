@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
@@ -95,7 +95,7 @@ class RegisterCraftingRecipe extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->output->isNotEmpty();
+        return $this->output->isValid();
     }
 
     public function getIngredients(): array {

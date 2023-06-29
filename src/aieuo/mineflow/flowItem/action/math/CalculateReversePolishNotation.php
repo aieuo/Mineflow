@@ -50,7 +50,7 @@ class CalculateReversePolishNotation extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->formula->isNotEmpty() and $this->resultName->isNotEmpty();
+        return $this->formula->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

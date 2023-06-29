@@ -45,7 +45,7 @@ class SendForm extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->formName->isNotEmpty();
+        return $this->formName->isValid();
     }
 
     public function getPlayer(): PlayerArgument {
