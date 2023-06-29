@@ -63,7 +63,7 @@ class Dropdown extends Element {
         return [
             "type" => $this->type,
             "text" => Language::replace($this->extraText).$this->reflectHighlight(Language::replace($this->text)),
-            "options" => $this->options,
+            "options" => array_map(fn(string $option) => Language::replace($option), $this->options),
             "default" => $this->default,
         ];
     }
