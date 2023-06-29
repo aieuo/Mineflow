@@ -74,18 +74,14 @@ class NumberArgument extends FlowItemArgument {
      * @throws \InvalidArgumentException
      */
     public function getInt(FlowItemExecutor $executor): int {
-        $number = $executor->replaceVariables($this->get());
-        Utils::validateNumberString($number, $this->getMin(), $this->getMax(), $this->getExcludes());
-        return (int)$number;
+        return Utils::getInt($executor->replaceVariables($this->get()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     /**
      * @throws \InvalidArgumentException
      */
     public function getFloat(FlowItemExecutor $executor): float {
-        $number = $executor->replaceVariables($this->get());
-        Utils::validateNumberString($number, $this->getMin(), $this->getMax(), $this->getExcludes());
-        return (float)$number;
+        return Utils::getFloat($executor->replaceVariables($this->get()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     public function createFormElement(array $variables): Element {

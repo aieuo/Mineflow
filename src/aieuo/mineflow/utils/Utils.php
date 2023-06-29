@@ -81,4 +81,14 @@ class Utils {
         }
     }
 
+    public static function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
+        static::validateNumberString($number, $min, $max, $exclude);
+        return (int)$number;
+    }
+
+    public static function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
+        static::validateNumberString($number, $min, $max, $exclude);
+        return (float)$number;
+    }
+
 }

@@ -7,7 +7,6 @@ namespace aieuo\mineflow\flowItem;
 use aieuo\mineflow\exception\FlowItemExecutionException;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\placeholder\NumberPlaceholder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use JetBrains\PhpStorm\Deprecated;
@@ -108,20 +107,14 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
         }
     }
+    #[Deprecated(replacement: "aieuo\mineflow\utils\Utils::getInt(%parametersList%)")]
 
-    #[Deprecated]
-    /**
-     * @see NumberPlaceholder
-     */
     protected function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
         $this->throwIfInvalidNumber($number, $min, $max, $exclude);
         return (int)$number;
     }
 
-    #[Deprecated]
-    /**
-     * @see NumberPlaceholder
-     */
+    #[Deprecated(replacement: "aieuo\mineflow\utils\Utils::getFloat(%parametersList%)")]
     protected function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
         $this->throwIfInvalidNumber($number, $min, $max, $exclude);
         return (float)$number;
