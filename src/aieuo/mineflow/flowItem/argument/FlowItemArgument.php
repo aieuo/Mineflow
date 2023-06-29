@@ -54,4 +54,8 @@ abstract class FlowItemArgument {
      * @return Element
      */
     abstract public function createFormElement(array $variables): Element;
+
+    public function __toString(): string {
+        return (string)$this->get();
+    }
 }

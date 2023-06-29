@@ -24,4 +24,8 @@ class BooleanArgument extends FlowItemArgument {
     public function createFormElement(array $variables): Element {
         return new Toggle($this->getDescription(), $this->getBool());
     }
+
+    public function __toString(): string {
+        return $this->getBool() ? "true" : "false";
+    }
 }

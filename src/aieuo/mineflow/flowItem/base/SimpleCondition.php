@@ -16,6 +16,6 @@ abstract class SimpleCondition extends SimpleFlowItem implements Condition {
     }
 
     public function getDetailReplaces(): array {
-        return array_map(fn(FlowItemArgument $value) => $value->get(), $this->getArguments());
+        return array_map(fn(FlowItemArgument $value) => (string)$value, $this->getArguments());
     }
 }
