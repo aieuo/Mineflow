@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem;
 
-use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\exception\FlowItemExecutionException;
 use aieuo\mineflow\exception\MineflowMethodErrorException;
 use aieuo\mineflow\exception\RecipeInterruptException;
 use aieuo\mineflow\exception\UndefinedMineflowMethodException;
