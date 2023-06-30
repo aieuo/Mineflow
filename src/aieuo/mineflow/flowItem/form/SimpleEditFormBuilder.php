@@ -6,87 +6,52 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\form;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\formAPI\CustomForm;
-use aieuo\mineflow\formAPI\element\CancelToggle;
-use aieuo\mineflow\formAPI\element\Element;
-use aieuo\mineflow\formAPI\element\Label;
-use function array_unshift;
-use function array_values;
+use aieuo\mineflow\flowItem\form\page\builder\CustomFormEditPageBuilder;
+use aieuo\mineflow\flowItem\form\page\builder\EditPageBuilder;
 
-class SimpleEditFormBuilder {
-
-    private EditFormResponseProcessor $responseProcessor;
-    private SimpleEditFormPageManager $pageManager;
+class SimpleEditFormBuilder extends CustomFormEditPageBuilder {
 
     /**
      * @param FlowItem $item
-     * @param array $elements
      * @param bool $isNew
-     * @param SimpleEditFormPageManager|null $pageManager
+     * @param SimpleEditFormPageManager $pageManager
      */
     public function __construct(
-        private FlowItem          $item,
-        private array             $elements = [],
-        private bool              $isNew = true,
-        SimpleEditFormPageManager $pageManager = null,
+        private readonly FlowItem                  $item,
+        private readonly bool                      $isNew = true,
+        private readonly SimpleEditFormPageManager $pageManager = new SimpleEditFormPageManager(),
     ) {
-        $this->responseProcessor = new EditFormResponseProcessor(\Closure::fromCallable([$item, "loadSaveData"]));
+        parent::__construct($this);
 
-        $this->pageManager = $pageManager ?? new SimpleEditFormPageManager();
         if ($this->pageManager->count() === 0) {
-            $this->pageManager->add(0, $this);
+            $this->pageManager->add($this);
         }
-    }
-
-    /**
-     * @param Element[] $elements
-     * @return SimpleEditFormBuilder
-     */
-    public function elements(array $elements): self {
-        $this->elements = array_merge($this->elements, $elements);
-        return $this;
-    }
-
-    /**
-     * @param Element[] $elements
-     * @return void
-     */
-    public function setElements(array $elements): void {
-        $this->elements = $elements;
-    }
-
-    public function appendElement(Element $element): void {
-        $this->elements[] = $element;
-    }
-
-    public function prependElement(Element $element): void {
-        array_unshift($this->elements, $element);
-        $this->elements = array_values($this->elements);
-    }
-
-    /**
-     * @param callable(EditFormResponseProcessor $response): void $callback
-     * @return SimpleEditFormBuilder
-     */
-    public function response(callable $callback): self {
-        $callback($this->responseProcessor);
-        return $this;
     }
 
     /**
      * @param int $number
-     * @param callable(SimpleEditFormBuilder $builder): void $callback
+     * @param callable(EditPageBuilder $builder): void $callback
+     * @param EditPageBuilder|null $newPageInstance
      * @return SimpleEditFormBuilder
      */
-    public function page(int $number, callable $callback): self {
+    public function page(int $number, callable $callback, EditPageBuilder $newPageInstance = null): self {
         $page = $this->pageManager->get($number);
         if ($page === null) {
-            $page = new self($this->item, isNew: $this->isNew, pageManager: $this->pageManager);
-            $this->pageManager->add($number, $page);
+            $page = $newPageInstance ?? new CustomFormEditPageBuilder($this);
+            $this->pageManager->add($page);
         }
 
         $callback($page);
         return $this;
+    }
+
+    public function customFormPage(int $number, callable $callback): self {
+        $page = $this->pageManager->get($number);
+        if ($page !== null and !($page instanceof CustomFormEditPageBuilder)) {
+            throw new \InvalidArgumentException("Flowitem edit page #".$number." is not a CustomFormPage");
+        }
+
+        return $this->page($number, $callback, new CustomFormEditPageBuilder($this));
     }
 
     /**
@@ -104,14 +69,11 @@ class SimpleEditFormBuilder {
         return !$this->isNew;
     }
 
-    private function buildForm(): CustomForm {
-        return (new CustomForm($this->item->getName()))
-            ->addContent(new Label($this->item->getDescription()))
-            ->addContents($this->elements)
-            ->addContent(new CancelToggle());
+    public function getItem(): FlowItem {
+        return $this->item;
     }
 
-    public function build(): SimpleEditForm {
-        return new SimpleEditForm($this->item, $this->buildForm(), $this->responseProcessor->build(), $this->responseProcessor->getLoader());
+    public function getPageManager(): SimpleEditFormPageManager {
+        return $this->pageManager;
     }
 }

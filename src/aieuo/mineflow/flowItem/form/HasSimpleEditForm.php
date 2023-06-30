@@ -19,7 +19,7 @@ trait HasSimpleEditForm {
         while ($i < $max) {
             $builder = new SimpleEditFormBuilder($this, isNew: $isNew);
             $this->buildEditForm($builder, $variables);
-            $pages = $builder->getPages();
+            $pages = array_values($builder->getPages());
 
             $prevMax = $max;
             $max = count($pages);
