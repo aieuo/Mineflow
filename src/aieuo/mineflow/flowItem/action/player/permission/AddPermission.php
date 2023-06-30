@@ -16,7 +16,7 @@ class AddPermission extends AddPermissionBase {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $permission = $source->replaceVariables($this->getPlayerPermission());
+        $permission = $this->playerPermission->getString($source);
         $player = $this->player->getOnlinePlayer($source);
 
         $player->addAttachment(Main::getInstance(), $permission, true);

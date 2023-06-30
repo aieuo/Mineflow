@@ -23,9 +23,9 @@ class AddDamage extends FlowItem {
     private NumberArgument $damage;
 
     public function __construct(
-        string         $entity = "",
-        string $damage = "",
-        private int    $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK
+        string      $entity = "",
+        string      $damage = "",
+        private int $cause = EntityDamageEvent::CAUSE_ENTITY_ATTACK
     ) {
         parent::__construct(self::ADD_DAMAGE, FlowItemCategory::ENTITY);
 
@@ -74,8 +74,9 @@ class AddDamage extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-           $this->entity->createFormElement($variables),
-           $this->damage->createFormElement($variables),
+            $this->entity->createFormElement($variables),
+            $this->damage->createFormElement($variables),
+            // TODO: cause
         ]);
     }
 

@@ -7,12 +7,9 @@ namespace aieuo\mineflow\flowItem\action\item;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -20,9 +17,7 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\nbt\NbtException;
 use SOFe\AwaitGenerator\Await;
 
-class SetItemData extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetItemData extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
     private ItemArgument $item;
@@ -32,17 +27,11 @@ class SetItemData extends FlowItem {
     public function __construct(string $item = "", string $key = "", string $value = "") {
         parent::__construct(self::SET_ITEM_DATA, FlowItemCategory::ITEM);
 
-        $this->item = new ItemArgument("item", $item);
-        $this->key = new StringArgument("key", $key, example: "aieuo");
-        $this->value = new StringArgument("value", $value, example: "100");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->item->getName(), "key", "value"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->item->get(), $this->key->get(), $this->value->get()];
+        $this->setArguments([
+            $this->item = new ItemArgument("item", $item),
+            $this->key = new StringArgument("key", $key, example: "aieuo"),
+            $this->value = new StringArgument("value", $value, example: "100"),
+        ]);
     }
 
     public function getItem(): ItemArgument {
@@ -55,10 +44,6 @@ class SetItemData extends FlowItem {
 
     public function getValue(): StringArgument {
         return $this->value;
-    }
-
-    public function isDataValid(): bool {
-        return $this->item->isValid() and $this->key->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -84,23 +69,5 @@ class SetItemData extends FlowItem {
         $value = $this->value->get();
 
         return $helper->copyOrCreateVariable($value, $source);
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->item->createFormElement($variables),
-            $this->key->createFormElement($variables),
-            $this->value->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->item->set($content[0]);
-        $this->key->set($content[1]);
-        $this->value->set($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->item->get(), $this->key->get(), $this->value->get()];
     }
 }

@@ -6,18 +6,13 @@ namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
 
-abstract class GetInventoryContentsBase extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+abstract class GetInventoryContentsBase extends SimpleAction {
 
     protected PlayerArgument $player;
     protected StringArgument $resultName;
@@ -30,44 +25,18 @@ abstract class GetInventoryContentsBase extends FlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->player = new PlayerArgument("player", $player);
-        $this->resultName = new StringArgument("inventory", $resultName, "@action.form.resultVariableName", example: "inventory");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->player->getName(), "inventory"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->getResultName()];
-    }
-
-    public function getResultName(): StringArgument {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->resultName->isValid();
+        $this->setArguments([
+            $this->player = new PlayerArgument("player", $player),
+            $this->resultName = new StringArgument("inventory", $resultName, "@action.form.resultVariableName", example: "inventory"),
+        ]);
     }
 
     public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->player->createFormElement($variables),
-            $this->resultName->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->resultName->set($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->player->get(), $this->resultName->get()];
+    public function getResultName(): StringArgument {
+        return $this->resultName;
     }
 
     public function getAddingVariables(): array {

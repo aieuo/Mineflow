@@ -6,18 +6,13 @@ namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\WorldArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use pocketmine\world\World;
 use SOFe\AwaitGenerator\Await;
 
-class SetWorldTime extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetWorldTime extends SimpleAction {
 
     private WorldArgument $world;
     private NumberArgument $time;
@@ -28,16 +23,10 @@ class SetWorldTime extends FlowItem {
     ) {
         parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
 
-        $this->world = new WorldArgument("world", $worldName);
-        $this->time = new NumberArgument("time", $time, example: "12000", min: 0, max: World::TIME_FULL);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->world->getName(), "time"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->world->get(), $this->time->get()];
+        $this->setArguments([
+            $this->world = new WorldArgument("world", $worldName),
+            $this->time = new NumberArgument("time", $time, example: "12000", min: 0, max: World::TIME_FULL),
+        ]);
     }
 
     public function getWorld(): WorldArgument {
@@ -48,10 +37,6 @@ class SetWorldTime extends FlowItem {
         return $this->time;
     }
 
-    public function isDataValid(): bool {
-        return $this->world->isValid() and $this->time->isValid();
-    }
-
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $world = $this->world->getWorld($source);
         $time = $this->time->getInt($source);
@@ -59,21 +44,5 @@ class SetWorldTime extends FlowItem {
         $world->setTime($time);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->world->createFormElement($variables),
-            $this->time->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->world->set($content[0]);
-        $this->time->set($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->world->get(), $this->time->get()];
     }
 }

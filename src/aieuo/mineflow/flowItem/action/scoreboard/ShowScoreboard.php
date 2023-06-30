@@ -6,17 +6,12 @@ namespace aieuo\mineflow\flowItem\action\scoreboard;
 
 use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use SOFe\AwaitGenerator\Await;
 
-class ShowScoreboard extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class ShowScoreboard extends SimpleAction {
 
     private PlayerArgument $player;
     private ScoreboardArgument $scoreboard;
@@ -24,28 +19,18 @@ class ShowScoreboard extends FlowItem {
     public function __construct(string $player = "", string $scoreboard = "") {
         parent::__construct(self::SHOW_SCOREBOARD, FlowItemCategory::SCOREBOARD);
 
-        $this->player = new PlayerArgument("player", $player);
-        $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->player->getName(), $this->scoreboard->getName()];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->scoreboard->get()];
-    }
-
-    public function getScoreboard(): ScoreboardArgument {
-        return $this->scoreboard;
-    }
-
-    public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->scoreboard->isValid();
+        $this->setArguments([
+            $this->player = new PlayerArgument("player", $player),
+            $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard),
+        ]);
     }
 
     public function getPlayer(): PlayerArgument {
         return $this->player;
+    }
+
+    public function getScoreboard(): ScoreboardArgument {
+        return $this->scoreboard;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -55,21 +40,5 @@ class ShowScoreboard extends FlowItem {
         $board->show($player);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->player->createFormElement($variables),
-            $this->scoreboard->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->scoreboard->set($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->player->get(), $this->scoreboard->get()];
     }
 }

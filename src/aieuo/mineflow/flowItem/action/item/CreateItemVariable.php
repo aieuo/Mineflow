@@ -7,12 +7,10 @@ namespace aieuo\mineflow\flowItem\action\item;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
@@ -23,9 +21,7 @@ use pocketmine\item\LegacyStringToItemParserException;
 use pocketmine\item\StringToItemParser;
 use SOFe\AwaitGenerator\Await;
 
-class CreateItemVariable extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class CreateItemVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -37,18 +33,12 @@ class CreateItemVariable extends FlowItem {
     public function __construct(string $itemId = "", int $itemCount = 0, string $itemName = "", string $variableName = "item") {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
 
-        $this->variableName = new StringArgument("item", $variableName, "@action.form.resultVariableName", example: "item");
-        $this->itemId = new StringArgument("id", $itemId, example: "1:0");
-        $this->itemCount = new NumberArgument("count", $itemCount, example: "64", min: 0, optional: true);
-        $this->itemName = new StringArgument("name", $itemName, example: "aieuo", optional: true);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["item", "id", "count", "name"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->variableName->get(), $this->itemId->get(), $this->itemCount->get(), $this->itemName->get()];
+        $this->setArguments([
+            $this->variableName = new StringArgument("item", $variableName, "@action.form.resultVariableName", example: "item"),
+            $this->itemId = new StringArgument("id", $itemId, example: "1:0"),
+            $this->itemCount = new NumberArgument("count", $itemCount, example: "64", min: 0, optional: true),
+            $this->itemName = new StringArgument("name", $itemName, example: "aieuo", optional: true),
+        ]);
     }
 
     public function getVariableName(): StringArgument {
@@ -65,10 +55,6 @@ class CreateItemVariable extends FlowItem {
 
     public function getItemName(): StringArgument {
         return $this->itemName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName->isValid() and $this->itemId->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -106,17 +92,6 @@ class CreateItemVariable extends FlowItem {
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([3, 0, 1, 2]);
         });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->variableName->set($content[0]);
-        $this->itemId->set($content[1]);
-        $this->itemCount->set($content[2]);
-        $this->itemName->set($content[3] ?? "");
-    }
-
-    public function serializeContents(): array {
-        return [$this->variableName->get(), $this->itemId->get(), $this->itemCount->get(), $this->itemName->get()];
     }
 
     public function getAddingVariables(): array {

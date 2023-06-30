@@ -7,21 +7,16 @@ namespace aieuo\mineflow\flowItem\action\world;
 use aieuo\mineflow\flowItem\argument\AxisAlignedBBArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\argument\WorldArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 use SOFe\AwaitGenerator\Await;
 use function array_map;
 
-abstract class GetEntitiesInAreaBase extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+abstract class GetEntitiesInAreaBase extends SimpleAction {
 
     private AxisAlignedBBArgument $aabb;
     private WorldArgument $world;
@@ -36,17 +31,11 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
     ) {
         parent::__construct($id, $category);
 
-        $this->aabb = new AxisAlignedBBArgument("aabb", $aabb);
-        $this->world = new WorldArgument("world", $worldName);
-        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entitites");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->aabb->getName(), $this->world->getName(), "result"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->aabb->get(), $this->world->get(), $this->resultName->get()];
+        $this->setArguments([
+            $this->aabb = new AxisAlignedBBArgument("aabb", $aabb),
+            $this->world = new WorldArgument("world", $worldName),
+            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entities"),
+        ]);
     }
 
     public function getAxisAlignedBB(): AxisAlignedBBArgument {
@@ -59,10 +48,6 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
 
     public function getResultName(): StringArgument {
         return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->aabb->isValid() and $this->world->isValid() and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -83,22 +68,4 @@ abstract class GetEntitiesInAreaBase extends FlowItem {
      * @return Entity[]
      */
     abstract protected function filterEntities(array $entities): array;
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->aabb->createFormElement($variables),
-            $this->world->createFormElement($variables),
-            $this->resultName->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->aabb->set($content[0]);
-        $this->world->set($content[1]);
-        $this->resultName->set($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->aabb->get(), $this->world->get(), $this->resultName->get()];
-    }
 }

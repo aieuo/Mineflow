@@ -6,13 +6,11 @@ namespace aieuo\mineflow\flowItem\action\config;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
@@ -21,12 +19,10 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
 use SOFe\AwaitGenerator\Await;
 
-class CreateConfigVariable extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class CreateConfigVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
-    
+
     private StringArgument $fileName;
     private StringArgument $variableName;
 
@@ -34,16 +30,10 @@ class CreateConfigVariable extends FlowItem {
         parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
-        $this->variableName = new StringArgument("config", $variableName, "@action.form.resultVariableName", example: "config");
-        $this->fileName = new StringArgument("name", $fileName, example: "config");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["config", "name"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->variableName->get(), $this->fileName->get()];
+        $this->setArguments([
+            $this->variableName = new StringArgument("config", $variableName, "@action.form.resultVariableName", example: "config"),
+            $this->fileName = new StringArgument("name", $fileName, example: "config"),
+        ]);
     }
 
     public function getVariableName(): StringArgument {
@@ -52,10 +42,6 @@ class CreateConfigVariable extends FlowItem {
 
     public function getFileName(): StringArgument {
         return $this->fileName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName->isValid() and $this->fileName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -74,20 +60,11 @@ class CreateConfigVariable extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->fileName->isNotEmpty(),
-            $this->variableName->isNotEmpty(),
+            $this->fileName->createFormElement($variables),
+            $this->variableName->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([1, 0]);
         });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->variableName->set($content[0]);
-        $this->fileName->set($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->variableName->get(), $this->fileName->get()];
     }
 
     public function getAddingVariables(): array {
