@@ -59,8 +59,16 @@ class CustomFormEditPageBuilder extends EditPageBuilder {
         return $this;
     }
 
-    public function element(Element $element): self {
+    /**
+     * @param Element $element
+     * @param callable(mixed $value): mixed|null $responseProcessor
+     * @return $this
+     */
+    public function element(Element $element, callable $responseProcessor = null): self {
         $this->elements[] = $element;
+        if ($responseProcessor !== null) {
+            $this->responseProcessor->addSubProcessor($element, $responseProcessor);
+        }
         return $this;
     }
 

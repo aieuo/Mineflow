@@ -26,8 +26,9 @@ class CustomFormEditPage extends EditPage {
     }
 
     public function show(Player $player): \Generator {
-        return yield from Await::promise(function ($resolve) use ($player) {
-            $this->form->onReceiveWithoutPlayer(function (array $data) use ($resolve, $player) {
+        $elements = $this->form->getContents();
+        return yield from Await::promise(function ($resolve) use ($player, $elements) {
+            $this->form->onReceiveWithoutPlayer(function (array $data) use ($resolve, $player, $elements) {
                 array_shift($data);
                 if (array_pop($data)) {
                     $resolve(FlowItem::EDIT_CANCELED);
@@ -35,7 +36,7 @@ class CustomFormEditPage extends EditPage {
                 }
 
                 try {
-                    $data = ($this->processor)($data);
+                    $data = ($this->processor)($data, $elements);
                 } catch (InvalidFormValueException $e) {
                     $e->setIndex($e->getIndex() + 1);
                     throw $e;

@@ -5,15 +5,20 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\form;
 
+use aieuo\mineflow\formAPI\element\Element;
 use function array_pop;
 use function array_shift;
 use function array_unshift;
 use function array_values;
+use function spl_object_id;
 
 class EditFormResponseProcessor {
 
     /** @var array<callable(array): array> */
     private array $processors = [];
+
+    /** @var array<int, (callable(mixed $value): mixed)[]> */
+    private array $subProcessors = [];
     private \Closure $loader;
 
     public function __construct(callable $loader = null) {
@@ -121,9 +126,24 @@ class EditFormResponseProcessor {
         return $this->loader;
     }
 
+    public function addSubProcessor(Element $element, callable $responseProcessor): void {
+        $this->subProcessors[spl_object_id($element)][] = $responseProcessor;
+    }
+
     public function build(): callable {
         $processors = $this->processors;
-        return function (array $data) use ($processors) {
+
+        /** @var Element[] $elements */
+        return function (array $data, array $elements) use ($processors) {
+            foreach ($elements as $i => $element) {
+                $subProcessors = $this->subProcessors[spl_object_id($element)] ?? null;
+                if ($subProcessors === null) continue;
+
+                foreach ($subProcessors as $subProcessor) {
+                    $data[$i] = $subProcessor($data[$i]);
+                }
+            }
+
             foreach ($processors as $processor) {
                 $data = $processor($data);
             }
