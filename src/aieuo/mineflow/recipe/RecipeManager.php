@@ -152,6 +152,14 @@ class RecipeManager {
         return $this->recipes;
     }
 
+    public function unload(string $name, string $group = ""): void {
+        $recipe = $this->get($name, $group);
+        if ($recipe === null) return;
+
+        $recipe->removeTriggerAll();
+        unset($this->recipes[$group][$name]);
+    }
+
     public function remove(string $name, string $group = ""): void {
         $recipe = $this->get($name, $group);
         if ($recipe === null) return;
