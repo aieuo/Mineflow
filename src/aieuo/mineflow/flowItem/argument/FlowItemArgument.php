@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Element;
-use aieuo\mineflow\variable\Variable;
 
 abstract class FlowItemArgument {
 
@@ -13,7 +13,7 @@ abstract class FlowItemArgument {
         private readonly string $name,
         private mixed           $value = null,
         private string          $description = "",
-        private readonly bool   $optional = false,
+        private bool            $optional = false,
     ) {
     }
 
@@ -37,6 +37,16 @@ abstract class FlowItemArgument {
         return $this->description;
     }
 
+    public function optional(): self {
+        $this->optional = true;
+        return $this;
+    }
+
+    public function required(): self {
+        $this->optional = false;
+        return $this;
+    }
+
     public function isOptional(): bool {
         return $this->optional;
     }
@@ -49,11 +59,11 @@ abstract class FlowItemArgument {
         return $this->isOptional() or !$this->isEmpty();
     }
 
-    /**
-     * @param array<string, Variable> $variables
-     * @return Element
-     */
     abstract public function createFormElement(array $variables): Element;
+
+    public function buildEditPage(SimpleEditFormBuilder $builder, array $variables): void {
+        $builder->element($this->createFormElement($variables));
+    }
 
     public function __toString(): string {
         return (string)$this->get();

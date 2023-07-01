@@ -4,22 +4,15 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\IntEnumArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\flowItem\argument\PlayerArgument;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\utils\Language;
 use pocketmine\data\java\GameModeIdMap;
 use SOFe\AwaitGenerator\Await;
 
-class SetGamemode extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetGamemode extends SimpleAction {
 
     private array $gamemodes = [
         "action.gamemode.survival",
@@ -29,61 +22,31 @@ class SetGamemode extends FlowItem {
     ];
 
     private PlayerArgument $player;
+    private IntEnumArgument $gamemode;
 
-    public function __construct(string $player = "", private string $gamemode = "") {
+    public function __construct(string $player = "", int $gamemode = 0) {
         parent::__construct(self::SET_GAMEMODE, FlowItemCategory::PLAYER);
 
-        $this->player = new PlayerArgument("player", $player);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->player->getName(), "gamemode"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->player->get(), Language::get($this->gamemodes[$this->getGamemode()])];
-    }
-
-    public function setGamemode(string $gamemode): void {
-        $this->gamemode = $gamemode;
-    }
-
-    public function getGamemode(): string {
-        return $this->gamemode;
-    }
-
-    public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->gamemode !== "";
+        $this->setArguments([
+            $this->player = new PlayerArgument("player", $player),
+            $this->gamemode = new IntEnumArgument("gamemode", $gamemode, $this->gamemodes),
+        ]);
     }
 
     public function getPlayer(): PlayerArgument {
         return $this->player;
     }
 
+    public function getGamemode(): IntEnumArgument {
+        return $this->gamemode;
+    }
+
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $gamemode = $this->getInt($source->replaceVariables($this->getGamemode()), 0, 3);
+        $gamemode = $this->gamemode->getValue();
         $player = $this->player->getOnlinePlayer($source);
 
         $player->setGamemode(GameModeIdMap::getInstance()->fromId($gamemode));
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->player->createFormElement($variables),
-            new Dropdown("@action.setGamemode.form.gamemode", array_map(fn(string $mode) => Language::get($mode), $this->gamemodes), (int)$this->getGamemode()),
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->preprocessAt(1, fn($value) => (string)$value);
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->setGamemode($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->player->get(), $this->getGamemode()];
     }
 }

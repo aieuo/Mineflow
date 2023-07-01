@@ -8,14 +8,10 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\StringEnumArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -23,9 +19,7 @@ use pocketmine\math\Facing;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class GetEntitySidePosition extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class GetEntitySidePosition extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -70,39 +64,26 @@ class GetEntitySidePosition extends FlowItem {
         Facing::NORTH,
     ];
     private EntityArgument $entity;
+    private StringEnumArgument $direction;
     private NumberArgument $steps;
     private StringArgument $resultName;
 
-    public function __construct(
-        string         $entity = "",
-        private string $direction = "",
-        int            $steps = 1,
-        string         $resultName = "pos"
-    ) {
+    public function __construct(string $entity = "", string $direction = self::SIDE_DOWN, int $steps = 1, string $resultName = "pos") {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
-        $this->entity = new EntityArgument("entity", $entity);
-        $this->steps = new NumberArgument("steps", $steps, example: "1");
-        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->entity->getName(), "direction", "step", "result"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->getDirection(), $this->steps->get(), $this->resultName->get()];
+        $this->setArguments([
+            $this->entity = new EntityArgument("entity", $entity),
+            $this->direction = new StringEnumArgument("direction", $direction, $this->directions),
+            $this->steps = new NumberArgument("steps", $steps, example: "1"),
+            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
+        ]);
     }
 
     public function getEntity(): EntityArgument {
         return $this->entity;
     }
 
-    public function setDirection(string $direction): void {
-        $this->direction = $direction;
-    }
-
-    public function getDirection(): string {
+    public function getDirection(): StringEnumArgument {
         return $this->direction;
     }
 
@@ -115,12 +96,12 @@ class GetEntitySidePosition extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isValid() and $this->direction !== "" and $this->steps->get() !== "" and $this->resultName->isValid();
+        return $this->entity->isValid() and $this->direction->isValid() and $this->steps->get() !== "" and $this->resultName->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->entity->getOnlineEntity($source);
-        $side = $source->replaceVariables($this->getDirection());
+        $side = $this->direction->getValue();
         $step = $this->steps->getInt($source);
         $resultName = $this->resultName->getString($source);
 
@@ -155,28 +136,6 @@ class GetEntitySidePosition extends FlowItem {
 
         yield Await::ALL;
         return $this->resultName->get();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->entity->createFormElement($variables),
-            new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
-            $this->steps->createFormElement($variables),
-            $this->resultName->createFormElement($variables),
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->preprocessAt(1, fn($value) => $this->directions[$value] ?? "");
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->entity->set($content[0]);
-        $this->setDirection($content[1]);
-        $this->steps->set($content[2]);
-        $this->resultName->set($content[3]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->entity->get(), $this->getDirection(), $this->steps->get(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {

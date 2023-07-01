@@ -5,75 +5,58 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\BooleanArgument;
+use aieuo\mineflow\flowItem\argument\IsLocalVariableArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\StringArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use SOFe\AwaitGenerator\Await;
-use function array_map;
-use function explode;
 use function implode;
 
-class AddListVariable extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class AddListVariable extends SimpleAction {
 
-    /** @var string[] */
-    private array $variableValue;
+    private StringArgument $variableName;
+    private StringArrayArgument $value;
+    private BooleanArgument $isLocal;
 
     public function __construct(
-        private string $variableName = "",
-        string         $value = "",
-        private bool   $isLocal = true
+        string $variableName = "",
+        string $value = "",
+        bool   $isLocal = true
     ) {
         parent::__construct(self::ADD_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
-        $this->variableValue = array_map("trim", explode(",", $value));
+        $this->setArguments([
+            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            $this->value = new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aiueo"),
+            $this->isLocal = new IsLocalVariableArgument("scope", $isLocal),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["name", "scope", "value"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->isLocal ? "local" : "global", implode(",", $this->getVariableValue())];
-    }
-
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
+    public function getVariableName(): StringArgument {
         return $this->variableName;
     }
 
-    public function setVariableValue(array $variableValue): void {
-        $this->variableValue = $variableValue;
+    public function getValue(): StringArrayArgument {
+        return $this->value;
     }
 
-    public function getVariableValue(): array {
-        return $this->variableValue;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName !== "";
+    public function getIsLocal(): BooleanArgument {
+        return $this->isLocal;
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $source->replaceVariables($this->getVariableName());
-        $values = $this->getVariableValue();
+        $name = $this->variableName->getString($source);
+        $values = $this->value->getRawArray();
 
-        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->isLocal->getBool() ? $source->getVariable($name) : $helper->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
@@ -89,30 +72,9 @@ class AddListVariable extends FlowItem {
         yield Await::ALL;
     }
 
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-            new ExampleInput("@action.variable.form.value", "aiueo", implode(",", $this->getVariableValue()), false),
-            new Toggle("@action.variable.form.global", !$this->isLocal),
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->preprocessAt(1, fn($value) => array_map("trim", explode(",", $value)));
-            $response->logicalNOT(2);
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setVariableValue($content[1]);
-        $this->isLocal = $content[2];
-    }
-
-    public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getVariableValue(), $this->isLocal];
-    }
-
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(ListVariable::class, "[".implode(",", $this->getVariableValue())."]")
+            $this->variableName->get() => new DummyVariable(ListVariable::class, "[".implode(",", $this->value->get())."]")
         ];
     }
 }

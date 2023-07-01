@@ -5,24 +5,19 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\IntEnumArgument;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 use function abs;
 
-class Calculate extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class Calculate extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -43,38 +38,27 @@ class Calculate extends FlowItem {
     public const CALC_ROUND = 14;
     public const CALC_CEIL = 15;
 
-    private int $operator;
-
     private array $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
     private NumberArgument $value;
+    private IntEnumArgument $operator;
     private StringArgument $resultName;
 
-    public function __construct(string $value = "", string $operator = null, string $resultName = "result") {
+    public function __construct(string $value = "", int $operator = self::SQUARE, string $resultName = "result") {
         parent::__construct(self::CALCULATE, FlowItemCategory::MATH);
 
-        $this->value = new NumberArgument("value", $value, example: "10");
-        $this->operator = (int)($operator ?? self::SQUARE);
-        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["value", "operator", "result"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->value->get(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
+        $this->setArguments([
+            $this->value = new NumberArgument("value", $value, example: "10"),
+            $this->operator = new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
+            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+        ]);
     }
 
     public function getValue(): NumberArgument {
         return $this->value;
     }
 
-    public function setOperator(int $operator): void {
-        $this->operator = $operator;
-    }
-
-    public function getOperator(): int {
+    public function getOperator(): IntEnumArgument {
         return $this->operator;
     }
 
@@ -82,14 +66,10 @@ class Calculate extends FlowItem {
         return $this->resultName;
     }
 
-    public function isDataValid(): bool {
-        return $this->value->isValid();
-    }
-
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $value = $this->value->getFloat($source);
         $resultName = $this->resultName->getString($source);
-        $operator = $this->getOperator();
+        $operator = $this->operator->getValue();
 
         $result = match ($operator) {
             self::SQUARE => $value * $value,
@@ -123,24 +103,6 @@ class Calculate extends FlowItem {
             $result *= $i;
         }
         return $result;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->value->createFormElement($variables),
-            new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-            $this->resultName->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->value->set($content[0]);
-        $this->setOperator($content[1]);
-        $this->resultName->set($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->value->get(), $this->getOperator(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {

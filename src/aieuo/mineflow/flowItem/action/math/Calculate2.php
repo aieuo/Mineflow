@@ -5,23 +5,18 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\IntEnumArgument;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 
-class Calculate2 extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class Calculate2 extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -32,8 +27,6 @@ class Calculate2 extends FlowItem {
     public const CALC_HYPOT = 4;
     public const CALC_ATAN2 = 5;
     public const CALC_ROUND = 6;
-
-    private int $operator;
 
     private array $operatorSymbols = [
         "min(x, y)",
@@ -47,23 +40,18 @@ class Calculate2 extends FlowItem {
 
     private NumberArgument $value1;
     private NumberArgument $value2;
+    private IntEnumArgument $operator;
     private StringArgument $resultName;
 
-    public function __construct(float $value1 = 0, float $value2 = 0, string $operator = null, string $resultName = "result") {
+    public function __construct(float $value1 = 0, float $value2 = 0, int $operator = self::CALC_MIN, string $resultName = "result") {
         parent::__construct(self::CALCULATE2, FlowItemCategory::MATH);
 
-        $this->value1 = new NumberArgument("value1", $value1, example: "10");
-        $this->value2 = new NumberArgument("value2", $value2, example: "20");
-        $this->operator = (int)($operator ?? self::CALC_MIN);
-        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["value1", "value2", "operator", "result"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->value1->get(), $this->value2->get(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
+        $this->setArguments([
+            $this->value1 = new NumberArgument("value1", $value1, example: "10"),
+            $this->value2 = new NumberArgument("value2", $value2, example: "20"),
+            $this->operator = new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
+            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+        ]);
     }
 
     public function getValue1(): NumberArgument {
@@ -74,11 +62,7 @@ class Calculate2 extends FlowItem {
         return $this->value2;
     }
 
-    public function setOperator(int $operator): void {
-        $this->operator = $operator;
-    }
-
-    public function getOperator(): int {
+    public function getOperator(): IntEnumArgument {
         return $this->operator;
     }
 
@@ -86,15 +70,11 @@ class Calculate2 extends FlowItem {
         return $this->resultName;
     }
 
-    public function isDataValid(): bool {
-        return $this->value1->get() !== "" and $this->value2->get() !== "";
-    }
-
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $this->value1->getFloat($source);
         $value2 = $this->value2->getFloat($source);
         $resultName = $this->resultName->getString($source);
-        $operator = $this->getOperator();
+        $operator = $this->operator->getValue();
 
         $result = match ($operator) {
             self::CALC_MIN => min($value1, $value2),
@@ -111,26 +91,6 @@ class Calculate2 extends FlowItem {
 
         yield Await::ALL;
         return $result;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->value1->createFormElement($variables),
-            $this->value2->createFormElement($variables),
-            new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-            $this->resultName->createFormElement($variables),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->value1->set($content[0]);
-        $this->value2->set($content[1]);
-        $this->setOperator($content[2]);
-        $this->resultName->set($content[3]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->value1->get(), $this->value2->get(), $this->getOperator(), $this->resultName->get()];
     }
 
     public function getAddingVariables(): array {

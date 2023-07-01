@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
 class AllowFlight extends SimpleAction {
-    
+
     private PlayerArgument $player;
     private BooleanArgument $allow;
 
@@ -24,12 +24,11 @@ class AllowFlight extends SimpleAction {
 
         $this->setArguments([
             $this->player = new PlayerArgument("player", $player),
-            $this->allow = new BooleanArgument("allow", $allow, "@action.allowClimbWalls.form.allow"),
+            $this->allow = new BooleanArgument(
+                "allow", $allow, "@action.allowClimbWalls.form.allow",
+                toStringFormatter: fn(bool $value) => Language::get("action.allowFlight.".($value ? "allow" : "notAllow"))
+            ),
         ]);
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->player->get(), Language::get("action.allowFlight.".($this->allow->getBool() ? "allow" : "notAllow"))];
     }
 
     public function getPlayer(): PlayerArgument {

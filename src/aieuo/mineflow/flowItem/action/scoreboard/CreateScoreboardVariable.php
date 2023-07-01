@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
 use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\StringEnumArgument;
 use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
@@ -12,7 +13,6 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ScoreboardVariable;
@@ -29,18 +29,20 @@ class CreateScoreboardVariable extends FlowItem {
     private StringArgument $boardId;
     private StringArgument $displayName;
     private StringArgument $variableName;
+    private StringEnumArgument $displayType;
 
     public function __construct(
+        string $variableName = "board",
         string $boardId = "",
         string $displayName = "",
-        private string $displayType = Scoreboard::DISPLAY_SIDEBAR,
-        string $variableName = "board"
+        string $displayType = Scoreboard::DISPLAY_SIDEBAR,
     ) {
         parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
 
         $this->variableName = new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "board");
         $this->boardId = new StringArgument("id", $boardId, example: "aieuo");
         $this->displayName = new StringArgument("displayName", $displayName, example: "auieo");
+        $this->displayType = new StringEnumArgument("type", $displayType, $this->displayTypes);
     }
 
     public function getDetailDefaultReplaces(): array {
@@ -48,7 +50,7 @@ class CreateScoreboardVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->variableName->get(), $this->boardId->get(), $this->displayName->get(), $this->getDisplayType()];
+        return [$this->variableName->get(), $this->boardId->get(), $this->displayName->get(), $this->displayType->getKey()];
     }
 
     public function getVariableName(): StringArgument {
@@ -63,11 +65,7 @@ class CreateScoreboardVariable extends FlowItem {
         return $this->displayName;
     }
 
-    public function setDisplayType(string $displayType): void {
-        $this->displayType = $displayType;
-    }
-
-    public function getDisplayType(): string {
+    public function getDisplayType(): StringEnumArgument {
         return $this->displayType;
     }
 
@@ -79,7 +77,7 @@ class CreateScoreboardVariable extends FlowItem {
         $variableName = $this->variableName->getString($source);
         $id = $this->boardId->getString($source);
         $displayName = $this->displayName->getString($source);
-        $type = $this->getDisplayType();
+        $type = $this->displayType->getValue();
 
         $scoreboard = new Scoreboard($type, $id, $displayName);
 
@@ -94,10 +92,9 @@ class CreateScoreboardVariable extends FlowItem {
         $builder->elements([
             $this->boardId->createFormElement($variables),
             $this->displayName->createFormElement($variables),
-            new Dropdown("@action.createScoreboard.form.type", $this->displayTypes, array_search($this->getDisplayType(), $this->displayTypes, true)),
+            $this->displayType->createFormElement($variables),
             $this->variableName->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
-            $response->preprocessAt(2, fn($value) => $this->displayTypes[$value]);
             $response->rearrange([3, 0, 1, 2]);
         });
     }
@@ -106,11 +103,11 @@ class CreateScoreboardVariable extends FlowItem {
         $this->variableName->set($content[0]);
         $this->boardId->set($content[1]);
         $this->displayName->set($content[2]);
-        $this->setDisplayType($content[3]);
+        $this->displayType->set($content[3]);
     }
 
     public function serializeContents(): array {
-        return [$this->variableName->get(), $this->boardId->get(), $this->displayName->get(), $this->getDisplayType()];
+        return [$this->variableName->get(), $this->boardId->get(), $this->displayName->get(), $this->displayType->get()];
     }
 
     public function getAddingVariables(): array {

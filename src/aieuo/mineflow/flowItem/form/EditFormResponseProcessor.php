@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\form;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\formAPI\element\Element;
 use function array_pop;
 use function array_shift;
@@ -139,8 +140,12 @@ class EditFormResponseProcessor {
                 $subProcessors = $this->subProcessors[spl_object_id($element)] ?? null;
                 if ($subProcessors === null) continue;
 
-                foreach ($subProcessors as $subProcessor) {
-                    $data[$i] = $subProcessor($data[$i]);
+                try {
+                    foreach ($subProcessors as $subProcessor) {
+                        $data[$i] = $subProcessor($data[$i]);
+                    }
+                } catch (\RuntimeException $e) {
+                    throw new InvalidFormValueException($e->getMessage(), $i, previous: $e);
                 }
             }
 

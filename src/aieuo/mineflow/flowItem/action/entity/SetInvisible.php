@@ -21,15 +21,11 @@ class SetInvisible extends SimpleAction {
 
         $this->setArguments([
             $this->entity = new EntityArgument("entity", $entity),
-            $this->invisible = new BooleanArgument("invisible", $invisible),
+            $this->invisible = new BooleanArgument(
+                "invisible", $invisible,
+                toStringFormatter: fn(bool $value) => Language::get("action.setInvisible.".($value ? "visible" : "invisible"))
+            ),
         ]);
-    }
-
-    public function getDetailReplaces(): array {
-        return [
-            $this->entity->get(),
-            Language::get("action.setInvisible.".($this->invisible->getBool() ? "visible" : "invisible")),
-        ];
     }
 
     public function getEntity(): EntityArgument {

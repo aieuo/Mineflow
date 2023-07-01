@@ -34,6 +34,11 @@ class NumberArgument extends FlowItemArgument {
         parent::__construct($name, (string)$value, $description, $optional);
     }
 
+    public function example(string $example): self {
+        $this->example = $example;
+        return $this;
+    }
+
     public function setExample(string $example): void {
         $this->example = $example;
     }
@@ -42,7 +47,7 @@ class NumberArgument extends FlowItemArgument {
         return $this->example;
     }
 
-    public function setMin(?float $min): void {
+    public function min(?float $min): void {
         $this->min = $min;
     }
 
@@ -50,7 +55,7 @@ class NumberArgument extends FlowItemArgument {
         return $this->min;
     }
 
-    public function setMax(?float $max): void {
+    public function max(?float $max): void {
         $this->max = $max;
     }
 
@@ -62,7 +67,7 @@ class NumberArgument extends FlowItemArgument {
      * @param float[] $excludes
      * @return void
      */
-    public function setExcludes(array $excludes): void {
+    public function excludes(array $excludes): void {
         $this->excludes = $excludes;
     }
 

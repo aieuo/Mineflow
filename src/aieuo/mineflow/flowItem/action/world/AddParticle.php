@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\argument\NumberArgument;
-use aieuo\mineflow\flowItem\argument\PositionArgument;
-use aieuo\mineflow\flowItem\argument\StringArgument;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use SOFe\AwaitGenerator\Await;
@@ -25,9 +25,11 @@ class AddParticle extends SimpleAction {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
-        $this->position = new PositionArgument("position", $position);
-        $this->particle = new StringArgument("particle", $particle, example: "minecraft:explosion_particle");
-        $this->amount = new NumberArgument("amount", $amount, example: "1", min: 1);
+        $this->setArguments([
+            $this->position = new PositionArgument("position", $position),
+            $this->particle = new StringArgument("particle", $particle, example: "minecraft:explosion_particle"),
+            $this->amount = new NumberArgument("amount", $amount, example: "1", min: 1),
+        ]);
     }
 
     public function getDetailDefaultReplaces(): array {
