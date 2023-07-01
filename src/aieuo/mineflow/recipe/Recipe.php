@@ -33,8 +33,10 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use function array_merge;
 use function array_search;
 use function array_unique;
+use function array_values;
 use function is_string;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
@@ -64,7 +66,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     private array $arguments = [];
     private array $returnValues = [];
 
-    private ?FlowItemExecutor $executor;
+    protected ?FlowItemExecutor $executor;
 
     private array $lastPluginDependencies;
     private array $lastAddonDependencies;
@@ -284,7 +286,14 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->executor;
     }
 
-    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $arguments = [], ?FlowItemExecutor $from = null, ?callable $callback = null): bool {
+    /**
+     * @param Entity|null $target
+     * @param Event|null $event
+     * @param array<string, Variable> $variables
+     * @param array $arguments
+     * @return array<string, Variable>
+     */
+    protected function createVariables(?Entity $target, ?Event $event = null, array $variables = [], array $arguments = []): array {
         $helper = Mineflow::getVariableHelper();
         $args = array_values($arguments);
         foreach ($this->getArguments() as $i => $argument) {
@@ -296,9 +305,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             }
             try {
                 $argument->validateType($arg);
-            } catch (\InvalidArgumentException) {
-                Logger::warning(Language::get("recipe.argument.type.error", [$this->getPathname(), $argument->getName(), $argument->getType(), $arg::getTypeName()]), $target);
-                return false;
+            } catch (\InvalidArgumentException $e) {
+                throw new \InvalidArgumentException(Language::get("recipe.argument.type.error", [$this->getPathname(), $argument->getName(), $argument->getType(), $arg::getTypeName()]), previous: $e);
             }
             $variables[$argument->getName()] = $arg;
         }
@@ -312,7 +320,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         $variables["this"] = new RecipeVariable($this);
         $variables["_"] = $this->createSystemVariable($arguments);
 
-        $this->executor = new FlowItemExecutor($this->getActions(), $target, $variables, null, $event, function (FlowItemExecutor $executor) use($from, $callback) {
+        return $variables;
+    }
+
+    protected function createExecutor(array $actions, ?Entity $target, ?Event $event = null, array $variables = [], ?FlowItemExecutor $from = null, ?callable $callback = null): FlowItemExecutor {
+        return new FlowItemExecutor($actions, $target, $variables, null, $event, function (FlowItemExecutor $executor) use($from, $callback) {
             if ($from !== null) {
                 foreach ($this->getReturnValues() as $value) {
                     $name = $executor->replaceVariables($value);
@@ -326,6 +338,17 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         }, function (int $index, FlowItem $flowItem, ?Entity $target) {
             Logger::warning(Language::get("recipe.execute.failed", [$this->getPathname(), $index, $flowItem->getName()]), $target);
         }, $this);
+    }
+
+    public function execute(?Entity $target, ?Event $event = null, array $variables = [], array $arguments = [], ?FlowItemExecutor $from = null, ?callable $callback = null): bool {
+        try {
+            $variables = $this->createVariables($target, $event, $variables, $arguments);
+        } catch (\InvalidArgumentException $e) {
+            Logger::warning($e->getMessage(), $target);
+            return false;
+        }
+
+        $this->executor = $this->createExecutor($this->getActions(), $target, $event, $variables, $from, $callback);
         $this->executor->execute();
         return true;
     }
@@ -339,7 +362,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         foreach ($arguments as $name => $argument) {
             $values[] = new MapVariable([
                 "name" => new StringVariable($name),
-                "type" => $argument::getTypeName(),
+                "type" => new StringVariable($argument::getTypeName()),
                 "value" => $argument
             ]);
         }
