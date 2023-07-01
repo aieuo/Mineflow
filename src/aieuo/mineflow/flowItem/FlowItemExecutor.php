@@ -19,6 +19,7 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
 use SOFe\AwaitGenerator\Await;
+use function count;
 
 class FlowItemExecutor {
 
@@ -38,14 +39,14 @@ class FlowItemExecutor {
      * @param Recipe|null $sourceRecipe
      */
     public function __construct(
-        private array $items,
-        private ?Entity $target,
-        private array $variables = [],
-        private ?self $parent = null,
-        private ?Event $event = null,
+        private array     $items,
+        private ?Entity   $target,
+        private array     $variables = [],
+        private ?self     $parent = null,
+        private ?Event    $event = null,
         private ?\Closure $onComplete = null,
         private ?\Closure $onError = null,
-        private ?Recipe $sourceRecipe = null
+        private ?Recipe   $sourceRecipe = null
     ) {
         if ($event === null and $parent !== null) {
             $this->event = $parent->getEvent();
@@ -53,10 +54,22 @@ class FlowItemExecutor {
     }
 
     public function getGenerator(): \Generator {
-        foreach ($this->items as $i => $item) {
-            $this->currentIndex = $i;
-            $this->currentFlowItem = $item;
-            $this->lastResult = yield from $item->execute($this);
+        $maxIndex = count($this->items) - 1;
+        $this->currentIndex = 0;
+
+        while ($this->currentIndex <= $maxIndex) {
+            $this->currentFlowItem = $this->items[$this->currentIndex];
+            $this->lastResult = yield from $this->currentFlowItem->execute($this);
+            $this->currentIndex++;
+        }
+    }
+
+    public function restart(): void {
+        if ($this->parent === null) {
+            $this->currentIndex = -1;
+        } else {
+            $this->currentIndex = count($this->items);
+            $this->parent->restart();
         }
     }
 
@@ -135,5 +148,9 @@ class FlowItemExecutor {
     public function removeVariable(string $name): void {
         unset($this->variables[$name]);
         $this->parent?->removeVariable($name);
+    }
+
+    public function getRootExecutor(): FlowItemExecutor {
+        return $this->parent?->getRootExecutor() ?? $this;
     }
 }
