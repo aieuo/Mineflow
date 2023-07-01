@@ -35,12 +35,22 @@ class RecipeManager {
 
     public function __construct(
         private readonly string $directory,
+        private readonly ?\Closure $recipeCreationFunc = null,
     ) {
         if (!file_exists($directory)) @mkdir($directory, 0777, true);
     }
 
     public function getDirectory(): string {
         return $this->directory;
+    }
+
+    private function createRecipe(string $name, string $group, string $author, string $version): Recipe {
+        if ($this->recipeCreationFunc !== null) {
+            $recipe = ($this->recipeCreationFunc)($name, $group, $author, $version);
+        } else {
+            $recipe = new Recipe($name, $group, $author, $version);
+        }
+        return $recipe;
     }
 
     public function loadRecipes(): void {
@@ -85,7 +95,7 @@ class RecipeManager {
             $upgrader = new RecipeUpgrader();
             try {
                 $data = $upgrader->upgradeBeforeLoad($data);
-                $recipe = new Recipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? "0");
+                $recipe = $this->createRecipe($data["name"], $group, $data["author"] ?? "", $data["plugin_version"] ?? "0");
                 $recipe->setRawData($json);
                 $recipe->loadSaveData($data);
                 $upgrader->upgradeAfterLoad($recipe);
@@ -215,11 +225,11 @@ class RecipeManager {
             if ($action instanceof ExecuteRecipe) {
                 $name = Mineflow::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
 
-                [$recipeName, $group] = $recipeManager->parseName($name);
+                [$recipeName, $group] = $this->parseName($name);
                 if (empty($group)) $group = $origin->getGroup();
 
-                $recipe = $recipeManager->get($recipeName, $group);
-                if ($recipe === null) $recipe = $recipeManager->get($recipeName, "");
+                $recipe = $this->get($recipeName, $group) ?? $recipeManager->get($recipeName, $group);
+                if ($recipe === null) $recipe = $this->get($recipeName, "") ?? $recipeManager->get($recipeName, "");
                 if ($recipe === null) continue;
 
                 $recipes[] = $this->getWithLinkedRecipes($recipe, $recipe);
