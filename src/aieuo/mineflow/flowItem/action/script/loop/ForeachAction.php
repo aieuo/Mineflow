@@ -36,8 +36,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
     private string $valueVariableName = "value";
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        parent::__construct(self::ACTION_FOREACH, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ACTION_FOREACH, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
 
         $this->setActions($actions);
         $this->setCustomName($customName);

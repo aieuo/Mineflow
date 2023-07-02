@@ -23,8 +23,7 @@ class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
     use HasSimpleEditForm;
 
     public function __construct(string $config = "", private string $key = "") {
-        parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }

@@ -33,8 +33,7 @@ class MoveTo extends FlowItem implements EntityFlowItem, PositionFlowItem {
         private string $speedY = "0",
         private string $speedZ = "0.1"
     ) {
-        parent::__construct(self::MOVE_TO, FlowItemCategory::ENTITY);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::MOVE_TO, FlowItemCategory::ENTITY, [FlowItemPermission::LOOP]);
 
         $this->setEntityVariableName($entity);
         $this->setPositionVariableName($position);

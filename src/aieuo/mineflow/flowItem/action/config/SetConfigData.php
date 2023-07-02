@@ -26,8 +26,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
     use HasSimpleEditForm;
 
     public function __construct(string $config = "", private string $key = "", private string $value = "") {
-        parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }

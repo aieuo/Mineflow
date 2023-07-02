@@ -30,8 +30,7 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         private string $particle = "",
         private string $amount = "1"
     ) {
-        parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD, [FlowItemPermission::LOOP]);
 
         $this->setPositionVariableName($position);
     }

@@ -33,8 +33,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer, PositionFlo
     private string $counterName = "pos";
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
-        parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
 
         $this->setPositionVariableName($pos1, "pos1");
         $this->setPositionVariableName($pos2, "pos2");

@@ -32,8 +32,7 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
     private string $counterName = "i";
 
     public function __construct(array $actions = [], int $count = 1, ?string $customName = null) {
-        parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
 
         $this->setActions($actions);
         $this->repeatCount = (string)$count;

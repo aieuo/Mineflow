@@ -31,8 +31,7 @@ class CreateConfigVariable extends FlowItem {
         private string $fileName = "",
         private string $variableName = "config"
     ) {
-        parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
     }
 
     public function getDetailDefaultReplaces(): array {

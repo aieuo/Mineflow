@@ -22,8 +22,7 @@ class SaveConfigFile extends FlowItem implements ConfigFileFlowItem {
     use HasSimpleEditForm;
 
     public function __construct(string $config = "") {
-        parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
         $this->setConfigVariableName($config);
     }

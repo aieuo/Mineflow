@@ -26,8 +26,7 @@ class AllowFlight extends FlowItem implements PlayerFlowItem {
     private bool $allow;
 
     public function __construct(string $player = "", string $allow = "true") {
-        parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
-        $this->setPermissions([FlowItemPermission::CHEAT]);
+        parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER, [FlowItemPermission::CHEAT]);
 
         $this->setPlayerVariableName($player);
         $this->allow = $allow === "true";

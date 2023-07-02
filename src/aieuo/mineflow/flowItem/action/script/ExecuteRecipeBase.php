@@ -35,8 +35,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
         private string $recipeName = "",
         string         $args = ""
     ) {
-        parent::__construct($id, $category);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct($id, $category, [FlowItemPermission::LOOP]);
 
         $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
     }

@@ -21,8 +21,7 @@ class CommandConsole extends FlowItem {
     use HasSimpleEditForm;
 
     public function __construct(private string $command = "") {
-        parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
-        $this->setPermissions([FlowItemPermission::CONSOLE]);
+        parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND, [FlowItemPermission::CONSOLE]);
     }
 
     public function getDetailDefaultReplaces(): array {

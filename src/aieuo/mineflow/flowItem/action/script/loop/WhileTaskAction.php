@@ -37,8 +37,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         private int $interval = 20,
         ?string     $customName = null
     ) {
-        parent::__construct(self::ACTION_WHILE_TASK, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ACTION_WHILE_TASK, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
 
         $this->setConditions($conditions);
         $this->setActions($actions);

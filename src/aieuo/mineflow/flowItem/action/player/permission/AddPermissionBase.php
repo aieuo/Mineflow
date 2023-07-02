@@ -26,8 +26,7 @@ abstract class AddPermissionBase extends FlowItem implements PlayerFlowItem {
         string $player = "",
         private string $playerPermission = ""
     ) {
-        parent::__construct($id, $category);
-        $this->setPermissions([FlowItemPermission::PERMISSION]);
+        parent::__construct($id, $category, [FlowItemPermission::PERMISSION]);
 
         $this->setPlayerVariableName($player);
     }
