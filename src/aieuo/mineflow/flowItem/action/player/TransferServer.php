@@ -13,37 +13,33 @@ use SOFe\AwaitGenerator\Await;
 
 class TransferServer extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $ip;
-    private NumberArgument $port;
-
     public function __construct(string $player = "", string $ip = "", int $port = 19132) {
         parent::__construct(self::TRANSFER_SERVER, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->ip = new StringArgument("ip", $ip, example: "aieuo.tokyo"),
-            $this->port = new NumberArgument("port", $port, example: "19132", min: 1, max: 65535),
+            new PlayerArgument("player", $player),
+            new StringArgument("ip", $ip, example: "aieuo.tokyo"),
+            new NumberArgument("port", $port, example: "19132", min: 1, max: 65535),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getIp(): StringArgument {
-        return $this->ip;
+        return $this->getArguments()[1];
     }
 
     public function getPort(): NumberArgument {
-        return $this->port;
+        return $this->getArguments()[2];
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $ip = $this->ip->getString($source);
-        $port = $this->port->getInt($source);
+        $ip = $this->getIp()->getString($source);
+        $port = $this->getPort()->getInt($source);
 
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
         $player->transfer($ip, $port);
         yield Await::ALL;
     }

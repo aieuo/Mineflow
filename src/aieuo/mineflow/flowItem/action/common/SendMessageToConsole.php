@@ -18,7 +18,7 @@ class SendMessageToConsole extends TypeMessage {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($this->message->getString($source));
+        $message = Language::replace($this->getMessage()->getString($source));
         Main::getInstance()->getLogger()->info($message);
 
         yield Await::ALL;

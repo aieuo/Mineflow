@@ -21,10 +21,6 @@ use function implode;
 
 class AddListVariable extends SimpleAction {
 
-    private StringArgument $variableName;
-    private StringArrayArgument $value;
-    private BooleanArgument $isLocal;
-
     public function __construct(
         string $variableName = "",
         string $value = "",
@@ -33,30 +29,30 @@ class AddListVariable extends SimpleAction {
         parent::__construct(self::ADD_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            $this->value = new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aiueo"),
-            $this->isLocal = new IsLocalVariableArgument("scope", $isLocal),
+            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aiueo"),
+            new IsLocalVariableArgument("scope", $isLocal),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getValue(): StringArrayArgument {
-        return $this->value;
+        return $this->getArguments()[1];
     }
 
     public function getIsLocal(): BooleanArgument {
-        return $this->isLocal;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $this->variableName->getString($source);
-        $values = $this->value->getRawArray();
+        $name = $this->getVariableName()->getString($source);
+        $values = $this->getValue()->getRawArray();
 
-        $variable = $this->isLocal->getBool() ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->getIsLocal()->getBool() ? $source->getVariable($name) : $helper->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
@@ -74,7 +70,7 @@ class AddListVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(ListVariable::class, "[".implode(",", $this->value->get())."]")
+            $this->getVariableName()->get() => new DummyVariable(ListVariable::class, "[".implode(",", $this->getValue()->get())."]")
         ];
     }
 }

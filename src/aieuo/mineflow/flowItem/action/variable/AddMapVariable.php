@@ -19,46 +19,41 @@ use SOFe\AwaitGenerator\Await;
 
 class AddMapVariable extends SimpleAction {
 
-    private StringArgument $variableName;
-    private StringArgument $variableKey;
-    private StringArgument $variableValue;
-    private BooleanArgument $isLocal;
-
     public function __construct(string $variableName = "", string $variableKey = "", string $variableValue = "", bool $isLocal = true) {
         parent::__construct(self::ADD_MAP_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            $this->variableKey = new StringArgument("key", $variableKey, "@action.variable.form.key", example: "auieo"),
-            $this->variableValue = new StringArgument("value", $variableValue, "@action.variable.form.value", example: "aeiuo", optional: true),
-            $this->isLocal = new IsLocalVariableArgument("scope", $isLocal),
+            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            new StringArgument("key", $variableKey, "@action.variable.form.key", example: "auieo"),
+            new StringArgument("value", $variableValue, "@action.variable.form.value", example: "aeiuo", optional: true),
+            new IsLocalVariableArgument("scope", $isLocal),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
-    public function getKey(): StringArgument {
-        return $this->variableKey;
+    public function getVariableKey(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     public function getVariableValue(): StringArgument {
-        return $this->variableValue;
+        return $this->getArguments()[2];
     }
 
     public function getIsLocal(): BooleanArgument {
-        return $this->isLocal;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $this->variableName->getString($source);
-        $key = $this->variableKey->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $key = $this->getVariableKey()->getString($source);
 
-        $value = $this->variableValue->get();
+        $value = $this->getVariableValue()->get();
         $addVariable = $helper->copyOrCreateVariable($value, $source);
-        $variable = $this->isLocal->getBool() ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->getIsLocal()->getBool() ? $source->getVariable($name) : $helper->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
@@ -72,7 +67,7 @@ class AddMapVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(MapVariable::class)
+            $this->getVariableName()->get() => new DummyVariable(MapVariable::class)
         ];
     }
 }

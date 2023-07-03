@@ -19,50 +19,45 @@ class SetArmorColor extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $armor;
-    private NumberArgument $red;
-    private NumberArgument $green;
-    private NumberArgument $blue;
-
     public function __construct(string $item = "", string $red = "", string $green = "", string $blue = "") {
         parent::__construct(self::SET_ARMOR_COLOR, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->armor = new ItemArgument("armor", $item),
-            $this->red = new NumberArgument("red", $red, example: "0", min: 0, max: 255),
-            $this->green = new NumberArgument("green", $green, example: "255", min: 0, max: 255),
-            $this->blue = new NumberArgument("blue", $blue, example: "0", min: 0, max: 255),
+            new ItemArgument("armor", $item),
+            new NumberArgument("red", $red, example: "0", min: 0, max: 255),
+            new NumberArgument("green", $green, example: "255", min: 0, max: 255),
+            new NumberArgument("blue", $blue, example: "0", min: 0, max: 255),
         ]);
     }
 
     public function getArmor(): ItemArgument {
-        return $this->armor;
+        return $this->getArguments()[0];
     }
 
     public function getRed(): NumberArgument {
-        return $this->red;
+        return $this->getArguments()[1];
     }
 
     public function getGreen(): NumberArgument {
-        return $this->green;
+        return $this->getArguments()[2];
     }
 
     public function getBlue(): NumberArgument {
-        return $this->blue;
+        return $this->getArguments()[3];
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $r = $this->red->getInt($source);
-        $g = $this->green->getInt($source);
-        $b = $this->blue->getInt($source);
+        $r = $this->getRed()->getInt($source);
+        $g = $this->getGreen()->getInt($source);
+        $b = $this->getBlue()->getInt($source);
 
-        $item = $this->armor->getItem($source);
+        $item = $this->getArmor()->getItem($source);
         if (!($item instanceof Armor)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.setArmorColor.not.armor", [$this->armor->get()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.setArmorColor.not.armor", [$this->getArmor()->get()]));
         }
 
         $item->setCustomColor(new Color($r, $g, $b));
         yield Await::ALL;
-        return $this->armor->get();
+        return $this->getArmor()->get();
     }
 }

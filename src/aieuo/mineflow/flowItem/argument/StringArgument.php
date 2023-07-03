@@ -30,7 +30,7 @@ class StringArgument extends FlowItemArgument {
     }
 
     public function getString(FlowItemExecutor $executor): string {
-        return $executor->replaceVariables($this->get());
+        return $executor->replaceVariables($this->getRawString());
     }
 
     public function getRawString(): string {
@@ -44,5 +44,9 @@ class StringArgument extends FlowItemArgument {
             $this->get(),
             required: !$this->isOptional()
         );
+    }
+
+    public function __toString(): string {
+        return $this->getRawString();
     }
 }

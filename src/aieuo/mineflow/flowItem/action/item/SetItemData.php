@@ -20,35 +20,32 @@ use SOFe\AwaitGenerator\Await;
 class SetItemData extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
-    private ItemArgument $item;
-    private StringArgument $key;
-    private StringArgument $value;
 
     public function __construct(string $item = "", string $key = "", string $value = "") {
         parent::__construct(self::SET_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->key = new StringArgument("key", $key, example: "aieuo"),
-            $this->value = new StringArgument("value", $value, example: "100"),
+            new ItemArgument("item", $item),
+            new StringArgument("key", $key, example: "aieuo"),
+            new StringArgument("value", $value, example: "100"),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     public function getValue(): StringArgument {
-        return $this->value;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
-        $key = $this->key->getString($source);
+        $item = $this->getItem()->getItem($source);
+        $key = $this->getKey()->getString($source);
         $variable = $this->getValueVariable($source);
 
         $tags = $item->getNamedTag();
@@ -61,12 +58,12 @@ class SetItemData extends SimpleAction {
         }
 
         yield Await::ALL;
-        return $this->item->get();
+        return $this->getItem()->get();
     }
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
         $helper = Mineflow::getVariableHelper();
-        $value = $this->value->get();
+        $value = $this->getValue()->get();
 
         return $helper->copyOrCreateVariable($value, $source);
     }

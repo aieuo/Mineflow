@@ -14,9 +14,6 @@ use SOFe\AwaitGenerator\Await;
 
 class SetWorldTime extends SimpleAction {
 
-    private WorldArgument $world;
-    private NumberArgument $time;
-
     public function __construct(
         string $worldName = "",
         int    $time = null
@@ -24,22 +21,22 @@ class SetWorldTime extends SimpleAction {
         parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->world = new WorldArgument("world", $worldName),
-            $this->time = new NumberArgument("time", $time, example: "12000", min: 0, max: World::TIME_FULL),
+            new WorldArgument("world", $worldName),
+            new NumberArgument("time", $time, example: "12000", min: 0, max: World::TIME_FULL),
         ]);
     }
 
     public function getWorld(): WorldArgument {
-        return $this->world;
+        return $this->getArguments()[0];
     }
 
     public function getTime(): NumberArgument {
-        return $this->time;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $world = $this->world->getWorld($source);
-        $time = $this->time->getInt($source);
+        $world = $this->getWorld()->getWorld($source);
+        $time = $this->getTime()->getInt($source);
 
         $world->setTime($time);
 

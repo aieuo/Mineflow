@@ -18,38 +18,34 @@ use SOFe\AwaitGenerator\Await;
 
 class DeleteListVariableContent extends SimpleAction {
 
-    private StringArgument $variableName;
-    private StringArgument $variableKey;
-    private BooleanArgument $isLocal;
-
     public function __construct(string $variableName = "", string $variableKey = "", bool $isLocal = true) {
         parent::__construct(self::DELETE_LIST_VARIABLE_CONTENT, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            $this->variableKey = new StringArgument("key", $variableKey, "@action.variable.form.key", example: "auieo"),
-            $this->isLocal = new IsLocalVariableArgument("scope", $isLocal),
+            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            new StringArgument("key", $variableKey, "@action.variable.form.key", example: "auieo"),
+            new IsLocalVariableArgument("scope", $isLocal),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getVariableKey(): StringArgument {
-        return $this->variableKey;
+        return $this->getArguments()[1];
     }
 
     public function getIsLocal(): BooleanArgument {
-        return $this->isLocal;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $this->variableName->getString($source);
-        $key = $this->variableKey->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $key = $this->getVariableKey()->getString($source);
 
-        $variable = ($this->isLocal->getBool() ? $source->getVariable($name) : $helper->getNested($name));
+        $variable = ($this->getIsLocal()->getBool() ? $source->getVariable($name) : $helper->getNested($name));
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }

@@ -14,36 +14,32 @@ use SOFe\AwaitGenerator\Await;
 
 class SendToast extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $title;
-    private StringArgument $body;
-
     public function __construct(string $player = "", string $title = "", string $body = "") {
         parent::__construct(self::SEND_TOAST, FlowItemCategory::PLAYER_MESSAGE);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->title = new StringArgument("title", $title, example: "aieuo", optional: true),
-            $this->body = new StringArgument("body", $body, example: "aieuo", optional: true),
+            new PlayerArgument("player", $player),
+            new StringArgument("title", $title, example: "aieuo", optional: true),
+            new StringArgument("body", $body, example: "aieuo", optional: true),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getTitle(): StringArgument {
-        return $this->title;
+        return $this->getArguments()[1];
     }
 
     public function getBody(): StringArgument {
-        return $this->body;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $title = $this->title->getString($source);
-        $body = $this->body->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $title = $this->getTitle()->getString($source);
+        $body = $this->getBody()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->getNetworkSession()->sendDataPacket(ToastRequestPacket::create($title, $body));
 

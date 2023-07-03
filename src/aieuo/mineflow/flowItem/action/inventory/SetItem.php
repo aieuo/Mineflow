@@ -14,37 +14,33 @@ use SOFe\AwaitGenerator\Await;
 
 class SetItem extends SimpleAction {
 
-    private PlayerArgument $player;
-    private ItemArgument $item;
-    private NumberArgument $index;
-
     public function __construct(string $player = "", string $item = "", string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->item = new ItemArgument("item", $item),
-            $this->index = new NumberArgument("index", $index, example: "0", min: 0),
+            new PlayerArgument("player", $player),
+            new ItemArgument("item", $item),
+            new NumberArgument("index", $index, example: "0", min: 0),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[1];
     }
 
     public function getIndex(): NumberArgument {
-        return $this->index;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $index = $this->index->getInt($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $index = $this->getIndex()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
-        $item = $this->item->getItem($source);
+        $item = $this->getItem()->getItem($source);
 
         $player->getInventory()->setItem($index, $item);
 

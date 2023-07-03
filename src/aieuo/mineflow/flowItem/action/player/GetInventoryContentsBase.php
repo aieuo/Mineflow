@@ -14,9 +14,6 @@ use aieuo\mineflow\variable\object\ItemVariable;
 
 abstract class GetInventoryContentsBase extends SimpleAction {
 
-    protected PlayerArgument $player;
-    protected StringArgument $resultName;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::PLAYER,
@@ -26,22 +23,22 @@ abstract class GetInventoryContentsBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->resultName = new StringArgument("inventory", $resultName, "@action.form.resultVariableName", example: "inventory"),
+            new PlayerArgument("player", $player),
+            new StringArgument("inventory", $resultName, "@action.form.resultVariableName", example: "inventory"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(ListVariable::class, ItemVariable::getTypeName())
+            (string)$this->getResultName() => new DummyVariable(ListVariable::class, ItemVariable::getTypeName())
         ];
     }
 }

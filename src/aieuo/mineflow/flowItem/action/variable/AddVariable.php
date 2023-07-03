@@ -76,8 +76,8 @@ class AddVariable extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $value = $this->variableValue->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $value = $this->getVariableValue()->getString($source);
 
         switch ($this->variableType) {
             case StringVariable::getTypeName():
@@ -135,5 +135,10 @@ class AddVariable extends FlowItem {
         return [
             $this->variableName->get() => new DummyVariable($class, $this->variableValue->get())
         ];
+    }
+
+    public function __clone(): void {
+        $this->variableName = clone $this->variableName;
+        $this->variableValue = clone $this->variableValue;
     }
 }

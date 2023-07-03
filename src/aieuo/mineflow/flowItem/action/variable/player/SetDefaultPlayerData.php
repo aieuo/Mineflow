@@ -15,31 +15,28 @@ use SOFe\AwaitGenerator\Await;
 
 class SetDefaultPlayerData extends SimpleAction {
 
-    private StringArgument $dataName;
-    private StringArgument $defaultValue;
-
     public function __construct(string $dataName = "", string $defaultValue = "") {
         parent::__construct(self::SET_DEFAULT_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
 
         $this->setArguments([
-            $this->dataName = new StringArgument("name", $dataName, "@action.setPlayerData.form.name", example: "tag"),
-            $this->defaultValue = new StringArgument("default", $defaultValue, "@action.setPlayerData.form.default", example: "aieuo", optional: true),
+            new StringArgument("name", $dataName, "@action.setPlayerData.form.name", example: "tag"),
+            new StringArgument("default", $defaultValue, "@action.setPlayerData.form.default", example: "aieuo", optional: true),
         ]);
     }
 
     public function getDataName(): StringArgument {
-        return $this->dataName;
+        return $this->getArguments()[0];
     }
 
     public function getDefaultValue(): StringArgument {
-        return $this->defaultValue;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
 
-        $name = $this->dataName->getString($source);
-        $default = $this->defaultValue->get() === "" ? null : $helper->copyOrCreateVariable($this->defaultValue->get(), $source);
+        $name = $this->getDataName()->getString($source);
+        $default = $this->getDefaultValue()->get() === "" ? null : $helper->copyOrCreateVariable($this->getDefaultValue()->get(), $source);
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {

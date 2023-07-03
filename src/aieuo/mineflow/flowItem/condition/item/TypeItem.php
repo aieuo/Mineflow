@@ -11,9 +11,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 
 abstract class TypeItem extends SimpleCondition {
 
-    protected PlayerArgument $player;
-    protected ItemArgument $item;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::INVENTORY,
@@ -23,16 +20,16 @@ abstract class TypeItem extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->item = new ItemArgument("item", $item),
+            new PlayerArgument("player", $player),
+            new ItemArgument("item", $item),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[1];
     }
 }

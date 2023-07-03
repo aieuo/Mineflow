@@ -18,29 +18,26 @@ class GetBlock extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private PositionArgument $position;
-    private StringArgument $resultName;
-
     public function __construct(string $position = "", string $resultName = "block") {
         parent::__construct(self::GET_BLOCK, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->position = new PositionArgument("position", $position),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block"),
+            new PositionArgument("position", $position),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block"),
         ]);
     }
 
     public function getPosition(): PositionArgument {
-        return $this->position;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $position = $this->position->getPosition($source);
-        $result = $this->resultName->getString($source);
+        $position = $this->getPosition()->getPosition($source);
+        $result = $this->getResultName()->getString($source);
 
         /** @var Position $position */
         $block = $position->world->getBlock($position);
@@ -49,12 +46,12 @@ class GetBlock extends SimpleAction {
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(BlockVariable::class)
+            $this->getResultName()->get() => new DummyVariable(BlockVariable::class)
         ];
     }
 }

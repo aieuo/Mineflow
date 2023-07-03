@@ -24,36 +24,32 @@ class ComparisonNumber extends SimpleCondition {
 
     private array $operatorSymbols = ["==", "!=", ">", "<", ">=", "<="];
 
-    private NumberArgument $value1;
-    private IntEnumArgument $operator;
-    private NumberArgument $value2;
-
     public function __construct(string $value1 = "", int $operator = self::EQUAL, string $value2 = "") {
         parent::__construct(self::COMPARISON_NUMBER, FlowItemCategory::SCRIPT);
 
         $this->setArguments([
-            $this->value1 = new NumberArgument("value1", $value1, example: "10"),
-            $this->operator = new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@condition.comparisonNumber.form.operator"),
-            $this->value2 = new NumberArgument("value2", $value2, example: "50"),
+            new NumberArgument("value1", $value1, example: "10"),
+            new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@condition.comparisonNumber.form.operator"),
+            new NumberArgument("value2", $value2, example: "50"),
         ]);
     }
 
     public function getValue1(): NumberArgument {
-        return $this->value1;
+        return $this->getArguments()[0];
     }
 
     public function getOperator(): IntEnumArgument {
-        return $this->operator;
+        return $this->getArguments()[1];
     }
 
     public function getValue2(): NumberArgument {
-        return $this->value2;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $this->value1->getFloat($source);
-        $value2 = $this->value2->getFloat($source);
-        $operator = $this->operator->getValue();
+        $value1 = $this->getValue1()->getFloat($source);
+        $value2 = $this->getValue2()->getFloat($source);
+        $operator = $this->getOperator()->getValue();
 
         $result = match ($operator) {
             self::EQUAL => $value1 === $value2,

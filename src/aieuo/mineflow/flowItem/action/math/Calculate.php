@@ -40,36 +40,32 @@ class Calculate extends SimpleAction {
 
     private array $operatorSymbols = ["x^2", "√x", "x!", "abs(x)", "log(x)", "sin(x)", "cos(x)", "tan(x)", "asin(x)", "acos(x)", "atan(x)", "deg2rad(x)", "rad2deg(x)", "floor(x)", "round(x)", "ceil(x)"];
 
-    private NumberArgument $value;
-    private IntEnumArgument $operator;
-    private StringArgument $resultName;
-
     public function __construct(string $value = "", int $operator = self::SQUARE, string $resultName = "result") {
         parent::__construct(self::CALCULATE, FlowItemCategory::MATH);
 
         $this->setArguments([
-            $this->value = new NumberArgument("value", $value, example: "10"),
-            $this->operator = new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            new NumberArgument("value", $value, example: "10"),
+            new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
         ]);
     }
 
     public function getValue(): NumberArgument {
-        return $this->value;
+        return $this->getArguments()[0];
     }
 
     public function getOperator(): IntEnumArgument {
-        return $this->operator;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value = $this->value->getFloat($source);
-        $resultName = $this->resultName->getString($source);
-        $operator = $this->operator->getValue();
+        $value = $this->getValue()->getFloat($source);
+        $resultName = $this->getResultName()->getString($source);
+        $operator = $this->getOperator()->getValue();
 
         $result = match ($operator) {
             self::SQUARE => $value * $value,
@@ -107,7 +103,7 @@ class Calculate extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(NumberVariable::class)
+            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

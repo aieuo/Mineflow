@@ -11,9 +11,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 
 abstract class TypePlayerMessage extends SimpleAction {
 
-    protected PlayerArgument $player;
-    protected StringArgument $message;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::PLAYER_MESSAGE,
@@ -23,16 +20,16 @@ abstract class TypePlayerMessage extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->message = new StringArgument("message", $message, "@action.message.form.message", example: "aieuo"),
+            new PlayerArgument("player", $player),
+            new StringArgument("message", $message, "@action.message.form.message", example: "aieuo"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getMessage(): StringArgument {
-        return $this->message;
+        return $this->getArguments()[1];
     }
 }

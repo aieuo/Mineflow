@@ -22,56 +22,50 @@ use SOFe\AwaitGenerator\Await;
 
 class AddEffect extends SimpleAction {
 
-    private EntityArgument $entity;
-    private StringArgument $effectId;
-    private NumberArgument $time;
-    private NumberArgument $power;
-    private BooleanArgument $visible;
-
     public function __construct(string $entity = "", string $effectId = "", int $time = 300, int $power = 1, bool $visible = false) {
         parent::__construct(self::ADD_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("entity", $entity),
-            $this->effectId = new StringArgument("effect", $effectId, example: "1"),
-            $this->time = new NumberArgument("time", $time, example: "300", min: 0, max: Limits::INT32_MAX),
-            $this->power = new NumberArgument("power", $power, example: "1", min: 0, max: 255),
-            $this->visible = new BooleanArgument("visible", $visible),
+            new EntityArgument("entity", $entity),
+            new StringArgument("effect", $effectId, example: "1"),
+            new NumberArgument("time", $time, example: "300", min: 0, max: Limits::INT32_MAX),
+            new NumberArgument("power", $power, example: "1", min: 0, max: 255),
+            new BooleanArgument("visible", $visible),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getEffectId(): StringArgument {
-        return $this->effectId;
+        return $this->getArguments()[1];
     }
 
     public function getPower(): NumberArgument {
-        return $this->power;
+        return $this->getArguments()[3];
     }
 
     public function getTime(): NumberArgument {
-        return $this->time;
+        return $this->getArguments()[2];
     }
 
     public function getVisible(): BooleanArgument {
-        return $this->visible;
+        return $this->getArguments()[4];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $effectId = $this->effectId->getString($source);
-        $time = $this->time->getInt($source);
-        $power = $this->power->getInt($source);
-        $entity = $this->entity->getOnlineEntity($source);
+        $effectId = $this->getEffectId()->getString($source);
+        $time = $this->getTime()->getInt($source);
+        $power = $this->getPower()->getInt($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
         $effect = StringToEffectParser::getInstance()->parse($effectId);
         if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
         if ($entity instanceof Living) {
-            $entity->getEffects()->add(new EffectInstance($effect, $time * 20, $power - 1, $this->visible->getBool()));
+            $entity->getEffects()->add(new EffectInstance($effect, $time * 20, $power - 1, $this->getVisible()->getBool()));
         }
 
         yield Await::ALL;

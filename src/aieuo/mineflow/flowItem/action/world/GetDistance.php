@@ -17,36 +17,32 @@ class GetDistance extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private PositionArgument $position1;
-    private PositionArgument $position2;
-    private StringArgument $resultName;
-
     public function __construct(string $pos1 = "", string $pos2 = "", string $resultName = "distance") {
         parent::__construct(self::GET_DISTANCE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->position1 = new PositionArgument("pos1", $pos1),
-            $this->position2 = new PositionArgument("pos2", $pos2),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "distance"),
+            new PositionArgument("pos1", $pos1),
+            new PositionArgument("pos2", $pos2),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "distance"),
         ]);
     }
 
     public function getPosition1(): PositionArgument {
-        return $this->position1;
+        return $this->getArguments()[0];
     }
 
     public function getPosition2(): PositionArgument {
-        return $this->position2;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos1 = $this->position1->getPosition($source);
-        $pos2 = $this->position2->getPosition($source);
-        $result = $this->resultName->getString($source);
+        $pos1 = $this->getPosition1()->getPosition($source);
+        $pos2 = $this->getPosition2()->getPosition($source);
+        $result = $this->getResultName()->getString($source);
 
         $distance = $pos1->distance($pos2);
 
@@ -58,7 +54,7 @@ class GetDistance extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(NumberVariable::class)
+            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

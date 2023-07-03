@@ -15,8 +15,8 @@ class SetMaxHealth extends SetHealthBase {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $health = Utils::getInt($this->health->getInt($source), min: 1);
-        $entity = $this->entity->getOnlineEntity($source);
+        $health = Utils::getInt($this->getHealth()->getInt($source), min: 1);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
         $entity->setMaxHealth($health);
 

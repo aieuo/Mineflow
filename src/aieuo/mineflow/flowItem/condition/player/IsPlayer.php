@@ -17,7 +17,7 @@ class IsPlayer extends CheckEntityStateById {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $id = $this->entityId->getInt($source);
+        $id = $this->getEntityId()->getInt($source);
 
         yield Await::ALL;
         return EntityHolder::isPlayer($id);

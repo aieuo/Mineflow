@@ -15,8 +15,8 @@ class SendTip extends TypePlayerMessage {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($this->message->getString($source));
-        $player = $this->player->getOnlinePlayer($source);
+        $message = Language::replace($this->getMessage()->getString($source));
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->sendTip($message);
 

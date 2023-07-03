@@ -15,43 +15,38 @@ use SOFe\AwaitGenerator\Await;
 
 class PlaySound extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $sound;
-    private NumberArgument $volume;
-    private NumberArgument $pitch;
-
     public function __construct(string $player = "", string $sound = "", float $volume = 1, float $pitch = 1) {
         parent::__construct(self::PLAY_SOUND, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->sound = new StringArgument("sound", $sound, example: "random.levelup"),
-            $this->volume = new NumberArgument("volume", $volume, example: "1"),
-            $this->pitch = new NumberArgument("pitch", $pitch, example: "1"),
+            new PlayerArgument("player", $player),
+            new StringArgument("sound", $sound, example: "random.levelup"),
+            new NumberArgument("volume", $volume, example: "1"),
+            new NumberArgument("pitch", $pitch, example: "1"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getSound(): StringArgument {
-        return $this->sound;
+        return $this->getArguments()[1];
     }
 
     public function getVolume(): NumberArgument {
-        return $this->volume;
+        return $this->getArguments()[2];
     }
 
     public function getPitch(): NumberArgument {
-        return $this->pitch;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $sound = $this->sound->getString($source);
-        $volume = $this->volume->getInt($source);
-        $pitch = $this->pitch->getInt($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $sound = $this->getSound()->getString($source);
+        $volume = $this->getVolume()->getInt($source);
+        $pitch = $this->getPitch()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $pk = new PlaySoundPacket();
         $pk->soundName = $sound;

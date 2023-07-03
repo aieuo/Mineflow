@@ -16,7 +16,7 @@ class IsCreature extends CheckEntityStateById {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $id = $this->entityId->getInt($source);
+        $id = $this->getEntityId()->getInt($source);
         $entity = EntityHolder::findEntity($id);
 
         yield Await::ALL;

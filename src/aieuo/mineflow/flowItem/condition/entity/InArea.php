@@ -13,36 +13,32 @@ use SOFe\AwaitGenerator\Await;
 
 class InArea extends SimpleCondition {
 
-    private PositionArgument $position1;
-    private PositionArgument $position2;
-    private EntityArgument $entity;
-
     public function __construct(string $entity = "", string $pos1 = "", string $pos2 = "") {
         parent::__construct(self::IN_AREA, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("target", $entity),
-            $this->position1 = new PositionArgument("pos1", $pos1, "@condition.inArea.form.pos1"),
-            $this->position2 = new PositionArgument("pos2", $pos2, "@condition.inArea.form.pos2"),
+            new EntityArgument("target", $entity),
+            new PositionArgument("pos1", $pos1, "@condition.inArea.form.pos1"),
+            new PositionArgument("pos2", $pos2, "@condition.inArea.form.pos2"),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getPosition1(): PositionArgument {
-        return $this->position1;
+        return $this->getArguments()[1];
     }
 
     public function getPosition2(): PositionArgument {
-        return $this->position2;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->entity->getOnlineEntity($source);
-        $pos1 = $this->position1->getPosition($source);
-        $pos2 = $this->position2->getPosition($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
+        $pos1 = $this->getPosition1()->getPosition($source);
+        $pos2 = $this->getPosition2()->getPosition($source);
         $pos = $entity->getLocation()->floor();
 
         yield Await::ALL;

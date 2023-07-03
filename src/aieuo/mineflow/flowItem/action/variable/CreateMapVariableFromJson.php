@@ -19,36 +19,32 @@ use function array_is_list;
 
 class CreateMapVariableFromJson extends SimpleAction {
 
-    private StringArgument $variableName;
-    private StringArgument $json;
-    private IsLocalVariableArgument $isLocal;
-
     public function __construct(string $variableName = "", string $json = "", bool $isLocal = true) {
         parent::__construct(self::CREATE_MAP_VARIABLE_FROM_JSON, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            $this->json = new StringArgument("json", $json, "@action.variable.form.value", example: "aeiuo"),
-            $this->isLocal = new IsLocalVariableArgument("scope", $isLocal),
+            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            new StringArgument("json", $json, "@action.variable.form.value", example: "aeiuo"),
+            new IsLocalVariableArgument("scope", $isLocal),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getJson(): StringArgument {
-        return $this->json;
+        return $this->getArguments()[1];
     }
 
     public function getIsLocal(): IsLocalVariableArgument {
-        return $this->isLocal;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $this->variableName->getString($source);
-        $json = $this->json->get();
+        $name = $this->getVariableName()->getString($source);
+        $json = $this->getJson()->get();
 
         $value = json_decode($json, true);
         if ($value === null) {
@@ -61,7 +57,7 @@ class CreateMapVariableFromJson extends SimpleAction {
             $variable = new MapVariable(Mineflow::getVariableHelper()->toVariableArray($value));
         }
 
-        if ($this->isLocal->getBool()) {
+        if ($this->getIsLocal()->getBool()) {
             $source->addVariable($name, $variable);
         } else {
             $helper->add($name, $variable);
@@ -72,7 +68,7 @@ class CreateMapVariableFromJson extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(MapVariable::class)
+            $this->getVariableName()->get() => new DummyVariable(MapVariable::class)
         ];
     }
 }

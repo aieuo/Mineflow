@@ -15,7 +15,7 @@ class GetE extends TypeGetMathVariable {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $resultName = $this->resultName->getString($source);
+        $resultName = $this->getResultName()->getString($source);
         $source->addVariable($resultName, new NumberVariable(M_E));
 
         yield Await::ALL;

@@ -18,34 +18,31 @@ use SOFe\AwaitGenerator\Await;
 
 class ClearEffect extends SimpleAction {
 
-    private EntityArgument $entity;
-    private StringArgument $effectId;
-
     public function __construct(string $entity = "", string $effectId = "") {
         parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("entity", $entity),
-            $this->effectId = new StringArgument("id", $effectId, example: "1"),
+            new EntityArgument("entity", $entity),
+            new StringArgument("id", $effectId, example: "1"),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getEffectId(): StringArgument {
-        return $this->effectId;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $effectId = $this->effectId->getString($source);
+        $effectId = $this->getEffectId()->getString($source);
 
         $effect = StringToEffectParser::getInstance()->parse($effectId);
         if ($effect === null) $effect = EffectIdMap::getInstance()->fromId((int)$effectId);
         if ($effect === null) throw new InvalidFlowValueException($this->getName(), Language::get("action.effect.notFound", [$effectId]));
 
-        $entity = $this->entity->getOnlineEntity($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
         if ($entity instanceof Living) {
             $entity->getEffects()->remove($effect);

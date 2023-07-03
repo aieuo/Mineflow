@@ -13,28 +13,25 @@ use SOFe\AwaitGenerator\Await;
 
 class RemoveScoreboardScoreName extends SimpleAction {
 
-    private ScoreboardArgument $scoreboard;
-    private NumberArgument $score;
-
     public function __construct(string $scoreboard = "", int $score = null) {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE_NAME, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard),
-            $this->score = new NumberArgument("score", $score, "@action.setScore.form.score", example: "100"),
+            new ScoreboardArgument("scoreboard", $scoreboard),
+            new NumberArgument("score", $score, "@action.setScore.form.score", example: "100"),
         ]);
     }
     public function getScoreboard(): ScoreboardArgument {
-        return $this->scoreboard;
+        return $this->getArguments()[0];
     }
 
     public function getScore(): NumberArgument {
-        return $this->score;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $score = $this->score->getInt($source);
-        $board = $this->scoreboard->getScoreboard($source);
+        $score = $this->getScore()->getInt($source);
+        $board = $this->getScoreboard()->getScoreboard($source);
 
         $board->removeScoreName($score);
 

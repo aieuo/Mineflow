@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\Await;
 
 class SetBlock extends SimpleAction {
 
-    private BlockArgument $block;
-    private PositionArgument $position;
-
     public function __construct(string $position = "", string $block = "") {
         parent::__construct(self::SET_BLOCK, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->position = new PositionArgument("position", $position),
-            $this->block = new BlockArgument("block", $block),
+            new PositionArgument("position", $position),
+            new BlockArgument("block", $block),
         ]);
     }
 
     public function getPosition(): PositionArgument {
-        return $this->position;
+        return $this->getArguments()[0];
     }
 
     public function getBlock(): BlockArgument {
-        return $this->block;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $position = $this->position->getPosition($source);
-        $block = $this->block->getBlock($source);
+        $position = $this->getPosition()->getPosition($source);
+        $block = $this->getBlock()->getBlock($source);
 
         $position->world->setBlock($position, $block);
 

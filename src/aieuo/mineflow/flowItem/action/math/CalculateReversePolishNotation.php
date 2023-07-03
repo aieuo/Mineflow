@@ -18,29 +18,26 @@ class CalculateReversePolishNotation extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private StringArgument $formula;
-    private StringArgument $resultName;
-
     public function __construct(string $formula = "", string $resultName = "result") {
         parent::__construct(self::REVERSE_POLISH_NOTATION, FlowItemCategory::MATH);
 
         $this->setArguments([
-            $this->formula = new StringArgument("formula", $formula, example: "1 2 + 3 -"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            new StringArgument("formula", $formula, example: "1 2 + 3 -"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
         ]);
     }
 
     public function getFormula(): StringArgument {
-        return $this->formula;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $formula = $this->formula->getString($source);
-        $resultName = $this->resultName->getString($source);
+        $formula = $this->getFormula()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $stack = [];
         foreach (explode(" ", $formula) as $token) {
@@ -71,7 +68,7 @@ class CalculateReversePolishNotation extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(NumberVariable::class)
+            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

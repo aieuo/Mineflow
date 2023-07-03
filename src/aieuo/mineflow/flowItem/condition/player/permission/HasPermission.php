@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\Await;
 
 class HasPermission extends SimpleCondition {
 
-    private PlayerArgument $player;
-    private StringArgument $playerPermission;
-
     public function __construct(string $player = "", string $playerPermission = "") {
         parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER_PERMISSION);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->playerPermission = new StringArgument("permission", $playerPermission, example: "mineflow.customcommand.op"),
+            new PlayerArgument("player", $player),
+            new StringArgument("permission", $playerPermission, example: "mineflow.customcommand.op"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getPlayerPermission(): StringArgument {
-        return $this->playerPermission;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
-        $permission = $this->playerPermission->get();
+        $player = $this->getPlayer()->getOnlinePlayer($source);
+        $permission = $this->getPlayerPermission()->get();
 
         yield Await::ALL;
         return $player->hasPermission($permission);

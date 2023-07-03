@@ -25,7 +25,7 @@ class CustomFormEditPageBuilder extends EditPageBuilder {
     protected string $description = "";
     protected array $elements = [];
 
-    public function __construct(SimpleEditFormBuilder $builder,) {
+    public function __construct(SimpleEditFormBuilder $builder) {
         parent::__construct($builder);
 
         $item = $this->builder->getItem();

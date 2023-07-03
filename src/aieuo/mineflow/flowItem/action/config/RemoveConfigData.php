@@ -14,31 +14,28 @@ use SOFe\AwaitGenerator\Await;
 
 class RemoveConfigData extends SimpleAction {
 
-    private ConfigArgument $config;
-    private StringArgument $key;
-
     public function __construct(string $config = "", string $key = "") {
         parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            $this->config = new ConfigArgument("config", $config),
-            $this->key = new StringArgument("key", $key, "@action.setConfig.form.key", example: "aieuo"),
+            new ConfigArgument("config", $config),
+            new StringArgument("key", $key, "@action.setConfig.form.key", example: "aieuo"),
         ]);
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->config;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $key = $this->key->getString($source);
+        $key = $this->getKey()->getString($source);
 
-        $config = $this->config->getConfig($source);
+        $config = $this->getConfig()->getConfig($source);
         $config->removeNested($key);
 
         yield Await::ALL;

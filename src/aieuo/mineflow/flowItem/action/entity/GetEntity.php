@@ -21,21 +21,26 @@ class GetEntity extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private NumberArgument $entityId;
-    private StringArgument $resultName;
-
     public function __construct(int $entityId = null, string $resultName = "entity") {
         parent::__construct(self::GET_ENTITY, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            $this->entityId = new NumberArgument("id", $entityId ?? "", "@action.getEntity.form.target", example: "1", min: 0),
-            $this->resultName = new StringArgument("result", $resultName, example: "entity"),
+            new NumberArgument("id", $entityId ?? "", "@action.getEntity.form.target", example: "1", min: 0),
+            new StringArgument("result", $resultName, example: "entity"),
         ]);
     }
 
+    public function getEntityId(): NumberArgument {
+        return $this->getArguments()[0];
+    }
+
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[0];
+    }
+
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $id = $this->entityId->getInt($source);
-        $resultName = $this->resultName->getString($source);
+        $id = $this->getEntityId()->getInt($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $entity = EntityHolder::findEntity($id);
         if ($entity === null) {
@@ -44,12 +49,12 @@ class GetEntity extends SimpleAction {
         $source->addVariable($resultName, EntityVariable::fromObject($entity));
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(PlayerVariable::class, $this->entityId->get())
+            $this->getResultName()->get() => new DummyVariable(PlayerVariable::class, $this->getEntityId()->get())
         ];
     }
 }

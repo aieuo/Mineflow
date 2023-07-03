@@ -12,22 +12,20 @@ use SOFe\AwaitGenerator\Await;
 
 class ClearInventory extends SimpleAction {
 
-    private PlayerArgument $player;
-
     public function __construct(string $player = "") {
         parent::__construct(self::CLEAR_INVENTORY, FlowItemCategory::INVENTORY);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
+            new PlayerArgument("player", $player),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->getInventory()->clearAll();
 

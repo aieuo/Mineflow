@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\entity;
 
 use aieuo\mineflow\entity\MineflowHuman;
-use aieuo\mineflow\flowItem\base\SimpleAction;
-use aieuo\mineflow\flowItem\FlowItemCategory;
-use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
@@ -21,35 +21,33 @@ class CreateHumanEntity extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private PlayerArgument $player;
-    private PositionArgument $position;
-    private StringArgument $resultName;
-
     public function __construct(string $name = "", string $pos = "", string $resultName = "human") {
         parent::__construct(self::CREATE_HUMAN_ENTITY, FlowItemCategory::ENTITY);
 
-        $this->player = new PlayerArgument("skin", $name, "@action.createHuman.form.skin");
-        $this->position = new PositionArgument("pos", $pos);
-        $this->resultName = new StringArgument("result", $resultName, example: "entity");
+        $this->setArguments([
+            new PlayerArgument("skin", $name, "@action.createHuman.form.skin"),
+            new PositionArgument("pos", $pos),
+            new StringArgument("result", $resultName, example: "entity"),
+        ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getPosition(): PositionArgument {
-        return $this->position;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
-        $pos = $this->position->getPosition($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
+        $pos = $this->getPosition()->getPosition($source);
 
-        $resultName = $this->resultName->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         if (!($pos instanceof Location)) $pos = Location::fromObject($pos, $pos->getWorld());
         $entity = new MineflowHuman($pos, $player->getSkin());
@@ -59,12 +57,12 @@ class CreateHumanEntity extends SimpleAction {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(EntityVariable::class, $this->player->get())
+            (string)$this->getResultName() => new DummyVariable(EntityVariable::class, (string)$this->getPlayer())
         ];
     }
 }

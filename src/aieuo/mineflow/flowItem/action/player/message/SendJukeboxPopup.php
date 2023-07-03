@@ -14,9 +14,9 @@ class SendJukeboxPopup extends TypePlayerMessage {
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($this->message->getString($source));
+        $message = Language::replace($this->getMessage()->getString($source));
 
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
         $player->sendJukeboxPopup($message);
         yield Await::ALL;
     }

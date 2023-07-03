@@ -21,29 +21,26 @@ class Gamemode extends SimpleCondition {
         "action.gamemode.spectator"
     ];
 
-    private PlayerArgument $player;
-    private IntEnumArgument $gamemode;
-
     public function __construct(string $player = "", int $gamemode = 0) {
         parent::__construct(self::GAMEMODE, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->gamemode = new IntEnumArgument("gamemode", $gamemode, $this->gamemodes),
+            new PlayerArgument("player", $player),
+            new IntEnumArgument("gamemode", $gamemode, $this->gamemodes),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getGamemode(): IntEnumArgument {
-        return $this->gamemode;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
-        $gamemode = GameModeIdMap::getInstance()->fromId($this->gamemode->getValue());
+        $player = $this->getPlayer()->getOnlinePlayer($source);
+        $gamemode = GameModeIdMap::getInstance()->fromId($this->getGamemode()->getValue());
 
         yield Await::ALL;
         return $player->getGamemode() === $gamemode;

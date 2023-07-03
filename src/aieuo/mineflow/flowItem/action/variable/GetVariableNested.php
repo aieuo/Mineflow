@@ -19,39 +19,35 @@ class GetVariableNested extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private StringArgument $variableName;
-    private StringArgument $resultName;
-    private StringArgument $fallbackValue;
-
     public function __construct(string $variableName = "", string $resultName = "var",string $fallbackValue = "") {
         parent::__construct(self::GET_VARIABLE_NESTED, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, example: "target.hand"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "item"),
-            $this->fallbackValue = new StringArgument("fallback", $fallbackValue, example: "optional", optional: true),
+            new StringArgument("name", $variableName, example: "target.hand"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "item"),
+            new StringArgument("fallback", $fallbackValue, example: "optional", optional: true),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     public function getFallbackValue(): StringArgument {
-        return $this->fallbackValue;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $variableName = $this->variableName->getString($source);
-        $resultName = $this->resultName->getString($source);
+        $variableName = $this->getVariableName()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $variable = $source->getVariable($variableName) ?? Mineflow::getVariableHelper()->getNested($variableName);
 
-        $fallbackValue = $this->fallbackValue->get();
+        $fallbackValue = $this->getFallbackValue()->get();
         if ($fallbackValue !== "" and $variable === null) {
             $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
         }
@@ -63,12 +59,12 @@ class GetVariableNested extends SimpleAction {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(UnknownVariable::class)
+            $this->getResultName()->get() => new DummyVariable(UnknownVariable::class)
         ];
     }
 }

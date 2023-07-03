@@ -16,38 +16,34 @@ use SOFe\AwaitGenerator\Await;
 
 class SetPlayerData extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $dataName;
-    private StringArgument $data;
-
     public function __construct(string $player = "", string $dataName = "", string $data = "") {
         parent::__construct(self::SET_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->dataName = new StringArgument("name", $dataName, example: "tag"),
-            $this->data = new StringArgument("data", $data, example: "aieuo"),
+            new PlayerArgument("player", $player),
+            new StringArgument("name", $dataName, example: "tag"),
+            new StringArgument("data", $data, example: "aieuo"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getDataName(): StringArgument {
-        return $this->dataName;
+        return $this->getArguments()[1];
     }
 
     public function getData(): StringArgument {
-        return $this->data;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
 
-        $player = $this->player->getPlayer($source);
-        $name = $this->dataName->getString($source);
-        $variable = $helper->copyOrCreateVariable($this->data->get(), $source);
+        $player = $this->getPlayer()->getPlayer($source);
+        $name = $this->getDataName()->getString($source);
+        $variable = $helper->copyOrCreateVariable($this->getData()->get(), $source);
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {

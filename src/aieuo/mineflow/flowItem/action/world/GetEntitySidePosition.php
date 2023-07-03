@@ -63,47 +63,43 @@ class GetEntitySidePosition extends SimpleAction {
         Facing::WEST,
         Facing::NORTH,
     ];
-    private EntityArgument $entity;
-    private StringEnumArgument $direction;
-    private NumberArgument $steps;
-    private StringArgument $resultName;
 
     public function __construct(string $entity = "", string $direction = self::SIDE_DOWN, int $steps = 1, string $resultName = "pos") {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("entity", $entity),
-            $this->direction = new StringEnumArgument("direction", $direction, $this->directions),
-            $this->steps = new NumberArgument("steps", $steps, example: "1"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
+            new EntityArgument("entity", $entity),
+            new StringEnumArgument("direction", $direction, $this->directions),
+            new NumberArgument("steps", $steps, example: "1"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getDirection(): StringEnumArgument {
-        return $this->direction;
+        return $this->getArguments()[1];
     }
 
     public function getSteps(): NumberArgument {
-        return $this->steps;
+        return $this->getArguments()[2];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[3];
     }
 
     public function isDataValid(): bool {
-        return $this->entity->isValid() and $this->direction->isValid() and $this->steps->get() !== "" and $this->resultName->isValid();
+        return $this->getEntity()->isValid() and $this->getDirection()->isValid() and $this->getSteps()->get() !== "" and $this->getResultName()->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->entity->getOnlineEntity($source);
-        $side = $this->direction->getValue();
-        $step = $this->steps->getInt($source);
-        $resultName = $this->resultName->getString($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
+        $side = $this->getDirection()->getValue();
+        $step = $this->getSteps()->getInt($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $direction = $entity->getHorizontalFacing();
         $pos = $entity->getPosition()->floor()->add(0.5, 0.5, 0.5);
@@ -135,12 +131,12 @@ class GetEntitySidePosition extends SimpleAction {
         $source->addVariable($resultName, new PositionVariable(Position::fromObject($pos, $entity->getWorld())));
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(PositionVariable::class)
+            $this->getResultName()->get() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

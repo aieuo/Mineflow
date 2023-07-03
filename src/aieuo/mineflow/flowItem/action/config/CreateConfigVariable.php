@@ -23,30 +23,27 @@ class CreateConfigVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private StringArgument $fileName;
-    private StringArgument $variableName;
-
     public function __construct(string $fileName = "", string $variableName = "config") {
         parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("config", $variableName, "@action.form.resultVariableName", example: "config"),
-            $this->fileName = new StringArgument("name", $fileName, example: "config"),
+            new StringArgument("config", $variableName, "@action.form.resultVariableName", example: "config"),
+            new StringArgument("name", $fileName, example: "config"),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getFileName(): StringArgument {
-        return $this->fileName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $file = $this->fileName->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $file = $this->getFileName()->getString($source);
         if (!Utils::isValidFileName($file)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("form.recipe.invalidName"));
         }
@@ -55,13 +52,13 @@ class CreateConfigVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->variableName->get();
+        return $this->getVariableName()->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->fileName->createFormElement($variables),
-            $this->variableName->createFormElement($variables),
+            $this->getFileName()->createFormElement($variables),
+            $this->getVariableName()->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([1, 0]);
         });
@@ -69,7 +66,7 @@ class CreateConfigVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(ConfigVariable::class, $this->fileName->get())
+            $this->getVariableName()->get() => new DummyVariable(ConfigVariable::class, $this->getFileName()->get())
         ];
     }
 }

@@ -20,29 +20,26 @@ class CountListVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private StringArgument $variableName;
-    private StringArgument $resultName;
-
     public function __construct(string $variableName = "", string $resultName = "count") {
         parent::__construct(self::COUNT_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, example: "list"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            new StringArgument("name", $variableName, example: "list"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $resultName = $this->resultName->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $variable = $source->getVariable($name) ?? Mineflow::getVariableHelper()->getNested($name);
 
@@ -59,7 +56,7 @@ class CountListVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(NumberVariable::class)
+            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

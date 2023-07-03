@@ -18,10 +18,6 @@ use function array_map;
 
 abstract class GetEntitiesInAreaBase extends SimpleAction {
 
-    private AxisAlignedBBArgument $aabb;
-    private WorldArgument $world;
-    private StringArgument $resultName;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::WORLD,
@@ -32,35 +28,35 @@ abstract class GetEntitiesInAreaBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->aabb = new AxisAlignedBBArgument("aabb", $aabb),
-            $this->world = new WorldArgument("world", $worldName),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entities"),
+            new AxisAlignedBBArgument("aabb", $aabb),
+            new WorldArgument("world", $worldName),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entities"),
         ]);
     }
 
     public function getAxisAlignedBB(): AxisAlignedBBArgument {
-        return $this->aabb;
+        return $this->getArguments()[0];
     }
 
     public function getWorld(): WorldArgument {
-        return $this->world;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $aabb = $this->aabb->getAxisAlignedBB($source);
-        $world = $this->world->getWorld($source);
-        $result = $this->resultName->getString($source);
+        $aabb = $this->getAxisAlignedBB()->getAxisAlignedBB($source);
+        $world = $this->getWorld()->getWorld($source);
+        $result = $this->getResultName()->getString($source);
 
         $entities = $this->filterEntities($world->getNearbyEntities($aabb));
         $variable = new ListVariable(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $entities));
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return (string)$this->getResultName();
     }
 
     /**

@@ -15,33 +15,30 @@ class SetItemName extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $item;
-    private StringArgument $itemName;
-
     public function __construct(string $item = "", string $itemName = "") {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->itemName = new StringArgument("name", $itemName, "@action.createItem.form.name", example: "aieuo", optional: true),
+            new ItemArgument("item", $item),
+            new StringArgument("name", $itemName, "@action.createItem.form.name", example: "aieuo", optional: true),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getItemName(): StringArgument {
-        return $this->itemName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->itemName->getString($source);
-        $item = $this->item->getItem($source);
+        $name = $this->getItemName()->getString($source);
+        $item = $this->getItem()->getItem($source);
 
         $item->setCustomName($name);
 
         yield Await::ALL;
-        return $this->item->get();
+        return $this->getItem()->get();
     }
 }

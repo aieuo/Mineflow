@@ -14,8 +14,8 @@ class AddXpProgress extends AddXpBase {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $xp = $this->xp->getInt($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $xp = $this->getXp()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $new = $player->getXpManager()->getCurrentTotalXp() + $xp;
         if ($new < 0) $xp = -$player->getXpManager()->getCurrentTotalXp();

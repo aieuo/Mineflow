@@ -13,22 +13,20 @@ use SOFe\AwaitGenerator\Await;
 
 class IsOp extends SimpleCondition {
 
-    private PlayerArgument $player;
-
     public function __construct(string $player = "") {
         parent::__construct(self::IS_OP, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
+            new PlayerArgument("player", $player),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         yield Await::ALL;
         return Server::getInstance()->isOp($player->getName());

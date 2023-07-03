@@ -15,22 +15,20 @@ use SOFe\AwaitGenerator\Await;
 
 class CallCustomTrigger extends SimpleAction {
 
-    private StringArgument $triggerName;
-
     public function __construct(string $triggerName = "") {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
 
         $this->setArguments([
-            $this->triggerName = new StringArgument("identifier", $triggerName, example: "aieuo"),
+            new StringArgument("identifier", $triggerName, example: "aieuo"),
         ]);
     }
 
     public function getTriggerName(): StringArgument {
-        return $this->triggerName;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->triggerName->getString($source);
+        $name = $this->getTriggerName()->getString($source);
         $trigger = new CustomTrigger($name);
 
         TriggerHolder::executeRecipeAll($trigger, $source->getTarget(), [], $source->getEvent());

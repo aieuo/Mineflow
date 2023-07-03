@@ -74,9 +74,9 @@ class CreateScoreboardVariable extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $variableName = $this->variableName->getString($source);
-        $id = $this->boardId->getString($source);
-        $displayName = $this->displayName->getString($source);
+        $variableName = $this->getVariableName()->getString($source);
+        $id = $this->getBoardId()->getString($source);
+        $displayName = $this->getDisplayName()->getString($source);
         $type = $this->displayType->getValue();
 
         $scoreboard = new Scoreboard($type, $id, $displayName);
@@ -114,5 +114,12 @@ class CreateScoreboardVariable extends FlowItem {
         return [
             $this->variableName->get() => new DummyVariable(ScoreboardVariable::class, $this->displayName->get())
         ];
+    }
+
+    public function __clone(): void {
+        $this->variableName = clone $this->variableName;
+        $this->boardId = clone $this->boardId;
+        $this->displayName = clone $this->displayName;
+        $this->displayType = clone $this->displayType;
     }
 }

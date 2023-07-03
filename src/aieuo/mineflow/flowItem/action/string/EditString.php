@@ -34,11 +34,6 @@ class EditString extends SimpleAction {
         self::TYPE_SPLIT,
     ];
 
-    private StringArgument $value1;
-    private StringEnumArgument $operator;
-    private StringArgument $value2;
-    private StringArgument $resultName;
-
     public function __construct(
         string $value1 = "",
         string $operator = self::TYPE_JOIN,
@@ -48,37 +43,37 @@ class EditString extends SimpleAction {
         parent::__construct(self::EDIT_STRING, FlowItemCategory::STRING);
 
         $this->setArguments([
-            $this->value1 = new StringArgument("value1", $value1, "@action.fourArithmeticOperations.form.value1", example: "10"),
-            $this->operator = new StringEnumArgument(
+            new StringArgument("value1", $value1, "@action.fourArithmeticOperations.form.value1", example: "10"),
+            new StringEnumArgument(
                 "operator", $operator, $this->operators, "@action.fourArithmeticOperations.form.operator",
                 keyFormatter: fn(string $value) => Language::get("action.editString.".$value),
             ),
-            $this->value2 = new StringArgument("value2", $value2, "@action.fourArithmeticOperations.form.value2", example: "50"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            new StringArgument("value2", $value2, "@action.fourArithmeticOperations.form.value2", example: "50"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
         ]);
     }
 
     public function getValue1(): StringArgument {
-        return $this->value1;
+        return $this->getArguments()[0];
     }
 
     public function getOperator(): StringEnumArgument {
-        return $this->operator;
+        return $this->getArguments()[1];
     }
 
     public function getValue2(): StringArgument {
-        return $this->value2;
+        return $this->getArguments()[2];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $this->value1->getString($source);
-        $value2 = $this->value2->getString($source);
-        $resultName = $this->resultName->getString($source);
-        $operator = $this->operator->getValue();
+        $value1 = $this->getValue1()->getString($source);
+        $value2 = $this->getValue2()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
+        $operator = $this->getOperator()->getValue();
 
         $result = match ($operator) {
             self::TYPE_JOIN => new StringVariable($value1.$value2),
@@ -96,7 +91,7 @@ class EditString extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(StringVariable::class)
+            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

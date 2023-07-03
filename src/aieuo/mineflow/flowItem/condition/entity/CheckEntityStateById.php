@@ -10,8 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 
 abstract class CheckEntityStateById extends SimpleCondition {
 
-    protected NumberArgument $entityId;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::ENTITY,
@@ -20,11 +18,11 @@ abstract class CheckEntityStateById extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->entityId = new NumberArgument("id", $entityId, "@condition.isActiveEntity.form.entityId", example: "aieuo"),
+            new NumberArgument("id", $entityId, "@condition.isActiveEntity.form.entityId", example: "aieuo"),
         ]);
     }
 
     public function getEntityId(): NumberArgument {
-        return $this->entityId;
+        return $this->getArguments()[0];
     }
 }

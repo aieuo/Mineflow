@@ -14,22 +14,20 @@ use SOFe\AwaitGenerator\Await;
 
 class IsPlayerOnlineByName extends SimpleCondition {
 
-    private StringArgument $playerName;
-
     public function __construct(string $playerName = "target") {
         parent::__construct(self::IS_PLAYER_ONLINE_BY_NAME, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->playerName = new StringArgument("name", $playerName, "@condition.isPlayerOnline.form.name", example: "target"),
+            new StringArgument("name", $playerName, "@condition.isPlayerOnline.form.name", example: "target"),
         ]);
     }
 
     public function getPlayerName(): StringArgument {
-        return $this->playerName;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->playerName->getString($source);
+        $name = $this->getPlayerName()->getString($source);
 
         $player = Server::getInstance()->getPlayerExact($name);
 

@@ -15,33 +15,30 @@ class SetItemCount extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $item;
-    private NumberArgument $count;
-
     public function __construct(string $item = "", int $count = null) {
         parent::__construct(self::SET_ITEM_COUNT, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->count = new NumberArgument("count", $count, "@action.createItem.form.count", example: "64", min: 0),
+            new ItemArgument("item", $item),
+            new NumberArgument("count", $count, "@action.createItem.form.count", example: "64", min: 0),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getCount(): NumberArgument {
-        return $this->count;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $count = $this->count->getInt($source);
-        $item = $this->item->getItem($source);
+        $count = $this->getCount()->getInt($source);
+        $item = $this->getItem()->getItem($source);
 
         $item->setCount($count);
 
         yield Await::ALL;
-        return $this->item->get();
+        return $this->getItem()->get();
     }
 }

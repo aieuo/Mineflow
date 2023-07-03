@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\Await;
 
 class SetSleeping extends SimpleAction {
 
-    private PlayerArgument $player;
-    private PositionArgument $position;
-
     public function __construct(string $player = "", string $position = "") {
         parent::__construct(self::SET_SLEEPING, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->position = new PositionArgument("position", $position),
+            new PlayerArgument("player", $player),
+            new PositionArgument("position", $position),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getPosition(): PositionArgument {
-        return $this->position;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
-        $position = $this->position->getPosition($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
+        $position = $this->getPosition()->getPosition($source);
 
         $player->sleepOn($position);
 

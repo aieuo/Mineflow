@@ -19,45 +19,40 @@ class GetLanguage extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private StringArgument $language;
-    private StringArgument $key;
-    private StringArrayArgument $parameters;
-    private StringArgument $resultName;
-
     public function __construct(string $language = "", string $key = "", array $parameters = [], string $resultName = "message") {
         parent::__construct(self::GET_LANGUAGE_MESSAGE, FlowItemCategory::INTERNAL);
 
         $languages = implode(", ", Language::getAvailableLanguages());
 
         $this->setArguments([
-            $this->language = new StringArgument("language", $language, Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), example: "eng"),
-            $this->key = new StringArgument("key", $key, "@action.addLanguageMappings.form.key", example: "mineflow.action.aieuo"),
-            $this->parameters = new StringArrayArgument("parameters", $parameters, example: "aieuo, 123"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "message"),
+            new StringArgument("language", $language, Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), example: "eng"),
+            new StringArgument("key", $key, "@action.addLanguageMappings.form.key", example: "mineflow.action.aieuo"),
+            new StringArrayArgument("parameters", $parameters, example: "aieuo, 123"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "message"),
         ]);
     }
 
     public function getLanguage(): StringArgument {
-        return $this->language;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     public function getParameters(): StringArrayArgument {
-        return $this->parameters;
+        return $this->getArguments()[2];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $language = $this->language->getString($source);
-        $key = $this->key->getString($source);
-        $parameters = $this->parameters->getArray($source);
-        $resultName = $this->resultName->getString($source);
+        $language = $this->getLanguage()->getString($source);
+        $key = $this->getKey()->getString($source);
+        $parameters = $this->getParameters()->getArray($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $variable = new StringVariable(Language::get($key, $parameters, $language));
         $source->addVariable($resultName, $variable);
@@ -67,7 +62,7 @@ class GetLanguage extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(StringVariable::class)
+            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

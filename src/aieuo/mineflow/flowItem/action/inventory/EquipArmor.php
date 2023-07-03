@@ -22,32 +22,32 @@ class EquipArmor extends SimpleAction {
         "action.equipArmor.boots",
     ];
 
-    private ItemArgument $item;
-    private EntityArgument $entity;
-    private IntEnumArgument $index;
-
     public function __construct(string $entity = "", string $item = "", int $index = 0) {
         parent::__construct(self::EQUIP_ARMOR, FlowItemCategory::INVENTORY);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("entity", $entity),
-            $this->item = new ItemArgument("item", $item),
-            $this->index = new IntEnumArgument("index", $index, $this->slots),
+            new EntityArgument("entity", $entity),
+            new ItemArgument("item", $item),
+            new IntEnumArgument("index", $index, $this->slots),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[1];
+    }
+
+    public function getIndex(): IntEnumArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $index = $this->index->getValue();
-        $entity = $this->entity->getOnlineEntity($source);
-        $item = $this->item->getItem($source);
+        $index = $this->getIndex()->getValue();
+        $entity = $this->getEntity()->getOnlineEntity($source);
+        $item = $this->getItem()->getItem($source);
 
         if ($entity instanceof Living) {
             $entity->getArmorInventory()->setItem($index, $item);

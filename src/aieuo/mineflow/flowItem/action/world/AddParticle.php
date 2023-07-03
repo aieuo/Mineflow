@@ -17,18 +17,14 @@ use SOFe\AwaitGenerator\Await;
 
 class AddParticle extends SimpleAction {
 
-    private PositionArgument $position;
-    private StringArgument $particle;
-    private NumberArgument $amount;
-
     public function __construct(string $position = "", string $particle = "", int $amount = 1) {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setArguments([
-            $this->position = new PositionArgument("position", $position),
-            $this->particle = new StringArgument("particle", $particle, example: "minecraft:explosion_particle"),
-            $this->amount = new NumberArgument("amount", $amount, example: "1", min: 1),
+            new PositionArgument("position", $position),
+            new StringArgument("particle", $particle, example: "minecraft:explosion_particle"),
+            new NumberArgument("amount", $amount, example: "1", min: 1),
         ]);
     }
 
@@ -40,15 +36,27 @@ class AddParticle extends SimpleAction {
 
     public function getDetailReplaces(): array {
         $replaces = parent::getDetailReplaces();
-        $replaces[] = $this->amount->get() === "1" ? "" : "s";
+        $replaces[] = $this->getAmount()->get() === "1" ? "" : "s";
         return $replaces;
     }
 
-    protected function onExecute(FlowItemExecutor $source): \Generator {
-        $particleName = $this->particle->getString($source);
-        $amount = $this->amount->getInt($source);
+    public function getPosition(): PositionArgument {
+        return $this->getArguments()[0];
+    }
 
-        $position = $this->position->getPosition($source);
+    public function getParticle(): StringArgument {
+        return $this->getArguments()[1];
+    }
+
+    public function getAmount(): NumberArgument {
+        return $this->getArguments()[2];
+    }
+
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $particleName = $this->getParticle()->getString($source);
+        $amount = $this->getAmount()->getInt($source);
+
+        $position = $this->getPosition()->getPosition($source);
 
         for ($i = 0; $i < $amount; $i++) {
             $pk = new SpawnParticleEffectPacket();

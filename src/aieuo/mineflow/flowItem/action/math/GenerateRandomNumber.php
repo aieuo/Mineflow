@@ -12,31 +12,28 @@ use SOFe\AwaitGenerator\Await;
 
 class GenerateRandomNumber extends TypeGetMathVariable {
 
-    private NumberArgument $min;
-    private NumberArgument $max;
-
     public function __construct(string $min = "", string $max = "", string $resultName = "random") {
         parent::__construct(self::GENERATE_RANDOM_NUMBER, resultName: $resultName);
 
         $this->setArguments([
-            $this->min = new NumberArgument("min", $min, example: "0"),
-            $this->max = new NumberArgument("max", $max, example: "10"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "random"),
+            new NumberArgument("min", $min, example: "0"),
+            new NumberArgument("max", $max, example: "10"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "random"),
         ]);
     }
 
     public function getMin(): NumberArgument {
-        return $this->min;
+        return $this->getArguments()[0];
     }
 
     public function getMax(): NumberArgument {
-        return $this->max;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $min = $this->min->getInt($source);
-        $max = $this->max->getInt($source);
-        $resultName = $this->resultName->getString($source);
+        $min = $this->getMin()->getInt($source);
+        $max = $this->getMax()->getInt($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $rand = mt_rand($min, $max);
         $source->addVariable($resultName, new NumberVariable($rand));

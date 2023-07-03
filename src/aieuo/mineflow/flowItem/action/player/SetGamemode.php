@@ -21,29 +21,26 @@ class SetGamemode extends SimpleAction {
         "action.gamemode.spectator"
     ];
 
-    private PlayerArgument $player;
-    private IntEnumArgument $gamemode;
-
     public function __construct(string $player = "", int $gamemode = 0) {
         parent::__construct(self::SET_GAMEMODE, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->gamemode = new IntEnumArgument("gamemode", $gamemode, $this->gamemodes),
+            new PlayerArgument("player", $player),
+            new IntEnumArgument("gamemode", $gamemode, $this->gamemodes),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getGamemode(): IntEnumArgument {
-        return $this->gamemode;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $gamemode = $this->gamemode->getValue();
-        $player = $this->player->getOnlinePlayer($source);
+        $gamemode = $this->getGamemode()->getValue();
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->setGamemode(GameModeIdMap::getInstance()->fromId($gamemode));
 

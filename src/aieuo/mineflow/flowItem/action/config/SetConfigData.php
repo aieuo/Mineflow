@@ -17,36 +17,32 @@ use SOFe\AwaitGenerator\Await;
 
 class SetConfigData extends SimpleAction {
 
-    private ConfigArgument $config;
-    private StringArgument $key;
-    private StringArgument $value;
-
     public function __construct(string $config = "", string $key = "", string $value = "") {
         parent::__construct(self::SET_CONFIG_VALUE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            $this->config = new ConfigArgument("config", $config),
-            $this->key = new StringArgument("key", $key, example: "aieuo"),
-            $this->value = new StringArgument("value", $value, example: "100"),
+            new ConfigArgument("config", $config),
+            new StringArgument("key", $key, example: "aieuo"),
+            new StringArgument("value", $value, example: "100"),
         ]);
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->config;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     public function getValue(): StringArgument {
-        return $this->value;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $key = $this->key->getString($source);
-        $value = $this->value->get();
+        $key = $this->getKey()->getString($source);
+        $value = $this->getValue()->get();
 
         $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
@@ -63,7 +59,7 @@ class SetConfigData extends SimpleAction {
             if (is_numeric($value)) $value = (float)$value;
         }
 
-        $config = $this->config->getConfig($source);
+        $config = $this->getConfig()->getConfig($source);
         $config->setNested($key, $value);
 
         yield Await::ALL;

@@ -18,29 +18,26 @@ class GetWorldByName extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private StringArgument $worldName;
-    private StringArgument $resultName;
-
     public function __construct(string $worldName = "", string $resultName = "world") {
         parent::__construct(self::GET_WORLD_BY_NAME, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->worldName = new StringArgument("name", $worldName, example: "world"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "world"),
+            new StringArgument("name", $worldName, example: "world"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "world"),
         ]);
     }
 
     public function getWorldName(): StringArgument {
-        return $this->worldName;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $worldName = $this->worldName->getString($source);
-        $result = $this->resultName->getString($source);
+        $worldName = $this->getWorldName()->getString($source);
+        $result = $this->getResultName()->getString($source);
 
         $world = Server::getInstance()->getWorldManager()->getWorldByName($worldName);
 
@@ -48,12 +45,12 @@ class GetWorldByName extends SimpleAction {
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(WorldVariable::class)
+            $this->getResultName()->get() => new DummyVariable(WorldVariable::class)
         ];
     }
 }

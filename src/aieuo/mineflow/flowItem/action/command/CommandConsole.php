@@ -15,23 +15,21 @@ use SOFe\AwaitGenerator\Await;
 
 class CommandConsole extends SimpleAction {
 
-    private StringArgument $command;
-
     public function __construct(string $command = "") {
         parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
         $this->setPermissions([FlowItemPermission::CONSOLE]);
 
         $this->setArguments([
-            $this->command = new StringArgument("command", $command, "@action.command.form.command", example: "mineflow"),
+            new StringArgument("command", $command, "@action.command.form.command", example: "mineflow"),
         ]);
     }
 
     public function getCommand(): StringArgument {
-        return $this->command;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $command = $this->command->getString($source);
+        $command = $this->getCommand()->getString($source);
 
         Server::getInstance()->dispatchCommand(new MineflowConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage()), $command);
 

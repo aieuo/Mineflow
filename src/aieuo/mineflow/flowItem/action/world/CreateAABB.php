@@ -18,14 +18,6 @@ class CreateAABB extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private NumberArgument $minX;
-    private NumberArgument $minY;
-    private NumberArgument $minZ;
-    private NumberArgument $maxX;
-    private NumberArgument $maxY;
-    private NumberArgument $maxZ;
-    private StringArgument $variableName;
-
     public function __construct(
         string $minX = "",
         string $minY = "",
@@ -38,52 +30,52 @@ class CreateAABB extends SimpleAction {
         parent::__construct(self::CREATE_AABB, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->minX = new NumberArgument("min x", $minX, "@action.createAABB.form.minX", "0"),
-            $this->minY = new NumberArgument("min y", $minY, "@action.createAABB.form.minY", "100"),
-            $this->minZ = new NumberArgument("min z", $minZ, "@action.createAABB.form.minZ", "16"),
-            $this->maxX = new NumberArgument("max x", $maxX, "@action.createAABB.form.maxX", "10"),
-            $this->maxY = new NumberArgument("max y", $maxY, "@action.createAABB.form.maxY", "200"),
-            $this->maxZ = new NumberArgument("max z", $maxZ, "@action.createAABB.form.maxZ", "160"),
-            $this->variableName = new StringArgument("result", $variableName, "@action.form.resultVariableName", "area"),
+            new NumberArgument("min x", $minX, "@action.createAABB.form.minX", "0"),
+            new NumberArgument("min y", $minY, "@action.createAABB.form.minY", "100"),
+            new NumberArgument("min z", $minZ, "@action.createAABB.form.minZ", "16"),
+            new NumberArgument("max x", $maxX, "@action.createAABB.form.maxX", "10"),
+            new NumberArgument("max y", $maxY, "@action.createAABB.form.maxY", "200"),
+            new NumberArgument("max z", $maxZ, "@action.createAABB.form.maxZ", "160"),
+            new StringArgument("result", $variableName, "@action.form.resultVariableName", "area"),
         ]);
     }
 
     public function getMinX(): NumberArgument {
-        return $this->minX;
+        return $this->getArguments()[0];
     }
 
     public function getMinY(): NumberArgument {
-        return $this->minY;
+        return $this->getArguments()[1];
     }
 
     public function getMinZ(): NumberArgument {
-        return $this->minZ;
+        return $this->getArguments()[2];
     }
 
     public function getMaxX(): NumberArgument {
-        return $this->maxX;
+        return $this->getArguments()[3];
     }
 
     public function getMaxY(): NumberArgument {
-        return $this->maxY;
+        return $this->getArguments()[4];
     }
 
     public function getMaxZ(): NumberArgument {
-        return $this->maxZ;
+        return $this->getArguments()[5];
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[6];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $minX = $this->minX->getFloat($source);
-        $minY = $this->minY->getFloat($source);
-        $minZ = $this->minZ->getFloat($source);
-        $maxX = $this->maxX->getFloat($source);
-        $maxY = $this->maxY->getFloat($source);
-        $maxZ = $this->maxZ->getFloat($source);
+        $name = $this->getVariableName()->getString($source);
+        $minX = $this->getMinX()->getFloat($source);
+        $minY = $this->getMinY()->getFloat($source);
+        $minZ = $this->getMinZ()->getFloat($source);
+        $maxX = $this->getMaxX()->getFloat($source);
+        $maxY = $this->getMaxY()->getFloat($source);
+        $maxZ = $this->getMaxZ()->getFloat($source);
 
         $aabb = new AxisAlignedBB(
             min($minX, $maxX),
@@ -97,15 +89,15 @@ class CreateAABB extends SimpleAction {
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
 
         yield Await::ALL;
-        return $this->variableName->get();
+        return $this->getVariableName()->get();
     }
 
     public function getAddingVariables(): array {
-        $pos1 = $this->minX->get().", ".$this->minY->get().", ".$this->minZ->get();
-        $pos2 = $this->maxX->get().", ".$this->maxY->get().", ".$this->maxZ->get();
+        $pos1 = $this->getMinX()->get().", ".$this->getMinY()->get().", ".$this->getMinZ()->get();
+        $pos2 = $this->getMaxX()->get().", ".$this->getMaxY()->get().", ".$this->getMaxZ()->get();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->variableName->get() => new DummyVariable(AxisAlignedBBVariable::class, $area)
+            $this->getVariableName()->get() => new DummyVariable(AxisAlignedBBVariable::class, $area)
         ];
     }
 }

@@ -14,37 +14,48 @@ use function array_map;
 abstract class SimpleFlowItem extends FlowItem {
     use HasSimpleEditForm;
 
-    /** @var FlowItemArgument[] */
+    /** @var array<int|string, FlowItemArgument> */
     private array $arguments = [];
 
     public function getArguments(): array {
         return $this->arguments;
     }
 
+    public function getArgument(int|string $index): ?FlowItemArgument {
+        return $this->arguments[$index] ?? null;
+    }
+
     /**
-     * @param FlowItemArgument[] $placeholders
+     * @param FlowItemArgument[] $arguments
      * @param bool $updateDescription
      * @return void
      */
-    public function setArguments(array $placeholders, bool $updateDescription = true): void {
-        $this->arguments = $placeholders;
-
-        if ($updateDescription) {
-            $type = $this instanceof Condition ? "condition" : "action";
-            foreach ($placeholders as $placeholder) {
-                if ($placeholder->getDescription() !== "") continue;
-                $placeholder->setDescription("@{$type}.{$this->getId()}.form.{$placeholder->getName()}");
-            }
+    public function setArguments(array $arguments, bool $updateDescription = true): void {
+        $this->arguments = [];
+        foreach ($arguments as $i => $argument) {
+            $this->setArgument($i, $argument, $updateDescription);
         }
     }
 
-    public function addArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
+    public function setArgument(int|string $index, FlowItemArgument $argument, bool $updateDescription = true): void {
+        $this->arguments[$index] = $argument;
+
+        if ($updateDescription and $argument->getDescription() === "") {
+            $this->updateArgumentDescription($argument);
+        }
+    }
+
+    public function pushArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
         $this->arguments[] = $argument;
 
         if ($updateDescription and $argument->getDescription() === "") {
-            $type = $this instanceof Condition ? "condition" : "action";
-            $argument->setDescription("@{$type}.{$this->getId()}.form.{$argument->getName()}");
+            $this->updateArgumentDescription($argument);
         }
+    }
+
+    private function updateArgumentDescription(FlowItemArgument $argument): void {
+        $type = $this instanceof Condition ? "condition" : "action";
+        $argument->setDescription("@{$type}.{$this->getId()}.form.{$argument->getName()}");
     }
 
     public function isDataValid(): bool {
@@ -55,7 +66,7 @@ abstract class SimpleFlowItem extends FlowItem {
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        foreach (array_values($this->getArguments()) as $i => $placeholder) {
+        foreach ($this->getArguments() as $placeholder) {
             $placeholder->buildEditPage($builder, $variables);
         }
     }
@@ -68,5 +79,13 @@ abstract class SimpleFlowItem extends FlowItem {
 
     public function serializeContents(): array {
         return array_map(fn(FlowItemArgument $value) => $value->get(), $this->getArguments());
+    }
+
+    public function __clone(): void {
+        $arguments = [];
+        foreach ($this->arguments as $i => $argument) {
+            $arguments[$i] = clone $argument;
+        }
+        $this->arguments = $arguments;
     }
 }

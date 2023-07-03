@@ -14,29 +14,26 @@ class GetDate extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private StringArgument $format;
-    private StringArgument $resultName;
-
     public function __construct(string $format = "H:i:s", string $resultName = "date") {
         parent::__construct(self::GET_DATE, FlowItemCategory::COMMON);
 
         $this->setArguments([
-            $this->format = new StringArgument("format", $format, example: "H:i:s"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "date"),
+            new StringArgument("format", $format, example: "H:i:s"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "date"),
         ]);
     }
 
     public function getFormat(): StringArgument {
-        return $this->format;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $format = $this->format->getString($source);
-        $resultName = $this->resultName->getString($source);
+        $format = $this->getFormat()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $date = date($format);
         $source->addVariable($resultName, new StringVariable($date));
@@ -47,7 +44,7 @@ class GetDate extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(StringVariable::class)
+            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

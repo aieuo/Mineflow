@@ -23,36 +23,32 @@ class AddEnchantment extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $item;
-    private StringArgument $enchantId;
-    private NumberArgument $enchantLevel;
-
     public function __construct(string $item = "", string $enchantId = "", int $enchantLevel = 1) {
         parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->enchantId = new StringArgument("id", $enchantId, example: "1"),
-            $this->enchantLevel = new NumberArgument("level", $enchantLevel, example: "1"),
+            new ItemArgument("item", $item),
+            new StringArgument("id", $enchantId, example: "1"),
+            new NumberArgument("level", $enchantLevel, example: "1"),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getEnchantId(): StringArgument {
-        return $this->enchantId;
+        return $this->getArguments()[1];
     }
 
     public function getEnchantLevel(): NumberArgument {
-        return $this->enchantLevel;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
+        $item = $this->getItem()->getItem($source);
 
-        $id = $this->enchantId->getString($source);
+        $id = $this->getEnchantId()->getString($source);
         if (is_numeric($id)) {
             $enchant = EnchantmentIdMap::getInstance()->fromId((int)$id);
         } else {
@@ -61,11 +57,11 @@ class AddEnchantment extends SimpleAction {
         if (!($enchant instanceof Enchantment)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addEnchant.enchant.notFound", [$id]));
         }
-        $level = $this->enchantLevel->getInt($source);
+        $level = $this->getEnchantLevel()->getInt($source);
 
         $item->addEnchantment(new EnchantmentInstance($enchant, $level));
 
         yield Await::ALL;
-        return $this->item->get();
+        return (string)$this->getItem();
     }
 }

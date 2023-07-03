@@ -14,43 +14,40 @@ use SOFe\AwaitGenerator\Await;
 
 class Motion extends SimpleAction {
 
-    private EntityArgument $entity;
-    private NumberArgument $x;
-    private NumberArgument $y;
-    private NumberArgument $z;
-
     public function __construct(string $entity = "", float $x = 0, float $y = 0, float $z = 0) {
         parent::__construct(self::MOTION, FlowItemCategory::ENTITY);
 
-        $this->entity = new EntityArgument("entity", $entity);
-        $this->x = new NumberArgument("x", $x, example: "2");
-        $this->y = new NumberArgument("y", $y, example: "3");
-        $this->z = new NumberArgument("z", $z, example: "4");
+        $this->setArguments([
+            new EntityArgument("entity", $entity),
+            new NumberArgument("x", $x, example: "2"),
+            new NumberArgument("y", $y, example: "3"),
+            new NumberArgument("z", $z, example: "4"),
+        ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getX(): NumberArgument {
-        return $this->x;
+        return $this->getArguments()[1];
     }
 
     public function getY(): NumberArgument {
-        return $this->y;
+        return $this->getArguments()[2];
     }
 
     public function getZ(): NumberArgument {
-        return $this->z;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->entity->getOnlineEntity($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
         $motion = new Vector3(
-            $this->x->getFloat($source),
-            $this->y->getFloat($source),
-            $this->z->getFloat($source),
+            $this->getX()->getFloat($source),
+            $this->getY()->getFloat($source),
+            $this->getZ()->getFloat($source),
         );
         $entity->setMotion($motion);
 

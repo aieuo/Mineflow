@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\Await;
 
 class ExistsConfigData extends SimpleCondition {
 
-    private ConfigArgument $config;
-    private StringArgument $key;
-
     public function __construct(string $config = "", string $key = "") {
         parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
 
         $this->setArguments([
-            $this->config = new ConfigArgument("config", $config),
-            $this->key = new StringArgument("key", $key, example: "aieuo"),
+            new ConfigArgument("config", $config),
+            new StringArgument("key", $key, example: "aieuo"),
         ]);
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->config;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $config = $this->config->getConfig($source);
-        $key = $this->key->getString($source);
+        $config = $this->getConfig()->getConfig($source);
+        $key = $this->getKey()->getString($source);
 
         yield Await::ALL;
         return $config->getNested($key) !== null;

@@ -23,50 +23,44 @@ class CreatePositionVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private NumberArgument $x;
-    private NumberArgument $y;
-    private NumberArgument $z;
-    private StringArgument $world;
-    private StringArgument $variableName;
-
     public function __construct(float $x = 0, float $y = 0, float $z = 0, string $world = "{target.world.name}", string $variableName = "pos") {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("position", $variableName, "@action.form.resultVariableName", example: "pos"),
-            $this->x = new NumberArgument("x", $x, example: "0"),
-            $this->y = new NumberArgument("y", $y, example: "100"),
-            $this->z = new NumberArgument("z", $z, example: "16"),
-            $this->world = new StringArgument("world", $world, example: "{target.level}"),
+            new StringArgument("position", $variableName, "@action.form.resultVariableName", example: "pos"),
+            new NumberArgument("x", $x, example: "0"),
+            new NumberArgument("y", $y, example: "100"),
+            new NumberArgument("z", $z, example: "16"),
+            new StringArgument("world", $world, example: "{target.level}"),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getX(): NumberArgument {
-        return $this->x;
+        return $this->getArguments()[1];
     }
 
     public function getY(): NumberArgument {
-        return $this->y;
+        return $this->getArguments()[2];
     }
 
     public function getZ(): NumberArgument {
-        return $this->z;
+        return $this->getArguments()[3];
     }
 
     public function getWorld(): StringArgument {
-        return $this->world;
+        return $this->getArguments()[4];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $x = $this->x->getFloat($source);
-        $y = $this->y->getFloat($source);
-        $z = $this->z->getFloat($source);
-        $levelName = $this->world->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $x = $this->getX()->getFloat($source);
+        $y = $this->getY()->getFloat($source);
+        $z = $this->getZ()->getFloat($source);
+        $levelName = $this->getWorld()->getString($source);
         $level = Server::getInstance()->getWorldManager()->getWorldByName($levelName);
 
         if ($level === null) {
@@ -79,25 +73,25 @@ class CreatePositionVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->variableName->get();
+        return $this->getVariableName()->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->x->createFormElement($variables),
-            $this->y->createFormElement($variables),
-            $this->z->createFormElement($variables),
-            $this->world->createFormElement($variables),
-            $this->variableName->createFormElement($variables),
+            $this->getX()->createFormElement($variables),
+            $this->getY()->createFormElement($variables),
+            $this->getZ()->createFormElement($variables),
+            $this->getWorld()->createFormElement($variables),
+            $this->getVariableName()->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([4, 0, 1, 2, 3]);
         });
     }
 
     public function getAddingVariables(): array {
-        $pos = $this->x->get().", ".$this->y->get().", ".$this->z->get().", ".$this->world->get();
+        $pos = $this->getX()->get().", ".$this->getY()->get().", ".$this->getZ()->get().", ".$this->getWorld()->get();
         return [
-            $this->variableName->get() => new DummyVariable(PositionVariable::class, $pos)
+            $this->getVariableName()->get() => new DummyVariable(PositionVariable::class, $pos)
         ];
     }
 }

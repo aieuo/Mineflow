@@ -38,7 +38,7 @@ class AddDamage extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->entity->get(), $this->damage->get()];
+        return [(string)$this->entity, (string)$this->damage];
     }
 
     public function getEntity(): EntityArgument {
@@ -62,7 +62,7 @@ class AddDamage extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $damage = $this->damage->getFloat($source);
+        $damage = $this->getDamage()->getFloat($source);
         $cause = $this->getCause();
         $entity = $this->entity->getOnlineEntity($source);
 
@@ -88,5 +88,10 @@ class AddDamage extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->entity->get(), $this->damage->get()];
+    }
+
+    public function __clone(): void {
+        $this->entity = clone $this->entity;
+        $this->damage = clone $this->damage;
     }
 }

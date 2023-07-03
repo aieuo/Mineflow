@@ -19,36 +19,33 @@ class GetItemData extends SimpleAction {
     protected string $id = self::GET_ITEM_DATA;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
-    private ItemArgument $item;
-    private StringArgument $key;
-    private StringArgument $resultName;
 
     public function __construct(string         $item = "", string $key = "", string $resultName = "data") {
         parent::__construct(self::GET_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->key = new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entity"),
+            new ItemArgument("item", $item),
+            new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entity"),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
-        $key = $this->key->getString($source);
-        $resultName = $this->resultName->getString($source);
+        $item = $this->getItem()->getItem($source);
+        $key = $this->getKey()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $tags = $item->getNamedTag();
         $tag = $tags->getTag($key);
@@ -60,6 +57,6 @@ class GetItemData extends SimpleAction {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->item->get();
+        return $this->getItem()->get();
     }
 }

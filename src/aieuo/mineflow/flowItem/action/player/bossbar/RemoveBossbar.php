@@ -14,29 +14,26 @@ use SOFe\AwaitGenerator\Await;
 
 class RemoveBossbar extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $barId;
-
     public function __construct(string $player = "", string $barId = "") {
         parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->barId = new StringArgument("id", $barId, "@action.showBossbar.form.id", example: "aieuo"),
+            new PlayerArgument("player", $player),
+            new StringArgument("id", $barId, "@action.showBossbar.form.id", example: "aieuo"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getBarId(): StringArgument {
-        return $this->barId;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $id = $this->barId->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $id = $this->getBarId()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Bossbar::remove($player, $id);
 

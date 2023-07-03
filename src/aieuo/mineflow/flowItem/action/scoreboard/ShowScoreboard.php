@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\Await;
 
 class ShowScoreboard extends SimpleAction {
 
-    private PlayerArgument $player;
-    private ScoreboardArgument $scoreboard;
-
     public function __construct(string $player = "", string $scoreboard = "") {
         parent::__construct(self::SHOW_SCOREBOARD, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard),
+            new PlayerArgument("player", $player),
+            new ScoreboardArgument("scoreboard", $scoreboard),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getScoreboard(): ScoreboardArgument {
-        return $this->scoreboard;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
-        $board = $this->scoreboard->getScoreboard($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
+        $board = $this->getScoreboard()->getScoreboard($source);
 
         $board->show($player);
 

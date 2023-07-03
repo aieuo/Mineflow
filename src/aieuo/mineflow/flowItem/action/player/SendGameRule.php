@@ -16,38 +16,34 @@ use SOFe\AwaitGenerator\Await;
 
 class SendGameRule extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $gamerule;
-    private BooleanArgument $value;
-
     public function __construct(string $player = "", string $gamerule = "", bool $value = true) {
         parent::__construct(self::SEND_BOOL_GAMERULE, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->gamerule = new StringArgument("gamerule", $gamerule, "@action.setGamerule.form.gamerule", example: "showcoordinates"),
-            $this->value = new BooleanArgument("value", $value),
+            new PlayerArgument("player", $player),
+            new StringArgument("gamerule", $gamerule, "@action.setGamerule.form.gamerule", example: "showcoordinates"),
+            new BooleanArgument("value", $value),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getGamerule(): StringArgument {
-        return $this->gamerule;
+        return $this->getArguments()[1];
     }
 
     public function getValue(): BooleanArgument {
-        return $this->value;
+        return $this->getArguments()[2];
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $gamerule = $this->gamerule->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $gamerule = $this->getGamerule()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $pk = GameRulesChangedPacket::create([
-            $gamerule => new BoolGameRule($this->value->getBool(), true),
+            $gamerule => new BoolGameRule($this->getValue()->getBool(), true),
         ]);
         $player->getNetworkSession()->sendDataPacket($pk);
         yield Await::ALL;

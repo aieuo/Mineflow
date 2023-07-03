@@ -15,32 +15,29 @@ use SOFe\AwaitGenerator\Await;
 
 class PlayerChatEventSetMessage extends SimpleAction {
 
-    private EventArgument $event;
-    private StringArgument $message;
-
     public function __construct(string $event = "event", string $message = "") {
         parent::__construct(self::PLAYER_CHAT_EVENT_SET_MESSAGE, FlowItemCategory::PLAYER_CHAT_EVENT);
 
         $this->setArguments([
-            $this->event = new EventArgument("event", $event),
-            $this->message = new StringArgument("message", $message, "@action.message.form.message", example: "aieuo", optional: true),
+            new EventArgument("event", $event),
+            new StringArgument("message", $message, "@action.message.form.message", example: "aieuo", optional: true),
         ]);
     }
 
     public function getEvent(): EventArgument {
-        return $this->event;
+        return $this->getArguments()[0];
     }
 
     public function getMessage(): StringArgument {
-        return $this->message;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $event = $this->event->getEvent($source);
-        $message = $this->message->getString($source);
+        $event = $this->getEvent()->getEvent($source);
+        $message = $this->getMessage()->getString($source);
 
         if (!($event instanceof PlayerChatEvent)) {
-            throw $this->event->createTypeMismatchedException((string)new PlayerChatEventTrigger());
+            throw $this->getEvent()->createTypeMismatchedException((string)new PlayerChatEventTrigger());
         }
 
         $event->setMessage($message);

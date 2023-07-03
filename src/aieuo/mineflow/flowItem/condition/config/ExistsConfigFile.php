@@ -15,22 +15,20 @@ use SOFe\AwaitGenerator\Await;
 
 class ExistsConfigFile extends SimpleCondition {
 
-    private StringArgument $fileName;
-
     public function __construct(string $fileName = "") {
         parent::__construct(self::EXISTS_CONFIG_FILE, FlowItemCategory::CONFIG);
 
         $this->setArguments([
-            $this->fileName = new FileNameArgument("name", $fileName),
+            new FileNameArgument("name", $fileName),
         ]);
     }
 
     public function getFileName(): StringArgument {
-        return $this->fileName;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = Utils::getValidFileName($this->fileName->getString($source));
+        $name = Utils::getValidFileName($this->getFileName()->getString($source));
 
         yield Await::ALL;
         return file_exists(Main::getInstance()->getDataFolder()."/configs/".$name.".yml");

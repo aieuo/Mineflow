@@ -16,7 +16,7 @@ class OnlinePlayerLessThan extends OnlinePlayerCount {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value = $this->value->getInt($source);
+        $value = $this->getValue()->getInt($source);
 
         yield Await::ALL;
         return count(Server::getInstance()->getOnlinePlayers()) < $value;

@@ -28,13 +28,6 @@ class ShowBossbar extends SimpleAction {
         "white" => BossBarColor::WHITE,
     ];
 
-    private PlayerArgument $player;
-    private StringArgument $title;
-    private NumberArgument $max;
-    private NumberArgument $value;
-    private StringEnumArgument $color;
-    private StringArgument $barId;
-
     public function __construct(
         string $player = "",
         string $title = "",
@@ -46,47 +39,47 @@ class ShowBossbar extends SimpleAction {
         parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->title = new StringArgument("title", $title, example: "title"),
-            $this->max = new NumberArgument("max", $max, example: "20", min: 1),
-            $this->value = new NumberArgument("value", $value, example: "20"),
-            $this->color = new StringEnumArgument("color", $color, array_keys($this->colors)),
-            $this->barId = new StringArgument("id", $barId, example: "20"),
+            new PlayerArgument("player", $player),
+            new StringArgument("title", $title, example: "title"),
+            new NumberArgument("max", $max, example: "20", min: 1),
+            new NumberArgument("value", $value, example: "20"),
+            new StringEnumArgument("color", $color, array_keys($this->colors)),
+            new StringArgument("id", $barId, example: "20"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getTitle(): StringArgument {
-        return $this->title;
+        return $this->getArguments()[1];
     }
 
     public function getMax(): NumberArgument {
-        return $this->max;
+        return $this->getArguments()[2];
     }
 
     public function getValue(): NumberArgument {
-        return $this->value;
+        return $this->getArguments()[3];
     }
 
     public function getColor(): StringEnumArgument {
-        return $this->color;
+        return $this->getArguments()[4];
     }
 
     public function getBarId(): StringArgument {
-        return $this->barId;
+        return $this->getArguments()[5];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $title = $this->title->getString($source);
-        $max = $this->max->getFloat($source);
-        $value = $this->value->getFloat($source);
-        $id = $this->barId->getString($source);
-        $color = $this->colors[$this->color->getValue()] ?? BossBarColor::PURPLE;
+        $title = $this->getTitle()->getString($source);
+        $max = $this->getMax()->getFloat($source);
+        $value = $this->getValue()->getFloat($source);
+        $id = $this->getBarId()->getString($source);
+        $color = $this->colors[$this->getColor()->getValue()] ?? BossBarColor::PURPLE;
 
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Bossbar::add($player, $id, $title, $max, $value / $max, $color);
 

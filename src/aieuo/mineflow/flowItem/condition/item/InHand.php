@@ -14,8 +14,8 @@ class InHand extends TypeItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $item = $this->getItem()->getItem($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $hand = $player->getInventory()->getItemInHand();
 

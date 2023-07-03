@@ -87,12 +87,12 @@ class SendTitle extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $title = $this->title->getString($source);
-        $subtitle = $this->subtitle->getString($source);
-        $fadein = $this->fadein->getInt($source);
-        $stay = $this->stay->getInt($source);
-        $fadeout = $this->fadeout->getInt($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $title = $this->getTitle()->getString($source);
+        $subtitle = $this->getSubtitle()->getString($source);
+        $fadein = $this->getFadein()->getInt($source);
+        $stay = $this->getStay()->getInt($source);
+        $fadeout = $this->getFadeout()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->sendTitle($title, $subtitle, $fadein, $stay, $fadeout);
 
@@ -128,5 +128,14 @@ class SendTitle extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->player->get(), $this->title->get(), $this->subtitle->get(), $this->fadein->get(), $this->stay->get(), $this->fadeout->get()];
+    }
+
+    public function __clone(): void {
+        $this->player = clone $this->player;
+        $this->title = clone $this->title;
+        $this->subtitle = clone $this->subtitle;
+        $this->fadein = clone $this->fadein;
+        $this->stay = clone $this->stay;
+        $this->fadeout = clone $this->fadeout;
     }
 }

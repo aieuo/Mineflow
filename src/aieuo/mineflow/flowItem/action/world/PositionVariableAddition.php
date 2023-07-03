@@ -19,51 +19,45 @@ class PositionVariableAddition extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private PositionArgument $position;
-    private NumberArgument $x;
-    private NumberArgument $y;
-    private NumberArgument $z;
-    private StringArgument $resultName;
-
     public function __construct(string $position = "pos", float $x = null, float $y = null, float $z = null, string $resultName = "pos") {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->position = new PositionArgument("position", $position),
-            $this->x = new NumberArgument("x", $x, example: "0"),
-            $this->y = new NumberArgument("y", $y, example: "100"),
-            $this->z = new NumberArgument("z", $z, example: "16"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
+            new PositionArgument("position", $position),
+            new NumberArgument("x", $x, example: "0"),
+            new NumberArgument("y", $y, example: "100"),
+            new NumberArgument("z", $z, example: "16"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
         ]);
     }
 
     public function getPosition(): PositionArgument {
-        return $this->position;
+        return $this->getArguments()[0];
     }
 
     public function getX(): NumberArgument {
-        return $this->x;
+        return $this->getArguments()[1];
     }
 
     public function getY(): NumberArgument {
-        return $this->y;
+        return $this->getArguments()[2];
     }
 
     public function getZ(): NumberArgument {
-        return $this->z;
+        return $this->getArguments()[3];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[4];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos = $this->position->getPosition($source);
+        $pos = $this->getPosition()->getPosition($source);
 
-        $x = $this->x->getFloat($source);
-        $y = $this->y->getFloat($source);
-        $z = $this->z->getFloat($source);
-        $name = $this->resultName->getString($source);
+        $x = $this->getX()->getFloat($source);
+        $y = $this->getY()->getFloat($source);
+        $z = $this->getZ()->getFloat($source);
+        $name = $this->getResultName()->getString($source);
 
         $position = Position::fromObject($pos->add($x, $y, $z), $pos->getWorld());
 
@@ -71,13 +65,13 @@ class PositionVariableAddition extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
-        $desc = $this->position->get()." + (".$this->x->get().",".$this->y->get().",".$this->z->get().")";
+        $desc = $this->getPosition()->get()." + (".$this->getX()->get().",".$this->getY()->get().",".$this->getZ()->get().")";
         return [
-            $this->resultName->get() => new DummyVariable(PositionVariable::class, $desc)
+            $this->getResultName()->get() => new DummyVariable(PositionVariable::class, $desc)
         ];
     }
 }

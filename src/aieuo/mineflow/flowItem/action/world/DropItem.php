@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\Await;
 
 class DropItem extends SimpleAction {
 
-    private PositionArgument $position;
-    private ItemArgument $item;
-
     public function __construct(string $position = "", string $item = "") {
         parent::__construct(self::DROP_ITEM, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->position = new PositionArgument("position", $position),
-            $this->item = new ItemArgument("item", $item),
+            new PositionArgument("position", $position),
+            new ItemArgument("item", $item),
         ]);
     }
 
     public function getPosition(): PositionArgument {
-        return $this->position;
+        return $this->getArguments()[0];
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $position = $this->position->getPosition($source);
-        $item = $this->item->getItem($source);
+        $position = $this->getPosition()->getPosition($source);
+        $item = $this->getItem()->getItem($source);
 
         $position->getWorld()->dropItem($position, $item);
 

@@ -18,37 +18,33 @@ use SOFe\AwaitGenerator\Await;
 
 class JoinListVariableToString extends SimpleAction {
 
-    private StringArgument $variableName;
-    private StringArgument $separator;
-    private StringArgument $resultName;
-
     public function __construct(string $variableName = "", string $separator = "", string $resultName = "result") {
         parent::__construct(self::JOIN_LIST_VARIABLE_TO_STRING, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            $this->separator = new StringArgument("separator", $separator, example: ", ", optional: true),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "string"),
+            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            new StringArgument("separator", $separator, example: ", ", optional: true),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "string"),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getSeparator(): StringArgument {
-        return $this->separator;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $this->variableName->getString($source);
-        $separator = $this->separator->getString($source);
-        $result = $this->resultName->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $separator = $this->getSeparator()->getString($source);
+        $result = $this->getResultName()->getString($source);
 
         $variable = $source->getVariable($name) ?? $helper->getNested($name);
         if ($variable === null) {
@@ -69,7 +65,7 @@ class JoinListVariableToString extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(StringVariable::class)
+            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

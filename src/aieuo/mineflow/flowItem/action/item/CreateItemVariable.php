@@ -25,43 +25,38 @@ class CreateItemVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private StringArgument $variableName;
-    private StringArgument $itemId;
-    private NumberArgument $itemCount;
-    private StringArgument $itemName;
-
     public function __construct(string $itemId = "", int $itemCount = 0, string $itemName = "", string $variableName = "item") {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("item", $variableName, "@action.form.resultVariableName", example: "item"),
-            $this->itemId = new StringArgument("id", $itemId, example: "1:0"),
-            $this->itemCount = new NumberArgument("count", $itemCount, example: "64", min: 0, optional: true),
-            $this->itemName = new StringArgument("name", $itemName, example: "aieuo", optional: true),
+            new StringArgument("item", $variableName, "@action.form.resultVariableName", example: "item"),
+            new StringArgument("id", $itemId, example: "1:0"),
+            new NumberArgument("count", $itemCount, example: "64", min: 0, optional: true),
+            new StringArgument("name", $itemName, example: "aieuo", optional: true),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getItemId(): StringArgument {
-        return $this->itemId;
+        return $this->getArguments()[1];
     }
 
     public function getItemCount(): NumberArgument {
-        return $this->itemCount;
+        return $this->getArguments()[2];
     }
 
     public function getItemName(): StringArgument {
-        return $this->itemName;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $id = $this->itemId->getString($source);
-        $count = $source->replaceVariables($this->itemCount->get());
-        $itemName = $this->itemName->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $id = $this->getItemId()->getString($source);
+        $count = $source->replaceVariables($this->getItemCount()->get());
+        $itemName = $this->getItemName()->getString($source);
         try {
             $item = StringToItemParser::getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
         } catch (\InvalidArgumentException|LegacyStringToItemParserException) {
@@ -80,15 +75,15 @@ class CreateItemVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->variableName->get();
+        return $this->getVariableName()->get();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->itemId->createFormElement($variables),
-            $this->itemCount->createFormElement($variables),
-            $this->itemName->createFormElement($variables),
-            $this->variableName->createFormElement($variables),
+            $this->getItemId()->createFormElement($variables),
+            $this->getItemCount()->createFormElement($variables),
+            $this->getItemName()->createFormElement($variables),
+            $this->getVariableName()->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([3, 0, 1, 2]);
         });
@@ -96,7 +91,7 @@ class CreateItemVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(ItemVariable::class, $this->itemId->get())
+            $this->getVariableName()->get() => new DummyVariable(ItemVariable::class, $this->getItemId()->get())
         ];
     }
 }

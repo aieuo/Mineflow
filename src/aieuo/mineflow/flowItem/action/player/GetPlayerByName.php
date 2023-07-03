@@ -20,29 +20,26 @@ class GetPlayerByName extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private StringArgument $playerName;
-    private StringArgument $resultName;
-
     public function __construct(string $playerName = "", string $resultName = "player") {
         parent::__construct(self::GET_PLAYER, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->playerName = new StringArgument("name", $playerName, example: "aieuo"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "player"),
+            new StringArgument("name", $playerName, example: "aieuo"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "player"),
         ]);
     }
 
     public function getPlayerName(): StringArgument {
-        return $this->playerName;
+        return $this->getArguments()[0];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->playerName->getString($source);
-        $resultName = $this->resultName->getString($source);
+        $name = $this->getPlayerName()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $player = Server::getInstance()->getPlayerExact($name);
         if (!($player instanceof Player)) {
@@ -53,12 +50,12 @@ class GetPlayerByName extends SimpleAction {
         $source->addVariable($resultName, $result);
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(PlayerVariable::class, $this->playerName->get())
+            $this->getResultName()->get() => new DummyVariable(PlayerVariable::class, $this->getPlayerName()->get())
         ];
     }
 }

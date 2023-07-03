@@ -18,36 +18,32 @@ class CreateAABBByVector3Variable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private Vector3Argument $pos1;
-    private Vector3Argument $pos2;
-    private StringArgument $variableName;
-
     public function __construct(string $pos1 = "", string $pos2 = "", string $variableName = "area") {
         parent::__construct(self::CREATE_AABB_BY_VECTOR3_VARIABLE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->pos1 = new Vector3Argument("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1"),
-            $this->pos2 = new Vector3Argument("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1"),
-            $this->variableName = new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "area"),
+            new Vector3Argument("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1"),
+            new Vector3Argument("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1"),
+            new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "area"),
         ]);
     }
 
     public function getPos1(): Vector3Argument {
-        return $this->pos1;
+        return $this->getArguments()[0];
     }
 
     public function getPos2(): Vector3Argument {
-        return $this->pos2;
+        return $this->getArguments()[1];
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $pos1 = $this->pos1->getVector3($source);
-        $pos2 = $this->pos2->getVector3($source);
+        $name = $this->getVariableName()->getString($source);
+        $pos1 = $this->getPos1()->getVector3($source);
+        $pos2 = $this->getPos2()->getVector3($source);
 
         $aabb = new AxisAlignedBB(
             min((float)$pos1->x, (float)$pos2->x),
@@ -61,15 +57,15 @@ class CreateAABBByVector3Variable extends SimpleAction {
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
 
         yield Await::ALL;
-        return $this->variableName->get();
+        return $this->getVariableName()->get();
     }
 
     public function getAddingVariables(): array {
-        $pos1 = $this->pos1->get();
-        $pos2 = $this->pos2->get();
+        $pos1 = $this->getPos1()->get();
+        $pos2 = $this->getPos2()->get();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->variableName->get() => new DummyVariable(AxisAlignedBB::class, $area)
+            $this->getVariableName()->get() => new DummyVariable(AxisAlignedBB::class, $area)
         ];
     }
 }

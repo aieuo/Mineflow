@@ -17,43 +17,38 @@ use SOFe\AwaitGenerator\Await;
 
 class CreateMapVariable extends SimpleAction {
 
-    private StringArgument $variableName;
-    private StringArrayArgument $variableKey;
-    private StringArrayArgument $variableValue;
-    private IsLocalVariableArgument $isLocal;
-
     public function __construct(string $variableName = "", string $key = "", string $value = "", bool $isLocal = true) {
         parent::__construct(self::CREATE_MAP_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            $this->variableKey = new StringArrayArgument("key", $key, "@action.variable.form.key", example: "aieuo"),
-            $this->variableValue = new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aieuo"),
-            $this->isLocal = new IsLocalVariableArgument("scope", $isLocal),
+            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            new StringArrayArgument("key", $key, "@action.variable.form.key", example: "aieuo"),
+            new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aieuo"),
+            new IsLocalVariableArgument("scope", $isLocal),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getVariableKey(): StringArrayArgument {
-        return $this->variableKey;
+        return $this->getArguments()[1];
     }
 
     public function getVariableValue(): StringArrayArgument {
-        return $this->variableValue;
+        return $this->getArguments()[2];
     }
 
     public function getIsLocal(): IsLocalVariableArgument {
-        return $this->isLocal;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $this->variableName->getString($source);
-        $keys = $this->variableKey->getArray($source);
-        $values = $this->variableValue->getRawArray();
+        $name = $this->getVariableName()->getString($source);
+        $keys = $this->getVariableKey()->getArray($source);
+        $values = $this->getVariableValue()->getRawArray();
 
         $variable = new MapVariable([]);
         for ($i = 0, $iMax = count($keys); $i < $iMax; $i++) {
@@ -65,7 +60,7 @@ class CreateMapVariable extends SimpleAction {
             $variable->setValueAt($key, $addVariable);
         }
 
-        if ($this->isLocal->getBool()) {
+        if ($this->getIsLocal()->getBool()) {
             $source->addVariable($name, $variable);
         } else {
             $helper->add($name, $variable);
@@ -76,7 +71,7 @@ class CreateMapVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(MapVariable::class)
+            $this->getVariableName()->get() => new DummyVariable(MapVariable::class)
         ];
     }
 }

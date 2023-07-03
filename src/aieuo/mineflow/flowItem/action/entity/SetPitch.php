@@ -14,29 +14,26 @@ use SOFe\AwaitGenerator\Await;
 
 class SetPitch extends SimpleAction {
 
-    private EntityArgument $entity;
-    private NumberArgument $pitch;
-
     public function __construct(string $entity = "", float $pitch = null) {
         parent::__construct(self::SET_PITCH, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("entity", $entity),
-            $this->pitch = new NumberArgument("pitch", $pitch, example: "180"),
+            new EntityArgument("entity", $entity),
+            new NumberArgument("pitch", $pitch, example: "180"),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getPitch(): NumberArgument {
-        return $this->pitch;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pitch = $this->pitch->getFloat($source);
-        $entity = $this->entity->getOnlineEntity($source);
+        $pitch = $this->getPitch()->getFloat($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
         $entity->setRotation($entity->getLocation()->getYaw(), $pitch);
         if ($entity instanceof Player) $entity->teleport($entity->getPosition(), $entity->getLocation()->getYaw(), $pitch);

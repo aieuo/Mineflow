@@ -21,42 +21,37 @@ class SendInputForm extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private PlayerArgument $player;
-    private StringArgument $formText;
-    private StringArgument $resultName;
-    private BooleanArgument $resendOnClose;
-
     public function __construct(string $player = "", string $formText = "", string $resultName = "input", bool $resendOnClose = false) {
         parent::__construct(self::SEND_INPUT, FlowItemCategory::FORM);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->formText = new StringArgument("text", $formText, example: "aieuo"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "input"),
-            $this->resendOnClose = new BooleanArgument("resend", $resendOnClose, "@action.input.form.resendOnClose"),
+            new PlayerArgument("player", $player),
+            new StringArgument("text", $formText, example: "aieuo"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "input"),
+            new BooleanArgument("resend", $resendOnClose, "@action.input.form.resendOnClose"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getFormText(): StringArgument {
-        return $this->formText;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     public function getResendOnClose(): BooleanArgument {
-        return $this->resendOnClose;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $text = $this->formText->getString($source);
-        $resultName = $this->resultName->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $text = $this->getFormText()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         yield from Await::promise(function ($resolve) use ($source, $player, $text, $resultName) {
             $this->sendForm($source, $player, $text, $resultName, $resolve);
@@ -72,13 +67,13 @@ class SendInputForm extends SimpleAction {
                 $source->addVariable($resultName, $variable);
                 $callback();
             })->onClose(function (Player $player) use ($source, $text, $resultName, $callback) {
-                if ($this->resendOnClose->getBool()) $this->sendForm($source, $player, $text, $resultName, $callback);
+                if ($this->getResendOnClose()->getBool()) $this->sendForm($source, $player, $text, $resultName, $callback);
             })->show($player);
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(StringVariable::class)
+            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
         ];
     }
 }

@@ -42,7 +42,7 @@ class AddLanguageMappings extends FlowItem {
             if (empty($message)) continue;
             $messages[] = $language.": ".$message;
         }
-        return [$this->key->get(), implode("\n§7-§f ", $messages)];
+        return [(string)$this->key, implode("\n§7-§f ", $messages)];
     }
 
     public function getKey(): StringArgument {
@@ -62,7 +62,7 @@ class AddLanguageMappings extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $key = $this->key->getString($source);
+        $key = $this->getKey()->getString($source);
         foreach ($this->getMappings() as $language => $message) {
             $message = $source->replaceVariables($message);
             if (empty($message)) continue;
@@ -110,5 +110,9 @@ class AddLanguageMappings extends FlowItem {
 
     public function serializeContents(): array {
         return [$this->key->get(), $this->getMappings()];
+    }
+
+    public function __clone(): void {
+        $this->key = clone $this->key;
     }
 }

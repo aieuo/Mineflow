@@ -16,47 +16,43 @@ use SOFe\AwaitGenerator\Await;
 
 class GetTargetBlock extends SimpleAction {
 
-    private PlayerArgument $player;
-    private NumberArgument $max;
-    private StringArgument $resultName;
-
     public function __construct(string $player = "", int $max = 100, string $resultName = "block") {
         parent::__construct(self::GET_TARGET_BLOCK, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->max = new NumberArgument("maxDistance", $max, example: "100", min: 1),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block"),
+            new PlayerArgument("player", $player),
+            new NumberArgument("maxDistance", $max, example: "100", min: 1),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getMax(): NumberArgument {
-        return $this->max;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $max = $this->max->getInt($source);
-        $result = $this->resultName->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $max = $this->getMax()->getInt($source);
+        $result = $this->getResultName()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $block = $player->getTargetBlock($max);
         $source->addVariable($result, new BlockVariable($block));
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(BlockVariable::class)
+            $this->getResultName()->get() => new DummyVariable(BlockVariable::class)
         ];
     }
 }

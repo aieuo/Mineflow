@@ -14,36 +14,32 @@ use SOFe\AwaitGenerator\Await;
 
 class DecrementScoreboardScore extends SimpleAction {
 
-    private ScoreboardArgument $scoreboard;
-    private StringArgument $scoreName;
-    private NumberArgument $score;
-
     public function __construct(string $scoreboard = "", string $scoreName = "", int $score = null) {
         parent::__construct(self::DECREMENT_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            $this->scoreboard = new ScoreboardArgument("scoreboard", $scoreboard),
-            $this->scoreName = new StringArgument("name", $scoreName, "@action.setScore.form.name", example: "aieuo", optional: true),
-            $this->score = new NumberArgument("score", $score, "@action.setScore.form.score", example: "100"),
+            new ScoreboardArgument("scoreboard", $scoreboard),
+            new StringArgument("name", $scoreName, "@action.setScore.form.name", example: "aieuo", optional: true),
+            new NumberArgument("score", $score, "@action.setScore.form.score", example: "100"),
         ]);
     }
 
     public function getScoreboard(): ScoreboardArgument {
-        return $this->scoreboard;
+        return $this->getArguments()[0];
     }
 
     public function getScoreName(): StringArgument {
-        return $this->scoreName;
+        return $this->getArguments()[1];
     }
 
     public function getScore(): NumberArgument {
-        return $this->score;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->scoreName->getString($source);
-        $score = $this->score->getInt($source);
-        $board = $this->scoreboard->getScoreboard($source);
+        $name = $this->getScoreName()->getString($source);
+        $score = $this->getScore()->getInt($source);
+        $board = $this->getScoreboard()->getScoreboard($source);
 
         $board->setScore($name, ($board->getScore($name) ?? 0) - $score);
 

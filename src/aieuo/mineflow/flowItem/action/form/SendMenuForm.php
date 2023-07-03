@@ -88,9 +88,9 @@ class SendMenuForm extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $text = $this->formText->getString($source);
-        $resultName = $this->resultName->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $text = $this->getFormText()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         yield from Await::promise(function ($resolve) use ($source, $player, $text, $resultName) {
             $this->sendForm($source, $player, $text, $resultName, $resolve);
@@ -167,7 +167,13 @@ class SendMenuForm extends FlowItem {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(MapVariable::class)
+            (string)$this->getResultName() => new DummyVariable(MapVariable::class)
         ];
+    }
+
+    public function __clone(): void {
+        $this->player = clone $this->player;
+        $this->resultName = clone $this->resultName;
+        $this->formText = clone $this->formText;
     }
 }

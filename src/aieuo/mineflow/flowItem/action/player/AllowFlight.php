@@ -15,16 +15,13 @@ use SOFe\AwaitGenerator\Await;
 
 class AllowFlight extends SimpleAction {
 
-    private PlayerArgument $player;
-    private BooleanArgument $allow;
-
     public function __construct(string $player = "", bool $allow = true) {
         parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
         $this->setPermissions([FlowItemPermission::CHEAT]);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->allow = new BooleanArgument(
+            new PlayerArgument("player", $player),
+            new BooleanArgument(
                 "allow", $allow, "@action.allowClimbWalls.form.allow",
                 toStringFormatter: fn(bool $value) => Language::get("action.allowFlight.".($value ? "allow" : "notAllow"))
             ),
@@ -32,17 +29,17 @@ class AllowFlight extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getAllow(): BooleanArgument {
-        return $this->allow;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
-        $player->setAllowFlight($this->allow->getBool());
+        $player->setAllowFlight($this->getAllow()->getBool());
 
         yield Await::ALL;
     }

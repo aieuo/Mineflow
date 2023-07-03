@@ -200,4 +200,13 @@ class RegisterCraftingRecipe extends FlowItem {
         }
         return [$items, $this->output->get()];
     }
+
+    public function __clone(): void {
+        $ingredients = [];
+        foreach ($this->ingredients as $ingredient) {
+            $ingredients[] = clone $ingredient;
+        }
+        $this->ingredients = $ingredients;
+        $this->output = clone $this->output;
+    }
 }

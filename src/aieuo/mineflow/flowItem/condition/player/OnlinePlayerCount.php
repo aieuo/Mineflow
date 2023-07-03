@@ -10,8 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 
 abstract class OnlinePlayerCount extends SimpleCondition {
 
-    protected NumberArgument $value;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::PLAYER,
@@ -20,11 +18,11 @@ abstract class OnlinePlayerCount extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->value = new NumberArgument("value", $value, "@condition.randomNumber.form.value", example: "5"),
+            new NumberArgument("value", $value, "@condition.randomNumber.form.value", example: "5"),
         ]);
     }
 
     public function getValue(): NumberArgument {
-        return $this->value;
+        return $this->getArguments()[0];
     }
 }

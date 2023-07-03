@@ -21,33 +21,30 @@ class SetItemDataFromNBTJson extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $item;
-    private StringArgument $json;
-
     public function __construct(string $item = "", string $json = "") {
         parent::__construct(self::SET_ITEM_DATA_FROM_NBT_JSON, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->json = new StringArgument("json", $json, "@action.setItemData.form.value", example: "{display:{Lore:}"),
+            new ItemArgument("item", $item),
+            new StringArgument("json", $json, "@action.setItemData.form.value", example: "{display:{Lore:}"),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getJson(): StringArgument {
-        return $this->json;
+        return $this->getArguments()[1];
     }
 
     public function isDataValid(): bool {
-        return $this->item->isValid() and $this->json->isValid();
+        return $this->getItem()->isValid() and $this->getJson()->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
-        $json = $this->json->getRawString();
+        $item = $this->getItem()->getItem($source);
+        $json = $this->getJson()->getRawString();
 
         try {
             $tags = JsonNbtParser::parseJson($json);
@@ -58,6 +55,6 @@ class SetItemDataFromNBTJson extends SimpleAction {
         }
 
         yield Await::ALL;
-        return $this->item->get();
+        return $this->getItem()->get();
     }
 }

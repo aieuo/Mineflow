@@ -12,36 +12,32 @@ use SOFe\AwaitGenerator\Await;
 
 class RandomNumber extends SimpleCondition {
 
-    private NumberArgument $min;
-    private NumberArgument $max;
-    private NumberArgument $value;
-
     public function __construct(int $min = null, int $max = null, int $value = null) {
         parent::__construct(self::RANDOM_NUMBER, FlowItemCategory::MATH);
 
         $this->setArguments([
-            $this->min = new NumberArgument("min", $min, example: "0"),
-            $this->max = new NumberArgument("max", $max, example: "10"),
-            $this->value = new NumberArgument("value", $value, example: "0"),
+            new NumberArgument("min", $min, example: "0"),
+            new NumberArgument("max", $max, example: "10"),
+            new NumberArgument("value", $value, example: "0"),
         ]);
     }
 
     public function getMin(): NumberArgument {
-        return $this->min;
+        return $this->getArguments()[0];
     }
 
     public function getMax(): NumberArgument {
-        return $this->max;
+        return $this->getArguments()[1];
     }
 
     public function getValue(): NumberArgument {
-        return $this->value;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $min = $this->min->getInt($source);
-        $max = $this->max->getInt($source);
-        $value = $this->value->getInt($source);
+        $min = $this->getMin()->getInt($source);
+        $max = $this->getMax()->getInt($source);
+        $value = $this->getValue()->getInt($source);
 
         yield Await::ALL;
         return mt_rand(min($min, $max), max($min, $max)) === $value;

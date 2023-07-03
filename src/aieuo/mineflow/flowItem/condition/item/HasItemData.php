@@ -15,29 +15,26 @@ class HasItemData extends SimpleCondition {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $item;
-    private StringArgument $key;
-
     public function __construct(string $item = "", string $key = "") {
         parent::__construct(self::HAS_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            $this->item = new ItemArgument("item", $item),
-            $this->key = new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo"),
+            new ItemArgument("item", $item),
+            new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo"),
         ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getKey(): StringArgument {
-        return $this->key;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
-        $key = $this->key->getString($source);
+        $item = $this->getItem()->getItem($source);
+        $key = $this->getKey()->getString($source);
         $tags = $item->getNamedTag();
 
         yield Await::ALL;

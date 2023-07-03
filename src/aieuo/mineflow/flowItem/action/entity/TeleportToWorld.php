@@ -17,34 +17,30 @@ use SOFe\AwaitGenerator\Await;
 
 class TeleportToWorld extends SimpleAction {
 
-    private EntityArgument $entity;
-    private StringArgument $worldName;
-    private BooleanArgument $safeSpawn;
-
     public function __construct(string $entity = "", string $worldName = "", bool $safeSpawn = true) {
         parent::__construct(self::TELEPORT_TO_WORLD, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            $this->entity = new EntityArgument("entity", $entity),
-            $this->worldName = new StringArgument("world", $worldName, "@action.createPosition.form.world", example: "world"),
-            $this->safeSpawn = new BooleanArgument("safespawn", $safeSpawn),
+            new EntityArgument("entity", $entity),
+            new StringArgument("world", $worldName, "@action.createPosition.form.world", example: "world"),
+            new BooleanArgument("safespawn", $safeSpawn),
         ]);
     }
 
     public function getEntity(): EntityArgument {
-        return $this->entity;
+        return $this->getArguments()[0];
     }
 
     public function getWorldName(): StringArgument {
-        return $this->worldName;
+        return $this->getArguments()[1];
     }
 
     public function getSafeSpawn(): BooleanArgument {
-        return $this->safeSpawn;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $worldName = $this->worldName->getString($source);
+        $worldName = $this->getWorldName()->getString($source);
 
         $worldManager = Server::getInstance()->getWorldManager();
         $worldManager->loadWorld($worldName);
@@ -53,9 +49,9 @@ class TeleportToWorld extends SimpleAction {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.createPosition.world.notFound"));
         }
 
-        $entity = $this->entity->getOnlineEntity($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
-        $pos = $this->safeSpawn->getBool() ? $world->getSafeSpawn() : $world->getSpawnLocation();
+        $pos = $this->getSafeSpawn()->getBool() ? $world->getSafeSpawn() : $world->getSpawnLocation();
         $entity->teleport($pos);
 
         yield Await::ALL;

@@ -14,29 +14,26 @@ use SOFe\AwaitGenerator\Await;
 
 class Command extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $command;
-
     public function __construct(string $player = "", string $command = "") {
         parent::__construct(self::COMMAND, FlowItemCategory::COMMAND);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->command = new StringArgument("command", $command, example: "command"),
+            new PlayerArgument("player", $player),
+            new StringArgument("command", $command, example: "command"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getCommand(): StringArgument {
-        return $this->command;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $command = $this->command->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $command = $this->getCommand()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Server::getInstance()->dispatchCommand($player, $command);
 

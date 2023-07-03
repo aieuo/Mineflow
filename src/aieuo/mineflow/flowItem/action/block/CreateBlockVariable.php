@@ -25,29 +25,26 @@ class CreateBlockVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private StringArgument $blockId;
-    private StringArgument $variableName;
-
     public function __construct(string $blockId = "", string $variableName = "block") {
         parent::__construct(self::CREATE_BLOCK_VARIABLE, FlowItemCategory::BLOCK);
 
         $this->setArguments([
-            $this->variableName = new StringArgument("block", $variableName, "@action.form.resultVariableName", example: "block"),
-            $this->blockId = new StringArgument("id", $blockId, example: "1:0"),
+            new StringArgument("block", $variableName, "@action.form.resultVariableName", example: "block"),
+            new StringArgument("id", $blockId, example: "1:0"),
         ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getBlockId(): StringArgument {
-        return $this->blockId;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->variableName->getString($source);
-        $id = $this->blockId->getString($source);
+        $name = $this->getVariableName()->getString($source);
+        $id = $this->getBlockId()->getString($source);
         try {
             $item = StringToItemParser::getInstance()->getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
         } catch (\InvalidArgumentException|LegacyStringToItemParserException) {
@@ -63,13 +60,13 @@ class CreateBlockVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->variableName->get();
+        return (string)$this->getVariableName();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->blockId->createFormElement($variables),
-            $this->variableName->createFormElement($variables),
+            $this->getBlockId()->createFormElement($variables),
+            $this->getVariableName()->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->rearrange([1, 0]);
         });
@@ -77,7 +74,7 @@ class CreateBlockVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->variableName->get() => new DummyVariable(BlockVariable::class, $this->blockId->get())
+            (string)$this->getVariableName() => new DummyVariable(BlockVariable::class, (string)$this->getBlockId())
         ];
     }
 }

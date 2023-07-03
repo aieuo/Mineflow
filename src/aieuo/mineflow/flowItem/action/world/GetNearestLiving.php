@@ -20,7 +20,7 @@ class GetNearestLiving extends GetNearestEntityBase {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(LivingVariable::class)
+            (string)$this->getResultName() => new DummyVariable(LivingVariable::class)
         ];
     }
 }

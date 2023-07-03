@@ -20,7 +20,7 @@ class GetNearestPlayer extends GetNearestEntityBase {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(PlayerVariable::class, "nullable")
+            (string)$this->getResultName() => new DummyVariable(PlayerVariable::class, "nullable")
         ];
     }
 }

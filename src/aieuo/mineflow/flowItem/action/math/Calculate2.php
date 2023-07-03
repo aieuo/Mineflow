@@ -38,43 +38,38 @@ class Calculate2 extends SimpleAction {
         "round(x, y)"
     ];
 
-    private NumberArgument $value1;
-    private NumberArgument $value2;
-    private IntEnumArgument $operator;
-    private StringArgument $resultName;
-
     public function __construct(float $value1 = 0, float $value2 = 0, int $operator = self::CALC_MIN, string $resultName = "result") {
         parent::__construct(self::CALCULATE2, FlowItemCategory::MATH);
 
         $this->setArguments([
-            $this->value1 = new NumberArgument("value1", $value1, example: "10"),
-            $this->value2 = new NumberArgument("value2", $value2, example: "20"),
-            $this->operator = new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            new NumberArgument("value1", $value1, example: "10"),
+            new NumberArgument("value2", $value2, example: "20"),
+            new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
         ]);
     }
 
     public function getValue1(): NumberArgument {
-        return $this->value1;
+        return $this->getArguments()[0];
     }
 
     public function getValue2(): NumberArgument {
-        return $this->value2;
+        return $this->getArguments()[1];
     }
 
     public function getOperator(): IntEnumArgument {
-        return $this->operator;
+        return $this->getArguments()[2];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $this->value1->getFloat($source);
-        $value2 = $this->value2->getFloat($source);
-        $resultName = $this->resultName->getString($source);
-        $operator = $this->operator->getValue();
+        $value1 = $this->getValue1()->getFloat($source);
+        $value2 = $this->getValue2()->getFloat($source);
+        $resultName = $this->getResultName()->getString($source);
+        $operator = $this->getOperator()->getValue();
 
         $result = match ($operator) {
             self::CALC_MIN => min($value1, $value2),
@@ -95,7 +90,7 @@ class Calculate2 extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(NumberVariable::class)
+            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

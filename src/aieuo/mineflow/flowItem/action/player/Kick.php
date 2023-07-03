@@ -15,29 +15,26 @@ use SOFe\AwaitGenerator\Await;
 
 class Kick extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $reason;
-
     public function __construct(string $player = "", string $reason = "") {
         parent::__construct(self::KICK, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->reason = new StringArgument("reason", $reason, example: "aieuo"),
+            new PlayerArgument("player", $player),
+            new StringArgument("reason", $reason, example: "aieuo"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getReason(): StringArgument {
-        return $this->reason;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $reason = $this->reason->getString($source);
-        $player = $this->player->getOnlinePlayer($source);
+        $reason = $this->getReason()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
             $player->kick($reason);

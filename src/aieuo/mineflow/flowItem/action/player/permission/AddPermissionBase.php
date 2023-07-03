@@ -12,9 +12,6 @@ use aieuo\mineflow\flowItem\FlowItemPermission;
 
 abstract class AddPermissionBase extends SimpleAction {
 
-    protected PlayerArgument $player;
-    protected StringArgument $playerPermission;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::PLAYER_PERMISSION,
@@ -25,12 +22,16 @@ abstract class AddPermissionBase extends SimpleAction {
         $this->setPermissions([FlowItemPermission::PERMISSION]);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->playerPermission = new StringArgument("permission", $playerPermission, "@condition.hasPermission.form.permission", example: "mineflow.customcommand.op"),
+            new PlayerArgument("player", $player),
+            new StringArgument("permission", $playerPermission, "@condition.hasPermission.form.permission", example: "mineflow.customcommand.op"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
+    }
+
+    public function getPlayerPermission(): StringArgument {
+        return $this->getArguments()[1];
     }
 }

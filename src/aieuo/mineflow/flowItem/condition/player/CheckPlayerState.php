@@ -10,8 +10,6 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 
 abstract class CheckPlayerState extends SimpleCondition {
 
-    protected PlayerArgument $player;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::PLAYER,
@@ -20,11 +18,11 @@ abstract class CheckPlayerState extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
+            new PlayerArgument("player", $player),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 }

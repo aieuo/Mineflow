@@ -17,35 +17,32 @@ use SOFe\AwaitGenerator\Await;
 
 class SendForm extends SimpleAction {
 
-    private PlayerArgument $player;
-    private StringArgument $formName;
-
     public function __construct(string $player = "", string $formName = "") {
         parent::__construct(self::SEND_FORM, FlowItemCategory::FORM);
 
         $this->setArguments([
-            $this->player = new PlayerArgument("player", $player),
-            $this->formName = new StringArgument("form", $formName, example: "aieuo"),
+            new PlayerArgument("player", $player),
+            new StringArgument("form", $formName, example: "aieuo"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
     }
 
     public function getFormName(): StringArgument {
-        return $this->formName;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $this->formName->getString($source);
+        $name = $this->getFormName()->getString($source);
         $manager = Mineflow::getFormManager();
         $form = $manager->getForm($name) ?? Mineflow::getAddonManager()->getForm($name);
         if ($form === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.sendForm.notFound", [$this->getName()]));
         }
 
-        $player = $this->player->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $form = clone $form;
         $form->replaceVariablesFromExecutor($source);

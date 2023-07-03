@@ -13,23 +13,21 @@ use SOFe\AwaitGenerator\Await;
 
 class SaveConfigFile extends SimpleAction {
 
-    private ConfigArgument $config;
-
     public function __construct(string $config = "") {
         parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            $this->config = new ConfigArgument("config", $config),
+            new ConfigArgument("config", $config),
         ]);
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->config;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $config = $this->config->getConfig($source);
+        $config = $this->getConfig()->getConfig($source);
         $config->save();
 
         yield Await::ALL;

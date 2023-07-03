@@ -67,4 +67,9 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     public function serializeContents(): array {
         return [$this->recipeName->get(), $this->entity->get()];
     }
+
+    public function __clone(): void {
+        $this->recipeName = clone $this->recipeName;
+        $this->entity = clone $this->entity;
+    }
 }

@@ -14,8 +14,6 @@ abstract class TypeGetMathVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    protected StringArgument $resultName;
-
     public function __construct(
         string $id,
         string $category = FlowItemCategory::MATH,
@@ -24,17 +22,17 @@ abstract class TypeGetMathVariable extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
         ]);
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[0];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(NumberVariable::class)
+            (string)$this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

@@ -20,36 +20,32 @@ class GenerateRandomPosition extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private PositionArgument $position1;
-    private PositionArgument $position2;
-    private StringArgument $resultName;
-
     public function __construct(string $min = "", string $max = "", string $resultName = "position") {
         parent::__construct(self::GENERATE_RANDOM_POSITION, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            $this->position1 = new PositionArgument("min", $min, "@action.form.target.position 1"),
-            $this->position2 = new PositionArgument("max", $max, "@action.form.target.position 2"),
-            $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "position"),
+            new PositionArgument("min", $min, "@action.form.target.position 1"),
+            new PositionArgument("max", $max, "@action.form.target.position 2"),
+            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "position"),
         ]);
     }
 
     public function getPosition1(): PositionArgument {
-        return $this->position1;
+        return $this->getArguments()[0];
     }
 
     public function getPosition2(): PositionArgument {
-        return $this->position2;
+        return $this->getArguments()[1];
     }
 
     public function getResultName(): StringArgument {
-        return $this->resultName;
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos1 = $this->position1->getPosition($source);
-        $pos2 = $this->position2->getPosition($source);
-        $resultName = $this->resultName->getString($source);
+        $pos1 = $this->getPosition1()->getPosition($source);
+        $pos2 = $this->getPosition2()->getPosition($source);
+        $resultName = $this->getResultName()->getString($source);
 
         if ($pos1->getWorld()->getFolderName() !== $pos2->getWorld()->getFolderName()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
@@ -62,12 +58,12 @@ class GenerateRandomPosition extends SimpleAction {
         $source->addVariable($resultName, new PositionVariable($rand));
 
         yield Await::ALL;
-        return $this->resultName->get();
+        return $this->getResultName()->get();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->resultName->get() => new DummyVariable(PositionVariable::class)
+            $this->getResultName()->get() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

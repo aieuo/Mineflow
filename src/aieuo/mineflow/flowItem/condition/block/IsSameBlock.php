@@ -13,29 +13,26 @@ use SOFe\AwaitGenerator\GeneratorUtil;
 
 class IsSameBlock extends SimpleCondition {
 
-    private BlockArgument $block1;
-    private BlockArgument $block2;
-
     public function __construct(string $block1 = "", string $block2 = "") {
         parent::__construct(FlowItemIds::IS_SAME_BLOCk, FlowItemCategory::BLOCK);
 
         $this->setArguments([
-            $this->block1 = new BlockArgument("block1", $block1, "@action.form.target.block (1)"),
-            $this->block2 = new BlockArgument("block2", $block2, "@action.form.target.block (2)"),
+            new BlockArgument("block1", $block1, "@action.form.target.block (1)"),
+            new BlockArgument("block2", $block2, "@action.form.target.block (2)"),
         ]);
     }
 
     public function getBlock1(): BlockArgument {
-        return $this->block1;
+        return $this->getArguments()[0];
     }
 
     public function getBlock2(): BlockArgument {
-        return $this->block2;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $block1 = $this->block1->getBlock($source);
-        $block2 = $this->block2->getBlock($source);
+        $block1 = $this->getBlock1()->getBlock($source);
+        $block2 = $this->getBlock2()->getBlock($source);
 
         yield from GeneratorUtil::empty();
 

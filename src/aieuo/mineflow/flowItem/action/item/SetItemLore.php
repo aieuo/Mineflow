@@ -15,31 +15,30 @@ class SetItemLore extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    private ItemArgument $item;
-    private StringArrayArgument $lore;
-
     public function __construct(string $item = "", string $lore = "") {
         parent::__construct(self::SET_ITEM_LORE, FlowItemCategory::ITEM);
 
-        $this->item = new ItemArgument("item", $item);
-        $this->lore = new StringArrayArgument("lore", $lore, separator: ";");
+        $this->setArguments([
+            new ItemArgument("item", $item),
+            new StringArrayArgument("lore", $lore, separator: ";"),
+        ]);
     }
 
     public function getItem(): ItemArgument {
-        return $this->item;
+        return $this->getArguments()[0];
     }
 
     public function getLore(): StringArrayArgument {
-        return $this->lore;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->item->getItem($source);
-        $lore = $this->lore->getArray($source);
+        $item = $this->getItem()->getItem($source);
+        $lore = $this->getLore()->getArray($source);
 
         $item->setLore($lore);
 
         yield Await::ALL;
-        return $this->item->get();
+        return (string)$this->getItem();
     }
 }

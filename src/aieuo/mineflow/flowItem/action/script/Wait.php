@@ -14,22 +14,20 @@ use SOFe\AwaitGenerator\Await;
 
 class Wait extends SimpleAction {
 
-    private NumberArgument $time;
-
     public function __construct(string $time = "") {
         parent::__construct(self::ACTION_WAIT, FlowItemCategory::SCRIPT);
 
         $this->setArguments([
-            $this->time = new NumberArgument("time", $time, example: "10", min: 1 / 20),
+            new NumberArgument("time", $time, example: "10", min: 1 / 20),
         ]);
     }
 
     public function getTime(): NumberArgument {
-        return $this->time;
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $time = $this->time->getFloat($source);
+        $time = $this->getTime()->getFloat($source);
 
         yield from Await::promise(function ($resolve) use($time) {
             Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask($resolve), (int)($time * 20));
