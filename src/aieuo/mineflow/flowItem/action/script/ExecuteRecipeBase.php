@@ -12,6 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\page\builder\EditPageBuilder;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
@@ -98,7 +99,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->page(0, function (SimpleEditFormBuilder $page) {
+        $builder->page(0, function (EditPageBuilder $page) {
             $page->elements([
                 new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
             ])->response(function (EditFormResponseProcessor $response) {
@@ -106,7 +107,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
             });
         });
 
-        $builder->page(1, function (SimpleEditFormBuilder $page) use($variables) {
+        $builder->page(1, function (EditPageBuilder $page) use($variables) {
             $recipeManager = Mineflow::getRecipeManager();
             $recipe = $recipeManager->get(...$recipeManager->parseName($this->getRecipeName()));
 

@@ -14,7 +14,7 @@ use SOFe\AwaitGenerator\Await;
 
 class Wait extends SimpleAction {
 
-    public function __construct(string $time = "") {
+    public function __construct(float $time = null) {
         parent::__construct(self::ACTION_WAIT, FlowItemCategory::SCRIPT);
 
         $this->setArguments([
