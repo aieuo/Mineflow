@@ -60,7 +60,7 @@ class FourArithmeticOperations extends SimpleAction {
         $value1 = $this->getValue1()->getFloat($source);
         $value2 = $this->getValue2()->getFloat($source);
         $resultName = $this->getResultName()->getString($source);
-        $operator = $this->getOperator()->getValue();
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::ADDITION => $value1 + $value2,
@@ -79,7 +79,7 @@ class FourArithmeticOperations extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
+            (string)$this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

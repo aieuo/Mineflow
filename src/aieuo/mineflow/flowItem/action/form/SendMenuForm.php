@@ -60,7 +60,7 @@ class SendMenuForm extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->formText->get(), implode(";", $this->getOptions()), $this->resultName->get()];
+        return [(string)$this->player, (string)$this->formText, implode(";", $this->getOptions()), (string)$this->resultName];
     }
 
     public function getFormText(): StringArgument {
@@ -80,7 +80,7 @@ class SendMenuForm extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and $this->formText->isValid() and $this->resultName->isValid();
+        return $this->player->isValid() and $this->formText->isValid() and $this->resultName->isValid();
     }
 
     public function getPlayer(): PlayerArgument {
@@ -148,18 +148,18 @@ class SendMenuForm extends FlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->resultName->set($content[1]);
-        $this->formText->set($content[2]);
+        $this->player->value($content[0]);
+        $this->resultName->value($content[1]);
+        $this->formText->value($content[2]);
         $this->setOptions($content[3]);
         $this->resendOnClose = $content[4];
     }
 
     public function serializeContents(): array {
         return [
-            $this->player->get(),
-            $this->resultName->get(),
-            $this->formText->get(),
+            $this->player,
+            $this->resultName,
+            $this->formText,
             $this->getOptions(),
             $this->resendOnClose
         ];

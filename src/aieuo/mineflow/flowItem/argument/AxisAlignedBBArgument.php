@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 
-class AxisAlignedBBArgument extends FlowItemArgument {
+class AxisAlignedBBArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.aabb", $optional);
@@ -22,17 +22,17 @@ class AxisAlignedBBArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getAxisAlignedBB(FlowItemExecutor $executor): AxisAlignedBB {
-        $aabb = $executor->replaceVariables($this->get());
+        $aabb = $executor->replaceVariables($this->getVariableName());
         $variable = $executor->getVariable($aabb);
 
         if ($variable instanceof AxisAlignedBBVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.aabb"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.aabb"], $this->getVariableName()]));
     }
 
     public function createFormElement(array $variables): Element {
-        return new AxisAlignedBBVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new AxisAlignedBBVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

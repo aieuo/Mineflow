@@ -58,12 +58,12 @@ class SetItemData extends SimpleAction {
         }
 
         yield Await::ALL;
-        return $this->getItem()->get();
+        return (string)$this->getItem();
     }
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
         $helper = Mineflow::getVariableHelper();
-        $value = $this->getValue()->get();
+        $value = $this->getValue()->getRawString();
 
         return $helper->copyOrCreateVariable($value, $source);
     }

@@ -57,15 +57,15 @@ class CreateAABBByVector3Variable extends SimpleAction {
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
 
         yield Await::ALL;
-        return $this->getVariableName()->get();
+        return (string)$this->getVariableName();
     }
 
     public function getAddingVariables(): array {
-        $pos1 = $this->getPos1()->get();
-        $pos2 = $this->getPos2()->get();
+        $pos1 = $this->getPos1();
+        $pos2 = $this->getPos2();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName()->get() => new DummyVariable(AxisAlignedBB::class, $area)
+            (string)$this->getVariableName() => new DummyVariable(AxisAlignedBB::class, $area)
         ];
     }
 }

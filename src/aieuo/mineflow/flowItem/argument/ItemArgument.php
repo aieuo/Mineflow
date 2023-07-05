@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\Item;
 
-class ItemArgument extends FlowItemArgument {
+class ItemArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.item", $optional);
@@ -22,11 +22,11 @@ class ItemArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getItemVariable(FlowItemExecutor $executor): ItemVariable {
-        $item = $executor->replaceVariables($this->get());
+        $item = $executor->replaceVariables($this->getVariableName());
 
         $variable = $executor->getVariable($item);
         if (!($variable instanceof ItemVariable)) {
-            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], $this->get()]));
+            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], $this->getVariableName()]));
         }
 
         return $variable;
@@ -38,13 +38,13 @@ class ItemArgument extends FlowItemArgument {
     public function getItem(FlowItemExecutor $executor): Item {
         $variable = $this->getItemVariable($executor);
         if (!(($item = $variable->getValue()) instanceof Item)) {
-            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], $this->get()]));
+            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], $this->getVariableName()]));
         }
 
         return $item;
     }
 
     public function createFormElement(array $variables): Element {
-        return new ItemVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new ItemVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

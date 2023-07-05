@@ -65,7 +65,7 @@ class Calculate extends SimpleAction {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $value = $this->getValue()->getFloat($source);
         $resultName = $this->getResultName()->getString($source);
-        $operator = $this->getOperator()->getValue();
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::SQUARE => $value * $value,
@@ -103,7 +103,7 @@ class Calculate extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(NumberVariable::class)
+            (string)$this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

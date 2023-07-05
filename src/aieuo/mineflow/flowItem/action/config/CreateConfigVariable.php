@@ -52,7 +52,7 @@ class CreateConfigVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getVariableName()->get();
+        return (string)$this->getVariableName();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
@@ -66,7 +66,7 @@ class CreateConfigVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName()->get() => new DummyVariable(ConfigVariable::class, $this->getFileName()->get())
+            (string)$this->getVariableName() => new DummyVariable(ConfigVariable::class, (string)$this->getFileName())
         ];
     }
 }

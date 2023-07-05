@@ -60,7 +60,7 @@ class AddVariable extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->variableName->get(), $this->variableValue->get(), $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"];
+        return [(string)$this->variableName, (string)$this->variableValue, $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"];
     }
 
     public function getVariableName(): StringArgument {
@@ -120,20 +120,20 @@ class AddVariable extends FlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->variableName->set($content[0]);
-        $this->variableValue->set($content[1]);
+        $this->variableName->value($content[0]);
+        $this->variableValue->value($content[1]);
         $this->variableType = is_int($content[2]) ? $this->variableTypes[$content[2]] : $content[2];
         $this->isLocal = $content[3];
     }
 
     public function serializeContents(): array {
-        return [$this->variableName->get(), $this->variableValue->get(), $this->variableType, $this->isLocal];
+        return [$this->variableName, $this->variableValue, $this->variableType, $this->isLocal];
     }
 
     public function getAddingVariables(): array {
         $class = $this->variableClasses[$this->variableType];
         return [
-            $this->variableName->get() => new DummyVariable($class, $this->variableValue->get())
+            (string)$this->variableName => new DummyVariable($class, (string)$this->variableValue)
         ];
     }
 

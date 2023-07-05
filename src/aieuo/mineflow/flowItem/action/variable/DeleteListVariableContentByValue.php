@@ -44,7 +44,7 @@ class DeleteListVariableContentByValue extends SimpleAction {
         $helper = Mineflow::getVariableHelper();
         $name = $this->getVariableName()->getString($source);
 
-        $value = $this->getVariableValue()->get();
+        $value = $this->getVariableValue()->getRawString();
         if ($helper->isVariableString($value)) {
             $value = $source->getVariable(mb_substr($value, 1, -1)) ?? $helper->getNested(mb_substr($value, 1, -1));
             if ($value === null) {

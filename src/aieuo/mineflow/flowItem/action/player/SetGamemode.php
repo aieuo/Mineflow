@@ -39,7 +39,7 @@ class SetGamemode extends SimpleAction {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $gamemode = $this->getGamemode()->getValue();
+        $gamemode = $this->getGamemode()->getEnumValue();
         $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->setGamemode(GameModeIdMap::getInstance()->fromId($gamemode));

@@ -43,6 +43,6 @@ class SetItemDamage extends SimpleAction {
         $this->getItem()->getItemVariable($source)->setItem($newItem);
 
         yield Await::ALL;
-        return $this->getItem()->get();
+        return (string)$this->getItem();
     }
 }

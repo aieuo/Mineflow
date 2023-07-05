@@ -39,6 +39,6 @@ class SetItemCount extends SimpleAction {
         $item->setCount($count);
 
         yield Await::ALL;
-        return $this->getItem()->get();
+        return (string)$this->getItem();
     }
 }

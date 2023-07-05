@@ -77,7 +77,7 @@ class ShowBossbar extends SimpleAction {
         $max = $this->getMax()->getFloat($source);
         $value = $this->getValue()->getFloat($source);
         $id = $this->getBarId()->getString($source);
-        $color = $this->colors[$this->getColor()->getValue()] ?? BossBarColor::PURPLE;
+        $color = $this->colors[$this->getColor()->getEnumValue()] ?? BossBarColor::PURPLE;
 
         $player = $this->getPlayer()->getOnlinePlayer($source);
 

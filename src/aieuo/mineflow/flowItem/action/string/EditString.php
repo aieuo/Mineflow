@@ -73,7 +73,7 @@ class EditString extends SimpleAction {
         $value1 = $this->getValue1()->getString($source);
         $value2 = $this->getValue2()->getString($source);
         $resultName = $this->getResultName()->getString($source);
-        $operator = $this->getOperator()->getValue();
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::TYPE_JOIN => new StringVariable($value1.$value2),
@@ -91,7 +91,7 @@ class EditString extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
+            (string)$this->getResultName() => new DummyVariable(StringVariable::class)
         ];
     }
 }

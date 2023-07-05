@@ -44,7 +44,7 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
     }
 
     public function getDetail(): string {
-        $repeat = $this->position1->get()." -> ".$this->position2->get()."; (".$this->counterName.")";
+        $repeat = $this->position1." -> ".$this->position2."; (".$this->counterName.")";
 
         $details = ["", "§7==§f eachPos(".$repeat.") §7==§f"];
         foreach ($this->getActions() as $action) {
@@ -114,8 +114,8 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
                 $this->position2->createFormElement($variables),
                 new ExampleInput("@action.for.counterName", "pos", $this->counterName, true),
             ])->onReceive(function (Player $player, array $data) {
-                $this->position1->set($data[0]);
-                $this->position2->set($data[1]);
+                $this->position1->value($data[0]);
+                $this->position2->value($data[1]);
                 $this->counterName = $data[2];
                 (new FlowItemForm)->sendFlowItemCustomMenu($player, $this, FlowItemContainer::ACTION, ["@form.changed"]);
             })->show($player);
@@ -127,16 +127,16 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
             $this->addAction($action);
         }
 
-        $this->position1->set($contents[1]);
-        $this->position2->set($contents[2]);
+        $this->position1->value($contents[1]);
+        $this->position2->value($contents[2]);
         $this->counterName = $contents[3];
     }
 
     public function serializeContents(): array {
         return [
             $this->getActions(),
-            $this->position1->get(),
-            $this->position2->get(),
+            $this->position1,
+            $this->position2,
             $this->counterName,
         ];
     }

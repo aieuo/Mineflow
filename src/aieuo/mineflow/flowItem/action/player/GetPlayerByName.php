@@ -50,12 +50,12 @@ class GetPlayerByName extends SimpleAction {
         $source->addVariable($resultName, $result);
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(PlayerVariable::class, $this->getPlayerName()->get())
+            (string)$this->getResultName() => new DummyVariable(PlayerVariable::class, (string)$this->getPlayerName())
         ];
     }
 }

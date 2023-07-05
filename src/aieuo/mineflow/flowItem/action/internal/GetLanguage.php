@@ -27,7 +27,7 @@ class GetLanguage extends SimpleAction {
         $this->setArguments([
             new StringArgument("language", $language, Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), example: "eng"),
             new StringArgument("key", $key, "@action.addLanguageMappings.form.key", example: "mineflow.action.aieuo"),
-            new StringArrayArgument("parameters", $parameters, example: "aieuo, 123"),
+            new StringArrayArgument("parameters", $parameters, example: "aieuo, 123", optional: true),
             new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "message"),
         ]);
     }
@@ -62,7 +62,7 @@ class GetLanguage extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
+            (string)$this->getResultName() => new DummyVariable(StringVariable::class)
         ];
     }
 }

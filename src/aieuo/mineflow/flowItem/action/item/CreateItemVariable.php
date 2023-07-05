@@ -55,7 +55,7 @@ class CreateItemVariable extends SimpleAction {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $this->getVariableName()->getString($source);
         $id = $this->getItemId()->getString($source);
-        $count = $source->replaceVariables($this->getItemCount()->get());
+        $count = $this->getItemCount()->getRawString();
         $itemName = $this->getItemName()->getString($source);
         try {
             $item = StringToItemParser::getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
@@ -75,7 +75,7 @@ class CreateItemVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getVariableName()->get();
+        return (string)$this->getVariableName();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
@@ -91,7 +91,7 @@ class CreateItemVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName()->get() => new DummyVariable(ItemVariable::class, $this->getItemId()->get())
+            (string)$this->getVariableName() => new DummyVariable(ItemVariable::class, (string)$this->getItemId())
         ];
     }
 }

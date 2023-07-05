@@ -89,15 +89,15 @@ class CreateAABB extends SimpleAction {
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
 
         yield Await::ALL;
-        return $this->getVariableName()->get();
+        return (string)$this->getVariableName();
     }
 
     public function getAddingVariables(): array {
-        $pos1 = $this->getMinX()->get().", ".$this->getMinY()->get().", ".$this->getMinZ()->get();
-        $pos2 = $this->getMaxX()->get().", ".$this->getMaxY()->get().", ".$this->getMaxZ()->get();
+        $pos1 = $this->getMinX().", ".$this->getMinY().", ".$this->getMinZ();
+        $pos2 = $this->getMaxX().", ".$this->getMaxY().", ".$this->getMaxZ();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName()->get() => new DummyVariable(AxisAlignedBBVariable::class, $area)
+            (string)$this->getVariableName() => new DummyVariable(AxisAlignedBBVariable::class, $area)
         ];
     }
 }

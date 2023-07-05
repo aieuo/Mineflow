@@ -44,7 +44,7 @@ class CreateMapVariableFromJson extends SimpleAction {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
         $name = $this->getVariableName()->getString($source);
-        $json = $this->getJson()->get();
+        $json = $this->getJson()->getRawString();
 
         $value = json_decode($json, true);
         if ($value === null) {
@@ -68,7 +68,7 @@ class CreateMapVariableFromJson extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName()->get() => new DummyVariable(MapVariable::class)
+            (string)$this->getVariableName() => new DummyVariable(MapVariable::class)
         ];
     }
 }

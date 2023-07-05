@@ -62,7 +62,7 @@ class RegisterCraftingRecipe extends FlowItem {
         $index = -1;
         $items = [];
         for ($i = 0; $i < 9; $i++) {
-            $input = $this->ingredients[$i]->get();
+            $input = (string)$this->ingredients[$i];
             if ($input !== "") {
                 if (isset($items[$input])) {
                     $key = $keys[$items[$input]];
@@ -89,7 +89,7 @@ class RegisterCraftingRecipe extends FlowItem {
             $details[] = "- ".$key." = ".$ingredient;
         }
         $details[] = Language::get("action.registerShapedRecipe.results");
-        $details[] = "- ".$this->output->get();
+        $details[] = "- ".$this->output;
         $details[] = "------------------------";
         return implode("\n", $details);
     }
@@ -188,17 +188,13 @@ class RegisterCraftingRecipe extends FlowItem {
 
     public function loadSaveData(array $content): void {
         for ($i = 0; $i < 9; $i++) {
-            $this->ingredients[$i]->set($content[0][$i] ?? "");
+            $this->ingredients[$i]->value($content[0][$i] ?? "");
         }
-        $this->output->set($content[1]);
+        $this->output->value($content[1]);
     }
 
     public function serializeContents(): array {
-        $items = [];
-        for ($i = 0; $i < 9; $i++) {
-            $items[] = $this->ingredients[$i]->get();
-        }
-        return [$items, $this->output->get()];
+        return [$this->ingredients, $this->output];
     }
 
     public function __clone(): void {

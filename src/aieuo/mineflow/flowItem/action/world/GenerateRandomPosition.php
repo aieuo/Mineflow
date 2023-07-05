@@ -58,12 +58,12 @@ class GenerateRandomPosition extends SimpleAction {
         $source->addVariable($resultName, new PositionVariable($rand));
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(PositionVariable::class)
+            (string)$this->getResultName() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

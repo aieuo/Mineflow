@@ -47,12 +47,12 @@ class GetTargetBlock extends SimpleAction {
         $source->addVariable($result, new BlockVariable($block));
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(BlockVariable::class)
+            (string)$this->getResultName() => new DummyVariable(BlockVariable::class)
         ];
     }
 }

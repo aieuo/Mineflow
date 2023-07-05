@@ -53,11 +53,11 @@ class SetArmorColor extends SimpleAction {
 
         $item = $this->getArmor()->getItem($source);
         if (!($item instanceof Armor)) {
-            throw new InvalidFlowValueException($this->getName(), Language::get("action.setArmorColor.not.armor", [$this->getArmor()->get()]));
+            throw new InvalidFlowValueException($this->getName(), Language::get("action.setArmorColor.not.armor", [(string)$this->getArmor()]));
         }
 
         $item->setCustomColor(new Color($r, $g, $b));
         yield Await::ALL;
-        return $this->getArmor()->get();
+        return (string)$this->getArmor();
     }
 }

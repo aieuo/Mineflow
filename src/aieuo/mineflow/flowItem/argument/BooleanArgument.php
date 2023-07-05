@@ -19,12 +19,21 @@ class BooleanArgument extends FlowItemArgument {
      */
     public function __construct(
         string                $name,
-        bool                  $value = false,
+        private bool          $value = false,
         string                $description = "",
         private \Closure|null $toStringFormatter = null,
         private bool          $inverseToggle = false,
     ) {
-        parent::__construct($name, $value, $description, false);
+        parent::__construct($name, $description);
+    }
+
+    public function value(bool $value): self {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function getBool(): bool {
+        return $this->value;
     }
 
     /**
@@ -41,8 +50,8 @@ class BooleanArgument extends FlowItemArgument {
         return $this;
     }
 
-    public function getBool(): bool {
-        return $this->get();
+    public function isValid(): bool {
+        return true;
     }
 
     public function createFormElement(array $variables): Element {
@@ -55,6 +64,14 @@ class BooleanArgument extends FlowItemArgument {
             $processor = fn(bool $value) => !$value;
         }
         $builder->element($this->createFormElement($variables), $processor);
+    }
+
+    public function jsonSerialize(): bool {
+        return $this->getBool();
+    }
+
+    public function load(mixed $value): void {
+        $this->value($value);
     }
 
     public function __toString(): string {

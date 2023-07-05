@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\world\World;
 
-class WorldArgument extends FlowItemArgument {
+class WorldArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.world", $optional);
@@ -22,17 +22,17 @@ class WorldArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getWorld(FlowItemExecutor $executor): World {
-        $world = $executor->replaceVariables($this->get());
+        $world = $executor->replaceVariables($this->getVariableName());
         $variable = $executor->getVariable($world);
 
         if ($variable instanceof WorldVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.world"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.world"], $this->getVariableName()]));
     }
 
     public function createFormElement(array $variables): Element {
-        return new WorldVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new WorldVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

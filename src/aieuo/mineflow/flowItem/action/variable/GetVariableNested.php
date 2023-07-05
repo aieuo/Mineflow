@@ -47,7 +47,7 @@ class GetVariableNested extends SimpleAction {
 
         $variable = $source->getVariable($variableName) ?? Mineflow::getVariableHelper()->getNested($variableName);
 
-        $fallbackValue = $this->getFallbackValue()->get();
+        $fallbackValue = $this->getFallbackValue()->getRawString();
         if ($fallbackValue !== "" and $variable === null) {
             $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
         }
@@ -59,12 +59,12 @@ class GetVariableNested extends SimpleAction {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(UnknownVariable::class)
+            (string)$this->getResultName() => new DummyVariable(UnknownVariable::class)
         ];
     }
 }

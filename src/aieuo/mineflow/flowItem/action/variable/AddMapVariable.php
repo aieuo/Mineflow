@@ -51,7 +51,7 @@ class AddMapVariable extends SimpleAction {
         $name = $this->getVariableName()->getString($source);
         $key = $this->getVariableKey()->getString($source);
 
-        $value = $this->getVariableValue()->get();
+        $value = $this->getVariableValue()->getRawString();
         $addVariable = $helper->copyOrCreateVariable($value, $source);
         $variable = $this->getIsLocal()->getBool() ? $source->getVariable($name) : $helper->get($name);
         if ($variable === null) {
@@ -67,7 +67,7 @@ class AddMapVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName()->get() => new DummyVariable(MapVariable::class)
+            (string)$this->getVariableName() => new DummyVariable(MapVariable::class)
         ];
     }
 }

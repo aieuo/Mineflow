@@ -51,7 +51,7 @@ class SendTitle extends FlowItem {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->player->get(), $this->title->get(), $this->subtitle->get(), $this->fadein->get(), $this->stay->get(), $this->fadeout->get()];
+        return [(string)$this->player, (string)$this->title, (string)$this->subtitle, (string)$this->fadein, (string)$this->stay, (string)$this->fadeout];
     }
 
     public function getTitle(): StringArgument {
@@ -79,7 +79,7 @@ class SendTitle extends FlowItem {
     }
 
     public function isDataValid(): bool {
-        return $this->player->get() !== "" and ($this->title->isValid() or $this->subtitle->isValid());
+        return $this->player->isValid() and ($this->title->isValid() or $this->subtitle->isValid());
     }
 
     public function getPlayer(): PlayerArgument {
@@ -116,18 +116,18 @@ class SendTitle extends FlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->player->set($content[0]);
-        $this->title->set($content[1]);
-        $this->subtitle->set($content[2]);
+        $this->player->value($content[0]);
+        $this->title->value($content[1]);
+        $this->subtitle->value($content[2]);
         if (isset($content[5])) {
-            $this->fadein->set($content[3]);
-            $this->stay->set($content[3]);
-            $this->fadeout->set($content[3]);
+            $this->fadein->value($content[3]);
+            $this->stay->value($content[3]);
+            $this->fadeout->value($content[3]);
         }
     }
 
     public function serializeContents(): array {
-        return [$this->player->get(), $this->title->get(), $this->subtitle->get(), $this->fadein->get(), $this->stay->get(), $this->fadeout->get()];
+        return [$this->player, $this->title, $this->subtitle, $this->fadein, $this->stay, $this->fadeout];
     }
 
     public function __clone(): void {

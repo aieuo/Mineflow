@@ -73,7 +73,7 @@ class SendInputForm extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(StringVariable::class)
+            (string)$this->getResultName() => new DummyVariable(StringVariable::class)
         ];
     }
 }

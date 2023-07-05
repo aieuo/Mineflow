@@ -42,7 +42,7 @@ class SetConfigData extends SimpleAction {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $key = $this->getKey()->getString($source);
-        $value = $this->getValue()->get();
+        $value = $this->getValue()->getRawString();
 
         $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {

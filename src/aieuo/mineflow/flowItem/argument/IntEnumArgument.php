@@ -18,30 +18,43 @@ class IntEnumArgument extends FlowItemArgument {
      */
     public function __construct(
         string                 $name,
-        int                    $value = 0,
+        private int            $value = 0,
         private readonly array $keys = [],
         string                 $description = "",
     ) {
-        parent::__construct($name, $value, $description, false);
+        parent::__construct($name, $description);
     }
 
-    public function getValue(): int {
-        return (int)$this->get();
+    public function value(int $enumValue): self {
+        $this->value = $enumValue;
+        return $this;
     }
 
-    public function getKey(): string {
-        return $this->keys[$this->getValue()] ?? "";
+    public function getEnumValue(): int {
+        return $this->value;
+    }
+
+    public function getEnumKey(): string {
+        return $this->keys[$this->getEnumValue()] ?? "";
     }
 
     public function isValid(): bool {
-        return $this->getValue() >= 0 and $this->getValue() < count($this->keys);
+        return $this->getEnumValue() >= 0 and $this->getEnumValue() < count($this->keys);
     }
 
     public function createFormElement(array $variables): Element {
-        return new Dropdown($this->getDescription(), $this->keys, $this->getValue());
+        return new Dropdown($this->getDescription(), $this->keys, $this->getEnumValue());
+    }
+
+    public function jsonSerialize(): int {
+        return $this->getEnumValue();
+    }
+
+    public function load(mixed $value): void {
+        $this->value($value);
     }
 
     public function __toString(): string {
-        return $this->getKey();
+        return $this->getEnumKey();
     }
 }

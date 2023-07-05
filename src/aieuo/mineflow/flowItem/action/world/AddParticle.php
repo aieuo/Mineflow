@@ -36,7 +36,7 @@ class AddParticle extends SimpleAction {
 
     public function getDetailReplaces(): array {
         $replaces = parent::getDetailReplaces();
-        $replaces[] = $this->getAmount()->get() === "1" ? "" : "s";
+        $replaces[] = $this->getAmount()->getRawString() === "1" ? "" : "s";
         return $replaces;
     }
 

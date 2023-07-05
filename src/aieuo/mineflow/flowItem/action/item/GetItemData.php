@@ -57,6 +57,6 @@ class GetItemData extends SimpleAction {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->getItem()->get();
+        return (string)$this->getItem();
     }
 }

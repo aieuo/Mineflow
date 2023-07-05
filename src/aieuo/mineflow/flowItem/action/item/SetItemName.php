@@ -39,6 +39,6 @@ class SetItemName extends SimpleAction {
         $item->setCustomName($name);
 
         yield Await::ALL;
-        return $this->getItem()->get();
+        return (string)$this->getItem();
     }
 }

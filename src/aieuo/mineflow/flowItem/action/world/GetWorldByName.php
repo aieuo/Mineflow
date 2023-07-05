@@ -45,12 +45,12 @@ class GetWorldByName extends SimpleAction {
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(WorldVariable::class)
+            (string)$this->getResultName() => new DummyVariable(WorldVariable::class)
         ];
     }
 }

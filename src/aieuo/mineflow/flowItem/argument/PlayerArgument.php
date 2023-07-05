@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 
-class PlayerArgument extends FlowItemArgument {
+class PlayerArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.player", $optional);
@@ -22,14 +22,14 @@ class PlayerArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getPlayer(FlowItemExecutor $executor): Player {
-        $player = $executor->replaceVariables($this->get());
+        $player = $executor->replaceVariables($this->getVariableName());
 
         $variable = $executor->getVariable($player);
         if ($variable instanceof PlayerVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.player"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.player"], $this->getVariableName()]));
     }
 
     /**
@@ -44,6 +44,6 @@ class PlayerArgument extends FlowItemArgument {
     }
 
     public function createFormElement(array $variables): Element {
-        return new PlayerVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new PlayerVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

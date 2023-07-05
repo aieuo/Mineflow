@@ -9,7 +9,6 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
@@ -29,7 +28,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     }
 
     public function getDetailReplaces(): array {
-        return [$this->recipeName->get(), $this->entity->get()];
+        return [(string)$this->recipeName, (string)$this->entity];
     }
 
     public function getEntity(): EntityArgument {
@@ -52,20 +51,20 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->recipeName->get(), true),
-           $this->entity->createFormElement($variables),
+            $this->recipeName->createFormElement($variables),
+            $this->entity->createFormElement($variables),
         ])->response(function (EditFormResponseProcessor $response) {
             $response->clear();
         });
     }
 
     public function loadSaveData(array $content): void {
-        $this->recipeName->set($content[0]);
-        $this->entity->set($content[1]);
+        $this->recipeName->load($content[0]);
+        $this->entity->load($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->recipeName->get(), $this->entity->get()];
+        return [$this->recipeName, $this->entity];
     }
 
     public function __clone(): void {

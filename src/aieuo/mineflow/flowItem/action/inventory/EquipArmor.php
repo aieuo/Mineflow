@@ -45,7 +45,7 @@ class EquipArmor extends SimpleAction {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $index = $this->getIndex()->getValue();
+        $index = $this->getIndex()->getEnumValue();
         $entity = $this->getEntity()->getOnlineEntity($source);
         $item = $this->getItem()->getItem($source);
 

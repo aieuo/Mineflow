@@ -13,7 +13,7 @@ use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Human;
 use pocketmine\player\Player;
 
-class HumanArgument extends FlowItemArgument {
+class HumanArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.human", $optional);
@@ -23,14 +23,14 @@ class HumanArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getHuman(FlowItemExecutor $executor): Human {
-        $human = $executor->replaceVariables($this->get());
+        $human = $executor->replaceVariables($this->getVariableName());
 
         $variable = $executor->getVariable($human);
         if ($variable instanceof HumanVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.human"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.human"], $this->getVariableName()]));
     }
 
     /**
@@ -45,6 +45,6 @@ class HumanArgument extends FlowItemArgument {
     }
 
     public function createFormElement(array $variables): Element {
-        return new HumanVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new HumanVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

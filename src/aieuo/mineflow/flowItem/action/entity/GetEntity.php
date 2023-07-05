@@ -49,12 +49,12 @@ class GetEntity extends SimpleAction {
         $source->addVariable($resultName, EntityVariable::fromObject($entity));
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(PlayerVariable::class, $this->getEntityId()->get())
+            (string)$this->getResultName() => new DummyVariable(PlayerVariable::class, (string)$this->getEntityId())
         ];
     }
 }

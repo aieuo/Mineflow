@@ -73,7 +73,7 @@ class CreatePositionVariable extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getVariableName()->get();
+        return (string)$this->getVariableName();
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
@@ -89,9 +89,9 @@ class CreatePositionVariable extends SimpleAction {
     }
 
     public function getAddingVariables(): array {
-        $pos = $this->getX()->get().", ".$this->getY()->get().", ".$this->getZ()->get().", ".$this->getWorld()->get();
+        $pos = $this->getX().", ".$this->getY().", ".$this->getZ().", ".$this->getWorld();
         return [
-            $this->getVariableName()->get() => new DummyVariable(PositionVariable::class, $pos)
+            (string)$this->getVariableName() => new DummyVariable(PositionVariable::class, $pos)
         ];
     }
 }

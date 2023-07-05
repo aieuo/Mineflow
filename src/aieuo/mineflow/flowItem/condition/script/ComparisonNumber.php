@@ -49,7 +49,7 @@ class ComparisonNumber extends SimpleCondition {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $this->getValue1()->getFloat($source);
         $value2 = $this->getValue2()->getFloat($source);
-        $operator = $this->getOperator()->getValue();
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::EQUAL => $value1 === $value2,

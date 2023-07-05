@@ -71,7 +71,7 @@ class CreateMapVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName()->get() => new DummyVariable(MapVariable::class)
+            (string)$this->getVariableName() => new DummyVariable(MapVariable::class)
         ];
     }
 }

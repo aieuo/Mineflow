@@ -104,12 +104,12 @@ class AddLanguageMappings extends FlowItem {
     }
 
     public function loadSaveData(array $content): void {
-        $this->key->set($content[0]);
+        $this->key->value($content[0]);
         $this->setMappings($content[1]);
     }
 
     public function serializeContents(): array {
-        return [$this->key->get(), $this->getMappings()];
+        return [$this->getKey(), $this->getMappings()];
     }
 
     public function __clone(): void {

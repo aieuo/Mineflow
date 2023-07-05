@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\BlockVariable;
 use pocketmine\block\Block;
 
-class BlockArgument extends FlowItemArgument {
+class BlockArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.block", $optional);
@@ -22,17 +22,17 @@ class BlockArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getBlock(FlowItemExecutor $executor): Block {
-        $block = $executor->replaceVariables($this->get());
+        $block = $executor->replaceVariables($this->getVariableName());
         $variable = $executor->getVariable($block);
 
         if ($variable instanceof BlockVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.block"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.block"], $this->getVariableName()]));
     }
 
     public function createFormElement(array $variables): Element {
-        return new BlockVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new BlockVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

@@ -40,7 +40,7 @@ class Gamemode extends SimpleCondition {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getPlayer()->getOnlinePlayer($source);
-        $gamemode = GameModeIdMap::getInstance()->fromId($this->getGamemode()->getValue());
+        $gamemode = GameModeIdMap::getInstance()->fromId($this->getGamemode()->getEnumValue());
 
         yield Await::ALL;
         return $player->getGamemode() === $gamemode;

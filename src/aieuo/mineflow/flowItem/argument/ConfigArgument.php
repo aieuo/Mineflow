@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\ConfigVariable;
 use pocketmine\utils\Config;
 
-class ConfigArgument extends FlowItemArgument {
+class ConfigArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.config", $optional);
@@ -22,17 +22,17 @@ class ConfigArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getConfig(FlowItemExecutor $executor): Config {
-        $config = $executor->replaceVariables($this->get());
+        $config = $executor->replaceVariables($this->getVariableName());
         $variable = $executor->getVariable($config);
 
         if ($variable instanceof ConfigVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.config"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.config"], $this->getVariableName()]));
     }
 
     public function createFormElement(array $variables): Element {
-        return new ConfigVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new ConfigVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

@@ -92,12 +92,12 @@ class GetEntitySidePosition extends SimpleAction {
     }
 
     public function isDataValid(): bool {
-        return $this->getEntity()->isValid() and $this->getDirection()->isValid() and $this->getSteps()->get() !== "" and $this->getResultName()->isValid();
+        return $this->getEntity()->isValid() and $this->getDirection()->isValid() and $this->getSteps()->isValid() and $this->getResultName()->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $entity = $this->getEntity()->getOnlineEntity($source);
-        $side = $this->getDirection()->getValue();
+        $side = $this->getDirection()->getEnumValue();
         $step = $this->getSteps()->getInt($source);
         $resultName = $this->getResultName()->getString($source);
 
@@ -131,12 +131,12 @@ class GetEntitySidePosition extends SimpleAction {
         $source->addVariable($resultName, new PositionVariable(Position::fromObject($pos, $entity->getWorld())));
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName()->get() => new DummyVariable(PositionVariable::class)
+            (string)$this->getResultName() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

@@ -20,7 +20,7 @@ class SetItemLore extends SimpleAction {
 
         $this->setArguments([
             new ItemArgument("item", $item),
-            new StringArrayArgument("lore", $lore, separator: ";"),
+            new StringArrayArgument("lore", $lore, optional: true, separator: ";"),
         ]);
     }
 

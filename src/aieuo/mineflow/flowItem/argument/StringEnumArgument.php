@@ -25,14 +25,27 @@ class StringEnumArgument extends FlowItemArgument {
      */
     public function __construct(
         string                 $name,
-        string                 $value = "",
+        private string         $value = "",
         private readonly array $values = [],
         string                 $description = "",
         private \Closure|null  $keyFormatter = null,
     ) {
-        parent::__construct($name, $value, $description, false);
+        parent::__construct($name, $description);
 
         $this->keys = ($keyFormatter === null ? $values : array_map(fn(string $v) => $keyFormatter($v), $values));
+    }
+
+    public function value(string $value): self {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function getEnumValue(): string {
+        return $this->value;
+    }
+
+    public function getEnumKey(): string {
+        return $this->keyFormatter === null ? $this->getEnumValue() : ($this->keyFormatter)($this->getEnumValue());
     }
 
     /**
@@ -44,20 +57,12 @@ class StringEnumArgument extends FlowItemArgument {
         return $this;
     }
 
-    public function getValue(): string {
-        return (string)$this->get();
-    }
-
-    public function getKey(): string {
-        return $this->keyFormatter === null ? $this->getValue() : ($this->keyFormatter)($this->getValue());
-    }
-
     public function isValid(): bool {
-        return in_array($this->getValue(), $this->values, true);
+        return in_array($this->getEnumValue(), $this->values, true);
     }
 
     public function createFormElement(array $variables): Element {
-        $default = $this->getKey();
+        $default = $this->getEnumKey();
         $options = $this->keys;
         $index = array_search($default, $options, true);
         return new Dropdown($this->getDescription(), $options, $index === false ? 0 : $index);
@@ -69,7 +74,15 @@ class StringEnumArgument extends FlowItemArgument {
         });
     }
 
+    public function jsonSerialize(): string {
+        return $this->getEnumValue();
+    }
+
+    public function load(mixed $value): void {
+        $this->value($value);
+    }
+
     public function __toString(): string {
-        return $this->getKey();
+        return $this->getEnumKey();
     }
 }

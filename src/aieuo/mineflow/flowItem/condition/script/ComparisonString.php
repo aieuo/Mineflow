@@ -50,7 +50,7 @@ class ComparisonString extends SimpleCondition {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $value1 = $this->getValue1()->getString($source);
         $value2 = $this->getValue2()->getString($source);
-        $operator = $this->getOperator()->getValue();
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::EQUALS => $value1 === $value2,

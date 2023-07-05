@@ -65,13 +65,13 @@ class PositionVariableAddition extends SimpleAction {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getResultName()->get();
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
-        $desc = $this->getPosition()->get()." + (".$this->getX()->get().",".$this->getY()->get().",".$this->getZ()->get().")";
+        $desc = $this->getPosition()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
         return [
-            $this->getResultName()->get() => new DummyVariable(PositionVariable::class, $desc)
+            (string)$this->getResultName() => new DummyVariable(PositionVariable::class, $desc)
         ];
     }
 }

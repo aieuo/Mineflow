@@ -9,7 +9,6 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use function array_map;
 
 abstract class SimpleFlowItem extends FlowItem {
     use HasSimpleEditForm;
@@ -55,7 +54,7 @@ abstract class SimpleFlowItem extends FlowItem {
 
     private function updateArgumentDescription(FlowItemArgument $argument): void {
         $type = $this instanceof Condition ? "condition" : "action";
-        $argument->setDescription("@{$type}.{$this->getId()}.form.{$argument->getName()}");
+        $argument->description("@{$type}.{$this->getId()}.form.{$argument->getName()}");
     }
 
     public function isDataValid(): bool {
@@ -73,12 +72,12 @@ abstract class SimpleFlowItem extends FlowItem {
 
     public function loadSaveData(array $content): void {
         foreach ($content as $i => $value) {
-            $this->arguments[$i]->set($value);
+            $this->arguments[$i]->load($value);
         }
     }
 
     public function serializeContents(): array {
-        return array_map(fn(FlowItemArgument $value) => $value->get(), $this->getArguments());
+        return $this->getArguments();
     }
 
     public function __clone(): void {

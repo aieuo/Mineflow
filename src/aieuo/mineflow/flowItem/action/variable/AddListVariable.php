@@ -17,7 +17,6 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use SOFe\AwaitGenerator\Await;
-use function implode;
 
 class AddListVariable extends SimpleAction {
 
@@ -70,7 +69,7 @@ class AddListVariable extends SimpleAction {
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName()->get() => new DummyVariable(ListVariable::class, "[".implode(",", $this->getValue()->get())."]")
+            (string)$this->getVariableName() => new DummyVariable(ListVariable::class, "[".$this->getValue()."]")
         ];
     }
 }

@@ -51,6 +51,6 @@ class RemoveItemData extends SimpleAction {
         }
 
         yield Await::ALL;
-        return $this->getItem()->get();
+        return (string)$this->getItem();
     }
 }

@@ -12,7 +12,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EventVariable;
 use pocketmine\event\Event;
 
-class EventArgument extends FlowItemArgument {
+class EventArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.event", $optional);
@@ -22,24 +22,24 @@ class EventArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getEvent(FlowItemExecutor $executor): Event {
-        $event = $executor->replaceVariables($this->get());
+        $event = $executor->replaceVariables($this->getVariableName());
 
         $variable = $executor->getVariable($event);
         if ($variable instanceof EventVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.event"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.event"], $this->getVariableName()]));
     }
 
     public function createTypeMismatchedException(string $eventName): InvalidPlaceholderValueException {
         return new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [
             Language::get("action.target.require.event")."(".$eventName.")",
-            $this->get(),
+            $this->getVariableName(),
         ]));
     }
 
     public function createFormElement(array $variables): Element {
-        return new EventVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new EventVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }

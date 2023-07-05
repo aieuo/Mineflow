@@ -32,7 +32,7 @@ class HasPermission extends SimpleCondition {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $player = $this->getPlayer()->getOnlinePlayer($source);
-        $permission = $this->getPlayerPermission()->get();
+        $permission = $this->getPlayerPermission()->getString($source);
 
         yield Await::ALL;
         return $player->hasPermission($permission);

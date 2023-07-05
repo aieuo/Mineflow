@@ -11,6 +11,8 @@ use aieuo\mineflow\utils\Utils;
 
 class NumberArgument extends FlowItemArgument {
 
+    private string $value;
+
     /**
      * @param string $name
      * @param string|float|int|null $value
@@ -29,9 +31,34 @@ class NumberArgument extends FlowItemArgument {
         private ?float        $min = null,
         private ?float        $max = null,
         private array         $excludes = [],
-        bool                  $optional = false,
+        private bool          $optional = false,
     ) {
-        parent::__construct($name, (string)$value, $description, $optional);
+        parent::__construct($name, $description);
+
+        $this->value = (string)$value;
+    }
+
+    public function value(string|float|int $value): static {
+        $this->value = (string)$value;
+        return $this;
+    }
+
+    public function getRawString(): string {
+        return $this->value;
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public function getInt(FlowItemExecutor $executor): int {
+        return Utils::getInt($executor->replaceVariables($this->getRawString()), $this->getMin(), $this->getMax(), $this->getExcludes());
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public function getFloat(FlowItemExecutor $executor): float {
+        return Utils::getFloat($executor->replaceVariables($this->getRawString()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     public function example(string $example): self {
@@ -75,29 +102,45 @@ class NumberArgument extends FlowItemArgument {
         return $this->excludes;
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
-    public function getInt(FlowItemExecutor $executor): int {
-        return Utils::getInt($executor->replaceVariables($this->get()), $this->getMin(), $this->getMax(), $this->getExcludes());
+    public function optional(): static {
+        $this->optional = true;
+        return $this;
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
-    public function getFloat(FlowItemExecutor $executor): float {
-        return Utils::getFloat($executor->replaceVariables($this->get()), $this->getMin(), $this->getMax(), $this->getExcludes());
+    public function required(): static {
+        $this->optional = false;
+        return $this;
+    }
+
+    public function isOptional(): bool {
+        return $this->optional;
+    }
+
+    public function isValid(): bool {
+        return $this->isOptional() or $this->getRawString() !== "";
     }
 
     public function createFormElement(array $variables): Element {
         return new ExampleNumberInput(
             $this->getDescription(),
             $this->getExample(),
-            $this->get(),
+            $this->getRawString(),
             required: !$this->isOptional(),
             min: (float)$this->getMin(),
             max: (float)$this->getMax(),
             excludes: $this->getExcludes(),
         );
+    }
+
+    public function jsonSerialize(): string {
+        return $this->getRawString();
+    }
+
+    public function load(mixed $value): void {
+        $this->value($value);
+    }
+
+    public function __toString(): string {
+        return $this->getRawString();
     }
 }

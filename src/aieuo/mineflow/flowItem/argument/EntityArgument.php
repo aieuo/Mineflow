@@ -13,7 +13,7 @@ use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 use pocketmine\player\Player;
 
-class EntityArgument extends FlowItemArgument {
+class EntityArgument extends ObjectVariableArgument {
 
     public function __construct(string $name, string $value = "", string $description = null, bool $optional = false) {
         parent::__construct($name, $value, $description ?? "@action.form.target.entity", $optional);
@@ -23,14 +23,14 @@ class EntityArgument extends FlowItemArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getEntity(FlowItemExecutor $executor): Entity {
-        $entity = $executor->replaceVariables($this->get());
+        $entity = $executor->replaceVariables($this->getVariableName());
 
         $variable = $executor->getVariable($entity);
         if ($variable instanceof EntityVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.entity"], $this->get()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.entity"], $this->getVariableName()]));
     }
 
     /**
@@ -45,6 +45,6 @@ class EntityArgument extends FlowItemArgument {
     }
 
     public function createFormElement(array $variables): Element {
-        return new EntityVariableDropdown($variables, $this->get(), $this->getDescription(), $this->isOptional());
+        return new EntityVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
     }
 }
