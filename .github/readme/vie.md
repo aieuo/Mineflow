@@ -17,23 +17,23 @@
 
 ---
 
-# English
+# Tiếng Việt
 
-You can combine actions and create something like a plugin without any coding knowledge.  
-**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
+Bạn có thể kết hợp các hành động và tạo thứ gì đó giống như plugin mà không cần bất kỳ kiến thức viết mã nào.  
+**Một số tác vụ được ẩn theo mặc định để ngăn lạm dụng. Để hiển thị tất cả, vui lòng chạy `mineflow permission add <tên của bạn> all` từ bảng điều khiển.**
 
-## Command
+## Lệnh
 
-| command                                         | description                      |
-| ----------------------------------------------- | -------------------------------- |
-| /mineflow language <eng &#124; jpn ind>         | Change language                  |
-| /mineflow recipe [add &#124; edit &#124; list]  | Manage recipes                   |
-| /mineflow command [add &#124; edit &#124; list] | Manage command triggers          |
-| /mineflow form                                  | Manage form triggers             |
-| /mineflow permission <name> <level>             | Change player's permission level |
-| /mineflow setting                               | Setting                          |
+| lệnh                                            | mô tả                                |
+| ----------------------------------------------- | ------------------------------------ |
+| /mineflow language <eng &#124; jpn ind>         | Thay đổi ngôn ngữ                    |
+| /mineflow recipe [add &#124; edit &#124; list]  | Quản lý các công thức chế tạo        |
+| /mineflow command [add &#124; edit &#124; list] | Quản lý trình kích hoạt lệnh         |
+| /mineflow form                                  | Quản lý trình kích hoạt biểu mẫu     |
+| /mineflow permission <name> <level>             | Thay đổi cấp độ quyền của người chơi |
+| /mineflow setting                               | Cài đặt                              |
 
-## ActionPermission
+## Quyền Hành Động
 
 To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
 
@@ -89,6 +89,6 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 
 Set the permissions of the command to `anyone can execute` on the form to add the command or in the command menu.
 
-## Copyright
+## Bản quyền
 
-Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
+Các biểu tượng được tạo bởi [Pause08](https://www.flaticon.com/authors/pause08) từ [www.flaticon.com](https://www.flaticon.com/)
