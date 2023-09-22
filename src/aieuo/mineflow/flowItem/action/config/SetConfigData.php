@@ -16,7 +16,7 @@ use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
@@ -67,7 +67,7 @@ class SetConfigData extends FlowItem implements ConfigFileFlowItem {
         $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
             $variable = $source->getVariable(substr($value, 1, -1)) ?? VariableRegistry::global()->get(substr($value, 1, -1)) ?? $value;
-            if ($variable instanceof ListVariable) {
+            if ($variable instanceof IteratorVariable) {
                 $value = $variable->toArray();
             } else if ($variable instanceof NumberVariable) {
                 $value = $variable->getValue();

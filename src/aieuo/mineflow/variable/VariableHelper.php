@@ -503,7 +503,7 @@ class VariableHelper {
         return $result;
     }
 
-    public function arrayToListVariable(array $data): ListVariable {
+    public function arrayToListVariable(array $data): ListVariable|MapVariable {
         $variableArray = $this->toVariableArray($data);
 
         if (array_is_list($variableArray)) return new ListVariable($variableArray);
