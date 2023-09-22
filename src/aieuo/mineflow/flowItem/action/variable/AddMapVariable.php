@@ -18,6 +18,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class AddMapVariable extends FlowItem {
@@ -76,7 +77,7 @@ class AddMapVariable extends FlowItem {
 
         $value = $this->getVariableValue();
         $addVariable = $helper->copyOrCreateVariable($value, $source);
-        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->isLocal ? $source->getVariable($name) : VariableRegistry::global()->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }

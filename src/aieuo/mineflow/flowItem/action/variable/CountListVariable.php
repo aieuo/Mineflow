@@ -12,11 +12,11 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class CountListVariable extends FlowItem {
@@ -64,7 +64,7 @@ class CountListVariable extends FlowItem {
         $name = $source->replaceVariables($this->getVariableName());
         $resultName = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($name) ?? Mineflow::getVariableHelper()->getNested($name);
+        $variable = $source->getVariable($name) ?? VariableRegistry::global()->getNested($name);
 
         if (!($variable instanceof ListVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.count.error.notList"));

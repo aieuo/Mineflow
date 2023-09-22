@@ -14,9 +14,9 @@ use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
-use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class DeleteListVariableContent extends FlowItem {
@@ -60,11 +60,10 @@ class DeleteListVariableContent extends FlowItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
 
-        $variable = ($this->isLocal ? $source->getVariable($name) : $helper->getNested($name));
+        $variable = ($this->isLocal ? $source->getVariable($name) : VariableRegistry::global()->getNested($name));
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }

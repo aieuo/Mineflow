@@ -17,6 +17,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
@@ -66,7 +67,7 @@ class DeleteListVariableContentByValue extends FlowItem {
 
         $value = $this->getValue();
         if ($helper->isVariableString($value)) {
-            $value = $source->getVariable(mb_substr($value, 1, -1)) ?? $helper->getNested(mb_substr($value, 1, -1));
+            $value = $source->getVariable(mb_substr($value, 1, -1)) ?? VariableRegistry::global()->getNested(mb_substr($value, 1, -1));
             if ($value === null) {
                 throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
             }
@@ -74,7 +75,7 @@ class DeleteListVariableContentByValue extends FlowItem {
             $value = new StringVariable($source->replaceVariables($this->getValue()));
         }
 
-        $variable = $source->getVariable($name) ?? ($this->isLocal ? null : $helper->getNested($name));
+        $variable = $source->getVariable($name) ?? ($this->isLocal ? null : VariableRegistry::global()->getNested($name));
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }

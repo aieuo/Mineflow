@@ -18,6 +18,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 use function array_map;
 use function explode;
@@ -73,7 +74,7 @@ class AddListVariable extends FlowItem {
         $name = $source->replaceVariables($this->getVariableName());
         $values = $this->getVariableValue();
 
-        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->isLocal ? $source->getVariable($name) : VariableRegistry::global()->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }

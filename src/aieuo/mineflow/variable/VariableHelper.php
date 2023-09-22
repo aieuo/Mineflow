@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace aieuo\mineflow\variable;
@@ -43,12 +42,24 @@ use pocketmine\nbt\tag\Tag;
 use pocketmine\utils\Config;
 use function array_is_list;
 use function array_map;
+use function array_pop;
+use function array_shift;
+use function explode;
+use function implode;
 use function is_array;
 use function is_bool;
 use function is_null;
 use function is_numeric;
+use function is_string;
 use function preg_match;
+use function preg_match_all;
+use function str_contains;
+use function str_replace;
+use function str_starts_with;
 use function substr;
+use const JSON_BIGINT_AS_STRING;
+use const JSON_PRETTY_PRINT;
+use const JSON_UNESCAPED_UNICODE;
 
 class VariableHelper {
 
@@ -58,7 +69,10 @@ class VariableHelper {
     /** @var array<string, array<string, CustomVariableData>> */
     private array $customVariableData = [];
 
-    public function __construct(private Config $file, private Config $customDataFile) {
+    public function __construct(
+        private readonly Config $file,
+        private readonly Config $customDataFile
+    ) {
         $this->file->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
         $this->customDataFile->setJsonOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING);
 
@@ -67,6 +81,7 @@ class VariableHelper {
     }
 
     public function loadVariables(): void {
+        $globalVariableRegistry = VariableRegistry::global();
         foreach ($this->file->getAll() as $name => $data) {
             $variable = VariableDeserializer::deserialize($data);
 
@@ -75,7 +90,7 @@ class VariableHelper {
                 continue;
             }
 
-            $this->variables[$name] = $variable;
+            $globalVariableRegistry->add($name, $variable);
         }
 
         foreach ($this->customDataFile->getAll() as $type => $values) {
@@ -111,47 +126,18 @@ class VariableHelper {
         return isset($this->variables[$name]);
     }
 
-    public function get(string $name): ?Variable {
-        return $this->variables[$name] ?? null;
-    }
-
-    public function getNested(string $name): ?Variable {
-        $names = explode(".", $name);
-        $name = array_shift($names);
-        if (!$this->exists($name)) return null;
-
-        $variable = $this->get($name);
-        foreach ($names as $name1) {
-            if (!($variable instanceof Variable)) return null;
-            $variable = $variable->getProperty($name1);
-        }
-        return $variable;
-    }
-
-    public function getAll(): array {
-        return $this->variables;
-    }
-
-    public function add(string $name, Variable $variable): void {
-        $this->variables[$name] = $variable;
-    }
-
-    public function delete(string $name): void {
-        unset($this->variables[$name]);
-
-        $this->file->remove($name);
-    }
-
     public function saveAll(): void {
-        foreach ($this->variables as $name => $variable) {
+        $globalVariables = [];
+        foreach (VariableRegistry::global()->getAll() as $name => $variable) {
             $serialized = VariableSerializer::serialize($variable);
 
             if ($serialized !== null) {
-                $this->file->set($name, $serialized);
+                $globalVariables[$name] = $serialized;
             } elseif ($variable instanceof \JsonSerializable) {
-                $this->file->set($name, $variable);
+                $globalVariables[$name] = $variable;
             }
         }
+        $this->file->setAll($globalVariables);
         $this->file->save();
 
         foreach ($this->customVariableData as $type => $values) {
@@ -436,7 +422,7 @@ class VariableHelper {
         $name = array_shift($names);
         if (!isset($variables[$name]) and !$this->exists($name)) throw new UndefinedMineflowVariableException($name);
 
-        $variable = $variables[$name] ?? ($global ? $this->get($name) : null);
+        $variable = $variables[$name] ?? ($global ? VariableRegistry::global()->get($name) : null);
         if ($variable === null) throw new UndefinedMineflowVariableException($name);
 
         $tmp = $name;
@@ -454,7 +440,7 @@ class VariableHelper {
 
     public function copyOrCreateVariable(string $value, ?FlowItemExecutor $executor = null): Variable {
         if ($this->isSimpleVariableString($value)) {
-            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? $this->getNested(substr($value, 1, -1));
+            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? VariableRegistry::global()->getNested(substr($value, 1, -1));
             if ($variable !== null) {
                 return $variable;
             }

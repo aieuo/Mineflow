@@ -16,6 +16,7 @@ use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class ExistsListVariableKey extends FlowItem implements Condition {
@@ -63,7 +64,7 @@ class ExistsListVariableKey extends FlowItem implements Condition {
         $name = $source->replaceVariables($this->getVariableName());
         $key = $source->replaceVariables($this->getKey());
 
-        $variable = $this->isLocal ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->isLocal ? $source->getVariable($name) : VariableRegistry::global()->get($name);
         if (!($variable instanceof ListVariable)) return false;
         $value = $variable->getValue();
 

@@ -23,6 +23,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
@@ -83,7 +84,7 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $listName = $source->replaceVariables($this->listVariableName);
-        $list = $source->getVariable($listName) ?? Mineflow::getVariableHelper()->getNested($listName);
+        $list = $source->getVariable($listName) ?? VariableRegistry::global()->getNested($listName);
         $keyName = $source->replaceVariables($this->keyVariableName);
         $valueName = $source->replaceVariables($this->valueVariableName);
 

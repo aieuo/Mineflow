@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class ExistsVariable extends FlowItem implements Condition {
@@ -44,11 +44,12 @@ class ExistsVariable extends FlowItem implements Condition {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Mineflow::getVariableHelper();
         $name = $source->replaceVariables($this->getVariableName());
 
         yield Await::ALL;
-        return $source->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
+        return $source->getVariable($name) !== null
+            or VariableRegistry::global()->get($name) !== null
+            or VariableRegistry::global()->getNested($name) !== null;
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {

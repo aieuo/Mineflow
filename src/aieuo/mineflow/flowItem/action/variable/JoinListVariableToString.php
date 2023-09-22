@@ -16,6 +16,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
@@ -73,7 +74,7 @@ class JoinListVariableToString extends FlowItem {
         $separator = $source->replaceVariables($this->getSeparator());
         $result = $source->replaceVariables($this->getResultName());
 
-        $variable = $source->getVariable($name) ?? $helper->getNested($name);
+        $variable = $source->getVariable($name) ?? VariableRegistry::global()->getNested($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
