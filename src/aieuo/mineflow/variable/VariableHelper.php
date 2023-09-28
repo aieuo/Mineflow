@@ -3,14 +3,8 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\exception\MineflowMethodErrorException;
-use aieuo\mineflow\exception\UndefinedMineflowMethodException;
-use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
-use aieuo\mineflow\exception\UndefinedMineflowVariableException;
-use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\global\DefaultGlobalMethodVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
@@ -45,16 +39,10 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\nbt\tag\Tag;
 use pocketmine\utils\Config;
 use function array_is_list;
-use function array_map;
-use function array_pop;
-use function array_shift;
-use function explode;
-use function implode;
 use function is_array;
 use function is_bool;
 use function is_null;
 use function is_numeric;
-use function is_string;
 use function preg_match;
 use function preg_match_all;
 use function str_contains;
@@ -228,104 +216,6 @@ class VariableHelper {
         $tokens = (new VariableLexer($replace))->lexer();
         $ast = (new VariableParser($tokens))->parse();
         return (new VariableEvaluator(new VariableRegistry($variables), $global))->eval($ast);
-    }
-
-    /**
-     * @param string|array|Variable $ast
-     * @param array<string, Variable> $variables
-     * @param bool $global
-     * @return Variable
-     */
-    public function runAST(string|array|Variable $ast, array $variables = [], bool $global = false): Variable {
-        if (is_string($ast)) return $this->mustGetVariableNested($ast, $variables, $global);
-        if ($ast instanceof Variable) return $ast;
-
-        if (!isset($ast["left"])) {
-            $result = "";
-            foreach ($ast as $value) {
-                if (is_array($value)) $result .= (",".$this->runAST($value, $variables, $global));
-                else $result .= (",".$value);
-            }
-            return $this->mustGetVariableNested(substr($result, 1), $variables, $global);
-        }
-
-        $op = $ast["op"];
-        $left = is_array($ast["left"]) ? $this->runAST($ast["left"], $variables, $global) : $ast["left"];
-        if (is_array($ast["right"]) and ($op !== "()" or isset($ast["right"]["op"]))) {
-            $right = $this->runAST($ast["right"], $variables, $global);
-        } else {
-            $right = $ast["right"];
-        }
-
-        if (is_string($left)) {
-            if ($op === "()") {
-                return $this->runMethodCall($left, !is_array($right) ? [$right] : $right, $variables, $global);
-            }
-
-            $left = $this->mustGetVariableNested($left, $variables, $global);
-        }
-
-        if (is_string($right)) {
-            $right = $this->mustGetVariableNested($right, $variables, $global);
-        }
-
-        return match ($op) {
-            "+" => $left->add($right),
-            "-" => $left->sub($right),
-            "*" => $left->mul($right),
-            "/" => $left->div($right),
-            default => throw new UnsupportedCalculationException(),
-        };
-    }
-
-    public function runMethodCall(string $left, array $right, array $variables, bool $global): Variable {
-        $tmp = explode(".", $left);
-        $name = array_pop($tmp);
-        $target = implode(".", $tmp);
-
-        if ($target === "") {
-            $variable = new DefaultGlobalMethodVariable();
-        } else {
-            $variable = $this->mustGetVariableNested($target, $variables, $global);
-        }
-
-        try {
-            $result = $variable->callMethod($name, array_map(function (mixed $arg) {
-                if ($arg instanceof Variable) {
-                    $arg = $this->variableArrayToArray([$arg])[0];
-                }
-                return $arg;
-            }, $right));
-        } catch (\Error $e) {
-            if (Mineflow::isDebug()) {
-                Main::getInstance()->getLogger()->logException($e);
-            }
-            throw new MineflowMethodErrorException($target, $name, $e->getMessage());
-        }
-
-        if ($result === null) throw new UndefinedMineflowMethodException($target, $name);
-        return $result;
-    }
-
-    public function mustGetVariableNested(string $name, array $variables = [], bool $global = false): Variable {
-        $names = explode(".", $name);
-        $name = array_shift($names);
-        if (!isset($variables[$name]) and !$this->exists($name)) throw new UndefinedMineflowVariableException($name);
-
-        $variable = $variables[$name] ?? ($global ? VariableRegistry::global()->get($name) : null);
-        if ($variable === null) throw new UndefinedMineflowVariableException($name);
-
-        $tmp = $name;
-        foreach ($names as $name1) {
-            $variable = $variable->getProperty($name1);
-
-            if ($variable === null) {
-                throw new UndefinedMineflowPropertyException($tmp, $name1);
-            }
-            $tmp .= ".".$name1;
-        }
-
-        return $variable;
     }
 
     public function copyOrCreateVariable(string $value, ?FlowItemExecutor $executor = null): Variable {
