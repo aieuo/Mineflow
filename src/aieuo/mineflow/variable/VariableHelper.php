@@ -31,6 +31,10 @@ use aieuo\mineflow\variable\object\ServerVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
 use aieuo\mineflow\variable\object\Vector3Variable;
 use aieuo\mineflow\variable\object\WorldVariable;
+use aieuo\mineflow\variable\parser\VariableEvaluator;
+use aieuo\mineflow\variable\parser\VariableLexer;
+use aieuo\mineflow\variable\parser\VariableParser;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -221,123 +225,9 @@ class VariableHelper {
      * @return Variable
      */
     public function runVariableStatement(string $replace, array $variables = [], bool $global = true): Variable {
-        $tokens = $this->lexer($replace);
-        $ast = $this->parse($tokens);
-        return $this->runAST($ast, $variables, $global);
-    }
-
-    public function lexer(string $source): array {
-        $source = preg_replace("/\[(.*?)]/u", ".$1", $source);
-
-        $tokens = [];
-        $token = "";
-        $brackets = 0;
-        $escape = false;
-
-        foreach (preg_split("//u", $source, -1, PREG_SPLIT_NO_EMPTY) as $char) {
-            if ($escape) {
-                $token .= $char;
-                $escape = false;
-                continue;
-            }
-
-            switch ($char) {
-                case "\\":
-                    $escape = true;
-                    break;
-                case "+":
-                case "-":
-                case "*":
-                case "/":
-                case "(":
-                case ")":
-                    $tokens[] = trim($token);
-                    $tokens[] = $char;
-                    $token = "";
-
-                    if ($char === "(") {
-                        $brackets ++;
-                    } elseif ($char === ")") {
-                        $brackets --;
-                    }
-                    break;
-                case ",":
-                    if ($brackets > 0) {
-                        $tokens[] = trim($token);
-                        $tokens[] = $char;
-                        $token = "";
-                    } else {
-                        $token .= $char;
-                    }
-                    break;
-                default:
-                    $token .= $char;
-                    break;
-            }
-        }
-        $tokens[] = trim($token);
-        return array_values(array_filter($tokens, fn($token) => $token !== ""));
-    }
-
-    public function parse(array &$tokens, int $priority = 0): string|array|Variable {
-        $rules = [
-            ["type" => 1, "ops" => [","]],
-            ["type" => 0, "ops" => ["+", "-"]], // 1 + 2, 1 - 2
-            ["type" => 0, "ops" => ["*", "/"]], // 1 * 2, 1 / 2
-            ["type" => 2, "ops" => ["+", "-"]], // +1, -1
-            ["type" => 3, "ops" => ["("]], //method aiueo(1)
-            ["type" => 4, "ops" => ["("]], // (1 + 2)
-        ];
-
-        if (!isset($rules[$priority])) {
-            $value = array_shift($tokens);
-            return is_numeric($value) ? new NumberVariable((float)$value) : $value;
-        }
-
-        $type = $rules[$priority]["type"];
-        $ops = $rules[$priority]["ops"];
-
-        if ($type === 1) {
-            $left = $this->parse($tokens, $priority + 1);
-            $list = [$left];
-            while (count($tokens) > 0 and in_array($tokens[0], $ops, true)) {
-                array_shift($tokens);
-                $list[] = $this->parse($tokens, $priority + 1);
-            }
-            return count($list) > 1 ? $list : $left;
-        }
-
-        if (($type === 2 or $type === 4) and !in_array($tokens[0], $ops, true)) {
-            return $this->parse($tokens, $priority + 1);
-        }
-
-        if ($type === 2) {
-            return ["left" => 0, "op" => array_shift($tokens), "right" => $this->parse($tokens, $priority + 1)];
-        }
-        if ($type === 4) {
-            array_shift($tokens); // (
-            $right = $this->parse($tokens);
-            array_shift($tokens); // )
-            return $right;
-        }
-
-        $left = $this->parse($tokens, $priority + 1);
-        if ($type === 3) {
-            while (isset($tokens[0]) and in_array($tokens[0], $ops, true)) {
-                array_shift($tokens); // (
-                $right = $tokens[0] === ")" ? "" : $this->parse($tokens);
-                array_shift($tokens); // )
-                $tmp = $left;
-                $left = ["left" => $tmp, "op" => "()", "right" => $right];
-            }
-            return $left;
-        }
-
-        while (isset($tokens[0]) and in_array($tokens[0], $ops, true)) {
-            $tmp = $left;
-            $left = ["left" => $tmp, "op" => array_shift($tokens), "right" => $this->parse($tokens, $priority + 1)];
-        }
-        return $left;
+        $tokens = (new VariableLexer($replace))->lexer();
+        $ast = (new VariableParser($tokens))->parse();
+        return (new VariableEvaluator(new VariableRegistry($variables), $global))->eval($ast);
     }
 
     /**
