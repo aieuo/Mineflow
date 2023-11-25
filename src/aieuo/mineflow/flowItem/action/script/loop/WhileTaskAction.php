@@ -79,7 +79,7 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $wait = new Wait((string)($this->getInterval() / 20));
+        $wait = new Wait($this->getInterval() / 20);
         while (true) {
             $source->addVariable("i", new NumberVariable($this->loopCount)); // TODO: i を変更できるようにする
             foreach ($this->getConditions() as $i => $condition) {
