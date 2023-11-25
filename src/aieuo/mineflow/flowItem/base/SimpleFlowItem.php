@@ -65,8 +65,8 @@ abstract class SimpleFlowItem extends FlowItem {
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        foreach ($this->getArguments() as $placeholder) {
-            $placeholder->buildEditPage($builder, $variables);
+        foreach ($this->getArguments() as $argument) {
+            $builder->elements($argument->createFormElements($variables), $argument->handleFormResponse(...));
         }
     }
 

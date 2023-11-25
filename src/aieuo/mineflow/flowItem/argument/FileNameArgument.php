@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\utils\Utils;
 
 class FileNameArgument extends StringArgument {
@@ -19,11 +19,15 @@ class FileNameArgument extends StringArgument {
         parent::__construct($name, $value, $description, $example, $optional);
     }
 
-    public function buildEditPage(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->element($this->createFormElement($variables), function (string $data) {
-            if (!Utils::isValidFileName($data)) {
-                throw new \UnexpectedValueException("@form.recipe.invalidName", 0);
-            }
-        });
+    /**
+     * @param array{0: string} $data
+     * @return void
+     */
+    public function handleFormResponse(...$data): void {
+        if (!Utils::isValidFileName($data[0])) {
+            throw new InvalidFormValueException("@form.recipe.invalidName", 0);
+        }
+
+        $this->value($data[0]);
     }
 }

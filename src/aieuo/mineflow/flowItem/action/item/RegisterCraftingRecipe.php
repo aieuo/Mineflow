@@ -168,16 +168,16 @@ class RegisterCraftingRecipe extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->ingredients[0]->createFormElement($variables),
-            $this->ingredients[1]->createFormElement($variables),
-            $this->ingredients[2]->createFormElement($variables),
-            $this->ingredients[3]->createFormElement($variables),
-            $this->ingredients[4]->createFormElement($variables),
-            $this->ingredients[5]->createFormElement($variables),
-            $this->ingredients[6]->createFormElement($variables),
-            $this->ingredients[7]->createFormElement($variables),
-            $this->ingredients[8]->createFormElement($variables),
-            $this->output->createFormElement($variables),
+            $this->ingredients[0]->createFormElements($variables)[0],
+            $this->ingredients[1]->createFormElements($variables)[0],
+            $this->ingredients[2]->createFormElements($variables)[0],
+            $this->ingredients[3]->createFormElements($variables)[0],
+            $this->ingredients[4]->createFormElements($variables)[0],
+            $this->ingredients[5]->createFormElements($variables)[0],
+            $this->ingredients[6]->createFormElements($variables)[0],
+            $this->ingredients[7]->createFormElements($variables)[0],
+            $this->ingredients[8]->createFormElements($variables)[0],
+            $this->output->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->preprocess(function (array $data) {
                 $result = array_pop($data);

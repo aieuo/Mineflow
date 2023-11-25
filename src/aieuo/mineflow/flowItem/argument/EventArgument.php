@@ -6,7 +6,6 @@ namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\EventVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\EventVariable;
@@ -39,7 +38,9 @@ class EventArgument extends ObjectVariableArgument {
         ]));
     }
 
-    public function createFormElement(array $variables): Element {
-        return new EventVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
+    public function createFormElements(array $variables): array {
+        return [
+            new EventVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+        ];
     }
 }

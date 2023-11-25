@@ -103,8 +103,8 @@ class AddVariable extends FlowItem {
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $index = array_search($this->variableType, $this->variableTypes, true);
         $builder->elements([
-            $this->variableName->createFormElement($variables),
-            $this->variableValue->createFormElement($variables),
+            $this->variableName->createFormElements($variables)[0],
+            $this->variableValue->createFormElements($variables)[0],
             new Dropdown("@action.variable.form.type", array_values(array_unique($this->variableTypes)), $index === false ? 0 : $index),
             new Toggle("@action.variable.form.global", !$this->isLocal),
         ])->response(function (CustomFormResponseProcessor $response) {

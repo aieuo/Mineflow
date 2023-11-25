@@ -51,8 +51,8 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->recipeName->createFormElement($variables),
-            $this->entity->createFormElement($variables),
+            $this->recipeName->createFormElements($variables)[0],
+            $this->entity->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->clear();
         });

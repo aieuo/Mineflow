@@ -120,9 +120,9 @@ class SendMenuForm extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $contents = [
-            $this->player->createFormElement($variables),
-            $this->resultName->createFormElement($variables),
-            $this->formText->createFormElement($variables),
+            $this->player->createFormElements($variables)[0],
+            $this->resultName->createFormElements($variables)[0],
+            $this->formText->createFormElements($variables)[0],
         ];
         foreach ($this->getOptions() as $i => $option) {
             $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), Language::get("form.example", ["aieuo"]), $option);

@@ -101,11 +101,11 @@ class SendTitle extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->player->createFormElement($variables),
-            $this->title->createFormElement($variables),
-            $this->fadein->createFormElement($variables),
-            $this->stay->createFormElement($variables),
-            $this->fadeout->createFormElement($variables),
+            $this->player->createFormElements($variables)[0],
+            $this->title->createFormElements($variables)[0],
+            $this->fadein->createFormElements($variables)[0],
+            $this->stay->createFormElements($variables)[0],
+            $this->fadeout->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->validate(function (array $data) {
                 if ($data[1] === "" and $data[2] === "") {

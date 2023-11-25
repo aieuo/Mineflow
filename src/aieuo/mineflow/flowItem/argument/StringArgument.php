@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 
 class StringArgument extends FlowItemArgument {
@@ -60,13 +59,18 @@ class StringArgument extends FlowItemArgument {
         return $this->isOptional() or $this->getRawString() !== "";
     }
 
-    public function createFormElement(array $variables): Element {
-        return new ExampleInput(
-            $this->getDescription(),
-            $this->getExample(),
-            $this->getRawString(),
-            required: !$this->isOptional()
-        );
+    public function createFormElements(array $variables): array {
+        return [
+            new ExampleInput($this->getDescription(), $this->getExample(), $this->getRawString(), required: !$this->isOptional())
+        ];
+    }
+
+    /**
+     * @param array{0: string} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $this->value($data[0]);
     }
 
     public function jsonSerialize(): string {

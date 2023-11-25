@@ -75,7 +75,7 @@ class AddLanguageMappings extends FlowItem {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $elements = [
-            $this->key->createFormElement($variables),
+            $this->key->createFormElements($variables)[0],
         ];
         $mappings = $this->getMappings();
         foreach (Language::getAvailableLanguages() as $name) {

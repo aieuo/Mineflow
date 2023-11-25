@@ -80,10 +80,10 @@ class CreateItemVariable extends SimpleAction {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->getItemId()->createFormElement($variables),
-            $this->getItemCount()->createFormElement($variables),
-            $this->getItemName()->createFormElement($variables),
-            $this->getVariableName()->createFormElement($variables),
+            $this->getItemId()->createFormElements($variables)[0],
+            $this->getItemCount()->createFormElements($variables)[0],
+            $this->getItemName()->createFormElements($variables)[0],
+            $this->getVariableName()->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->rearrange([3, 0, 1, 2]);
         });

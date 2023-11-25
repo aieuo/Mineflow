@@ -54,16 +54,18 @@ class BooleanArgument extends FlowItemArgument {
         return true;
     }
 
-    public function createFormElement(array $variables): Element {
-        return new Toggle($this->getDescription(), $this->inverseToggle ? !$this->getBool() : $this->getBool());
+    public function createFormElements(array $variables): array {
+        return [
+            new Toggle($this->getDescription(), $this->inverseToggle xor $this->getBool()),
+        ];
     }
 
-    public function buildEditPage(SimpleEditFormBuilder $builder, array $variables): void {
-        $processor = null;
-        if ($this->inverseToggle) {
-            $processor = fn(bool $value) => !$value;
-        }
-        $builder->element($this->createFormElement($variables), $processor);
+    /**
+     * @param array{0: bool} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $this->value($data[0] xor $this->inverseToggle);
     }
 
     public function jsonSerialize(): bool {

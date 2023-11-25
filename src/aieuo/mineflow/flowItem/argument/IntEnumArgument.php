@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Element;
 use function count;
 
 class IntEnumArgument extends FlowItemArgument {
@@ -42,8 +41,18 @@ class IntEnumArgument extends FlowItemArgument {
         return $this->getEnumValue() >= 0 and $this->getEnumValue() < count($this->keys);
     }
 
-    public function createFormElement(array $variables): Element {
-        return new Dropdown($this->getDescription(), $this->keys, $this->getEnumValue());
+    public function createFormElements(array $variables): array {
+        return [
+            new Dropdown($this->getDescription(), $this->keys, $this->getEnumValue())
+        ];
+    }
+
+    /**
+     * @param array{0: int} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $this->value($data[0]);
     }
 
     public function jsonSerialize(): int {

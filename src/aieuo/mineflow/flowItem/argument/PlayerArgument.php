@@ -6,7 +6,6 @@ namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PlayerVariable;
@@ -43,7 +42,9 @@ class PlayerArgument extends ObjectVariableArgument {
         return $player;
     }
 
-    public function createFormElement(array $variables): Element {
-        return new PlayerVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
+    public function createFormElements(array $variables): array {
+        return [
+            new PlayerVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+        ];
     }
 }

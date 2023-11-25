@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Utils;
 
@@ -24,14 +23,14 @@ class NumberArgument extends FlowItemArgument {
      * @param bool $optional
      */
     public function __construct(
-        string                $name,
-        string|float|int|null $value = "",
-        string                $description = "",
-        private string        $example = "",
+        string                 $name,
+        string|float|int|null  $value = "",
+        string                 $description = "",
+        private string         $example = "",
         private ?float        $min = null,
         private ?float        $max = null,
-        private array         $excludes = [],
-        private bool          $optional = false,
+        private array          $excludes = [],
+        private bool           $optional = false,
     ) {
         parent::__construct($name, $description);
 
@@ -120,8 +119,8 @@ class NumberArgument extends FlowItemArgument {
         return $this->isOptional() or $this->getRawString() !== "";
     }
 
-    public function createFormElement(array $variables): Element {
-        return new ExampleNumberInput(
+    public function createFormElements(array $variables): array {
+        return [new ExampleNumberInput(
             $this->getDescription(),
             $this->getExample(),
             $this->getRawString(),
@@ -129,7 +128,15 @@ class NumberArgument extends FlowItemArgument {
             min: (float)$this->getMin(),
             max: (float)$this->getMax(),
             excludes: $this->getExcludes(),
-        );
+        )];
+    }
+
+    /**
+     * @param array{0: int|float} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $this->value($data[0]);
     }
 
     public function jsonSerialize(): string {

@@ -110,8 +110,8 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
     public function sendSettingCounter(Player $player, array $variables): void {
         (new CustomForm("@action.for.setting"))
             ->setContents([
-                $this->position1->createFormElement($variables),
-                $this->position2->createFormElement($variables),
+                $this->position1->createFormElements($variables)[0],
+                $this->position2->createFormElements($variables)[0],
                 new ExampleInput("@action.for.counterName", "pos", $this->counterName, true),
             ])->onReceive(function (Player $player, array $data) {
                 $this->position1->value($data[0]);

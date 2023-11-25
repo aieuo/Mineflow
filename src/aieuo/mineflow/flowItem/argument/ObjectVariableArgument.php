@@ -38,11 +38,19 @@ abstract class ObjectVariableArgument extends FlowItemArgument {
     }
 
     public function isValid(): bool {
-        return $this->getVariableName() !== "";
+        return $this->isOptional() or $this->getVariableName() !== "";
     }
 
     public function jsonSerialize(): string {
         return $this->getVariableName();
+    }
+
+    /**
+     * @param array{0: string} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $this->value($data[0]);
     }
 
     public function load(mixed $value): void {

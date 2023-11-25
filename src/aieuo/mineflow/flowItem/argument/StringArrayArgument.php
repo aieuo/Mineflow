@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use function array_map;
 use function explode;
@@ -104,19 +102,19 @@ class StringArrayArgument extends FlowItemArgument {
         return $this->isOptional() or $this->getRawString() !== "";
     }
 
-    public function createFormElement(array $variables): Element {
-        return new ExampleInput(
-            $this->getDescription(),
-            $this->getExample(),
-            $this->getRawString(),
-            required: !$this->isOptional()
-        );
+    public function createFormElements(array $variables): array {
+        return [
+            new ExampleInput($this->getDescription(), $this->getExample(), $this->getRawString(), required: !$this->isOptional())
+        ];
     }
 
-    public function buildEditPage(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->element($this->createFormElement($variables), function (string $data) {
-            return array_map(trim(...), explode($this->separator, $data));
-        });
+    /**
+     * @param array{0: string} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $values = array_map(trim(...), explode($this->separator, $data[0]));
+        $this->value($values);
     }
 
     public function jsonSerialize(): array {

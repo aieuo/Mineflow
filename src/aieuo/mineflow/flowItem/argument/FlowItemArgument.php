@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\formAPI\element\Element;
 
 abstract class FlowItemArgument implements \JsonSerializable {
@@ -30,11 +30,18 @@ abstract class FlowItemArgument implements \JsonSerializable {
 
     abstract public function isValid(): bool;
 
-    abstract public function createFormElement(array $variables): Element;
+    /**
+     * @param array $variables
+     * @return Element[]
+     */
+    abstract public function createFormElements(array $variables): array;
 
-    public function buildEditPage(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->element($this->createFormElement($variables));
-    }
+    /**
+     * @param mixed ...$data
+     * @return void
+     * @throws InvalidFormValueException
+     */
+    abstract public function handleFormResponse(mixed ...$data): void;
 
     abstract public function jsonSerialize(): mixed;
 

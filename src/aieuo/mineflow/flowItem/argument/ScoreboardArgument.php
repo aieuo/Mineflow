@@ -6,7 +6,6 @@ namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Scoreboard;
@@ -32,7 +31,9 @@ class ScoreboardArgument extends ObjectVariableArgument {
         throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.scoreboard"], $this->getVariableName()]));
     }
 
-    public function createFormElement(array $variables): Element {
-        return new ScoreboardVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional());
+    public function createFormElements(array $variables): array {
+        return [
+            new ScoreboardVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+        ];
     }
 }

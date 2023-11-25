@@ -65,8 +65,8 @@ class CreateBlockVariable extends SimpleAction {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->getBlockId()->createFormElement($variables),
-            $this->getVariableName()->createFormElement($variables),
+            $this->getBlockId()->createFormElements($variables)[0],
+            $this->getVariableName()->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->rearrange([1, 0]);
         });

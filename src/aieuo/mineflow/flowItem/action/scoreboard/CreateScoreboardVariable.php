@@ -71,10 +71,10 @@ class CreateScoreboardVariable extends SimpleAction {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->getBoardId()->createFormElement($variables),
-            $this->getDisplayName()->createFormElement($variables),
-            $this->getDisplayType()->createFormElement($variables),
-            $this->getVariableName()->createFormElement($variables),
+            $this->getBoardId()->createFormElements($variables)[0],
+            $this->getDisplayName()->createFormElements($variables)[0],
+            $this->getDisplayType()->createFormElements($variables)[0],
+            $this->getVariableName()->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->rearrange([3, 0, 1, 2]);
         });

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Element;
 use function array_map;
 use function array_search;
 use function in_array;
@@ -61,17 +59,21 @@ class StringEnumArgument extends FlowItemArgument {
         return in_array($this->getEnumValue(), $this->values, true);
     }
 
-    public function createFormElement(array $variables): Element {
+    public function createFormElements(array $variables): array {
         $default = $this->getEnumKey();
         $options = $this->keys;
         $index = array_search($default, $options, true);
-        return new Dropdown($this->getDescription(), $options, $index === false ? 0 : $index);
+        return [
+            new Dropdown($this->getDescription(), $options, $index === false ? 0 : $index)
+        ];
     }
 
-    public function buildEditPage(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->element($this->createFormElement($variables), function (int $data) {
-            return $this->values[$data];
-        });
+    /**
+     * @param array{0: int} $data
+     * @return void
+     */
+    public function handleFormResponse(mixed ...$data): void {
+        $this->value($this->values[$data[0]]);
     }
 
     public function jsonSerialize(): string {

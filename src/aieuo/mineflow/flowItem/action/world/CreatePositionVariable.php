@@ -78,11 +78,11 @@ class CreatePositionVariable extends SimpleAction {
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
         $builder->elements([
-            $this->getX()->createFormElement($variables),
-            $this->getY()->createFormElement($variables),
-            $this->getZ()->createFormElement($variables),
-            $this->getWorld()->createFormElement($variables),
-            $this->getVariableName()->createFormElement($variables),
+            $this->getX()->createFormElements($variables)[0],
+            $this->getY()->createFormElements($variables)[0],
+            $this->getZ()->createFormElements($variables)[0],
+            $this->getWorld()->createFormElements($variables)[0],
+            $this->getVariableName()->createFormElements($variables)[0],
         ])->response(function (CustomFormResponseProcessor $response) {
             $response->rearrange([4, 0, 1, 2, 3]);
         });
