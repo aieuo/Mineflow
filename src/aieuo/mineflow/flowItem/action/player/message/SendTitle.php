@@ -12,8 +12,8 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use SOFe\AwaitGenerator\Await;
 
@@ -106,7 +106,7 @@ class SendTitle extends FlowItem {
             $this->fadein->createFormElement($variables),
             $this->stay->createFormElement($variables),
             $this->fadeout->createFormElement($variables),
-        ])->response(function (EditFormResponseProcessor $response) {
+        ])->response(function (CustomFormResponseProcessor $response) {
             $response->validate(function (array $data) {
                 if ($data[1] === "" and $data[2] === "") {
                     throw new InvalidFormValueException("@form.insufficient", 1);

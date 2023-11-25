@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
@@ -84,7 +84,7 @@ class CreateItemVariable extends SimpleAction {
             $this->getItemCount()->createFormElement($variables),
             $this->getItemName()->createFormElement($variables),
             $this->getVariableName()->createFormElement($variables),
-        ])->response(function (EditFormResponseProcessor $response) {
+        ])->response(function (CustomFormResponseProcessor $response) {
             $response->rearrange([3, 0, 1, 2]);
         });
     }

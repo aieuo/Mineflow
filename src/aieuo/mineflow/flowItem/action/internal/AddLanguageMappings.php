@@ -10,8 +10,8 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
@@ -83,7 +83,7 @@ class AddLanguageMappings extends FlowItem {
         }
 
         $builder->elements($elements);
-        $builder->response(function (EditFormResponseProcessor $response) {
+        $builder->response(function (CustomFormResponseProcessor $response) {
             $response->preprocess(function (array $data) {
                 $messageKey = array_shift($data);
 

@@ -10,9 +10,9 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\page\builder\EditPageBuilder;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\page\EditPageBuilder;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
@@ -102,8 +102,8 @@ abstract class ExecuteRecipeBase extends FlowItem {
         $builder->page(0, function (EditPageBuilder $page) {
             $page->elements([
                 new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
-            ])->response(function (EditFormResponseProcessor $response) {
-                $response->setLoader(fn(array $data) => $this->setRecipeName($data[0]));
+            ], function (string $data) {
+                $this->setRecipeName($data);
             });
         });
 
@@ -114,7 +114,7 @@ abstract class ExecuteRecipeBase extends FlowItem {
             if ($recipe === null) {
                 $page->elements([
                     new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
-                ])->response(function (EditFormResponseProcessor $response) {
+                ])->response(function (CustomFormResponseProcessor $response) {
                     $response->preprocessAt(0, fn($value) => array_map("trim", explode(",", $value)));
                 });
             } else {
@@ -126,24 +126,18 @@ abstract class ExecuteRecipeBase extends FlowItem {
                     $isObjectVariable[] = $argument->getDummyVariable()->isObjectVariableType();
                 }
 
-                $page->elements($elements)->response(function (EditFormResponseProcessor $response) use($isObjectVariable) {
-                    $response->preprocess(function ($data) use($isObjectVariable) {
-                        $args = [];
-                        foreach ($data as $i => $arg) {
-                            if ($isObjectVariable[$i]) {
-                                $args[] = "{".$arg."}";
-                            } else {
-                                $args[] = $arg;
-                            }
+                $page->elements($elements, function (string ...$data) use($isObjectVariable) {
+                    $args = [];
+                    foreach ($data as $i => $arg) {
+                        if ($isObjectVariable[$i]) {
+                            $args[] = "{".$arg."}";
+                        } else {
+                            $args[] = $arg;
                         }
-                        return [$args];
-                    });
+                    }
+                    $this->setArgs($args);
                 });
             }
-
-            $page->response(function (EditFormResponseProcessor $response) {
-                $response->unshift($this->getRecipeName());
-            });
         });
     }
 

@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\form;
 
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\flowItem\form\page\builder\CustomFormEditPageBuilder;
-use aieuo\mineflow\flowItem\form\page\builder\EditPageBuilder;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormEditPageBuilder;
+use aieuo\mineflow\flowItem\form\page\EditPageBuilder;
 
 class SimpleEditFormBuilder extends CustomFormEditPageBuilder {
 
@@ -42,6 +42,16 @@ class SimpleEditFormBuilder extends CustomFormEditPageBuilder {
         }
 
         $callback($page);
+        return $this;
+    }
+
+    /**
+     * @param callable(EditPageBuilder $builder): void $callback
+     * @param EditPageBuilder|null $newPageInstance
+     * @return $this
+     */
+    public function newPage(callable $callback, EditPageBuilder $newPageInstance = null): self {
+        $this->page($this->getPageManager()->count(), $callback, $newPageInstance);
         return $this;
     }
 

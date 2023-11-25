@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
@@ -178,7 +178,7 @@ class RegisterCraftingRecipe extends FlowItem {
             $this->ingredients[7]->createFormElement($variables),
             $this->ingredients[8]->createFormElement($variables),
             $this->output->createFormElement($variables),
-        ])->response(function (EditFormResponseProcessor $response) {
+        ])->response(function (CustomFormResponseProcessor $response) {
             $response->preprocess(function (array $data) {
                 $result = array_pop($data);
                 return [$data, $result];

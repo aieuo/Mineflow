@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\form;
 
-use aieuo\mineflow\flowItem\form\page\builder\EditPageBuilder;
+use aieuo\mineflow\flowItem\form\page\EditPageBuilder;
 use function array_values;
 
 class SimpleEditFormPageManager {

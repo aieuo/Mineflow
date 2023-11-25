@@ -11,8 +11,8 @@ use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
@@ -107,7 +107,7 @@ class AddVariable extends FlowItem {
             $this->variableValue->createFormElement($variables),
             new Dropdown("@action.variable.form.type", array_values(array_unique($this->variableTypes)), $index === false ? 0 : $index),
             new Toggle("@action.variable.form.global", !$this->isLocal),
-        ])->response(function (EditFormResponseProcessor $response) {
+        ])->response(function (CustomFormResponseProcessor $response) {
             $response->preprocess(function (array $data) {
                 $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
                 if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {

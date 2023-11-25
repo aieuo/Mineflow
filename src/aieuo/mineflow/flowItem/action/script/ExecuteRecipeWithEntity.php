@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\action\script;
 use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use SOFe\AwaitGenerator\Await;
 
@@ -53,7 +53,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
         $builder->elements([
             $this->recipeName->createFormElement($variables),
             $this->entity->createFormElement($variables),
-        ])->response(function (EditFormResponseProcessor $response) {
+        ])->response(function (CustomFormResponseProcessor $response) {
             $response->clear();
         });
     }

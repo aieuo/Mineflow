@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\argument\StringEnumArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
@@ -75,7 +75,7 @@ class CreateScoreboardVariable extends SimpleAction {
             $this->getDisplayName()->createFormElement($variables),
             $this->getDisplayType()->createFormElement($variables),
             $this->getVariableName()->createFormElement($variables),
-        ])->response(function (EditFormResponseProcessor $response) {
+        ])->response(function (CustomFormResponseProcessor $response) {
             $response->rearrange([3, 0, 1, 2]);
         });
     }
