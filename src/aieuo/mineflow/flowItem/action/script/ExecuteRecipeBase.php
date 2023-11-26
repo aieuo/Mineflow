@@ -5,73 +5,43 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\RecipeArgumentArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\page\EditPageBuilder;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
-use function array_map;
-use function explode;
-use function implode;
-use function substr;
 
-abstract class ExecuteRecipeBase extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
-
-    /** @var string[] */
-    private array $args;
+abstract class ExecuteRecipeBase extends SimpleAction {
 
     public function __construct(
-        string         $id,
-        string         $category = FlowItemCategory::SCRIPT,
-        private string $recipeName = "",
-        string         $args = ""
+        string $id,
+        string $category = FlowItemCategory::SCRIPT,
+        string $recipeName = "",
+        array $args = [],
     ) {
         parent::__construct($id, $category);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
-        $this->args = array_filter(array_map("trim", explode(",", $args)), fn(string $t) => $t !== "");
+        $this->setArguments([
+            StringArgument::create("name", $recipeName, "@action.executeRecipe.form.name")->example("aieuo"),
+            RecipeArgumentArgument::create("args", $args)->recipeName(fn() => $this->getRecipeName()->getRawString()),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["name"];
+    public function getRecipeName(): StringArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getRecipeName()];
-    }
-
-    public function setRecipeName(string $name): void {
-        $this->recipeName = $name;
-    }
-
-    public function getRecipeName(): string {
-        return $this->recipeName;
-    }
-
-    public function setArgs(array $args): void {
-        $this->args = $args;
-    }
-
-    public function getArgs(): array {
-        return $this->args;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getRecipeName() !== "";
+    public function getArgs(): RecipeArgumentArgument {
+        return $this->getArguments()[1];
     }
 
     public function getRecipe(FlowItemExecutor $source): Recipe {
-        $name = $source->replaceVariables($this->getRecipeName());
+        $name = $this->getRecipeName()->getString($source);
 
         $recipeManager = Mineflow::getRecipeManager();
         [$recipeName, $group] = $recipeManager->parseName($name);
@@ -88,65 +58,9 @@ abstract class ExecuteRecipeBase extends FlowItem {
         return $recipe;
     }
 
-    public function getArguments(FlowItemExecutor $source): array {
-        $helper = Mineflow::getVariableHelper();
-        $args = [];
-        foreach ($this->getArgs() as $arg) {
-            $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
-            $args[$name] = $helper->copyOrCreateVariable($arg, $source);
-        }
-        return $args;
-    }
+    public function __clone(): void {
+        parent::__clone();
 
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->page(0, function (EditPageBuilder $page) {
-            $page->elements([
-                new ExampleInput("@action.executeRecipe.form.name", "aieuo", $this->getRecipeName(), true),
-            ], function (string $data) {
-                $this->setRecipeName($data);
-            });
-        });
-
-        $builder->page(1, function (EditPageBuilder $page) use($variables) {
-            $recipeManager = Mineflow::getRecipeManager();
-            $recipe = $recipeManager->get(...$recipeManager->parseName($this->getRecipeName()));
-
-            if ($recipe === null) {
-                $page->elements([
-                    new ExampleInput("@action.callRecipe.form.args", "{target}, 1, aieuo", implode(", ", $this->getArgs()), false),
-                ])->response(function (CustomFormResponseProcessor $response) {
-                    $response->preprocessAt(0, fn($value) => array_map("trim", explode(",", $value)));
-                });
-            } else {
-                $args = $this->getArgs();
-                $elements = [];
-                $isObjectVariable = [];
-                foreach ($recipe->getArguments() as $i => $argument) {
-                    $elements[] = $argument->getInputElement($variables, $args[$i] ?? null);
-                    $isObjectVariable[] = $argument->getDummyVariable()->isObjectVariableType();
-                }
-
-                $page->elements($elements, function (string ...$data) use($isObjectVariable) {
-                    $args = [];
-                    foreach ($data as $i => $arg) {
-                        if ($isObjectVariable[$i]) {
-                            $args[] = "{".$arg."}";
-                        } else {
-                            $args[] = $arg;
-                        }
-                    }
-                    $this->setArgs($args);
-                });
-            }
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setRecipeName($content[0]);
-        $this->setArgs($content[1] ?? []);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getRecipeName(), $this->getArgs()];
+        $this->getArgs()->recipeName(fn() => $this->getRecipeName()->getRawString());
     }
 }

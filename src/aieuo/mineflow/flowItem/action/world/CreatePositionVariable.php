@@ -10,8 +10,6 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -27,7 +25,7 @@ class CreatePositionVariable extends SimpleAction {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            StringArgument::create("position", $variableName, "@action.form.resultVariableName")->example("pos"),
+            StringArgument::create("position", $variableName, "@action.form.resultVariableName")->order(1)->example("pos"),
             NumberArgument::create("x", $x)->example("0"),
             NumberArgument::create("y", $y)->example("100"),
             NumberArgument::create("z", $z)->example("16"),
@@ -74,18 +72,6 @@ class CreatePositionVariable extends SimpleAction {
 
         yield Await::ALL;
         return (string)$this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->getX()->createFormElements($variables)[0],
-            $this->getY()->createFormElements($variables)[0],
-            $this->getZ()->createFormElements($variables)[0],
-            $this->getWorld()->createFormElements($variables)[0],
-            $this->getVariableName()->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->rearrange([4, 0, 1, 2, 3]);
-        });
     }
 
     public function getAddingVariables(): array {

@@ -11,7 +11,7 @@ class BooleanArgument extends FlowItemArgument {
     public static function create(string $name, bool $value = false, string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);
     }
-    
+
     /**
      * @param string $name
      * @param bool $value
@@ -47,7 +47,7 @@ class BooleanArgument extends FlowItemArgument {
         return $this;
     }
 
-    public function inverse(): self {
+    public function inverted(): self {
         $this->inverseToggle = true;
         return $this;
     }

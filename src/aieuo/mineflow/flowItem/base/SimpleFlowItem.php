@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\base;
 
+use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\argument\FlowItemArgument;
+use aieuo\mineflow\flowItem\argument\OrderType;
 use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
+use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
+use aieuo\mineflow\flowItem\form\page\EditPageBuilder;
 use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
+use function uasort;
 
 abstract class SimpleFlowItem extends FlowItem {
     use HasSimpleEditForm;
@@ -18,6 +23,14 @@ abstract class SimpleFlowItem extends FlowItem {
 
     public function getArguments(): array {
         return $this->arguments;
+    }
+
+    public function getArgumentsSorted(OrderType $sortType = OrderType::Form): array {
+        $arguments = $this->arguments;
+        uasort($arguments, function (FlowItemArgument $a1, FlowItemArgument $a2) use ($sortType) {
+            return $a1->getCustomOrder($sortType) <=> $a2->getCustomOrder($sortType);
+        });
+        return $arguments;
     }
 
     public function getArgument(int|string $index): ?FlowItemArgument {
@@ -65,9 +78,28 @@ abstract class SimpleFlowItem extends FlowItem {
     }
 
     public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        foreach ($this->getArguments() as $argument) {
-            $builder->elements($argument->createFormElements($variables), $argument->handleFormResponse(...));
+        $arguments = $this->getArgumentsSorted(OrderType::Form);
+        foreach ($arguments as $argument) {
+            if ($argument->getEditFormPage() > 0) {
+                $builder->page($argument->getEditFormPage(), function (EditPageBuilder $page) use($argument, $variables) {
+                    $page->elements($argument->createFormElements($variables), $argument->handleFormResponse(...));
+                });
+            } else {
+                $builder->elements($argument->createFormElements($variables), $argument->handleFormResponse(...));
+            }
         }
+
+        $builder->response(function (CustomFormResponseProcessor $response) {
+            $response->validate(fn(array $data) => $this->validateFormResponse($data));
+        });
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * @throws InvalidFormValueException
+     */
+    public function validateFormResponse(array $data): void {
     }
 
     public function loadSaveData(array $content): void {

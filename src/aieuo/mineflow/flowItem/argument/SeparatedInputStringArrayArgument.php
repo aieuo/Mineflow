@@ -37,12 +37,14 @@ class SeparatedInputStringArrayArgument extends StringArrayArgument {
         parent::__construct($name, $value, "", $example, $optional, $separator);
     }
 
-    public function newValuesDescription(string $description): void {
+    public function newValuesDescription(string $description): static {
         $this->newValuesDescription = $description;
+        return $this;
     }
 
-    public function editValuesDescription(string $description): void {
+    public function editValuesDescription(string $description): static {
         $this->editValuesDescription = $description;
+        return $this;
     }
 
     public function createFormElements(array $variables): array {

@@ -9,8 +9,6 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
@@ -30,7 +28,7 @@ class CreateBlockVariable extends SimpleAction {
 
         $this->setArguments([
             StringArgument::create("block", $variableName, "@action.form.resultVariableName")->example("block"),
-            StringArgument::create("id", $blockId)->example("1:0"),
+            StringArgument::create("id", $blockId)->order(-1)->example("stone"),
         ]);
     }
 
@@ -61,15 +59,6 @@ class CreateBlockVariable extends SimpleAction {
 
         yield Await::ALL;
         return (string)$this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->getBlockId()->createFormElements($variables)[0],
-            $this->getVariableName()->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->rearrange([1, 0]);
-        });
     }
 
     public function getAddingVariables(): array {

@@ -6,31 +6,23 @@ namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\argument\IsLocalVariableArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\StringEnumArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
-use function array_search;
 use function array_unique;
 use function array_values;
-use function is_int;
 use function is_numeric;
 
-class AddVariable extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class AddVariable extends SimpleAction {
 
     private string $variableType;
 
@@ -38,48 +30,42 @@ class AddVariable extends FlowItem {
     private array $variableTypes = [0 => "string", "string" => "string", 1 => "number", "number" => "number"];
     private array $variableClasses = ["string" => StringVariable::class, "number" => NumberVariable::class];
 
-    private StringArgument $variableName;
-    private StringArgument $variableValue;
-
-    public function __construct(
-        string       $variableName = "",
-        string       $variableValue = "",
-        string       $type = null,
-        private bool $isLocal = true
-    ) {
+    public function __construct(string $variableName = "", string $variableValue = "", string $type = "string", bool $isLocal = true) {
         parent::__construct(self::ADD_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->variableType = $type ?? StringVariable::getTypeName();
 
-        $this->variableName = StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo");
-        $this->variableValue = StringArgument::create("value", $variableValue, "@action.variable.form.value")->example("aeiuo");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["name", "value", "type", "scope"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [(string)$this->variableName, (string)$this->variableValue, $this->variableTypes[$this->variableType], $this->isLocal ? "local" : "global"];
+        $this->setArguments([
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArgument::create("value", $variableValue, "@action.variable.form.value")->example("aeiuo"),
+            StringEnumArgument::create("type", $type, "@action.variable.form.type")->options(array_values(array_unique($this->variableTypes))),
+            IsLocalVariableArgument::create("scope", $isLocal),
+        ]);
     }
 
     public function getVariableName(): StringArgument {
-        return $this->variableName;
+        return $this->getArguments()[0];
     }
 
     public function getVariableValue(): StringArgument {
-        return $this->variableValue;
+        return $this->getArguments()[1];
     }
 
-    public function isDataValid(): bool {
-        return $this->variableName->isValid() and $this->variableValue->isValid();
+    public function getVariableType(): StringArgument {
+        return $this->getArguments()[2];
+    }
+
+    public function isLocalVariable(): IsLocalVariableArgument {
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $this->getVariableName()->getString($source);
         $value = $this->getVariableValue()->getString($source);
+        $type = $this->getVariableType()->getString($source);
+        $isLocal = $this->isLocalVariable()->getBool();
 
-        switch ($this->variableType) {
+        switch ($type) {
             case StringVariable::getTypeName():
                 $variable = new StringVariable($value);
                 break;
@@ -91,7 +77,7 @@ class AddVariable extends FlowItem {
                 throw new InvalidFlowValueException($this->getName(), Language::get("action.error.recipe"));
         }
 
-        if ($this->isLocal) {
+        if ($isLocal) {
             $source->addVariable($name, $variable);
         } else {
             Mineflow::getVariableHelper()->add($name, $variable);
@@ -100,45 +86,18 @@ class AddVariable extends FlowItem {
         yield Await::ALL;
     }
 
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $index = array_search($this->variableType, $this->variableTypes, true);
-        $builder->elements([
-            $this->variableName->createFormElements($variables)[0],
-            $this->variableValue->createFormElements($variables)[0],
-            new Dropdown("@action.variable.form.type", array_values(array_unique($this->variableTypes)), $index === false ? 0 : $index),
-            new Toggle("@action.variable.form.global", !$this->isLocal),
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->preprocess(function (array $data) {
-                $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
-                if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
-                    throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
-                }
+    public function validateFormResponse(array $data): void {
+        $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
 
-                return [$data[0], $data[1], $data[2], !$data[3]];
-            });
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->variableName->value($content[0]);
-        $this->variableValue->value($content[1]);
-        $this->variableType = is_int($content[2]) ? $this->variableTypes[$content[2]] : $content[2];
-        $this->isLocal = $content[3];
-    }
-
-    public function serializeContents(): array {
-        return [$this->variableName, $this->variableValue, $this->variableType, $this->isLocal];
+        if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
+            throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
+        }
     }
 
     public function getAddingVariables(): array {
         $class = $this->variableClasses[$this->variableType];
         return [
-            (string)$this->variableName => new DummyVariable($class, (string)$this->variableValue)
+            (string)$this->getVariableName() => new DummyVariable($class, (string)$this->getVariableValue())
         ];
-    }
-
-    public function __clone(): void {
-        $this->variableName = clone $this->variableName;
-        $this->variableValue = clone $this->variableValue;
     }
 }

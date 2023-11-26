@@ -10,8 +10,6 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
@@ -29,7 +27,7 @@ class CreateItemVariable extends SimpleAction {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            StringArgument::create("item", $variableName, "@action.form.resultVariableName")->example("item"),
+            StringArgument::create("item", $variableName, "@action.form.resultVariableName")->order(1)->example("item"),
             StringArgument::create("id", $itemId)->example("1:0"),
             NumberArgument::create("count", $itemCount)->min(0)->optional()->example("64"),
             StringArgument::create("name", $itemName)->optional()->example("aieuo"),
@@ -76,17 +74,6 @@ class CreateItemVariable extends SimpleAction {
 
         yield Await::ALL;
         return (string)$this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->getItemId()->createFormElements($variables)[0],
-            $this->getItemCount()->createFormElements($variables)[0],
-            $this->getItemName()->createFormElements($variables)[0],
-            $this->getVariableName()->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->rearrange([3, 0, 1, 2]);
-        });
     }
 
     public function getAddingVariables(): array {

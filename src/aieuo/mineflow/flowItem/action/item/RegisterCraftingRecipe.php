@@ -6,24 +6,18 @@ namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ItemArgument;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemFixedArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
-use function array_pop;
 use function floor;
 use function implode;
 
-class RegisterCraftingRecipe extends FlowItem {
-
-    private ItemArgument $output;
-    /** @var ItemArgument[] */
-    private array $ingredients;
+class RegisterCraftingRecipe extends SimpleAction {
 
     /**
      * @param string[] $ingredients
@@ -33,15 +27,12 @@ class RegisterCraftingRecipe extends FlowItem {
         parent::__construct(self::REGISTER_SHAPED_RECIPE, FlowItemCategory::ITEM);
 
         $characters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
-        $this->ingredients = [];
-        for ($i = 0; $i < 9; $i ++) {
-            $this->ingredients[] = ItemArgument::create(
-                "input".$i,
-                $ingredients[$i] ?? "",
-                "@action.registerShapedRecipe.ingredients ".$characters[$i]
-            )->optional();
-        }
-        $this->output = ItemArgument::create("output", $output, "@action.registerShapedRecipe.results RESULT");
+        $this->setArguments([
+            ItemFixedArrayArgument::create("ingredients", $ingredients, "@action.registerShapedRecipe.ingredients")
+                ->format(fn(int $i, string $desc) => $desc." ".$characters[$i])
+                ->count(9)->optional(),
+            ItemArgument::create("output", $output, "@action.registerShapedRecipe.results RESULT"),
+        ]);
     }
 
     public function getName(): string {
@@ -53,15 +44,13 @@ class RegisterCraftingRecipe extends FlowItem {
     }
 
     public function getDetail(): string {
-        if (!$this->isDataValid()) return $this->getName();
-
         $shape = ["", "", ""];
         $ingredients = [];
         $keys = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
         $index = -1;
         $items = [];
         for ($i = 0; $i < 9; $i++) {
-            $input = (string)$this->ingredients[$i];
+            $input = $this->getIngredients()->getVariableNameAt($i);
             if ($input !== "") {
                 if (isset($items[$input])) {
                     $key = $keys[$items[$input]];
@@ -88,25 +77,21 @@ class RegisterCraftingRecipe extends FlowItem {
             $details[] = "- ".$key." = ".$ingredient;
         }
         $details[] = Language::get("action.registerShapedRecipe.results");
-        $details[] = "- ".$this->output;
+        $details[] = "- ".$this->getOutput();
         $details[] = "------------------------";
         return implode("\n", $details);
     }
 
-    public function isDataValid(): bool {
-        return $this->output->isValid();
-    }
-
-    public function getIngredients(): array {
-        return $this->ingredients;
+    public function getIngredients(): ItemFixedArrayArgument {
+        return $this->getArguments()[0];
     }
 
     public function getOutput(): ItemArgument {
-        return $this->output;
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $output = $this->output->getItem($source);
+        $output = $this->getOutput()->getItem($source);
         $shape = ["", "", ""];
         $ingredients = [];
         $keys = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
@@ -114,7 +99,7 @@ class RegisterCraftingRecipe extends FlowItem {
         $items = [];
         for ($i = 0; $i < 9; $i++) {
             try {
-                $input = $this->ingredients[$i]->getItem($source);
+                $input = $this->getIngredients()->getItemAt($source, $i);
                 $itemId = $input->getStateId();
                 if (isset($items[$itemId])) {
                     $key = $keys[$items[$itemId]];
@@ -163,45 +148,5 @@ class RegisterCraftingRecipe extends FlowItem {
             if (trim($line) === "") unset($shape[$i]);
         }
         return array_values($shape);
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->ingredients[0]->createFormElements($variables)[0],
-            $this->ingredients[1]->createFormElements($variables)[0],
-            $this->ingredients[2]->createFormElements($variables)[0],
-            $this->ingredients[3]->createFormElements($variables)[0],
-            $this->ingredients[4]->createFormElements($variables)[0],
-            $this->ingredients[5]->createFormElements($variables)[0],
-            $this->ingredients[6]->createFormElements($variables)[0],
-            $this->ingredients[7]->createFormElements($variables)[0],
-            $this->ingredients[8]->createFormElements($variables)[0],
-            $this->output->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->preprocess(function (array $data) {
-                $result = array_pop($data);
-                return [$data, $result];
-            });
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        for ($i = 0; $i < 9; $i++) {
-            $this->ingredients[$i]->value($content[0][$i] ?? "");
-        }
-        $this->output->value($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->ingredients, $this->output];
-    }
-
-    public function __clone(): void {
-        $ingredients = [];
-        foreach ($this->ingredients as $ingredient) {
-            $ingredients[] = clone $ingredient;
-        }
-        $this->ingredients = $ingredients;
-        $this->output = clone $this->output;
     }
 }

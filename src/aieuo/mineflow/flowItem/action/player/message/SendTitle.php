@@ -4,86 +4,58 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player\message;
 
-use aieuo\mineflow\exception\InvalidFormValueException;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\PlayerArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use SOFe\AwaitGenerator\Await;
 
-class SendTitle extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
-
-    private PlayerArgument $player;
-    private StringArgument $title;
-    private StringArgument $subtitle;
-    private NumberArgument $fadein;
-    private NumberArgument $stay;
-    private NumberArgument $fadeout;
+class SendTitle extends SimpleAction {
 
     public function __construct(
         string $player = "",
         string $title = "",
         string $subtitle = "",
-        string $fadein = "-1",
-        string $stay = "-1",
-        string $fadeout = "-1"
+        int $fadein = -1,
+        int $stay = -1,
+        int $fadeout = -1
     ) {
         parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER_MESSAGE);
 
-        $this->player = PlayerArgument::create("player", $player);
-        $this->title = StringArgument::create("title", $title)->optional()->example("aieuo");
-        $this->subtitle = StringArgument::create("subtitle", $subtitle)->optional()->example("aieuo");
-        $this->fadein = NumberArgument::create("fadein", $fadein)->min(-1)->example("-1");
-        $this->stay = NumberArgument::create("stay", $stay)->min(-1)->example("-1");
-        $this->fadeout = NumberArgument::create("fadeout", $fadeout)->min(-1)->example("-1");
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return [$this->player->getName(), "title", "subtitle", "fadein", "stay", "fadeout"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [(string)$this->player, (string)$this->title, (string)$this->subtitle, (string)$this->fadein, (string)$this->stay, (string)$this->fadeout];
-    }
-
-    public function getTitle(): StringArgument {
-        return $this->title;
-    }
-
-    public function getSubTitle(): StringArgument {
-        return $this->subtitle;
-    }
-
-    public function getFadein(): NumberArgument {
-        return $this->fadein;
-    }
-
-    public function getStay(): NumberArgument {
-        return $this->stay;
-    }
-
-    public function getFadeout(): NumberArgument {
-        return $this->fadeout;
-    }
-
-    public function getTime(): array {
-        return [$this->fadein, $this->stay, $this->fadeout];
-    }
-
-    public function isDataValid(): bool {
-        return $this->player->isValid() and ($this->title->isValid() or $this->subtitle->isValid());
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("title", $title)->optional()->example("aieuo"),
+            StringArgument::create("subtitle", $subtitle)->optional()->example("aieuo"),
+            NumberArgument::create("fadein", $fadein)->min(-1)->example("-1"),
+            NumberArgument::create("stay", $stay)->min(-1)->example("-1"),
+            NumberArgument::create("fadeout", $fadeout)->min(-1)->example("-1"),
+        ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->player;
+        return $this->getArguments()[0];
+    }
+
+    public function getTitle(): StringArgument {
+        return $this->getArguments()[1];
+    }
+
+    public function getSubTitle(): StringArgument {
+        return $this->getArguments()[2];
+    }
+
+    public function getFadein(): NumberArgument {
+        return $this->getArguments()[3];
+    }
+
+    public function getStay(): NumberArgument {
+        return $this->getArguments()[4];
+    }
+
+    public function getFadeout(): NumberArgument {
+        return $this->getArguments()[5];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -97,45 +69,5 @@ class SendTitle extends FlowItem {
         $player->sendTitle($title, $subtitle, $fadein, $stay, $fadeout);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->player->createFormElements($variables)[0],
-            $this->title->createFormElements($variables)[0],
-            $this->fadein->createFormElements($variables)[0],
-            $this->stay->createFormElements($variables)[0],
-            $this->fadeout->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->validate(function (array $data) {
-                if ($data[1] === "" and $data[2] === "") {
-                    throw new InvalidFormValueException("@form.insufficient", 1);
-                }
-            });
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->player->value($content[0]);
-        $this->title->value($content[1]);
-        $this->subtitle->value($content[2]);
-        if (isset($content[5])) {
-            $this->fadein->value($content[3]);
-            $this->stay->value($content[3]);
-            $this->fadeout->value($content[3]);
-        }
-    }
-
-    public function serializeContents(): array {
-        return [$this->player, $this->title, $this->subtitle, $this->fadein, $this->stay, $this->fadeout];
-    }
-
-    public function __clone(): void {
-        $this->player = clone $this->player;
-        $this->title = clone $this->title;
-        $this->subtitle = clone $this->subtitle;
-        $this->fadein = clone $this->fadein;
-        $this->stay = clone $this->stay;
-        $this->fadeout = clone $this->fadeout;
     }
 }

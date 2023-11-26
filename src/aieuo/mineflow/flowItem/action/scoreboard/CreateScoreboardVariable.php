@@ -9,8 +9,6 @@ use aieuo\mineflow\flowItem\argument\StringEnumArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\Scoreboard;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\ScoreboardVariable;
@@ -31,10 +29,10 @@ class CreateScoreboardVariable extends SimpleAction {
         parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("board"),
-            StringArgument::create("id", $boardId)->example("aieuo"),
-            StringArgument::create("displayName", $displayName)->example("auieo"),
-            StringEnumArgument::create("type", $displayType)->options($this->displayTypes),
+            (new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "board"))->order(1),
+            new StringArgument("id", $boardId, example: "aieuo"),
+            new StringArgument("displayName", $displayName, example: "auieo"),
+            new StringEnumArgument("type", $displayType, $this->displayTypes),
         ]);
     }
 
@@ -67,17 +65,6 @@ class CreateScoreboardVariable extends SimpleAction {
 
         yield Await::ALL;
         return (string)$this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->getBoardId()->createFormElements($variables)[0],
-            $this->getDisplayName()->createFormElements($variables)[0],
-            $this->getDisplayType()->createFormElements($variables)[0],
-            $this->getVariableName()->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->rearrange([3, 0, 1, 2]);
-        });
     }
 
     public function getAddingVariables(): array {

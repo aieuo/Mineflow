@@ -10,8 +10,6 @@ use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\form\page\custom\CustomFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\utils\ConfigHolder;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
@@ -29,7 +27,7 @@ class CreateConfigVariable extends SimpleAction {
 
         $this->setArguments([
             StringArgument::create("config", $variableName, "@action.form.resultVariableName")->example("config"),
-            StringArgument::create("name", $fileName)->example("config"),
+            StringArgument::create("name", $fileName)->order(-1)->example("config"),
         ]);
     }
 
@@ -53,15 +51,6 @@ class CreateConfigVariable extends SimpleAction {
 
         yield Await::ALL;
         return (string)$this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            $this->getFileName()->createFormElements($variables)[0],
-            $this->getVariableName()->createFormElements($variables)[0],
-        ])->response(function (CustomFormResponseProcessor $response) {
-            $response->rearrange([1, 0]);
-        });
     }
 
     public function getAddingVariables(): array {
