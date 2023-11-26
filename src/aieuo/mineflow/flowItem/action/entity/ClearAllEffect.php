@@ -17,7 +17,7 @@ class ClearAllEffect extends SimpleAction {
         parent::__construct(self::CLEAR_ALL_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
+            EntityArgument::create("entity", $entity),
         ]);
     }
 

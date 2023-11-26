@@ -18,8 +18,8 @@ class SetPitch extends SimpleAction {
         parent::__construct(self::SET_PITCH, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new NumberArgument("pitch", $pitch, example: "180"),
+            EntityArgument::create("entity", $entity),
+            NumberArgument::create("pitch", $pitch)->example("180"),
         ]);
     }
 

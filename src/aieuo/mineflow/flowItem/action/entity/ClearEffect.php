@@ -22,8 +22,8 @@ class ClearEffect extends SimpleAction {
         parent::__construct(self::CLEAR_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new StringArgument("id", $effectId, example: "1"),
+            EntityArgument::create("entity", $entity),
+            StringArgument::create("id", $effectId)->example("1"),
         ]);
     }
 

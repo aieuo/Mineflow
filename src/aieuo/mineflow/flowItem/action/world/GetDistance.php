@@ -21,9 +21,9 @@ class GetDistance extends SimpleAction {
         parent::__construct(self::GET_DISTANCE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("pos1", $pos1),
-            new PositionArgument("pos2", $pos2),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "distance"),
+            PositionArgument::create("pos1", $pos1),
+            PositionArgument::create("pos2", $pos2),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("distance"),
         ]);
     }
 

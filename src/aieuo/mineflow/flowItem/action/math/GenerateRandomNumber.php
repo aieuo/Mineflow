@@ -16,9 +16,9 @@ class GenerateRandomNumber extends TypeGetMathVariable {
         parent::__construct(self::GENERATE_RANDOM_NUMBER, resultName: $resultName);
 
         $this->setArguments([
-            new NumberArgument("min", $min, example: "0"),
-            new NumberArgument("max", $max, example: "10"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "random"),
+            NumberArgument::create("min", $min)->example("0"),
+            NumberArgument::create("max", $max)->example("10"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("random"),
         ]);
     }
 

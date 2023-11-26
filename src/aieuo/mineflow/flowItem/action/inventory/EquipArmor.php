@@ -26,9 +26,9 @@ class EquipArmor extends SimpleAction {
         parent::__construct(self::EQUIP_ARMOR, FlowItemCategory::INVENTORY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new ItemArgument("item", $item),
-            new IntEnumArgument("index", $index, $this->slots),
+            EntityArgument::create("entity", $entity),
+            ItemArgument::create("item", $item),
+            IntEnumArgument::create("index", $index)->options($this->slots),
         ]);
     }
 

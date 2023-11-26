@@ -37,8 +37,8 @@ class ForeachPosition extends FlowItem implements FlowItemContainer {
         parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP);
         $this->setPermissions([FlowItemPermission::LOOP]);
 
-        $this->position1 = new PositionArgument("pos1", $pos1, "@action.foreachPosition.form.pos1");
-        $this->position2 = new PositionArgument("pos2", $pos2, "@action.foreachPosition.form.pos2");
+        $this->position1 = PositionArgument::create("pos1", $pos1, "@action.foreachPosition.form.pos1");
+        $this->position2 = PositionArgument::create("pos2", $pos2, "@action.foreachPosition.form.pos2");
         $this->setActions($actions);
         $this->setCustomName($customName);
     }

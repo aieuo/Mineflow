@@ -19,8 +19,8 @@ class Kick extends SimpleAction {
         parent::__construct(self::KICK, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("reason", $reason, example: "aieuo"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("reason", $reason)->example("aieuo"),
         ]);
     }
 

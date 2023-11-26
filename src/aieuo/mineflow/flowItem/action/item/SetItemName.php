@@ -19,8 +19,8 @@ class SetItemName extends SimpleAction {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArgument("name", $itemName, "@action.createItem.form.name", example: "aieuo", optional: true),
+            ItemArgument::create("item", $item),
+            StringArgument::create("name", $itemName, "@action.createItem.form.name")->optional()->example("aieuo"),
         ]);
     }
 

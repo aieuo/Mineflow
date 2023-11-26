@@ -19,7 +19,7 @@ class ExistsConfigFile extends SimpleCondition {
         parent::__construct(self::EXISTS_CONFIG_FILE, FlowItemCategory::CONFIG);
 
         $this->setArguments([
-            new FileNameArgument("name", $fileName),
+            FileNameArgument::create("name", $fileName),
         ]);
     }
 

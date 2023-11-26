@@ -20,9 +20,9 @@ class SendGameRule extends SimpleAction {
         parent::__construct(self::SEND_BOOL_GAMERULE, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("gamerule", $gamerule, "@action.setGamerule.form.gamerule", example: "showcoordinates"),
-            new BooleanArgument("value", $value),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("gamerule", $gamerule, "@action.setGamerule.form.gamerule")->example("showcoordinates"),
+            BooleanArgument::create("value", $value),
         ]);
     }
 

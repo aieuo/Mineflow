@@ -49,10 +49,10 @@ class SendMenuForm extends FlowItem {
     public function __construct(string $player = "", string $formText = "", string $options = "", string $resultName = "menu") {
         parent::__construct(self::SEND_MENU, FlowItemCategory::FORM);
 
-        $this->player = new PlayerArgument("player", $player);
-        $this->formText = new StringArgument("text", $formText, "@action.input.form.text", example: "aieuo");
+        $this->player = PlayerArgument::create("player", $player);
+        $this->formText = StringArgument::create("text", $formText, "@action.input.form.text")->example("aieuo");
         $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
-        $this->resultName = new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "input");
+        $this->resultName = StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("input");
     }
 
     public function getDetailDefaultReplaces(): array {

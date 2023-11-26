@@ -17,8 +17,8 @@ class DropItem extends SimpleAction {
         parent::__construct(self::DROP_ITEM, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new ItemArgument("item", $item),
+            PositionArgument::create("position", $position),
+            ItemArgument::create("item", $item),
         ]);
     }
 

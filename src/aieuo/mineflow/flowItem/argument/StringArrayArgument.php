@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use function array_map;
@@ -12,6 +13,11 @@ use function implode;
 use function is_string;
 
 class StringArrayArgument extends FlowItemArgument {
+    use Required;
+
+    public static function create(string $name, string|array $value = "", string $description = ""): static {
+        return new static(name: $name, value: $value, description: $description);
+    }
 
     /** @var string[] */
     private array $value;
@@ -29,13 +35,14 @@ class StringArrayArgument extends FlowItemArgument {
         string|array   $value = [],
         string         $description = "",
         private string $example = "",
-        private bool   $optional = false,
+        bool           $optional = false,
         private string $separator = ",",
     ) {
         parent::__construct($name, $description);
 
         if (is_string($value)) $value = array_map(trim(...), explode($this->separator, $value));
         $this->value = $value;
+        $optional ? $this->optional() : $this->required();
     }
 
     public function value(array $value): self {
@@ -73,20 +80,6 @@ class StringArrayArgument extends FlowItemArgument {
 
     public function getExample(): string {
         return $this->example;
-    }
-
-    public function optional(): static {
-        $this->optional = true;
-        return $this;
-    }
-
-    public function required(): static {
-        $this->optional = false;
-        return $this;
-    }
-
-    public function isOptional(): bool {
-        return $this->optional;
     }
 
     public function separator(string $separator): self {

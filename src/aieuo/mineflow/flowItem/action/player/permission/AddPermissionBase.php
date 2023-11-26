@@ -22,8 +22,8 @@ abstract class AddPermissionBase extends SimpleAction {
         $this->setPermissions([FlowItemPermission::PERMISSION]);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("permission", $playerPermission, "@condition.hasPermission.form.permission", example: "mineflow.customcommand.op"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("permission", $playerPermission, "@condition.hasPermission.form.permission")->example("mineflow.customcommand.op"),
         ]);
     }
 

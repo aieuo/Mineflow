@@ -21,10 +21,10 @@ class CreateMapVariable extends SimpleAction {
         parent::__construct(self::CREATE_MAP_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new StringArrayArgument("key", $key, "@action.variable.form.key", example: "aieuo"),
-            new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aieuo"),
-            new IsLocalVariableArgument("scope", $isLocal),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArrayArgument::create("key", $key, "@action.variable.form.key")->example("aieuo"),
+            StringArrayArgument::create("value", $value, "@action.variable.form.value")->example("aieuo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
 

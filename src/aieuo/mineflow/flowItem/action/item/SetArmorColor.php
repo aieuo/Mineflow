@@ -23,10 +23,10 @@ class SetArmorColor extends SimpleAction {
         parent::__construct(self::SET_ARMOR_COLOR, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("armor", $item),
-            new NumberArgument("red", $red, example: "0", min: 0, max: 255),
-            new NumberArgument("green", $green, example: "255", min: 0, max: 255),
-            new NumberArgument("blue", $blue, example: "0", min: 0, max: 255),
+            ItemArgument::create("armor", $item),
+            NumberArgument::create("red", $red)->min(0)->max(255)->example("0"),
+            NumberArgument::create("green", $green)->min(0)->max(255)->example("255"),
+            NumberArgument::create("blue", $blue)->min(0)->max(255)->example("0"),
         ]);
     }
 

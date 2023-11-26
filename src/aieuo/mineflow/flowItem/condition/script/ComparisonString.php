@@ -29,9 +29,9 @@ class ComparisonString extends SimpleCondition {
         parent::__construct(self::COMPARISON_STRING, FlowItemCategory::SCRIPT);
 
         $this->setArguments([
-            new StringArgument("value1", $value1, "@condition.comparisonNumber.form.value1", example: "10"),
-            new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@condition.comparisonNumber.form.operator"),
-            new StringArgument("value2", $value2, "@condition.comparisonNumber.form.value2", example: "50", optional: true),
+            StringArgument::create("value1", $value1, "@condition.comparisonNumber.form.value1")->example("10"),
+            IntEnumArgument::create("operator", $operator, "@condition.comparisonNumber.form.operator")->options($this->operatorSymbols),
+            StringArgument::create("value2", $value2, "@condition.comparisonNumber.form.value2")->optional()->example("50"),
         ]);
     }
 

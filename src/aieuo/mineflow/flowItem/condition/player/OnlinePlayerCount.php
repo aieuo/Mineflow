@@ -18,7 +18,7 @@ abstract class OnlinePlayerCount extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new NumberArgument("value", $value, "@condition.randomNumber.form.value", example: "5"),
+            NumberArgument::create("value", $value, "@condition.randomNumber.form.value")->example("5"),
         ]);
     }
 

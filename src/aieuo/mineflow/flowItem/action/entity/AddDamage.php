@@ -19,8 +19,8 @@ class AddDamage extends SimpleAction {
         parent::__construct(self::ADD_DAMAGE, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new NumberArgument("damage", $damage, example: "10", min: 1),
+            EntityArgument::create("entity", $entity),
+            NumberArgument::create("damage", $damage)->min(1)->example("10"),
         ]);
     }
 

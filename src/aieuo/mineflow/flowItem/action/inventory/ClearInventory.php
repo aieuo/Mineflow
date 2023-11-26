@@ -16,7 +16,7 @@ class ClearInventory extends SimpleAction {
         parent::__construct(self::CLEAR_INVENTORY, FlowItemCategory::INVENTORY);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
+            PlayerArgument::create("player", $player),
         ]);
     }
 

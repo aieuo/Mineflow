@@ -22,7 +22,7 @@ abstract class TypeGetMathVariable extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
         ]);
     }
 

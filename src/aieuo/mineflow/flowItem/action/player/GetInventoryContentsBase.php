@@ -23,8 +23,8 @@ abstract class GetInventoryContentsBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("inventory", $resultName, "@action.form.resultVariableName", example: "inventory"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("inventory", $resultName, "@action.form.resultVariableName")->example("inventory"),
         ]);
     }
 

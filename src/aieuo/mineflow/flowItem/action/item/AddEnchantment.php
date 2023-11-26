@@ -27,9 +27,9 @@ class AddEnchantment extends SimpleAction {
         parent::__construct(self::ADD_ENCHANTMENT, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArgument("id", $enchantId, example: "1"),
-            new NumberArgument("level", $enchantLevel, example: "1"),
+            ItemArgument::create("item", $item),
+            StringArgument::create("id", $enchantId)->example("1"),
+            NumberArgument::create("level", $enchantLevel)->example("1"),
         ]);
     }
 

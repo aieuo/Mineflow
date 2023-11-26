@@ -18,7 +18,7 @@ abstract class CheckEntityState extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
+            EntityArgument::create("entity", $entity),
         ]);
     }
 

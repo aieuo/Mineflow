@@ -17,7 +17,7 @@ class ExistsVariable extends SimpleCondition {
         parent::__construct(self::EXISTS_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
         ]);
     }
 

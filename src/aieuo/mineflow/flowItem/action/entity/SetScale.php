@@ -17,8 +17,8 @@ class SetScale extends SimpleAction {
         parent::__construct(self::SET_SCALE, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new NumberArgument("scale", $scale, example: "1", min: 0, excludes: [0]),
+            EntityArgument::create("entity", $entity),
+            NumberArgument::create("scale", $scale)->min(0)->excludes([0])->example("1"),
         ]);
     }
 

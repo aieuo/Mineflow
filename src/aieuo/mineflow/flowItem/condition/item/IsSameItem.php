@@ -19,12 +19,10 @@ class IsSameItem extends SimpleCondition {
         parent::__construct(FlowItemIds::IS_SAME_ITEM, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item1", $item1, "@action.form.target.item (1)"),
-            new ItemArgument("item2", $item2, "@action.form.target.item (2)"),
-            new BooleanArgument(
-                "tag", $checkCompound, "@condition.isSameItem.form.checkCompound",
-                toStringFormatter: fn(bool $value) => Language::get($value ? "form.yes" : "form.no"),
-            ),
+            ItemArgument::create("item1", $item1, "@action.form.target.item (1)"),
+            ItemArgument::create("item2", $item2, "@action.form.target.item (2)"),
+            BooleanArgument::create("tag", $checkCompound, "@condition.isSameItem.form.checkCompound")
+                ->format(fn(bool $value) => Language::get($value ? "form.yes" : "form.no")),
         ]);
     }
 

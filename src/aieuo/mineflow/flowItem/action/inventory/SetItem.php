@@ -18,9 +18,9 @@ class SetItem extends SimpleAction {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new ItemArgument("item", $item),
-            new NumberArgument("index", $index, example: "0", min: 0),
+            PlayerArgument::create("player", $player),
+            ItemArgument::create("item", $item),
+            NumberArgument::create("index", $index)->min(0)->example("0"),
         ]);
     }
 

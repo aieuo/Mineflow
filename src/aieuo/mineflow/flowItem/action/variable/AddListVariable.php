@@ -28,9 +28,9 @@ class AddListVariable extends SimpleAction {
         parent::__construct(self::ADD_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new StringArrayArgument("value", $value, "@action.variable.form.value", example: "aiueo"),
-            new IsLocalVariableArgument("scope", $isLocal),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArrayArgument::create("value", $value, "@action.variable.form.value")->example("aiueo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
 

@@ -20,8 +20,8 @@ abstract class TypeItem extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new ItemArgument("item", $item),
+            PlayerArgument::create("player", $player),
+            ItemArgument::create("item", $item),
         ]);
     }
 

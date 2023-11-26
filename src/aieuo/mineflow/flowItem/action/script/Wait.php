@@ -18,7 +18,7 @@ class Wait extends SimpleAction {
         parent::__construct(self::ACTION_WAIT, FlowItemCategory::SCRIPT);
 
         $this->setArguments([
-            new NumberArgument("time", $time, example: "10", min: 1 / 20),
+            NumberArgument::create("time", $time)->min(1 / 20)->example("10"),
         ]);
     }
 

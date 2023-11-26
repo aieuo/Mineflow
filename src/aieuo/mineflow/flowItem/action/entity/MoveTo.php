@@ -21,11 +21,11 @@ class MoveTo extends SimpleAction {
         $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new PositionArgument("position", $position),
-            new NumberArgument("speedX", $speedX, example: "0.1", min: 0),
-            new NumberArgument("speedY", $speedY, example: "0", min: 0),
-            new NumberArgument("speedZ", $speedZ, example: "0.1", min: 0),
+            EntityArgument::create("entity", $entity),
+            PositionArgument::create("position", $position),
+            NumberArgument::create("speedX", $speedX)->min(0)->example("0.1"),
+            NumberArgument::create("speedY", $speedY)->min(0)->example("0"),
+            NumberArgument::create("speedZ", $speedZ)->min(0)->example("0.1"),
         ]);
     }
 

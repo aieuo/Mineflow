@@ -16,7 +16,7 @@ class IsPlayerOnline extends SimpleCondition {
         parent::__construct(self::IS_PLAYER_ONLINE, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
+            PlayerArgument::create("player", $player),
         ]);
     }
 

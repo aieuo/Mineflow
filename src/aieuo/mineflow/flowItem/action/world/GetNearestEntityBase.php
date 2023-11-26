@@ -28,9 +28,9 @@ abstract class GetNearestEntityBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new NumberArgument("distance", $maxDistance, "@action.getNearestEntity.form.maxDistance", example: "100"),
-            new StringArgument("entity", $resultName, "@action.form.resultVariableName", example: "entity"),
+            PositionArgument::create("position", $position),
+            NumberArgument::create("distance", $maxDistance, "@action.getNearestEntity.form.maxDistance")->example("100"),
+            StringArgument::create("entity", $resultName, "@action.form.resultVariableName")->example("entity"),
         ]);
     }
 

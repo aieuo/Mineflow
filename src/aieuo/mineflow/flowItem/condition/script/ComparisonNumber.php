@@ -28,9 +28,9 @@ class ComparisonNumber extends SimpleCondition {
         parent::__construct(self::COMPARISON_NUMBER, FlowItemCategory::SCRIPT);
 
         $this->setArguments([
-            new NumberArgument("value1", $value1, example: "10"),
-            new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@condition.comparisonNumber.form.operator"),
-            new NumberArgument("value2", $value2, example: "50"),
+            NumberArgument::create("value1", $value1)->example("10"),
+            IntEnumArgument::create("operator", $operator, "@condition.comparisonNumber.form.operator")->options($this->operatorSymbols),
+            NumberArgument::create("value2", $value2)->example("50"),
         ]);
     }
 

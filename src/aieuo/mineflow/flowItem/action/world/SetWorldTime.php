@@ -21,8 +21,8 @@ class SetWorldTime extends SimpleAction {
         parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new WorldArgument("world", $worldName),
-            new NumberArgument("time", $time, example: "12000", min: 0, max: World::TIME_FULL),
+            WorldArgument::create("world", $worldName),
+            NumberArgument::create("time", $time)->min(0)->max(World::TIME_FULL)->example("12000"),
         ]);
     }
 

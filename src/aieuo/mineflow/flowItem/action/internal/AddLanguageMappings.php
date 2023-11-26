@@ -29,7 +29,7 @@ class AddLanguageMappings extends FlowItem {
     public function __construct(string $key = "", private array $mappings = []) {
         parent::__construct(self::ADD_LANGUAGE_MAPPINGS, FlowItemCategory::INTERNAL);
 
-        $this->key = new StringArgument("key", $key, example: "mineflow.action.aieuo");
+        $this->key = StringArgument::create("key", $key)->example("mineflow.action.aieuo");
     }
 
     public function getDetailDefaultReplaces(): array {

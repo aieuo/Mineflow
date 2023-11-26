@@ -17,11 +17,9 @@ class SetInvisible extends SimpleAction {
         parent::__construct(self::SET_INVISIBLE, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new BooleanArgument(
-                "invisible", $invisible,
-                toStringFormatter: fn(bool $value) => Language::get("action.setInvisible.".($value ? "visible" : "invisible"))
-            ),
+            EntityArgument::create("entity", $entity),
+            BooleanArgument::create("invisible", $invisible)
+                ->format(fn(bool $value) => Language::get("action.setInvisible.".($value ? "visible" : "invisible"))),
         ]);
     }
 

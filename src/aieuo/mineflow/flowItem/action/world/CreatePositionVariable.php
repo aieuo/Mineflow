@@ -27,11 +27,11 @@ class CreatePositionVariable extends SimpleAction {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new StringArgument("position", $variableName, "@action.form.resultVariableName", example: "pos"),
-            new NumberArgument("x", $x, example: "0"),
-            new NumberArgument("y", $y, example: "100"),
-            new NumberArgument("z", $z, example: "16"),
-            new StringArgument("world", $world, example: "{target.level}"),
+            StringArgument::create("position", $variableName, "@action.form.resultVariableName")->example("pos"),
+            NumberArgument::create("x", $x)->example("0"),
+            NumberArgument::create("y", $y)->example("100"),
+            NumberArgument::create("z", $z)->example("16"),
+            StringArgument::create("world", $world)->example("{target.level}"),
         ]);
     }
 

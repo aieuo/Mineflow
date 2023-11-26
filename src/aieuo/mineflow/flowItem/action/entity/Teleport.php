@@ -17,8 +17,8 @@ class Teleport extends SimpleAction {
         parent::__construct(self::TELEPORT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new PositionArgument("position", $position),
+            EntityArgument::create("entity", $entity),
+            PositionArgument::create("position", $position),
         ]);
     }
 

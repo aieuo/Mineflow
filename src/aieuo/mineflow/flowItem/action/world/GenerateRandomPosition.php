@@ -24,9 +24,9 @@ class GenerateRandomPosition extends SimpleAction {
         parent::__construct(self::GENERATE_RANDOM_POSITION, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("min", $min, "@action.form.target.position 1"),
-            new PositionArgument("max", $max, "@action.form.target.position 2"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "position"),
+            PositionArgument::create("min", $min, "@action.form.target.position 1"),
+            PositionArgument::create("max", $max, "@action.form.target.position 2"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("position"),
         ]);
     }
 

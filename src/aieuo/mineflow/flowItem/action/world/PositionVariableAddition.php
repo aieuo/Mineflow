@@ -23,11 +23,11 @@ class PositionVariableAddition extends SimpleAction {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new NumberArgument("x", $x, example: "0"),
-            new NumberArgument("y", $y, example: "100"),
-            new NumberArgument("z", $z, example: "16"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
+            PositionArgument::create("position", $position),
+            NumberArgument::create("x", $x)->example("0"),
+            NumberArgument::create("y", $y)->example("100"),
+            NumberArgument::create("z", $z)->example("16"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("pos"),
         ]);
     }
 

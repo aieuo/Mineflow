@@ -22,9 +22,9 @@ class DeleteListVariableContentByValue extends SimpleAction {
         parent::__construct(self::DELETE_LIST_VARIABLE_CONTENT_BY_VALUE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new StringArgument("value", $variableValue, "@action.variable.form.value", example: "auieo"),
-            new IsLocalVariableArgument("scope", $isLocal),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArgument::create("value", $variableValue, "@action.variable.form.value")->example("auieo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
 

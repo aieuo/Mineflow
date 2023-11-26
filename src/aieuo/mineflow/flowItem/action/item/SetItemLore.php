@@ -19,8 +19,8 @@ class SetItemLore extends SimpleAction {
         parent::__construct(self::SET_ITEM_LORE, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArrayArgument("lore", $lore, optional: true, separator: ";"),
+            ItemArgument::create("item", $item),
+            StringArrayArgument::create("lore", $lore)->separator(";")->optional(),
         ]);
     }
 

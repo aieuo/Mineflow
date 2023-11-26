@@ -25,8 +25,8 @@ class Gamemode extends SimpleCondition {
         parent::__construct(self::GAMEMODE, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new IntEnumArgument("gamemode", $gamemode, $this->gamemodes),
+            PlayerArgument::create("player", $player),
+            IntEnumArgument::create("gamemode", $gamemode)->options($this->gamemodes),
         ]);
     }
 

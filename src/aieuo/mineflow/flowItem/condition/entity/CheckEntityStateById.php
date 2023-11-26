@@ -18,7 +18,7 @@ abstract class CheckEntityStateById extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new NumberArgument("id", $entityId, "@condition.isActiveEntity.form.entityId", example: "aieuo"),
+            NumberArgument::create("id", $entityId, "@condition.isActiveEntity.form.entityId")->example("aieuo"),
         ]);
     }
 

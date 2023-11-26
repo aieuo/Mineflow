@@ -18,8 +18,8 @@ class SetNameTag extends SimpleAction {
         parent::__construct(self::SET_NAME, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new StringArgument("name", $newName, example: "aieuo"),
+            EntityArgument::create("entity", $entity),
+            StringArgument::create("name", $newName)->example("aieuo"),
         ]);
     }
 

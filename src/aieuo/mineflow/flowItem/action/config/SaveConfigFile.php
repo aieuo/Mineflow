@@ -18,7 +18,7 @@ class SaveConfigFile extends SimpleAction {
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            new ConfigArgument("config", $config),
+            ConfigArgument::create("config", $config),
         ]);
     }
 

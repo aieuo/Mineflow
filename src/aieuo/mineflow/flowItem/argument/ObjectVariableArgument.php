@@ -4,14 +4,24 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\Required;
+
 abstract class ObjectVariableArgument extends FlowItemArgument {
+    use Required;
+
+    public static function create(string $name, string $value = "", string $description = ""): static {
+        return new static(name: $name, value: $value, description: $description);
+    }
+
     public function __construct(
         string         $name,
         private string $value = "",
         string         $description = "",
-        private bool   $optional = false,
+        bool           $optional = false,
     ) {
         parent::__construct($name, $description);
+
+        $optional ? $this->optional() : $this->required();
     }
 
     public function value(string $value): self {
@@ -21,20 +31,6 @@ abstract class ObjectVariableArgument extends FlowItemArgument {
 
     public function getVariableName(): ?string {
         return $this->value;
-    }
-
-    public function optional(): static {
-        $this->optional = true;
-        return $this;
-    }
-
-    public function required(): static {
-        $this->optional = false;
-        return $this;
-    }
-
-    public function isOptional(): bool {
-        return $this->optional;
     }
 
     public function isValid(): bool {

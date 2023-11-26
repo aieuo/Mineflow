@@ -18,8 +18,8 @@ class GetDate extends SimpleAction {
         parent::__construct(self::GET_DATE, FlowItemCategory::COMMON);
 
         $this->setArguments([
-            new StringArgument("format", $format, example: "H:i:s"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "date"),
+            StringArgument::create("format", $format)->example("H:i:s"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("date"),
         ]);
     }
 

@@ -19,7 +19,7 @@ class CallCustomTrigger extends SimpleAction {
         parent::__construct(self::CALL_CUSTOM_TRIGGER, FlowItemCategory::EVENT);
 
         $this->setArguments([
-            new StringArgument("identifier", $triggerName, example: "aieuo"),
+            StringArgument::create("identifier", $triggerName)->example("aieuo"),
         ]);
     }
 

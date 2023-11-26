@@ -18,7 +18,7 @@ class IsPlayerOnlineByName extends SimpleCondition {
         parent::__construct(self::IS_PLAYER_ONLINE_BY_NAME, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new StringArgument("name", $playerName, "@condition.isPlayerOnline.form.name", example: "target"),
+            StringArgument::create("name", $playerName, "@condition.isPlayerOnline.form.name")->example("target"),
         ]);
     }
 

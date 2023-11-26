@@ -17,7 +17,7 @@ class IsOp extends SimpleCondition {
         parent::__construct(self::IS_OP, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
+            PlayerArgument::create("player", $player),
         ]);
     }
 

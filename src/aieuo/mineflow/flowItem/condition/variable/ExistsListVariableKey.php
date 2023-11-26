@@ -20,9 +20,9 @@ class ExistsListVariableKey extends SimpleCondition {
         parent::__construct(self::EXISTS_LIST_VARIABLE_KEY, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new StringArgument("key", $variableKey, "@action.variable.form.key", example: "auieo"),
-            new IsLocalVariableArgument("scope", $isLocal),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArgument::create("key", $variableKey, "@action.variable.form.key")->example("auieo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
 

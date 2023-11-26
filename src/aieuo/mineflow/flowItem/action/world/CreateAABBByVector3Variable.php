@@ -22,9 +22,9 @@ class CreateAABBByVector3Variable extends SimpleAction {
         parent::__construct(self::CREATE_AABB_BY_VECTOR3_VARIABLE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new Vector3Argument("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1"),
-            new Vector3Argument("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1"),
-            new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "area"),
+            Vector3Argument::create("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1"),
+            Vector3Argument::create("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1"),
+            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("area"),
         ]);
     }
 

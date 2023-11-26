@@ -22,9 +22,9 @@ class AddParticle extends SimpleAction {
         $this->setPermissions([FlowItemPermission::LOOP]);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new StringArgument("particle", $particle, example: "minecraft:explosion_particle"),
-            new NumberArgument("amount", $amount, example: "1", min: 1),
+            PositionArgument::create("position", $position),
+            StringArgument::create("particle", $particle)->example("minecraft:explosion_particle"),
+            NumberArgument::create("amount", $amount)->min(1)->example("1"),
         ]);
     }
 

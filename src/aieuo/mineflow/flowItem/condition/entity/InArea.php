@@ -17,9 +17,9 @@ class InArea extends SimpleCondition {
         parent::__construct(self::IN_AREA, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("target", $entity),
-            new PositionArgument("pos1", $pos1, "@condition.inArea.form.pos1"),
-            new PositionArgument("pos2", $pos2, "@condition.inArea.form.pos2"),
+            EntityArgument::create("target", $entity),
+            PositionArgument::create("pos1", $pos1, "@condition.inArea.form.pos1"),
+            PositionArgument::create("pos2", $pos2, "@condition.inArea.form.pos2"),
         ]);
     }
 

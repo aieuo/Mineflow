@@ -22,8 +22,8 @@ class GetWorldByName extends SimpleAction {
         parent::__construct(self::GET_WORLD_BY_NAME, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new StringArgument("name", $worldName, example: "world"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "world"),
+            StringArgument::create("name", $worldName)->example("world"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("world"),
         ]);
     }
 

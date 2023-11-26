@@ -24,8 +24,8 @@ class GetPlayerByName extends SimpleAction {
         parent::__construct(self::GET_PLAYER, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new StringArgument("name", $playerName, example: "aieuo"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "player"),
+            StringArgument::create("name", $playerName)->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("player"),
         ]);
     }
 

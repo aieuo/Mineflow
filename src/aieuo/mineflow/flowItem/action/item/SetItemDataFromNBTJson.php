@@ -25,8 +25,8 @@ class SetItemDataFromNBTJson extends SimpleAction {
         parent::__construct(self::SET_ITEM_DATA_FROM_NBT_JSON, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArgument("json", $json, "@action.setItemData.form.value", example: "{display:{Lore:}"),
+            ItemArgument::create("item", $item),
+            StringArgument::create("json", $json, "@action.setItemData.form.value")->example("{display:{Lore:}"),
         ]);
     }
 

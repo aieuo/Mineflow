@@ -19,8 +19,8 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
 
-        $this->recipeName = new StringArgument("name", $name, "@action.executeRecipe.form.name", example: "aieuo");
-        $this->entity = new EntityArgument("target", $entity);
+        $this->recipeName = StringArgument::create("name", $name, "@action.executeRecipe.form.name")->example("aieuo");
+        $this->entity = EntityArgument::create("target", $entity);
     }
 
     public function getDetailDefaultReplaces(): array {

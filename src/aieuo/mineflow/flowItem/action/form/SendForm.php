@@ -21,8 +21,8 @@ class SendForm extends SimpleAction {
         parent::__construct(self::SEND_FORM, FlowItemCategory::FORM);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("form", $formName, example: "aieuo"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("form", $formName)->example("aieuo"),
         ]);
     }
 

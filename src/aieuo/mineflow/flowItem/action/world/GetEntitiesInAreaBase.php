@@ -28,9 +28,9 @@ abstract class GetEntitiesInAreaBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new AxisAlignedBBArgument("aabb", $aabb),
-            new WorldArgument("world", $worldName),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entities"),
+            AxisAlignedBBArgument::create("aabb", $aabb),
+            WorldArgument::create("world", $worldName),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("entities"),
         ]);
     }
 

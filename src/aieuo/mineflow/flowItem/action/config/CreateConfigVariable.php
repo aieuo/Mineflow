@@ -28,8 +28,8 @@ class CreateConfigVariable extends SimpleAction {
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            new StringArgument("config", $variableName, "@action.form.resultVariableName", example: "config"),
-            new StringArgument("name", $fileName, example: "config"),
+            StringArgument::create("config", $variableName, "@action.form.resultVariableName")->example("config"),
+            StringArgument::create("name", $fileName)->example("config"),
         ]);
     }
 

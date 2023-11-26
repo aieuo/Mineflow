@@ -15,8 +15,8 @@ abstract class AddXpBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new NumberArgument("xp", $xp, example: "10"),
+            PlayerArgument::create("player", $player),
+            NumberArgument::create("xp", $xp)->example("10"),
         ]);
     }
 

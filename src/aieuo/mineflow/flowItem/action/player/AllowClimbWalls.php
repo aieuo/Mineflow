@@ -18,11 +18,9 @@ class AllowClimbWalls extends SimpleAction {
         parent::__construct(self::ALLOW_CLIMB_WALLS, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new BooleanArgument(
-                "allow", $allow,
-                toStringFormatter: fn(bool $value) => Language::get("action.allowFlight.".($value ? "allow" : "notAllow"))
-            ),
+            PlayerArgument::create("player", $player),
+            BooleanArgument::create("allow", $allow)
+                ->format(fn(bool $value) => Language::get("action.allowFlight.".($value ? "allow" : "notAllow"))),
         ]);
     }
 

@@ -15,8 +15,8 @@ class InWorld extends SimpleCondition {
         parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("target", $entity),
-            new StringArgument("world", $world, "@action.createPosition.form.world", example: "world"),
+            EntityArgument::create("target", $entity),
+            StringArgument::create("world", $world, "@action.createPosition.form.world")->example("world"),
         ]);
     }
 

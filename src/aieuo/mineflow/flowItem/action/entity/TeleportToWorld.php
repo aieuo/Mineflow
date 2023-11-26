@@ -21,9 +21,9 @@ class TeleportToWorld extends SimpleAction {
         parent::__construct(self::TELEPORT_TO_WORLD, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new StringArgument("world", $worldName, "@action.createPosition.form.world", example: "world"),
-            new BooleanArgument("safespawn", $safeSpawn),
+            EntityArgument::create("entity", $entity),
+            StringArgument::create("world", $worldName, "@action.createPosition.form.world")->example("world"),
+            BooleanArgument::create("safespawn", $safeSpawn),
         ]);
     }
 

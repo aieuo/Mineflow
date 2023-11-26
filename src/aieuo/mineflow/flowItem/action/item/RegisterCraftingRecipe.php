@@ -35,14 +35,13 @@ class RegisterCraftingRecipe extends FlowItem {
         $characters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
         $this->ingredients = [];
         for ($i = 0; $i < 9; $i ++) {
-            $this->ingredients[] = new ItemArgument(
+            $this->ingredients[] = ItemArgument::create(
                 "input".$i,
                 $ingredients[$i] ?? "",
-                "@action.registerShapedRecipe.ingredients ".$characters[$i],
-                true
-            );
+                "@action.registerShapedRecipe.ingredients ".$characters[$i]
+            )->optional();
         }
-        $this->output = new ItemArgument("output", $output, "@action.registerShapedRecipe.results RESULT");
+        $this->output = ItemArgument::create("output", $output, "@action.registerShapedRecipe.results RESULT");
     }
 
     public function getName(): string {

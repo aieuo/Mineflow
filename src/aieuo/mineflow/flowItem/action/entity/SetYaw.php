@@ -19,8 +19,8 @@ class SetYaw extends SimpleAction {
 
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new NumberArgument("yaw", $yaw, example: "180"),
+            EntityArgument::create("entity", $entity),
+            NumberArgument::create("yaw", $yaw)->example("180"),
         ]);
     }
 

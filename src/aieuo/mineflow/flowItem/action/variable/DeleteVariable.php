@@ -19,8 +19,8 @@ class DeleteVariable extends SimpleAction {
         parent::__construct(self::DELETE_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new IsLocalVariableArgument("scope", $isLocal),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
 

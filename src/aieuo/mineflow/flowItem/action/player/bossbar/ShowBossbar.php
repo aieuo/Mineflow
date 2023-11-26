@@ -39,12 +39,12 @@ class ShowBossbar extends SimpleAction {
         parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("title", $title, example: "title"),
-            new NumberArgument("max", $max, example: "20", min: 1),
-            new NumberArgument("value", $value, example: "20"),
-            new StringEnumArgument("color", $color, array_keys($this->colors)),
-            new StringArgument("id", $barId, example: "20"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("title", $title)->example("title"),
+            NumberArgument::create("max", $max)->min(1)->example("20"),
+            NumberArgument::create("value", $value)->example("20"),
+            StringEnumArgument::create("color", $color)->options(array_keys($this->colors)),
+            StringArgument::create("id", $barId)->example("20"),
         ]);
     }
 

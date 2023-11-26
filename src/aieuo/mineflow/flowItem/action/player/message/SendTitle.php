@@ -38,12 +38,12 @@ class SendTitle extends FlowItem {
     ) {
         parent::__construct(self::SEND_TITLE, FlowItemCategory::PLAYER_MESSAGE);
 
-        $this->player = new PlayerArgument("player", $player);
-        $this->title = new StringArgument("title", $title, example: "aieuo", optional: true);
-        $this->subtitle = new StringArgument("subtitle", $subtitle, example: "aieuo", optional: true);
-        $this->fadein = new NumberArgument("fadein", $fadein, example: "-1", min: -1);
-        $this->stay = new NumberArgument("stay", $stay, example: "-1", min: -1);
-        $this->fadeout = new NumberArgument("fadeout", $fadeout, example: "-1", min: -1);
+        $this->player = PlayerArgument::create("player", $player);
+        $this->title = StringArgument::create("title", $title)->optional()->example("aieuo");
+        $this->subtitle = StringArgument::create("subtitle", $subtitle)->optional()->example("aieuo");
+        $this->fadein = NumberArgument::create("fadein", $fadein)->min(-1)->example("-1");
+        $this->stay = NumberArgument::create("stay", $stay)->min(-1)->example("-1");
+        $this->fadeout = NumberArgument::create("fadeout", $fadeout)->min(-1)->example("-1");
     }
 
     public function getDetailDefaultReplaces(): array {

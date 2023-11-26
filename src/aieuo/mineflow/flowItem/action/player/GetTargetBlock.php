@@ -20,9 +20,9 @@ class GetTargetBlock extends SimpleAction {
         parent::__construct(self::GET_TARGET_BLOCK, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new NumberArgument("maxDistance", $max, example: "100", min: 1),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block"),
+            PlayerArgument::create("player", $player),
+            NumberArgument::create("maxDistance", $max)->min(1)->example("100"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("block"),
         ]);
     }
 

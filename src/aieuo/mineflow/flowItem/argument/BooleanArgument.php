@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Toggle;
 
 class BooleanArgument extends FlowItemArgument {
 
+    public static function create(string $name, bool $value = false, string $description = ""): static {
+        return new static(name: $name, value: $value, description: $description);
+    }
+    
     /**
      * @param string $name
      * @param bool $value

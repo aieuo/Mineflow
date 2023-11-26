@@ -17,8 +17,8 @@ class SetSleeping extends SimpleAction {
         parent::__construct(self::SET_SLEEPING, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new PositionArgument("position", $position),
+            PlayerArgument::create("player", $player),
+            PositionArgument::create("position", $position),
         ]);
     }
 

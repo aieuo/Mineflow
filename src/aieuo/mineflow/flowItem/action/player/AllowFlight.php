@@ -20,11 +20,9 @@ class AllowFlight extends SimpleAction {
         $this->setPermissions([FlowItemPermission::CHEAT]);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new BooleanArgument(
-                "allow", $allow, "@action.allowClimbWalls.form.allow",
-                toStringFormatter: fn(bool $value) => Language::get("action.allowFlight.".($value ? "allow" : "notAllow"))
-            ),
+            PlayerArgument::create("player", $player),
+            BooleanArgument::create("allow", $allow, "@action.allowClimbWalls.form.allow")
+                ->format(fn(bool $value) => Language::get("action.allowFlight.".($value ? "allow" : "notAllow"))),
         ]);
     }
 

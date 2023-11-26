@@ -18,7 +18,7 @@ abstract class TypeMessage extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new StringArgument("message", $message, "@action.message.form.message", example: "aieuo"),
+            StringArgument::create("message", $message, "@action.message.form.message")->example("aieuo"),
         ]);
     }
 

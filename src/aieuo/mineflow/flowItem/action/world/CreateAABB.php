@@ -30,13 +30,13 @@ class CreateAABB extends SimpleAction {
         parent::__construct(self::CREATE_AABB, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new NumberArgument("min x", $minX, "@action.createAABB.form.minX", "0"),
-            new NumberArgument("min y", $minY, "@action.createAABB.form.minY", "100"),
-            new NumberArgument("min z", $minZ, "@action.createAABB.form.minZ", "16"),
-            new NumberArgument("max x", $maxX, "@action.createAABB.form.maxX", "10"),
-            new NumberArgument("max y", $maxY, "@action.createAABB.form.maxY", "200"),
-            new NumberArgument("max z", $maxZ, "@action.createAABB.form.maxZ", "160"),
-            new StringArgument("result", $variableName, "@action.form.resultVariableName", "area"),
+            NumberArgument::create("min x", $minX, "@action.createAABB.form.minX")->example("0"),
+            NumberArgument::create("min y", $minY, "@action.createAABB.form.minY")->example("100"),
+            NumberArgument::create("min z", $minZ, "@action.createAABB.form.minZ")->example("16"),
+            NumberArgument::create("max x", $maxX, "@action.createAABB.form.maxX")->example("10"),
+            NumberArgument::create("max y", $maxY, "@action.createAABB.form.maxY")->example("200"),
+            NumberArgument::create("max z", $maxZ, "@action.createAABB.form.maxZ")->example("160"),
+            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("area"),
         ]);
     }
 

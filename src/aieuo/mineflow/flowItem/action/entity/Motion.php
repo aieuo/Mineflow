@@ -18,10 +18,10 @@ class Motion extends SimpleAction {
         parent::__construct(self::MOTION, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new NumberArgument("x", $x, example: "2"),
-            new NumberArgument("y", $y, example: "3"),
-            new NumberArgument("z", $z, example: "4"),
+            EntityArgument::create("entity", $entity),
+            NumberArgument::create("x", $x)->example("2"),
+            NumberArgument::create("y", $y)->example("3"),
+            NumberArgument::create("z", $z)->example("4"),
         ]);
     }
 

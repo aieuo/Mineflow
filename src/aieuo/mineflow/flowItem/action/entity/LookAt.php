@@ -18,8 +18,8 @@ class LookAt extends SimpleAction {
         parent::__construct(self::LOOK_AT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new PositionArgument("position", $position),
+            EntityArgument::create("entity", $entity),
+            PositionArgument::create("position", $position),
         ]);
     }
 

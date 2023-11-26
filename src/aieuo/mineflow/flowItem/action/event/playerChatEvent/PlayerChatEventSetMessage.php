@@ -19,8 +19,8 @@ class PlayerChatEventSetMessage extends SimpleAction {
         parent::__construct(self::PLAYER_CHAT_EVENT_SET_MESSAGE, FlowItemCategory::PLAYER_CHAT_EVENT);
 
         $this->setArguments([
-            new EventArgument("event", $event),
-            new StringArgument("message", $message, "@action.message.form.message", example: "aieuo", optional: true),
+            EventArgument::create("event", $event),
+            StringArgument::create("message", $message, "@action.message.form.message")->optional()->example("aieuo"),
         ]);
     }
 

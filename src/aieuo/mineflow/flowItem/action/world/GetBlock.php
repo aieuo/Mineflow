@@ -22,8 +22,8 @@ class GetBlock extends SimpleAction {
         parent::__construct(self::GET_BLOCK, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "block"),
+            PositionArgument::create("position", $position),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("block"),
         ]);
     }
 

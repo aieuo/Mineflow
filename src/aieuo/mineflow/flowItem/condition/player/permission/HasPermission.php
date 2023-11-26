@@ -17,8 +17,8 @@ class HasPermission extends SimpleCondition {
         parent::__construct(self::HAS_PERMISSION, FlowItemCategory::PLAYER_PERMISSION);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("permission", $playerPermission, example: "mineflow.customcommand.op"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("permission", $playerPermission)->example("mineflow.customcommand.op"),
         ]);
     }
 

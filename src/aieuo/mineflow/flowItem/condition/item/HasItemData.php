@@ -19,8 +19,8 @@ class HasItemData extends SimpleCondition {
         parent::__construct(self::HAS_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo"),
+            ItemArgument::create("item", $item),
+            StringArgument::create("key", $key, "@action.setItemData.form.key")->example("aieuo"),
         ]);
     }
 

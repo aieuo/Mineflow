@@ -20,8 +20,8 @@ class StringLength extends SimpleAction {
         parent::__construct(self::STRING_LENGTH, FlowItemCategory::STRING);
 
         $this->setArguments([
-            new StringArgument("string", $value, example: "aieuo"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "length"),
+            StringArgument::create("string", $value)->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("length"),
         ]);
     }
 

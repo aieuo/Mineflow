@@ -23,9 +23,9 @@ class GetVariableNested extends SimpleAction {
         parent::__construct(self::GET_VARIABLE_NESTED, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, example: "target.hand"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "item"),
-            new StringArgument("fallback", $fallbackValue, example: "optional", optional: true),
+            StringArgument::create("name", $variableName)->example("target.hand"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("item"),
+            StringArgument::create("fallback", $fallbackValue)->optional()->example("optional"),
         ]);
     }
 

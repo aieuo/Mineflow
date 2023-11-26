@@ -42,10 +42,10 @@ class Calculate2 extends SimpleAction {
         parent::__construct(self::CALCULATE2, FlowItemCategory::MATH);
 
         $this->setArguments([
-            new NumberArgument("value1", $value1, example: "10"),
-            new NumberArgument("value2", $value2, example: "20"),
-            new IntEnumArgument("operator", $operator, $this->operatorSymbols, "@action.fourArithmeticOperations.form.operator"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            NumberArgument::create("value1", $value1)->example("10"),
+            NumberArgument::create("value2", $value2)->example("20"),
+            IntEnumArgument::create("operator", $operator, "@action.fourArithmeticOperations.form.operator")->options($this->operatorSymbols),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
         ]);
     }
 

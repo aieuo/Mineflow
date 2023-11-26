@@ -26,11 +26,11 @@ class AddEffect extends SimpleAction {
         parent::__construct(self::ADD_EFFECT, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new StringArgument("effect", $effectId, example: "1"),
-            new NumberArgument("time", $time, example: "300", min: 0, max: Limits::INT32_MAX),
-            new NumberArgument("power", $power, example: "1", min: 0, max: 255),
-            new BooleanArgument("visible", $visible),
+            EntityArgument::create("entity", $entity),
+            StringArgument::create("effect", $effectId)->example("1"),
+            NumberArgument::create("time", $time)->min(0)->max(Limits::INT32_MAX)->example("300"),
+            NumberArgument::create("power", $power)->min(0)->max(255)->example("1"),
+            BooleanArgument::create("visible", $visible),
         ]);
     }
 

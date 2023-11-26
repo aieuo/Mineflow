@@ -17,8 +17,8 @@ class RemoveScoreboardScore extends SimpleAction {
         parent::__construct(self::REMOVE_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            new ScoreboardArgument("scoreboard", $scoreboard),
-            new StringArgument("name", $scoreName, "@action.setScore.form.name", example: "aieuo", optional: true),
+            ScoreboardArgument::create("scoreboard", $scoreboard),
+            StringArgument::create("name", $scoreName, "@action.setScore.form.name")->optional()->example("aieuo"),
         ]);
     }
 

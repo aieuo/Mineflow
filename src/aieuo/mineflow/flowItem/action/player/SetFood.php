@@ -17,8 +17,8 @@ class SetFood extends SimpleAction {
         parent::__construct(self::SET_FOOD, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new NumberArgument("food", $food, example: "20", min: 0, max: 20),
+            PlayerArgument::create("player", $player),
+            NumberArgument::create("food", $food)->min(0)->max(20)->example("20"),
         ]);
     }
 

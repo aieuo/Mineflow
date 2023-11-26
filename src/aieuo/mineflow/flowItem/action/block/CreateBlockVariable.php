@@ -29,8 +29,8 @@ class CreateBlockVariable extends SimpleAction {
         parent::__construct(self::CREATE_BLOCK_VARIABLE, FlowItemCategory::BLOCK);
 
         $this->setArguments([
-            new StringArgument("block", $variableName, "@action.form.resultVariableName", example: "block"),
-            new StringArgument("id", $blockId, example: "1:0"),
+            StringArgument::create("block", $variableName, "@action.form.resultVariableName")->example("block"),
+            StringArgument::create("id", $blockId)->example("1:0"),
         ]);
     }
 

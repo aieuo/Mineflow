@@ -33,10 +33,10 @@ class FourArithmeticOperations extends SimpleAction {
         parent::__construct(self::FOUR_ARITHMETIC_OPERATIONS, FlowItemCategory::MATH);
 
         $this->setArguments([
-            new NumberArgument("value1", $value1, example: "10"),
-            new IntEnumArgument("operator", $operator, $this->operatorSymbols),
-            new NumberArgument("value2", $value2, example: "50"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            NumberArgument::create("value1", $value1)->example("10"),
+            IntEnumArgument::create("operator", $operator)->options($this->operatorSymbols),
+            NumberArgument::create("value2", $value2)->example("50"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
         ]);
     }
 

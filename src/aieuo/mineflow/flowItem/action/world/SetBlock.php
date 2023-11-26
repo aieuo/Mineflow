@@ -17,8 +17,8 @@ class SetBlock extends SimpleAction {
         parent::__construct(self::SET_BLOCK, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new BlockArgument("block", $block),
+            PositionArgument::create("position", $position),
+            BlockArgument::create("block", $block),
         ]);
     }
 

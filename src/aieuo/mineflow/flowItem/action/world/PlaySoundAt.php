@@ -20,10 +20,10 @@ class PlaySoundAt extends SimpleAction {
         parent::__construct(self::PLAY_SOUND_AT, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new PositionArgument("position", $position),
-            new StringArgument("sound", $sound, example: "random.levelup"),
-            new NumberArgument("volume", $volume, example: "1"),
-            new NumberArgument("pitch", $pitch, example: "1"),
+            PositionArgument::create("position", $position),
+            StringArgument::create("sound", $sound)->example("random.levelup"),
+            NumberArgument::create("volume", $volume)->example("1"),
+            NumberArgument::create("pitch", $pitch)->example("1"),
         ]);
     }
 

@@ -18,8 +18,8 @@ class RemoveBossbar extends SimpleAction {
         parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::BOSSBAR);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("id", $barId, "@action.showBossbar.form.id", example: "aieuo"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("id", $barId, "@action.showBossbar.form.id")->example("aieuo"),
         ]);
     }
 

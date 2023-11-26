@@ -43,13 +43,11 @@ class EditString extends SimpleAction {
         parent::__construct(self::EDIT_STRING, FlowItemCategory::STRING);
 
         $this->setArguments([
-            new StringArgument("value1", $value1, "@action.fourArithmeticOperations.form.value1", example: "10"),
-            new StringEnumArgument(
-                "operator", $operator, $this->operators, "@action.fourArithmeticOperations.form.operator",
-                keyFormatter: fn(string $value) => Language::get("action.editString.".$value),
-            ),
-            new StringArgument("value2", $value2, "@action.fourArithmeticOperations.form.value2", example: "50"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            StringArgument::create("value1", $value1, "@action.fourArithmeticOperations.form.value1")->example("10"),
+            StringEnumArgument::create("operator", $operator, "@action.fourArithmeticOperations.form.operator",)->options($this->operators)
+                ->format(fn(string $value) => Language::get("action.editString.".$value)),
+            StringArgument::create("value2", $value2, "@action.fourArithmeticOperations.form.value2")->example("50"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
         ]);
     }
 

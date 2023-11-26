@@ -22,8 +22,8 @@ class CalculateReversePolishNotation extends SimpleAction {
         parent::__construct(self::REVERSE_POLISH_NOTATION, FlowItemCategory::MATH);
 
         $this->setArguments([
-            new StringArgument("formula", $formula, example: "1 2 + 3 -"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            StringArgument::create("formula", $formula)->example("1 2 + 3 -"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
         ]);
     }
 

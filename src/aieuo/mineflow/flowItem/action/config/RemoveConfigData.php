@@ -19,8 +19,8 @@ class RemoveConfigData extends SimpleAction {
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            new ConfigArgument("config", $config),
-            new StringArgument("key", $key, "@action.setConfig.form.key", example: "aieuo"),
+            ConfigArgument::create("config", $config),
+            StringArgument::create("key", $key, "@action.setConfig.form.key")->example("aieuo"),
         ]);
     }
 

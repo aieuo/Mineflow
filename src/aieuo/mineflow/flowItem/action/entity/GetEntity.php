@@ -25,8 +25,8 @@ class GetEntity extends SimpleAction {
         parent::__construct(self::GET_ENTITY, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new NumberArgument("id", $entityId ?? "", "@action.getEntity.form.target", example: "1", min: 0),
-            new StringArgument("result", $resultName, example: "entity"),
+            NumberArgument::create("id", $entityId ?? "", "@action.getEntity.form.target")->min(0)->example("1"),
+            StringArgument::create("result", $resultName)->example("entity"),
         ]);
     }
 

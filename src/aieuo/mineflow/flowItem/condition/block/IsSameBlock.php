@@ -17,8 +17,8 @@ class IsSameBlock extends SimpleCondition {
         parent::__construct(FlowItemIds::IS_SAME_BLOCk, FlowItemCategory::BLOCK);
 
         $this->setArguments([
-            new BlockArgument("block1", $block1, "@action.form.target.block (1)"),
-            new BlockArgument("block2", $block2, "@action.form.target.block (2)"),
+            BlockArgument::create("block1", $block1, "@action.form.target.block (1)"),
+            BlockArgument::create("block2", $block2, "@action.form.target.block (2)"),
         ]);
     }
 

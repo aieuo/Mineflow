@@ -17,8 +17,8 @@ class HideScoreboard extends SimpleAction {
         parent::__construct(self::HIDE_SCOREBOARD, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new ScoreboardArgument("scoreboard", $scoreboard),
+            PlayerArgument::create("player", $player),
+            ScoreboardArgument::create("scoreboard", $scoreboard),
         ]);
     }
 

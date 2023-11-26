@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Utils;
 
 class NumberArgument extends FlowItemArgument {
+    use Required;
+
+    public static function create(string $name, string|float|int $value = "", string $description = ""): static {
+        return new static(name: $name, value: $value, description: $description);
+    }
 
     private string $value;
 
@@ -17,8 +23,8 @@ class NumberArgument extends FlowItemArgument {
      * @param string|float|int|null $value
      * @param string $description
      * @param string $example
-     * @param float|null $min
-     * @param float|null $max
+     * @param float|int|null $min
+     * @param float|int|null $max
      * @param float[] $excludes
      * @param bool $optional
      */
@@ -27,14 +33,15 @@ class NumberArgument extends FlowItemArgument {
         string|float|int|null  $value = "",
         string                 $description = "",
         private string         $example = "",
-        private ?float        $min = null,
-        private ?float        $max = null,
+        private float|int|null $min = null,
+        private float|int|null $max = null,
         private array          $excludes = [],
-        private bool           $optional = false,
+        bool                   $optional = false,
     ) {
         parent::__construct($name, $description);
 
         $this->value = (string)$value;
+        $optional ? $this->optional() : $this->required();
     }
 
     public function value(string|float|int $value): static {
@@ -73,46 +80,35 @@ class NumberArgument extends FlowItemArgument {
         return $this->example;
     }
 
-    public function min(?float $min): void {
+    public function min(float|int|null $min): self {
         $this->min = $min;
+        return $this;
     }
 
-    public function getMin(): ?float {
+    public function getMin(): float|int|null {
         return $this->min;
     }
 
-    public function max(?float $max): void {
+    public function max(float|int|null $max): self {
         $this->max = $max;
+        return $this;
     }
 
-    public function getMax(): ?float {
+    public function getMax(): float|int|null {
         return $this->max;
     }
 
     /**
      * @param float[] $excludes
-     * @return void
+     * @return NumberArgument
      */
-    public function excludes(array $excludes): void {
+    public function excludes(array $excludes): self {
         $this->excludes = $excludes;
+        return $this;
     }
 
     public function getExcludes(): array {
         return $this->excludes;
-    }
-
-    public function optional(): static {
-        $this->optional = true;
-        return $this;
-    }
-
-    public function required(): static {
-        $this->optional = false;
-        return $this;
-    }
-
-    public function isOptional(): bool {
-        return $this->optional;
     }
 
     public function isValid(): bool {

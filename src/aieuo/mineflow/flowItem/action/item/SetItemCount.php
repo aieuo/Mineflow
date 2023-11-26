@@ -19,8 +19,8 @@ class SetItemCount extends SimpleAction {
         parent::__construct(self::SET_ITEM_COUNT, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new NumberArgument("count", $count, "@action.createItem.form.count", example: "64", min: 0),
+            ItemArgument::create("item", $item),
+            NumberArgument::create("count", $count, "@action.createItem.form.count")->min(0)->example("64"),
         ]);
     }
 

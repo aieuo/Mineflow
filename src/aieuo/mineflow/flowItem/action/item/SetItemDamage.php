@@ -20,8 +20,8 @@ class SetItemDamage extends SimpleAction {
         parent::__construct(self::SET_ITEM_DAMAGE, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new NumberArgument("damage", $damage, example: "0", min: 0),
+            ItemArgument::create("item", $item),
+            NumberArgument::create("damage", $damage)->min(0)->example("0"),
         ]);
     }
 

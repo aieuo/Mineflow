@@ -9,17 +9,21 @@ use function count;
 
 class IntEnumArgument extends FlowItemArgument {
 
+    public static function create(string $name, int $value = 0, string $description = ""): static {
+        return new static(name: $name, value: $value, description: $description);
+    }
+
     /**
      * @param string $name
      * @param int $value
-     * @param string[] $keys
+     * @param string[] $options
      * @param string $description
      */
     public function __construct(
-        string                 $name,
-        private int            $value = 0,
-        private readonly array $keys = [],
-        string                 $description = "",
+        string        $name,
+        private int   $value = 0,
+        private array $options = [],
+        string        $description = "",
     ) {
         parent::__construct($name, $description);
     }
@@ -29,21 +33,30 @@ class IntEnumArgument extends FlowItemArgument {
         return $this;
     }
 
+    /**
+     * @param string[] $options
+     * @return $this
+     */
+    public function options(array $options): self {
+        $this->options = $options;
+        return $this;
+    }
+
     public function getEnumValue(): int {
         return $this->value;
     }
 
     public function getEnumKey(): string {
-        return $this->keys[$this->getEnumValue()] ?? "";
+        return $this->options[$this->getEnumValue()] ?? "";
     }
 
     public function isValid(): bool {
-        return $this->getEnumValue() >= 0 and $this->getEnumValue() < count($this->keys);
+        return $this->getEnumValue() >= 0 and $this->getEnumValue() < count($this->options);
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new Dropdown($this->getDescription(), $this->keys, $this->getEnumValue())
+            new Dropdown($this->getDescription(), $this->options, $this->getEnumValue())
         ];
     }
 

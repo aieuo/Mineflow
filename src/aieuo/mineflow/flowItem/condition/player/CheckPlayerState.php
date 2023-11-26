@@ -18,7 +18,7 @@ abstract class CheckPlayerState extends SimpleCondition {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
+            PlayerArgument::create("player", $player),
         ]);
     }
 

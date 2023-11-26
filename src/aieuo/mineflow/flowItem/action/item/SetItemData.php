@@ -25,9 +25,9 @@ class SetItemData extends SimpleAction {
         parent::__construct(self::SET_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArgument("key", $key, example: "aieuo"),
-            new StringArgument("value", $value, example: "100"),
+            ItemArgument::create("item", $item),
+            StringArgument::create("key", $key)->example("aieuo"),
+            StringArgument::create("value", $value)->example("100"),
         ]);
     }
 

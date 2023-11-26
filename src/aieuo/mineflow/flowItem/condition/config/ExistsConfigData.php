@@ -17,8 +17,8 @@ class ExistsConfigData extends SimpleCondition {
         parent::__construct(self::EXISTS_CONFIG_DATA, FlowItemCategory::CONFIG);
 
         $this->setArguments([
-            new ConfigArgument("config", $config),
-            new StringArgument("key", $key, example: "aieuo"),
+            ConfigArgument::create("config", $config),
+            StringArgument::create("key", $key)->example("aieuo"),
         ]);
     }
 

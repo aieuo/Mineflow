@@ -31,10 +31,10 @@ class CreateScoreboardVariable extends SimpleAction {
         parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "board"),
-            new StringArgument("id", $boardId, example: "aieuo"),
-            new StringArgument("displayName", $displayName, example: "auieo"),
-            new StringEnumArgument("type", $displayType, $this->displayTypes),
+            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("board"),
+            StringArgument::create("id", $boardId)->example("aieuo"),
+            StringArgument::create("displayName", $displayName)->example("auieo"),
+            StringEnumArgument::create("type", $displayType)->options($this->displayTypes),
         ]);
     }
 

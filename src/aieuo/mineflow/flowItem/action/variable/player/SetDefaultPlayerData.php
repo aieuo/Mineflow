@@ -19,8 +19,8 @@ class SetDefaultPlayerData extends SimpleAction {
         parent::__construct(self::SET_DEFAULT_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
 
         $this->setArguments([
-            new StringArgument("name", $dataName, "@action.setPlayerData.form.name", example: "tag"),
-            new StringArgument("default", $defaultValue, "@action.setPlayerData.form.default", example: "aieuo", optional: true),
+            StringArgument::create("name", $dataName, "@action.setPlayerData.form.name")->example("tag"),
+            StringArgument::create("default", $defaultValue, "@action.setPlayerData.form.default")->optional()->example("aieuo"),
         ]);
     }
 

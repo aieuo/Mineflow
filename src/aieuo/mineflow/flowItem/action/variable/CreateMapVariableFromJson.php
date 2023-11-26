@@ -23,9 +23,9 @@ class CreateMapVariableFromJson extends SimpleAction {
         parent::__construct(self::CREATE_MAP_VARIABLE_FROM_JSON, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new StringArgument("json", $json, "@action.variable.form.value", example: "aeiuo"),
-            new IsLocalVariableArgument("scope", $isLocal),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArgument::create("json", $json, "@action.variable.form.value")->example("aeiuo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
 

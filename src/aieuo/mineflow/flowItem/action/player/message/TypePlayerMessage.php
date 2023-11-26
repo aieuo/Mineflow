@@ -20,8 +20,8 @@ abstract class TypePlayerMessage extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("message", $message, "@action.message.form.message", example: "aieuo"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("message", $message, "@action.message.form.message")->example("aieuo"),
         ]);
     }
 

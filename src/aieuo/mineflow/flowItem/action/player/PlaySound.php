@@ -19,10 +19,10 @@ class PlaySound extends SimpleAction {
         parent::__construct(self::PLAY_SOUND, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("sound", $sound, example: "random.levelup"),
-            new NumberArgument("volume", $volume, example: "1"),
-            new NumberArgument("pitch", $pitch, example: "1"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("sound", $sound)->example("random.levelup"),
+            NumberArgument::create("volume", $volume)->example("1"),
+            NumberArgument::create("pitch", $pitch)->example("1"),
         ]);
     }
 

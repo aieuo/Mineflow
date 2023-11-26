@@ -25,9 +25,9 @@ class CreateHumanEntity extends SimpleAction {
         parent::__construct(self::CREATE_HUMAN_ENTITY, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new PlayerArgument("skin", $name, "@action.createHuman.form.skin"),
-            new PositionArgument("pos", $pos),
-            new StringArgument("result", $resultName, example: "entity"),
+            PlayerArgument::create("skin", $name, "@action.createHuman.form.skin"),
+            PositionArgument::create("pos", $pos),
+            StringArgument::create("result", $resultName)->example("entity"),
         ]);
     }
 

@@ -68,10 +68,10 @@ class GetEntitySidePosition extends SimpleAction {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new StringEnumArgument("direction", $direction, $this->directions),
-            new NumberArgument("steps", $steps, example: "1"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "pos"),
+            EntityArgument::create("entity", $entity),
+            StringEnumArgument::create("direction", $direction)->options($this->directions),
+            NumberArgument::create("steps", $steps)->example("1"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("pos"),
         ]);
     }
 

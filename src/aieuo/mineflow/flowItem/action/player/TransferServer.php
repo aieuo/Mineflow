@@ -17,9 +17,9 @@ class TransferServer extends SimpleAction {
         parent::__construct(self::TRANSFER_SERVER, FlowItemCategory::PLAYER);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("ip", $ip, example: "aieuo.tokyo"),
-            new NumberArgument("port", $port, example: "19132", min: 1, max: 65535),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("ip", $ip)->example("aieuo.tokyo"),
+            NumberArgument::create("port", $port)->min(1)->max(65535)->example("19132"),
         ]);
     }
 

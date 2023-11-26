@@ -24,8 +24,8 @@ class CountListVariable extends SimpleAction {
         parent::__construct(self::COUNT_LIST_VARIABLE, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, example: "list"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "result"),
+            StringArgument::create("name", $variableName)->example("list"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
         ]);
     }
 

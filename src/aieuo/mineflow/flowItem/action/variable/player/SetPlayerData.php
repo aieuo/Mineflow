@@ -20,9 +20,9 @@ class SetPlayerData extends SimpleAction {
         parent::__construct(self::SET_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("name", $dataName, example: "tag"),
-            new StringArgument("data", $data, example: "aieuo"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("name", $dataName)->example("tag"),
+            StringArgument::create("data", $data)->example("aieuo"),
         ]);
     }
 

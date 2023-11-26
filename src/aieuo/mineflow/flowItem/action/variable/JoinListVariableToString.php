@@ -22,9 +22,9 @@ class JoinListVariableToString extends SimpleAction {
         parent::__construct(self::JOIN_LIST_VARIABLE_TO_STRING, FlowItemCategory::VARIABLE);
 
         $this->setArguments([
-            new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo"),
-            new StringArgument("separator", $separator, example: ", ", optional: true),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "string"),
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArgument::create("separator", $separator)->optional()->example(", "),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("string"),
         ]);
     }
 

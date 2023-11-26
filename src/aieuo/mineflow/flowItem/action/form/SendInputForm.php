@@ -25,10 +25,10 @@ class SendInputForm extends SimpleAction {
         parent::__construct(self::SEND_INPUT, FlowItemCategory::FORM);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("text", $formText, example: "aieuo"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "input"),
-            new BooleanArgument("resend", $resendOnClose, "@action.input.form.resendOnClose"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("text", $formText)->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("input"),
+            BooleanArgument::create("resend", $resendOnClose, "@action.input.form.resendOnClose"),
         ]);
     }
 

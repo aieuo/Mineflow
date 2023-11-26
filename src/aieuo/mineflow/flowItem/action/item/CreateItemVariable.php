@@ -29,10 +29,10 @@ class CreateItemVariable extends SimpleAction {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new StringArgument("item", $variableName, "@action.form.resultVariableName", example: "item"),
-            new StringArgument("id", $itemId, example: "1:0"),
-            new NumberArgument("count", $itemCount, example: "64", min: 0, optional: true),
-            new StringArgument("name", $itemName, example: "aieuo", optional: true),
+            StringArgument::create("item", $variableName, "@action.form.resultVariableName")->example("item"),
+            StringArgument::create("id", $itemId)->example("1:0"),
+            NumberArgument::create("count", $itemCount)->min(0)->optional()->example("64"),
+            StringArgument::create("name", $itemName)->optional()->example("aieuo"),
         ]);
     }
 

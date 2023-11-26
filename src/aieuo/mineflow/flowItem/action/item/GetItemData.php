@@ -24,9 +24,9 @@ class GetItemData extends SimpleAction {
         parent::__construct(self::GET_ITEM_DATA, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            new ItemArgument("item", $item),
-            new StringArgument("key", $key, "@action.setItemData.form.key", example: "aieuo"),
-            new StringArgument("result", $resultName, "@action.form.resultVariableName", example: "entity"),
+            ItemArgument::create("item", $item),
+            StringArgument::create("key", $key, "@action.setItemData.form.key")->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("entity"),
         ]);
     }
 

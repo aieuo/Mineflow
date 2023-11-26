@@ -20,9 +20,9 @@ class AddSpecificLanguageMapping extends SimpleAction {
         $languages = implode(", ", Language::getAvailableLanguages());
 
         $this->setArguments([
-            new StringArgument("language", $language, Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), example: "eng"),
-            new StringArgument("key", $key, "@action.addLanguageMappings.form.key", example: "mineflow.action.aieuo"),
-            new StringArgument("message", $message, example: "Hello"),
+            StringArgument::create("language", $language, Language::get("action.addSpecificLanguageMapping.form.language", [$languages]))->example("eng"),
+            StringArgument::create("key", $key, "@action.addLanguageMappings.form.key")->example("mineflow.action.aieuo"),
+            StringArgument::create("message", $message)->example("Hello"),
         ]);
     }
 

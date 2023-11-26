@@ -18,9 +18,9 @@ class SendToast extends SimpleAction {
         parent::__construct(self::SEND_TOAST, FlowItemCategory::PLAYER_MESSAGE);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("title", $title, example: "aieuo", optional: true),
-            new StringArgument("body", $body, example: "aieuo", optional: true),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("title", $title)->optional()->example("aieuo"),
+            StringArgument::create("body", $body)->optional()->example("aieuo"),
         ]);
     }
 

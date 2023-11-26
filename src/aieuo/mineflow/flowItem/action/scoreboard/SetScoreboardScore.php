@@ -18,9 +18,9 @@ class SetScoreboardScore extends SimpleAction {
         parent::__construct(self::SET_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            new ScoreboardArgument("scoreboard", $scoreboard),
-            new StringArgument("name", $scoreName, "@action.setScore.form.name", example: "aieuo", optional: true),
-            new NumberArgument("score", $score, "@action.setScore.form.score", example: "100"),
+            ScoreboardArgument::create("scoreboard", $scoreboard),
+            StringArgument::create("name", $scoreName, "@action.setScore.form.name")->optional()->example("aieuo"),
+            NumberArgument::create("score", $score, "@action.setScore.form.score")->example("100"),
         ]);
     }
 

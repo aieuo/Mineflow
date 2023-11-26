@@ -20,7 +20,7 @@ class CommandConsole extends SimpleAction {
         $this->setPermissions([FlowItemPermission::CONSOLE]);
 
         $this->setArguments([
-            new StringArgument("command", $command, "@action.command.form.command", example: "mineflow"),
+            StringArgument::create("command", $command, "@action.command.form.command")->example("mineflow"),
         ]);
     }
 

@@ -16,9 +16,9 @@ class RandomNumber extends SimpleCondition {
         parent::__construct(self::RANDOM_NUMBER, FlowItemCategory::MATH);
 
         $this->setArguments([
-            new NumberArgument("min", $min, example: "0"),
-            new NumberArgument("max", $max, example: "10"),
-            new NumberArgument("value", $value, example: "0"),
+            NumberArgument::create("min", $min)->example("0"),
+            NumberArgument::create("max", $max)->example("10"),
+            NumberArgument::create("value", $value)->example("0"),
         ]);
     }
 

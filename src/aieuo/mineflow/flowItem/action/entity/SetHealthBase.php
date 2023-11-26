@@ -15,8 +15,8 @@ abstract class SetHealthBase extends SimpleAction {
         parent::__construct($id, $category);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
-            new NumberArgument("health", $health ?? "", "@action.setHealth.form.health", example: "20", min: 0),
+            EntityArgument::create("entity", $entity),
+            NumberArgument::create("health", $health ?? "", "@action.setHealth.form.health")->min(0)->example("20"),
         ]);
     }
 

@@ -16,7 +16,7 @@ class UnsetImmobile extends SimpleAction {
         parent::__construct(self::UNSET_IMMOBILE, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("entity", $entity),
+            EntityArgument::create("entity", $entity),
         ]);
     }
 

@@ -51,8 +51,8 @@ class AddVariable extends FlowItem {
 
         $this->variableType = $type ?? StringVariable::getTypeName();
 
-        $this->variableName = new StringArgument("name", $variableName, "@action.variable.form.name", example: "aieuo");
-        $this->variableValue = new StringArgument("value", $variableValue, "@action.variable.form.value", example: "aeiuo");
+        $this->variableName = StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo");
+        $this->variableValue = StringArgument::create("value", $variableValue, "@action.variable.form.value")->example("aeiuo");
     }
 
     public function getDetailDefaultReplaces(): array {

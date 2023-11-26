@@ -22,9 +22,9 @@ class SetConfigData extends SimpleAction {
         $this->setPermissions([FlowItemPermission::CONFIG]);
 
         $this->setArguments([
-            new ConfigArgument("config", $config),
-            new StringArgument("key", $key, example: "aieuo"),
-            new StringArgument("value", $value, example: "100"),
+            ConfigArgument::create("config", $config),
+            StringArgument::create("key", $key)->example("aieuo"),
+            StringArgument::create("value", $value)->example("100"),
         ]);
     }
 

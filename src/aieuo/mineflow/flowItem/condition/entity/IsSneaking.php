@@ -15,7 +15,7 @@ class IsSneaking extends SimpleCondition {
         parent::__construct(self::IS_SNEAKING, FlowItemCategory::ENTITY);
 
         $this->setArguments([
-            new EntityArgument("target", $entity),
+            EntityArgument::create("target", $entity),
         ]);
     }
 

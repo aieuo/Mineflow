@@ -18,8 +18,8 @@ class Command extends SimpleAction {
         parent::__construct(self::COMMAND, FlowItemCategory::COMMAND);
 
         $this->setArguments([
-            new PlayerArgument("player", $player),
-            new StringArgument("command", $command, example: "command"),
+            PlayerArgument::create("player", $player),
+            StringArgument::create("command", $command)->example("command"),
         ]);
     }
 

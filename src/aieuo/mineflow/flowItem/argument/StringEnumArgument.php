@@ -11,30 +11,43 @@ use function in_array;
 
 class StringEnumArgument extends FlowItemArgument {
 
+    public static function create(string $name, string $value = "", string $description = ""): static {
+        return new static(name: $name, value: $value, description: $description);
+    }
+
     /** @var string[] */
     private array $keys;
 
     /**
      * @param string $name
      * @param string $value
-     * @param string[] $values
+     * @param string[] $options
      * @param string $description
      * @param \Closure|null $keyFormatter
      */
     public function __construct(
-        string                 $name,
-        private string         $value = "",
-        private readonly array $values = [],
-        string                 $description = "",
-        private \Closure|null  $keyFormatter = null,
+        string                $name,
+        private string        $value = "",
+        private array         $options = [],
+        string                $description = "",
+        private \Closure|null $keyFormatter = null,
     ) {
         parent::__construct($name, $description);
 
-        $this->keys = ($keyFormatter === null ? $values : array_map(fn(string $v) => $keyFormatter($v), $values));
+        $this->keys = ($keyFormatter === null ? $options : array_map(fn(string $v) => $keyFormatter($v), $options));
     }
 
     public function value(string $value): self {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @param string[] $options
+     * @return $this
+     */
+    public function options(array $options): self {
+        $this->options = $options;
         return $this;
     }
 
@@ -56,7 +69,7 @@ class StringEnumArgument extends FlowItemArgument {
     }
 
     public function isValid(): bool {
-        return in_array($this->getEnumValue(), $this->values, true);
+        return in_array($this->getEnumValue(), $this->options, true);
     }
 
     public function createFormElements(array $variables): array {
@@ -73,7 +86,7 @@ class StringEnumArgument extends FlowItemArgument {
      * @return void
      */
     public function handleFormResponse(mixed ...$data): void {
-        $this->value($this->values[$data[0]]);
+        $this->value($this->options[$data[0]]);
     }
 
     public function jsonSerialize(): string {
