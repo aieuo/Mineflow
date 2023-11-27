@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\base\PositionFlowItem;
+use aieuo\mineflow\flowItem\base\SimpleFlowItem;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
@@ -208,6 +210,14 @@ class RecipeUpgrader {
             foreach ($item->getPositionVariableNames() as $name => $variable) {
                 $variable = preg_replace("/^(target|entity|player)\d*$/u", "$0.location", $variable);
                 $item->setPositionVariableName($variable, $name);
+            }
+        }
+        if ($item instanceof SimpleFlowItem) {
+            foreach ($item->getArguments() as $argument) {
+                if ($argument instanceof PositionArgument) {
+                    $variable = preg_replace("/^(target|entity|player)\d*$/u", "$0.location", $argument->getVariableName());
+                    $argument->value($variable);
+                }
             }
         }
     }
