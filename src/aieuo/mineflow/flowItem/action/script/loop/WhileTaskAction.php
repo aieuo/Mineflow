@@ -147,12 +147,6 @@ class WhileTaskAction extends FlowItem implements FlowItemContainer {
         ];
     }
 
-    public function getAddingVariables(): array {
-        return [
-            "i" => new DummyVariable(NumberVariable::class)
-        ];
-    }
-
     public function isDataValid(): bool {
         return true;
     }

@@ -141,13 +141,6 @@ class ForeachAction extends FlowItem implements FlowItemContainer {
         $this->setValueVariableName($contents[3]);
     }
 
-    public function getAddingVariables(): array {
-        return [
-            $this->getKeyVariableName() => new DummyVariable(UnknownVariable::class),
-            $this->getValueVariableName() => new DummyVariable(UnknownVariable::class),
-        ];
-    }
-
     public function serializeContents(): array {
         return [$this->getActions(), $this->listVariableName, $this->keyVariableName, $this->valueVariableName,];
     }

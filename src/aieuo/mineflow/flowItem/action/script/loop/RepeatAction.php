@@ -145,12 +145,6 @@ class RepeatAction extends FlowItem implements FlowItemContainer {
         ];
     }
 
-    public function getAddingVariables(): array {
-        return [
-            $this->getCounterName() => new DummyVariable(NumberVariable::class)
-        ];
-    }
-
     public function isDataValid(): bool {
         return true;
     }
