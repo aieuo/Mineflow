@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 
-class StringArgument extends FlowItemArgument {
+class StringArgument extends FlowItemArgument implements CustomFormEditorArgument {
     use Required;
 
     public static function create(string $name, string $value = "", string $description = ""): static {

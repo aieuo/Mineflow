@@ -35,8 +35,6 @@ class RecipeArgumentArgument extends StringArrayArgument {
         private ?\Closure $recipeName = null,
     ) {
         parent::__construct($name, $value, $description, $example, true, ",");
-
-        $this->page(1);
     }
 
     /**

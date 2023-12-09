@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\block;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
@@ -28,7 +29,7 @@ class CreateBlockVariable extends SimpleAction {
 
         $this->setArguments([
             StringArgument::create("block", $variableName, "@action.form.resultVariableName")->example("block"),
-            StringArgument::create("id", $blockId)->order(-1)->example("stone"),
+            StringArgument::create("id", $blockId)->example("stone"),
         ]);
     }
 
@@ -64,6 +65,15 @@ class CreateBlockVariable extends SimpleAction {
     public function getAddingVariables(): array {
         return [
             (string)$this->getVariableName() => new DummyVariable(BlockVariable::class, (string)$this->getBlockId())
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getBlockId(),
+                $this->getVariableName(),
+            ]),
         ];
     }
 }

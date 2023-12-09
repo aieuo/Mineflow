@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidPlaceholderValueException;
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\utils\Language;
@@ -12,7 +13,7 @@ use aieuo\mineflow\variable\object\ItemVariable;
 use pocketmine\item\Item;
 use function str_replace;
 
-class ItemFixedArrayArgument extends FlowItemArgument {
+class ItemFixedArrayArgument extends FlowItemArgument implements CustomFormEditorArgument {
 
     public static function create(string $name, array $value = [], string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);

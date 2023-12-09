@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\exception\InvalidFormValueException;
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use function count;
 use function implode;
 use function str_replace;
 
-class LanguageMappingArgument extends FlowItemArgument {
+class LanguageMappingArgument extends FlowItemArgument implements CustomFormEditorArgument {
 
     public static function create(string $name, array $value = [], string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);

@@ -16,6 +16,10 @@ use function str_replace;
 
 class SeparatedInputStringArrayArgument extends StringArrayArgument {
 
+    public static function create(string $name, string|array $value = "", string $description = ""): static {
+        return new static(name: $name, value: $value, editValuesDescription: $description);
+    }
+
     /**
      * @param string $name
      * @param string|string[] $value
@@ -67,7 +71,7 @@ class SeparatedInputStringArrayArgument extends StringArrayArgument {
      * @param string[] $data
      * @return void
      */
-    public function handleFormResponse(...$data): void {
+    public function handleFormResponse(mixed ...$data): void {
         $add = array_filter(array_map("trim", explode($this->getSeparator(), array_pop($data))));
 
         $values = array_filter($data, fn(string $str) => $str !== "");

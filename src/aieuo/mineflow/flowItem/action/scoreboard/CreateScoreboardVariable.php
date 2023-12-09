@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\scoreboard;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\argument\StringEnumArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Scoreboard;
@@ -29,10 +30,10 @@ class CreateScoreboardVariable extends SimpleAction {
         parent::__construct(self::CREATE_SCOREBOARD_VARIABLE, FlowItemCategory::SCOREBOARD);
 
         $this->setArguments([
-            (new StringArgument("result", $variableName, "@action.form.resultVariableName", example: "board"))->order(1),
-            new StringArgument("id", $boardId, example: "aieuo"),
-            new StringArgument("displayName", $displayName, example: "auieo"),
-            new StringEnumArgument("type", $displayType, $this->displayTypes),
+            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("board"),
+            StringArgument::create("id", $boardId)->example("aieuo"),
+            StringArgument::create("displayName", $displayName)->example("auieo"),
+            StringEnumArgument::create("type", $displayType)->options($this->displayTypes),
         ]);
     }
 
@@ -70,6 +71,17 @@ class CreateScoreboardVariable extends SimpleAction {
     public function getAddingVariables(): array {
         return [
             (string)$this->getVariableName() => new DummyVariable(ScoreboardVariable::class, (string)$this->getDisplayName())
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getId(),
+                $this->getDisplayName(),
+                $this->getDisplayType(),
+                $this->getVariableName(),
+            ]),
         ];
     }
 }

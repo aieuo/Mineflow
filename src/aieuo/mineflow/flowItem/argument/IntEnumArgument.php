@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use function count;
 
-class IntEnumArgument extends FlowItemArgument {
+class IntEnumArgument extends FlowItemArgument implements CustomFormEditorArgument {
 
     public static function create(string $name, int $value = 0, string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);

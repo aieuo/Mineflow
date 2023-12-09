@@ -6,11 +6,21 @@ namespace aieuo\mineflow\flowItem\action\script\ifelse;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\utils\Language;
 
 class ElseifAction extends IFActionBase {
 
     public function __construct(array $conditions = [], array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_ELSEIF, conditions: $conditions, actions: $actions, customName: $customName);
+    }
+
+    public function getName(): string {
+        return Language::get("action.elseif.name");
+    }
+
+
+    public function getDescription(): string {
+        return Language::get("action.elseif.description");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
@@ -22,7 +32,7 @@ class ElseifAction extends IFActionBase {
             if (!(yield from $condition->execute($source))) return false;
         }
 
-        yield from (new FlowItemExecutor($this->getActions(), $source->getTarget(), [], $source))->getGenerator();
+        yield from (new FlowItemExecutor($this->getActions()->getItems(), $source->getTarget(), [], $source))->getGenerator();
         return true;
     }
 }

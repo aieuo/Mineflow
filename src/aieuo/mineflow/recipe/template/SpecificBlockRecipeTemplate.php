@@ -6,7 +6,6 @@ namespace aieuo\mineflow\recipe\template;
 
 use aieuo\mineflow\flowItem\action\script\ifelse\IFAction;
 use aieuo\mineflow\flowItem\condition\script\ComparisonString;
-use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\recipe\Recipe;
@@ -45,13 +44,13 @@ class SpecificBlockRecipeTemplate extends RecipeTemplate {
 
     public function build(): Recipe {
         $recipe = new Recipe($this->getRecipeName(), $this->getRecipeGroup());
-        $recipe->addItem(new IFAction([
+        $recipe->addAction(new IFAction([
             new ComparisonString(match (true) {
                 str_contains($this->block, ":") => "{block.id}:{block.meta}",
                 is_numeric($this->block) => "{block.id}",
                 default => "{block.name}"
-            }, (string)ComparisonString::EQUALS, $this->block),
-        ]), FlowItemContainer::ACTION);
+            }, ComparisonString::EQUALS, $this->block),
+        ]));
         $recipe->addTrigger(EventTrigger::get($this->events[$this->event]));
         return $recipe;
     }

@@ -8,6 +8,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
@@ -25,7 +26,7 @@ class CreatePositionVariable extends SimpleAction {
         parent::__construct(self::CREATE_POSITION_VARIABLE, FlowItemCategory::WORLD);
 
         $this->setArguments([
-            StringArgument::create("position", $variableName, "@action.form.resultVariableName")->order(1)->example("pos"),
+            StringArgument::create("position", $variableName, "@action.form.resultVariableName")->example("pos"),
             NumberArgument::create("x", $x)->example("0"),
             NumberArgument::create("y", $y)->example("100"),
             NumberArgument::create("z", $z)->example("16"),
@@ -78,6 +79,18 @@ class CreatePositionVariable extends SimpleAction {
         $pos = $this->getX().", ".$this->getY().", ".$this->getZ().", ".$this->getWorld();
         return [
             (string)$this->getVariableName() => new DummyVariable(PositionVariable::class, $pos)
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getX(),
+                $this->getY(),
+                $this->getZ(),
+                $this->getWorld(),
+                $this->getVariableName(),
+            ]),
         ];
     }
 }

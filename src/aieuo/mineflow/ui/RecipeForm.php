@@ -2,7 +2,6 @@
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\CancelToggle;
@@ -18,10 +17,12 @@ use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\recipe\template\RecipeTemplate;
 use aieuo\mineflow\trigger\BaseTriggerForm;
 use aieuo\mineflow\trigger\Trigger;
+use aieuo\mineflow\ui\controller\FlowItemFormController;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Utils;
 use pocketmine\player\Player;
+use SOFe\AwaitGenerator\Await;
 use function array_map;
 use function array_merge;
 use function array_search;
@@ -208,6 +209,8 @@ class RecipeForm {
     }
 
     public function sendRecipeMenu(Player $player, Recipe $recipe, array $messages = []): void {
+        FlowItemFormController::enterRecipe($player, $recipe);
+
         $detail = trim($recipe->getDetail());
         if (!$recipe->isEnabled()) {
             $messages[] = Language::get("form.recipe.disabled");
@@ -220,8 +223,11 @@ class RecipeForm {
                     is_callable($prev) ? $prev($player) : $this->sendMenu($player);
                 }),
                 new Button("@action.edit", function () use($player, $recipe) {
-                    Session::getSession($player)->set("parents", []);
-                    (new FlowItemContainerForm)->sendActionList($player, $recipe, FlowItemContainer::ACTION);
+                    FlowItemFormController::enterContainer($player, $recipe);
+                    Await::f2c(function() use($player, $recipe) {
+                        yield from (new FlowItemContainerForm)->sendActionList($player, $recipe);
+                        $this->sendRecipeMenu($player, $recipe);
+                    });
                 }),
                 new Button("@form.recipe.recipeMenu.changeName", fn() => $this->sendChangeName($player, $recipe)),
                 new Button("@form.recipe.recipeMenu.execute", fn() => $recipe->executeAllTargets($player)),

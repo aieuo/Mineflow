@@ -44,7 +44,7 @@ class EditString extends SimpleAction {
 
         $this->setArguments([
             StringArgument::create("value1", $value1, "@action.fourArithmeticOperations.form.value1")->example("10"),
-            StringEnumArgument::create("operator", $operator, "@action.fourArithmeticOperations.form.operator",)->options($this->operators)
+            StringEnumArgument::create("operator", $operator, "@action.fourArithmeticOperations.form.operator")->options($this->operators)
                 ->format(fn(string $value) => Language::get("action.editString.".$value)),
             StringArgument::create("value2", $value2, "@action.fourArithmeticOperations.form.value2")->example("50"),
             StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),

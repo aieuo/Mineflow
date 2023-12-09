@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use function array_map;
 use function array_search;
 use function in_array;
 
-class StringEnumArgument extends FlowItemArgument {
+class StringEnumArgument extends FlowItemArgument implements CustomFormEditorArgument {
 
     public static function create(string $name, string $value = "", string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);

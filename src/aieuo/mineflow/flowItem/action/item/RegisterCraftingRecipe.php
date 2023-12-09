@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\action\item;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\argument\ItemFixedArrayArgument;
-use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
@@ -17,7 +17,7 @@ use SOFe\AwaitGenerator\Await;
 use function floor;
 use function implode;
 
-class RegisterCraftingRecipe extends SimpleAction {
+class RegisterCraftingRecipe extends FlowItem {
 
     /**
      * @param string[] $ingredients

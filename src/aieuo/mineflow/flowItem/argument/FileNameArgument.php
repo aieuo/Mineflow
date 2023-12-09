@@ -23,7 +23,7 @@ class FileNameArgument extends StringArgument {
      * @param array{0: string} $data
      * @return void
      */
-    public function handleFormResponse(...$data): void {
+    public function handleFormResponse(mixed ...$data): void {
         if (!Utils::isValidFileName($data[0])) {
             throw new InvalidFormValueException("@form.recipe.invalidName", 0);
         }

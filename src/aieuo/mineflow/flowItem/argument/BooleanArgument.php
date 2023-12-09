@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\formAPI\element\Toggle;
 
-class BooleanArgument extends FlowItemArgument {
+class BooleanArgument extends FlowItemArgument implements CustomFormEditorArgument {
 
     public static function create(string $name, bool $value = false, string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);

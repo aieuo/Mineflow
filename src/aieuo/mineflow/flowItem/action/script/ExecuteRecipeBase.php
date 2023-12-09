@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\argument\RecipeArgumentArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\CustomFormFlowItemEditor;
+use aieuo\mineflow\flowItem\editor\MultiplePageFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
@@ -56,6 +59,26 @@ abstract class ExecuteRecipeBase extends SimpleAction {
         }
 
         return $recipe;
+    }
+
+    public function getEditors(): array {
+        $arguments = [];
+        $recipeArgumentArgument = $this->getArgs();
+
+        foreach ($this->getArguments() as $argument) {
+            if (!($argument instanceof CustomFormEditorArgument) or $argument === $recipeArgumentArgument) {
+                continue;
+            }
+
+            $arguments[] = $argument;
+        }
+
+        return [
+            new MultiplePageFlowItemEditor([
+                new CustomFormFlowItemEditor($this, $arguments),
+                new CustomFormFlowItemEditor($this, [$recipeArgumentArgument]),
+            ], primary: true),
+        ];
     }
 
     public function __clone(): void {

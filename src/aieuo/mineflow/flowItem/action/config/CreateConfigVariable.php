@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\config;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
@@ -27,7 +28,7 @@ class CreateConfigVariable extends SimpleAction {
 
         $this->setArguments([
             StringArgument::create("config", $variableName, "@action.form.resultVariableName")->example("config"),
-            StringArgument::create("name", $fileName)->order(-1)->example("config"),
+            StringArgument::create("name", $fileName)->example("config"),
         ]);
     }
 
@@ -56,6 +57,15 @@ class CreateConfigVariable extends SimpleAction {
     public function getAddingVariables(): array {
         return [
             (string)$this->getVariableName() => new DummyVariable(ConfigVariable::class, (string)$this->getFileName())
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getFileName(),
+                $this->getVariableName(),
+            ]),
         ];
     }
 }

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Utils;
 
-class NumberArgument extends FlowItemArgument {
+class NumberArgument extends FlowItemArgument implements CustomFormEditorArgument {
     use Required;
 
-    public static function create(string $name, string|float|int $value = "", string $description = ""): static {
+    public static function create(string $name, string|float|int|null $value = "", string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);
     }
 
@@ -121,8 +122,8 @@ class NumberArgument extends FlowItemArgument {
             $this->getExample(),
             $this->getRawString(),
             required: !$this->isOptional(),
-            min: (float)$this->getMin(),
-            max: (float)$this->getMax(),
+            min: $this->getMin() === null ? null : (float)$this->getMin(),
+            max: $this->getMax() === null ? null : (float)$this->getMax(),
             excludes: $this->getExcludes(),
         )];
     }

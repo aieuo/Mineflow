@@ -6,7 +6,6 @@ use aieuo\mineflow\flowItem\action\command\Command;
 use aieuo\mineflow\flowItem\action\command\CommandConsole;
 use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
 use aieuo\mineflow\flowItem\action\form\SendForm;
-use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Mineflow;
@@ -105,10 +104,10 @@ class RecipePack implements \JsonSerializable {
                 }
             }
 
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $item) {
+            foreach ($recipe->getItemsFlatten() as $item) {
                 $command = match (true) {
-                    $item instanceof Command => $item->getCommand(),
-                    $item instanceof CommandConsole => $item->getCommand(),
+                    $item instanceof Command => $item->getCommand()->getRawString(),
+                    $item instanceof CommandConsole => $item->getCommand()->getRawString(),
                     default => null,
                 };
                 if ($command === null) continue;
@@ -134,9 +133,9 @@ class RecipePack implements \JsonSerializable {
                 $forms[$key] = $formManager->getForm($key);
             }
 
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $item) {
-                if ($item instanceof SendForm and !$variableHelper->isVariableString($item->getFormName())) {
-                    $name = $item->getFormName();
+            foreach ($recipe->getItemsFlatten() as $item) {
+                if ($item instanceof SendForm and !$variableHelper->isVariableString($item->getFormName()->getRawString())) {
+                    $name = $item->getFormName()->getRawString();
                     $forms[$name] = $formManager->getForm($name);
                 }
             }
@@ -147,15 +146,15 @@ class RecipePack implements \JsonSerializable {
     private function getLinkedConfigFiles(): array {
         $configData = [];
         foreach ($this->recipes as $recipe) {
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
+            foreach ($recipe->getItemsFlatten() as $action) {
                 if ($action instanceof CreateConfigVariable) {
-                    $name = $action->getFileName();
+                    $name = $action->getFileName()->getRawString();
                     $configData[$name] = ConfigHolder::getConfig($name)->getAll();
                 }
             }
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::CONDITION) as $action) {
+            foreach ($recipe->getItemsFlatten() as $action) {
                 if ($action instanceof CreateConfigVariable) {
-                    $name = $action->getFileName();
+                    $name = $action->getFileName()->getRawString();
                     $configData[$name] = ConfigHolder::getConfig($name)->getAll();
                 }
             }

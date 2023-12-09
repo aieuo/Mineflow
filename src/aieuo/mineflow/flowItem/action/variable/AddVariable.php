@@ -10,10 +10,12 @@ use aieuo\mineflow\flowItem\argument\IsLocalVariableArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\argument\StringEnumArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
@@ -70,7 +72,7 @@ class AddVariable extends SimpleAction {
                 $variable = new StringVariable($value);
                 break;
             case NumberVariable::getTypeName():
-                $value = $this->getFloat($value);
+                $value = Utils::getFloat($value);
                 $variable = new NumberVariable($value);
                 break;
             default:
@@ -86,18 +88,27 @@ class AddVariable extends SimpleAction {
         yield Await::ALL;
     }
 
-    public function validateFormResponse(array $data): void {
-        $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
-
-        if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
-            throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
-        }
-    }
-
     public function getAddingVariables(): array {
         $class = $this->variableClasses[$this->variableType];
         return [
             (string)$this->getVariableName() => new DummyVariable($class, (string)$this->getVariableValue())
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getVariableName(),
+                $this->getVariableValue(),
+                $this->getVariableType(),
+                $this->isLocalVariable(),
+            ], formResponseValidator: function (array $data) {
+                $containsVariable = Mineflow::getVariableHelper()->containsVariable($data[1]);
+
+                if ($data[2] === NumberVariable::getTypeName() and !$containsVariable and !is_numeric($data[1])) {
+                    throw new InvalidFormValueException(Language::get("action.error.notNumber", [$data[3]]), 1);
+                }
+            }),
         ];
     }
 }

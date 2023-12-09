@@ -8,6 +8,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
@@ -27,7 +28,7 @@ class CreateItemVariable extends SimpleAction {
         parent::__construct(self::CREATE_ITEM_VARIABLE, FlowItemCategory::ITEM);
 
         $this->setArguments([
-            StringArgument::create("item", $variableName, "@action.form.resultVariableName")->order(1)->example("item"),
+            StringArgument::create("item", $variableName, "@action.form.resultVariableName")->example("item"),
             StringArgument::create("id", $itemId)->example("1:0"),
             NumberArgument::create("count", $itemCount)->min(0)->optional()->example("64"),
             StringArgument::create("name", $itemName)->optional()->example("aieuo"),
@@ -79,6 +80,17 @@ class CreateItemVariable extends SimpleAction {
     public function getAddingVariables(): array {
         return [
             (string)$this->getVariableName() => new DummyVariable(ItemVariable::class, (string)$this->getItemId())
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getItemId(),
+                $this->getItemCount(),
+                $this->getItemName(),
+                $this->getVariableName(),
+            ]),
         ];
     }
 }
