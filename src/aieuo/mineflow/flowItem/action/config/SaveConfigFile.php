@@ -14,8 +14,7 @@ use SOFe\AwaitGenerator\Await;
 class SaveConfigFile extends SimpleAction {
 
     public function __construct(string $config = "") {
-        parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::SAVE_CONFIG_FILE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
         $this->setArguments([
             ConfigArgument::create("config", $config),

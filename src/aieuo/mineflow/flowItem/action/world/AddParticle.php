@@ -18,8 +18,7 @@ use SOFe\AwaitGenerator\Await;
 class AddParticle extends SimpleAction {
 
     public function __construct(string $position = "", string $particle = "", int $amount = 1) {
-        parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD, [FlowItemPermission::LOOP]);
 
         $this->setArguments([
             PositionArgument::create("position", $position),

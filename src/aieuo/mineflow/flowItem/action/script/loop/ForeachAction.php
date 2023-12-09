@@ -24,8 +24,7 @@ use SOFe\AwaitGenerator\Await;
 class ForeachAction extends FlowItem {
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        parent::__construct(self::ACTION_FOREACH, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ACTION_FOREACH, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
         $this->setCustomName($customName);
 
         $this->setArguments([

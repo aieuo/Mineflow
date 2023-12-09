@@ -17,8 +17,7 @@ use SOFe\AwaitGenerator\Await;
 class MoveTo extends SimpleAction {
 
     public function __construct(string $entity = "", string $position = "", float $speedX = 0.1, float $speedY = 0, float $speedZ = 0.1) {
-        parent::__construct(self::MOVE_TO, FlowItemCategory::ENTITY);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::MOVE_TO, FlowItemCategory::ENTITY, [FlowItemPermission::LOOP]);
 
         $this->setArguments([
             EntityArgument::create("entity", $entity),

@@ -20,8 +20,7 @@ use SOFe\AwaitGenerator\Await;
 class RepeatAction extends FlowItem {
 
     public function __construct(array $actions = [], int $count = 1, int $start = 0) {
-        parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
 
         $this->setArguments([
             ActionArrayArgument::create("actions", $actions),

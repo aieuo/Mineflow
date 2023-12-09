@@ -26,8 +26,7 @@ abstract class ExecuteRecipeBase extends SimpleAction {
         string $recipeName = "",
         array $args = [],
     ) {
-        parent::__construct($id, $category);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct($id, $category, [FlowItemPermission::LOOP]);
 
         $this->setArguments([
             StringArgument::create("name", $recipeName, "@action.executeRecipe.form.name")->example("aieuo"),

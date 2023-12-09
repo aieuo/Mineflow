@@ -21,8 +21,7 @@ use SOFe\AwaitGenerator\Await;
 class ForeachPosition extends FlowItem {
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
-        parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
         $this->setCustomName($customName);
 
         $this->setArguments([

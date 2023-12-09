@@ -21,8 +21,7 @@ use function str_replace;
 class ForAction extends FlowItem {
 
     public function __construct(array $actions = [], ?string $customName = null) {
-        parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT_LOOP);
-        $this->setPermissions([FlowItemPermission::LOOP]);
+        parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
         $this->setCustomName($customName);
 
         $this->setArguments([

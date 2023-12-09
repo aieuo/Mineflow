@@ -16,8 +16,7 @@ use SOFe\AwaitGenerator\Await;
 class AllowFlight extends SimpleAction {
 
     public function __construct(string $player = "", bool $allow = true) {
-        parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER);
-        $this->setPermissions([FlowItemPermission::CHEAT]);
+        parent::__construct(self::ALLOW_FLIGHT, FlowItemCategory::PLAYER, [FlowItemPermission::CHEAT]);
 
         $this->setArguments([
             PlayerArgument::create("player", $player),

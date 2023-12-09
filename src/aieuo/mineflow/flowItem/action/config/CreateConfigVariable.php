@@ -23,8 +23,7 @@ class CreateConfigVariable extends SimpleAction {
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(string $fileName = "", string $variableName = "config") {
-        parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::CREATE_CONFIG_VARIABLE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
         $this->setArguments([
             StringArgument::create("config", $variableName, "@action.form.resultVariableName")->example("config"),

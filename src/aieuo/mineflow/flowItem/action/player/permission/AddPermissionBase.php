@@ -18,8 +18,7 @@ abstract class AddPermissionBase extends SimpleAction {
         string $player = "",
         string $playerPermission = ""
     ) {
-        parent::__construct($id, $category);
-        $this->setPermissions([FlowItemPermission::PERMISSION]);
+        parent::__construct($id, $category, [FlowItemPermission::PERMISSION]);
 
         $this->setArguments([
             PlayerArgument::create("player", $player),

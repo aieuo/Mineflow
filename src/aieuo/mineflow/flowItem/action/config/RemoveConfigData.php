@@ -15,8 +15,7 @@ use SOFe\AwaitGenerator\Await;
 class RemoveConfigData extends SimpleAction {
 
     public function __construct(string $config = "", string $key = "") {
-        parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG);
-        $this->setPermissions([FlowItemPermission::CONFIG]);
+        parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
         $this->setArguments([
             ConfigArgument::create("config", $config),

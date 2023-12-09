@@ -16,8 +16,7 @@ use SOFe\AwaitGenerator\Await;
 class CommandConsole extends SimpleAction {
 
     public function __construct(string $command = "") {
-        parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND);
-        $this->setPermissions([FlowItemPermission::CONSOLE]);
+        parent::__construct(self::COMMAND_CONSOLE, FlowItemCategory::COMMAND, [FlowItemPermission::CONSOLE]);
 
         $this->setArguments([
             StringArgument::create("command", $command, "@action.command.form.command")->example("mineflow"),
