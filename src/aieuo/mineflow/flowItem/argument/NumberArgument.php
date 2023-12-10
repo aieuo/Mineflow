@@ -9,6 +9,7 @@ use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Utils;
+use aieuo\mineflow\variable\VariableString;
 
 class NumberArgument extends FlowItemArgument implements CustomFormEditorArgument {
     use Required;
@@ -17,7 +18,7 @@ class NumberArgument extends FlowItemArgument implements CustomFormEditorArgumen
         return new static(name: $name, value: $value, description: $description);
     }
 
-    private string $value;
+    private VariableString $value;
 
     /**
      * @param string $name
@@ -41,31 +42,31 @@ class NumberArgument extends FlowItemArgument implements CustomFormEditorArgumen
     ) {
         parent::__construct($name, $description);
 
-        $this->value = (string)$value;
+        $this->value = new VariableString((string)$value);
         $optional ? $this->optional() : $this->required();
     }
 
     public function value(string|float|int $value): static {
-        $this->value = (string)$value;
+        $this->value = new VariableString((string)$value);
         return $this;
     }
 
     public function getRawString(): string {
-        return $this->value;
+        return $this->value->getRaw();
     }
 
     /**
      * @throws \InvalidArgumentException
      */
     public function getInt(FlowItemExecutor $executor): int {
-        return Utils::getInt($executor->replaceVariables($this->getRawString()), $this->getMin(), $this->getMax(), $this->getExcludes());
+        return Utils::getInt($this->value->get($executor->getVariables()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     /**
      * @throws \InvalidArgumentException
      */
     public function getFloat(FlowItemExecutor $executor): float {
-        return Utils::getFloat($executor->replaceVariables($this->getRawString()), $this->getMin(), $this->getMax(), $this->getExcludes());
+        return Utils::getFloat($this->value->get($executor->getVariables()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     public function example(string $example): self {
@@ -146,5 +147,9 @@ class NumberArgument extends FlowItemArgument implements CustomFormEditorArgumen
 
     public function __toString(): string {
         return $this->getRawString();
+    }
+
+    public function __clone(): void {
+        $this->value = clone $this->value;
     }
 }

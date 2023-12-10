@@ -25,7 +25,8 @@ use function is_numeric;
 class VariableEvaluator {
     public function __construct(
         private readonly VariableRegistry $variables,
-        private readonly bool $fetchFromGlobalVariable = true,
+        private readonly bool             $fetchFromGlobalVariable = true,
+        private readonly array            $tmpVariables = [],
     ) {
     }
 
@@ -38,7 +39,7 @@ class VariableEvaluator {
 
         if ($node instanceof NameNode) {
             $stmt = $node->getName();
-            return new StringVariable($node->getName());
+            return $this->tmpVariables[$node->getName()] ?? new StringVariable($node->getName());
         }
 
         if ($node instanceof IdentifierNode) {
@@ -48,12 +49,12 @@ class VariableEvaluator {
                 return new NumberVariable((float)$node->getName());
             }
 
+            $name = (string)($this->tmpVariables[$node->getName()] ?? $node->getName());
             if (!$this->fetchFromGlobalVariable) {
-                return $this->variables->mustGet($node->getName());
+                return $this->variables->mustGet($name);
             }
 
-            return $this->variables->get($node->getName()) ?? VariableRegistry::global()->mustGet($node->getName());
-
+            return $this->variables->get($name) ?? VariableRegistry::global()->mustGet($name);
         }
 
         if ($node instanceof BinaryExpressionNode) {
@@ -94,7 +95,7 @@ class VariableEvaluator {
             $arguments = [];
             $argumentStmts = [];
             foreach ($node->getArguments() as $argument) {
-                $arguments[] = $this->eval($node, $argumentStmt);
+                $arguments[] = $this->eval($argument, $argumentStmt);
                 $argumentStmts[] = $argumentStmt;
             }
             $stmt .= implode(", ", $argumentStmts).")";
@@ -103,4 +104,5 @@ class VariableEvaluator {
 
         throw new \RuntimeException("Unknown node type ".$node::class);
     }
+
 }

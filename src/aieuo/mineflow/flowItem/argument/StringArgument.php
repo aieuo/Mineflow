@@ -8,9 +8,12 @@ use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
+use aieuo\mineflow\variable\VariableString;
 
 class StringArgument extends FlowItemArgument implements CustomFormEditorArgument {
     use Required;
+
+    private VariableString $value;
 
     public static function create(string $name, string $value = "", string $description = ""): static {
         return new static(name: $name, value: $value, description: $description);
@@ -18,27 +21,28 @@ class StringArgument extends FlowItemArgument implements CustomFormEditorArgumen
 
     public function __construct(
         string         $name,
-        private string $value = "",
+        string         $value = "",
         string         $description = "",
         private string $example = "",
         bool           $optional = false,
     ) {
         parent::__construct($name, $description);
 
+        $this->value = new VariableString($value);
         $optional ? $this->optional() : $this->required();
     }
 
     public function value(string $value): self {
-        $this->value = $value;
+        $this->value = new VariableString($value);
         return $this;
     }
 
     public function getRawString(): string {
-        return $this->value;
+        return $this->value->getRaw();
     }
 
     public function getString(FlowItemExecutor $executor): string {
-        return $executor->replaceVariables($this->getRawString());
+        return $this->value->get($executor->getVariables());
     }
 
     public function example(string $example): self {
@@ -78,5 +82,9 @@ class StringArgument extends FlowItemArgument implements CustomFormEditorArgumen
 
     public function __toString(): string {
         return $this->getRawString();
+    }
+
+    public function __clone(): void {
+        $this->value = clone $this->value;
     }
 }
