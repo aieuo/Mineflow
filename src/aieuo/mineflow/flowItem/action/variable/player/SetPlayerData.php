@@ -4,69 +4,46 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\variable\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\CustomVariableData;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use SOFe\AwaitGenerator\Await;
 
-class SetPlayerData extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetPlayerData extends SimpleAction {
 
-    public function __construct(
-        string         $player = "",
-        private string $dataName = "",
-        private string $data = "",
-    ) {
+    public function __construct(string $player = "", string $dataName = "", string $data = "") {
         parent::__construct(self::SET_PLAYER_DATA, FlowItemCategory::PLAYER_DATA);
-        $this->setPlayerVariableName($player);
+
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("name", $dataName)->example("tag"),
+            StringArgument::create("data", $data)->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "name", "data"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getDataName(), $this->getData()];
+    public function getDataName(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function getDataName(): string {
-        return $this->dataName;
-    }
-
-    public function setDataName(string $dataName): void {
-        $this->dataName = $dataName;
-    }
-
-    public function getData(): string {
-        return $this->data;
-    }
-
-    public function setData(string $data): void {
-        $this->data = $data;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->dataName !== "" and $this->data !== "";
+    public function getData(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
 
-        $player = $this->getPlayer($source);
-        $name = $source->replaceVariables($this->getDataName());
-        $variable = $helper->copyOrCreateVariable($this->getData(), $source);
+        $player = $this->getPlayer()->getPlayer($source);
+        $name = $this->getDataName()->getString($source);
+        $variable = $helper->copyOrCreateVariable($this->getData()->getRawString(), $source);
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {
@@ -76,23 +53,5 @@ class SetPlayerData extends FlowItem implements PlayerFlowItem {
         $data->setData($player->getName(), $variable);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.setPlayerData.form.name", "tag", $this->getDataName(), true),
-            new ExampleInput("@action.setPlayerData.form.data", "aieuo", $this->getData(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setDataName($content[1]);
-        $this->setData($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getDataName(), $this->getData()];
     }
 }

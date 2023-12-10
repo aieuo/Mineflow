@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
@@ -22,54 +17,35 @@ use aieuo\mineflow\variable\Variable;
 use pocketmine\nbt\NbtException;
 use SOFe\AwaitGenerator\Await;
 
-class SetItemData extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetItemData extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        string         $item = "",
-        private string $key = "",
-        private string $value = "",
-    ) {
+    public function __construct(string $item = "", string $key = "", string $value = "") {
         parent::__construct(self::SET_ITEM_DATA, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            ItemArgument::create("item", $item),
+            StringArgument::create("key", $key)->example("aieuo"),
+            StringArgument::create("value", $value)->example("100"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["item", "key", "value"];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getKey(), $this->getValue()];
+    public function getKey(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getKey(): string {
-        return $this->key;
-    }
-
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
-        return $this->value;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->getKey() !== "";
+    public function getValue(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
-        $key = $source->replaceVariables($this->getKey());
+        $item = $this->getItem()->getItem($source);
+        $key = $this->getKey()->getString($source);
         $variable = $this->getValueVariable($source);
 
         $tags = $item->getNamedTag();
@@ -82,31 +58,13 @@ class SetItemData extends FlowItem implements ItemFlowItem {
         }
 
         yield Await::ALL;
-        return $this->getItemVariableName();
+        return (string)$this->getItem();
     }
 
     public function getValueVariable(FlowItemExecutor $source): Variable {
         $helper = Mineflow::getVariableHelper();
-        $value = $this->getValue();
+        $value = $this->getValue()->getRawString();
 
         return $helper->copyOrCreateVariable($value, $source);
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
-            new ExampleInput("@action.setItemData.form.value", "100", $this->getValue(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
-        $this->setKey($content[1]);
-        $this->setValue($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getKey(), $this->getValue()];
     }
 }

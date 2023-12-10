@@ -1,112 +1,118 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\ui;
 
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\formAPI\element\Button;
+use aieuo\mineflow\formAPI\element\GeneratorButton;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\ui\controller\FlowItemFormController;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use function count;
 
 class FlowItemContainerForm {
 
-    public function sendActionList(Player $player, FlowItemContainer $container, string $type, array $messages = []): void {
-        $actions = $container->getItems($type);
+    public function sendActionList(Player $player, FlowItemContainer $container, array $messages = []): \Generator {
+        $actions = $container->getItems();
 
-        $buttons = [new Button("@form.back"), new Button("@{$type}.add")];
+        $buttons = [
+            new Button("@form.back"),
+            new Button("@{$container->getContainerItemType()}.add")
+        ];
         foreach ($actions as $action) {
             $buttons[] = new Button(trim(TextFormat::clean($action->getShortDetail())));
         }
 
-        (new ListForm(Language::get("form.{$type}Container.list.title", [$container->getContainerName()])))
-            ->addButtons($buttons)
-            ->onReceive(function (Player $player, int $data) use($container, $type, $actions) {
-                if ($data === 0) {
-                    if ($container instanceof Recipe) {
-                        (new RecipeForm)->sendRecipeMenu($player, $container);
-                    } else {
-                        /** @var FlowItem $container */
-                        (new FlowItemForm)->sendFlowItemCustomMenu($player, $container, $type);
-                    }
-                    return;
-                }
-                Session::getSession($player)
-                    ->set("action_list_clicked", null)
-                    ->push("parents", $container);
+        $name = FlowItemFormController::getParentContainerName($player);
+        $form = new ListForm(Language::get("form.{$container->getContainerItemType()}Container.list.title", [$name]));
+        $form->addButtons($buttons);
+        $form->addMessages($messages);
 
-                if ($data === 1) {
-                    (new FlowItemForm)->selectActionCategory($player, $container, $type);
-                    return;
-                }
-                $data -= 2;
-                $action = $actions[$data];
-                Session::getSession($player)->set("action_list_clicked", $action);
+        $data = yield from $form->showAwait($player);
 
-                (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $action);
-            })->addArgs($container, $actions)->addMessages($messages)->show($player);
+        if ($data === 0) {
+            return;
+        }
+
+        Session::getSession($player)->set("action_list_clicked", null);
+        if ($data === 1) {
+            yield from (new FlowItemForm)->selectActionCategory($player, $container);
+            return;
+        }
+
+        $data -= 2;
+        $action = $actions[$data];
+        Session::getSession($player)->set("action_list_clicked", $action);
+
+        yield from FlowItemFormController::beginEditingItemAsync($player, $container, $action);
     }
 
-    public function sendMoveAction(Player $player, FlowItemContainer $container, string $type, int $selected, array $messages = [], int $count = 0): void {
-        $actions = $container->getItems($type);
+    public function sendMoveAction(Player $player, FlowItemContainer $container, int $selected, array $messages = [], int $count = 0): \Generator {
+        $actions = $container->getItems();
         $selectedAction = $actions[$selected];
 
-        $parents = Session::getSession($player)->get("parents");
-        array_pop($parents);
-        /** @var FlowItemContainer|null $parent */
-        $parent = array_pop($parents);
-
         $buttons = [
-            new Button("@form.back", fn() => (new FlowItemForm)->sendAddedItemMenu($player, $container, $type, $actions[$selected], [$count === 0 ? "@form.cancelled" : "@form.moved"])),
+            new GeneratorButton("@form.back", fn() => yield from (new FlowItemForm)->sendAddedItemMenu($player, $container, $actions[$selected], [$count === 0 ? "@form.cancelled" : "@form.moved"])),
         ];
 
-        if ($parent instanceof FlowItemContainer) {
-            $buttons[] = new Button("@action.move.outside", function (Player $player) use($parent, $container, $type, $selected, $count) {
-                $tmp = $container->getItem($selected, $type);
-                $container->removeItem($selected, $type);
-                $parent->addItem($tmp, $type);
-                Session::getSession($player)->pop("parents");
-                $this->sendMoveAction($player, $parent, $type, count($parent->getItems($type)) - 1, ["@form.moved"], ++ $count);
+        $parent = FlowItemFormController::getParentContainerOf($player, $container);
+        if ($parent !== null) {
+            $buttons[] = new GeneratorButton("@action.move.outside", function (Player $player) use($parent, $container, $selected, $count) {
+                $tmp = $container->getItem($selected);
+                if ($tmp !== null) {
+                    $container->removeItem($selected);
+                    $parent->addItem($tmp);
+                    FlowItemFormController::leaveContainer($player);
+                    yield from $this->sendMoveAction($player, $parent, count($parent->getItems()) - 1, ["@form.moved"], ++ $count);
+                }
             });
         }
 
         $i = 0;
         foreach ($actions as $i => $action) {
             if ($i !== $selected and $i !== $selected + 1) {
-                $buttons[] = new Button("@form.move.to.here", fn() => $this->moveContent($player, $container, $type, $actions, $selected, $i, $count));
+                $buttons[] = new GeneratorButton("@form.move.to.here", fn() => yield from $this->moveContent($player, $container, $actions, $selected, $i, $count));
             }
 
             $color = ($i === $selected ? TextFormat::AQUA : "");
-            $buttons[] = new Button($color.trim(TextFormat::clean($action->getShortDetail())), function (Player $player) use($i, $action, $container, $type, $selected, $count) {
-                if ($i === $selected or !($action instanceof FlowItemContainer)) {
-                    $this->sendMoveAction($player, $container, $type, $selected, ["@form.move.target.invalid"], $count);
+            $buttons[] = new GeneratorButton($color.trim(TextFormat::clean($action->getShortDetail())), function (Player $player) use($i, $action, $container, $selected, $count) {
+                $containerArg = $action->getFlowItemContainer($container->getContainerItemType());
+                if ($i === $selected or $containerArg === null) {
+                    yield from $this->sendMoveAction($player, $container, $selected, ["@form.move.target.invalid"], $count);
                 } else {
-                    $tmp = $container->getItem($selected, $type);
-                    $container->removeItem($selected, $type);
-                    $action->addItem($tmp, $type);
-                    Session::getSession($player)->push("parents", $action);
-                    $this->sendMoveAction($player, $action, $type, count($action->getItems($type)) - 1, ["@form.moved"], ++ $count);
+                    $tmp = $container->getItem($selected);
+                    if ($tmp !== null) {
+                        $container->removeItem($selected);
+                        $containerArg->addItem($tmp);
+                        FlowItemFormController::enterContainer($player, $containerArg);
+                        yield from $this->sendMoveAction($player, $containerArg, count($containerArg->getItems()) - 1, ["@form.moved"], ++ $count);
+                    }
                 }
             });
         }
         if ($selected !== count($actions) - 1) {
-            $buttons[] = new Button("@form.move.to.here", fn() => $this->moveContent($player, $container, $type, $actions, $selected, $i + 1, $count));
+            $buttons[] = new GeneratorButton("@form.move.to.here", fn() => yield from $this->moveContent($player, $container, $actions, $selected, $i + 1, $count));
         }
 
-        (new ListForm(Language::get("form.{$type}Container.move.title", [$container->getContainerName(), $selectedAction->getName()])))
-            ->setContent("@form.{$type}Container.move.content")
+        $name = FlowItemFormController::getParentContainerName($player);
+        $selected = yield from (new ListForm(Language::get("form.{$container->getContainerItemType()}Container.move.title", [$name, $selectedAction->getName()])))
+            ->setContent("@form.{$container->getContainerItemType()}Container.move.content")
             ->addButtons($buttons)
             ->addMessages($messages)
-            ->show($player);
+            ->showAwait($player);
+        $button = $buttons[$selected];
+
+        yield from $button->getGenerator($player);
     }
 
-    public function moveContent(Player $player, FlowItemContainer $container, string $type, array $actions, int $from, int $to, int $count): void {
+    public function moveContent(Player $player, FlowItemContainer $container, array $actions, int $from, int $to, int $count): \Generator {
         $actions = $this->getMovedContents($actions, $from, $to);
-        $container->setItems($actions, $type);
-        $this->sendMoveAction($player, $container, $type, $from < $to ? $to - 1 : $to, ["@form.moved"], ++ $count);
+        $container->setItems($actions);
+        yield from $this->sendMoveAction($player, $container, $from < $to ? $to - 1 : $to, ["@form.moved"], ++ $count);
     }
 
     public function getMovedContents(array $contents, int $from, int $to): array {

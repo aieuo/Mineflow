@@ -3,6 +3,9 @@
 namespace aieuo\mineflow\utils;
 
 use function count;
+use function implode;
+use function in_array;
+use function is_numeric;
 use function preg_match;
 use function preg_match_all;
 use function preg_quote;
@@ -56,6 +59,36 @@ class Utils {
             )
         );
         return new \RegexIterator($files, '/\.json$/', \RegexIterator::MATCH);
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public static function validateNumberString(string|float|int $number, float|int|null $min = null, float|int|null $max = null, array $exclude = []): void {
+        if (!is_numeric($number)) {
+            throw new \InvalidArgumentException(Language::get("action.error.notNumber", [$number]));
+        }
+        $number = (float)$number;
+        if ($min !== null and $number < $min) {
+            throw new \InvalidArgumentException(Language::get("action.error.lessValue", [$min, $number]));
+        }
+        if ($max !== null and $number > $max) {
+            throw new \InvalidArgumentException(Language::get("action.error.overValue", [$max, $number]));
+        }
+        /** @noinspection TypeUnsafeArraySearchInspection */
+        if (!empty($exclude) and in_array($number, $exclude)) {
+            throw new \InvalidArgumentException(Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
+        }
+    }
+
+    public static function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
+        static::validateNumberString($number, $min, $max, $exclude);
+        return (int)$number;
+    }
+
+    public static function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
+        static::validateNumberString($number, $min, $max, $exclude);
+        return (float)$number;
     }
 
 }

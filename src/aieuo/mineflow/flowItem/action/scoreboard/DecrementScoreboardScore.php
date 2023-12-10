@@ -4,87 +4,45 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\scoreboard;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ScoreboardFlowItem;
-use aieuo\mineflow\flowItem\base\ScoreboardFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class DecrementScoreboardScore extends FlowItem implements ScoreboardFlowItem {
-    use ScoreboardFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class DecrementScoreboardScore extends SimpleAction {
 
-    public function __construct(
-        string         $scoreboard = "",
-        private string $scoreName = "",
-        private string $score = ""
-    ) {
+    public function __construct(string $scoreboard = "", string $scoreName = "", int $score = null) {
         parent::__construct(self::DECREMENT_SCOREBOARD_SCORE, FlowItemCategory::SCOREBOARD);
 
-        $this->setScoreboardVariableName($scoreboard);
+        $this->setArguments([
+            ScoreboardArgument::create("scoreboard", $scoreboard),
+            StringArgument::create("name", $scoreName, "@action.setScore.form.name")->optional()->example("aieuo"),
+            NumberArgument::create("score", $score, "@action.setScore.form.score")->example("100"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["scoreboard", "name", "score"];
+    public function getScoreboard(): ScoreboardArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()];
+    public function getScoreName(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function getScoreName(): string {
-        return $this->scoreName;
-    }
-
-    public function setScoreName(string $scoreName): void {
-        $this->scoreName = $scoreName;
-    }
-
-    public function getScore(): string {
-        return $this->score;
-    }
-
-    public function setScore(string $score): void {
-        $this->score = $score;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getScoreboardVariableName() !== "" and $this->getScore() !== "";
+    public function getScore(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getScoreName());
-        $score = $this->getInt($source->replaceVariables($this->getScore()));
-        $board = $this->getScoreboard($source);
+        $name = $this->getScoreName()->getString($source);
+        $score = $this->getScore()->getInt($source);
+        $board = $this->getScoreboard()->getScoreboard($source);
 
         $board->setScore($name, ($board->getScore($name) ?? 0) - $score);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ScoreboardVariableDropdown($variables, $this->getScoreboardVariableName()),
-            new ExampleInput("@action.setScore.form.name", "aieuo", $this->getScoreName(), false),
-            new ExampleNumberInput("@action.setScore.form.score", "100", $this->getScore(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setScoreboardVariableName($content[0]);
-        $this->setScoreName($content[1]);
-        $this->setScore($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getScoreboardVariableName(), $this->getScoreName(), $this->getScore()];
     }
 }

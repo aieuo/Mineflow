@@ -4,70 +4,58 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
 use SOFe\AwaitGenerator\Await;
 
-class AddParticle extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class AddParticle extends SimpleAction {
 
-    public function __construct(
-        string         $position = "",
-        private string $particle = "",
-        private string $amount = "1"
-    ) {
+    public function __construct(string $position = "", string $particle = "", int $amount = 1) {
         parent::__construct(self::ADD_PARTICLE, FlowItemCategory::WORLD, [FlowItemPermission::LOOP]);
 
-        $this->setPositionVariableName($position);
+        $this->setArguments([
+            PositionArgument::create("position", $position),
+            StringArgument::create("particle", $particle)->example("minecraft:explosion_particle"),
+            NumberArgument::create("amount", $amount)->min(1)->example("1"),
+        ]);
     }
 
     public function getDetailDefaultReplaces(): array {
-        return ["position", "particle", "amount", ""];
+        $replaces = parent::getDetailDefaultReplaces();
+        $replaces[] = "";
+        return $replaces;
     }
 
     public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount(), $this->getAmount() === "1" ? "" : "s"];
+        $replaces = parent::getDetailReplaces();
+        $replaces[] = $this->getAmount()->getRawString() === "1" ? "" : "s";
+        return $replaces;
     }
 
-    public function setParticle(string $particle): void {
-        $this->particle = $particle;
+    public function getPosition(): PositionArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getParticle(): string {
-        return $this->particle;
+    public function getParticle(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setAmount(string $amount): void {
-        $this->amount = $amount;
-    }
-
-    public function getAmount(): string {
-        return $this->amount;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->particle !== "" and $this->amount !== "";
+    public function getAmount(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $particleName = $source->replaceVariables($this->getParticle());
-        $amount = $this->getInt($source->replaceVariables($this->getAmount()), 1);
+        $particleName = $this->getParticle()->getString($source);
+        $amount = $this->getAmount()->getInt($source);
 
-        $position = $this->getPosition($source);
+        $position = $this->getPosition()->getPosition($source);
 
         for ($i = 0; $i < $amount; $i++) {
             $pk = new SpawnParticleEffectPacket();
@@ -78,23 +66,5 @@ class AddParticle extends FlowItem implements PositionFlowItem {
         }
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-            new ExampleInput("@action.addParticle.form.particle", "minecraft:explosion_particle", $this->getParticle(), true),
-            new ExampleNumberInput("@action.addParticle.form.amount", "1", $this->getAmount(), true, 1),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0]);
-        $this->setParticle($content[1]);
-        $this->setAmount($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->getParticle(), $this->getAmount()];
     }
 }

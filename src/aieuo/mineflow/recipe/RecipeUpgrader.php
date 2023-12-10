@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\recipe;
 
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
@@ -69,11 +69,8 @@ class RecipeUpgrader {
                 $recipe->setTargetSetting($oldToNewTargetMap[$recipe->getTargetType()], $recipe->getTargetOptions());
             }
 
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
+            foreach ($recipe->getActionsFlatten() as $action) {
                 $this->replaceLevelToWorld($action);
-            }
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::CONDITION) as $condition) {
-                $this->replaceLevelToWorld($condition);
             }
 
             $recipe->setPluginVersion("2.0.0");
@@ -88,13 +85,9 @@ class RecipeUpgrader {
                 $this->removeDirectActionCall($action, [$recipe]);
             }
 
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::ACTION) as $action) {
+            foreach ($recipe->getActionsFlatten() as $action) {
                 $this->replacePositionVariable($action);
                 $this->replaceMapOperator($action);
-            }
-            foreach ($recipe->getItemsFlatten(FlowItemContainer::CONDITION) as $condition) {
-                $this->replacePositionVariable($condition);
-                $this->replaceMapOperator($condition);
             }
 
             $recipe->setPluginVersion("3.0.0");
@@ -115,16 +108,15 @@ class RecipeUpgrader {
 
     private function removeDirectActionCall(FlowItem $item, array $parents): void {
         $variableHelper = Mineflow::getVariableHelper();
-        
-        if ($item instanceof FlowItemContainer) {
-            $parents[] = $item;
-            foreach ($item->getActions() as $action) {
-                $this->removeDirectActionCall($action, $parents);
+
+        foreach ($item->getArguments() as $argument) {
+            if ($argument instanceof FlowItemContainer) {
+                $parents[] = $item;
+                foreach ($argument->getItems() as $action) {
+                    $this->removeDirectActionCall($action, $parents);
+                }
+                return;
             }
-            foreach ($item->getConditions() as $condition) {
-                $this->removeDirectActionCall($condition, $parents);
-            }
-            return;
         }
 
         $newContents = [];
@@ -204,10 +196,10 @@ class RecipeUpgrader {
     }
 
     private function replacePositionVariable(FlowItem $item): void {
-        if ($item instanceof PositionFlowItem) {
-            foreach ($item->getPositionVariableNames() as $name => $variable) {
-                $variable = preg_replace("/^(target|entity|player)\d*$/u", "$0.location", $variable);
-                $item->setPositionVariableName($variable, $name);
+        foreach ($item->getArguments() as $argument) {
+            if ($argument instanceof PositionArgument) {
+                $variable = preg_replace("/^(target|entity|player)\d*$/u", "$0.location", $argument->getVariableName());
+                $argument->value($variable);
             }
         }
     }

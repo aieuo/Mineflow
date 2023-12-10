@@ -4,7 +4,7 @@ namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\event\MineflowRecipeLoadEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
-use aieuo\mineflow\flowItem\action\script\ExecuteRecipe;
+use aieuo\mineflow\flowItem\action\script\ExecuteRecipeBase;
 use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
@@ -22,6 +22,7 @@ use function file_get_contents;
 use function json_decode;
 use function json_last_error_msg;
 use function ltrim;
+use function rtrim;
 use function str_replace;
 use function str_starts_with;
 use const PHP_EOL;
@@ -60,9 +61,7 @@ class RecipeManager {
         foreach ($files as $file) {
             /** @var \SplFileInfo $file */
             $pathname = $file->getPathname();
-            $group = str_replace(
-                ["\\", str_replace("\\", "/", $this->getDirectory())],
-                ["/", ""], $file->getPath());
+            $group = str_replace(rtrim(str_replace("\\", "/", $this->getDirectory()), "/"), "", rtrim(str_replace("\\", "/", $file->getPath()), "/"));
             $group = ltrim($group, "/");
 
             $json = file_get_contents($pathname);
@@ -101,10 +100,16 @@ class RecipeManager {
                 $upgrader->upgradeAfterLoad($recipe);
             } catch (ErrorException|\UnexpectedValueException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], $e->getMessage()]).PHP_EOL);
+                if (Mineflow::isDebug()) {
+                    Main::getInstance()->getLogger()->logException($e);
+                }
                 continue;
             } catch (FlowItemLoadException $e) {
                 Logger::warning(Language::get("recipe.load.failed", [$data["name"], ""]));
                 Logger::warning($e->getMessage().PHP_EOL);
+                if (Mineflow::isDebug()) {
+                    Main::getInstance()->getLogger()->logException($e);
+                }
                 continue;
             }
 
@@ -223,14 +228,15 @@ class RecipeManager {
 
         $recipes = [];
         if ($base) $recipes[] = [$origin->getGroup()."/".$origin->getName() => $origin];
-        foreach ($recipe->getActions() as $action) {
-            if ($action instanceof FlowItemContainer) {
-                $links = $this->getWithLinkedRecipes($action, $origin, false);
-                $recipes[] = $links;
-                continue;
+        foreach ($recipe->getItems() as $action) {
+            foreach ($action->getArguments() as $argument) {
+                if ($argument instanceof FlowItemContainer) {
+                    $links = $this->getWithLinkedRecipes($argument, $origin, false);
+                    $recipes[] = $links;
+                }
             }
 
-            if ($action instanceof ExecuteRecipe) {
+            if ($action instanceof ExecuteRecipeBase) {
                 $name = Mineflow::getVariableHelper()->replaceVariables($action->getRecipeName(), []);
 
                 [$recipeName, $group] = $this->parseName($name);

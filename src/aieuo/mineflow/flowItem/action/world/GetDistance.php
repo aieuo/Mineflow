@@ -4,61 +4,45 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 
-class GetDistance extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class GetDistance extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    public function __construct(
-        string         $pos1 = "",
-        string         $pos2 = "",
-        private string $resultName = "distance"
-    ) {
+    public function __construct(string $pos1 = "", string $pos2 = "", string $resultName = "distance") {
         parent::__construct(self::GET_DISTANCE, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($pos1, "pos1");
-        $this->setPositionVariableName($pos2, "pos2");
+        $this->setArguments([
+            PositionArgument::create("pos1", $pos1),
+            PositionArgument::create("pos2", $pos2),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("distance"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["pos1", "pos2", "result"];
+    public function getPosition1(): PositionArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
+    public function getPosition2(): PositionArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPositionVariableName("pos1") !== "" and $this->getPositionVariableName("pos2") !== "" and $this->resultName !== "";
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos1 = $this->getPosition($source, "pos1");
-        $pos2 = $this->getPosition($source, "pos2");
-        $result = $source->replaceVariables($this->getResultName());
+        $pos1 = $this->getPosition1()->getPosition($source);
+        $pos2 = $this->getPosition2()->getPosition($source);
+        $result = $this->getResultName()->getString($source);
 
         $distance = $pos1->distance($pos2);
 
@@ -68,27 +52,9 @@ class GetDistance extends FlowItem implements PositionFlowItem {
         return $distance;
     }
 
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleInput("@action.getDistance.form.pos1", "pos1", $this->getPositionVariableName("pos1"), true),
-            new ExampleInput("@action.getDistance.form.pos2", "pos2", $this->getPositionVariableName("pos2"), true),
-            new ExampleInput("@action.form.resultVariableName", "distance", $this->getResultName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0], "pos1");
-        $this->setPositionVariableName($content[1], "pos2");
-        $this->setResultName($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
-    }
-
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            (string)$this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

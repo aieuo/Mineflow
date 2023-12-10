@@ -4,72 +4,39 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\command;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\Server;
 use SOFe\AwaitGenerator\Await;
 
-class Command extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class Command extends SimpleAction {
 
-    public function __construct(string $player = "", private string $command = "") {
+    public function __construct(string $player = "", string $command = "") {
         parent::__construct(self::COMMAND, FlowItemCategory::COMMAND);
 
-        $this->setPlayerVariableName($player);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("command", $command)->example("command"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "command"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getCommand()];
-    }
-
-    public function setCommand(string $command): void {
-        $this->command = $command;
-    }
-
-    public function getCommand(): string {
-        return $this->command;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->command !== "";
+    public function getCommand(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $command = $source->replaceVariables($this->getCommand());
-        $player = $this->getOnlinePlayer($source);
+        $command = $this->getCommand()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Server::getInstance()->dispatchCommand($player, $command);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.command.form.command", "command", $this->getCommand(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setCommand($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getCommand()];
     }
 }

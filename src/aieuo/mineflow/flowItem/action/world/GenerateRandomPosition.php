@@ -5,64 +5,47 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class GenerateRandomPosition extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        string         $min = "",
-        string         $max = "",
-        private string $resultName = "position"
-    ) {
+    public function __construct(string $min = "", string $max = "", string $resultName = "position") {
         parent::__construct(self::GENERATE_RANDOM_POSITION, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($min, "pos1");
-        $this->setPositionVariableName($max, "pos2");
+        $this->setArguments([
+            PositionArgument::create("min", $min, "@action.form.target.position 1"),
+            PositionArgument::create("max", $max, "@action.form.target.position 2"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("position"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["min", "max", "result"];
+    public function getPosition1(): PositionArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
+    public function getPosition2(): PositionArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getResultName() !== "";
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos1 = $this->getPosition($source, "pos1");
-        $pos2 = $this->getPosition($source, "pos2");
-        $resultName = $source->replaceVariables($this->getResultName());
+        $pos1 = $this->getPosition1()->getPosition($source);
+        $pos2 = $this->getPosition2()->getPosition($source);
+        $resultName = $this->getResultName()->getString($source);
 
         if ($pos1->getWorld()->getFolderName() !== $pos2->getWorld()->getFolderName()) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.position.world.different"));
@@ -75,30 +58,12 @@ class GenerateRandomPosition extends FlowItem implements PositionFlowItem {
         $source->addVariable($resultName, new PositionVariable($rand));
 
         yield Await::ALL;
-        return $this->getResultName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PositionVariableDropdown($variables, $this->getPositionVariableName("pos1"), "@action.form.target.position 1"),
-            new PositionVariableDropdown($variables, $this->getPositionVariableName("pos2"), "@action.form.target.position 2"),
-            new ExampleInput("@action.form.resultVariableName", "position", $this->getResultName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0], "pos1");
-        $this->setPositionVariableName($content[1], "pos2");
-        $this->setResultName($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPositionVariableName("pos1"), $this->getPositionVariableName("pos2"), $this->getResultName()];
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(PositionVariable::class)
+            (string)$this->getResultName() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

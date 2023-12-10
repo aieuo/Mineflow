@@ -14,9 +14,9 @@ class SendActionBarMessage extends TypePlayerMessage {
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($source->replaceVariables($this->getMessage()));
+        $message = Language::replace($this->getMessage()->getString($source));
 
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
         $player->sendActionBarMessage($message);
         yield Await::ALL;
     }

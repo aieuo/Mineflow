@@ -3,81 +3,44 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class TransferServer extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class TransferServer extends SimpleAction {
 
-    public function __construct(string $player = "", private string $ip = "", private string $port = "19132") {
+    public function __construct(string $player = "", string $ip = "", int $port = 19132) {
         parent::__construct(self::TRANSFER_SERVER, FlowItemCategory::PLAYER);
 
-        $this->setPlayerVariableName($player);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "ip", "port"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getIp(), $this->getPort()];
-    }
-
-    public function setIp(string $ip): void {
-        $this->ip = $ip;
-    }
-
-    public function getIp(): string {
-        return $this->ip;
-    }
-
-    public function setPort(string $port): void {
-        $this->port = $port;
-    }
-
-    public function getPort(): string {
-        return $this->port;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->ip !== "" and $this->port !== "";
-    }
-
-    public function onExecute(FlowItemExecutor $source): \Generator {
-        $ip = $source->replaceVariables($this->getIp());
-        $port = $this->getInt($source->replaceVariables($this->getPort()), 1, 65535);
-
-        $player = $this->getOnlinePlayer($source);
-        $player->transfer($ip, $port);
-        yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.transfer.form.ip", "aieuo.tokyo", $this->getIp()),
-            new ExampleInput("@action.transfer.form.port", "19132", $this->getIp()),
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("ip", $ip)->example("aieuo.tokyo"),
+            NumberArgument::create("port", $port)->min(1)->max(65535)->example("19132"),
         ]);
     }
 
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setIp($content[1]);
-        $this->setPort($content[2]);
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getIp(), $this->getPort()];
+    public function getIp(): StringArgument {
+        return $this->getArguments()[1];
+    }
+
+    public function getPort(): NumberArgument {
+        return $this->getArguments()[2];
+    }
+
+    public function onExecute(FlowItemExecutor $source): \Generator {
+        $ip = $this->getIp()->getString($source);
+        $port = $this->getPort()->getInt($source);
+
+        $player = $this->getPlayer()->getOnlinePlayer($source);
+        $player->transfer($ip, $port);
+        yield Await::ALL;
     }
 }

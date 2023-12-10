@@ -4,72 +4,39 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\config;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ConfigFileFlowItem;
-use aieuo\mineflow\flowItem\base\ConfigFileFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ConfigArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ConfigVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
-class RemoveConfigData extends FlowItem implements ConfigFileFlowItem {
-    use ConfigFileFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class RemoveConfigData extends SimpleAction {
 
-    public function __construct(string $config = "", private string $key = "") {
+    public function __construct(string $config = "", string $key = "") {
         parent::__construct(self::REMOVE_CONFIG_VALUE, FlowItemCategory::CONFIG, [FlowItemPermission::CONFIG]);
 
-        $this->setConfigVariableName($config);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["config", "key"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getConfigVariableName(), $this->getKey()];
-    }
-
-    public function setKey(string $health): void {
-        $this->key = $health;
-    }
-
-    public function getKey(): string {
-        return $this->key;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getConfigVariableName() !== "" and $this->key !== "";
-    }
-
-    protected function onExecute(FlowItemExecutor $source): \Generator {
-        $key = $source->replaceVariables($this->getKey());
-
-        $config = $this->getConfig($source);
-        $config->removeNested($key);
-
-        yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ConfigVariableDropdown($variables, $this->getConfigVariableName()),
-            new ExampleInput("@action.setConfig.form.key", "aieuo", $this->getKey(), true),
+        $this->setArguments([
+            ConfigArgument::create("config", $config),
+            StringArgument::create("key", $key, "@action.setConfig.form.key")->example("aieuo"),
         ]);
     }
 
-    public function loadSaveData(array $content): void {
-        $this->setConfigVariableName($content[0]);
-        $this->setKey($content[1]);
+    public function getConfig(): ConfigArgument {
+        return $this->getArguments()[0];
     }
 
-    public function serializeContents(): array {
-        return [$this->getConfigVariableName(), $this->getKey()];
+    public function getKey(): StringArgument {
+        return $this->getArguments()[1];
+    }
+
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $key = $this->getKey()->getString($source);
+
+        $config = $this->getConfig()->getConfig($source);
+        $config->removeNested($key);
+
+        yield Await::ALL;
     }
 }

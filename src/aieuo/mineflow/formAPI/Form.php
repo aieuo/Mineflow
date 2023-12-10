@@ -7,14 +7,23 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\utils\Language;
+use JetBrains\PhpStorm\ExpectedValues;
 use pocketmine\form\Form as PMForm;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use SOFe\AwaitGenerator\Await;
 use function array_merge;
 use function call_user_func_array;
 use function is_callable;
 
 abstract class Form implements PMForm {
+
+    public const CLOSE_THROW = 0;
+    public const CLOSE_RETURN_NULL = 1;
+    public const CLOSE_IGNORE = 2;
+    private const RESPONSE_TYPES_ON_CLOSED = [
+        self::CLOSE_THROW, self::CLOSE_RETURN_NULL, self::CLOSE_IGNORE
+    ];
 
     public const MODAL_FORM = "modal";
     public const LIST_FORM = "form";
@@ -137,6 +146,18 @@ abstract class Form implements PMForm {
     public function show(Player $player): self {
         $player->sendForm($this);
         return $this;
+    }
+
+    public function showAwait(Player $player, #[ExpectedValues(self::RESPONSE_TYPES_ON_CLOSED)] int $onClose = self::CLOSE_IGNORE): \Generator {
+        return yield from Await::promise(function ($resolve, $reject) use($player, $onClose) {
+            $this->onReceiveWithoutPlayer($resolve);
+            match ($onClose) {
+                self::CLOSE_THROW => $this->onClose(fn() => $reject(new FormCloseException())),
+                self::CLOSE_RETURN_NULL => $this->onClose(fn() => $resolve(null)),
+                default => null
+            };
+            $player->sendForm($this);
+        });
     }
 
     abstract public function jsonSerialize(): array;

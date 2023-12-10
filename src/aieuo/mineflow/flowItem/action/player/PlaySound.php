@@ -4,77 +4,49 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use SOFe\AwaitGenerator\Await;
 
-class PlaySound extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class PlaySound extends SimpleAction {
 
-    public function __construct(
-        string         $player = "",
-        private string $sound = "",
-        private string $volume = "1",
-        private string $pitch = "1"
-    ) {
+    public function __construct(string $player = "", string $sound = "", float $volume = 1, float $pitch = 1) {
         parent::__construct(self::PLAY_SOUND, FlowItemCategory::PLAYER);
 
-        $this->setPlayerVariableName($player);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("sound", $sound)->example("random.levelup"),
+            NumberArgument::create("volume", $volume)->example("1"),
+            NumberArgument::create("pitch", $pitch)->example("1"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "sound", "volume", "pitch"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()];
+    public function getSound(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setSound(string $health): void {
-        $this->sound = $health;
+    public function getVolume(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getSound(): string {
-        return $this->sound;
-    }
-
-    public function setVolume(string $volume): void {
-        $this->volume = $volume;
-    }
-
-    public function getVolume(): string {
-        return $this->volume;
-    }
-
-    public function setPitch(string $pitch): void {
-        $this->pitch = $pitch;
-    }
-
-    public function getPitch(): string {
-        return $this->pitch;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->sound !== "" and $this->volume !== "" and $this->pitch !== "";
+    public function getPitch(): NumberArgument {
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $sound = $source->replaceVariables($this->getSound());
-        $volume = $this->getInt($source->replaceVariables($this->getVolume()));
-        $pitch = $this->getInt($source->replaceVariables($this->getPitch()));
-        $player = $this->getOnlinePlayer($source);
+        $sound = $this->getSound()->getString($source);
+        $volume = $this->getVolume()->getInt($source);
+        $pitch = $this->getPitch()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $pk = new PlaySoundPacket();
         $pk->soundName = $sound;
@@ -86,25 +58,5 @@ class PlaySound extends FlowItem implements PlayerFlowItem {
         $player->getNetworkSession()->sendDataPacket($pk);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.playSound.form.sound", "random.levelup", $this->getSound(), true),
-            new ExampleNumberInput("@action.playSound.form.volume", "1", $this->getVolume(), true),
-            new ExampleNumberInput("@action.playSound.form.pitch", "1", $this->getPitch(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setSound($content[1]);
-        $this->setVolume($content[2]);
-        $this->setPitch($content[3]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getSound(), $this->getVolume(), $this->getPitch()];
     }
 }

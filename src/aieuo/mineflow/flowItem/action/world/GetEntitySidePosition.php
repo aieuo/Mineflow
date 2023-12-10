@@ -5,19 +5,13 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\world;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\StringEnumArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
@@ -25,10 +19,7 @@ use pocketmine\math\Facing;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class GetEntitySidePosition extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
@@ -73,58 +64,42 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         Facing::NORTH,
     ];
 
-    public function __construct(
-        string         $entity = "",
-        private string $direction = "",
-        private string $steps = "1",
-        private string $resultName = "pos"
-    ) {
+    public function __construct(string $entity = "", string $direction = self::SIDE_DOWN, int $steps = 1, string $resultName = "pos") {
         parent::__construct(self::GET_ENTITY_SIDE, FlowItemCategory::WORLD);
 
-        $this->setEntityVariableName($entity);
+        $this->setArguments([
+            EntityArgument::create("entity", $entity),
+            StringEnumArgument::create("direction", $direction)->options($this->directions),
+            NumberArgument::create("steps", $steps)->example("1"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("pos"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["entity", "direction", "step", "result"];
+    public function getEntity(): EntityArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+    public function getDirection(): StringEnumArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setDirection(string $direction): void {
-        $this->direction = $direction;
+    public function getSteps(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getDirection(): string {
-        return $this->direction;
-    }
-
-    public function setSteps(string $steps): void {
-        $this->steps = $steps;
-    }
-
-    public function getSteps(): string {
-        return $this->steps;
-    }
-
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[3];
     }
 
     public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->direction !== "" and $this->steps !== "" and $this->resultName !== "";
+        return $this->getEntity()->isValid() and $this->getDirection()->isValid() and $this->getSteps()->isValid() and $this->getResultName()->isValid();
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
-        $side = $source->replaceVariables($this->getDirection());
-        $step = $this->getInt($source->replaceVariables($this->getSteps()));
-        $resultName = $source->replaceVariables($this->getResultName());
+        $entity = $this->getEntity()->getOnlineEntity($source);
+        $side = $this->getDirection()->getEnumValue();
+        $step = $this->getSteps()->getInt($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $direction = $entity->getHorizontalFacing();
         $pos = $entity->getPosition()->floor()->add(0.5, 0.5, 0.5);
@@ -156,34 +131,12 @@ class GetEntitySidePosition extends FlowItem implements EntityFlowItem {
         $source->addVariable($resultName, new PositionVariable(Position::fromObject($pos, $entity->getWorld())));
 
         yield Await::ALL;
-        return $this->getResultName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new Dropdown("@action.getEntitySide.form.direction", $this->directions, (int)array_search($this->getDirection(), $this->directions, true)),
-            new ExampleNumberInput("@action.getEntitySide.form.steps", "1", $this->getSteps(), true),
-            new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->preprocessAt(1, fn($value) => $this->directions[$value] ?? "");
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
-        $this->setDirection($content[1]);
-        $this->setSteps($content[2]);
-        $this->setResultName($content[3]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getDirection(), $this->getSteps(), $this->getResultName()];
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(PositionVariable::class)
+            (string)$this->getResultName() => new DummyVariable(PositionVariable::class)
         ];
     }
 }

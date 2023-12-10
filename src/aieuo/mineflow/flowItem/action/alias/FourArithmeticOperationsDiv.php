@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\action\math\FourArithmeticOperations;
 
 class FourArithmeticOperationsDiv extends FourArithmeticOperations implements FlowItemAlias {
 
-    public function __construct(string $value1 = "", string $value2 = "", string $resultName = "result") {
+    public function __construct(float $value1 = null, float $value2 = null, string $resultName = "result") {
         parent::__construct($value1, self::DIVISION, $value2, $resultName);
     }
 

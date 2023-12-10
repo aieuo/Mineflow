@@ -4,74 +4,41 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class SetItemCount extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetItemCount extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(string $item = "", private string $count = "") {
+    public function __construct(string $item = "", int $count = null) {
         parent::__construct(self::SET_ITEM_COUNT, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            ItemArgument::create("item", $item),
+            NumberArgument::create("count", $count, "@action.createItem.form.count")->min(0)->example("64"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["item", "count"];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getCount()];
-    }
-
-    public function setCount(string $count): void {
-        $this->count = $count;
-    }
-
-    public function getCount(): string {
-        return $this->count;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->count !== "";
+    public function getCount(): NumberArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $count = $this->getInt($source->replaceVariables($this->getCount()), 0);
-        $item = $this->getItem($source);
+        $count = $this->getCount()->getInt($source);
+        $item = $this->getItem()->getItem($source);
 
         $item->setCount($count);
 
         yield Await::ALL;
-        return $this->getItemVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleNumberInput("@action.createItem.form.count", "64", $this->getCount(), true, 0),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
-        $this->setCount($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getCount()];
+        return (string)$this->getItem();
     }
 }

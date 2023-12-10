@@ -4,92 +4,60 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class PositionVariableAddition extends FlowItem implements PositionFlowItem {
-    use PositionFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class PositionVariableAddition extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        string         $name = "pos",
-        private string $x = "",
-        private string $y = "",
-        private string $z = "",
-        private string $resultName = "pos"
-    ) {
+    public function __construct(string $position = "pos", float $x = null, float $y = null, float $z = null, string $resultName = "pos") {
         parent::__construct(self::POSITION_VARIABLE_ADDITION, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($name);
+        $this->setArguments([
+            PositionArgument::create("position", $position),
+            NumberArgument::create("x", $x)->example("0"),
+            NumberArgument::create("y", $y)->example("100"),
+            NumberArgument::create("z", $z)->example("16"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("pos"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["position", "x", "y", "z", "result"];
+    public function getPosition(): PositionArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
+    public function getX(): NumberArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setX(string $x): void {
-        $this->x = $x;
+    public function getY(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getX(): string {
-        return $this->x;
+    public function getZ(): NumberArgument {
+        return $this->getArguments()[3];
     }
 
-    public function setY(string $y): void {
-        $this->y = $y;
-    }
-
-    public function getY(): string {
-        return $this->y;
-    }
-
-    public function setZ(string $z): void {
-        $this->z = $z;
-    }
-
-    public function getZ(): string {
-        return $this->z;
-    }
-
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->x !== "" and $this->y !== "" and $this->z !== "" and $this->resultName !== "";
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[4];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $pos = $this->getPosition($source);
+        $pos = $this->getPosition()->getPosition($source);
 
-        $x = $this->getFloat($source->replaceVariables($this->getX()));
-        $y = $this->getFloat($source->replaceVariables($this->getY()));
-        $z = $this->getFloat($source->replaceVariables($this->getZ()));
-        $name = $source->replaceVariables($this->getResultName());
+        $x = $this->getX()->getFloat($source);
+        $y = $this->getY()->getFloat($source);
+        $z = $this->getZ()->getFloat($source);
+        $name = $this->getResultName()->getString($source);
 
         $position = Position::fromObject($pos->add($x, $y, $z), $pos->getWorld());
 
@@ -97,35 +65,13 @@ class PositionVariableAddition extends FlowItem implements PositionFlowItem {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PositionVariableDropdown($variables),
-            new ExampleNumberInput("@action.positionAddition.form.x", "0", $this->getX(), true),
-            new ExampleNumberInput("@action.positionAddition.form.y", "100", $this->getY(), true),
-            new ExampleNumberInput("@action.positionAddition.form.z", "16", $this->getZ(), true),
-            new ExampleInput("@action.form.resultVariableName", "pos", $this->getResultName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0]);
-        $this->setX($content[1]);
-        $this->setY($content[2]);
-        $this->setZ($content[3]);
-        $this->setResultName($content[4]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->getX(), $this->getY(), $this->getZ(), $this->getResultName()];
+        return (string)$this->getResultName();
     }
 
     public function getAddingVariables(): array {
-        $desc = $this->getPositionVariableName()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
+        $desc = $this->getPosition()." + (".$this->getX().",".$this->getY().",".$this->getZ().")";
         return [
-            $this->getResultName() => new DummyVariable(PositionVariable::class, $desc)
+            (string)$this->getResultName() => new DummyVariable(PositionVariable::class, $desc)
         ];
     }
 }

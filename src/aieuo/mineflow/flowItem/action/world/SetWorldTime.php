@@ -4,75 +4,42 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\WorldFlowItem;
-use aieuo\mineflow\flowItem\base\WorldFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use pocketmine\world\World;
 use SOFe\AwaitGenerator\Await;
 
-class SetWorldTime extends FlowItem implements WorldFlowItem {
-    use WorldFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetWorldTime extends SimpleAction {
 
     public function __construct(
-        string         $worldName = "",
-        private string $time = ""
+        string $worldName = "",
+        int    $time = null
     ) {
         parent::__construct(self::SET_WORLD_TIME, FlowItemCategory::WORLD);
 
-        $this->setWorldVariableName($worldName);
+        $this->setArguments([
+            WorldArgument::create("world", $worldName),
+            NumberArgument::create("time", $time)->min(0)->max(World::TIME_FULL)->example("12000"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["world", "time"];
+    public function getWorld(): WorldArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getWorldVariableName(), $this->getTime()];
-    }
-
-    public function getTime(): string {
-        return $this->time;
-    }
-
-    public function setTime(string $time): void {
-        $this->time = $time;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getWorldVariableName() !== "" and $this->getTime() !== "";
+    public function getTime(): NumberArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $world = $this->getWorld($source);
-        $time = $this->getInt($source->replaceVariables($this->getTime()), 0, World::TIME_FULL);
+        $world = $this->getWorld()->getWorld($source);
+        $time = $this->getTime()->getInt($source);
 
         $world->setTime($time);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new WorldVariableDropdown($variables, $this->getWorldVariableName()),
-            new ExampleNumberInput("@action.setWorldTime.form.time", "12000", $this->getTime(), required: true, min: 0, max: World::TIME_FULL),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setWorldVariableName($content[0]);
-        $this->setTime($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getWorldVariableName(), $this->getTime()];
     }
 }

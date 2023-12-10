@@ -5,21 +5,25 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\recipe\argument;
 
+use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
+use aieuo\mineflow\flowItem\argument\AxisAlignedBBArgument;
+use aieuo\mineflow\flowItem\argument\BlockArgument;
+use aieuo\mineflow\flowItem\argument\BooleanArgument;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\EventArgument;
+use aieuo\mineflow\flowItem\argument\FlowItemArgument;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\ScoreboardArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\Vector3Argument;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
 use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\mineflow\AxisAlignedBBVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\BlockVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\EventVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ScoreboardVariableDropdown;
 use aieuo\mineflow\formAPI\element\mineflow\VariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\Vector3VariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
-use aieuo\mineflow\formAPI\element\NumberInput;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
@@ -45,38 +49,41 @@ class RecipeArgument implements \JsonSerializable {
     public static array $classes = [];
     public static array $formElements = [];
 
+    /** @var array<string, callable(string $name): (FlowItemArgument&CustomFormEditorArgument)>  */
+    private static array $recipeArgumentToFlowItemArgumentMap = [];
+
     public static function init(): void {
-        self::addType(UnknownVariable::class, fn(string $text, array $variables) => new Input($text, required: true));
-        self::addType(StringVariable::class, fn(string $text, array $variables) => new Input($text, required: true));
-        self::addType(NumberVariable::class, fn(string $text, array $variables) => new NumberInput($text, required: true));
-        self::addType(BooleanVariable::class, fn(string $text, array $variables) => new Toggle($text));
-        self::addType(PlayerVariable::class, fn(string $text, array $variables) => new PlayerVariableDropdown($variables, text: $text));
-        self::addType(EntityVariable::class, fn(string $text, array $variables) => new EntityVariableDropdown($variables, text: $text));
-        self::addType(ItemVariable::class, fn(string $text, array $variables) => new ItemVariableDropdown($variables, text: $text));
-        self::addType(BlockVariable::class, fn(string $text, array $variables) => new BlockVariableDropdown($variables, text: $text));
-        self::addType(PositionVariable::class, fn(string $text, array $variables) => new PositionVariableDropdown($variables, text: $text));
-        self::addType(Vector3Variable::class, fn(string $text, array $variables) => new Vector3VariableDropdown($variables, text: $text));
-        self::addType(WorldVariable::class, fn(string $text, array $variables) => new WorldVariableDropdown($variables, text: $text));
-        self::addType(AxisAlignedBBVariable::class, fn(string $text, array $variables) => new AxisAlignedBBVariableDropdown($variables, text: $text));
-        self::addType(ScoreboardVariable::class, fn(string $text, array $variables) => new ScoreboardVariableDropdown($variables, text: $text));
-        self::addType(EventVariable::class, fn(string $text, array $variables) => new EventVariableDropdown($variables, text: $text));
+        self::addType(UnknownVariable::class, fn(string $name) => StringArgument::create($name));
+        self::addType(StringVariable::class, fn(string $name) => StringArgument::create($name));
+        self::addType(NumberVariable::class, fn(string $name) => NumberArgument::create($name));
+        self::addType(BooleanVariable::class, fn(string $name) => BooleanArgument::create($name));
+        self::addType(PlayerVariable::class, fn(string $name) => PlayerArgument::create($name));
+        self::addType(EntityVariable::class, fn(string $name) => EntityArgument::create($name));
+        self::addType(ItemVariable::class, fn(string $name) => ItemArgument::create($name));
+        self::addType(BlockVariable::class, fn(string $name) => BlockArgument::create($name));
+        self::addType(PositionVariable::class, fn(string $name) => PositionArgument::create($name));
+        self::addType(Vector3Variable::class, fn(string $name) => Vector3Argument::create($name));
+        self::addType(WorldVariable::class, fn(string $name) => WorldArgument::create($name));
+        self::addType(AxisAlignedBBVariable::class, fn(string $name) => AxisAlignedBBArgument::create($name));
+        self::addType(ScoreboardVariable::class, fn(string $name) => ScoreboardArgument::create($name));
+        self::addType(EventVariable::class, fn(string $name) => EventArgument::create($name));
     }
 
     /**
-     * @param class-string<Variable> $class
-     * @param callable(string $text, array<Variable> $variables): Element $formElement
+     * @param class-string<Variable> $variableClass
+     * @param callable(string $name): (FlowItemArgument&CustomFormEditorArgument) $flowItemArgument
      * @param bool $override
      * @return void
      */
-    public static function addType(string $class, callable $formElement, bool $override = false): void {
-        $type = $class::getTypeName();
+    public static function addType(string $variableClass, callable $flowItemArgument, bool $override = false): void {
+        $type = $variableClass::getTypeName();
         if (in_array($type, self::$types, true) and !$override) {
             throw new \InvalidArgumentException("RecipeArgument type ".$type." is already registered.");
         }
 
         self::$types[] = $type;
-        self::$classes[$type] = $class;
-        self::$formElements[$type] = $formElement;
+        self::$classes[$type] = $variableClass;
+        self::$recipeArgumentToFlowItemArgumentMap[$type] = $flowItemArgument;
     }
 
     public static function getTypes(): array {
@@ -131,9 +138,17 @@ class RecipeArgument implements \JsonSerializable {
         }
     }
 
+    public function toFlowItemArgument(): FlowItemArgument&CustomFormEditorArgument {
+        /** @var FlowItemArgument&CustomFormEditorArgument $argument */
+        $argument = (self::$recipeArgumentToFlowItemArgumentMap[$this->type])($this->getName());
+        return $argument;
+    }
+
     public function getInputElement(array $variables, mixed $default = null): Element {
-        /** @var Element $element */
-        $element = (self::$formElements[$this->type])("§7<".$this->name.">§f ".$this->description, $variables);
+        $flowItemArgument = $this->toFlowItemArgument();
+        $flowItemArgument->description("§7<".$this->name.">§f ".$this->description);
+        $element = $flowItemArgument->createFormElements($variables)[0];
+
         if ($default !== null) {
             if ($element instanceof Input or $element instanceof Toggle) {
                 $element->setDefault($default);
@@ -142,7 +157,6 @@ class RecipeArgument implements \JsonSerializable {
             } elseif ($element instanceof Dropdown) {
                 $element->setDefaultString($default);
             }
-
         }
         return $element;
     }

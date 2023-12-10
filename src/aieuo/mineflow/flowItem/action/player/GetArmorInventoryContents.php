@@ -15,13 +15,13 @@ class GetArmorInventoryContents extends GetInventoryContentsBase {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $resultName = $source->replaceVariables($this->getResultName());
-        $entity = $this->getOnlinePlayer($source);
+        $resultName = $this->getResultName()->getString($source);
+        $entity = $this->getPlayer()->getOnlinePlayer($source);
         $variable = new InventoryVariable($entity->getArmorInventory());
 
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return (string)$this->getResultName();
     }
 }

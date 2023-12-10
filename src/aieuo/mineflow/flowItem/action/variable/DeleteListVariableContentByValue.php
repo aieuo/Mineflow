@@ -5,76 +5,56 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\variable;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\IsLocalVariableArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
-class DeleteListVariableContentByValue extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class DeleteListVariableContentByValue extends SimpleAction {
 
-    public function __construct(
-        private string $variableName = "",
-        private string $variableValue = "",
-        private bool   $isLocal = true
-    ) {
+    public function __construct(string $variableName = "", string $variableValue = "", bool $isLocal = true) {
         parent::__construct(self::DELETE_LIST_VARIABLE_CONTENT_BY_VALUE, FlowItemCategory::VARIABLE);
+
+        $this->setArguments([
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+            StringArgument::create("value", $variableValue, "@action.variable.form.value")->example("auieo"),
+            IsLocalVariableArgument::create("scope", $isLocal),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["name", "scope", "value"];
+    public function getVariableName(): StringArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->isLocal ? "local" : "global", $this->getValue()];
+    public function getVariableValue(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
-        return $this->variableName;
-    }
-
-    public function setValue(string $variableKey): void {
-        $this->variableValue = $variableKey;
-    }
-
-    public function getValue(): string {
-        return $this->variableValue;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->variableValue !== "";
+    public function getIsLocal(): IsLocalVariableArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $helper = Mineflow::getVariableHelper();
-        $name = $source->replaceVariables($this->getVariableName());
+        $name = $this->getVariableName()->getString($source);
 
-        $value = $this->getValue();
+        $value = $this->getVariableValue()->getRawString();
         if ($helper->isVariableString($value)) {
             $value = $source->getVariable(mb_substr($value, 1, -1)) ?? $helper->getNested(mb_substr($value, 1, -1));
             if ($value === null) {
                 throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
             }
         } else {
-            $value = new StringVariable($source->replaceVariables($this->getValue()));
+            $value = new StringVariable($this->getVariableValue()->getString($source));
         }
 
-        $variable = $source->getVariable($name) ?? ($this->isLocal ? null : $helper->getNested($name));
+        $variable = $source->getVariable($name) ?? ($this->getIsLocal()->getBool() ? null : $helper->getNested($name));
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
@@ -85,25 +65,5 @@ class DeleteListVariableContentByValue extends FlowItem {
         $variable->removeValue($value, false);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-            new ExampleInput("@action.variable.form.value", "auieo", $this->getValue(), true),
-            new Toggle("@action.variable.form.global", !$this->isLocal),
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->logicalNOT(2);
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setValue($content[1]);
-        $this->isLocal = $content[2];
-    }
-
-    public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getValue(), $this->isLocal];
     }
 }

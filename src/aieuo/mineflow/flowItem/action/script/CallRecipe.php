@@ -9,13 +9,13 @@ use SOFe\AwaitGenerator\Await;
 
 class CallRecipe extends ExecuteRecipeBase {
 
-    public function __construct(string $name = "", string $args = "") {
+    public function __construct(string $name = "", array $args = []) {
         parent::__construct(self::CALL_RECIPE, recipeName: $name, args: $args);
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $recipe = clone $this->getRecipe($source);
-        $args = $this->getArguments($source);
+        $args = $this->getArgs()->getVariableArray($source);
 
         yield from Await::promise(fn($resolve) => $recipe->executeAllTargets($source->getTarget(), [
             "parent" => $source->getVariable("this"),

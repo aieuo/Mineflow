@@ -4,75 +4,41 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\item;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class SetItemName extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetItemName extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(string $item = "", private string $itemName = "") {
+    public function __construct(string $item = "", string $itemName = "") {
         parent::__construct(self::SET_ITEM_NAME, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            ItemArgument::create("item", $item),
+            StringArgument::create("name", $itemName, "@action.createItem.form.name")->optional()->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["item", "name"];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getItemName()];
-    }
-
-    public function setItemName(string $itemName): void {
-        $this->itemName = $itemName;
-    }
-
-    public function getItemName(): string {
-        return $this->itemName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "";
+    public function getItemName(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getItemName());
-
-        $item = $this->getItem($source);
+        $name = $this->getItemName()->getString($source);
+        $item = $this->getItem()->getItem($source);
 
         $item->setCustomName($name);
 
         yield Await::ALL;
-        return $this->getItemVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleInput("@action.createItem.form.name", "aieuo", $this->getItemName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
-        $this->setItemName($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getItemName()];
+        return (string)$this->getItem();
     }
 }

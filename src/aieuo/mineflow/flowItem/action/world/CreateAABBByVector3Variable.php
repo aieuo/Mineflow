@@ -4,63 +4,46 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\Vector3FlowItem;
-use aieuo\mineflow\flowItem\base\Vector3FlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\Vector3Argument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\Vector3VariableDropdown;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 use SOFe\AwaitGenerator\Await;
 
-class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
-    use Vector3FlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class CreateAABBByVector3Variable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        string         $pos1 = "",
-        string         $pos2 = "",
-        private string $variableName = "area"
-    ) {
+    public function __construct(string $pos1 = "", string $pos2 = "", string $variableName = "area") {
         parent::__construct(self::CREATE_AABB_BY_VECTOR3_VARIABLE, FlowItemCategory::WORLD);
 
-        $this->setVector3VariableName($pos1, "pos1");
-        $this->setVector3VariableName($pos2, "pos2");
+        $this->setArguments([
+            Vector3Argument::create("pos1", $pos1, "@action.createAABBByVector3Variable.form.pos1"),
+            Vector3Argument::create("pos2", $pos2, "@action.createAABBByVector3Variable.form.pos1"),
+            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("area"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["pos1", "pos2", "result"];
+    public function getPos1(): Vector3Argument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getVector3VariableName("pos1"), $this->getVector3VariableName("pos2"), $this->getVariableName()];
+    public function getPos2(): Vector3Argument {
+        return $this->getArguments()[1];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
-        return $this->variableName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->getVector3VariableName("pos1") !== "" and $this->getVector3VariableName("pos2") !== "";
+    public function getVariableName(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
-        $pos1 = $this->getVector3($source, "pos1");
-        $pos2 = $this->getVector3($source, "pos2");
+        $name = $this->getVariableName()->getString($source);
+        $pos1 = $this->getPos1()->getVector3($source);
+        $pos2 = $this->getPos2()->getVector3($source);
 
         $aabb = new AxisAlignedBB(
             min((float)$pos1->x, (float)$pos2->x),
@@ -74,37 +57,15 @@ class CreateAABBByVector3Variable extends FlowItem implements Vector3FlowItem {
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
 
         yield Await::ALL;
-        return $this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos1"), "@action.createAABBByVector3Variable.form.pos1"),
-            new Vector3VariableDropdown($variables, $this->getVector3VariableName("pos2"), "@action.createAABBByVector3Variable.form.pos2"),
-            new ExampleInput("@action.form.resultVariableName", "area", $this->getVariableName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setVector3VariableName($content[0], "pos1");
-        $this->setVector3VariableName($content[1], "pos2");
-        $this->setVariableName($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [
-            $this->getVector3VariableName("pos1"),
-            $this->getVector3VariableName("pos2"),
-            $this->getVariableName()
-        ];
+        return (string)$this->getVariableName();
     }
 
     public function getAddingVariables(): array {
-        $pos1 = $this->getVector3VariableName("pos1");
-        $pos2 = $this->getVector3VariableName("pos2");
+        $pos1 = $this->getPos1();
+        $pos2 = $this->getPos2();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName() => new DummyVariable(AxisAlignedBB::class, $area)
+            (string)$this->getVariableName() => new DummyVariable(AxisAlignedBB::class, $area)
         ];
     }
 }
