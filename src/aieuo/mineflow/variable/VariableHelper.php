@@ -176,9 +176,8 @@ class VariableHelper {
      */
     public function replaceVariables(string $string, array $variables = [], bool $global = true): string {
         $limit = 10;
-        while (preg_match_all("/({(?:[^{}]+|(?R))*})/u", $string, $matches)) {
-            foreach ($matches[0] as $name) {
-                $name = substr($name, 1, -1);
+        while (preg_match_all("/{((?:[^{}]+|(?R))*)}/u", $string, $matches)) {
+            foreach ($matches[1] as $name) {
                 if (str_contains($name, "{") and str_contains($name, "}")) {
                     $replaced = $this->replaceVariables($name, $variables, $global);
                     $string = str_replace($name, $replaced, $string);
