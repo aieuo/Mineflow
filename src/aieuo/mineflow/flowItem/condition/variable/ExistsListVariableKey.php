@@ -10,8 +10,7 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Mineflow;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
@@ -40,15 +39,13 @@ class ExistsListVariableKey extends SimpleCondition {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Mineflow::getVariableHelper();
         $name = $this->getVariableName()->getString($source);
         $key = $this->getVariableKey()->getString($source);
 
         $variable = $this->getIsLocal()->getBool() ? $source->getVariable($name) : VariableRegistry::global()->get($name);
-        if (!($variable instanceof ListVariable)) return false;
-        $value = $variable->getValue();
+        if (!($variable instanceof IteratorVariable)) return false;
 
         yield Await::ALL;
-        return isset($value[$key]);
+        return $variable->hasKey($key);
     }
 }

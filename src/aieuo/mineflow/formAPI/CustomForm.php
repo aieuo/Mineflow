@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function is_callable;
@@ -122,8 +122,8 @@ class CustomForm extends Form {
                     if ($helper->isVariableString($option)) {
                         $variableName = substr($option, 1, -1);
                         $variable = $helper->runVariableStatement($variableName, $executor->getVariables());
-                        if ($variable instanceof ListVariable) {
-                            foreach ($variable->getValue() as $value) {
+                        if ($variable instanceof IteratorVariable) {
+                            foreach ($variable->getIterator() as $value) {
                                 $options[] = $executor->replaceVariables((string)$value);
                             }
                         }

@@ -9,10 +9,9 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
@@ -44,12 +43,12 @@ class CountListVariable extends SimpleAction {
 
         $variable = $source->getVariable($name) ?? VariableRegistry::global()->getNested($name);
 
-        if (!($variable instanceof ListVariable)) {
+        if (!($variable instanceof IteratorVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.count.error.notList"));
         }
 
-        $count = count($variable->getValue());
-        $source->addVariable($resultName, new NumberVariable($count));
+        $count = $variable->count();
+        $source->addVariable($resultName, $count);
 
         yield Await::ALL;
         return $count;

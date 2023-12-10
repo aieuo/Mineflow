@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
@@ -59,7 +59,7 @@ class DeleteListVariableContentByValue extends SimpleAction {
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
-        if (!($variable instanceof ListVariable)) {
+        if (!($variable instanceof IteratorVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 
