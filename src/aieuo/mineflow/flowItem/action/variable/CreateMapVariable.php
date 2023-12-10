@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class CreateMapVariable extends SimpleAction {
@@ -56,14 +57,14 @@ class CreateMapVariable extends SimpleAction {
             $value = $values[$i] ?? "";
             if ($key === "") continue;
 
-            $addVariable = $helper->copyOrCreateVariable($value, $source);
+            $addVariable = $helper->copyOrCreateVariable($value, $source->getVariableRegistryCopy());
             $variable->setValueAt($key, $addVariable);
         }
 
         if ($this->getIsLocal()->getBool()) {
             $source->addVariable($name, $variable);
         } else {
-            $helper->add($name, $variable);
+            VariableRegistry::global()->add($name, $variable);
         }
 
         yield Await::ALL;

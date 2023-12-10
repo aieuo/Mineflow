@@ -43,7 +43,7 @@ class SetPlayerData extends SimpleAction {
 
         $player = $this->getPlayer()->getPlayer($source);
         $name = $this->getDataName()->getString($source);
-        $variable = $helper->copyOrCreateVariable($this->getData()->getRawString(), $source);
+        $variable = $helper->copyOrCreateVariable($this->getData()->getRawString(), $source->getVariableRegistryCopy());
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {

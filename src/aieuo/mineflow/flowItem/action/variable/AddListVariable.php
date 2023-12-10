@@ -61,7 +61,7 @@ class AddListVariable extends SimpleAction {
         }
 
         foreach ($values as $value) {
-            $addVariable = $helper->copyOrCreateVariable($value, $source);
+            $addVariable = $helper->copyOrCreateVariable($value, $source->getVariableRegistryCopy());
             $variable->appendValue($addVariable);
         }
 

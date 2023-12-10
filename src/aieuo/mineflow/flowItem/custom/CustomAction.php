@@ -92,7 +92,7 @@ class CustomAction extends FlowItem {
                 $args[$arg] = $executor->getVariable($executor->replaceVariables($arg));
             } else {
                 $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
-                $args[$name] = $helper->copyOrCreateVariable($arg, $executor);
+                $args[$name] = $helper->copyOrCreateVariable($arg, $executor->getVariableRegistryCopy());
             }
         }
         return $args;

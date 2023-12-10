@@ -36,7 +36,7 @@ class SetDefaultPlayerData extends SimpleAction {
         $helper = Mineflow::getVariableHelper();
 
         $name = $this->getDataName()->getString($source);
-        $default = $this->getDefaultValue()->getRawString() === "" ? null : $helper->copyOrCreateVariable($this->getDefaultValue()->getRawString(), $source);
+        $default = $this->getDefaultValue()->getRawString() === "" ? null : $helper->copyOrCreateVariable($this->getDefaultValue()->getRawString(), $source->getVariableRegistryCopy());
 
         $data = $helper->getCustomVariableData(PlayerVariable::getTypeName(), $name);
         if ($data === null) {

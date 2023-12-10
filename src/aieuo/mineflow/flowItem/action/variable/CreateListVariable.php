@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class CreateListVariable extends SimpleAction {
@@ -49,14 +50,14 @@ class CreateListVariable extends SimpleAction {
         foreach ($values as $value) {
             if ($value === "") continue;
 
-            $addVariable = $helper->copyOrCreateVariable($value, $source);
+            $addVariable = $helper->copyOrCreateVariable($value, $source->getVariableRegistryCopy());
             $variable->appendValue($addVariable);
         }
 
         if ($this->getIsLocal()->getBool()) {
             $source->addVariable($name, $variable);
         } else {
-            $helper->add($name, $variable);
+            VariableRegistry::global()->add($name, $variable);
         }
 
         yield Await::ALL;

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable;
 
-use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\global\DefaultGlobalMethodVariable;
@@ -218,15 +217,15 @@ class VariableHelper {
         return (new VariableEvaluator(new VariableRegistry($variables), $global))->eval($ast);
     }
 
-    public function copyOrCreateVariable(string $value, ?FlowItemExecutor $executor = null): Variable {
+    public function copyOrCreateVariable(string $value, ?VariableRegistry $registry = null): Variable {
         if ($this->isSimpleVariableString($value)) {
-            $variable = $executor?->getVariable(substr($value, 1, -1)) ?? VariableRegistry::global()->getNested(substr($value, 1, -1));
+            $variable = $registry?->getNested(substr($value, 1, -1)) ?? VariableRegistry::global()->getNested(substr($value, 1, -1));
             if ($variable !== null) {
                 return $variable;
             }
         }
 
-        $value = $this->replaceVariables($value, $executor?->getVariables() ?? []);
+        $value = $this->replaceVariables($value, $registry?->getAll() ?? []);
         return Variable::create($this->currentType($value), $this->getType($value));
     }
 

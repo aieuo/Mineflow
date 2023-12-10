@@ -50,7 +50,7 @@ class GetVariableNested extends SimpleAction {
 
         $fallbackValue = $this->getFallbackValue()->getRawString();
         if ($fallbackValue !== "" and $variable === null) {
-            $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
+            $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source->getVariableRegistryCopy());
         }
 
         if ($variable === null) {
