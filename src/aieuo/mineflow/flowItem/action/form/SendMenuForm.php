@@ -4,107 +4,75 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\form;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\BooleanArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\SeparatedInputStringArrayArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\StringArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\Input;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\ListForm;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
 use SOFe\AwaitGenerator\Await;
-use function array_filter;
-use function array_map;
-use function array_merge;
-use function array_pop;
-use function array_shift;
-use function explode;
-use function implode;
 
-class SendMenuForm extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SendMenuForm extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
-    private array $options;
-    private bool $resendOnClose = false;
-
-    public function __construct(
-        string         $player = "",
-        private string $formText = "",
-        string         $options = "",
-        private string $resultName = "menu"
-    ) {
+    public function __construct(string $player = "", string $formText = "", string $options = "", string $resultName = "menu") {
         parent::__construct(self::SEND_MENU, FlowItemCategory::FORM);
 
-        $this->setPlayerVariableName($player);
-        $this->options = array_filter(array_map("trim", explode(";", $options)), fn(string $o) => $o !== "");
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("text", $formText, "@action.input.form.text")->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("input"),
+            SeparatedInputStringArrayArgument::create("options", $options)
+                ->newValuesDescription("@customForm.dropdown.option.add")
+                ->editValuesDescription("@customForm.dropdown.option")
+                ->separator(";"),
+            BooleanArgument::create("resend on close", false, "@action.input.form.resendOnClose"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "text", "options", "result"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getFormText(), implode(";", $this->getOptions()), $this->getResultName()];
+    public function getFormText(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setFormText(string $formText): void {
-        $this->formText = $formText;
+    public function getOptions(): StringArrayArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getFormText(): string {
-        return $this->formText;
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[3];
     }
 
-    public function setOptions(array $options): void {
-        $this->options = $options;
-    }
-
-    public function getOptions(): array {
-        return $this->options;
-    }
-
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->formText !== "" and $this->resultName !== "";
+    public function getResendOnClose(): BooleanArgument {
+        return $this->getArguments()[4];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $text = $source->replaceVariables($this->getFormText());
-        $resultName = $source->replaceVariables($this->getResultName());
-        $player = $this->getOnlinePlayer($source);
+        $text = $this->getFormText()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
-        yield from Await::promise(function ($resolve) use($source, $player, $text, $resultName) {
+        yield from Await::promise(function ($resolve) use ($source, $player, $text, $resultName) {
             $this->sendForm($source, $player, $text, $resultName, $resolve);
         });
     }
 
     private function sendForm(FlowItemExecutor $source, Player $player, string $text, string $resultName, callable $callback): void {
         $buttons = [];
-        foreach ($this->options as $option) {
+        foreach ($this->getOptions()->getArray($source) as $option) {
             $buttons[] = new Button($option);
         }
 
@@ -114,65 +82,18 @@ class SendMenuForm extends FlowItem implements PlayerFlowItem {
             ->onReceive(function (Player $player, int $data) use ($source, $resultName, $callback) {
                 $variable = new MapVariable([
                     "id" => new NumberVariable($data),
-                    "text" => new StringVariable($this->options[$data]),
-                ], $this->options[$data]);
+                    "text" => new StringVariable($this->getOptions()->getArray($source)[$data]),
+                ], $this->getOptions()->getArray($source)[$data]);
                 $source->addVariable($resultName, $variable);
                 $callback();
             })->onClose(function (Player $player) use ($source, $text, $resultName, $callback) {
-                if ($this->resendOnClose) $this->sendForm($source, $player, $text, $resultName, $callback);
+                if ($this->getResendOnClose()->getBool()) $this->sendForm($source, $player, $text, $resultName, $callback);
             })->show($player);
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $contents = [
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.form.resultVariableName", "input", $this->getResultName(), true),
-            new ExampleInput("@action.input.form.text", "aieuo", $this->getFormText(), true),
-        ];
-        foreach ($this->getOptions() as $i => $option) {
-            $contents[] = new Input(Language::get("customForm.dropdown.option", [$i]), Language::get("form.example", ["aieuo"]), $option);
-        }
-        $contents[] = new ExampleInput("@customForm.dropdown.option.add", "aeiuo");
-        $contents[] = new Toggle("@action.input.form.resendOnClose", $this->resendOnClose);
-
-        $builder->elements($contents);
-
-        $builder->response(function (EditFormResponseProcessor $response) {
-            $response->preprocess(function (array $data) {
-                $target = array_shift($data);
-                $resultName = array_shift($data);
-                $text = array_shift($data);
-                $resendOnClose = array_pop($data);
-                $add = array_filter(array_map("trim", explode(";", array_pop($data))), fn(string $o) => $o !== "");
-
-                $options = array_filter($data, fn(string $o) => $o !== "");
-                $options = array_merge($options, $add);
-                return [$target, $resultName, $text, $options, $resendOnClose];
-            });
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setResultName($content[1]);
-        $this->setFormText($content[2]);
-        $this->setOptions($content[3]);
-        $this->resendOnClose = $content[4];
-    }
-
-    public function serializeContents(): array {
-        return [
-            $this->getPlayerVariableName(),
-            $this->getResultName(),
-            $this->getFormText(),
-            $this->getOptions(),
-            $this->resendOnClose
-        ];
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(MapVariable::class)
+            (string)$this->getResultName() => new DummyVariable(MapVariable::class)
         ];
     }
 }

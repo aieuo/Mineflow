@@ -16,7 +16,7 @@ class BroadcastMessage extends TypeMessage {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($source->replaceVariables($this->getMessage()));
+        $message = Language::replace($this->getMessage()->getString($source));
         Server::getInstance()->broadcastMessage($message);
 
         yield Await::ALL;

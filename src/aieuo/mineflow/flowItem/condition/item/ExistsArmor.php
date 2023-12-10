@@ -13,8 +13,8 @@ class ExistsArmor extends TypeItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
-        $player = $this->getOnlinePlayer($source);
+        $item = $this->getItem()->getItem($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         yield Await::ALL;
         return $player->getArmorInventory()->contains($item);

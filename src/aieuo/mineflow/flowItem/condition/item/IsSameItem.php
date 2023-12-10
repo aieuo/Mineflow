@@ -4,83 +4,45 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\item;
 
-use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\condition\Condition;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\BooleanArgument;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\GeneratorUtil;
 
-class IsSameItem extends FlowItem implements Condition, ItemFlowItem {
-    use ItemFlowItemTrait;
-    use ConditionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class IsSameItem extends SimpleCondition {
 
-    private const KEY_ITEM1 = "item1";
-    private const KEY_ITEM2 = "item2";
-
-    public function __construct(string $item1 = "", string $item2 = "", private bool $checkCompound = false) {
+    public function __construct(string $item1 = "", string $item2 = "", bool $checkCompound = false) {
         parent::__construct(FlowItemIds::IS_SAME_ITEM, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item1, self::KEY_ITEM1);
-        $this->setItemVariableName($item2, self::KEY_ITEM2);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["item1", "item2", "tag"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [
-            $this->getItemVariableName(self::KEY_ITEM1),
-            $this->getItemVariableName(self::KEY_ITEM2),
-            Language::get($this->checkCompound ? "form.yes" : "form.no"),
-        ];
-    }
-
-    public function isDataValid(): bool {
-        return $this->getItemVariableName(self::KEY_ITEM1) !== "" and $this->getItemVariableName(self::KEY_ITEM2) !== "";
-    }
-
-    public function getCheckCompound(): bool {
-        return $this->checkCompound;
-    }
-
-    public function setCheckCompound(bool $checkCompound): void {
-        $this->checkCompound = $checkCompound;
-    }
-
-    protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item1 = $this->getItem($source, self::KEY_ITEM1);
-        $item2 = $this->getItem($source, self::KEY_ITEM2);
-
-        yield from GeneratorUtil::empty();
-        return $item1->equals($item2, checkCompound: $this->checkCompound);
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName(self::KEY_ITEM1), "@action.form.target.item (1)"),
-            new ItemVariableDropdown($variables, $this->getItemVariableName(self::KEY_ITEM2), "@action.form.target.item (2)"),
-            new Toggle("@condition.isSameItem.form.checkCompound", $this->getCheckCompound()),
+        $this->setArguments([
+            ItemArgument::create("item1", $item1, "@action.form.target.item (1)"),
+            ItemArgument::create("item2", $item2, "@action.form.target.item (2)"),
+            BooleanArgument::create("tag", $checkCompound, "@condition.isSameItem.form.checkCompound")
+                ->format(fn(bool $value) => Language::get($value ? "form.yes" : "form.no")),
         ]);
     }
 
-    public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0], self::KEY_ITEM1);
-        $this->setItemVariableName($content[1], self::KEY_ITEM2);
-        $this->setCheckCompound($content[2]);
+    public function getItem1(): ItemArgument {
+        return $this->getArguments()[0];
     }
 
-    public function serializeContents(): array {
-        return [$this->getItemVariableName(self::KEY_ITEM1), $this->getItemVariableName(self::KEY_ITEM2), $this->getCheckCompound()];
+    public function getItem2(): ItemArgument {
+        return $this->getArguments()[1];
+    }
+
+    public function getCheckCompound(): BooleanArgument {
+        return $this->getArguments()[2];
+    }
+
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $item1 = $this->getItem1()->getItem($source);
+        $item2 = $this->getItem2()->getItem($source);
+
+        yield from GeneratorUtil::empty();
+        return $item1->equals($item2, checkCompound: $this->getCheckCompound()->getBool());
     }
 }

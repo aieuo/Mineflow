@@ -4,74 +4,59 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\AxisAlignedBBFlowItem;
-use aieuo\mineflow\flowItem\base\AxisAlignedBBFlowItemTrait;
-use aieuo\mineflow\flowItem\base\WorldFlowItem;
-use aieuo\mineflow\flowItem\base\WorldFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\AxisAlignedBBArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\WorldArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\AxisAlignedBBVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\WorldVariableDropdown;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
 use SOFe\AwaitGenerator\Await;
 use function array_map;
 
-abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFlowItem, WorldFlowItem {
-    use AxisAlignedBBFlowItemTrait, WorldFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+abstract class GetEntitiesInAreaBase extends SimpleAction {
 
     public function __construct(
-        string         $id,
-        string         $category = FlowItemCategory::WORLD,
-        string         $aabb = "",
-        string         $worldName = "",
-        private string $resultName = "entities"
+        string $id,
+        string $category = FlowItemCategory::WORLD,
+        string $aabb = "",
+        string $worldName = "",
+        string $resultName = "entities"
     ) {
         parent::__construct($id, $category);
 
-        $this->setAxisAlignedBBVariableName($aabb);
-        $this->setWorldVariableName($worldName);
+        $this->setArguments([
+            AxisAlignedBBArgument::create("aabb", $aabb),
+            WorldArgument::create("world", $worldName),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("entities"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["aabb", "world", "result"];
+    public function getAxisAlignedBB(): AxisAlignedBBArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getAxisAlignedBBVariableName(), $this->getWorldVariableName(), $this->getResultName()];
+    public function getWorld(): WorldArgument {
+        return $this->getArguments()[1];
     }
 
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getAxisAlignedBBVariableName() !== "" and $this->getWorldVariableName() !== "" and $this->getResultName() !== "";
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $aabb = $this->getAxisAlignedBB($source);
-        $world = $this->getWorld($source);
-        $result = $source->replaceVariables($this->getResultName());
+        $aabb = $this->getAxisAlignedBB()->getAxisAlignedBB($source);
+        $world = $this->getWorld()->getWorld($source);
+        $result = $this->getResultName()->getString($source);
 
         $entities = $this->filterEntities($world->getNearbyEntities($aabb));
         $variable = new ListVariable(array_map(fn(Entity $entity) => EntityVariable::fromObject($entity), $entities));
         $source->addVariable($result, $variable);
 
         yield Await::ALL;
-        return $this->getResultName();
+        return (string)$this->getResultName();
     }
 
     /**
@@ -79,22 +64,4 @@ abstract class GetEntitiesInAreaBase extends FlowItem implements AxisAlignedBBFl
      * @return Entity[]
      */
     abstract protected function filterEntities(array $entities): array;
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new AxisAlignedBBVariableDropdown($variables, $this->getAxisAlignedBBVariableName()),
-            new WorldVariableDropdown($variables, $this->getWorldVariableName()),
-            new ExampleInput("@action.form.resultVariableName", "entities", $this->getResultName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setAxisAlignedBBVariableName($content[0]);
-        $this->setWorldVariableName($content[1]);
-        $this->setResultName($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getAxisAlignedBBVariableName(), $this->getWorldVariableName(), $this->getResultName()];
-    }
 }

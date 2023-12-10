@@ -16,7 +16,7 @@ class SendMessageToOp extends TypeMessage {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($source->replaceVariables($this->getMessage()));
+        $message = Language::replace($this->getMessage()->getString($source));
         $players = Server::getInstance()->getOnlinePlayers();
         foreach ($players as $player) {
             if (Server::getInstance()->isOp($player->getName())) {

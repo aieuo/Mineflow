@@ -4,72 +4,39 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player\bossbar;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
 use SOFe\AwaitGenerator\Await;
 
-class RemoveBossbar extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class RemoveBossbar extends SimpleAction {
 
-    public function __construct(string $player = "", private string $barId = "") {
+    public function __construct(string $player = "", string $barId = "") {
         parent::__construct(self::REMOVE_BOSSBAR, FlowItemCategory::BOSSBAR);
 
-        $this->setPlayerVariableName($player);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("id", $barId, "@action.showBossbar.form.id")->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "id"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getBarId()];
-    }
-
-    public function setBarId(string $barId): void {
-        $this->barId = $barId;
-    }
-
-    public function getBarId(): string {
-        return $this->barId;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->barId !== "";
+    public function getBarId(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $id = $source->replaceVariables($this->getBarId());
-        $player = $this->getOnlinePlayer($source);
+        $id = $this->getBarId()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Bossbar::remove($player, $id);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.showBossbar.form.id", "aieuo", $this->getBarId(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setBarId($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getBarId()];
     }
 }

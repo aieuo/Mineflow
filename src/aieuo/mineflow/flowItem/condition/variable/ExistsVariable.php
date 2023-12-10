@@ -4,65 +4,33 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\variable;
 
-use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\condition\Condition;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
-class ExistsVariable extends FlowItem implements Condition {
-    use ConditionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class ExistsVariable extends SimpleCondition {
 
-    public function __construct(private string $variableName = "") {
+    public function __construct(string $variableName = "") {
         parent::__construct(self::EXISTS_VARIABLE, FlowItemCategory::VARIABLE);
+
+        $this->setArguments([
+            StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["name"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getVariableName()];
-    }
-
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
-        return $this->variableName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName !== "";
+    public function getVariableName(): StringArgument {
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
+        $name = $this->getVariableName()->getString($source);
 
         yield Await::ALL;
         return $source->getVariable($name) !== null
             or VariableRegistry::global()->get($name) !== null
             or VariableRegistry::global()->getNested($name) !== null;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleInput("@action.variable.form.name", "aieuo", $this->getVariableName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getVariableName()];
     }
 }

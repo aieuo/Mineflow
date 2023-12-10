@@ -9,13 +9,13 @@ use SOFe\AwaitGenerator\Await;
 
 class AddXpProgress extends AddXpBase {
 
-    public function __construct(string $player = "", string $xp = "") {
+    public function __construct(string $player = "", int $xp = null) {
         parent::__construct(self::ADD_XP_PROGRESS, player: $player, xp: $xp);
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $xp = $this->getInt($source->replaceVariables($this->getXp()));
-        $player = $this->getOnlinePlayer($source);
+        $xp = $this->getXp()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $new = $player->getXpManager()->getCurrentTotalXp() + $xp;
         if ($new < 0) $xp = -$player->getXpManager()->getCurrentTotalXp();

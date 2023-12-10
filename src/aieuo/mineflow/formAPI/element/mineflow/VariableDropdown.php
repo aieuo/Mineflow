@@ -2,8 +2,8 @@
 
 namespace aieuo\mineflow\formAPI\element\mineflow;
 
+use aieuo\mineflow\flowItem\editor\FlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItem;
-use aieuo\mineflow\flowItem\FlowItemContainer;
 use aieuo\mineflow\flowItem\FlowItemFactory;
 use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
@@ -11,6 +11,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
 use aieuo\mineflow\recipe\Recipe;
+use aieuo\mineflow\ui\controller\FlowItemFormController;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
@@ -20,9 +21,7 @@ use SOFe\AwaitGenerator\Await;
 use function array_key_first;
 use function array_merge;
 use function array_search;
-use function array_shift;
 use function count;
-use function end;
 use function in_array;
 
 abstract class VariableDropdown extends Dropdown {
@@ -144,41 +143,50 @@ abstract class VariableDropdown extends Dropdown {
     }
 
     public function sendAddVariableForm(Player $player, CustomForm $origin, int $index): void {
-        (new ListForm("@form.element.variableDropdown.createVariable"))
-            ->addButtonsEach($this->actions, function (string $id) use ($player, $origin, $index) {
-                $action = FlowItemFactory::get($id);
+        $actions = [];
+        foreach ($this->actions as $id) {
+            $action = FlowItemFactory::get($id);
+            if ($action !== null) {
+                $actions[] = $action;
+            }
+        }
 
+        (new ListForm("@form.element.variableDropdown.createVariable"))
+            ->addButtonsEach($actions, function (FlowItem $action) use ($player, $origin, $index) {
                 return new Button($action->getName(), function () use ($player, $origin, $index, $action) {
                     Await::f2c(function () use($player, $origin, $index, $action) {
-                        $parents = Session::getSession($player)->get("parents");
-                        /** @var FlowItemContainer $container */
-                        $container = end($parents);
-                        /** @var Recipe $recipe */
-                        $recipe = array_shift($parents);
-                        $variables = $recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION);
+                        $recipe = FlowItemFormController::getEditingRecipe($player);
+                        if ($recipe === null) return;
 
-                        $result = yield from $action->edit($player, $variables, true);
-                        if ($result === FlowItem::EDIT_CLOSE) return;
+                        $variables = $recipe->getAddingVariablesUntil($action);
 
-                        if ($result === FlowItem::EDIT_CANCELED) {
+                        $container = FlowItemFormController::getEditingContainer($player) ?? $recipe;
+                        $parentContainer = FlowItemFormController::getParentContainerOf($player, $container);
+
+                        $editor = $action->getNewItemEditor();
+                        $editor->onStartEdit($player);
+                        $result = yield from $editor->edit($player, $variables, true);
+                        $editor->onFinishEdit($player);
+                        if ($result === FlowItemEditor::EDIT_CLOSE) return;
+
+                        if ($result === FlowItemEditor::EDIT_CANCELED) {
                             $origin->resend([], ["@form.cancelled"]);
                             return;
                         }
 
                         if ($container instanceof Recipe) {
-                            $place = array_search(Session::getSession($player)->get("action_list_clicked"), $container->getActions(), true);
-                            if ($place !== false) {
-                                $container->pushAction($place, $action);
+                            $index = array_search(Session::getSession($player)->get("action_list_clicked"), $container->getItems(), true);
+                            if ($index !== false) {
+                                $container->pushAction($index, $action);
                             } else {
                                 $container->addAction($action);
                             }
-                        } else {
-                            $container1 = $parents[count($parents) - 2] ?? $recipe;
-                            $place = array_search($container, $container1->getActions(), true);
-                            $container1->pushAction($place, $action);
+                        } elseif ($parentContainer !== null) {
+                            $index = array_search($container, $parentContainer->getItems(), true);
+                            $parentContainer->pushItem($index, $action);
                         }
                         $add = $action->getAddingVariables();
-                        $variables = array_merge($recipe->getAddingVariablesBefore($action, $parents, FlowItemContainer::ACTION), $add);
+                        $variables = array_merge($recipe->getAddingVariablesUntil($action), $add);
 
                         $indexes = [];
                         foreach ($origin->getContents() as $i => $content) {

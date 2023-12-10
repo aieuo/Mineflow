@@ -5,23 +5,18 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\math;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\IntEnumArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 
-class Calculate2 extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class Calculate2 extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_VALUE;
 
@@ -33,8 +28,6 @@ class Calculate2 extends FlowItem {
     public const CALC_ATAN2 = 5;
     public const CALC_ROUND = 6;
 
-    private int $operator;
-
     private array $operatorSymbols = [
         "min(x, y)",
         "max(x, y)",
@@ -45,66 +38,38 @@ class Calculate2 extends FlowItem {
         "round(x, y)"
     ];
 
-    public function __construct(
-        private string $value1 = "",
-        private string $value2 = "",
-        string         $operator = null,
-        private string $resultName = "result"
-    ) {
+    public function __construct(float $value1 = 0, float $value2 = 0, int $operator = self::CALC_MIN, string $resultName = "result") {
         parent::__construct(self::CALCULATE2, FlowItemCategory::MATH);
 
-        $this->operator = (int)($operator ?? self::CALC_MIN);
+        $this->setArguments([
+            NumberArgument::create("value1", $value1)->example("10"),
+            NumberArgument::create("value2", $value2)->example("20"),
+            IntEnumArgument::create("operator", $operator, "@action.fourArithmeticOperations.form.operator")->options($this->operatorSymbols),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("result"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["value1", "value2", "operator", "result"];
+    public function getValue1(): NumberArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getValue1(), $this->getValue2(), $this->operatorSymbols[$this->getOperator()], $this->resultName];
+    public function getValue2(): NumberArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setValue1(string $value1): void {
-        $this->value1 = $value1;
+    public function getOperator(): IntEnumArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getValue1(): string {
-        return $this->value1;
-    }
-
-    public function setValue2(string $value2): void {
-        $this->value2 = $value2;
-    }
-
-    public function getValue2(): string {
-        return $this->value2;
-    }
-
-    public function setOperator(int $operator): void {
-        $this->operator = $operator;
-    }
-
-    public function getOperator(): int {
-        return $this->operator;
-    }
-
-    public function setResultName(string $name): void {
-        $this->resultName = $name;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getValue1() !== "" and $this->getValue2() !== "";
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[3];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $this->getFloat($source->replaceVariables($this->getValue1()));
-        $value2 = $this->getFloat($source->replaceVariables($this->getValue2()));
-        $resultName = $source->replaceVariables($this->getResultName());
-        $operator = $this->getOperator();
+        $value1 = $this->getValue1()->getFloat($source);
+        $value2 = $this->getValue2()->getFloat($source);
+        $resultName = $this->getResultName()->getString($source);
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::CALC_MIN => min($value1, $value2),
@@ -123,29 +88,9 @@ class Calculate2 extends FlowItem {
         return $result;
     }
 
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleNumberInput("@action.calculate2.form.value1", "10", $this->getValue1(), true),
-            new ExampleNumberInput("@action.calculate2.form.value2", "20", $this->getValue2(), true),
-            new Dropdown("@action.fourArithmeticOperations.form.operator", $this->operatorSymbols, $this->getOperator()),
-            new ExampleInput("@action.form.resultVariableName", "result", $this->getResultName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setValue1($content[0]);
-        $this->setValue2($content[1]);
-        $this->setOperator($content[2]);
-        $this->setResultName($content[3]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getValue1(), $this->getValue2(), $this->getOperator(), $this->getResultName()];
-    }
-
     public function getAddingVariables(): array {
         return [
-            $this->getResultName() => new DummyVariable(NumberVariable::class)
+            (string)$this->getResultName() => new DummyVariable(NumberVariable::class)
         ];
     }
 }

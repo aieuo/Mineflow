@@ -4,87 +4,45 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player\message;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use pocketmine\network\mcpe\protocol\ToastRequestPacket;
 use SOFe\AwaitGenerator\Await;
 
-class SendToast extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SendToast extends SimpleAction {
 
-    public function __construct(
-        private string $player = "",
-        private string $title = "",
-        private string $body = ""
-    ) {
+    public function __construct(string $player = "", string $title = "", string $body = "") {
         parent::__construct(self::SEND_TOAST, FlowItemCategory::PLAYER_MESSAGE);
 
-        $this->setPlayerVariableName($player);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("title", $title)->optional()->example("aieuo"),
+            StringArgument::create("body", $body)->optional()->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "title", "body"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getTitle(), $this->getBody()];
+    public function getTitle(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setTitle(string $title): void {
-        $this->title = $title;
-    }
-
-    public function getTitle(): string {
-        return $this->title;
-    }
-
-    public function setBody(string $body): void {
-        $this->body = $body;
-    }
-
-    public function getBody(): string {
-        return $this->body;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "";
+    public function getBody(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $title = $source->replaceVariables($this->getTitle());
-        $body = $source->replaceVariables($this->getBody());
-        $player = $this->getOnlinePlayer($source);
+        $title = $this->getTitle()->getString($source);
+        $body = $this->getBody()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->getNetworkSession()->sendDataPacket(ToastRequestPacket::create($title, $body));
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.sendToast.form.title", "aieuo", $this->getTitle()),
-            new ExampleInput("@action.sendToast.form.subtitle", "aieuo", $this->getBody()),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setTitle($content[1]);
-        $this->setBody($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getTitle(), $this->getBody()];
     }
 }

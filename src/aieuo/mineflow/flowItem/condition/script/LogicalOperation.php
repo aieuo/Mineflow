@@ -4,70 +4,55 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\script;
 
-use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
+use aieuo\mineflow\flowItem\argument\ConditionArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\condition\Condition;
+use aieuo\mineflow\flowItem\editor\ConditionArrayEditor;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
-use aieuo\mineflow\flowItem\FlowItemContainer;
-use aieuo\mineflow\flowItem\FlowItemContainerTrait;
-use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\ui\FlowItemContainerForm;
-use pocketmine\player\Player;
 
-abstract class LogicalOperation extends FlowItem implements Condition, FlowItemContainer {
-    use FlowItemContainerTrait;
-    use ConditionNameWithMineflowLanguage;
+abstract class LogicalOperation extends SimpleCondition {
 
+    /**
+     * @param string $id
+     * @param string $category
+     * @param array<FlowItem&Condition> $conditions
+     */
     public function __construct(
         string $id,
         string $category = FlowItemCategory::SCRIPT,
+        array  $conditions = [],
     ) {
         parent::__construct($id, $category);
+
+        $this->setArguments([
+            ConditionArrayArgument::create("conditions", $conditions),
+        ]);
     }
 
     public function getDetail(): string {
-        $details = ["----------".$this->getId()."-----------"];
-        foreach ($this->getConditions() as $condition) {
-            $details[] = $condition->getShortDetail();
-        }
-        $details[] = "------------------------";
-        return implode("\n", $details);
+        return <<<END
+            §7---------§f {$this->getId()} §7---------§f
+            {$this->getConditions()}
+            §7------------------------§f
+            END;
     }
 
-    public function getContainerName(): string {
-        return empty($this->getCustomName()) ? $this->getName() : $this->getCustomName();
+    public function getConditions(): ConditionArrayArgument {
+        return $this->getArguments()[0];
     }
 
-    public function hasCustomMenu(): bool {
-        return true;
-    }
-
-    public function getCustomMenuButtons(): array {
+    public function getEditors(): array {
         return [
-            new Button("@condition.edit", fn(Player $player) => (new FlowItemContainerForm)->sendActionList($player, $this, FlowItemContainer::CONDITION)),
+            new ConditionArrayEditor($this->getConditions()),
         ];
     }
 
-    public function loadSaveData(array $contents): void {
-        foreach ($contents as $content) {
-            $condition = FlowItem::loadEachSaveData($content);
-            $this->addCondition($condition);
-        }
+    public function loadSaveData(array $content): void {
+        $this->getConditions()->load($content);
     }
 
     public function serializeContents(): array {
-        return $this->getConditions();
-    }
-
-    public function isDataValid(): bool {
-        return true;
-    }
-
-    public function __clone() {
-        $conditions = [];
-        foreach ($this->getConditions() as $k => $condition) {
-            $conditions[$k] = clone $condition;
-        }
-        $this->setConditions($conditions);
+        return $this->getConditions()->jsonSerialize();
     }
 }

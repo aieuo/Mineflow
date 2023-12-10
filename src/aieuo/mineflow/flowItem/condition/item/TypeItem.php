@@ -4,23 +4,12 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\condition\item;
 
-use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\condition\Condition;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 
-abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, ItemFlowItem {
-    use PlayerFlowItemTrait, ItemFlowItemTrait;
-    use ConditionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+abstract class TypeItem extends SimpleCondition {
 
     public function __construct(
         string $id,
@@ -30,35 +19,17 @@ abstract class TypeItem extends FlowItem implements Condition, PlayerFlowItem, I
     ) {
         parent::__construct($id, $category);
 
-        $this->setPlayerVariableName($player);
-        $this->setItemVariableName($item);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "item"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName()];
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "";
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            ItemArgument::create("item", $item),
         ]);
     }
 
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setItemVariableName($content[1]);
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName()];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[1];
     }
 }

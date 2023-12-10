@@ -4,113 +4,78 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use pocketmine\math\AxisAlignedBB;
 use SOFe\AwaitGenerator\Await;
 
-class CreateAABB extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class CreateAABB extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
     public function __construct(
-        private string $minX = "",
-        private string $minY = "",
-        private string $minZ = "",
-        private string $maxX = "",
-        private string $maxY = "",
-        private string $maxZ = "",
-        private string $variableName = "aabb"
+        string $minX = "",
+        string $minY = "",
+        string $minZ = "",
+        string $maxX = "",
+        string $maxY = "",
+        string $maxZ = "",
+        string $variableName = "aabb"
     ) {
         parent::__construct(self::CREATE_AABB, FlowItemCategory::WORLD);
+
+        $this->setArguments([
+            NumberArgument::create("min x", $minX, "@action.createAABB.form.minX")->example("0"),
+            NumberArgument::create("min y", $minY, "@action.createAABB.form.minY")->example("100"),
+            NumberArgument::create("min z", $minZ, "@action.createAABB.form.minZ")->example("16"),
+            NumberArgument::create("max x", $maxX, "@action.createAABB.form.maxX")->example("10"),
+            NumberArgument::create("max y", $maxY, "@action.createAABB.form.maxY")->example("200"),
+            NumberArgument::create("max z", $maxZ, "@action.createAABB.form.maxZ")->example("160"),
+            StringArgument::create("result", $variableName, "@action.form.resultVariableName")->example("area"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["min x", "min y", "min z", "max x", "max y", "max z", "result"];
+    public function getMinX(): NumberArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getMinX(), $this->getMinY(), $this->getMinZ(), $this->getMaxX(), $this->getMaxY(), $this->getMaxZ(), $this->getVariableName()];
+    public function getMinY(): NumberArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
+    public function getMinZ(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getVariableName(): string {
-        return $this->variableName;
+    public function getMaxX(): NumberArgument {
+        return $this->getArguments()[3];
     }
 
-    public function setMinX(string $minX): void {
-        $this->minX = $minX;
+    public function getMaxY(): NumberArgument {
+        return $this->getArguments()[4];
     }
 
-    public function getMinX(): string {
-        return $this->minX;
+    public function getMaxZ(): NumberArgument {
+        return $this->getArguments()[5];
     }
 
-    public function setMinY(string $minY): void {
-        $this->minY = $minY;
-    }
-
-    public function getMinY(): string {
-        return $this->minY;
-    }
-
-    public function setMinZ(string $minZ): void {
-        $this->minZ = $minZ;
-    }
-
-    public function getMinZ(): string {
-        return $this->minZ;
-    }
-
-    public function getMaxX(): string {
-        return $this->maxX;
-    }
-
-    public function setMaxX(string $maxX): void {
-        $this->maxX = $maxX;
-    }
-
-    public function getMaxY(): string {
-        return $this->maxY;
-    }
-
-    public function setMaxY(string $maxY): void {
-        $this->maxY = $maxY;
-    }
-
-    public function getMaxZ(): string {
-        return $this->maxZ;
-    }
-
-    public function setMaxZ(string $maxZ): void {
-        $this->maxZ = $maxZ;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->minX !== "" and $this->minY !== "" and $this->minZ !== "" and $this->maxX !== "" and $this->maxY !== "" and $this->maxZ !== "";
+    public function getVariableName(): StringArgument {
+        return $this->getArguments()[6];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
-        $minX = $this->getFloat($source->replaceVariables($this->getMinX()));
-        $minY = $this->getFloat($source->replaceVariables($this->getMinY()));
-        $minZ = $this->getFloat($source->replaceVariables($this->getMinZ()));
-        $maxX = $this->getFloat($source->replaceVariables($this->getMaxX()));
-        $maxY = $this->getFloat($source->replaceVariables($this->getMaxY()));
-        $maxZ = $this->getFloat($source->replaceVariables($this->getMaxZ()));
+        $name = $this->getVariableName()->getString($source);
+        $minX = $this->getMinX()->getFloat($source);
+        $minY = $this->getMinY()->getFloat($source);
+        $minZ = $this->getMinZ()->getFloat($source);
+        $maxX = $this->getMaxX()->getFloat($source);
+        $maxY = $this->getMaxY()->getFloat($source);
+        $maxZ = $this->getMaxZ()->getFloat($source);
 
         $aabb = new AxisAlignedBB(
             min($minX, $maxX),
@@ -124,41 +89,7 @@ class CreateAABB extends FlowItem {
         $source->addVariable($name, new AxisAlignedBBVariable($aabb));
 
         yield Await::ALL;
-        return $this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleNumberInput("@action.createAABB.form.minX", "0", $this->getMinX(), true),
-            new ExampleNumberInput("@action.createAABB.form.minY", "100", $this->getMinY(), true),
-            new ExampleNumberInput("@action.createAABB.form.minZ", "16", $this->getMinZ(), true),
-            new ExampleNumberInput("@action.createAABB.form.maxX", "10", $this->getMaxX(), true),
-            new ExampleNumberInput("@action.createAABB.form.maxY", "200", $this->getMaxY(), true),
-            new ExampleNumberInput("@action.createAABB.form.maxZ", "160", $this->getMaxZ(), true),
-            new ExampleInput("@action.form.resultVariableName", "area", $this->getVariableName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setMinX($content[0]);
-        $this->setMinY($content[1]);
-        $this->setMinZ($content[2]);
-        $this->setMaxX($content[3]);
-        $this->setMaxY($content[4]);
-        $this->setMaxZ($content[5]);
-        $this->setVariableName($content[6]);
-    }
-
-    public function serializeContents(): array {
-        return [
-            $this->getMinX(),
-            $this->getMinY(),
-            $this->getMinZ(),
-            $this->getMaxX(),
-            $this->getMaxY(),
-            $this->getMaxZ(),
-            $this->getVariableName()
-        ];
+        return (string)$this->getVariableName();
     }
 
     public function getAddingVariables(): array {
@@ -166,7 +97,7 @@ class CreateAABB extends FlowItem {
         $pos2 = $this->getMaxX().", ".$this->getMaxY().", ".$this->getMaxZ();
         $area = "({$pos1}) ~ ({$pos2})";
         return [
-            $this->getVariableName() => new DummyVariable(AxisAlignedBBVariable::class, $area)
+            (string)$this->getVariableName() => new DummyVariable(AxisAlignedBBVariable::class, $area)
         ];
     }
 }

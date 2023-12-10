@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem;
 
+use aieuo\mineflow\exception\FlowItemExecutionException;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
+use aieuo\mineflow\flowItem\argument\FlowItemArgument;
+use aieuo\mineflow\flowItem\condition\Condition;
+use aieuo\mineflow\flowItem\editor\CustomFormFlowItemEditor;
+use aieuo\mineflow\flowItem\editor\FlowItemEditor;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\utils\Language;
+use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
+use JetBrains\PhpStorm\Deprecated;
 use JsonSerializable;
-use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use SOFe\AwaitGenerator\GeneratorUtil;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
@@ -23,19 +29,17 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     protected string $returnValueType = self::RETURN_NONE;
 
-    public const EDIT_SUCCESS = 0;
-    public const EDIT_CANCELED = 1;
-    public const EDIT_CLOSE = 2;
-
     /**
      * @param string $id
      * @param string $category
      * @param string[] $permissions
+     * @param array<int|string, FlowItemArgument> $arguments
      */
     public function __construct(
-        private string $id,
-        private string $category,
-        private array  $permissions = [],
+        private readonly string $id,
+        private string          $category,
+        private array           $permissions = [],
+        private array           $arguments = [],
     ) {
     }
 
@@ -61,6 +65,10 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $this->customName;
     }
 
+    public function setCategory(string $category): void {
+        $this->category = $category;
+    }
+
     public function getCategory(): string {
         return $this->category;
     }
@@ -71,6 +79,67 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
     public function setPermissions(array $permissions): void {
         $this->permissions = $permissions;
+    }
+
+    public function getArguments(): array {
+        return $this->arguments;
+    }
+
+    public function getArgument(int|string $index): ?FlowItemArgument {
+        return $this->arguments[$index] ?? null;
+    }
+
+    /**
+     * @param FlowItemArgument[] $arguments
+     * @param bool $updateDescription
+     * @return void
+     */
+    public function setArguments(array $arguments, bool $updateDescription = true): void {
+        $this->arguments = [];
+        foreach ($arguments as $i => $argument) {
+            $this->setArgument($i, $argument, $updateDescription);
+        }
+    }
+
+    public function setArgument(int|string $index, FlowItemArgument $argument, bool $updateDescription = true): void {
+        $this->arguments[$index] = $argument;
+
+        if ($updateDescription and $argument->getDescription() === "") {
+            $this->updateArgumentDescription($argument);
+        }
+    }
+
+    public function pushArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
+        $this->arguments[] = $argument;
+
+        if ($updateDescription and $argument->getDescription() === "") {
+            $this->updateArgumentDescription($argument);
+        }
+    }
+
+    private function updateArgumentDescription(FlowItemArgument $argument): void {
+        $type = $this instanceof Condition ? "condition" : "action";
+        $argument->description("@{$type}.{$this->getId()}.form.{$argument->getName()}");
+    }
+
+    public function hasFlowItemContainer(string $type = null): bool {
+        foreach ($this->getArguments() as $argument) {
+            if ($argument instanceof FlowItemContainer and ($type === null or $argument->getContainerItemType() === $type)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getFlowItemContainer(string $type): ?FlowItemContainer {
+        foreach ($this->getArguments() as $argument) {
+            if ($argument instanceof FlowItemContainer and $argument->getContainerItemType() === $type) {
+                return $argument;
+            }
+        }
+
+        return null;
     }
 
     public function getReturnValueType(): string {
@@ -88,6 +157,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $data;
     }
 
+    #[Deprecated(replacement: "aieuo\mineflow\utils\Utils::validateNumberString(%parametersList%)")]
     private function throwIfInvalidNumber(string|float|int $number, float|int|null $min = null, float|int|null $max = null, array $exclude = []): void {
         if (!is_numeric($number)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.error.notNumber", [$number]));
@@ -105,25 +175,41 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         }
     }
 
+    #[Deprecated(replacement: "aieuo\mineflow\utils\Utils::getInt(%parametersList%)")]
     protected function getInt(string|int $number, ?int $min = null, ?int $max = null, array $exclude = []): int {
-        $this->throwIfInvalidNumber($number, $min, $max, $exclude);
+        Utils::validateNumberString($number, $min, $max, $exclude);
         return (int)$number;
     }
 
+    #[Deprecated(replacement: "aieuo\mineflow\utils\Utils::getFloat(%parametersList%)")]
     protected function getFloat(string|float $number, ?float $min = null, ?float $max = null, array $exclude = []): float {
-        $this->throwIfInvalidNumber($number, $min, $max, $exclude);
+        Utils::validateNumberString($number, $min, $max, $exclude);
         return (float)$number;
     }
 
-    public function edit(Player $player, array $variables, bool $isNew): \Generator {
-        yield from GeneratorUtil::empty();
-        return self::EDIT_SUCCESS;
+    /**
+     * @return FlowItemEditor[]
+     */
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this),
+        ];
+    }
+
+    public function getNewItemEditor(): FlowItemEditor {
+        foreach ($this->getEditors() as $editor) {
+            if ($editor->isPrimary()) {
+                return $editor;
+            }
+        }
+
+        return new CustomFormFlowItemEditor($this, []);
     }
 
     /**
      * @param array $content
      * @return self
-     * @throws FlowItemLoadException|\ErrorException
+     * @throws FlowItemLoadException
      */
     public static function loadEachSaveData(array $content): self {
         if ($content["id"] === FlowItemIds::IN_AREA and !isset($content["contents"][2])) {
@@ -139,14 +225,6 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $action;
     }
 
-    public function hasCustomMenu(): bool {
-        return false;
-    }
-
-    public function getCustomMenuButtons(): array {
-        return [];
-    }
-
     /**
      * @return array<string, DummyVariable>
      */
@@ -158,17 +236,22 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return null;
     }
 
-    abstract public function isDataValid(): bool;
+    public function isDataValid(): bool {
+        foreach ($this->getArguments() as $argument) {
+            if (!$argument->isValid()) return false;
+        }
+        return true;
+    }
 
-    abstract public function serializeContents(): array;
+    public function serializeContents(): array {
+        return $this->getArguments();
+    }
 
-    /**
-     * @param array $content
-     * @return void
-     * @throws FlowItemLoadException
-     * @throws \ErrorException
-     */
-    abstract public function loadSaveData(array $content): void;
+    public function loadSaveData(array $content): void {
+        foreach ($content as $i => $value) {
+            $this->getArgument($i)?->load($value);
+        }
+    }
 
     /**
      * @param FlowItemExecutor $source
@@ -178,11 +261,23 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     final public function execute(FlowItemExecutor $source): \Generator {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents");
-            throw new InvalidFlowValueException($this->getName(), $message);
+            throw new FlowItemExecutionException($this->getName(), $message);
         }
 
-        return yield from $this->onExecute($source);
+        try {
+            return yield from $this->onExecute($source);
+        } catch (\RuntimeException $e) {
+            throw new FlowItemExecutionException($this->getName(), $e->getMessage(), previous: $e);
+        }
     }
 
     abstract protected function onExecute(FlowItemExecutor $source): \Generator;
+
+    public function __clone(): void {
+        $arguments = [];
+        foreach ($this->arguments as $i => $argument) {
+            $arguments[$i] = clone $argument;
+        }
+        $this->arguments = $arguments;
+    }
 }

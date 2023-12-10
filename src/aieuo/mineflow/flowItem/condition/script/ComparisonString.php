@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\script;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\condition\Condition;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\IntEnumArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 use function str_ends_with;
 
-class ComparisonString extends FlowItem implements Condition {
-    use ConditionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class ComparisonString extends SimpleCondition {
 
     public const EQUALS = 0;
     public const NOT_EQUALS = 1;
@@ -29,57 +23,34 @@ class ComparisonString extends FlowItem implements Condition {
     public const STARTS_WITH = 4;
     public const ENDS_WITH = 5;
 
-    private int $operator;
-
     private array $operatorSymbols = ["==", "!=", "contains", "not contains", "starts with", "ends with"];
 
-    public function __construct(
-        private string $value1 = "",
-        string         $operator = null,
-        private string $value2 = ""
-    ) {
+    public function __construct(string $value1 = "", int $operator = self::EQUALS, string $value2 = "") {
         parent::__construct(self::COMPARISON_STRING, FlowItemCategory::SCRIPT);
 
-        $this->operator = (int)($operator ?? self::EQUALS);
+        $this->setArguments([
+            StringArgument::create("value1", $value1, "@condition.comparisonNumber.form.value1")->example("10"),
+            IntEnumArgument::create("operator", $operator, "@condition.comparisonNumber.form.operator")->options($this->operatorSymbols),
+            StringArgument::create("value2", $value2, "@condition.comparisonNumber.form.value2")->optional()->example("50"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["value1", "operator", "value2"];
+    public function getValue1(): StringArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getValue1(), $this->operatorSymbols[$this->getOperator()], $this->getValue2()];
+    public function getOperator(): IntEnumArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setValues(string $value1, string $value2): void {
-        $this->value1 = $value1;
-        $this->value2 = $value2;
-    }
-
-    public function getValue1(): string {
-        return $this->value1;
-    }
-
-    public function getValue2(): string {
-        return $this->value2;
-    }
-
-    public function setOperator(int $operator): void {
-        $this->operator = $operator;
-    }
-
-    public function getOperator(): int {
-        return $this->operator;
-    }
-
-    public function isDataValid(): bool {
-        return $this->value1 !== "";
+    public function getValue2(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $value1 = $source->replaceVariables($this->getValue1());
-        $value2 = $source->replaceVariables($this->getValue2());
-        $operator = $this->getOperator();
+        $value1 = $this->getValue1()->getString($source);
+        $value2 = $this->getValue2()->getString($source);
+        $operator = $this->getOperator()->getEnumValue();
 
         $result = match ($operator) {
             self::EQUALS => $value1 === $value2,
@@ -93,22 +64,5 @@ class ComparisonString extends FlowItem implements Condition {
 
         yield Await::ALL;
         return $result;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleInput("@condition.comparisonNumber.form.value1", "10", $this->getValue1(), true),
-            new Dropdown("@condition.comparisonNumber.form.operator", $this->operatorSymbols, $this->getOperator()),
-            new ExampleInput("@condition.comparisonNumber.form.value2", "50", $this->getValue2(), false),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setValues($content[0], $content[2]);
-        $this->setOperator($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getValue1(), $this->getOperator(), $this->getValue2()];
     }
 }

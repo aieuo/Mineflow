@@ -59,13 +59,13 @@ class AddonManifestRecipeTemplate extends RecipeTemplate {
         }
 
         $group = new ActionGroup();
-        $group->addAction(new CreateMapVariable("recipe_data", "", "", true));
-        $group->addAction(new AddListVariable("recipes", "{recipe_data}", true));
-        $group->addAction(new AddMapVariable("recipe_data", "path", $this->path, true));
-        $group->addAction(new AddMapVariable("recipe_data", "id", $this->id, true));
-        $group->addAction(new AddMapVariable("recipe_data", "category", FlowItemCategory::all()[$this->category], true));
-        $group->addAction(new AddMapVariable("recipe_data", "name", $this->name, true));
-        $group->addAction(new AddMapVariable("recipe_data", "description", $this->description, true));
+        $group->getActions()->addItem(new CreateMapVariable("recipe_data", "", "", true));
+        $group->getActions()->addItem(new AddListVariable("recipes", "{recipe_data}", true));
+        $group->getActions()->addItem(new AddMapVariable("recipe_data", "path", $this->path, true));
+        $group->getActions()->addItem(new AddMapVariable("recipe_data", "id", $this->id, true));
+        $group->getActions()->addItem(new AddMapVariable("recipe_data", "category", FlowItemCategory::all()[$this->category], true));
+        $group->getActions()->addItem(new AddMapVariable("recipe_data", "name", $this->name, true));
+        $group->getActions()->addItem(new AddMapVariable("recipe_data", "description", $this->description, true));
         $recipe->addAction($group);
         return $recipe;
     }

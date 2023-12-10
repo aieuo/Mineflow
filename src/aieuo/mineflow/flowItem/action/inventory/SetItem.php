@@ -4,79 +4,46 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\inventory;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class SetItem extends FlowItem implements PlayerFlowItem, ItemFlowItem {
-    use PlayerFlowItemTrait, ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class SetItem extends SimpleAction {
 
-    public function __construct(string $player = "", string $item = "", private string $index = "") {
+    public function __construct(string $player = "", string $item = "", string $index = "") {
         parent::__construct(self::SET_ITEM, FlowItemCategory::INVENTORY);
 
-        $this->setPlayerVariableName($player);
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            ItemArgument::create("item", $item),
+            NumberArgument::create("index", $index)->min(0)->example("0"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "item", "index"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setIndex(string $health): void {
-        $this->index = $health;
-    }
-
-    public function getIndex(): string {
-        return $this->index;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->getItemVariableName() !== "" and $this->index !== "";
+    public function getIndex(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $index = $this->getInt($source->replaceVariables($this->getIndex()), 0);
-        $player = $this->getOnlinePlayer($source);
+        $index = $this->getIndex()->getInt($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
-        $item = $this->getItem($source);
+        $item = $this->getItem()->getItem($source);
 
         $player->getInventory()->setItem($index, $item);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleNumberInput("@action.setItem.form.index", "0", $this->getIndex(), true, 0),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setItemVariableName($content[1]);
-        $this->setIndex($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getItemVariableName(), $this->getIndex()];
     }
 }

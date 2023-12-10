@@ -4,67 +4,38 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\world;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\base\PositionFlowItem;
-use aieuo\mineflow\flowItem\base\PositionFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\PositionVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class DropItem extends FlowItem implements PositionFlowItem, ItemFlowItem {
-    use PositionFlowItemTrait, ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class DropItem extends SimpleAction {
 
     public function __construct(string $position = "", string $item = "") {
         parent::__construct(self::DROP_ITEM, FlowItemCategory::WORLD);
 
-        $this->setPositionVariableName($position);
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            PositionArgument::create("position", $position),
+            ItemArgument::create("item", $item),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["position", "item"];
+    public function getPosition(): PositionArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPositionVariableName(), $this->getItemVariableName()];
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPositionVariableName() !== "" and $this->getItemVariableName() !== "";
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $position = $this->getPosition($source);
-
-        $item = $this->getItem($source);
+        $position = $this->getPosition()->getPosition($source);
+        $item = $this->getItem()->getItem($source);
 
         $position->getWorld()->dropItem($position, $item);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PositionVariableDropdown($variables, $this->getPositionVariableName()),
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPositionVariableName($content[0]);
-        $this->setItemVariableName($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPositionVariableName(), $this->getItemVariableName()];
     }
 }

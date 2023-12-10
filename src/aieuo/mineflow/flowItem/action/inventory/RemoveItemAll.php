@@ -14,8 +14,8 @@ class RemoveItemAll extends TypeItem {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
-        $player = $this->getOnlinePlayer($source);
+        $item = $this->getItem()->getItem($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->getInventory()->remove($item);
 

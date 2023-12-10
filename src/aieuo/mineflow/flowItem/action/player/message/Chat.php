@@ -15,8 +15,8 @@ class Chat extends TypePlayerMessage {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $message = Language::replace($source->replaceVariables($this->getMessage()));
-        $player = $this->getOnlinePlayer($source);
+        $message = Language::replace($this->getMessage()->getString($source));
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         $player->chat($message);
 

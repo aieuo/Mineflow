@@ -5,71 +5,47 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 
-class GetItemData extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class GetItemData extends SimpleAction {
 
     protected string $id = self::GET_ITEM_DATA;
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        string         $item = "",
-        private string $key = "",
-        private string $resultName = "data",
-    ) {
+    public function __construct(string         $item = "", string $key = "", string $resultName = "data") {
         parent::__construct(self::GET_ITEM_DATA, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            ItemArgument::create("item", $item),
+            StringArgument::create("key", $key, "@action.setItemData.form.key")->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("entity"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["item", "key"];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getKey()];
+    public function getKey(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getKey(): string {
-        return $this->key;
-    }
-
-    public function setResultName(string $resultName): void {
-        $this->resultName = $resultName;
-    }
-
-    public function getResultName(): string {
-        return $this->resultName;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->getKey() !== "" and $this->getResultName() !== "";
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
-        $key = $source->replaceVariables($this->getKey());
-        $resultName = $source->replaceVariables($this->getResultName());
+        $item = $this->getItem()->getItem($source);
+        $key = $this->getKey()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
 
         $tags = $item->getNamedTag();
         $tag = $tags->getTag($key);
@@ -81,24 +57,6 @@ class GetItemData extends FlowItem implements ItemFlowItem {
         $source->addVariable($resultName, $variable);
 
         yield Await::ALL;
-        return $this->getItemVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
-            new ExampleInput("@action.form.resultVariableName", "entity", $this->getResultName(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
-        $this->setKey($content[1]);
-        $this->setResultName($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getKey(), $this->getResultName()];
+        return (string)$this->getItem();
     }
 }

@@ -5,61 +5,41 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\item;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\ItemFlowItem;
-use aieuo\mineflow\flowItem\base\ItemFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\ItemArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ItemVariableDropdown;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use pocketmine\nbt\NbtException;
 use SOFe\AwaitGenerator\Await;
 
-class RemoveItemData extends FlowItem implements ItemFlowItem {
-    use ItemFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class RemoveItemData extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        string         $item = "",
-        private string $key = "",
-    ) {
+    public function __construct(string $item = "", string $key = "") {
         parent::__construct(self::REMOVE_ITEM_DATA, FlowItemCategory::ITEM);
 
-        $this->setItemVariableName($item);
+        $this->setArguments([
+            ItemArgument::create("item", $item),
+            StringArgument::create("key", $key, "@action.setItemData.form.key")->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["item", "key"];
+    public function getItem(): ItemArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getItemVariableName(), $this->getKey()];
-    }
-
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getKey(): string {
-        return $this->key;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getItemVariableName() !== "" and $this->getKey() !== "";
+    public function getKey(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $item = $this->getItem($source);
-        $key = $source->replaceVariables($this->getKey());
+        $item = $this->getItem()->getItem($source);
+        $key = $this->getKey()->getString($source);
 
         $tags = $item->getNamedTag();
         try {
@@ -71,22 +51,6 @@ class RemoveItemData extends FlowItem implements ItemFlowItem {
         }
 
         yield Await::ALL;
-        return $this->getItemVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ItemVariableDropdown($variables, $this->getItemVariableName()),
-            new ExampleInput("@action.setItemData.form.key", "aieuo", $this->getKey(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setItemVariableName($content[0]);
-        $this->setKey($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getItemVariableName(), $this->getKey()];
+        return (string)$this->getItem();
     }
 }

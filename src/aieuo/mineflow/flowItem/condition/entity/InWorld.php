@@ -2,71 +2,37 @@
 
 namespace aieuo\mineflow\flowItem\condition\entity;
 
-use aieuo\mineflow\flowItem\base\ConditionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\flowItem\condition\Condition;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use SOFe\AwaitGenerator\Await;
 
-class InWorld extends FlowItem implements Condition, EntityFlowItem {
-    use EntityFlowItemTrait;
-    use ConditionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class InWorld extends SimpleCondition {
 
-    public function __construct(string $entity = "", private string $world = "") {
+    public function __construct(string $entity = "", string $world = "") {
         parent::__construct(self::IN_WORLD, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
-    }
-
-    public function getDetailDefaultReplaces(): array {
-        return ["target", "world"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName(), $this->getWorld()];
-    }
-
-    public function setWorld(string $world): void {
-        $this->world = $world;
-    }
-
-    public function getWorld(): string {
-        return $this->world;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "" and $this->getWorld() !== "";
-    }
-
-    protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
-        $world = $source->replaceVariables($this->getWorld());
-
-        yield Await::ALL;
-        return $entity->getPosition()->getWorld()->getFolderName() === $world;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-            new ExampleInput("@action.createPosition.form.world", "world", $this->getWorld(), true),
+        $this->setArguments([
+            EntityArgument::create("target", $entity),
+            StringArgument::create("world", $world, "@action.createPosition.form.world")->example("world"),
         ]);
     }
 
-    public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
-        $this->setWorld($content[1]);
+    public function getEntity(): EntityArgument {
+        return $this->getArguments()[0];
     }
 
-    public function serializeContents(): array {
-        return [$this->getEntityVariableName(), $this->getWorld()];
+    public function getWorld(): StringArgument {
+        return $this->getArguments()[1];
+    }
+
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $entity = $this->getEntity()->getOnlineEntity($source);
+        $world = $this->getWorld()->getString($source);
+
+        yield Await::ALL;
+        return $entity->getPosition()->getWorld()->getFolderName() === $world;
     }
 }

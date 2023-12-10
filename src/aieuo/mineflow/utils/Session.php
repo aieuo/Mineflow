@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\utils;
 
 use pocketmine\player\Player;
+use function array_key_first;
+use function array_key_last;
 
 class Session {
 
@@ -60,6 +63,20 @@ class Session {
         $value = array_pop($data);
         $this->set($key, $data);
         return $value;
+    }
+
+    public function firstOf(string $key): mixed {
+        $data = $this->get($key);
+        if (!is_array($data) or empty($data)) return null;
+
+        return $data[array_key_first($data)];
+    }
+
+    public function lastOf(string $key): mixed {
+        $data = $this->get($key);
+        if (!is_array($data) or empty($data)) return null;
+
+        return $data[array_key_last($data)];
     }
 
     public function remove(string $key): self {

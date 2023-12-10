@@ -4,59 +4,31 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\entity;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\EntityFlowItem;
-use aieuo\mineflow\flowItem\base\EntityFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\EntityArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\EntityVariableDropdown;
 use SOFe\AwaitGenerator\Await;
 
-class UnsetImmobile extends FlowItem implements EntityFlowItem {
-    use EntityFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class UnsetImmobile extends SimpleAction {
 
     public function __construct(string $entity = "") {
         parent::__construct(self::UNSET_IMMOBILE, FlowItemCategory::ENTITY);
 
-        $this->setEntityVariableName($entity);
+        $this->setArguments([
+            EntityArgument::create("entity", $entity),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["entity"];
-    }
-
-    public function getDetailReplaces(): array {
-        return [$this->getEntityVariableName()];
-    }
-
-    public function isDataValid(): bool {
-        return $this->getEntityVariableName() !== "";
+    public function getEntity(): EntityArgument {
+        return $this->getArguments()[0];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $entity = $this->getOnlineEntity($source);
+        $entity = $this->getEntity()->getOnlineEntity($source);
 
         $entity->setNoClientPredictions(false);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new EntityVariableDropdown($variables, $this->getEntityVariableName()),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setEntityVariableName($content[0]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getEntityVariableName()];
     }
 }

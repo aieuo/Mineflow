@@ -4,29 +4,19 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player\bossbar;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\StringEnumArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\utils\Bossbar;
 use pocketmine\network\mcpe\protocol\types\BossBarColor;
 use SOFe\AwaitGenerator\Await;
 use function array_keys;
-use function array_search;
 
-class ShowBossbar extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class ShowBossbar extends SimpleAction {
 
     private array $colors = [
         "pink" => BossBarColor::PINK,
@@ -39,114 +29,60 @@ class ShowBossbar extends FlowItem implements PlayerFlowItem {
     ];
 
     public function __construct(
-        string         $player = "",
-        private string $title = "",
-        private string $max = "",
-        private string $value = "",
-        private string $color = "purple",
-        private string $barId = ""
+        string $player = "",
+        string $title = "",
+        float  $max = 0,
+        float  $value = 0,
+        string $color = "purple",
+        string $barId = ""
     ) {
         parent::__construct(self::SHOW_BOSSBAR, FlowItemCategory::BOSSBAR);
 
-        $this->setPlayerVariableName($player);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("title", $title)->example("title"),
+            NumberArgument::create("max", $max)->min(1)->example("20"),
+            NumberArgument::create("value", $value)->example("20"),
+            StringEnumArgument::create("color", $color)->options(array_keys($this->colors)),
+            StringArgument::create("id", $barId)->example("20"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "title", "max", "value", "color", "id"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getTitle(), $this->getMax(), $this->getValue(), $this->getColor(), $this->getBarId()];
+    public function getTitle(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function setTitle(string $health): void {
-        $this->title = $health;
+    public function getMax(): NumberArgument {
+        return $this->getArguments()[2];
     }
 
-    public function getTitle(): string {
-        return $this->title;
+    public function getValue(): NumberArgument {
+        return $this->getArguments()[3];
     }
 
-    public function setMax(string $max): void {
-        $this->max = $max;
+    public function getColor(): StringEnumArgument {
+        return $this->getArguments()[4];
     }
 
-    public function getMax(): string {
-        return $this->max;
-    }
-
-    public function setValue(string $value): void {
-        $this->value = $value;
-    }
-
-    public function getValue(): string {
-        return $this->value;
-    }
-
-    public function setColor(string $color): void {
-        $this->color = $color;
-    }
-
-    public function getColor(): string {
-        return $this->color;
-    }
-
-    public function setBarId(string $barId): void {
-        $this->barId = $barId;
-    }
-
-    public function getBarId(): string {
-        return $this->barId;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->title !== "";
+    public function getBarId(): StringArgument {
+        return $this->getArguments()[5];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $title = $source->replaceVariables($this->getTitle());
-        $max = $this->getFloat($source->replaceVariables($this->getMax()), 1);
-        $value = $this->getFloat($source->replaceVariables($this->getValue()));
-        $id = $source->replaceVariables($this->getBarId());
-        $color = $this->colors[$source->replaceVariables($this->getColor())] ?? BossBarColor::PURPLE;
+        $title = $this->getTitle()->getString($source);
+        $max = $this->getMax()->getFloat($source);
+        $value = $this->getValue()->getFloat($source);
+        $id = $this->getBarId()->getString($source);
+        $color = $this->colors[$this->getColor()->getEnumValue()] ?? BossBarColor::PURPLE;
 
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Bossbar::add($player, $id, $title, $max, $value / $max, $color);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.showBossbar.form.title", "20", $this->getTitle(), true),
-            new ExampleNumberInput("@action.showBossbar.form.max", "20", $this->getMax(), true),
-            new ExampleNumberInput("@action.showBossbar.form.value", "20", $this->getValue(), true),
-            new ExampleInput("@action.showBossbar.form.id", "20", $this->getBarId(), true),
-            new Dropdown("@action.showBossbar.form.color", array_keys($this->colors), (int)array_search($this->getColor(), array_keys($this->colors), true))
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->preprocessAt(5, fn($value) => array_keys($this->colors)[$value] ?? "purple");
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setTitle($content[1]);
-        $this->setMax($content[2]);
-        $this->setValue($content[3]);
-        $this->setBarId($content[4]);
-        $this->setColor($content[5] ?? "purple");
-    }
-
-    public function serializeContents(): array {
-        return [
-            $this->getPlayerVariableName(),
-            $this->getTitle(),
-            $this->getMax(),
-            $this->getValue(),
-            $this->getBarId(),
-            $this->getColor(),
-        ];
     }
 }

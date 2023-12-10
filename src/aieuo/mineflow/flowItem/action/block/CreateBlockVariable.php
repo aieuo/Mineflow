@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\action\block;
 
 use aieuo\mineflow\exception\InvalidFlowValueException;
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\EditFormResponseProcessor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
@@ -23,50 +20,30 @@ use pocketmine\item\LegacyStringToItemParserException;
 use pocketmine\item\StringToItemParser;
 use SOFe\AwaitGenerator\Await;
 
-class CreateBlockVariable extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class CreateBlockVariable extends SimpleAction {
 
     protected string $returnValueType = self::RETURN_VARIABLE_NAME;
 
-    public function __construct(
-        private string $blockId = "",
-        private string $variableName = "block"
-    ) {
+    public function __construct(string $blockId = "", string $variableName = "block") {
         parent::__construct(self::CREATE_BLOCK_VARIABLE, FlowItemCategory::BLOCK);
+
+        $this->setArguments([
+            StringArgument::create("block", $variableName, "@action.form.resultVariableName")->example("block"),
+            StringArgument::create("id", $blockId)->example("stone"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["block", "id"];
+    public function getVariableName(): StringArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getVariableName(), $this->getBlockId()];
-    }
-
-    public function setVariableName(string $variableName): void {
-        $this->variableName = $variableName;
-    }
-
-    public function getVariableName(): string {
-        return $this->variableName;
-    }
-
-    public function setBlockId(string $id): void {
-        $this->blockId = $id;
-    }
-
-    public function getBlockId(): string {
-        return $this->blockId;
-    }
-
-    public function isDataValid(): bool {
-        return $this->variableName !== "" and $this->blockId !== "";
+    public function getBlockId(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $name = $source->replaceVariables($this->getVariableName());
-        $id = $source->replaceVariables($this->getBlockId());
+        $name = $this->getVariableName()->getString($source);
+        $id = $this->getBlockId()->getString($source);
         try {
             $item = StringToItemParser::getInstance()->getInstance()->parse($id) ?? LegacyStringToItemParser::getInstance()->parse($id);
         } catch (\InvalidArgumentException|LegacyStringToItemParserException) {
@@ -82,30 +59,21 @@ class CreateBlockVariable extends FlowItem {
         $source->addVariable($name, $variable);
 
         yield Await::ALL;
-        return $this->getVariableName();
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new ExampleInput("@action.createBlock.form.id", "1:0", $this->getBlockId(), true),
-            new ExampleInput("@action.form.resultVariableName", "block", $this->getVariableName(), true),
-        ])->response(function (EditFormResponseProcessor $response) {
-            $response->rearrange([1, 0]);
-        });
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setVariableName($content[0]);
-        $this->setBlockId($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getVariableName(), $this->getBlockId()];
+        return (string)$this->getVariableName();
     }
 
     public function getAddingVariables(): array {
         return [
-            $this->getVariableName() => new DummyVariable(BlockVariable::class, $this->getBlockId())
+            (string)$this->getVariableName() => new DummyVariable(BlockVariable::class, (string)$this->getBlockId())
+        ];
+    }
+
+    public function getEditors(): array {
+        return [
+            new MainFlowItemEditor($this, [
+                $this->getBlockId(),
+                $this->getVariableName(),
+            ]),
         ];
     }
 }

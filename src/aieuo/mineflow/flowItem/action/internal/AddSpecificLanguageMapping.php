@@ -4,91 +4,47 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\internal;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
 use aieuo\mineflow\utils\Language;
 use SOFe\AwaitGenerator\Await;
 use function implode;
 
-class AddSpecificLanguageMapping extends FlowItem {
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class AddSpecificLanguageMapping extends SimpleAction {
 
-    public function __construct(
-        private string $language = "",
-        private string $key = "",
-        private string $message = ""
-    ) {
+    public function __construct(string $language = "", string $key = "", string $message = "") {
         parent::__construct(self::ADD_SPECIFIC_LANGUAGE_MAPPING, FlowItemCategory::INTERNAL);
+
+        $languages = implode(", ", Language::getAvailableLanguages());
+
+        $this->setArguments([
+            StringArgument::create("language", $language, Language::get("action.addSpecificLanguageMapping.form.language", [$languages]))->example("eng"),
+            StringArgument::create("key", $key, "@action.addLanguageMappings.form.key")->example("mineflow.action.aieuo"),
+            StringArgument::create("message", $message)->example("Hello"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["language", "key", "message"];
+    public function getLanguage(): StringArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getLanguage(), $this->getKey(), $this->getMessage()];
+    public function getKey(): StringArgument {
+        return $this->getArguments()[1];
     }
 
-    public function getLanguage(): string {
-        return $this->language;
-    }
-
-    public function setLanguage(string $language): void {
-        $this->language = $language;
-    }
-
-    public function getKey(): string {
-        return $this->key;
-    }
-
-    public function setKey(string $key): void {
-        $this->key = $key;
-    }
-
-    public function getMessage(): string {
-        return $this->message;
-    }
-
-    public function setMessage(string $message): void {
-        $this->message = $message;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getLanguage() !== "" and $this->getKey() !== "" and $this->getMessage() !== "";
+    public function getMessage(): StringArgument {
+        return $this->getArguments()[2];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $language = $source->replaceVariables($this->getLanguage());
-        $key = $source->replaceVariables($this->getKey());
-        $message = $source->replaceVariables($this->getMessage());
+        $language = $this->getLanguage()->getString($source);
+        $key = $this->getKey()->getString($source);
+        $message = $this->getMessage()->getString($source);
 
         Language::add([$key => $message], $language);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $languages = implode(", ", Language::getAvailableLanguages());
-        $builder->elements([
-            new ExampleInput(Language::get("action.addSpecificLanguageMapping.form.language", [$languages]), "eng", $this->getLanguage(), true),
-            new ExampleInput("@action.addLanguageMappings.form.key", "mineflow.action.aieuo", $this->getKey(), true),
-            new ExampleInput("@action.addSpecificLanguageMapping.form.message", "Hello", $this->getMessage(), true),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setLanguage($content[0]);
-        $this->setKey($content[1]);
-        $this->setMessage($content[2]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getLanguage(), $this->getKey(), $this->getMessage()];
     }
 }

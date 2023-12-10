@@ -4,10 +4,10 @@ namespace aieuo\mineflow\recipe;
 
 use aieuo\mineflow\event\MineflowRecipeExecuteEvent;
 use aieuo\mineflow\exception\FlowItemLoadException;
+use aieuo\mineflow\flowItem\argument\FlowItemArrayArgument;
 use aieuo\mineflow\flowItem\custom\CustomAction;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
-use aieuo\mineflow\flowItem\FlowItemContainerTrait;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
@@ -35,14 +35,12 @@ use pocketmine\utils\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use function array_merge;
 use function array_search;
+use function array_splice;
 use function array_unique;
 use function array_values;
 use function is_string;
 
 class Recipe implements \JsonSerializable, FlowItemContainer {
-    use FlowItemContainerTrait {
-        getAddingVariablesBefore as traitGetAddingVariableBefore;
-    }
 
     public const TARGET_NONE = 0;
     public const TARGET_DEFAULT = 1;
@@ -58,6 +56,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     private int $targetType = self::TARGET_DEFAULT;
     private array $targetOptions = [];
+
+    /** @var FlowItem[] */
+    private array $actions = [];
 
     /** @var Trigger[] */
     private array $triggers = [];
@@ -93,10 +94,6 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getPathname(): string {
         return empty($this->getGroup()) ? $this->getName() : ($this->getGroup()."/".$this->getName());
-    }
-
-    public function getContainerName(): string {
-        return $this->getName();
     }
 
     public function setGroup(string $group): void {
@@ -211,6 +208,96 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
                 break;
         }
         return $targets;
+    }
+
+    public function getContainerItemType(): string {
+        return FlowItemContainer::ACTION;
+    }
+
+    public function addAction(FlowItem $action): void {
+        $this->actions[] = $action;
+    }
+
+    /**
+     * @param FlowItem[] $actions
+     */
+    public function setActions(array $actions): void {
+        $this->actions = $actions;
+    }
+
+    public function pushAction(int $index, FlowItem $action): void {
+        array_splice($this->actions, $index, 0, [$action]);
+    }
+
+    public function getAction(int $index): ?FlowItem {
+        return $this->actions[$index] ?? null;
+    }
+
+    public function removeAction(int $index): void {
+        unset($this->actions[$index]);
+        $this->actions = array_values($this->actions);
+    }
+
+    /**
+     * @return FlowItem[]
+     */
+    public function getActions(): array {
+        return $this->actions;
+    }
+
+    /**
+     * @return FlowItem[]
+     */
+    public function getActionsFlatten(): array {
+        $flat = [];
+        foreach ($this->getActions() as $item) {
+            $flat[] = $item;
+            foreach ($item->getArguments() as $argument) {
+                if ($argument instanceof FlowItemArrayArgument) {
+                    foreach ($argument->getItemsFlatten() as $item2) {
+                        $flat[] = $item2;
+                    }
+                }
+            }
+        }
+        return $flat;
+    }
+
+    public function addItem(FlowItem $item): void {
+        $this->addAction($item);
+    }
+
+    /**
+     * @param FlowItem[] $items
+     */
+    public function setItems(array $items): void {
+        $this->setActions($items);
+    }
+
+    public function pushItem(int $index, FlowItem $item): void {
+        $this->pushAction($index, $item);
+    }
+
+    public function getItem(int $index): ?FlowItem {
+        return $this->getAction($index);
+    }
+
+    public function removeItem(int $index): void {
+        $this->removeAction($index);
+    }
+
+    /**
+     * @return FlowItem[]
+     */
+    public function getItems(): array {
+        return $this->getActions();
+    }
+
+    /**
+     * @return FlowItem[]
+     */
+    public function getItemsFlatten(): array {
+        return $this->getActionsFlatten();
     }
 
     public function getTriggerHolder(): TriggerHolder {
@@ -398,7 +485,11 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
         return $this->returnValues;
     }
 
-    public function getAddingVariablesBefore(FlowItem $flowItem, array $containers, string $type): array {
+    /**
+     * @param FlowItem $target
+     * @return array|DummyVariable[]
+     */
+    public function getAddingVariablesUntil(FlowItem $target): array {
         $variables = [
             "target" => new DummyVariable(PlayerVariable::class)
         ];
@@ -407,16 +498,43 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             $variables[$argument->getName()] = $argument->getDummyVariable();
         }
 
-        $add = [];
         foreach ($this->getTriggers() as $trigger) {
-            $add[] = $trigger->getVariablesDummy();
+            foreach ($trigger->getVariablesDummy() as $name => $variable) {
+                $variables[$name] = $variable;
+            }
         }
-        return array_merge(array_merge($variables, ...$add), $this->traitGetAddingVariableBefore($flowItem, $containers, $type));
+
+        foreach ($this->getActions() as $item) {
+            foreach ($this->getFlowItemAddingVariablesUntil($item, $target) as $name => $variable) {
+                $variables[$name] = $variable;
+            }
+
+            if ($item === $target) break;
+        }
+        return $variables;
+    }
+
+    private function getFlowItemAddingVariablesUntil(FlowItem $item, FlowItem $target): array {
+        if ($item === $target) return [];
+
+        $variablesMerge = [];
+        foreach ($item->getArguments() as $argument) {
+            if (!($argument instanceof FlowItemContainer)) continue;
+
+            foreach ($argument->getItems() as $i) {
+                $variablesMerge[] = $this->getFlowItemAddingVariablesUntil($i, $target);
+
+                if ($i === $target) break 2;
+            }
+        }
+        $variablesMerge[] = $item->getAddingVariables();
+
+        return array_merge(...$variablesMerge);
     }
 
     public function getAddonDependencies(): array {
         $dependencies = [];
-        foreach ($this->getItemsFlatten(self::ACTION) as $action) {
+        foreach ($this->getActionsFlatten() as $action) {
             if ($action instanceof CustomAction) {
                 $dependencies[] = $action->getAddonName();
             }
@@ -426,14 +544,9 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function getPluginDependencies(): array {
         $dependencies = [];
-        foreach ($this->getItemsFlatten(self::ACTION) as $action) {
+        foreach ($this->getActionsFlatten() as $action) {
             if ($action->getPlugin() !== null) {
                 $dependencies[] = $action->getPlugin()->getName();
-            }
-        }
-        foreach ($this->getItemsFlatten(self::CONDITION) as $condition) {
-            if ($condition->getPlugin() !== null) {
-                $dependencies[] = $condition->getPlugin()->getName();
             }
         }
         return array_values(array_unique($dependencies));
@@ -532,8 +645,8 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
 
     public function __clone() {
         $actions = [];
-        foreach ($this->getActions() as $k => $action) {
-            $actions[$k] = clone $action;
+        foreach ($this->getActions() as $action) {
+            $actions[] = clone $action;
         }
         $this->setActions($actions);
 

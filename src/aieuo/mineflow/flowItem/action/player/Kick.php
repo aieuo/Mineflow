@@ -4,79 +4,42 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem\action\player;
 
-use aieuo\mineflow\flowItem\base\ActionNameWithMineflowLanguage;
-use aieuo\mineflow\flowItem\base\PlayerFlowItem;
-use aieuo\mineflow\flowItem\base\PlayerFlowItemTrait;
-use aieuo\mineflow\flowItem\FlowItem;
+use aieuo\mineflow\flowItem\argument\PlayerArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\flowItem\form\HasSimpleEditForm;
-use aieuo\mineflow\flowItem\form\SimpleEditFormBuilder;
-use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\formAPI\element\mineflow\PlayerVariableDropdown;
 use aieuo\mineflow\Main;
 use pocketmine\scheduler\ClosureTask;
 use SOFe\AwaitGenerator\Await;
 
-class Kick extends FlowItem implements PlayerFlowItem {
-    use PlayerFlowItemTrait;
-    use ActionNameWithMineflowLanguage;
-    use HasSimpleEditForm;
+class Kick extends SimpleAction {
 
-    public function __construct(
-        string         $player = "",
-        private string $reason = "",
-        private bool   $isAdmin = false
-    ) {
+    public function __construct(string $player = "", string $reason = "") {
         parent::__construct(self::KICK, FlowItemCategory::PLAYER);
 
-        $this->setPlayerVariableName($player);
+        $this->setArguments([
+            PlayerArgument::create("player", $player),
+            StringArgument::create("reason", $reason)->example("aieuo"),
+        ]);
     }
 
-    public function getDetailDefaultReplaces(): array {
-        return ["player", "reason"];
+    public function getPlayer(): PlayerArgument {
+        return $this->getArguments()[0];
     }
 
-    public function getDetailReplaces(): array {
-        return [$this->getPlayerVariableName(), $this->getReason()];
-    }
-
-    public function setReason(string $reason): void {
-        $this->reason = $reason;
-    }
-
-    public function getReason(): string {
-        return $this->reason;
-    }
-
-    public function isDataValid(): bool {
-        return $this->getPlayerVariableName() !== "" and $this->reason !== "";
+    public function getReason(): StringArgument {
+        return $this->getArguments()[1];
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $reason = $source->replaceVariables($this->getReason());
-        $player = $this->getOnlinePlayer($source);
+        $reason = $this->getReason()->getString($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($player, $reason): void {
             $player->kick($reason);
         }), 1);
 
         yield Await::ALL;
-    }
-
-    public function buildEditForm(SimpleEditFormBuilder $builder, array $variables): void {
-        $builder->elements([
-            new PlayerVariableDropdown($variables, $this->getPlayerVariableName()),
-            new ExampleInput("@action.kick.form.reason", "aieuo", $this->getReason()),
-        ]);
-    }
-
-    public function loadSaveData(array $content): void {
-        $this->setPlayerVariableName($content[0]);
-        $this->setReason($content[1]);
-    }
-
-    public function serializeContents(): array {
-        return [$this->getPlayerVariableName(), $this->getReason()];
     }
 }

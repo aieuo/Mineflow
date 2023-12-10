@@ -14,7 +14,7 @@ class IsSprinting extends CheckPlayerState {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $player = $this->getOnlinePlayer($source);
+        $player = $this->getPlayer()->getOnlinePlayer($source);
 
         yield Await::ALL;
         return $player->isSprinting();
