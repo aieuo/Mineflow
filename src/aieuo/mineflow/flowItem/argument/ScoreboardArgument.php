@@ -21,19 +21,19 @@ class ScoreboardArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getScoreboard(FlowItemExecutor $executor): Scoreboard {
-        $scoreboard = $executor->replaceVariables($this->getVariableName());
+        $scoreboard = $this->getVariableName()->get($executor->getVariables());
         $variable = $executor->getVariable($scoreboard);
 
         if ($variable instanceof ScoreboardVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.scoreboard"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.scoreboard"], (string)$this->getVariableName()]));
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new ScoreboardVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new ScoreboardVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

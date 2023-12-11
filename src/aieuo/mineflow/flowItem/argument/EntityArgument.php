@@ -22,14 +22,14 @@ class EntityArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getEntity(FlowItemExecutor $executor): Entity {
-        $entity = $executor->replaceVariables($this->getVariableName());
+        $entity = $this->getVariableName()->get($executor->getVariables());
 
         $variable = $executor->getVariable($entity);
         if ($variable instanceof EntityVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.entity"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.entity"], (string)$this->getVariableName()]));
     }
 
     /**
@@ -45,7 +45,7 @@ class EntityArgument extends ObjectVariableArgument {
 
     public function createFormElements(array $variables): array {
         return [
-            new EntityVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new EntityVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

@@ -198,7 +198,7 @@ class RecipeUpgrader {
     private function replacePositionVariable(FlowItem $item): void {
         foreach ($item->getArguments() as $argument) {
             if ($argument instanceof PositionArgument) {
-                $variable = preg_replace("/^(target|entity|player)\d*$/u", "$0.location", $argument->getVariableName());
+                $variable = preg_replace("/^(target|entity|player)\d*$/u", "$0.location", (string)$argument->getVariableName());
                 $argument->value($variable);
             }
         }

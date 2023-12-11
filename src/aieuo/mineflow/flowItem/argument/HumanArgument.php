@@ -22,14 +22,14 @@ class HumanArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getHuman(FlowItemExecutor $executor): Human {
-        $human = $executor->replaceVariables($this->getVariableName());
+        $human = $this->getVariableName()->get($executor->getVariables());
 
         $variable = $executor->getVariable($human);
         if ($variable instanceof HumanVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.human"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.human"], (string)$this->getVariableName()]));
     }
 
     /**
@@ -45,7 +45,7 @@ class HumanArgument extends ObjectVariableArgument {
 
     public function createFormElements(array $variables): array {
         return [
-            new HumanVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new HumanVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

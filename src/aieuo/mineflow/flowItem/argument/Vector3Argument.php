@@ -21,19 +21,19 @@ class Vector3Argument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getVector3(FlowItemExecutor $executor): Vector3 {
-        $vector3 = $executor->replaceVariables($this->getVariableName());
+        $vector3 = $this->getVariableName()->get($executor->getVariables());
         $variable = $executor->getVariable($vector3);
 
         if ($variable instanceof Vector3Variable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.vector3"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.vector3"], (string)$this->getVariableName()]));
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new Vector3VariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new Vector3VariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }
