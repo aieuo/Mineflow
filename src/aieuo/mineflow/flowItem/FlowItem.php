@@ -18,6 +18,8 @@ use aieuo\mineflow\variable\DummyVariable;
 use JetBrains\PhpStorm\Deprecated;
 use JsonSerializable;
 use pocketmine\plugin\Plugin;
+use function array_is_list;
+use function array_values;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
@@ -33,7 +35,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
      * @param string $id
      * @param string $category
      * @param string[] $permissions
-     * @param array<int|string, FlowItemArgument> $arguments
+     * @param array<int, FlowItemArgument> $arguments
      */
     public function __construct(
         private readonly string $id,
@@ -41,6 +43,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         private array           $permissions = [],
         private array           $arguments = [],
     ) {
+        $this->setArguments($this->arguments, true);
     }
 
     public function getId(): string {
@@ -85,8 +88,14 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $this->arguments;
     }
 
-    public function getArgument(int|string $index): ?FlowItemArgument {
-        return $this->arguments[$index] ?? null;
+    public function getArgument(string $name): ?FlowItemArgument {
+        foreach ($this->getArguments() as $argument) {
+            if ($argument->getName() === $name) {
+                return $argument;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -96,20 +105,16 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
      */
     public function setArguments(array $arguments, bool $updateDescription = true): void {
         $this->arguments = [];
-        foreach ($arguments as $i => $argument) {
-            $this->setArgument($i, $argument, $updateDescription);
+        foreach ($arguments as $argument) {
+            $this->addArgument($argument, $updateDescription);
         }
     }
 
-    public function setArgument(int|string $index, FlowItemArgument $argument, bool $updateDescription = true): void {
-        $this->arguments[$index] = $argument;
-
-        if ($updateDescription and $argument->getDescription() === "") {
-            $this->updateArgumentDescription($argument);
+    public function addArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
+        if ($this->getArgument($argument->getName()) !== null) {
+            throw new \InvalidArgumentException("Argument {$argument->getName()} is already exists in {$this->getName()}.");
         }
-    }
 
-    public function pushArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
         $this->arguments[] = $argument;
 
         if ($updateDescription and $argument->getDescription() === "") {
@@ -244,12 +249,23 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     }
 
     public function serializeContents(): array {
-        return $this->getArguments();
+        $serialized = [];
+        foreach ($this->getArguments() as $argument) {
+            $serialized[$argument->getName()] = $argument->jsonSerialize();
+        }
+        return $serialized;
     }
 
     public function loadSaveData(array $content): void {
-        foreach ($content as $i => $value) {
-            $this->getArgument($i)?->load($value);
+        if (array_is_list($content)) {
+            $args = array_values($this->getArguments());
+            foreach ($content as $i => $value) {
+                ($args[$i] ?? null)?->load($value);
+            }
+        } else {
+            foreach ($content as $key => $value) {
+                $this->getArgument($key)?->load($value);
+            }
         }
     }
 

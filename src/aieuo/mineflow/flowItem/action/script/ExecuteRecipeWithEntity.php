@@ -13,7 +13,7 @@ class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
     public function __construct(string $name = "", string $entity = "") {
         parent::__construct(self::EXECUTE_RECIPE_WITH_ENTITY, recipeName: $name);
 
-        $this->pushArgument(EntityArgument::create("target", $entity));
+        $this->addArgument(EntityArgument::create("target", $entity));
     }
 
     public function getEntity(): EntityArgument {
