@@ -74,7 +74,7 @@ class IntEnumArgument extends FlowItemArgument implements CustomFormEditorArgume
     }
 
     public function load(mixed $value): void {
-        $this->value($value);
+        $this->value((int)$value);
     }
 
     public function __toString(): string {

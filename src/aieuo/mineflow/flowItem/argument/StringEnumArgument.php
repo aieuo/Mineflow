@@ -9,6 +9,7 @@ use aieuo\mineflow\formAPI\element\Dropdown;
 use function array_map;
 use function array_search;
 use function in_array;
+use function is_int;
 
 class StringEnumArgument extends FlowItemArgument implements CustomFormEditorArgument {
 
@@ -95,6 +96,9 @@ class StringEnumArgument extends FlowItemArgument implements CustomFormEditorArg
     }
 
     public function load(mixed $value): void {
+        if (is_int($value)) {
+            $value = $this->options[$value] ?? $this->options[0] ?? "";
+        }
         $this->value($value);
     }
 
