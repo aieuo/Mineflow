@@ -23,8 +23,8 @@ class RepeatAction extends FlowItem {
         parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
 
         $this->setArguments([
-            ActionArrayArgument::create("actions", $actions),
             NumberArgument::create("repeat", $count, "@action.repeat.repeatCount")->min(1)->example("10"),
+            ActionArrayArgument::create("actions", $actions),
             NumberArgument::create("start", $start, "@action.repeat.start")->example("0"),
             StringArgument::create("counter", "i", "@action.for.counterName")->example("1"),
         ]);
@@ -47,11 +47,11 @@ class RepeatAction extends FlowItem {
             END;
     }
 
-    public function getActions(): ActionArrayArgument {
+    public function getRepeatCount(): NumberArgument {
         return $this->getArguments()[0];
     }
 
-    public function getRepeatCount(): NumberArgument {
+    public function getActions(): ActionArrayArgument {
         return $this->getArguments()[1];
     }
 
