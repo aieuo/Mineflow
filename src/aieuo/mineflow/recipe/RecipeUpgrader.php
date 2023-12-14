@@ -4,26 +4,40 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\recipe;
 
+use aieuo\mineflow\flowItem\action\block\CreateBlockVariable;
+use aieuo\mineflow\flowItem\action\item\CreateItemVariable;
+use aieuo\mineflow\flowItem\action\math\FourArithmeticOperations;
+use aieuo\mineflow\flowItem\action\world\CreatePositionVariable;
+use aieuo\mineflow\flowItem\argument\FlowItemArgument;
+use aieuo\mineflow\flowItem\argument\FlowItemArrayArgument;
+use aieuo\mineflow\flowItem\argument\ObjectVariableArgument;
 use aieuo\mineflow\flowItem\argument\PositionArgument;
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\argument\StringArrayArgument;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemContainer;
-use aieuo\mineflow\flowItem\FlowItemFactory;
+use aieuo\mineflow\flowItem\FlowItemIds;
 use aieuo\mineflow\Main;
 use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\variable\parser\exception\VariableParseException;
+use aieuo\mineflow\variable\parser\node\BinaryExpressionNode;
+use aieuo\mineflow\variable\parser\node\GlobalMethodNode;
+use aieuo\mineflow\variable\parser\node\IdentifierNode;
+use aieuo\mineflow\variable\parser\node\MethodNode;
+use aieuo\mineflow\variable\parser\node\Node;
+use aieuo\mineflow\variable\parser\node\PropertyNode;
+use aieuo\mineflow\variable\parser\node\UnaryExpressionNode;
+use aieuo\mineflow\variable\parser\node\WrappedNode;
+use aieuo\mineflow\variable\parser\VariableLexer;
+use aieuo\mineflow\variable\parser\VariableParser;
 use function array_key_last;
-use function array_map;
 use function array_pop;
 use function array_search;
 use function explode;
-use function get_class;
-use function is_array;
 use function is_string;
-use function mt_rand;
 use function preg_replace;
-use function str_contains;
 use function str_replace;
 use function version_compare;
-use const PHP_INT_MAX;
 
 class RecipeUpgrader {
     public function needUpgrade(string $from, string $current, string $target): bool {
@@ -95,15 +109,12 @@ class RecipeUpgrader {
     }
 
     private function replaceLevelToWorld(FlowItem $action): void {
-        $newContents = [];
-        foreach ($action->serializeContents() as $data) {
-            if (is_string($data)) {
-                $data = str_replace(["origin_level", "target_level"], ["origin_world", "target_world"], $data);
-                $data = preg_replace("/({.+\.)level((\.?.+)*})/u", "$1world$2", $data);
-            }
-            $newContents[] = $data;
+        foreach ($action->getArguments() as $argument) {
+            $this->processArgumentStrings($argument, function (string $value) {
+                $value = str_replace(["origin_level", "target_level"], ["origin_world", "target_world"], $value);
+                return preg_replace("/({.+\.)level((\.?.+)*})/u", "$1world$2", $value);
+            });
         }
-        $action->loadSaveData($newContents);
     }
 
     private function removeDirectActionCall(FlowItem $item, array $parents): void {
@@ -111,7 +122,7 @@ class RecipeUpgrader {
 
         foreach ($item->getArguments() as $argument) {
             if ($argument instanceof FlowItemContainer) {
-                $parents[] = $item;
+                $parents[] = $argument;
                 foreach ($argument->getItems() as $action) {
                     $this->removeDirectActionCall($action, $parents);
                 }
@@ -128,53 +139,15 @@ class RecipeUpgrader {
 
             $variables = $variableHelper->findVariables($data);
             foreach ($variables as $variable) {
-                $tokens = $variableHelper->lexer($variable);
-                $ast = $variableHelper->parse($tokens);
-                if (!is_array($ast)) continue;
-                if (!isset($ast["op"]) or $ast["op"] !== "()") continue;
-                if (!isset($ast["left"]) or !is_string($ast["left"])) continue;
-                if (str_contains($ast["left"], ".")) continue;
-
-                $action = FlowItemFactory::get($ast["left"], true);
-                if ($action === null) throw new \UnexpectedValueException("§cUnknown action id {$ast["left"]}");
-
-                $class = get_class($action);
-                $parameters = array_map(fn($arg) => (string)$arg, is_array($ast["right"]) ? $ast["right"] : [$ast["right"]]);
-
-                $newAction = new $class(...$parameters);
-                $returnType = $action->getReturnValueType();
-
-                if ($returnType === FlowItem::RETURN_NONE) {
-                    $this->insertActionBefore($item, $newAction, $parents);
-                    $data = str_replace("{".$variable."}", "__".$variable."__", $data);
+                try {
+                    $tokens = (new VariableLexer($variable))->lexer();
+                    $ast = (new VariableParser($tokens))->parse();
+                } catch (VariableParseException $e) {
+                    Main::getInstance()->getLogger()->error("Failed to parse variable during upgrading recipe: ".$e->getMessage()."; ".$variable);
                     continue;
                 }
 
-                $reflection = new \ReflectionClass($newAction);
-                try {
-                    $getResultName = $reflection->getMethod("getResultName");
-                    $setResultName = $reflection->getMethod("setResultName");
-                } catch (\ReflectionException) {
-                    try {
-                        $getResultName = $reflection->getMethod("getVariableName");
-                        $setResultName = $reflection->getMethod("setVariableName");
-                    } catch (\ReflectionException $e) {
-                        if (Mineflow::isDebug()) Main::getInstance()->getLogger()->logException($e);
-                        throw new \UnexpectedValueException("§cFailed to extract direct action call: {$ast["left"]}");
-                    }
-                }
-
-                if (empty($resultName = $getResultName->invoke($newAction))) {
-                    $setResultName->invoke($newAction, $resultName = $ast["left"].mt_rand(0, PHP_INT_MAX));
-                }
-
-                $this->insertActionBefore($item, $newAction, $parents);
-
-                if ($returnType === FlowItem::RETURN_VARIABLE_VALUE) {
-                    $data = str_replace("{".$variable."}", "{".$resultName."}", $data);
-                } else {
-                    $data = str_replace("{".$variable."}", $resultName, $data);
-                }
+                $data = $this->removeDirectActionCallNested($data, $variable, $ast, $item, $parents);
             }
 
             $newContents[] = $data;
@@ -183,16 +156,83 @@ class RecipeUpgrader {
         array_pop($parents);
     }
 
+    private function removeDirectActionCallNested(string $data, string $variable, Node $node, FlowItem $item, array $parents): string {
+        if ($node instanceof GlobalMethodNode) {
+            $newAction = $this->extractDirectActionCall($node, $resultName);
+
+            if ($newAction !== null) {
+                $this->insertActionBefore($item, $newAction, $parents);
+
+                if ($newAction->getReturnValueType() === FlowItem::RETURN_VARIABLE_VALUE) {
+                    $data = str_replace("{".$variable."}", "{".$resultName."}", $data);
+                } else {
+                    $data = str_replace("{".$variable."}", $resultName, $data);
+                }
+            }
+        }
+
+        if ($node instanceof WrappedNode) {
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getStatement(), $item, $parents);
+        }
+        if ($node instanceof BinaryExpressionNode) {
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getLeft(), $item, $parents);
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getRight(), $item, $parents);
+        }
+        if ($node instanceof UnaryExpressionNode) {
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getRight(), $item, $parents);
+        }
+        if ($node instanceof PropertyNode) {
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getLeft(), $item, $parents);
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getIdentifier(), $item, $parents);
+        }
+        if ($node instanceof MethodNode) {
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getLeft(), $item, $parents);
+            $data = $this->removeDirectActionCallNested($data, $variable, $node->getIdentifier(), $item, $parents);
+            foreach ($node->getArguments() as $arg) {
+                $data = $this->removeDirectActionCallNested($data, $variable, $arg, $item, $parents);
+            }
+        }
+
+        return $data;
+    }
+
+    private function extractDirectActionCall(GlobalMethodNode $node, string &$resultName = null): ?FlowItem {
+        $identifier = $node->getIdentifier();
+        if (!($identifier instanceof IdentifierNode)) return null;
+
+        $name = $identifier->getName();
+        $args = [];
+        foreach ($node->getArguments() as $argument) {
+            if (!($argument instanceof IdentifierNode)) return null;
+            $args[] = $argument->getName();
+        }
+
+        switch ($name) {
+            case FlowItemIds::CREATE_ITEM_VARIABLE:
+                $resultName = $args[3] ?? "item";
+                return new CreateItemVariable($args[0] ?? "", (int)($args[1] ?? 0), $args[2] ?? "", $resultName);
+            case FlowItemIds::CREATE_BLOCK_VARIABLE:
+                $resultName = $args[1] ?? "block";
+                return new CreateBlockVariable($args[0] ?? "", $resultName);
+            case FlowItemIds::CREATE_POSITION_VARIABLE:
+                $resultName = $args[4] ?? "pos";
+                return new CreatePositionVariable((float)($args[0] ?? 0), (float)($args[1] ?? 0), (float)($args[2] ?? 0), $args[3] ?? "", $resultName);
+            case FlowItemIds::FOUR_ARITHMETIC_OPERATIONS:
+                $resultName = $args[3] ?? "result";
+                return new FourArithmeticOperations((float)($args[0] ?? 0), (int)($args[1] ?? 0), (float)($args[2] ?? 0), $resultName);
+        }
+
+        return null;
+    }
+
     private function insertActionBefore(FlowItem $item, FlowItem $action, array $parents): void {
         $container = array_pop($parents);
-        if ($container instanceof Recipe) {
-            $index = array_search($item, $container->getActions(), true);
-            $container->pushAction($index, $action);
-        } else {
-            $container1 = array_pop($parents);
-            $index = array_search($container, $container1->getActions(), true);
-            $container1->pushAction($index, $action);
+        if (!($container instanceof Recipe)) {
+            $container = array_pop($parents);
         }
+
+        $index = array_search($item, $container->getItems(), true);
+        $container->pushItem($index === false ? 0 : $index, $action);
     }
 
     private function replacePositionVariable(FlowItem $item): void {
@@ -205,13 +245,35 @@ class RecipeUpgrader {
     }
 
     private function replaceMapOperator(FlowItem $action): void {
-        $newContents = [];
-        foreach ($action->serializeContents() as $data) {
-            if (is_string($data)) {
-                $data = preg_replace("/>\s*it\./u", ".", $data);
-            }
-            $newContents[] = $data;
+        foreach ($action->getArguments() as $argument) {
+            $this->processArgumentStrings($argument, function (string $value) {
+                return preg_replace("/>\s*it\./u", ".", $value);
+            });
         }
-        $action->loadSaveData($newContents);
+    }
+
+    /**
+     * @param FlowItemArgument $arg
+     * @param callable(string $value): string $processor
+     * @return void
+     */
+    protected function processArgumentStrings(FlowItemArgument $arg, callable $processor): void {
+        if ($arg instanceof StringArgument) {
+            $arg->value($processor($arg->getRawString()));
+        } elseif ($arg instanceof StringArrayArgument) {
+            $values = [];
+            foreach ($arg->getRawArray() as $item) {
+                $values[] = $processor($item);
+            }
+            $arg->value($values);
+        } elseif ($arg instanceof ObjectVariableArgument) {
+            $arg->value($processor($arg->getRawVariableName()));
+        } elseif ($arg instanceof FlowItemArrayArgument) {
+            foreach ($arg->getItems() as $item) {
+                foreach ($item->getArguments() as $argument) {
+                    $this->processArgumentStrings($argument, $processor);
+                }
+            }
+        }
     }
 }

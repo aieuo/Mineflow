@@ -34,6 +34,10 @@ abstract class ObjectVariableArgument extends FlowItemArgument implements Custom
         return $this;
     }
 
+    public function getRawVariableName(): string {
+        return $this->value->getRaw();
+    }
+
     public function getVariableName(): VariableString {
         return $this->value;
     }
