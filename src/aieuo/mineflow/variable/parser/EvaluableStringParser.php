@@ -15,7 +15,7 @@ use aieuo\mineflow\variable\parser\token\VariableToken;
 
 class EvaluableStringParser extends VariableParser {
 
-    public function doParse(): ConcatenateNode {
+    protected function doParse(): ConcatenateNode {
         return $this->strings();
     }
 
