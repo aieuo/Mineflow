@@ -22,6 +22,11 @@ class EvaluableStringLexer extends VariableLexer {
                 $escape = false;
                 continue;
             }
+            if ($char === VariableToken::ESCAPE) {
+                $escape = true;
+                continue;
+            }
+
             if ($char === VariableToken::L_BRACE) {
                 $braces++;
             }
@@ -31,9 +36,6 @@ class EvaluableStringLexer extends VariableLexer {
             }
 
             switch ($char) {
-                case VariableToken::ESCAPE:
-                    $escape = true;
-                    break;
                 case VariableToken::PLUS:
                 case VariableToken::MINUS:
                 case VariableToken::ASTERISK:
