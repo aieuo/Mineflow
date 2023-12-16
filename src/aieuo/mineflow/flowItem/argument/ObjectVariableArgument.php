@@ -6,12 +6,12 @@ namespace aieuo\mineflow\flowItem\argument;
 
 use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\argument\attribute\Required;
-use aieuo\mineflow\variable\VariableString;
+use aieuo\mineflow\variable\EvaluableString;
 
 abstract class ObjectVariableArgument extends FlowItemArgument implements CustomFormEditorArgument {
     use Required;
 
-    private VariableString $value;
+    private EvaluableString $value;
 
     public static function create(string $name, string $value = "", string $description = null): static {
         return new static(name: $name, value: $value, description: $description);
@@ -25,12 +25,12 @@ abstract class ObjectVariableArgument extends FlowItemArgument implements Custom
     ) {
         parent::__construct($name, $description);
 
-        $this->value = new VariableString($value);
+        $this->value = new EvaluableString($value);
         $optional ? $this->optional() : $this->required();
     }
 
     public function value(string $value): self {
-        $this->value = new VariableString($value);
+        $this->value = new EvaluableString($value);
         return $this;
     }
 
@@ -38,7 +38,7 @@ abstract class ObjectVariableArgument extends FlowItemArgument implements Custom
         return $this->value->getRaw();
     }
 
-    public function getVariableName(): VariableString {
+    public function getVariableName(): EvaluableString {
         return $this->value;
     }
 

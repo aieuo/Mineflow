@@ -25,4 +25,7 @@ class BinaryExpressionNode implements Node {
         return $this->right;
     }
 
+    public function __toString(): string {
+        return $this->left.$this->operator.$this->right;
+    }
 }

@@ -12,13 +12,18 @@ class VariableToken {
     public const SLASH = "/";
     public const L_PAREN = "(";
     public const R_PAREN = ")";
+    public const L_BRACE = "{";
+    public const R_BRACE = "}";
     public const DOT = ".";
     public const COMMA = ",";
     public const ESCAPE = "\\";
+    public const STRING = "string";
 
     public function __construct(
         private readonly string $token,
-        private readonly string $type
+        private readonly string $type,
+        private readonly string $trimmedLeft = "",
+        private readonly string $trimmedRight = "",
     ) {
     }
 
@@ -30,7 +35,15 @@ class VariableToken {
         return $this->type;
     }
 
+    public function getTrimmedLeft(): string {
+        return $this->trimmedLeft;
+    }
+
+    public function getTrimmedRight(): string {
+        return $this->trimmedRight;
+    }
+
     public function __toString(): string {
-        return $this->getToken();
+        return $this->getTrimmedLeft().$this->getToken().$this->getTrimmedRight();
     }
 }

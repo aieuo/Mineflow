@@ -44,8 +44,6 @@ use function is_null;
 use function is_numeric;
 use function preg_match;
 use function preg_match_all;
-use function str_contains;
-use function str_replace;
 use function str_starts_with;
 use function substr;
 use const JSON_BIGINT_AS_STRING;
@@ -175,33 +173,7 @@ class VariableHelper {
      * @return string
      */
     public function replaceVariables(string $string, array $variables = [], bool $global = true): string {
-        $limit = 10;
-        while (preg_match_all("/{((?:[^{}]+|(?R))*)}/u", $string, $matches)) {
-            foreach ($matches[1] as $name) {
-                if (str_contains($name, "{") and str_contains($name, "}")) {
-                    $replaced = $this->replaceVariables($name, $variables, $global);
-                    $string = str_replace($name, $replaced, $string);
-                    $name = $replaced;
-                }
-                $string = $this->replaceVariable($string, $name, $variables, $global);
-            }
-            if (--$limit < 0) break;
-        }
-        return $string;
-    }
-
-    /**
-     * @param string $string
-     * @param string $replace
-     * @param Variable[] $variables
-     * @param bool $global
-     * @return string
-     */
-    public function replaceVariable(string $string, string $replace, array $variables = [], bool $global = true): string {
-        if (!str_contains($string, "{".$replace."}") or preg_match("/%\d+/u", $replace)) return $string;
-
-        $result = (string)$this->runVariableStatement($replace, $variables, $global);
-        return str_replace("{".$replace."}", $result, $string);
+        return (new EvaluableString($string))->eval(new VariableRegistry($variables), $global);
     }
 
     /**
@@ -211,8 +183,8 @@ class VariableHelper {
      * @return Variable
      */
     public function runVariableStatement(string $replace, array $variables = [], bool $global = true): Variable {
-        $tokens = (new VariableLexer($replace))->lexer();
-        $ast = (new VariableParser($tokens))->parse();
+        $tokens = (new VariableLexer())->lexer($replace);
+        $ast = (new VariableParser())->parse($tokens);
         return (new VariableEvaluator(new VariableRegistry($variables), $global))->eval($ast);
     }
 

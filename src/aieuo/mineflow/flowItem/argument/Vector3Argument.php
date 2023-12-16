@@ -21,7 +21,7 @@ class Vector3Argument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getVector3(FlowItemExecutor $executor): Vector3 {
-        $vector3 = $this->getVariableName()->get($executor->getVariables());
+        $vector3 = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($vector3);
 
         if ($variable instanceof Vector3Variable) {

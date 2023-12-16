@@ -20,4 +20,7 @@ class UnaryExpressionNode implements Node {
         return $this->right;
     }
 
+    public function __toString(): string {
+        return $this->operator.$this->right;
+    }
 }

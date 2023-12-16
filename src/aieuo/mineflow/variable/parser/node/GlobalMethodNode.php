@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\parser\node;
 
+use function array_map;
+use function implode;
+
 class GlobalMethodNode implements Node {
 
     /**
@@ -24,4 +27,8 @@ class GlobalMethodNode implements Node {
         return $this->arguments;
     }
 
+    public function __toString(): string {
+        $args = array_map(fn(Node $node) => (string)$node, $this->arguments);
+        return $this->identifier."(".implode(",", $args).")";
+    }
 }

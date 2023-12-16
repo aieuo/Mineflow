@@ -21,7 +21,7 @@ class ItemArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getItemVariable(FlowItemExecutor $executor): ItemVariable {
-        $item = $this->getVariableName()->get($executor->getVariables());
+        $item = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($item);
         if (!($variable instanceof ItemVariable)) {

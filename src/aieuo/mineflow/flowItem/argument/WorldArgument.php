@@ -21,7 +21,7 @@ class WorldArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getWorld(FlowItemExecutor $executor): World {
-        $world = $this->getVariableName()->get($executor->getVariables());
+        $world = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($world);
 
         if ($variable instanceof WorldVariable) {

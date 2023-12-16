@@ -14,4 +14,8 @@ class WrappedNode implements Node {
     public function getStatement(): Node {
         return $this->statement;
     }
+
+    public function __toString(): string {
+        return "(".$this->statement.")";
+    }
 }

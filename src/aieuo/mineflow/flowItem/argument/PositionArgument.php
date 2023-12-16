@@ -21,7 +21,7 @@ class PositionArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getPosition(FlowItemExecutor $executor): Position {
-        $position = $this->getVariableName()->get($executor->getVariables());
+        $position = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($position);
         if ($variable instanceof PositionVariable and ($position = $variable->getValue()) instanceof Position) {

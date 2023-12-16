@@ -140,8 +140,8 @@ class RecipeUpgrader {
             $variables = $variableHelper->findVariables($data);
             foreach ($variables as $variable) {
                 try {
-                    $tokens = (new VariableLexer($variable))->lexer();
-                    $ast = (new VariableParser($tokens))->parse();
+                    $tokens = (new VariableLexer())->lexer($data);
+                    $ast = (new VariableParser())->parse($tokens);
                 } catch (VariableParseException $e) {
                     Main::getInstance()->getLogger()->error("Failed to parse variable during upgrading recipe: ".$e->getMessage()."; ".$variable);
                     continue;

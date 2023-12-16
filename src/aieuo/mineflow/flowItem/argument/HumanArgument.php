@@ -22,7 +22,7 @@ class HumanArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getHuman(FlowItemExecutor $executor): Human {
-        $human = $this->getVariableName()->get($executor->getVariables());
+        $human = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($human);
         if ($variable instanceof HumanVariable) {

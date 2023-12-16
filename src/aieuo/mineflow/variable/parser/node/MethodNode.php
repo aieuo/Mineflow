@@ -30,4 +30,8 @@ class MethodNode implements Node {
         return $this->arguments;
     }
 
+    public function __toString(): string {
+        $args = array_map(fn(Node $node) => (string)$node, $this->arguments);
+        return $this->left.".".$this->identifier."(".implode(",", $args).")";
+    }
 }

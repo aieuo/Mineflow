@@ -21,7 +21,7 @@ class ScoreboardArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getScoreboard(FlowItemExecutor $executor): Scoreboard {
-        $scoreboard = $this->getVariableName()->get($executor->getVariables());
+        $scoreboard = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($scoreboard);
 
         if ($variable instanceof ScoreboardVariable) {

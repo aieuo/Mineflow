@@ -19,4 +19,8 @@ class PropertyNode implements Node {
     public function getIdentifier(): Node {
         return $this->identifier;
     }
+
+    public function __toString(): string {
+        return $this->left.".".$this->identifier;
+    }
 }

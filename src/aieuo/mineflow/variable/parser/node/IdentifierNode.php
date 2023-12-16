@@ -8,6 +8,8 @@ class IdentifierNode implements Node {
 
     public function __construct(
         private readonly string $name,
+        private readonly string $trimmedLeft = "",
+        private readonly string $trimmedRight = "",
     ) {
     }
 
@@ -15,4 +17,15 @@ class IdentifierNode implements Node {
         return $this->name;
     }
 
+    public function getTrimmedLeft(): string {
+        return $this->trimmedLeft;
+    }
+
+    public function getTrimmedRight(): string {
+        return $this->trimmedRight;
+    }
+
+    public function __toString(): string {
+        return $this->trimmedLeft.$this->name.$this->trimmedRight;
+    }
 }

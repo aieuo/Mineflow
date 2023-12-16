@@ -21,7 +21,7 @@ class PlayerArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getPlayer(FlowItemExecutor $executor): Player {
-        $player = $this->getVariableName()->get($executor->getVariables());
+        $player = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($player);
         if ($variable instanceof PlayerVariable) {

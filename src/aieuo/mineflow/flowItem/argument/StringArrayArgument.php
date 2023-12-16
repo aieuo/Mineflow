@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\argument\attribute\CustomFormEditorArgument;
 use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleInput;
-use aieuo\mineflow\variable\VariableString;
+use aieuo\mineflow\variable\EvaluableString;
 use function array_map;
 use function explode;
 use function implode;
@@ -21,7 +21,7 @@ class StringArrayArgument extends FlowItemArgument implements CustomFormEditorAr
         return new static(name: $name, value: $value, description: $description);
     }
 
-    /** @var VariableString[] */
+    /** @var EvaluableString[] */
     private array $value;
 
     /**
@@ -43,12 +43,12 @@ class StringArrayArgument extends FlowItemArgument implements CustomFormEditorAr
         parent::__construct($name, $description);
 
         if (is_string($value)) $value = array_map(trim(...), explode($this->separator, $value));
-        $this->value = array_map(fn(string $value) => new VariableString($value), $value);
+        $this->value = array_map(fn(string $value) => new EvaluableString($value), $value);
         $optional ? $this->optional() : $this->required();
     }
 
     public function value(array $value): self {
-        $this->value = array_map(fn(string $value) => new VariableString($value), $value);
+        $this->value = array_map(fn(string $value) => new EvaluableString($value), $value);
         return $this;
     }
 
@@ -56,7 +56,7 @@ class StringArrayArgument extends FlowItemArgument implements CustomFormEditorAr
      * @return string[]
      */
     public function getRawArray(): array {
-        return array_map(fn(VariableString $value) => $value->getRaw(), $this->value);
+        return array_map(fn(EvaluableString $value) => $value->getRaw(), $this->value);
     }
 
     /**
@@ -64,7 +64,7 @@ class StringArrayArgument extends FlowItemArgument implements CustomFormEditorAr
      * @return string[]
      */
     public function getArray(FlowItemExecutor $executor): array {
-        return array_map(fn(VariableString $value) => $value->get($executor->getVariables()), $this->value);
+        return array_map(fn(EvaluableString $value) => $value->eval($executor->getVariableRegistryCopy()), $this->value);
     }
 
     public function getRawString(): string {

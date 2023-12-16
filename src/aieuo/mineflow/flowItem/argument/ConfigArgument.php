@@ -21,7 +21,7 @@ class ConfigArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getConfig(FlowItemExecutor $executor): Config {
-        $config = $this->getVariableName()->get($executor->getVariables());
+        $config = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($config);
 
         if ($variable instanceof ConfigVariable) {

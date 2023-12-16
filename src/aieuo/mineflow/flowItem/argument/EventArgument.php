@@ -21,7 +21,7 @@ class EventArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getEvent(FlowItemExecutor $executor): Event {
-        $event = $this->getVariableName()->get($executor->getVariables());
+        $event = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($event);
         if ($variable instanceof EventVariable) {

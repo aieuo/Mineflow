@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\argument\attribute\Required;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\mineflow\ExampleNumberInput;
 use aieuo\mineflow\utils\Utils;
-use aieuo\mineflow\variable\VariableString;
+use aieuo\mineflow\variable\EvaluableString;
 
 class NumberArgument extends FlowItemArgument implements CustomFormEditorArgument {
     use Required;
@@ -18,7 +18,7 @@ class NumberArgument extends FlowItemArgument implements CustomFormEditorArgumen
         return new static(name: $name, value: $value, description: $description);
     }
 
-    private VariableString $value;
+    private EvaluableString $value;
 
     /**
      * @param string $name
@@ -42,12 +42,12 @@ class NumberArgument extends FlowItemArgument implements CustomFormEditorArgumen
     ) {
         parent::__construct($name, $description);
 
-        $this->value = new VariableString((string)$value);
+        $this->value = new EvaluableString((string)$value);
         $optional ? $this->optional() : $this->required();
     }
 
     public function value(string|float|int $value): static {
-        $this->value = new VariableString((string)$value);
+        $this->value = new EvaluableString((string)$value);
         return $this;
     }
 
@@ -59,14 +59,14 @@ class NumberArgument extends FlowItemArgument implements CustomFormEditorArgumen
      * @throws \InvalidArgumentException
      */
     public function getInt(FlowItemExecutor $executor): int {
-        return Utils::getInt($this->value->get($executor->getVariables()), $this->getMin(), $this->getMax(), $this->getExcludes());
+        return Utils::getInt($this->value->eval($executor->getVariableRegistryCopy()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     /**
      * @throws \InvalidArgumentException
      */
     public function getFloat(FlowItemExecutor $executor): float {
-        return Utils::getFloat($this->value->get($executor->getVariables()), $this->getMin(), $this->getMax(), $this->getExcludes());
+        return Utils::getFloat($this->value->eval($executor->getVariableRegistryCopy()), $this->getMin(), $this->getMax(), $this->getExcludes());
     }
 
     public function example(string $example): self {

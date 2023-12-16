@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\parser\node;
 
-class NameNode implements Node {
+class StringNode implements Node {
 
     public function __construct(
-        private readonly string $name,
+        private readonly string $string,
         private readonly string $trimmedLeft = "",
         private readonly string $trimmedRight = "",
     ) {
     }
 
-    public function getName(): string {
-        return $this->name;
+    public function getString(): string {
+        return $this->string;
     }
 
     public function getTrimmedLeft(): string {
@@ -26,6 +26,6 @@ class NameNode implements Node {
     }
 
     public function __toString(): string {
-        return $this->trimmedLeft.$this->name.$this->trimmedRight;
+        return $this->trimmedLeft.$this->string.$this->trimmedRight;
     }
 }

@@ -13,6 +13,7 @@ use aieuo\mineflow\variable\parser\node\MethodNode;
 use aieuo\mineflow\variable\parser\node\NameNode;
 use aieuo\mineflow\variable\parser\node\Node;
 use aieuo\mineflow\variable\parser\node\PropertyNode;
+use aieuo\mineflow\variable\parser\node\StringNode;
 use aieuo\mineflow\variable\parser\node\UnaryExpressionNode;
 use aieuo\mineflow\variable\parser\node\WrappedNode;
 use aieuo\mineflow\variable\parser\token\VariableToken;
@@ -23,26 +24,36 @@ use function in_array;
 
 class VariableParser {
 
-    private int $pos = 0;
-    private int $length;
+    /** @var VariableToken[] */
+    protected array $tokens = [];
+    protected int $pos = 0;
+    protected int $length;
 
     /**
-     * @param string[] $tokens
+     * @param VariableToken[] $tokens
+     * @return Node
      */
-    public function __construct(private readonly array $tokens) {
-        $this->length = count($this->tokens);
-    }
+    final public function parse(array $tokens): Node {
+        $this->tokens = $tokens;
+        $this->length = count($tokens);
 
-    public function parse(): Node {
-        $expression = $this->expression();
+        if ($this->length === 0) {
+            return new StringNode("");
+        }
+
+        $expression = $this->doParse();
         if ($this->valid()) {
             throw new VariableParseException(Language::get("variable.parse.failed.unexpected.end"), $this->tokens, $this->pos);
         }
         return $expression;
     }
 
+    protected function doParse(): Node {
+        return $this->expression();
+    }
+
     // expression ::= term (("+" | "-") term)*
-    private function expression(): Node {
+    protected function expression(): Node {
         $left = $this->term();
         while ($this->nextIs(VariableToken::PLUS) or $this->nextIs(VariableToken::MINUS)) {
             $operator = $this->consume(VariableToken::PLUS, VariableToken::MINUS);
@@ -53,7 +64,7 @@ class VariableParser {
     }
 
     // term ::= unary (("*" | "/") unary)*
-    private function term(): Node {
+    protected function term(): Node {
         $left = $this->unary();
         while ($this->nextIs(VariableToken::ASTERISK) or $this->nextIs(VariableToken::SLASH)) {
             $operator = $this->consume(VariableToken::ASTERISK, VariableToken::SLASH);
@@ -64,7 +75,7 @@ class VariableParser {
     }
 
     // unary ::= ["+" | "-"] access
-    private function unary(): Node {
+    protected function unary(): Node {
         if ($this->nextIs(VariableToken::PLUS) or $this->nextIs(VariableToken::MINUS)) {
             $operator = $this->consume(VariableToken::PLUS, VariableToken::MINUS);
             $operand = $this->access();
@@ -75,7 +86,7 @@ class VariableParser {
     }
 
     // access ::= factor ("(" arguments ")" | "." name ["(" arguments ")"])*
-    private function access(): Node {
+    protected function access(): Node {
         $left = $this->factor();
         while ($this->nextIs(VariableToken::DOT) or $this->nextIs(VariableToken::L_PAREN)) {
             if ($this->nextIs(VariableToken::DOT)) {
@@ -101,19 +112,29 @@ class VariableParser {
     }
 
     // factor ::= identifier | "(" expression ")"
-    private function factor(): Node {
-        if ($this->nextIs(VariableToken::L_PAREN)) {
-            $this->consume(VariableToken::L_PAREN);
-            $node = new WrappedNode($this->expression());
-            $this->consume(VariableToken::R_PAREN);
-            return $node;
-        }
+    protected function factor(): Node {
+        $this->expect(VariableToken::STRING, VariableToken::L_PAREN);
 
-        return new IdentifierNode($this->consume());
+        $node = $this->brackets();
+        if ($node !== null) return $node;
+
+        $token = $this->consumeToken(VariableToken::STRING);
+        return new IdentifierNode($token->getToken(), $token->getTrimmedLeft(), $token->getTrimmedRight());
     }
 
     // name ::= identifier | "(" expression ")"
-    private function name(): Node {
+    protected function name(): Node {
+        $this->expect(VariableToken::STRING, VariableToken::L_PAREN);
+        
+        $node = $this->brackets();
+        if ($node !== null) return $node;
+
+        $token = $this->consumeToken(VariableToken::STRING);
+        return new NameNode($token->getToken(), $token->getTrimmedLeft(), $token->getTrimmedRight());
+    }
+
+    // "(" expression ")"
+    protected function brackets(): ?Node {
         if ($this->nextIs(VariableToken::L_PAREN)) {
             $this->consume(VariableToken::L_PAREN);
             $node = new WrappedNode($this->expression());
@@ -121,11 +142,11 @@ class VariableParser {
             return $node;
         }
 
-        return new NameNode($this->consume());
+        return null;
     }
 
     // arguments ::= [expression ("," expression)*]
-    private function arguments(): array {
+    protected function arguments(): array {
         $arguments = [];
         while (!$this->nextIs(VariableToken::R_PAREN)) {
             if (count($arguments) > 0) {
@@ -133,32 +154,49 @@ class VariableParser {
             }
 
             $arguments[] = $this->expression();
+            $this->expect(VariableToken::COMMA, VariableToken::R_PAREN);
         }
         return $arguments;
     }
 
-    private function peek(): ?string {
+    protected function peek(): ?VariableToken {
         return $this->tokens[$this->pos] ?? null;
     }
 
-    private function nextIs(string $token): bool {
-        return $this->peek() === $token;
+    protected function next(): ?VariableToken {
+        return $this->tokens[$this->pos ++] ?? null;
     }
 
-    private function consume(string ...$expects): string {
+    protected function nextIs(string $type): bool {
+        return $this->peek()?->getType() === $type;
+    }
+
+    protected function expect(string ...$expects): VariableToken {
         $token = $this->peek();
         if ($token === null) {
-            throw new VariableParseException(Language::get("variable.parse.failed.expected.end", [implode("§e, §c", $expects)]), $this->tokens, $this->pos);
+            throw new VariableParseException(Language::get("variable.parse.failed.expected.end", [implode("§e, §7", $expects)]), $this->tokens, $this->pos);
         }
-        if ((!empty($expects) and !in_array($token, $expects, true))) {
-            throw new VariableParseException(Language::get("variable.parse.failed.expected.token", [implode("§e, §c", $expects), $token]), $this->tokens, $this->pos);
+        if ((!empty($expects) and !in_array($token->getType(), $expects, true))) {
+            throw new VariableParseException(Language::get("variable.parse.failed.expected.token", [implode("§e, §7", $expects), $token]), $this->tokens, $this->pos);
         }
+        return $token;
+    }
+
+    protected function consume(string ...$expects): string {
+        $token = $this->expect(...$expects);
+
+        $this->pos++;
+        return $token->getToken();
+    }
+
+    protected function consumeToken(string ...$expects): VariableToken {
+        $token = $this->expect(...$expects);
 
         $this->pos++;
         return $token;
     }
 
-    private function valid(): bool {
+    protected function valid(): bool {
         return $this->pos < $this->length;
     }
 

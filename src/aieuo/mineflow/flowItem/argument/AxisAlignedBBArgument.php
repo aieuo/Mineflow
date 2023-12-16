@@ -21,7 +21,7 @@ class AxisAlignedBBArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getAxisAlignedBB(FlowItemExecutor $executor): AxisAlignedBB {
-        $aabb = $this->getVariableName()->get($executor->getVariables());
+        $aabb = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($aabb);
 
         if ($variable instanceof AxisAlignedBBVariable) {

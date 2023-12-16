@@ -22,7 +22,7 @@ class EntityArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getEntity(FlowItemExecutor $executor): Entity {
-        $entity = $this->getVariableName()->get($executor->getVariables());
+        $entity = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($entity);
         if ($variable instanceof EntityVariable) {

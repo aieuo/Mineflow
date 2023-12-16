@@ -21,7 +21,7 @@ class BlockArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getBlock(FlowItemExecutor $executor): Block {
-        $block = $this->getVariableName()->get($executor->getVariables());
+        $block = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($block);
 
         if ($variable instanceof BlockVariable) {
