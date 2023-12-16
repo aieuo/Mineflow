@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class DeleteVariable extends SimpleAction {
@@ -37,7 +37,7 @@ class DeleteVariable extends SimpleAction {
         if ($this->getIsLocal()->getBool()) {
             $source->removeVariable($name);
         } else {
-            Mineflow::getVariableHelper()->delete($name);
+            VariableRegistry::global()->remove($name);
         }
 
         yield Await::ALL;

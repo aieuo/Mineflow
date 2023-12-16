@@ -65,6 +65,22 @@ class ConfigVariable extends ObjectVariable implements IteratorVariable {
         }
     }
 
+    public function hasKey(int|string $key): bool {
+        return $this->getValue()->exists($key);
+    }
+
+    public function setValueAt(int|string $key, Variable $value): void {
+        $this->getValue()->set($key, match (true) {
+            $value instanceof IteratorVariable => $value->toArray(),
+            $value instanceof NumberVariable => $value->getValue(),
+            default => (string)$value,
+        });
+    }
+
+    public function removeValueAt(int|string $index): void {
+        $this->getValue()->remove($index);
+    }
+
     public function __toString(): string {
         return "Config(".$this->getValue()->getPath().")";
     }

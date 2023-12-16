@@ -12,7 +12,8 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
@@ -46,7 +47,7 @@ class DeleteListVariableContentByValue extends SimpleAction {
 
         $value = $this->getVariableValue()->getRawString();
         if ($helper->isVariableString($value)) {
-            $value = $source->getVariable(mb_substr($value, 1, -1)) ?? $helper->getNested(mb_substr($value, 1, -1));
+            $value = $source->getVariable(mb_substr($value, 1, -1)) ?? VariableRegistry::global()->getNested(mb_substr($value, 1, -1));
             if ($value === null) {
                 throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
             }
@@ -54,11 +55,11 @@ class DeleteListVariableContentByValue extends SimpleAction {
             $value = new StringVariable($this->getVariableValue()->getString($source));
         }
 
-        $variable = $source->getVariable($name) ?? ($this->getIsLocal()->getBool() ? null : $helper->getNested($name));
+        $variable = $source->getVariable($name) ?? ($this->getIsLocal()->getBool() ? null : VariableRegistry::global()->getNested($name));
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
-        if (!($variable instanceof ListVariable)) {
+        if (!($variable instanceof IteratorVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 

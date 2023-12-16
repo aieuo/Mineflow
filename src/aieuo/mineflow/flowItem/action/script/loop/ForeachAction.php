@@ -14,10 +14,10 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
@@ -74,13 +74,13 @@ class ForeachAction extends FlowItem {
         $listName = $this->getListVariableName()->getString($source);
         $keyName = $this->getKeyVariableName()->getString($source);
         $valueName = $this->getValueVariableName()->getString($source);
-        $list = $source->getVariable($listName) ?? Mineflow::getVariableHelper()->getNested($listName);
+        $list = $source->getVariable($listName) ?? VariableRegistry::global()->getNested($listName);
 
-        if (!($list instanceof ListVariable)) {
+        if (!($list instanceof IteratorVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.foreach.error.notVariable", [$listName]));
         }
 
-        foreach ($list->getValue() as $key => $value) {
+        foreach ($list->getIterator() as $key => $value) {
             $keyVariable = is_numeric($key) ? new NumberVariable($key) : new StringVariable($key);
             $valueVariable = clone $value;
 

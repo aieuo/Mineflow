@@ -8,7 +8,6 @@ use aieuo\mineflow\exception\UnsupportedCalculationException;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\Tag;
 use function array_reverse;
-use function array_search;
 use function array_slice;
 use function array_values;
 use function iterator_to_array;
@@ -17,7 +16,6 @@ use function shuffle;
 class ListVariable extends Variable implements IteratorVariable, \JsonSerializable {
     use IteratorVariableTrait;
 
-    private ?string $showString;
 
     public static function getTypeName(): string {
         return "list";
@@ -25,10 +23,9 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
 
     /**
      * @param Variable[] $values
-     * @param string|null $str
+     * @param string|null $showString
      */
-    public function __construct(protected array $values, ?string $str = "") {
-        $this->showString = $str;
+    public function __construct(protected array $values, private ?string $showString = "") {
     }
 
     public function getValue(): array {
@@ -61,34 +58,18 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
         $this->values[] = $value;
     }
 
-    public function setValueAt(int|string $key, Variable $value): void {
-        $this->values[(int)$key] = $value;
-        $this->values = array_values($this->values);
+    public function hasKey(int|string $key): bool {
+        return isset($this->values[$key]);
     }
 
-    public function removeValue(Variable $value, bool $strict = true): void {
-        $index = $this->indexOf($value, $strict);
-        if ($index === false) return;
-        unset($this->values[$index]);
+    public function setValueAt(int|string $key, Variable $value): void {
+        $this->values[(int)$key] = $value;
         $this->values = array_values($this->values);
     }
 
     public function removeValueAt(int|string $index): void {
         unset($this->values[(int)$index]);
         $this->values = array_values($this->values);
-    }
-
-    public function indexOf(Variable $value, bool $strict = true): int|string|null {
-        if ($strict) {
-            $index = array_search($value, $this->values, true);
-            return $index === false ? null : $index;
-        }
-
-        $str = (string)$value;
-        foreach ($this->values as $index => $v) {
-            if ((string)$v === $str) return $index;
-        }
-        return null;
     }
 
     protected function getValueFromIndex(string $index): ?Variable {
@@ -147,15 +128,6 @@ class ListVariable extends Variable implements IteratorVariable, \JsonSerializab
 
     public function getShowString(): string {
         return $this->showString;
-    }
-
-    public function toArray(): array {
-        $result = [];
-        foreach ($this->getValue() as $i => $value) {
-            if ($value instanceof ListVariable) $result[$i] = $value->toArray();
-            else $result[$i] = (string)$value;
-        }
-        return $result;
     }
 
     public function toNBTTag(): Tag {

@@ -21,11 +21,11 @@ class ItemArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getItemVariable(FlowItemExecutor $executor): ItemVariable {
-        $item = $executor->replaceVariables($this->getVariableName());
+        $item = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($item);
         if (!($variable instanceof ItemVariable)) {
-            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], $this->getVariableName()]));
+            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], (string)$this->getVariableName()]));
         }
 
         return $variable;
@@ -37,7 +37,7 @@ class ItemArgument extends ObjectVariableArgument {
     public function getItem(FlowItemExecutor $executor): Item {
         $variable = $this->getItemVariable($executor);
         if (!(($item = $variable->getValue()) instanceof Item)) {
-            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], $this->getVariableName()]));
+            throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.item"], (string)$this->getVariableName()]));
         }
 
         return $item;
@@ -45,7 +45,7 @@ class ItemArgument extends ObjectVariableArgument {
 
     public function createFormElements(array $variables): array {
         return [
-            new ItemVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new ItemVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

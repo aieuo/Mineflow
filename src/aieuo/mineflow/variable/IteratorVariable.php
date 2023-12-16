@@ -29,4 +29,16 @@ interface IteratorVariable extends \IteratorAggregate {
     public function takeLast(int $amount): IteratorVariable;
 
     public function count(): NumberVariable;
+
+    public function hasKey(int|string $key): bool;
+
+    public function setValueAt(int|string $key, Variable $value): void;
+
+    public function removeValue(Variable $value, bool $strict = true): void;
+
+    public function removeValueAt(int|string $index): void;
+
+    public function indexOf(Variable $value, bool $strict = true): int|string|null;
+
+    public function toArray(): array;
 }

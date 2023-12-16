@@ -55,7 +55,7 @@ class RecipeArgumentArgument extends StringArrayArgument {
         $args = [];
         foreach ($this->getRawArray() as $arg) {
             $name = $helper->isSimpleVariableString($arg) ? substr($arg, 1, -1) : $arg;
-            $args[$name] = $helper->copyOrCreateVariable($arg, $executor);
+            $args[$name] = $helper->copyOrCreateVariable($arg, $executor->getVariableRegistryCopy());
         }
         return $args;
     }
@@ -103,6 +103,8 @@ class RecipeArgumentArgument extends StringArrayArgument {
     }
 
     public function __clone(): void {
+        parent::__clone();
+        
         $this->recipeName = null;
     }
 }

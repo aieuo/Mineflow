@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class ExistsVariable extends SimpleCondition {
@@ -26,10 +26,11 @@ class ExistsVariable extends SimpleCondition {
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
-        $helper = Mineflow::getVariableHelper();
         $name = $this->getVariableName()->getString($source);
 
         yield Await::ALL;
-        return $source->getVariable($name) !== null or $helper->get($name) !== null or $helper->getNested($name) !== null;
+        return $source->getVariable($name) !== null
+            or VariableRegistry::global()->get($name) !== null
+            or VariableRegistry::global()->getNested($name) !== null;
     }
 }

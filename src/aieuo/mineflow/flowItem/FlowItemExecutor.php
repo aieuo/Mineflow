@@ -3,18 +3,15 @@
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemExecutionException;
-use aieuo\mineflow\exception\MineflowMethodErrorException;
+use aieuo\mineflow\exception\MineflowException;
 use aieuo\mineflow\exception\RecipeInterruptException;
-use aieuo\mineflow\exception\UndefinedMineflowMethodException;
-use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
-use aieuo\mineflow\exception\UndefinedMineflowVariableException;
-use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Logger;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\ObjectVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
@@ -27,6 +24,8 @@ class FlowItemExecutor {
 
     private FlowItem $currentFlowItem;
     private int $currentIndex;
+
+    private VariableRegistry $variableRegistry;
 
     /**
      * @param FlowItem[] $items
@@ -41,7 +40,7 @@ class FlowItemExecutor {
     public function __construct(
         private array     $items,
         private ?Entity   $target,
-        private array     $variables = [],
+        array             $variables = [],
         private ?self     $parent = null,
         private ?Event    $event = null,
         private ?\Closure $onComplete = null,
@@ -51,6 +50,8 @@ class FlowItemExecutor {
         if ($event === null and $parent !== null) {
             $this->event = $parent->getEvent();
         }
+
+        $this->variableRegistry = new VariableRegistry($variables);
     }
 
     public function getGenerator(): \Generator {
@@ -80,11 +81,11 @@ class FlowItemExecutor {
             } catch (FlowItemExecutionException $e) {
                 Logger::warning(Language::get("action.error", [$e->getFlowItemName(), $e->getMessage()]), $this->target);
                 if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
-            } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|MineflowMethodErrorException|UnsupportedCalculationException $e) {
-                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
-                if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
-            } catch (RecipeInterruptException) {
-                // ignored
+            } catch (MineflowException $e) {
+                if (!($e instanceof RecipeInterruptException)) {
+                    if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
+                    if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
+                }
             }
 
             if ($this->onComplete !== null) ($this->onComplete)($this);
@@ -118,27 +119,31 @@ class FlowItemExecutor {
         $names = explode(".", $name);
         $name = array_shift($names);
 
-        $variable = $this->variables[$name] ?? ($this->parent?->getVariable($name));
+        $variable = $this->variableRegistry->get($name) ?? ($this->parent?->getVariable($name));
 
         if ($variable === null) return null;
 
         foreach ($names as $name1) {
-            if (!($variable instanceof ListVariable) and !($variable instanceof ObjectVariable)) return null;
+            if (!($variable instanceof IteratorVariable) and !($variable instanceof ObjectVariable)) return null;
             $variable = $variable->getProperty($name1);
         }
         return $variable;
     }
 
     public function getVariables(): array {
-        $variables = $this->variables;
+        $variables = $this->variableRegistry->getAll();
         if ($this->parent !== null) {
             $variables = array_merge($this->parent->getVariables(), $variables);
         }
         return $variables;
     }
 
+    public function getVariableRegistryCopy(): VariableRegistry {
+        return new VariableRegistry($this->getVariables());
+    }
+
     public function addVariable(string $name, Variable $variable, bool $onlyThisScope = false): void {
-        $this->variables[$name] = $variable;
+        $this->variableRegistry->add($name, $variable);
 
         if (!$onlyThisScope and $this->parent !== null) {
             $this->parent->addVariable($name, $variable);
@@ -146,7 +151,7 @@ class FlowItemExecutor {
     }
 
     public function removeVariable(string $name): void {
-        unset($this->variables[$name]);
+        $this->variableRegistry->remove($name);
         $this->parent?->removeVariable($name);
     }
 
