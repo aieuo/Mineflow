@@ -34,26 +34,20 @@ class VariableEvaluator {
     ) {
     }
 
-    public function eval(Node $node, string &$stmt = null): Variable {
+    public function eval(Node $node): Variable {
         if ($node instanceof WrappedNode) {
-            $var = $this->eval($node->getStatement(), $stmtStmt);
-            $stmt = "(".$stmtStmt.")";
-            return $var;
+            return $this->eval($node->getStatement());
         }
 
         if ($node instanceof StringNode) {
-            $stmt = $node->getString();
             return new StringVariable($node->getString());
         }
 
         if ($node instanceof NameNode) {
-            $stmt = $node->getName();
             return new StringVariable($node->getName());
         }
 
         if ($node instanceof IdentifierNode) {
-            $stmt = $node->getName();
-
             if (is_numeric($node->getName())) {
                 return new NumberVariable((float)$node->getName());
             }
@@ -67,11 +61,11 @@ class VariableEvaluator {
         }
 
         if ($node instanceof EvaluableNameNode) {
-            return $this->eval($node->getName(), $stmt);
+            return $this->eval($node->getName());
         }
 
         if ($node instanceof EvaluableIdentifierNode) {
-            $name = (string)$this->eval($node->getName(), $stmt);
+            $name = (string)$this->eval($node->getName());
 
             if (is_numeric($name)) {
                 return new NumberVariable((float)$name);
@@ -85,9 +79,8 @@ class VariableEvaluator {
         }
 
         if ($node instanceof BinaryExpressionNode) {
-            $left = $this->eval($node->getLeft(), $leftStmt);
-            $right = $this->eval($node->getRight(), $rightStmt);
-            $stmt = $leftStmt." ".$node->getOperator()." ".$rightStmt;
+            $left = $this->eval($node->getLeft());
+            $right = $this->eval($node->getRight());
             return match ($node->getOperator()) {
                 VariableToken::PLUS => $left->add($right),
                 VariableToken::MINUS => $left->sub($right),
@@ -99,8 +92,7 @@ class VariableEvaluator {
 
         if ($node instanceof UnaryExpressionNode) {
             $left = NumberVariable::zero();
-            $right = $this->eval($node->getRight(), $rightStmt);
-            $stmt = $node->getOperator().$rightStmt;
+            $right = $this->eval($node->getRight());
             return match ($node->getOperator()) {
                 VariableToken::PLUS => $left->add($right),
                 VariableToken::MINUS => $left->sub($right),
@@ -109,40 +101,31 @@ class VariableEvaluator {
         }
 
         if ($node instanceof PropertyNode) {
-            $left = $this->eval($node->getLeft(), $leftStmt);
-            $identifier = $this->eval($node->getIdentifier(), $identifierStmt);
-            $stmt = $leftStmt.".".$identifierStmt;
-            return $left->getProperty((string)$identifier) ?? throw new UndefinedMineflowPropertyException($leftStmt, (string)$identifier);
+            $left = $this->eval($node->getLeft());
+            $identifier = $this->eval($node->getIdentifier());
+            return $left->getProperty((string)$identifier) ?? throw new UndefinedMineflowPropertyException((string)$node->getLeft(), (string)$identifier);
         }
 
         if ($node instanceof MethodNode) {
-            $left = $this->eval($node->getLeft(), $leftStmt);
-            $identifier = $this->eval($node->getIdentifier(), $identifierStmt);
-            $stmt = $leftStmt.".".$identifierStmt."(";
+            $left = $this->eval($node->getLeft());
+            $identifier = $this->eval($node->getIdentifier());
             $arguments = [];
-            $argumentStmts = [];
             foreach ($node->getArguments() as $argument) {
-                $arguments[] = $this->eval($argument, $argumentStmt);
-                $argumentStmts[] = $argumentStmt;
+                $arguments[] = $this->eval($argument);
             }
-            $stmt .= implode(", ", $argumentStmts).")";
-            return $left->callMethod($identifier->getValue(), $arguments) ?? throw new UndefinedMineflowMethodException($leftStmt, (string)$identifier->getValue());
+            return $left->callMethod($identifier->getValue(), $arguments) ?? throw new UndefinedMineflowMethodException((string)$node->getLeft(), (string)$identifier->getValue());
         }
 
         if ($node instanceof ToStringNode) {
-            $node = $this->eval($node->getNode(), $nodeStmt);
-            $stmt = "{".$nodeStmt."}";
+            $node = $this->eval($node->getNode());
             return new StringVariable((string)$node);
         }
 
         if ($node instanceof ConcatenateNode) {
             $strings = [];
-            $stmt = "{";
             foreach ($node->getNodes() as $child) {
-                $strings[] = (string)$this->eval($child, $childStmt);
-                $stmt .= $childStmt;
+                $strings[] = (string)$this->eval($child);
             }
-            $stmt .= "}";
             return new StringVariable(implode("", $strings));
         }
 
