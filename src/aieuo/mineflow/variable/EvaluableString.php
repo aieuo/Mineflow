@@ -62,18 +62,7 @@ class EvaluableString {
             $this->compile();
         }
 
-        if ($this->text !== null) {
-            return $this->text;
-        }
-
-        if (count($this->ast->getNodes()) === 1) {
-            $node = $this->ast->getNodes()[0];
-            if ($node instanceof StringNode) {
-                return $node->getString();
-            }
-        }
-
-        return (string)(new VariableEvaluator($registry, $global))->eval($this->ast);
+        return $this->text ?? (string)(new VariableEvaluator($registry, $global))->eval($this->ast);
     }
 
     public function __toString(): string {
