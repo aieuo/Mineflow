@@ -10,9 +10,9 @@ use function array_map;
 
 abstract class Variable {
 
-    /** @var array<class-string<ObjectVariable>, array<string, VariableProperty>> */
+    /** @var array<class-string<Variable>, array<string, VariableProperty>> */
     private static array $properties = [];
-    /** @var array<class-string<ObjectVariable>, array<string, VariableMethod>> */
+    /** @var array<class-string<Variable>, array<string, VariableMethod>> */
     private static array $methods = [];
 
     public static function create($value, int|string $type): ?self {

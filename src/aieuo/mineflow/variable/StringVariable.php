@@ -33,7 +33,7 @@ class StringVariable extends Variable implements \JsonSerializable {
     }
 
     public function mul(Variable $target): StringVariable {
-        if ($target instanceof NumberVariable) return new StringVariable(str_repeat($this->getValue(), $target->getValue()));
+        if ($target instanceof NumberVariable) return new StringVariable(str_repeat($this->getValue(), (int)$target->getValue()));
 
         throw new UnsupportedCalculationException();
     }
