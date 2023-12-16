@@ -162,6 +162,7 @@ abstract class VariableDropdown extends Dropdown {
 
                         $container = FlowItemFormController::getEditingContainer($player) ?? $recipe;
                         $parentContainer = FlowItemFormController::getParentContainerOf($player, $container);
+                        $editingItem = FlowItemFormController::getEditingItem($player);
 
                         $editor = $action->getNewItemEditor();
                         $editor->onStartEdit($player);
@@ -181,9 +182,13 @@ abstract class VariableDropdown extends Dropdown {
                             } else {
                                 $container->addAction($action);
                             }
-                        } elseif ($parentContainer !== null) {
-                            $index = array_search($container, $parentContainer->getItems(), true);
-                            $parentContainer->pushItem($index, $action);
+                        } elseif ($parentContainer !== null and $editingItem !== null) {
+                            $index = array_search($editingItem, $parentContainer->getItems(), true);
+                            if ($index !== false) {
+                                $parentContainer->pushItem($index, $action);
+                            } else {
+                                $parentContainer->addItem($action);
+                            }
                         }
                         $add = $action->getAddingVariables();
                         $variables = array_merge($recipe->getAddingVariablesUntil($action), $add);
