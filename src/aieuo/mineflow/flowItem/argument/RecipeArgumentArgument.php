@@ -103,6 +103,8 @@ class RecipeArgumentArgument extends StringArrayArgument {
     }
 
     public function __clone(): void {
+        parent::__clone();
+        
         $this->recipeName = null;
     }
 }
