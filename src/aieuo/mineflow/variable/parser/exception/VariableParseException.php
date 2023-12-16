@@ -15,7 +15,7 @@ class VariableParseException extends MineflowException {
         private readonly array $tokens,
         private readonly int   $position,
     ) {
-        parent::__construct($message, 0, null);
+        parent::__construct($message." ".$this->getHighlightedTokens(), 0, null);
     }
 
     public function getTokens(): array {
