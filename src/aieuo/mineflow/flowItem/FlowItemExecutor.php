@@ -3,12 +3,8 @@
 namespace aieuo\mineflow\flowItem;
 
 use aieuo\mineflow\exception\FlowItemExecutionException;
-use aieuo\mineflow\exception\MineflowMethodErrorException;
+use aieuo\mineflow\exception\MineflowException;
 use aieuo\mineflow\exception\RecipeInterruptException;
-use aieuo\mineflow\exception\UndefinedMineflowMethodException;
-use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
-use aieuo\mineflow\exception\UndefinedMineflowVariableException;
-use aieuo\mineflow\exception\UnsupportedCalculationException;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\utils\Language;
@@ -85,11 +81,11 @@ class FlowItemExecutor {
             } catch (FlowItemExecutionException $e) {
                 Logger::warning(Language::get("action.error", [$e->getFlowItemName(), $e->getMessage()]), $this->target);
                 if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
-            } catch (UndefinedMineflowVariableException|UndefinedMineflowPropertyException|UndefinedMineflowMethodException|MineflowMethodErrorException|UnsupportedCalculationException $e) {
-                if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
-                if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
-            } catch (RecipeInterruptException) {
-                // ignored
+            } catch (MineflowException $e) {
+                if (!($e instanceof RecipeInterruptException)) {
+                    if (!empty($e->getMessage())) Logger::warning($e->getMessage(), $this->target);
+                    if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
+                }
             }
 
             if ($this->onComplete !== null) ($this->onComplete)($this);
