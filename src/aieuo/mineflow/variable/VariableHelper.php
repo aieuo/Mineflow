@@ -111,10 +111,6 @@ class VariableHelper {
         }
     }
 
-    public function exists(string $name): bool {
-        return isset($this->variables[$name]);
-    }
-
     public function saveAll(): void {
         $globalVariables = [];
         foreach (VariableRegistry::global()->getAll() as $name => $variable) {
