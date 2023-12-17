@@ -25,12 +25,13 @@ use aieuo\mineflow\variable\parser\token\VariableToken;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\Variable;
+use function implode;
 use function is_numeric;
 
 class VariableEvaluator {
     public function __construct(
-        private readonly VariableRegistry $variables,
-        private readonly bool             $fetchFromGlobalVariable = true,
+        protected readonly VariableRegistry $variables,
+        protected readonly bool             $fetchFromGlobalVariable = true,
     ) {
     }
 
@@ -117,8 +118,8 @@ class VariableEvaluator {
         }
 
         if ($node instanceof ToStringNode) {
-            $node = $this->eval($node->getNode());
-            return new StringVariable((string)$node);
+            $variable = $this->eval($node->getNode());
+            return new StringVariable((string)$variable);
         }
 
         if ($node instanceof ConcatenateNode) {
@@ -131,5 +132,4 @@ class VariableEvaluator {
 
         throw new \RuntimeException("Unknown node type ".$node::class);
     }
-
 }

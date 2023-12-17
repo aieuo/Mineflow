@@ -29,6 +29,22 @@ class EvaluableString {
         return $this->raw;
     }
 
+    public function getAst(): ?Node {
+        if (!$this->compiled) {
+            $this->compile();
+        }
+
+        return $this->ast;
+    }
+
+    public function isSimpleText(): bool {
+        if (!$this->compiled) {
+            $this->compile();
+        }
+
+        return $this->text !== null;
+    }
+
     public function compile(): void {
         $this->compiled = true;
 

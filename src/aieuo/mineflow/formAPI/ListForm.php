@@ -4,9 +4,8 @@ namespace aieuo\mineflow\formAPI;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\formAPI\utils\FormUtils;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\IteratorVariable;
 use pocketmine\player\Player;
 use function call_user_func;
 use function is_callable;
@@ -105,25 +104,9 @@ class ListForm extends Form {
     }
 
     public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
-        $helper = Mineflow::getVariableHelper();
-
         $this->setTitle($executor->replaceVariables($this->getTitle()));
         $this->setContent($executor->replaceVariables($this->getContent()));
-        $buttons = [];
-        foreach ($this->getButtons() as $button) {
-            if ($helper->isVariableString($button->getText())) {
-                $variableName = substr($button->getText(), 1, -1);
-                $variable = $helper->runVariableStatement($variableName, $executor->getVariables());
-                if ($variable instanceof IteratorVariable) {
-                    foreach ($variable->getIterator() as $value) {
-                        $buttons[] = new Button((string)$value);
-                    }
-                    continue;
-                }
-            }
-
-            $buttons[] = $button->setText($executor->replaceVariables($button->getText()));
-        }
+        $buttons = FormUtils::expandListFormButtons($this, $executor->getVariableRegistryCopy());
         $this->setButtons($buttons);
         return $this;
     }

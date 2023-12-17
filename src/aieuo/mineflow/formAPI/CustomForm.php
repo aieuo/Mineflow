@@ -12,9 +12,9 @@ use aieuo\mineflow\formAPI\element\Slider;
 use aieuo\mineflow\formAPI\element\StringResponseDropdown;
 use aieuo\mineflow\formAPI\element\Toggle;
 use aieuo\mineflow\formAPI\response\CustomFormResponse;
-use aieuo\mineflow\Mineflow;
+use aieuo\mineflow\formAPI\utils\FormUtils;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\IteratorVariable;
+use aieuo\mineflow\variable\EvaluableString;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function is_callable;
@@ -98,8 +98,6 @@ class CustomForm extends Form {
     }
 
     public function replaceVariablesFromExecutor(FlowItemExecutor $executor): self {
-        $helper = Mineflow::getVariableHelper();
-
         $this->setTitle($executor->replaceVariables($this->getTitle()));
         foreach ($this->getContents() as $content) {
             $content->setText($executor->replaceVariables($content->getText()));
@@ -119,16 +117,8 @@ class CustomForm extends Form {
             } elseif ($content instanceof Dropdown) {
                 $options = [];
                 foreach ($content->getOptions() as $option) {
-                    if ($helper->isVariableString($option)) {
-                        $variableName = substr($option, 1, -1);
-                        $variable = $helper->runVariableStatement($variableName, $executor->getVariables());
-                        if ($variable instanceof IteratorVariable) {
-                            foreach ($variable->getIterator() as $value) {
-                                $options[] = $executor->replaceVariables((string)$value);
-                            }
-                        }
-                    } else {
-                        $options[] = $executor->replaceVariables($option);
+                    foreach (FormUtils::expandText(new EvaluableString($option), $executor->getVariableRegistryCopy()) as $text) {
+                        $options[] = $text;
                     }
                 }
                 $content->setOptions($options);
