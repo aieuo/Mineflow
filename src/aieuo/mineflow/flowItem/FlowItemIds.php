@@ -190,6 +190,8 @@ interface FlowItemIds {
     public const SEND_MENU = "select";
     public const SEND_SLIDER = "slider";
     public const SEND_DROPDOWN = "dropdown";
+    public const SEND_STEP_SLIDER = "stepSlider";
+    public const SEND_CONFIRM_FORM = "sendConfirmForm";
 
     public const SET_SCOREBOARD_SCORE = "setScore";
     public const SET_SCOREBOARD_SCORE_NAME = "setScoreName";

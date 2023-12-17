@@ -46,7 +46,7 @@ class SeparatedInputStringArrayArgument extends StringArrayArgument {
         return $this;
     }
 
-    public function editValuesDescription(string $description): static {
+    public function editValuesDescription(\Closure|string $description): static {
         $this->editValuesDescription = $description;
         return $this;
     }

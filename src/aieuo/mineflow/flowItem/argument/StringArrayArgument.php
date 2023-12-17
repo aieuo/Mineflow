@@ -22,7 +22,7 @@ class StringArrayArgument extends FlowItemArgument implements CustomFormEditorAr
     }
 
     /** @var EvaluableString[] */
-    private array $value;
+    protected array $value;
 
     /**
      * @param string $name
