@@ -2,7 +2,9 @@
 
 namespace aieuo\mineflow\formAPI\element;
 
-use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\CommandButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\FormButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\RecipeButton;
 use aieuo\mineflow\formAPI\utils\ButtonImage;
 use aieuo\mineflow\utils\Language;
 use Ramsey\Uuid\Uuid;
@@ -12,6 +14,8 @@ class Button implements \JsonSerializable {
     public const TYPE_NORMAL = "button";
     public const TYPE_COMMAND = "commandButton";
     public const TYPE_COMMAND_CONSOLE = "commandConsoleButton";
+    public const TYPE_FORM = "formButton";
+    public const TYPE_RECIPE = "recipeButton";
 
     protected string $type = self::TYPE_NORMAL;
     protected string $text = "";
@@ -82,6 +86,12 @@ class Button implements \JsonSerializable {
 
         if (isset($data["mineflow"]["command"])) {
             return CommandButton::fromSerializedArray($data);
+        }
+        if (isset($data["mineflow"]["form"])) {
+            return FormButton::fromSerializedArray($data);
+        }
+        if (isset($data["mineflow"]["recipe"])) {
+            return RecipeButton::fromSerializedArray($data);
         }
 
         $button = new Button($data["text"]);

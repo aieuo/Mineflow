@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace aieuo\mineflow\formAPI\utils;
 
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
-use aieuo\mineflow\formAPI\element\mineflow\CommandConsoleButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\CommandButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\CommandConsoleButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\FormButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\RecipeButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\variable\EvaluableString;
 use aieuo\mineflow\variable\ListVariable;
@@ -29,6 +31,12 @@ class FormUtils {
             if ($button instanceof CommandButton) {
                 $extraData = self::expandText(new EvaluableString($button->getCommand()), $registry);
             }
+            if ($button instanceof FormButton) {
+                $extraData = self::expandText(new EvaluableString($button->getFormName()), $registry);
+            }
+            if ($button instanceof RecipeButton) {
+                $extraData = self::expandText(new EvaluableString($button->getRecipeName()), $registry);
+            }
             if (count($texts) !== count($extraData)) $extraData = null;
 
             foreach ($texts as $i => $text) {
@@ -36,6 +44,10 @@ class FormUtils {
                     $buttons[] = new CommandConsoleButton($extraData === null ? $button->getCommand() : $extraData[$i], $text);
                 } elseif ($button instanceof CommandButton) {
                     $buttons[] = new CommandButton($extraData === null ? $button->getCommand() : $extraData[$i], $text);
+                } elseif ($button instanceof FormButton) {
+                    $buttons[] = new FormButton($extraData === null ? $button->getFormName() : $extraData[$i], $text);
+                } elseif ($button instanceof RecipeButton) {
+                    $buttons[] = new RecipeButton($extraData === null ? $button->getRecipeName() : $extraData[$i], $text);
                 } else {
                     $buttons[] = new Button($text);
                 }

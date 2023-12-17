@@ -1,6 +1,6 @@
 <?php
 
-namespace aieuo\mineflow\formAPI\element\mineflow;
+namespace aieuo\mineflow\formAPI\element\mineflow\button;
 
 use aieuo\mineflow\command\MineflowConsoleCommandSender;
 use aieuo\mineflow\formAPI\utils\ButtonImage;

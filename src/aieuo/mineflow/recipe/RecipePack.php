@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\action\command\Command;
 use aieuo\mineflow\flowItem\action\command\CommandConsole;
 use aieuo\mineflow\flowItem\action\config\CreateConfigVariable;
 use aieuo\mineflow\flowItem\action\form\SendForm;
-use aieuo\mineflow\formAPI\element\mineflow\CommandButton;
+use aieuo\mineflow\formAPI\element\mineflow\button\CommandButton;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\trigger\command\CommandTrigger;
