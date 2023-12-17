@@ -26,7 +26,7 @@ class EvaluableStringParser extends VariableParser {
         if (!$this->nextIs(VariableToken::L_BRACE)) {
             $str = $this->consumeToken();
             if ($str->getToken() !== "") {
-                $nodes[] = new StringNode($str->getToken(), $str->getTrimmedLeft(), $str->getTrimmedRight());
+                $nodes[] = new StringNode($str->getTrimmedLeft().$str->getToken().$str->getTrimmedRight());
             }
         }
 
@@ -38,7 +38,7 @@ class EvaluableStringParser extends VariableParser {
             if ($this->valid() and !$this->nextIs(VariableToken::L_BRACE)) {
                 $str = $this->consumeToken();
                 if ($str->getToken() !== "") {
-                    $nodes[] = new StringNode($str->getToken(), $str->getTrimmedLeft(), $str->getTrimmedRight());
+                    $nodes[] = new StringNode($str->getTrimmedLeft().$str->getToken().$str->getTrimmedRight());
                 }
             }
         }
