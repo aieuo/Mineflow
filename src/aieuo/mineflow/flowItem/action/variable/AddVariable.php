@@ -54,7 +54,7 @@ class AddVariable extends SimpleAction {
         return $this->getArguments()[1];
     }
 
-    public function getVariableType(): StringArgument {
+    public function getVariableType(): StringEnumArgument {
         return $this->getArguments()[2];
     }
 
@@ -65,7 +65,7 @@ class AddVariable extends SimpleAction {
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $name = $this->getVariableName()->getString($source);
         $value = $this->getVariableValue()->getString($source);
-        $type = $this->getVariableType()->getString($source);
+        $type = $this->getVariableType()->getEnumValue();
         $isLocal = $this->isLocalVariable()->getBool();
 
         switch ($type) {
