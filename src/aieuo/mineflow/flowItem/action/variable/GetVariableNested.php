@@ -13,6 +13,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\UnknownVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class GetVariableNested extends SimpleAction {
@@ -45,11 +46,11 @@ class GetVariableNested extends SimpleAction {
         $variableName = $this->getVariableName()->getString($source);
         $resultName = $this->getResultName()->getString($source);
 
-        $variable = $source->getVariable($variableName) ?? Mineflow::getVariableHelper()->getNested($variableName);
+        $variable = $source->getVariable($variableName) ?? VariableRegistry::global()->getNested($variableName);
 
         $fallbackValue = $this->getFallbackValue()->getRawString();
         if ($fallbackValue !== "" and $variable === null) {
-            $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source);
+            $variable = Mineflow::getVariableHelper()->copyOrCreateVariable($fallbackValue, $source->getVariableRegistryCopy());
         }
 
         if ($variable === null) {

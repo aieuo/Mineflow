@@ -16,6 +16,7 @@ use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class AddListVariable extends SimpleAction {
@@ -51,7 +52,7 @@ class AddListVariable extends SimpleAction {
         $name = $this->getVariableName()->getString($source);
         $values = $this->getValue()->getRawArray();
 
-        $variable = $this->getIsLocal()->getBool() ? $source->getVariable($name) : $helper->get($name);
+        $variable = $this->getIsLocal()->getBool() ? $source->getVariable($name) : VariableRegistry::global()->get($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
@@ -60,7 +61,7 @@ class AddListVariable extends SimpleAction {
         }
 
         foreach ($values as $value) {
-            $addVariable = $helper->copyOrCreateVariable($value, $source);
+            $addVariable = $helper->copyOrCreateVariable($value, $source->getVariableRegistryCopy());
             $variable->appendValue($addVariable);
         }
 

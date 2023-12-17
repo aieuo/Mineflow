@@ -21,26 +21,26 @@ class EventArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getEvent(FlowItemExecutor $executor): Event {
-        $event = $executor->replaceVariables($this->getVariableName());
+        $event = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($event);
         if ($variable instanceof EventVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.event"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.event"], (string)$this->getVariableName()]));
     }
 
     public function createTypeMismatchedException(string $eventName): InvalidPlaceholderValueException {
         return new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [
             Language::get("action.target.require.event")."(".$eventName.")",
-            $this->getVariableName(),
+            (string)$this->getVariableName(),
         ]));
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new EventVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new EventVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

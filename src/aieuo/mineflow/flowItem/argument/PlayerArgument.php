@@ -21,14 +21,14 @@ class PlayerArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getPlayer(FlowItemExecutor $executor): Player {
-        $player = $executor->replaceVariables($this->getVariableName());
+        $player = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
 
         $variable = $executor->getVariable($player);
         if ($variable instanceof PlayerVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.player"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.player"], (string)$this->getVariableName()]));
     }
 
     /**
@@ -44,7 +44,7 @@ class PlayerArgument extends ObjectVariableArgument {
 
     public function createFormElements(array $variables): array {
         return [
-            new PlayerVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new PlayerVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

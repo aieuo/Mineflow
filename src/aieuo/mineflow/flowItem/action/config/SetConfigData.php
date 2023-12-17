@@ -11,8 +11,9 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use aieuo\mineflow\Mineflow;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use SOFe\AwaitGenerator\Await;
 
 class SetConfigData extends SimpleAction {
@@ -45,8 +46,8 @@ class SetConfigData extends SimpleAction {
 
         $helper = Mineflow::getVariableHelper();
         if ($helper->isSimpleVariableString($value)) {
-            $variable = $source->getVariable(substr($value, 1, -1)) ?? $helper->get(substr($value, 1, -1)) ?? $value;
-            if ($variable instanceof ListVariable) {
+            $variable = $source->getVariable(substr($value, 1, -1)) ?? VariableRegistry::global()->get(substr($value, 1, -1)) ?? $value;
+            if ($variable instanceof IteratorVariable) {
                 $value = $variable->toArray();
             } else if ($variable instanceof NumberVariable) {
                 $value = $variable->getValue();

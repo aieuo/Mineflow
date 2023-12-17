@@ -21,19 +21,19 @@ class AxisAlignedBBArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getAxisAlignedBB(FlowItemExecutor $executor): AxisAlignedBB {
-        $aabb = $executor->replaceVariables($this->getVariableName());
+        $aabb = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($aabb);
 
         if ($variable instanceof AxisAlignedBBVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.aabb"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.aabb"], (string)$this->getVariableName()]));
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new AxisAlignedBBVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new AxisAlignedBBVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

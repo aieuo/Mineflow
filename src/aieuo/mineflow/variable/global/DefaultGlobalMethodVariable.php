@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\global;
 
-use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\VariableMethod;
 use function in_array;
@@ -55,7 +55,7 @@ class DefaultGlobalMethodVariable extends ObjectVariable {
         ));
         self::registerMethod($class, "vars", new VariableMethod(
             new DummyVariable(MapVariable::class),
-            fn($_ = null) => new MapVariable(Mineflow::getVariableHelper()->getAll()),
+            fn($_ = null) => new MapVariable(VariableRegistry::global()->getAll()),
         ));
     }
 }

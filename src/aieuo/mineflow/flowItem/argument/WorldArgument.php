@@ -21,19 +21,19 @@ class WorldArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getWorld(FlowItemExecutor $executor): World {
-        $world = $executor->replaceVariables($this->getVariableName());
+        $world = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($world);
 
         if ($variable instanceof WorldVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.world"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.world"], (string)$this->getVariableName()]));
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new WorldVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new WorldVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

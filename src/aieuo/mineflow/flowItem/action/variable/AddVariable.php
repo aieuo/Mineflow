@@ -18,6 +18,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 use function array_unique;
@@ -82,7 +83,7 @@ class AddVariable extends SimpleAction {
         if ($isLocal) {
             $source->addVariable($name, $variable);
         } else {
-            Mineflow::getVariableHelper()->add($name, $variable);
+            VariableRegistry::global()->add($name, $variable);
         }
 
         yield Await::ALL;

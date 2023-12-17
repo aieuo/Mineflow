@@ -12,7 +12,8 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
+use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
@@ -46,16 +47,16 @@ class JoinListVariableToString extends SimpleAction {
         $separator = $this->getSeparator()->getString($source);
         $result = $this->getResultName()->getString($source);
 
-        $variable = $source->getVariable($name) ?? $helper->getNested($name);
+        $variable = $source->getVariable($name) ?? VariableRegistry::global()->getNested($name);
         if ($variable === null) {
             throw new InvalidFlowValueException($this->getName(), Language::get("variable.notFound", [$name]));
         }
-        if (!($variable instanceof ListVariable)) {
+        if (!($variable instanceof IteratorVariable)) {
             throw new InvalidFlowValueException($this->getName(), Language::get("action.addListVariable.error.existsOtherType", [$name, (string)$variable]));
         }
 
         $strings = [];
-        foreach ($variable->getValue() as $key => $value) {
+        foreach ($variable->getIterator() as $value) {
             $strings[] = (string)$value;
         }
         $source->addVariable($result, new StringVariable(implode($separator, $strings)));

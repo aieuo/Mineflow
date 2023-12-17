@@ -65,6 +65,6 @@ class SetItemData extends SimpleAction {
         $helper = Mineflow::getVariableHelper();
         $value = $this->getValue()->getRawString();
 
-        return $helper->copyOrCreateVariable($value, $source);
+        return $helper->copyOrCreateVariable($value, $source->getVariableRegistryCopy());
     }
 }

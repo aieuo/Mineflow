@@ -21,19 +21,19 @@ class ConfigArgument extends ObjectVariableArgument {
      * @throws InvalidPlaceholderValueException
      */
     public function getConfig(FlowItemExecutor $executor): Config {
-        $config = $executor->replaceVariables($this->getVariableName());
+        $config = $this->getVariableName()->eval($executor->getVariableRegistryCopy());
         $variable = $executor->getVariable($config);
 
         if ($variable instanceof ConfigVariable) {
             return $variable->getValue();
         }
 
-        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.config"], $this->getVariableName()]));
+        throw new InvalidPlaceholderValueException(Language::get("action.target.not.valid", [["action.target.require.config"], (string)$this->getVariableName()]));
     }
 
     public function createFormElements(array $variables): array {
         return [
-            new ConfigVariableDropdown($variables, $this->getVariableName(), $this->getDescription(), $this->isOptional())
+            new ConfigVariableDropdown($variables, (string)$this->getVariableName(), $this->getDescription(), $this->isOptional())
         ];
     }
 }

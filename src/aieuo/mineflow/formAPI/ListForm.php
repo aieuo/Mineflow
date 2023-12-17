@@ -6,7 +6,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\ListVariable;
+use aieuo\mineflow\variable\IteratorVariable;
 use pocketmine\player\Player;
 use function call_user_func;
 use function is_callable;
@@ -114,8 +114,8 @@ class ListForm extends Form {
             if ($helper->isVariableString($button->getText())) {
                 $variableName = substr($button->getText(), 1, -1);
                 $variable = $helper->runVariableStatement($variableName, $executor->getVariables());
-                if ($variable instanceof ListVariable) {
-                    foreach ($variable->getValue() as $value) {
+                if ($variable instanceof IteratorVariable) {
+                    foreach ($variable->getIterator() as $value) {
                         $buttons[] = new Button((string)$value);
                     }
                     continue;

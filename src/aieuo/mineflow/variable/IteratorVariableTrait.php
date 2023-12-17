@@ -10,7 +10,9 @@ use function array_key_first;
 use function array_keys;
 use function array_map;
 use function array_rand;
+use function array_search;
 use function array_slice;
+use function array_values;
 use function is_int;
 use function is_string;
 use function iterator_to_array;
@@ -85,6 +87,35 @@ trait IteratorVariableTrait {
 
     public function count(): NumberVariable {
         return new NumberVariable(count(iterator_to_array($this->getIterator())));
+    }
+
+    public function removeValue(Variable $value, bool $strict = true): void {
+        $index = $this->indexOf($value, $strict);
+        if ($index === null) return;
+
+        $this->removeValueAt($index);
+    }
+
+    public function indexOf(Variable $value, bool $strict = true): int|string|null {
+        if ($strict) {
+            $index = array_search($value, $this->values, true);
+            return $index === false ? null : $index;
+        }
+
+        $str = (string)$value;
+        foreach ($this->values as $index => $v) {
+            if ((string)$v === $str) return $index;
+        }
+        return null;
+    }
+
+    public function toArray(): array {
+        $result = [];
+        foreach ($this->getValue() as $i => $value) {
+            if ($value instanceof IteratorVariable) $result[$i] = $value->toArray();
+            else $result[$i] = (string)$value;
+        }
+        return $result;
     }
 
     private function keyToVariable(string|int|null $key): Variable {
