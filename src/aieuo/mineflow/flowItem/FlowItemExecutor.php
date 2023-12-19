@@ -2,7 +2,7 @@
 
 namespace aieuo\mineflow\flowItem;
 
-use aieuo\mineflow\exception\FlowItemExecutionException;
+use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\exception\MineflowException;
 use aieuo\mineflow\exception\RecipeInterruptException;
 use aieuo\mineflow\Mineflow;
@@ -78,7 +78,7 @@ class FlowItemExecutor {
         Await::f2c(function () {
             try {
                 yield from $this->getGenerator();
-            } catch (FlowItemExecutionException $e) {
+            } catch (InvalidFlowValueException $e) {
                 Logger::warning(Language::get("action.error", [$e->getFlowItemName(), $e->getMessage()]), $this->target);
                 if ($this->onError !== null) ($this->onError)($this->currentIndex, $this->currentFlowItem, $this->target);
             } catch (MineflowException $e) {

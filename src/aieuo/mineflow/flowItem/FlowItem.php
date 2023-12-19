@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\flowItem;
 
-use aieuo\mineflow\exception\FlowItemExecutionException;
 use aieuo\mineflow\exception\FlowItemLoadException;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\FlowItemArgument;
@@ -277,14 +276,10 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     final public function execute(FlowItemExecutor $source): \Generator {
         if (!$this->isDataValid()) {
             $message = Language::get("invalid.contents");
-            throw new FlowItemExecutionException($this->getName(), $message);
+            throw new InvalidFlowValueException($this->getName(), $message);
         }
 
-        try {
-            return yield from $this->onExecute($source);
-        } catch (\RuntimeException $e) {
-            throw new FlowItemExecutionException($this->getName(), $e->getMessage(), previous: $e);
-        }
+        return yield from $this->onExecute($source);
     }
 
     abstract protected function onExecute(FlowItemExecutor $source): \Generator;
