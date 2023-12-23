@@ -1,0 +1,58 @@
+<?php
+declare(strict_types=1);
+
+
+namespace aieuo\mineflow\flowItem\action\form;
+
+use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
+use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\formAPI\ListForm;
+use aieuo\mineflow\variable\DummyVariable;
+use aieuo\mineflow\variable\object\ListFormVariable;
+use SOFe\AwaitGenerator\GeneratorUtil;
+
+class CreateListFormVariable extends SimpleAction {
+
+    public function __construct(string $title = "", string $description = "", string $resultName = "form") {
+        parent::__construct(self::CREATE_LIST_FORM, FlowItemCategory::FORM);
+
+        $this->setArguments([
+            StringArgument::create("title", $title, "@action.form.title")->example("aieuo"),
+            StringArgument::create("description", $description, "@action.form.description")->example("aieuo"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("form"),
+        ]);
+    }
+
+    public function getFormTitle(): StringArgument {
+        return $this->getArguments()[0];
+    }
+
+    public function getFormDescription(): StringArgument {
+        return $this->getArguments()[1];
+    }
+
+    public function getResultName(): StringArgument {
+        return $this->getArguments()[2];
+    }
+
+    protected function onExecute(FlowItemExecutor $source): \Generator {
+        $title = $this->getFormTitle()->getString($source);
+        $description = $this->getFormDescription()->getString($source);
+        $resultName = $this->getResultName()->getString($source);
+
+        $form = new ListForm($title);
+        $form->setContent($description);
+
+        $source->addVariable($resultName, new ListFormVariable($form));
+
+        yield from GeneratorUtil::empty();
+    }
+
+    public function getAddingVariables(): array {
+        return [
+            (string)$this->getResultName() => new DummyVariable(ListFormVariable::class)
+        ];
+    }
+}

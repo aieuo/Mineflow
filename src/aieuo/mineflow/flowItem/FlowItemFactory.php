@@ -47,6 +47,8 @@ use aieuo\mineflow\flowItem\action\entity\UnsetImmobile;
 use aieuo\mineflow\flowItem\action\event\CallCustomTrigger;
 use aieuo\mineflow\flowItem\action\event\EventCancel;
 use aieuo\mineflow\flowItem\action\event\playerChatEvent\PlayerChatEventSetMessage;
+use aieuo\mineflow\flowItem\action\form\button\AddButtonToListForm;
+use aieuo\mineflow\flowItem\action\form\CreateListFormVariable;
 use aieuo\mineflow\flowItem\action\form\SendConfirmForm;
 use aieuo\mineflow\flowItem\action\form\SendDropdown;
 use aieuo\mineflow\flowItem\action\form\SendForm;
@@ -54,6 +56,7 @@ use aieuo\mineflow\flowItem\action\form\SendInputForm;
 use aieuo\mineflow\flowItem\action\form\SendMenuForm;
 use aieuo\mineflow\flowItem\action\form\SendSlider;
 use aieuo\mineflow\flowItem\action\form\SendStepSlider;
+use aieuo\mineflow\flowItem\action\form\ShowFormVariable;
 use aieuo\mineflow\flowItem\action\internal\AddLanguageMappings;
 use aieuo\mineflow\flowItem\action\internal\AddSpecificLanguageMapping;
 use aieuo\mineflow\flowItem\action\internal\GetLanguage;
@@ -365,6 +368,9 @@ class FlowItemFactory {
         self::register(new SendSlider);
         self::register(new SendDropdown);
         self::register(new SendStepSlider);
+        self::register(new CreateListFormVariable);
+        self::register(new AddButtonToListForm);
+        self::register(new ShowFormVariable);
         /* command */
         self::register(new Command);
         self::register(new CommandConsole);

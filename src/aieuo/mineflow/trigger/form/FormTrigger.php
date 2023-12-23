@@ -2,25 +2,18 @@
 
 namespace aieuo\mineflow\trigger\form;
 
-use aieuo\mineflow\formAPI\CustomForm;
 use aieuo\mineflow\formAPI\element\Button;
-use aieuo\mineflow\formAPI\element\Dropdown;
-use aieuo\mineflow\formAPI\element\Element;
 use aieuo\mineflow\formAPI\Form;
 use aieuo\mineflow\formAPI\ListForm;
 use aieuo\mineflow\formAPI\ModalForm;
+use aieuo\mineflow\formAPI\utils\FormUtils;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
 use aieuo\mineflow\trigger\Trigger;
 use aieuo\mineflow\trigger\Triggers;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\variable\BooleanVariable;
-use aieuo\mineflow\variable\ListVariable;
-use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NullVariable;
-use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\object\RecipeVariable;
-use aieuo\mineflow\variable\StringVariable;
 
 class FormTrigger extends Trigger {
 
@@ -47,51 +40,9 @@ class FormTrigger extends Trigger {
      * @return array
      */
     public function getVariables(mixed $form, array|int|bool $data = [], Recipe $from = null): array {
-        $variable = new MapVariable([
-            "name" => new StringVariable($form->getName()),
-            "title" => new StringVariable($form->getTitle()),
-        ]);
-        switch ($form) {
-            case $form instanceof ModalForm:
-                /** @var bool $data */
-                $variable->setValueAt("data", new BooleanVariable($data));
-                $variable->setValueAt("button1", new MapVariable([
-                    "selected" => new BooleanVariable($data),
-                    "text" => new StringVariable($form->getButton1Text()),
-                ],  $form->getButton1Text()));
-                $variable->setValueAt("button2", new MapVariable([
-                    "selected" => new BooleanVariable(!$data),
-                    "text" => new StringVariable($form->getButton2Text()),
-                ], $form->getButton2Text()));
-                break;
-            case $form instanceof ListForm:
-                /** @var int $data */
-                $variable->setValueAt("data", new NumberVariable($data));
-                $variable->setValueAt("button", new StringVariable($form->getButton($data)?->getText() ?? ""));
-                break;
-            case $form instanceof CustomForm:
-                /** @var array $data */
-                $dataVariables = [];
-                $dropdownVariables = [];
-                foreach ($form->getContents() as $i => $content) {
-                    $var = match ($content->getType()) {
-                        Element::ELEMENT_INPUT => new StringVariable($data[$i]),
-                        Element::ELEMENT_TOGGLE => new BooleanVariable($data[$i]),
-                        Element::ELEMENT_SLIDER, Element::ELEMENT_STEP_SLIDER, Element::ELEMENT_DROPDOWN => new NumberVariable($data[$i]),
-                        default => new StringVariable(""),
-                    };
-                    $dataVariables[$i] = $var;
-                    if ($content instanceof Dropdown) {
-                        $selected = $content->getOptions()[$data[$i]];
-                        $dropdownVariables[] = new StringVariable($selected);
-                    }
-                }
-                $variable->setValueAt("data", new ListVariable($dataVariables));
-                $variable->setValueAt("selected", new ListVariable($dropdownVariables));
-                break;
-            default:
-                return [];
-        }
+        if (!($form instanceof Form)) return [];
+
+        $variable = FormUtils::createFormResponseVariable($form, $data);
         $variable->setValueAt("from", $from === null ? new NullVariable() : new RecipeVariable($from));
         return ["form" => $variable];
     }

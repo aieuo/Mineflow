@@ -192,6 +192,9 @@ interface FlowItemIds {
     public const SEND_DROPDOWN = "dropdown";
     public const SEND_STEP_SLIDER = "stepSlider";
     public const SEND_CONFIRM_FORM = "sendConfirmForm";
+    public const CREATE_LIST_FORM = "createListForm";
+    public const ADD_BUTTON = "addButton";
+    public const SHOW_FORM_VARIABLE = "showFormVariable";
 
     public const SET_SCOREBOARD_SCORE = "setScore";
     public const SET_SCOREBOARD_SCORE_NAME = "setScoreName";

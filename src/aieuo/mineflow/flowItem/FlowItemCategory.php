@@ -14,7 +14,11 @@ class FlowItemCategory {
     public const COMMAND = "command";
     public const ENTITY = "entity";
     public const EVENT = "event";
+
     public const FORM = "form";
+    public const FORM_BUTTON = "button";
+    public const FORM_ELEMENT = "element";
+
     public const INVENTORY = "inventory";
     public const ITEM = "item";
     public const WORLD = "world";
@@ -73,6 +77,8 @@ class FlowItemCategory {
         self::add(self::CONFIG);
         self::add(self::STRING);
         self::add(self::FORM);
+        self::add(self::FORM_BUTTON, self::FORM);
+        self::add(self::FORM_ELEMENT, self::FORM);
         self::add(self::SCOREBOARD);
         self::add(self::INTERNAL);
         self::add(self::PLUGIN);

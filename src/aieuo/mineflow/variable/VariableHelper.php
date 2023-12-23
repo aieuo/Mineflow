@@ -9,11 +9,13 @@ use aieuo\mineflow\variable\global\DefaultGlobalMethodVariable;
 use aieuo\mineflow\variable\object\AxisAlignedBBVariable;
 use aieuo\mineflow\variable\object\BlockVariable;
 use aieuo\mineflow\variable\object\ConfigVariable;
+use aieuo\mineflow\variable\object\CustomFormVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\EventVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
 use aieuo\mineflow\variable\object\InventoryVariable;
 use aieuo\mineflow\variable\object\ItemVariable;
+use aieuo\mineflow\variable\object\ListFormVariable;
 use aieuo\mineflow\variable\object\LivingVariable;
 use aieuo\mineflow\variable\object\LocationVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
@@ -243,6 +245,7 @@ class VariableHelper {
                 is_numeric($value) => new NumberVariable((float)$value),
                 is_bool($value) => new BooleanVariable($value),
                 is_null($value) => new NullVariable(),
+                $value instanceof \JsonSerializable => new MapVariable(self::toVariableArray($value->jsonSerialize())),
                 default => new StringVariable($value),
             };
         }
@@ -329,6 +332,8 @@ class VariableHelper {
         UnknownVariable::registerProperties();
         Vector3Variable::registerProperties();
         WorldVariable::registerProperties();
+        ListFormVariable::registerProperties();
+        CustomFormVariable::registerProperties();
         DefaultGlobalMethodVariable::registerProperties();
     }
 }
