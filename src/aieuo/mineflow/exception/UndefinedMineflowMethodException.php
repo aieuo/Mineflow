@@ -12,7 +12,7 @@ class UndefinedMineflowMethodException extends MineflowException {
     public function __construct(string $variableName, string $methodName, string $message = null, int $code = 0, Throwable $previous = null) {
         $this->variableName = $variableName;
         $this->methodName = $methodName;
-        parent::__construct($message ?? "§cUndefined method: ".$variableName.".§l".$methodName."()§r", $code, $previous);
+        parent::__construct($message ?? "§cUndefined method: ".($variableName === "" ? "" : $variableName.".")."§l".$methodName."()§r", $code, $previous);
     }
 
     public function getVariableName(): string {

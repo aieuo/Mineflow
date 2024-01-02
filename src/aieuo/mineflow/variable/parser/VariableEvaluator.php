@@ -7,11 +7,13 @@ namespace aieuo\mineflow\variable\parser;
 use aieuo\mineflow\exception\UndefinedMineflowMethodException;
 use aieuo\mineflow\exception\UndefinedMineflowPropertyException;
 use aieuo\mineflow\exception\UnsupportedCalculationException;
+use aieuo\mineflow\variable\global\DefaultGlobalMethodVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\parser\node\BinaryExpressionNode;
 use aieuo\mineflow\variable\parser\node\ConcatenateNode;
 use aieuo\mineflow\variable\parser\node\EvaluableIdentifierNode;
 use aieuo\mineflow\variable\parser\node\EvaluableNameNode;
+use aieuo\mineflow\variable\parser\node\GlobalMethodNode;
 use aieuo\mineflow\variable\parser\node\IdentifierNode;
 use aieuo\mineflow\variable\parser\node\MethodNode;
 use aieuo\mineflow\variable\parser\node\NameNode;
@@ -115,6 +117,16 @@ class VariableEvaluator {
                 $arguments[] = $this->eval($argument);
             }
             return $left->callMethod($identifier->getValue(), $arguments) ?? throw new UndefinedMineflowMethodException((string)$node->getLeft(), (string)$identifier->getValue());
+        }
+
+        if ($node instanceof GlobalMethodNode) {
+            $left = new DefaultGlobalMethodVariable();
+            $identifier = $this->eval($node->getIdentifier());
+            $arguments = [];
+            foreach ($node->getArguments() as $argument) {
+                $arguments[] = $this->eval($argument);
+            }
+            return $left->callMethod($identifier->getValue(), $arguments) ?? throw new UndefinedMineflowMethodException("", (string)$identifier->getValue());
         }
 
         if ($node instanceof ToStringNode) {
