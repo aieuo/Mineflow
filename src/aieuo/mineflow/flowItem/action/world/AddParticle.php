@@ -13,6 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket;
+use pocketmine\network\mcpe\protocol\types\DimensionIds;
 use SOFe\AwaitGenerator\Await;
 
 class AddParticle extends SimpleAction {
@@ -58,10 +59,7 @@ class AddParticle extends SimpleAction {
         $position = $this->getPosition()->getPosition($source);
 
         for ($i = 0; $i < $amount; $i++) {
-            $pk = new SpawnParticleEffectPacket();
-            $pk->position = $position;
-            $pk->particleName = $particleName;
-            $pk->molangVariablesJson = "";
+            $pk = SpawnParticleEffectPacket::create(DimensionIds::OVERWORLD, -1, $position, $particleName, null);
             NetworkBroadcastUtils::broadcastPackets($position->world->getPlayers(), [$pk]);
         }
 
