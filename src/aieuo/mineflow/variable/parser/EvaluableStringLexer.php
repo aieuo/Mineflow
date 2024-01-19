@@ -6,6 +6,7 @@ namespace aieuo\mineflow\variable\parser;
 
 use aieuo\mineflow\variable\parser\token\VariableToken;
 use function mb_str_split;
+use function preg_replace;
 
 class EvaluableStringLexer extends VariableLexer {
 
@@ -16,6 +17,7 @@ class EvaluableStringLexer extends VariableLexer {
         $braces = 0;
         $escape = false;
 
+        $source = preg_replace("/({.*)\[(\d+)](.*})/u", "$1.$2$3", $source);
         foreach (mb_str_split($source) as $char) {
             if ($escape) {
                 $this->token .= $char;
