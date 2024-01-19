@@ -3,29 +3,18 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\utils;
 
+use pocketmine\command\utils\CommandStringHelper;
 use function count;
 use function implode;
 use function in_array;
 use function is_numeric;
 use function preg_match;
-use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
-use function stripslashes;
 
 class Utils {
     public static function parseCommandString(string $command): array {
-        // https://github.com/pmmp/PocketMine-MP/blob/stable/src/command/SimpleCommandMap.php#L203
-        $commands = [];
-        preg_match_all('/"((?:\\\\.|[^\\\\"])*)"|(\S+)/u', $command, $matches);
-        foreach($matches[0] as $k => $_){
-            for($i = 1; $i <= 2; ++$i){
-                if($matches[$i][$k] !== ""){
-                    $commands[$k] = $i === 1 ? stripslashes($matches[$i][$k]) : $matches[$i][$k];
-                    break;
-                }
-            }
-        }
+        $commands = CommandStringHelper::parseQuoteAware($command);
         if (count($commands) === 0) {
             $commands[] = "";
         }
@@ -76,8 +65,7 @@ class Utils {
         if ($max !== null and $number > $max) {
             throw new \InvalidArgumentException(Language::get("action.error.overValue", [$max, $number]));
         }
-        /** @noinspection TypeUnsafeArraySearchInspection */
-        if (!empty($exclude) and in_array($number, $exclude)) {
+        if (!empty($exclude) and in_array($number, $exclude, false)) {
             throw new \InvalidArgumentException(Language::get("action.error.excludedNumber", [implode(",", $exclude), $number]));
         }
     }
