@@ -76,6 +76,10 @@ class EntityVariable extends ObjectVariable {
             new DummyVariable(NumberVariable::class),
             fn(Entity $entity) => new NumberVariable($entity->getHorizontalFacing()),
         ));
+        self::registerProperty($class, "directionVector", new VariableProperty(
+            new DummyVariable(NumberVariable::class),
+            fn(Entity $entity) => new Vector3Variable($entity->getDirectionVector()),
+        ), aliases: ["direction_vector"]);
         self::registerProperty($class, "onGround", new VariableProperty(
             new DummyVariable(BooleanVariable::class),
             fn(Entity $entity) => new BooleanVariable($entity->isOnGround()),
