@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger\event;
 
@@ -70,16 +71,6 @@ class EventTrigger extends Trigger {
 
     public function hash(): string|int {
         return $this->eventName;
-    }
-
-    public function serialize(): array {
-        return [
-            "event" => $this->eventName,
-        ];
-    }
-
-    public static function deserialize(array $data): ?EventTrigger {
-        return self::get($data["event"] ?? $data["key"]);
     }
 
     public function __toString(): string {

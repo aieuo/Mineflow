@@ -13,7 +13,7 @@ use pocketmine\block\Block;
 
 class BlockTrigger extends Trigger {
 
-    public function __construct(private string $position) {
+    public function __construct(private readonly string $position) {
         parent::__construct(Triggers::BLOCK);
     }
 
@@ -37,16 +37,6 @@ class BlockTrigger extends Trigger {
 
     public function hash(): string|int {
         return $this->position;
-    }
-
-    public function serialize(): array {
-        return [
-            "position" => $this->position,
-        ];
-    }
-
-    public static function deserialize(array $data): BlockTrigger {
-        return new BlockTrigger($data["position"] ?? $data["key"]);
     }
 
     public function __toString(): string {

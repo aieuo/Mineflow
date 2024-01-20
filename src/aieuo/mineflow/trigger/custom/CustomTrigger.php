@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger\custom;
 
@@ -8,7 +9,7 @@ use aieuo\mineflow\utils\Language;
 
 class CustomTrigger extends Trigger {
 
-    public function __construct(private string $identifier) {
+    public function __construct(private readonly string $identifier) {
         parent::__construct(Triggers::CUSTOM);
     }
 
@@ -18,16 +19,6 @@ class CustomTrigger extends Trigger {
 
     public function hash(): string|int {
         return $this->identifier;
-    }
-
-    public function serialize(): array {
-        return [
-            "identifier" => $this->identifier,
-        ];
-    }
-
-    public static function deserialize(array $data): CustomTrigger {
-        return new CustomTrigger($data["identifier"] ?? $data["key"]);
     }
 
     public function __toString(): string {

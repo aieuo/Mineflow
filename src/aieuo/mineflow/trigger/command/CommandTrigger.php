@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger\command;
 
@@ -15,7 +16,7 @@ class CommandTrigger extends Trigger {
 
     private string $command;
 
-    public function __construct(private string $fullCommand = "") {
+    public function __construct(private readonly string $fullCommand = "") {
         $this->command = explode(" ", $this->fullCommand)[0];
         parent::__construct(Triggers::COMMAND);
     }
@@ -45,17 +46,6 @@ class CommandTrigger extends Trigger {
 
     public function hash(): string|int {
         return $this->fullCommand;
-    }
-
-    public function serialize(): array {
-        return [
-            "command" => $this->command,
-            "full" => $this->fullCommand,
-        ];
-    }
-
-    public static function deserialize(array $data): CommandTrigger {
-        return new CommandTrigger($data["full"] ?? $data["subKey"]);
     }
 
     public function __toString(): string {

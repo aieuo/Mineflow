@@ -12,7 +12,7 @@ use aieuo\mineflow\variable\Variable;
 
 class TimeTrigger extends Trigger {
 
-    public function __construct(private int $hours, private int $minutes) {
+    public function __construct(private readonly int $hours, private readonly int $minutes) {
         parent::__construct(Triggers::TIME);
     }
 
@@ -46,17 +46,6 @@ class TimeTrigger extends Trigger {
 
     public function hash(): string|int {
         return ($this->hours * 60) + $this->minutes;
-    }
-
-    public function serialize(): array {
-        return [
-            "hours" => $this->hours,
-            "minutes" => $this->minutes,
-        ];
-    }
-
-    public static function deserialize(array $data): TimeTrigger {
-        return new TimeTrigger((int)($data["hours"] ?? $data["key"]), (int)($data["minutes"] ?? $data["subKey"]));
     }
 
     public function __toString(): string {

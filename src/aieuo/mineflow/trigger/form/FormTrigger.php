@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace aieuo\mineflow\trigger\form;
 
@@ -17,7 +18,7 @@ use aieuo\mineflow\variable\object\RecipeVariable;
 
 class FormTrigger extends Trigger {
 
-    public function __construct(private string $formName, private string $extraData = "") {
+    public function __construct(private readonly string $formName, private string $extraData = "") {
         parent::__construct(Triggers::FORM);
     }
 
@@ -49,17 +50,6 @@ class FormTrigger extends Trigger {
 
     public function hash(): string|int {
         return $this->getFormName().";".$this->getExtraData();
-    }
-
-    public function serialize(): array {
-        return [
-            "formName" => $this->formName,
-            "extraData" => $this->extraData,
-        ];
-    }
-
-    public static function deserialize(array $data): FormTrigger {
-        return new FormTrigger($data["formName"] ?? $data["key"], $data["extraData"] ?? $data["subKey"]);
     }
 
     public function __toString(): string {

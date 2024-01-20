@@ -328,8 +328,12 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
     public function setTriggersFromArray(array $triggers, bool $updateTriggerHolder = true): void {
         $this->removeTriggerAll();
         foreach ($triggers as $triggerData) {
-            $trigger = Triggers::deserialize($triggerData);
-            if ($trigger === null) throw new \UnexpectedValueException(Language::get("trigger.notFound", [$triggerData["type"]]));
+            try {
+                $trigger = Triggers::deserialize($triggerData);
+                if ($trigger === null) throw new \UnexpectedValueException(Language::get("trigger.notFound", [$triggerData["type"]]));
+            } catch (\InvalidArgumentException $e) {
+                throw new \UnexpectedValueException(Language::get("trigger.notFound", [$triggerData["type"]]), previous: $e);
+            }
             $this->addTrigger($trigger, $updateTriggerHolder);
         }
     }
@@ -602,7 +606,7 @@ class Recipe implements \JsonSerializable, FlowItemContainer {
             "author" => $this->author,
             "enabled" => $this->enabled,
             "actions" => $this->getActions(),
-            "triggers" => $this->triggers,
+            "triggers" => array_map(fn(Trigger $trigger) => Triggers::serialize($trigger), $this->triggers),
             "target" => [
                 "type" => $this->targetType,
                 "options" => $this->targetOptions,

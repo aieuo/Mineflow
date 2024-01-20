@@ -7,9 +7,9 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
 
-abstract class Trigger implements \JsonSerializable {
+abstract class Trigger {
 
-    public function __construct(private string $type) {
+    public function __construct(private readonly string $type) {
     }
 
     public function getType(): string {
@@ -35,17 +35,6 @@ abstract class Trigger implements \JsonSerializable {
 
     public function equals(Trigger $trigger): bool {
         return $trigger->getType() === $this->getType() and $trigger->hash() === $this->hash();
-    }
-
-    abstract public function serialize(): array;
-
-    abstract public static function deserialize(array $data): ?self;
-
-    public function jsonSerialize(): array {
-        return [
-            "type" => $this->getType(),
-            "values" => $this->serialize(),
-        ];
     }
 
     public function __toString(): string {
