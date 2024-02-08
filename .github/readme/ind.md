@@ -57,8 +57,8 @@ Tambahkan pemicu dari "Edit pemicu" dari bentuk. Kemudian, ketika pemicu terjadi
 
 ### Ubah pelaksananya
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.  
-It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
+Secara default, pemain yang memicu pemicu masuk ke variabel {target} resep.  
+Itu dapat diubah dari "Ubah target" pada formulir ke salah satu pemain yang ditentukan, semua pemain, pemain acak, atau tidak sama sekali.
 
 ### Argumen dan mengembalikan nilai
 
