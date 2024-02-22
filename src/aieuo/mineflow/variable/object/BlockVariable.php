@@ -81,7 +81,7 @@ class BlockVariable extends ObjectVariable {
             fn(Block $block) => new ItemVariable($block->getPickedItem()),
         ));
         self::registerProperty($class, "position", new VariableProperty(
-            new DummyVariable(LocationVariable::class),
+            new DummyVariable(PositionVariable::class),
             fn(Block $block) => new PositionVariable($block->getPosition()->asPosition()),
         ));
         self::registerProperty($class, "world", new VariableProperty(
