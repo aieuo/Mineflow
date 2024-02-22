@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace aieuo\mineflow\variable\global;
 
-use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\ObjectVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
-use aieuo\mineflow\variable\StringVariable;
 use aieuo\mineflow\variable\VariableMethod;
-use function in_array;
 use function mt_getrandmax;
 use function mt_rand;
-use function strtolower;
 use const M_PI;
 
 class DefaultGlobalMethodVariable extends ObjectVariable {
@@ -44,14 +40,6 @@ class DefaultGlobalMethodVariable extends ObjectVariable {
         self::registerMethod($class, "pi", new VariableMethod(
             new DummyVariable(NumberVariable::class),
             fn($_ = null) => M_PI,
-        ));
-        self::registerMethod($class, "str", new VariableMethod(
-            new DummyVariable(StringVariable::class),
-            fn($_ = null, $str = "") => new StringVariable((string)$str),
-        ));
-        self::registerMethod($class, "bool", new VariableMethod(
-            new DummyVariable(BooleanVariable::class),
-            fn($_ = null, $str = "") => new BooleanVariable(in_array(strtolower((string)$str), ["1", "true", "yes"], true)),
         ));
         self::registerMethod($class, "vars", new VariableMethod(
             new DummyVariable(MapVariable::class),
