@@ -23,6 +23,7 @@ use aieuo\mineflow\variable\VariableHelper;
 use JetBrains\PhpStorm\Deprecated;
 use pocketmine\Server;
 use pocketmine\utils\Config;
+use Symfony\Component\Filesystem\Path;
 use function in_array;
 
 class Mineflow {
@@ -60,16 +61,19 @@ class Mineflow {
         FlowItemFactory::init();
         RecipeArgument::init();
 
-        self::$config = new Config($main->getDataFolder()."config.yml");
-        self::$playerSettings = new PlayerConfig($main->getDataFolder()."player.yml");
+        self::$config = new Config(Path::join($main->getDataFolder(), "config.yml"));
+        self::$playerSettings = new PlayerConfig(Path::join($main->getDataFolder(), "player.yml"));
 
-        self::$commandManager = new CommandManager($main, new Config($main->getDataFolder()."commands.yml"));
+        self::$commandManager = new CommandManager($main, new Config(Path::join($main->getDataFolder(), "commands.yml")));
         self::$formManager = new FormManager(new Config($main->getDataFolder()."forms.json"));
         self::$eventManager = new EventManager(new Config($main->getDataFolder()."events.yml"));
         self::$recipeManager = new RecipeManager($main->getDataFolder()."recipes/");
         self::$addonManager = new AddonManager($main->getDataFolder()."addons/");
 
-        self::$variableHelper = new VariableHelper(new Config($main->getDataFolder()."variables.json"), new Config($main->getDataFolder()."variable_custom_data.json"));
+        self::$variableHelper = new VariableHelper(
+            new Config(Path::join($main->getDataFolder(), "variables.json")),
+            new Config(Path::join($main->getDataFolder(), "variable_custom_data.json")),
+        );
         self::$variableHelper->initVariableProperties();
     }
 

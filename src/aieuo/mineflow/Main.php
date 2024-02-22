@@ -8,6 +8,7 @@ use aieuo\mineflow\entity\EntityManager;
 use aieuo\mineflow\event\ServerStartEvent;
 use aieuo\mineflow\trigger\time\CheckTimeTriggerTask;
 use pocketmine\plugin\PluginBase;
+use Symfony\Component\Filesystem\Path;
 
 class Main extends PluginBase {
 
@@ -43,7 +44,7 @@ class Main extends PluginBase {
         (new EventListener())->registerEvents();
         $this->getServer()->getCommandMap()->register($this->getName(), new MineflowCommand);
 
-        if (!file_exists($this->getDataFolder()."imports/")) @mkdir($this->getDataFolder()."imports/", 0777, true);
+        if (!file_exists(Path::join($this->getDataFolder(), "imports"))) @mkdir(Path::join($this->getDataFolder(), "imports"), 0777, true);
 
         CheckTimeTriggerTask::start($this);
 
