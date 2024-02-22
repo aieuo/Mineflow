@@ -116,7 +116,7 @@ class VariableEvaluator {
             foreach ($node->getArguments() as $argument) {
                 $arguments[] = $this->eval($argument);
             }
-            return $left->callMethod($identifier->getValue(), $arguments) ?? throw new UndefinedMineflowMethodException((string)$node->getLeft(), (string)$identifier->getValue());
+            return $left->callMethod((string)$identifier, $arguments) ?? throw new UndefinedMineflowMethodException((string)$node->getLeft(), (string)$identifier);
         }
 
         if ($node instanceof GlobalMethodNode) {
@@ -126,7 +126,7 @@ class VariableEvaluator {
             foreach ($node->getArguments() as $argument) {
                 $arguments[] = $this->eval($argument);
             }
-            return $left->callMethod($identifier->getValue(), $arguments) ?? throw new UndefinedMineflowMethodException("", (string)$identifier->getValue());
+            return $left->callMethod((string)$identifier, $arguments) ?? throw new UndefinedMineflowMethodException("", (string)$identifier);
         }
 
         if ($node instanceof ToStringNode) {
