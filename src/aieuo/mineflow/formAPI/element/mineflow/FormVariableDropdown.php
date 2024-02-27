@@ -12,7 +12,6 @@ class FormVariableDropdown extends VariableDropdown {
 
     protected array $actions = [
         FlowItemIds::CREATE_LIST_FORM,
-        FlowItemIds::CREATE_CUSTOM_FORM,
     ];
 
     /**
