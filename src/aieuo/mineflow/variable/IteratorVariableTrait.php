@@ -97,13 +97,14 @@ trait IteratorVariableTrait {
     }
 
     public function indexOf(Variable $value, bool $strict = true): int|string|null {
+        $values = iterator_to_array($this->getIterator());
         if ($strict) {
-            $index = array_search($value, $this->values, true);
+            $index = array_search($value, $values, true);
             return $index === false ? null : $index;
         }
 
         $str = (string)$value;
-        foreach ($this->values as $index => $v) {
+        foreach ($values as $index => $v) {
             if ((string)$v === $str) return $index;
         }
         return null;
