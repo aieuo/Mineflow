@@ -27,21 +27,16 @@ use function is_numeric;
 
 class AddVariable extends SimpleAction {
 
-    private string $variableType;
-
-
     private array $variableTypes = [0 => "string", "string" => "string", 1 => "number", "number" => "number"];
     private array $variableClasses = ["string" => StringVariable::class, "number" => NumberVariable::class];
 
-    public function __construct(string $variableName = "", string $variableValue = "", string $type = "string", bool $isLocal = true) {
+    public function __construct(string $variableName = "", string $variableValue = "", string $variableType = "string", bool $isLocal = true) {
         parent::__construct(self::ADD_VARIABLE, FlowItemCategory::VARIABLE);
-
-        $this->variableType = $type ?? StringVariable::getTypeName();
 
         $this->setArguments([
             StringArgument::create("name", $variableName, "@action.variable.form.name")->example("aieuo"),
             StringArgument::create("value", $variableValue, "@action.variable.form.value")->example("aeiuo"),
-            StringEnumArgument::create("type", $type, "@action.variable.form.type")->options(array_values(array_unique($this->variableTypes))),
+            StringEnumArgument::create("type", $variableType, "@action.variable.form.type")->options(array_values(array_unique($this->variableTypes))),
             IsLocalVariableArgument::create("scope", $isLocal),
         ]);
     }
@@ -90,7 +85,7 @@ class AddVariable extends SimpleAction {
     }
 
     public function getAddingVariables(): array {
-        $class = $this->variableClasses[$this->variableType];
+        $class = $this->variableClasses[$this->getVariableType()->getEnumValue()];
         return [
             (string)$this->getVariableName() => new DummyVariable($class, (string)$this->getVariableValue())
         ];
