@@ -50,6 +50,7 @@ class StringEnumArgument extends FlowItemArgument implements CustomFormEditorArg
      */
     public function options(array $options): self {
         $this->options = $options;
+        $this->keys = ($this->keyFormatter === null ? $options : array_map(fn(string $v) => ($this->keyFormatter)($v), $options));
         return $this;
     }
 
