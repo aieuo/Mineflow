@@ -76,19 +76,19 @@ class GetEntitySidePosition extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getDirection(): StringEnumArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("direction");
     }
 
     public function getSteps(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("steps");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("result");
     }
 
     public function isDataValid(): bool {

@@ -31,11 +31,11 @@ class SetGamemode extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getGamemode(): IntEnumArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("gamemode");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

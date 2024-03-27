@@ -24,16 +24,16 @@ abstract class GetInventoryContentsBase extends SimpleAction {
 
         $this->setArguments([
             PlayerArgument::create("player", $player),
-            StringArgument::create("inventory", $resultName, "@action.form.resultVariableName")->example("inventory"),
+            StringArgument::create("result", $resultName, "@action.form.resultVariableName")->example("inventory"),
         ]);
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("result");
     }
 
     public function getAddingVariables(): array {

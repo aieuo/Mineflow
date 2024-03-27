@@ -25,11 +25,11 @@ class SetYaw extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getYaw(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("yaw");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

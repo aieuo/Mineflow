@@ -27,15 +27,15 @@ class AddSpecificLanguageMapping extends SimpleAction {
     }
 
     public function getLanguage(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("language");
     }
 
     public function getKey(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("key");
     }
 
     public function getMessage(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("message");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

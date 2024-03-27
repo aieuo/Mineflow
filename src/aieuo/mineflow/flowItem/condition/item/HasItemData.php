@@ -25,11 +25,11 @@ class HasItemData extends SimpleCondition {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getKey(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("key");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

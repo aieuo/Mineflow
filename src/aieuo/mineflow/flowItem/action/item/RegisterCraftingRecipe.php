@@ -76,11 +76,11 @@ class RegisterCraftingRecipe extends SimpleAction {
     }
 
     public function getIngredients(): ItemFixedArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("ingredients");
     }
 
     public function getOutput(): ItemArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("output");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

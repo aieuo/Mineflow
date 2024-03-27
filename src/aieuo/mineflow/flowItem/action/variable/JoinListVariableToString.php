@@ -30,15 +30,15 @@ class JoinListVariableToString extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getSeparator(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("separator");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

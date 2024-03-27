@@ -23,6 +23,6 @@ abstract class CheckEntityStateById extends SimpleCondition {
     }
 
     public function getEntityId(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("id");
     }
 }

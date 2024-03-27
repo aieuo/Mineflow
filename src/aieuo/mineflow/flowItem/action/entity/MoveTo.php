@@ -29,23 +29,23 @@ class MoveTo extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("position");
     }
 
     public function getSpeedX(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("speedX");
     }
 
     public function getSpeedY(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("speedY");
     }
 
     public function getSpeedZ(): NumberArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("speedZ");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

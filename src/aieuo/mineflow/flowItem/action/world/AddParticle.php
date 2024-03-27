@@ -41,15 +41,15 @@ class AddParticle extends SimpleAction {
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("position");
     }
 
     public function getParticle(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("particle");
     }
 
     public function getAmount(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("amount");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

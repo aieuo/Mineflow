@@ -23,11 +23,11 @@ class SetBlock extends SimpleAction {
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("position");
     }
 
     public function getBlock(): BlockArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("block");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

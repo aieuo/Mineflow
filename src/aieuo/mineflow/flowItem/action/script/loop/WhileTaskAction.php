@@ -42,19 +42,19 @@ class WhileTaskAction extends SimpleAction {
     }
 
     public function getConditions(): ConditionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("conditions");
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("actions");
     }
 
     public function getInterval(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("interval");
     }
 
     public function getLimit(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("limit");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

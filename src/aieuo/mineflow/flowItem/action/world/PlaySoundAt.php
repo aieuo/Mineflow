@@ -28,19 +28,19 @@ class PlaySoundAt extends SimpleAction {
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("position");
     }
 
     public function getSound(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("sound");
     }
 
     public function getVolume(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("volume");
     }
 
     public function getPitch(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("pitch");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

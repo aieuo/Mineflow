@@ -25,11 +25,11 @@ class SetItemCount extends SimpleAction {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getCount(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("count");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

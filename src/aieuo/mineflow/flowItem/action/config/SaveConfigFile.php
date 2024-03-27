@@ -22,7 +22,7 @@ class SaveConfigFile extends SimpleAction {
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("config");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -35,15 +35,15 @@ abstract class GetNearestEntityBase extends SimpleAction {
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("position");
     }
 
     public function getMaxDistance(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("distance");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("entity");
     }
 
     /**

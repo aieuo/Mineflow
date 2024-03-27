@@ -27,15 +27,15 @@ class SendGameRule extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getGamerule(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("gamerule");
     }
 
     public function getValue(): BooleanArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("value");
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {

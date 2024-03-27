@@ -23,7 +23,7 @@ class Wait extends SimpleAction {
     }
 
     public function getTime(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("time");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

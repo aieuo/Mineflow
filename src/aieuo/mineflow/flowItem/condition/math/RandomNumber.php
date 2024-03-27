@@ -23,15 +23,15 @@ class RandomNumber extends SimpleCondition {
     }
 
     public function getMin(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("min");
     }
 
     public function getMax(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("max");
     }
 
     public function getValue(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("value");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

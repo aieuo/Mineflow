@@ -28,15 +28,15 @@ class GetDistance extends SimpleAction {
     }
 
     public function getPosition1(): PositionArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("pos1");
     }
 
     public function getPosition2(): PositionArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("pos2");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

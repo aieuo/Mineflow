@@ -35,15 +35,15 @@ abstract class GetEntitiesInAreaBase extends SimpleAction {
     }
 
     public function getAxisAlignedBB(): AxisAlignedBBArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("aabb");
     }
 
     public function getWorld(): WorldArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("world");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

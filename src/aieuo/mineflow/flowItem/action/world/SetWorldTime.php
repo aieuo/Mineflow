@@ -27,11 +27,11 @@ class SetWorldTime extends SimpleAction {
     }
 
     public function getWorld(): WorldArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("world");
     }
 
     public function getTime(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("time");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

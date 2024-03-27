@@ -38,19 +38,19 @@ class CreateScoreboardVariable extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("result");
     }
 
     public function getBoardId(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("id");
     }
 
     public function getDisplayName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("displayName");
     }
 
     public function getDisplayType(): StringEnumArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("type");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

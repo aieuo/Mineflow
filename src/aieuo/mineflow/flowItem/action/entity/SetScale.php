@@ -23,11 +23,11 @@ class SetScale extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getScale(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("scale");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

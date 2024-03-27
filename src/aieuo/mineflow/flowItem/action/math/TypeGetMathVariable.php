@@ -27,7 +27,7 @@ abstract class TypeGetMathVariable extends SimpleAction {
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("result");
     }
 
     public function getAddingVariables(): array {

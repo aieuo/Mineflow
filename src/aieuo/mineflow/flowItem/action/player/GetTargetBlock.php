@@ -27,15 +27,15 @@ class GetTargetBlock extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getMax(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("maxDistance");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

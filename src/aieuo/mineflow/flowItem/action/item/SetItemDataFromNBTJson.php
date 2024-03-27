@@ -31,11 +31,11 @@ class SetItemDataFromNBTJson extends SimpleAction {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getJson(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("json");
     }
 
     public function isDataValid(): bool {

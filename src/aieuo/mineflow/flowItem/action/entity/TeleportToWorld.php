@@ -28,15 +28,15 @@ class TeleportToWorld extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getWorldName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("world");
     }
 
     public function getSafeSpawn(): BooleanArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("safespawn");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

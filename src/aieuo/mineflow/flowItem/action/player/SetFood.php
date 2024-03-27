@@ -23,11 +23,11 @@ class SetFood extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getFood(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("food");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

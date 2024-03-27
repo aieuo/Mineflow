@@ -42,19 +42,19 @@ class ShowFormVariable extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getForm(): FormArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("form");
     }
 
     public function getOnCloseBehavior(): IntEnumArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("close");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

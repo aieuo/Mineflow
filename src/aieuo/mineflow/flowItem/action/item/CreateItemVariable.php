@@ -36,19 +36,19 @@ class CreateItemVariable extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getItemId(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("id");
     }
 
     public function getItemCount(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("count");
     }
 
     public function getItemName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("name");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -35,11 +35,11 @@ abstract class ExecuteRecipeBase extends SimpleAction {
     }
 
     public function getRecipeName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getArgs(): RecipeArgumentArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("args");
     }
 
     public function getRecipe(FlowItemExecutor $source): Recipe {

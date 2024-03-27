@@ -35,27 +35,27 @@ class SendTitle extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getTitle(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("title");
     }
 
     public function getSubTitle(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("subtitle");
     }
 
     public function getFadein(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("fadein");
     }
 
     public function getStay(): NumberArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("stay");
     }
 
     public function getFadeout(): NumberArgument {
-        return $this->getArguments()[5];
+        return $this->getArgument("fadeout");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

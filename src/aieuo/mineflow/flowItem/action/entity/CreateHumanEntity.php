@@ -32,15 +32,15 @@ class CreateHumanEntity extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("skin");
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("pos");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

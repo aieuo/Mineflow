@@ -24,15 +24,15 @@ class TransferServer extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getIp(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("ip");
     }
 
     public function getPort(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("port");
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {

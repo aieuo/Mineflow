@@ -23,11 +23,11 @@ class Emote extends SimpleAction {
     }
 
     public function getHuman(): HumanArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getEmote(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("id");
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {

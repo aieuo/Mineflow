@@ -26,15 +26,15 @@ class IncrementScoreboardScore extends SimpleAction {
     }
 
     public function getScoreboard(): ScoreboardArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("scoreboard");
     }
 
     public function getScoreName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("name");
     }
 
     public function getScore(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("score");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

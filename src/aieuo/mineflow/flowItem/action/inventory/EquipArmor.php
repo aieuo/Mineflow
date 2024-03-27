@@ -33,15 +33,15 @@ class EquipArmor extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("item");
     }
 
     public function getIndex(): IntEnumArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("index");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

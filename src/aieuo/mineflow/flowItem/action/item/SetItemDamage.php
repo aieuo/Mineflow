@@ -26,11 +26,11 @@ class SetItemDamage extends SimpleAction {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getDamage(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("damage");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

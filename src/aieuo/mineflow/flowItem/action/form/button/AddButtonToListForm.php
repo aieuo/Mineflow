@@ -24,11 +24,11 @@ class AddButtonToListForm extends SimpleAction {
     }
 
     public function getForm(): ListFormArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("form");
     }
 
     public function getText(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("text");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

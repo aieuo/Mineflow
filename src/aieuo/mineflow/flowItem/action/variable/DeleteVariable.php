@@ -25,11 +25,11 @@ class DeleteVariable extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getIsLocal(): BooleanArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("scope");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

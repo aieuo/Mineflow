@@ -23,7 +23,7 @@ class IsPlayerOnlineByName extends SimpleCondition {
     }
 
     public function getPlayerName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

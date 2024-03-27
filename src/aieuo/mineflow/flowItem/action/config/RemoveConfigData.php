@@ -24,11 +24,11 @@ class RemoveConfigData extends SimpleAction {
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("config");
     }
 
     public function getKey(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("key");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

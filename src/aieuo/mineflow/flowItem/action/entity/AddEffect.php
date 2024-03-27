@@ -35,23 +35,23 @@ class AddEffect extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getEffectId(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("effect");
     }
 
     public function getPower(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("power");
     }
 
     public function getTime(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("time");
     }
 
     public function getVisible(): BooleanArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("visible");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

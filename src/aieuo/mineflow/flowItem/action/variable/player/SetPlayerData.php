@@ -27,15 +27,15 @@ class SetPlayerData extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getDataName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("name");
     }
 
     public function getData(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("data");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

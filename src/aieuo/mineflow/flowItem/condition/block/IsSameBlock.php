@@ -23,11 +23,11 @@ class IsSameBlock extends SimpleCondition {
     }
 
     public function getBlock1(): BlockArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("block1");
     }
 
     public function getBlock2(): BlockArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("block2");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

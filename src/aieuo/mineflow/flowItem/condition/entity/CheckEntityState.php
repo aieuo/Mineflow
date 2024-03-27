@@ -23,6 +23,6 @@ abstract class CheckEntityState extends SimpleCondition {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 }

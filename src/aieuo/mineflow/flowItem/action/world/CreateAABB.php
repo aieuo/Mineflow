@@ -41,31 +41,31 @@ class CreateAABB extends SimpleAction {
     }
 
     public function getMinX(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("min x");
     }
 
     public function getMinY(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("min y");
     }
 
     public function getMinZ(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("min z");
     }
 
     public function getMaxX(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("max x");
     }
 
     public function getMaxY(): NumberArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("max y");
     }
 
     public function getMaxZ(): NumberArgument {
-        return $this->getArguments()[5];
+        return $this->getArgument("max z");
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[6];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

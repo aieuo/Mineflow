@@ -25,11 +25,11 @@ class SetItemName extends SimpleAction {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getItemName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("name");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

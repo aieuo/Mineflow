@@ -23,11 +23,11 @@ class DropItem extends SimpleAction {
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("position");
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("item");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

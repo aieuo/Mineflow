@@ -21,10 +21,10 @@ abstract class AddXpBase extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getXp(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("xp");
     }
 }

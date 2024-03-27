@@ -34,15 +34,15 @@ class AddEnchantment extends SimpleAction {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getEnchantId(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("id");
     }
 
     public function getEnchantLevel(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("level");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

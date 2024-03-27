@@ -24,11 +24,11 @@ class SetNameTag extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getNewName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("name");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

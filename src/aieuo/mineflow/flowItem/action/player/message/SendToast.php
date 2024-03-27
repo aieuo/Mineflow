@@ -25,15 +25,15 @@ class SendToast extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getTitle(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("title");
     }
 
     public function getBody(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("body");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

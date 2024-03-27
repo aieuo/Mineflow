@@ -23,6 +23,6 @@ abstract class OnlinePlayerCount extends SimpleCondition {
     }
 
     public function getValue(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("value");
     }
 }

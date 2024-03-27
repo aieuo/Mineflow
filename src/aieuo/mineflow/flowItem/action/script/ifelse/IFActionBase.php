@@ -36,11 +36,11 @@ abstract class IFActionBase extends SimpleAction {
     }
 
     public function getConditions(): ConditionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("conditions");
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("actions");
     }
 
     public function getEditors(): array {

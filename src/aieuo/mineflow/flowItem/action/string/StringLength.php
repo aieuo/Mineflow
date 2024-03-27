@@ -26,11 +26,11 @@ class StringLength extends SimpleAction {
     }
 
     public function getValue(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("string");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

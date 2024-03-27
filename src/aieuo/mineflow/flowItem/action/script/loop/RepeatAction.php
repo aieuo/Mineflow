@@ -32,19 +32,19 @@ class RepeatAction extends SimpleAction {
     }
 
     public function getRepeatCount(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("repeat");
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("actions");
     }
 
     public function getStartIndex(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("start");
     }
 
     public function getCounterName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("counter");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

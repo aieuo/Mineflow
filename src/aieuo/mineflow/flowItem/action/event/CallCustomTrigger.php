@@ -24,7 +24,7 @@ class CallCustomTrigger extends SimpleAction {
     }
 
     public function getTriggerName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("identifier");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

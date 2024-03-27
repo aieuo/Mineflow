@@ -25,11 +25,11 @@ class PlayerChatEventSetMessage extends SimpleAction {
     }
 
     public function getEvent(): EventArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("event");
     }
 
     public function getMessage(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("message");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

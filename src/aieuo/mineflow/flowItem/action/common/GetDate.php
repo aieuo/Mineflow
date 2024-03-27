@@ -24,11 +24,11 @@ class GetDate extends SimpleAction {
     }
 
     public function getFormat(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("format");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

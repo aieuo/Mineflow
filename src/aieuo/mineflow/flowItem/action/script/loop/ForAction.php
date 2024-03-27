@@ -10,14 +10,11 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
-use function str_replace;
 
 class ForAction extends SimpleAction {
 
@@ -35,23 +32,23 @@ class ForAction extends SimpleAction {
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("actions");
     }
 
     public function getCounterName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("counter");
     }
 
     public function getStartIndex(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("start");
     }
 
     public function getEndIndex(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("end");
     }
 
     public function getSteps(): NumberArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("steps");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

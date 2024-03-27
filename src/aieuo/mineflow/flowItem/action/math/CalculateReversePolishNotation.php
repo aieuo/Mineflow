@@ -28,11 +28,11 @@ class CalculateReversePolishNotation extends SimpleAction {
     }
 
     public function getFormula(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("formula");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

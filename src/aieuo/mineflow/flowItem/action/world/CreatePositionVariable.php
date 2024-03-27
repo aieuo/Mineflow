@@ -35,23 +35,23 @@ class CreatePositionVariable extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("position");
     }
 
     public function getX(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("x");
     }
 
     public function getY(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("y");
     }
 
     public function getZ(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("z");
     }
 
     public function getWorld(): StringArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("world");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

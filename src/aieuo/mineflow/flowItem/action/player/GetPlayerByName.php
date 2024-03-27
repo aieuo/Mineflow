@@ -30,11 +30,11 @@ class GetPlayerByName extends SimpleAction {
     }
 
     public function getPlayerName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

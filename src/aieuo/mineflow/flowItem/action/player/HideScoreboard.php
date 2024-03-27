@@ -23,11 +23,11 @@ class HideScoreboard extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getScoreboard(): ScoreboardArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("scoreboard");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

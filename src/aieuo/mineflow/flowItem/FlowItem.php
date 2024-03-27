@@ -19,6 +19,8 @@ use JsonSerializable;
 use pocketmine\plugin\Plugin;
 use function array_is_list;
 use function array_values;
+use function is_a;
+use function is_subclass_of;
 
 abstract class FlowItem implements JsonSerializable, FlowItemIds {
 
@@ -34,7 +36,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
      * @param string $id
      * @param string $category
      * @param string[] $permissions
-     * @param array<int, FlowItemArgument> $arguments
+     * @param array<string, FlowItemArgument> $arguments
      */
     public function __construct(
         private readonly string $id,
@@ -87,14 +89,38 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
         return $this->arguments;
     }
 
-    public function getArgument(string $name): ?FlowItemArgument {
-        foreach ($this->getArguments() as $argument) {
-            if ($argument->getName() === $name) {
-                return $argument;
-            }
+    public function existsArgument(string $name): bool {
+        return isset($this->arguments[$name]);
+    }
+
+    /**
+     * @template T of FlowItemArgument
+     * @param string $name
+     * @param class-string<T>|null $class
+     * @return FlowItemArgument
+     * @phpstan-return T
+     */
+    public function getArgument(string $name, string $class = null): FlowItemArgument {
+        assert($class === null or is_subclass_of($class, FlowItemArgument::class));
+
+        if (!isset($this->arguments[$name])) {
+            throw new \InvalidArgumentException("Argument {$name} is not added to ".self::class);
         }
 
-        return null;
+        $argument = $this->arguments[$name];
+        if ($class !== null and !is_a($argument, $class)) {
+            throw new \InvalidArgumentException("Type of argument {$name} is expected ".$class.", got ".self::class);
+        }
+
+        return $argument;
+    }
+
+    public function getArgumentOrNull(string $name): ?FlowItemArgument {
+        try {
+            return $this->getArgument($name);
+        } catch (\InvalidArgumentException) {
+            return null;
+        }
     }
 
     /**
@@ -110,11 +136,11 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
     }
 
     public function addArgument(FlowItemArgument $argument, bool $updateDescription = true): void {
-        if ($this->getArgument($argument->getName()) !== null) {
+        if ($this->existsArgument($argument->getName())) {
             throw new \InvalidArgumentException("Argument {$argument->getName()} is already exists in {$this->getName()}.");
         }
 
-        $this->arguments[] = $argument;
+        $this->arguments[$argument->getName()] = $argument;
 
         if ($updateDescription and $argument->getDescription() === "") {
             $this->updateArgumentDescription($argument);
@@ -263,7 +289,7 @@ abstract class FlowItem implements JsonSerializable, FlowItemIds {
             }
         } else {
             foreach ($content as $key => $value) {
-                $this->getArgument($key)?->load($value);
+                $this->getArgumentOrNull($key)?->load($value);
             }
         }
     }

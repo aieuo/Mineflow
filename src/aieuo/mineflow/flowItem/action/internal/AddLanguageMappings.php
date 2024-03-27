@@ -24,11 +24,11 @@ class AddLanguageMappings extends SimpleAction {
     }
 
     public function getKey(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("key");
     }
 
     public function getMappings(): LanguageMappingArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("messages");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

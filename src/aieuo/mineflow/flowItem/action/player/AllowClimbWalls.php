@@ -25,11 +25,11 @@ class AllowClimbWalls extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getAllow(): BooleanArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("allow");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

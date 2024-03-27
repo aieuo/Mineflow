@@ -25,11 +25,11 @@ class SetItemLore extends SimpleAction {
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item");
     }
 
     public function getLore(): StringArrayArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("lore");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

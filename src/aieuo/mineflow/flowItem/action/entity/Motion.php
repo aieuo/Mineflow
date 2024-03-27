@@ -26,19 +26,19 @@ class Motion extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getX(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("x");
     }
 
     public function getY(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("y");
     }
 
     public function getZ(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("z");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

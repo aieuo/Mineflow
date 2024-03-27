@@ -53,39 +53,39 @@ class SendSlider extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getFormTitle(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("title");
     }
 
     public function getFormText(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("text");
     }
 
     public function getMinValue(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("min");
     }
 
     public function getMaxValue(): NumberArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("max");
     }
 
     public function getStep(): NumberArgument {
-        return $this->getArguments()[5];
+        return $this->getArgument("step");
     }
 
     public function getDefaultValue(): NumberArgument {
-        return $this->getArguments()[6];
+        return $this->getArgument("default");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[7];
+        return $this->getArgument("result");
     }
 
     public function getResendOnClose(): BooleanArgument {
-        return $this->getArguments()[8];
+        return $this->getArgument("resend");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

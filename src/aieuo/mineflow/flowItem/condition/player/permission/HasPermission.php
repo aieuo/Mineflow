@@ -23,11 +23,11 @@ class HasPermission extends SimpleCondition {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getPlayerPermission(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("permission");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

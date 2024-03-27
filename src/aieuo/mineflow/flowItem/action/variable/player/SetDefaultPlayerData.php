@@ -25,11 +25,11 @@ class SetDefaultPlayerData extends SimpleAction {
     }
 
     public function getDataName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getDefaultValue(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("default");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

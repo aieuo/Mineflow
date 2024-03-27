@@ -32,19 +32,19 @@ class AddMapVariable extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getVariableKey(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("key");
     }
 
     public function getVariableValue(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("value");
     }
 
     public function getIsLocal(): BooleanArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("scope");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

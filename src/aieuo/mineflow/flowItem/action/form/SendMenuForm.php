@@ -41,23 +41,23 @@ class SendMenuForm extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getFormText(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("text");
     }
 
     public function getOptions(): StringArrayArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("options");
     }
 
     public function getResendOnClose(): BooleanArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("resend on close");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

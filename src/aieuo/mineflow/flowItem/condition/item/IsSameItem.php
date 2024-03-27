@@ -27,15 +27,15 @@ class IsSameItem extends SimpleCondition {
     }
 
     public function getItem1(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("item1");
     }
 
     public function getItem2(): ItemArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("item2");
     }
 
     public function getCheckCompound(): BooleanArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("tag");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

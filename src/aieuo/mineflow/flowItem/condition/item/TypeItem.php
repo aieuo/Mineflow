@@ -26,10 +26,10 @@ abstract class TypeItem extends SimpleCondition {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getItem(): ItemArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("item");
     }
 }

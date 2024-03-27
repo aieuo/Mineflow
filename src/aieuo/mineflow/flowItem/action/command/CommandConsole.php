@@ -24,7 +24,7 @@ class CommandConsole extends SimpleAction {
     }
 
     public function getCommand(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("command");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

@@ -25,11 +25,11 @@ class AddDamage extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getDamage(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("damage");
     }
 
     public function getCause(): int {

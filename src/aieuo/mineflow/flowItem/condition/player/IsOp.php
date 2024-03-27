@@ -22,7 +22,7 @@ class IsOp extends SimpleCondition {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

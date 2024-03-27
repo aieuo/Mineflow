@@ -31,15 +31,15 @@ class GetVariableNested extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("result");
     }
 
     public function getFallbackValue(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("fallback");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

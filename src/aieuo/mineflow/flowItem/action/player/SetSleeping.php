@@ -23,11 +23,11 @@ class SetSleeping extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("position");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

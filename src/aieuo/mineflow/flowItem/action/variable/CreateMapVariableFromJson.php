@@ -31,15 +31,15 @@ class CreateMapVariableFromJson extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("name");
     }
 
     public function getJson(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("json");
     }
 
     public function getIsLocal(): IsLocalVariableArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("scope");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

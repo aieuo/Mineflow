@@ -11,7 +11,6 @@ use aieuo\mineflow\flowItem\argument\StringArrayArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
@@ -37,19 +36,19 @@ class ForeachAction extends SimpleAction {
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("actions");
     }
 
     public function getListVariableName(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("list");
     }
 
     public function getKeyVariableName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("key");
     }
 
     public function getValueVariableName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("value");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

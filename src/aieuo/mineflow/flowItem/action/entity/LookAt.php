@@ -24,11 +24,11 @@ class LookAt extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     public function getPosition(): PositionArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("position");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

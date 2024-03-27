@@ -24,11 +24,11 @@ class Command extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getCommand(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("command");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

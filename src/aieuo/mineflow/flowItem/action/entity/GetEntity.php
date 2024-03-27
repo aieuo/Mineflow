@@ -31,11 +31,11 @@ class GetEntity extends SimpleAction {
     }
 
     public function getEntityId(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("id");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("id");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

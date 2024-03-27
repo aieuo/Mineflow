@@ -23,6 +23,6 @@ abstract class CheckPlayerState extends SimpleCondition {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 }

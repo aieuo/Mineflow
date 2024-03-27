@@ -25,11 +25,11 @@ class Kick extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getReason(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("reason");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

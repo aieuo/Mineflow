@@ -34,11 +34,11 @@ class CreateBlockVariable extends SimpleAction {
     }
 
     public function getVariableName(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("block");
     }
 
     public function getBlockId(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("id");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

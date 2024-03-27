@@ -51,15 +51,15 @@ class Calculate extends SimpleAction {
     }
 
     public function getValue(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("value");
     }
 
     public function getOperator(): IntEnumArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("operator");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

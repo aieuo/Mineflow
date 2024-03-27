@@ -21,11 +21,11 @@ class InWorld extends SimpleCondition {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("target");
     }
 
     public function getWorld(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("world");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

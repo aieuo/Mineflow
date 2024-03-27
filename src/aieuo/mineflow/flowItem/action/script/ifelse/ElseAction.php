@@ -8,10 +8,8 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use aieuo\mineflow\utils\Language;
 
 class ElseAction extends SimpleAction {
 
@@ -25,7 +23,7 @@ class ElseAction extends SimpleAction {
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("actions");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

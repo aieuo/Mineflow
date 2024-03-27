@@ -40,7 +40,7 @@ abstract class LogicalOperation extends SimpleCondition {
     }
 
     public function getConditions(): ConditionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("conditions");
     }
 
     public function getEditors(): array {

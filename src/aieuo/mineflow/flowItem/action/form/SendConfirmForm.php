@@ -39,31 +39,31 @@ class SendConfirmForm extends SimpleAction {
     }
 
     public function getPlayer(): PlayerArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("player");
     }
 
     public function getFormTitle(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("title");
     }
 
     public function getFormText(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("text");
     }
 
     public function getYesText(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("yes");
     }
 
     public function getNoText(): StringArgument {
-        return $this->getArguments()[4];
+        return $this->getArgument("no");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[5];
+        return $this->getArgument("result");
     }
 
     public function getResendOnClose(): BooleanArgument {
-        return $this->getArguments()[6];
+        return $this->getArgument("resend on close");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

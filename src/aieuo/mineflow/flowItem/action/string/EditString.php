@@ -52,19 +52,19 @@ class EditString extends SimpleAction {
     }
 
     public function getValue1(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("value1");
     }
 
     public function getOperator(): StringEnumArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("operator");
     }
 
     public function getValue2(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("value2");
     }
 
     public function getResultName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("result");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

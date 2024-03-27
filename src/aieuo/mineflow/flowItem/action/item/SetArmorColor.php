@@ -31,19 +31,19 @@ class SetArmorColor extends SimpleAction {
     }
 
     public function getArmor(): ItemArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("armor");
     }
 
     public function getRed(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("red");
     }
 
     public function getGreen(): NumberArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("green");
     }
 
     public function getBlue(): NumberArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("blue");
     }
 
     public function onExecute(FlowItemExecutor $source): \Generator {

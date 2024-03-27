@@ -23,11 +23,11 @@ class GenerateRandomNumber extends TypeGetMathVariable {
     }
 
     public function getMin(): NumberArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("min");
     }
 
     public function getMax(): NumberArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("max");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

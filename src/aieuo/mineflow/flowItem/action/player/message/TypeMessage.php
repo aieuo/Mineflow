@@ -23,6 +23,6 @@ abstract class TypeMessage extends SimpleAction {
     }
 
     public function getMessage(): StringArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("message");
     }
 }

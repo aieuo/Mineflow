@@ -22,7 +22,7 @@ class ClearAllEffect extends SimpleAction {
     }
 
     public function getEntity(): EntityArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("entity");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

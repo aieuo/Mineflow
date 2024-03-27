@@ -10,11 +10,9 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
-use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemPermission;
-use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
@@ -34,19 +32,19 @@ class ForeachPosition extends SimpleAction {
     }
 
     public function getActions(): ActionArrayArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("actions");
     }
 
     public function getPosition1(): PositionArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("pos1");
     }
 
     public function getPosition2(): PositionArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("pos2");
     }
 
     public function getCounterName(): StringArgument {
-        return $this->getArguments()[3];
+        return $this->getArgument("current");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {

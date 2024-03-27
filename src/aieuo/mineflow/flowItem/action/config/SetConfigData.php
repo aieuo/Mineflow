@@ -29,15 +29,15 @@ class SetConfigData extends SimpleAction {
     }
 
     public function getConfig(): ConfigArgument {
-        return $this->getArguments()[0];
+        return $this->getArgument("config");
     }
 
     public function getKey(): StringArgument {
-        return $this->getArguments()[1];
+        return $this->getArgument("key");
     }
 
     public function getValue(): StringArgument {
-        return $this->getArguments()[2];
+        return $this->getArgument("value");
     }
 
     protected function onExecute(FlowItemExecutor $source): \Generator {
