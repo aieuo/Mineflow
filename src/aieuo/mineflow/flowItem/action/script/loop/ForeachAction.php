@@ -8,6 +8,7 @@ use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\argument\StringArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -21,7 +22,7 @@ use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
 use SOFe\AwaitGenerator\Await;
 
-class ForeachAction extends FlowItem {
+class ForeachAction extends SimpleAction {
 
     public function __construct(array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_FOREACH, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
@@ -33,25 +34,6 @@ class ForeachAction extends FlowItem {
             StringArrayArgument::create("key", "key", "@action.foreach.keyVariableName")->example("key"),
             StringArrayArgument::create("value", "value", "@action.foreach.valueVariableName")->example("value"),
         ]);
-    }
-
-    public function getName(): string {
-        return Language::get("action.foreach.name");
-    }
-
-    public function getDescription(): string {
-        return Language::get("action.foreach.description");
-    }
-
-    public function getDetail(): string {
-        $repeat = $this->getListVariableName()." as ".$this->getKeyVariableName()." => ".$this->getValueVariableName();
-
-        return <<<END
-            
-            §7==§f foreach({$repeat}) §7==§f
-            {$this->getActions()}
-            §7================================§f
-            END;
     }
 
     public function getActions(): ActionArrayArgument {

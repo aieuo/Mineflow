@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\script\loop;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -18,7 +19,7 @@ use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
 use SOFe\AwaitGenerator\Await;
 
-class ForeachPosition extends FlowItem {
+class ForeachPosition extends SimpleAction {
 
     public function __construct(string $pos1 = "pos1", string $pos2 = "pos2", array $actions = [], ?string $customName = null) {
         parent::__construct(self::FOREACH_POSITION, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
@@ -30,25 +31,6 @@ class ForeachPosition extends FlowItem {
             PositionArgument::create("pos2", $pos2, "@action.foreachPosition.form.pos2"),
             StringArgument::create("current", "pos", "@action.foreachPosition.form.current"),
         ]);
-    }
-
-    public function getName(): string {
-        return Language::get("action.foreachPosition.name");
-    }
-
-    public function getDescription(): string {
-        return Language::get("action.foreachPosition.description");
-    }
-
-    public function getDetail(): string {
-        $repeat = $this->getPosition1()." -> ".$this->getPosition2()."; (".$this->getCounterName().")";
-
-        return <<<END
-            
-            §7==§f eachPos({$repeat}) §7==§f
-            {$this->getActions()}
-            §7================================§f
-            END;
     }
 
     public function getActions(): ActionArrayArgument {

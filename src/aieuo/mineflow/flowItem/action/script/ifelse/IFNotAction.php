@@ -14,15 +14,6 @@ class IFNotAction extends IFActionBase {
         parent::__construct(self::ACTION_IF_NOT, conditions: $conditions, actions: $actions, customName: $customName);
     }
 
-    public function getName(): string {
-        return Language::get("action.if_not.name");
-    }
-
-
-    public function getDescription(): string {
-        return Language::get("action.if_not.description");
-    }
-
     protected function onExecute(FlowItemExecutor $source): \Generator {
         foreach ($this->getConditions() as $condition) {
             if (yield from $condition->execute($source)) return false;

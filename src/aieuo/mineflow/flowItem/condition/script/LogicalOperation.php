@@ -10,6 +10,7 @@ use aieuo\mineflow\flowItem\condition\Condition;
 use aieuo\mineflow\flowItem\editor\ConditionArrayEditor;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\utils\Language;
 
 abstract class LogicalOperation extends SimpleCondition {
 
@@ -30,12 +31,12 @@ abstract class LogicalOperation extends SimpleCondition {
         ]);
     }
 
-    public function getDetail(): string {
-        return <<<END
-            §7---------§f {$this->getId()} §7---------§f
-            {$this->getConditions()}
-            §7------------------------§f
-            END;
+    public function getDetailKey(): string {
+        return "condition.logical_operator.detail";
+    }
+
+    public function getDetailReplaces(): array {
+        return [$this->getId(), ...parent::getDetailReplaces()];
     }
 
     public function getConditions(): ConditionArrayArgument {

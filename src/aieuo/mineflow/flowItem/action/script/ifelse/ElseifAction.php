@@ -14,15 +14,6 @@ class ElseifAction extends IFActionBase {
         parent::__construct(self::ACTION_ELSEIF, conditions: $conditions, actions: $actions, customName: $customName);
     }
 
-    public function getName(): string {
-        return Language::get("action.elseif.name");
-    }
-
-
-    public function getDescription(): string {
-        return Language::get("action.elseif.description");
-    }
-
     protected function onExecute(FlowItemExecutor $source): \Generator {
         $lastResult = $source->getLastResult();
         if (!is_bool($lastResult)) throw new InvalidFlowValueException($this->getName());

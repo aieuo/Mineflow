@@ -34,18 +34,8 @@ class SendConfirmForm extends SimpleAction {
         ]);
     }
 
-    public function getDescription(): string {
-        return $this->getName();
-    }
-
-    public function getDetail(): string {
-        return <<<END
-            §7---§f {$this->getName()}({$this->getFormTitle()}) §7---§f
-            {$this->getFormText()}
-            text_yes: {$this->getYesText()}
-            text_no: {$this->getNoText()}
-            §7-----------------------------------§f
-            END;
+    public function getDescriptionKey(): string {
+        return $this->getNameKey();
     }
 
     public function getPlayer(): PlayerArgument {

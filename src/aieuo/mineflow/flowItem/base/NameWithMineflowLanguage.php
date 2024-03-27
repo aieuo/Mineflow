@@ -9,11 +9,21 @@ use function array_map;
 
 trait NameWithMineflowLanguage {
 
-    abstract public function getId(): string;
+    abstract public function getMessageKeyPrefix(): string;
 
-    abstract public function getNameKey(): string;
+    abstract public function getMessageKey(): string;
 
-    abstract public function getDetailKey(): string;
+    public function getNameKey(): string {
+        return $this->getMessageKeyPrefix().".".$this->getMessageKey().".name";
+    }
+
+    public function getDescriptionKey(): string {
+        return $this->getMessageKeyPrefix().".".$this->getMessageKey().".description";
+    }
+
+    public function getDetailKey(): string {
+        return $this->getMessageKeyPrefix().".".$this->getMessageKey().".detail";
+    }
 
     /**
      * @return string[]
@@ -35,6 +45,10 @@ trait NameWithMineflowLanguage {
 
     public function getDescription(): string {
         $replaces = array_map(fn($replace) => "§7<".$replace.">§f", $this->getDetailDefaultReplaces());
+
+        if (Language::exists($this->getDescriptionKey())) {
+            return Language::get($this->getDescriptionKey(), $replaces);
+        }
         return Language::get($this->getDetailKey(), $replaces);
     }
 

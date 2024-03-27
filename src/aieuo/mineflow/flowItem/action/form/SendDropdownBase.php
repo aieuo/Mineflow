@@ -11,6 +11,7 @@ use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
+use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
@@ -51,13 +52,7 @@ abstract class SendDropdownBase extends SimpleAction {
     }
 
     public function getDetail(): string {
-        return <<<END
-            §7---§f {$this->getName()}({$this->getFormTitle()}) §7---§f
-            {$this->getFormText()}
-            options: {$this->getOptions()}
-            default: {$this->getDefaultValue()}
-            §7-----------------------------------§f
-            END;
+        return Language::get("action.dropdown_base.detail", [$this->getName(), ...$this->getDetailReplaces()]);
     }
 
     public function getPlayer(): PlayerArgument {

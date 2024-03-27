@@ -6,12 +6,14 @@ namespace aieuo\mineflow\flowItem\action\script\ifelse;
 
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\ConditionArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\ConditionArrayEditor;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
+use aieuo\mineflow\utils\Language;
 
-abstract class IFActionBase extends FlowItem {
+abstract class IFActionBase extends SimpleAction {
 
     public function __construct(
         string  $id,
@@ -29,23 +31,16 @@ abstract class IFActionBase extends FlowItem {
         $this->setCustomName($customName);
     }
 
+    public function getDetail(): string {
+        return Language::get("action.if_base.detail", [$this->getId(), ...$this->getDetailReplaces()]);
+    }
+
     public function getConditions(): ConditionArrayArgument {
         return $this->getArguments()[0];
     }
 
     public function getActions(): ActionArrayArgument {
         return $this->getArguments()[1];
-    }
-
-    public function getDetail(): string {
-        return <<<END
-            
-            §7========§f {$this->getId()} §7========§f
-            {$this->getConditions()}
-            §7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f
-            {$this->getActions()}
-            §7================================§f
-            END;
     }
 
     public function getEditors(): array {

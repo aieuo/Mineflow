@@ -52,16 +52,6 @@ class SendSlider extends SimpleAction {
         return $this->getName();
     }
 
-    public function getDetail(): string {
-        return <<<END
-            §7---§f {$this->getName()}({$this->getFormTitle()}) §7---§f
-            {$this->getFormText()}
-            min: {$this->getMinValue()}, max: {$this->getMaxValue()}, step: {$this->getStep()}
-            default: {$this->getDefaultValue()}
-            §7-----------------------------------§f
-            END;
-    }
-
     public function getPlayer(): PlayerArgument {
         return $this->getArguments()[0];
     }

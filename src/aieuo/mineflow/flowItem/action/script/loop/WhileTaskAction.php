@@ -8,6 +8,7 @@ use aieuo\mineflow\flowItem\action\script\Wait;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\ConditionArrayArgument;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\ConditionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
@@ -19,7 +20,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 
-class WhileTaskAction extends FlowItem {
+class WhileTaskAction extends SimpleAction {
 
     private int $loopCount = 0;
 
@@ -38,25 +39,6 @@ class WhileTaskAction extends FlowItem {
             NumberArgument::create("interval", $interval, "@action.whileTask.interval")->min(1),
             NumberArgument::create("limit", -1, "@action.whileTask.limit")->min(-1),
         ]);
-    }
-
-    public function getName(): string {
-        return Language::get("action.whileTask.name");
-    }
-
-    public function getDescription(): string {
-        return Language::get("action.whileTask.description");
-    }
-
-    public function getDetail(): string {
-        return <<<END
-            
-            §7========§f whileTask({$this->getInterval()}) §7========§f
-            {$this->getConditions()}
-            §7~~~~~~~~~~~~~~~~~~~~~~~~~~~§f
-            {$this->getActions()}
-            §7================================§f
-            END;
     }
 
     public function getConditions(): ConditionArrayArgument {

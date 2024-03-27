@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\script\loop;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -17,7 +18,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 
-class RepeatAction extends FlowItem {
+class RepeatAction extends SimpleAction {
 
     public function __construct(array $actions = [], int $count = 1, int $start = 0) {
         parent::__construct(self::ACTION_REPEAT, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
@@ -28,23 +29,6 @@ class RepeatAction extends FlowItem {
             NumberArgument::create("start", $start, "@action.repeat.start")->example("0"),
             StringArgument::create("counter", "i", "@action.for.counterName")->example("1"),
         ]);
-    }
-
-    public function getName(): string {
-        return Language::get("action.repeat.name");
-    }
-
-    public function getDescription(): string {
-        return Language::get("action.repeat.description");
-    }
-
-    public function getDetail(): string {
-        return <<<END
-            
-            §7========§f repeat({$this->getRepeatCount()}) §7========§f
-            {$this->getActions()}
-            §7================================§f
-            END;
     }
 
     public function getRepeatCount(): NumberArgument {

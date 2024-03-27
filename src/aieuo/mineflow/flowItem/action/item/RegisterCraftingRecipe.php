@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\item;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ItemArgument;
 use aieuo\mineflow\flowItem\argument\ItemFixedArrayArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
@@ -17,7 +18,7 @@ use SOFe\AwaitGenerator\Await;
 use function floor;
 use function implode;
 
-class RegisterCraftingRecipe extends FlowItem {
+class RegisterCraftingRecipe extends SimpleAction {
 
     /**
      * @param string[] $ingredients
@@ -33,14 +34,6 @@ class RegisterCraftingRecipe extends FlowItem {
                 ->count(9)->optional(),
             ItemArgument::create("output", $output, "@action.registerShapedRecipe.results RESULT"),
         ]);
-    }
-
-    public function getName(): string {
-        return Language::get("action.registerShapedRecipe.name");
-    }
-
-    public function getDescription(): string {
-        return Language::get("action.registerShapedRecipe.detail");
     }
 
     public function getDetail(): string {

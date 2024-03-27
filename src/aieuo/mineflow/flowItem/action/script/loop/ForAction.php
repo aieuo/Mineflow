@@ -7,6 +7,7 @@ namespace aieuo\mineflow\flowItem\action\script\loop;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
+use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
 use aieuo\mineflow\flowItem\FlowItem;
@@ -18,7 +19,7 @@ use aieuo\mineflow\variable\NumberVariable;
 use SOFe\AwaitGenerator\Await;
 use function str_replace;
 
-class ForAction extends FlowItem {
+class ForAction extends SimpleAction {
 
     public function __construct(array $actions = [], ?string $customName = null) {
         parent::__construct(self::ACTION_FOR, FlowItemCategory::SCRIPT_LOOP, [FlowItemPermission::LOOP]);
@@ -31,27 +32,6 @@ class ForAction extends FlowItem {
             NumberArgument::create("end", "10", "@action.for.end")->example("10"),
             NumberArgument::create("steps", "1", "@action.for.fluctuation")->excludes([0.0])->example("1"),
         ]);
-    }
-
-    public function getName(): string {
-        return Language::get("action.for.name");
-    }
-
-    public function getDescription(): string {
-        return Language::get("action.for.description");
-    }
-
-    public function getDetail(): string {
-        $counter = $this->getCounterName();
-        $repeat = $counter."=".$this->getStartIndex()."; ".$counter."<=".$this->getEndIndex()."; ".$counter."+=".$this->getSteps();
-        $repeat = str_replace("+=-", "-=", $repeat);
-
-        return <<<END
-            
-            §7====§f for({$repeat}) §7====§f
-            {$this->getActions()}
-            §7================================§f
-            END;
     }
 
     public function getActions(): ActionArrayArgument {
