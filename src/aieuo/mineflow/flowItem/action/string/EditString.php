@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\StringVariable;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 
 class EditString extends SimpleAction {
 

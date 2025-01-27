@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\argument\PositionArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 
 class SetBlock extends SimpleAction {
 

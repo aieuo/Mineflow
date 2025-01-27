@@ -19,7 +19,7 @@ use aieuo\mineflow\variable\MapVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\StringVariable;
 use pocketmine\player\Player;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 
 class SendMenuForm extends SimpleAction {
 

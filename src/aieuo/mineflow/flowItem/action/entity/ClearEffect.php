@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Language;
 use pocketmine\data\bedrock\EffectIdMap;
 use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 
 class ClearEffect extends SimpleAction {
 

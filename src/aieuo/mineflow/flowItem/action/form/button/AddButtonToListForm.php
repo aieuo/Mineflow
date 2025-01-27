@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\formAPI\element\Button;
-use SOFe\AwaitGenerator\GeneratorUtil;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\GeneratorUtil;
 
 class AddButtonToListForm extends SimpleAction {
 

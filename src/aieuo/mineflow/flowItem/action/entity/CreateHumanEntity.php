@@ -15,7 +15,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\HumanVariable;
 use pocketmine\entity\Location;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 
 class CreateHumanEntity extends SimpleAction {
 

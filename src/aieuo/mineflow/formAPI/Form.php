@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\ExpectedValues;
 use pocketmine\form\Form as PMForm;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 use function array_merge;
 use function call_user_func_array;
 use function is_callable;

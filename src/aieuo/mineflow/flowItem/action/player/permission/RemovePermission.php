@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\action\player\permission;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Main;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
 
 class RemovePermission extends AddPermissionBase {
 

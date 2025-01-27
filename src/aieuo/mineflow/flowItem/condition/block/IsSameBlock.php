@@ -9,7 +9,7 @@ use aieuo\mineflow\flowItem\base\SimpleCondition;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\flowItem\FlowItemIds;
-use SOFe\AwaitGenerator\GeneratorUtil;
+use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\GeneratorUtil;
 
 class IsSameBlock extends SimpleCondition {
 
