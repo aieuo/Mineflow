@@ -1,0 +1,20 @@
+{
+    "name": "aieuo/mineflow",
+    "description": "Easily create and execute the original flow like a plugin",
+    "type": "pocketmine-plugin",
+    "license": "NCSA",
+    "authors": [
+        {
+            "name": "aieuo"
+        }
+    ],
+    "autoload": {
+        "classmap": ["src"]
+    },
+    "require": {
+        "pocketmine/pocketmine-mp": "^5.0.0"
+    },
+    "require-dev": {
+        "sof3/pharynx": "^0.3.0"
+    }
+}
