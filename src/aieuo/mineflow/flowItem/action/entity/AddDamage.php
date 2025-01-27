@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\event\entity\EntityDamageEvent;
 use SOFe\AwaitGenerator\Await;
 
-// TODO: event cause
+
 class AddDamage extends SimpleAction {
 
     public function __construct(string $entity = "", string $damage = "") {
