@@ -7,7 +7,6 @@ namespace aieuo\mineflow\flowItem\action\script\loop;
 use aieuo\mineflow\exception\InvalidFlowValueException;
 use aieuo\mineflow\flowItem\argument\ActionArrayArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
-use aieuo\mineflow\flowItem\argument\StringArrayArgument;
 use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\editor\ActionArrayEditor;
 use aieuo\mineflow\flowItem\editor\MainFlowItemEditor;
@@ -29,9 +28,9 @@ class ForeachAction extends SimpleAction {
 
         $this->setArguments([
             ActionArrayArgument::create("actions", $actions),
-            StringArrayArgument::create("list", "list", "@action.foreach.listVariableName")->example("list"),
-            StringArrayArgument::create("key", "key", "@action.foreach.keyVariableName")->example("key"),
-            StringArrayArgument::create("value", "value", "@action.foreach.valueVariableName")->example("value"),
+            StringArgument::create("list", "list", "@action.foreach.listVariableName")->example("list"),
+            StringArgument::create("key", "key", "@action.foreach.keyVariableName")->example("key"),
+            StringArgument::create("value", "value", "@action.foreach.valueVariableName")->example("value"),
         ]);
     }
 
