@@ -14,7 +14,7 @@ use aieuo\mineflow\formAPI\ModalForm;
 use aieuo\mineflow\variable\BooleanVariable;
 use aieuo\mineflow\variable\DummyVariable;
 use pocketmine\player\Player;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_f6944d67f135f2dc\SOFe\AwaitGenerator\Await;
 
 class SendConfirmForm extends SimpleAction {
 

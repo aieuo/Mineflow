@@ -13,7 +13,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_f6944d67f135f2dc\SOFe\AwaitGenerator\Await;
 
 class PositionVariableAddition extends SimpleAction {
 

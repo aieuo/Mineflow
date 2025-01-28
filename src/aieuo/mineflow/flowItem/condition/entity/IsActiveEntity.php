@@ -6,7 +6,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_f6944d67f135f2dc\SOFe\AwaitGenerator\Await;
 
 class IsActiveEntity extends CheckEntityStateById {
 

@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\action\player\message;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\Server;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_f6944d67f135f2dc\SOFe\AwaitGenerator\Await;
 
 class SendMessageToOp extends TypeMessage {
 
