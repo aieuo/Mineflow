@@ -48,7 +48,9 @@ class EventManager {
         $this->addTrigger(new PlayerDeathEventTrigger(), true);
         $this->addTrigger(new EntityDeathEventTrigger(), false);
         $this->addTrigger(new PlayerDropItemEventTrigger(), false);
+        $this->addTrigger(new PlayerEmoteEventTrigger(), false);
         $this->addTrigger(new PlayerExhaustEventTrigger(), false);
+        $this->addTrigger(new PlayerGameModeChangeEventTrigger(), false);
         $this->addTrigger(new PlayerInteractEventTrigger(), true);
         $this->addTrigger(new PlayerItemConsumeEventTrigger(), true);
         $this->addTrigger(new PlayerJoinEventTrigger(), true);
@@ -56,8 +58,10 @@ class EventManager {
         $this->addTrigger(new PlayerMoveEventTrigger(), false);
         $this->addTrigger(new PlayerQuitEventTrigger(), true);
         $this->addTrigger(new PlayerToggleFlightEventTrigger(), true);
+        $this->addTrigger(new PlayerToggleGlideEventTrigger(), false);
         $this->addTrigger(new PlayerToggleSneakEventTrigger(), true);
         $this->addTrigger(new PlayerToggleSprintEventTrigger(), false);
+        $this->addTrigger(new PlayerToggleSwimEventTrigger(), false);
         $this->addTrigger(new ProjectileHitEntityEventTrigger(), false);
         $this->addTrigger(new SignChangeEventTrigger(), false);
         $this->addTrigger(new ServerStartEventTrigger(), true);
