@@ -6,6 +6,8 @@
 
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
+[Discord Server](https://discord.gg/RK27uaZEt7)
+
 ---
 
 [![Crowdin](https://badges.crowdin.net/mineflow/localized.svg)](https://crowdin.com/project/mineflow)
