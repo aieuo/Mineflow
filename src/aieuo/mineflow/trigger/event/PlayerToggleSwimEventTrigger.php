@@ -10,7 +10,7 @@ use pocketmine\event\player\PlayerToggleSwimEvent;
 
 class PlayerToggleSwimEventTrigger extends EventTrigger {
     public function __construct() {
-        parent::__construct("PlayerToggleSprintEvent", PlayerToggleSwimEvent::class);
+        parent::__construct("PlayerToggleSwimEvent", PlayerToggleSwimEvent::class);
     }
 
     public function getVariables(mixed $event): array {
