@@ -77,7 +77,7 @@ class CreateScoreboardVariable extends SimpleAction {
     public function getEditors(): array {
         return [
             new MainFlowItemEditor($this, [
-                $this->getId(),
+                $this->getBoardId(),
                 $this->getDisplayName(),
                 $this->getDisplayType(),
                 $this->getVariableName(),
