@@ -10,7 +10,7 @@ use pocketmine\event\player\PlayerToggleGlideEvent;
 
 class PlayerToggleGlideEventTrigger extends EventTrigger {
     public function __construct() {
-        parent::__construct("PlayerToggleGlideSprintEvent", PlayerToggleGlideEvent::class);
+        parent::__construct("PlayerToggleGlideEvent", PlayerToggleGlideEvent::class);
     }
 
     public function getVariables(mixed $event): array {
