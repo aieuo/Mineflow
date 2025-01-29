@@ -18,7 +18,7 @@ use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\StringToEffectParser;
 use pocketmine\entity\Living;
 use pocketmine\utils\Limits;
-use aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator\Await;
 
 class AddEffect extends SimpleAction {
 

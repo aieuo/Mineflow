@@ -16,7 +16,7 @@ use pocketmine\data\bedrock\EnchantmentIdMap;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\StringToEnchantmentParser;
-use aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator\Await;
 use function is_numeric;
 
 class AddEnchantment extends SimpleAction {

@@ -20,24 +20,22 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator;
 
 use Exception;
 
 /**
- * The exception to throw into loser generators of
- * a {@link Await::safeRace()}.
- * 
- * If your generator has side effects, please consider
- * handling this exception by taking cancellation in a
- * `finally` block. Otherwise, if you prefer the `catch`
- * block, please re-throw this exception at the end.
- * (Please refer to {@link AwaitTest::testSafeRaceCancel()}.)
- * 
- * NOTICE: it would not cause a crash even though your
- * generator did not catch it.
+ * The default exception to throw into an async iterator
+ * when `Traverser::interrupt()` is called.
  */
-final class RaceLostException extends Exception{
-	public function __construct() {
+final class InterruptException extends Exception{
+	private static $instance;
+
+	public static function get() : self {
+		self::$instance = self::$instance ?? new self;
+		return self::$instance;
+	}
+
+	private function __construct() {
 	}
 }

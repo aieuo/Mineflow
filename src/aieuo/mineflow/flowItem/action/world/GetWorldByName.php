@@ -12,7 +12,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\WorldVariable;
 use pocketmine\Server;
-use aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator\Await;
 
 class GetWorldByName extends SimpleAction {
 

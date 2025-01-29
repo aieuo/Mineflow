@@ -20,10 +20,13 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator;
 
-use RuntimeException;
-
-class AwaitException extends RuntimeException{
-
+/**
+ * @template T
+ * @internal
+ */
+final class ReceivingChannelState{
+	/** @var list<Closure(T): void> */
+	public array $queue = [];
 }

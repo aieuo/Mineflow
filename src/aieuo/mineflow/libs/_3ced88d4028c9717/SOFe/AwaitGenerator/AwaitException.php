@@ -20,22 +20,10 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator;
 
-use Exception;
+use RuntimeException;
 
-/**
- * The default exception to throw into an async iterator
- * when `Traverser::interrupt()` is called.
- */
-final class InterruptException extends Exception{
-	private static $instance;
+class AwaitException extends RuntimeException{
 
-	public static function get() : self {
-		self::$instance = self::$instance ?? new self;
-		return self::$instance;
-	}
-
-	private function __construct() {
-	}
 }

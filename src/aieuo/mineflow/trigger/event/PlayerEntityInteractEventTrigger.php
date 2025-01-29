@@ -19,7 +19,7 @@ class PlayerEntityInteractEventTrigger extends PlayerEventTrigger {
         $target = $event->getPlayer();
         $entity = $event->getEntity();
         $clickPos = $event->getClickPosition();
-        return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getEntityVariables($entity), [
+        return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getEntityVariables($entity, "blockClicked"), [
             "clickPos" => new Vector3Variable($clickPos),
         ]);
     }

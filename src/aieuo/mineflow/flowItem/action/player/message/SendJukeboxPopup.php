@@ -5,7 +5,7 @@ namespace aieuo\mineflow\flowItem\action\player\message;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
-use aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_3ced88d4028c9717\SOFe\AwaitGenerator\Await;
 
 class SendJukeboxPopup extends TypePlayerMessage {
 
