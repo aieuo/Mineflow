@@ -6,7 +6,7 @@ namespace aieuo\mineflow\flowItem\action\player;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\object\InventoryVariable;
-use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator\Await;
 
 class GetInventoryContents extends GetInventoryContentsBase {
 

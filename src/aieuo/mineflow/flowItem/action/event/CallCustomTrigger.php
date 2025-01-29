@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\trigger\custom\CustomTrigger;
 use aieuo\mineflow\trigger\TriggerHolder;
-use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator\Await;
 
 class CallCustomTrigger extends SimpleAction {
 

@@ -17,7 +17,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\math\Facing;
 use pocketmine\world\Position;
-use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator\Await;
 
 class GetEntitySidePosition extends SimpleAction {
 

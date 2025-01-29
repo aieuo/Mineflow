@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\entity\Living;
-use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator\Await;
 
 class EquipArmor extends SimpleAction {
 
