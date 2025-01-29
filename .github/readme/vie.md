@@ -29,7 +29,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 | lệnh                                                                                                                                        | mô tả                                |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| /mineflow language <eng &#124; jpn &#124; ind>                             | Thay đổi ngôn ngữ                    |
+| /mineflow language <eng &#124; jpn ind>                                                        | Thay đổi ngôn ngữ                    |
 | /mineflow recipe [add &#124; edit &#124; list]  | Quản lý các công thức chế tạo        |
 | /mineflow command [add &#124; edit &#124; list] | Quản lý trình kích hoạt lệnh         |
 | /mineflow form                                                                                                                              | Quản lý trình kích hoạt biểu mẫu     |
@@ -96,4 +96,4 @@ Set the permissions of the command to `anyone can execute` on the form to add th
 
 ## Bản quyền
 
-Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
+Các biểu tượng được tạo bởi [Pause08](https://www.flaticon.com/authors/pause08) từ [www.flaticon.com](https://www.flaticon.com/)
