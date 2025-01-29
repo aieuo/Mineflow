@@ -20,10 +20,22 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_f6944d67f135f2dc\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator;
 
-class UnawaitedCallbackException extends AwaitException{
-	public function __construct(string $action){
-		parent::__construct("$action is disallowed when Await::RESOLVE or Await::REJECT was yielded but is not awaited through Await::ONCE, Await::ALL or Await::RACE");
+use Exception;
+
+/**
+ * The default exception to throw into an async iterator
+ * when `Traverser::interrupt()` is called.
+ */
+final class InterruptException extends Exception{
+	private static $instance;
+
+	public static function get() : self {
+		self::$instance = self::$instance ?? new self;
+		return self::$instance;
+	}
+
+	private function __construct() {
 	}
 }

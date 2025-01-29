@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_f6944d67f135f2dc\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_6c37ba9df39eb43f\SOFe\AwaitGenerator;
 
 use Closure;
 use Generator;
