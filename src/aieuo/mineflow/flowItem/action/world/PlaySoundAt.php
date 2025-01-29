@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class PlaySoundAt extends SimpleAction {
 

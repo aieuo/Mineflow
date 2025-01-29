@@ -15,7 +15,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class JoinListVariableToString extends SimpleAction {
 

@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\condition\entity\CheckEntityState;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\player\Player;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class IsPlayerVariable extends CheckEntityState {
 

@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\argument\NumberArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\NumberVariable;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class GenerateRandomNumber extends TypeGetMathVariable {
 

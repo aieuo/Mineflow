@@ -22,7 +22,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\utils\Utils;
 use pocketmine\player\Player;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 use function array_map;
 use function array_merge;
 use function array_search;

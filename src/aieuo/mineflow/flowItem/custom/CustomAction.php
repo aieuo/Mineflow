@@ -10,7 +10,7 @@ use aieuo\mineflow\flowItem\FlowItem;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\recipe\Recipe;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 use function array_map;
 use function str_replace;
 use function substr;

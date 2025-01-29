@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\argument\EntityArgument;
 use aieuo\mineflow\flowItem\argument\RecipeArgumentArgument;
 use aieuo\mineflow\flowItem\argument\StringArgument;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class ExecuteRecipeWithEntity extends ExecuteRecipeBase {
 

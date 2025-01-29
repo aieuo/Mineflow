@@ -15,7 +15,7 @@ use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\entity\Entity;
 use pocketmine\event\Event;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 use function count;
 
 class FlowItemExecutor {

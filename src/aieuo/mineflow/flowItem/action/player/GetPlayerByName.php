@@ -14,7 +14,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
 use pocketmine\player\Player;
 use pocketmine\Server;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class GetPlayerByName extends SimpleAction {
 

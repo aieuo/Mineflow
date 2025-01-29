@@ -14,7 +14,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\Language;
 use pocketmine\crafting\ShapedRecipe;
 use pocketmine\Server;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 use function floor;
 use function implode;
 

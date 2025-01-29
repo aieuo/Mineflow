@@ -16,7 +16,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\Server;
 use pocketmine\world\Position;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class CreatePositionVariable extends SimpleAction {
 

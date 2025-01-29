@@ -14,7 +14,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NullVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use pocketmine\entity\Entity;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 abstract class GetNearestEntityBase extends SimpleAction {
 

@@ -10,9 +10,9 @@ use aieuo\mineflow\flowItem\base\SimpleAction;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use pocketmine\event\entity\EntityDamageEvent;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
-// TODO: event cause
+
 class AddDamage extends SimpleAction {
 
     public function __construct(string $entity = "", string $damage = "") {

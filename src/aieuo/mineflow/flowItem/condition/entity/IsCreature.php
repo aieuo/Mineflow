@@ -7,7 +7,7 @@ namespace aieuo\mineflow\flowItem\condition\entity;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
 use pocketmine\entity\Living;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class IsCreature extends CheckEntityStateById {
 

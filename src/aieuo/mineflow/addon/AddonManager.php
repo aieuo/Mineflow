@@ -21,7 +21,7 @@ use aieuo\mineflow\utils\Logger;
 use aieuo\mineflow\utils\Utils;
 use aieuo\mineflow\variable\ListVariable;
 use aieuo\mineflow\variable\MapVariable;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 use function basename;
 use function file_exists;
 use function implode;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace aieuo\mineflow\flowItem\condition\item;
 
 use aieuo\mineflow\flowItem\FlowItemExecutor;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class ExistsArmor extends TypeItem {
 

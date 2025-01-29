@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\variable\IteratorVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class ExistsListVariableKey extends SimpleCondition {
 

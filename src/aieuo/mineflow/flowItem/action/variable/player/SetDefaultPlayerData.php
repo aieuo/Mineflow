@@ -11,7 +11,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\CustomVariableData;
 use aieuo\mineflow\variable\object\PlayerVariable;
-use SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_ddbd776e705b8daa\SOFe\AwaitGenerator\Await;
 
 class SetDefaultPlayerData extends SimpleAction {
 
