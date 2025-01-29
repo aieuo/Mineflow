@@ -6,7 +6,7 @@
 
 [![PoggitCI Badge](https://poggit.pmmp.io/ci.badge/aieuo/Mineflow/Mineflow)](https://poggit.pmmp.io/ci/aieuo/Mineflow/Mineflow)
 
-[Discord Server](https://discord.gg/RK27uaZEt7)
+[Server Discord](https://discord.gg/RK27uaZEt7)
 
 ---
 
@@ -29,7 +29,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 | perintah                                                                                                                                    | deskripsi                |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| /mineflow language <eng &#124; jpn &#124; ind>                             | Ubah bahasa              |
+| /mineflow language<eng &#124; jpn ind>                                                         | Ubah bahasa              |
 | /mineflow recipe [add &#124; edit &#124; list]  | Kelola resep             |
 | /mineflow command [add &#124; edit &#124; list] | Kelola pemicu perintah   |
 | /mineflow form                                                                                                                              | Kelola pemicu formulir   |
@@ -45,7 +45,7 @@ To change the permission, run `/mineflow permission <add|remove|list> <name> <pe
 Characters enclosed by "{" and "}" are recognized as variables and will be replaced.\
 examples: `{target}`, `{item}`
 
-[more details](https://mineflow.github.io/docs/eng/#/variable/about)
+[Detail lebih lanjut](https://mineflow.github.io/docs/eng/#/variable/about)
 
 ## Tutorial
 
@@ -80,7 +80,7 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
    ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
-3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
+3. Klik `Edit tindakan > Tambah tindakan > Pemain` untuk menambahkan `Bidang Kirim pesan ke obrolan` ke resep yang telah Anda buat.
 4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contains information about the item in the player's hand.)
 5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.
@@ -92,8 +92,8 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 
 ##### Untuk dapat menggunakannya non-OP
 
-Set the permissions of the command to `anyone can execute` on the form to add the command or in the command menu.
+Setel izin perintah ke `Siapa pun dapat mengeksekusi` pada formulir untuk menambahkan perintah atau di menu perintah.
 
 ## Hak Cipta
 
-Icons made by [Pause08](https://www.flaticon.com/authors/pause08) from [www.flaticon.com](https://www.flaticon.com/)
+Ikon dibuat oleh [Pause08](https://www.flaticon.com/authors/pause08) dari [www.flaticon.com](https://www.flaticon.com/)
