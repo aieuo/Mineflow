@@ -30,7 +30,7 @@
 
 | コマンド                                                                                                                                        | 説明            |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| /mineflow language<eng &#124; jpn ind>                                                         | 言語を変更する       |
+| /mineflow language <eng &#124; jpn &#124; ind>                             | 言語を変更する       |
 | /mineflow recipe [add &#124; edit &#124; list]  | レシピを管理する      |
 | /mineflow command [add &#124; edit &#124; list] | コマンドトリガーを管理する |
 | /mineflow form                                                                                                                              | フォームトリガーを管理する |
@@ -39,7 +39,7 @@
 
 ## アクション権限
 
-`/mineflow permission <add|remove|list><name> <permission>` で権限を変更できます。 `/mineflow permission <add|remove|list> <name> <permission>` で権限を変更できます。 `権限`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。 コンソールからは全ての権限を与えることができます。
+`/mineflow permission <add|remove|list><name> <permission>` で権限を変更できます。 `permission`権限を持っているプレイヤーのみ他のプレイヤーの権限を変更することができます。 コンソールからは全ての権限を与えることができます。 コンソールからは全ての権限を与えることができます。
 
 ## 変数
 
@@ -87,7 +87,7 @@
    ![レシピ追加](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. 作成したレシピのメニューから`アクションを編集する > アクションを追加する > プレイヤー`ボタンを押し、`チャット欄にメッセージを送る`を追加します。
 4. `チャット欄にメッセージを送る`の送信するメッセージに`{target.hand.id}:{target.hand.damage}`と入力します。 [ダウンロード](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)\
-   ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contains information about the item in the player's hand.)
+   ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` にはプレイヤーの手の中にあるアイテムに関する情報が含まれています。)
 5. レシピのメニューから`トリガーを編集する > トリガーを追加する > コマンド`ボタンを押し、コマンドの名前にidと入力します。
    ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
