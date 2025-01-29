@@ -20,11 +20,10 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator;
 
-/**
- * @template T
- * @internal
- */
-final class EmptyChannelState{
+use RuntimeException;
+
+class AwaitException extends RuntimeException{
+
 }

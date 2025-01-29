@@ -15,7 +15,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\EntityVariable;
 use aieuo\mineflow\variable\object\PlayerVariable;
-use aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator\Await;
 
 class GetEntity extends SimpleAction {
 

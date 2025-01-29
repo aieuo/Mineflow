@@ -17,7 +17,7 @@ use aieuo\mineflow\utils\Session;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\Variable;
 use pocketmine\player\Player;
-use aieuo\mineflow\libs\_ac618486ac522f0b\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator\Await;
 use function array_key_first;
 use function array_merge;
 use function array_search;
