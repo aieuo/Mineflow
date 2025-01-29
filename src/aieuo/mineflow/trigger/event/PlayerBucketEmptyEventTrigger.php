@@ -22,7 +22,7 @@ class PlayerBucketEmptyEventTrigger extends EventTrigger {
         $blockFace = $event->getBlockFace();
         $bucket = $event->getBucket();
         $item = $event->getItem();
-        return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($blockClicked), [
+        return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getBlockVariables($blockClicked, "blockClicked"), [
             "blockFace" => new NumberVariable($blockFace),
             "bucket" => new ItemVariable($bucket),
             "item" => new ItemVariable($item),

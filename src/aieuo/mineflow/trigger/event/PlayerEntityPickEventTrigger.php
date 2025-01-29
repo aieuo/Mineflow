@@ -19,7 +19,7 @@ class PlayerEntityPickEventTrigger extends PlayerEventTrigger {
         $target = $event->getPlayer();
         $entity = $event->getEntity();
         $item = $event->getResultItem();
-        return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getEntityVariables($entity), [
+        return array_merge(DefaultVariables::getPlayerVariables($target), DefaultVariables::getEntityVariables($entity, "blockClicked"), [
             "item" => new ItemVariable($item),
         ]);
     }
