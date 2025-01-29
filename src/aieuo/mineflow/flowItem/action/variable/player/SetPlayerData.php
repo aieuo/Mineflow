@@ -12,7 +12,7 @@ use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\Mineflow;
 use aieuo\mineflow\variable\CustomVariableData;
 use aieuo\mineflow\variable\object\PlayerVariable;
-use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
 
 class SetPlayerData extends SimpleAction {
 

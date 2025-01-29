@@ -20,13 +20,22 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator;
+
+use Exception;
 
 /**
- * @template T
- * @internal
+ * The default exception to throw into an async iterator
+ * when `Traverser::interrupt()` is called.
  */
-final class SendingChannelState{
-	/** @var list<array{T, Closure(): void}> */
-	public array $queue = [];
+final class InterruptException extends Exception{
+	private static $instance;
+
+	public static function get() : self {
+		self::$instance = self::$instance ?? new self;
+		return self::$instance;
+	}
+
+	private function __construct() {
+	}
 }

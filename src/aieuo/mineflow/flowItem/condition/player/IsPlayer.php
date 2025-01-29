@@ -8,7 +8,7 @@ use aieuo\mineflow\flowItem\condition\entity\CheckEntityStateById;
 use aieuo\mineflow\flowItem\FlowItemCategory;
 use aieuo\mineflow\flowItem\FlowItemExecutor;
 use aieuo\mineflow\utils\EntityHolder;
-use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
 
 class IsPlayer extends CheckEntityStateById {
 

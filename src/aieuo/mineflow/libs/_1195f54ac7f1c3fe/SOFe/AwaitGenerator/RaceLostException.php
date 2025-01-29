@@ -20,11 +20,24 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator;
+
+use Exception;
 
 /**
- * @template T
- * @internal
+ * The exception to throw into loser generators of
+ * a {@link Await::safeRace()}.
+ * 
+ * If your generator has side effects, please consider
+ * handling this exception by taking cancellation in a
+ * `finally` block. Otherwise, if you prefer the `catch`
+ * block, please re-throw this exception at the end.
+ * (Please refer to {@link AwaitTest::testSafeRaceCancel()}.)
+ * 
+ * NOTICE: it would not cause a crash even though your
+ * generator did not catch it.
  */
-final class EmptyChannelState{
+final class RaceLostException extends Exception{
+	public function __construct() {
+	}
 }

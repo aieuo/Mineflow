@@ -14,7 +14,7 @@ use aieuo\mineflow\utils\Language;
 use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\object\PositionVariable;
 use pocketmine\world\Position;
-use aieuo\mineflow\libs\_057384fe9e664697\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_1195f54ac7f1c3fe\SOFe\AwaitGenerator\Await;
 
 class GenerateRandomPosition extends SimpleAction {
 

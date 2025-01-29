@@ -70,6 +70,8 @@ class SettingForm {
                     }
                     $count++;
                 }
+                $eventManager->getSetting()->save();
+                
                 $this->sendMenu($player, ["@form.changed"]);
             })->show($player);
     }
