@@ -16,10 +16,10 @@ abstract class SimpleFlowItem extends FlowItem {
     }
 
     public function getDetailDefaultReplaces(): array {
-        return array_map(fn(FlowItemArgument $value) => $value->getName(), $this->getArguments());
+        return array_values(array_map(fn(FlowItemArgument $value) => $value->getName(), $this->getArguments()));
     }
 
     public function getDetailReplaces(): array {
-        return array_map(fn(FlowItemArgument $value) => (string)$value, $this->getArguments());
+        return array_values(array_map(fn(FlowItemArgument $value) => (string)$value, $this->getArguments()));
     }
 }
