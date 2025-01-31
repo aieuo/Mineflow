@@ -20,7 +20,7 @@ jobs:
         with:
           additional-assets: |
             icon.png
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Mineflow.phar
           path: ${{steps.pharynx.outputs.output-phar}}
