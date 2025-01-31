@@ -77,9 +77,8 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 ##### Steps
 
 1. Execute `/mineflow command add` and add the /id command.\
-   ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+   ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
-   Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
 4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
