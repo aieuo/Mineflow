@@ -23,6 +23,7 @@
 # Español
 
 Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.\
+\*\*Algunas de las acciones se ocultan por defecto para evitar abusos.\
 **Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `mineflow permission add <your name> all` desde la consola.**
 
 ## Comando
@@ -43,6 +44,7 @@ Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. Only the
 ## Variable
 
 Los caracteres encerrados por "{" y "}" son reconocidos como variables y serán reemplazados.\
+ejemplos: `{target}`, `{item}`\
 ejemplos: `{target}`, `{item}`
 
 [Más detalles](https://mineflow.github.io/docs/eng/#/variable/about)
@@ -61,6 +63,7 @@ Añadir un accionador de "Editar accionador" del formulario. Luego, cuando el ac
 ### Cambiar el ejecutor
 
 De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta.\
+De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta.\
 Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
 
 ### Argumentos y devolver valores
@@ -76,15 +79,18 @@ Envía el ID del elemento en la mano del jugador al campo de chat cuando ejecute
 
 ##### Pasos
 
-1. Ejecuta `/mineflow comando add` y añade el comando /id.\
-   ![AñadirComando](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
+1. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.\
+   ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 2. Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
+   Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
    ![AñadirReceta](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Haga clic en `Editar acciones > Añadir acción > Jugador` para añadir un `Enviar mensaje al campo de chat` a la receta que ha creado.
 4. Introduzca `{target.hand.id}:{target.hand.damage}` en el campo de mensaje de `Enviar mensaje al campo de chat`.\
+   Introduzca `{target.hand.id}:{target.hand.damage}` en el campo de mensaje de `Enviar mensaje al campo de chat`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contiene información sobre el objeto en la mano del jugador.)
 5. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.
-   ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+   Ejecuta `/mineflow comando add` y añade el comando /id.\
+   ![AñadirComando](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 
 ##### Para enviar más información del artículo
 
