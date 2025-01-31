@@ -23,14 +23,13 @@
 # English
 
 You can combine actions and create something like a plugin without any coding knowledge.\
-\*\*Some actions are hidden by default to prevent abuse.\
 **Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 ## Command
 
 | command                                                                                                                                     | description                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| /mineflow language <eng &#124; jpn ind>                                                        | Change language                  |
+| /mineflow language <eng &#124; jpn &#124; ind>                             | Change language                  |
 | /mineflow recipe [add &#124; edit &#124; list]  | Manage recipes                   |
 | /mineflow command [add &#124; edit &#124; list] | Manage command triggers          |
 | /mineflow form                                                                                                                              | Manage form triggers             |
@@ -44,7 +43,6 @@ To change the permission, run `/mineflow permission <add|remove|list> <name> <pe
 ## Variable
 
 Characters enclosed by "{" and "}" are recognized as variables and will be replaced.\
-examples: `{target}`, `{item}`\
 examples: `{target}`, `{item}`
 
 [more details](https://mineflow.github.io/docs/eng/#/variable/about)
@@ -54,7 +52,6 @@ examples: `{target}`, `{item}`
 ### Create a recipe
 
 Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)\
-Add a variety of actions to the recipe.\
 Add a variety of actions to the recipe.
 
 ### Execute a recipe
@@ -63,7 +60,6 @@ Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, th
 
 ### Change the executor
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.\
 By default, the player who fired the trigger goes into the {target} variable of the recipe.\
 It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
@@ -80,18 +76,15 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 
 ##### Steps
 
-1. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.\
-   ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+1. Execute `/mineflow command add` and add the /id command.\
+   ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
-   Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
 4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
-   Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contains information about the item in the player's hand.)
 5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.
-   Execute `/mineflow command add` and add the /id command.\
-   ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
+   ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### To send more information of item
 
