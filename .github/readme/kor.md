@@ -29,7 +29,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 | command                                                                                                                                     | description                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| /mineflow language <eng &#124; jpn ind>                                                        | Change language                  |
+| /mineflow language <eng &#124; jpn &#124; ind>                             | Change language                  |
 | /mineflow recipe [add &#124; edit &#124; list]  | Manage recipes                   |
 | /mineflow command [add &#124; edit &#124; list] | Manage command triggers          |
 | /mineflow form                                                                                                                              | Manage form triggers             |
@@ -38,7 +38,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## ActionPermission
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. The level you give can only be used below your level. You can give a maximum level from the console.
+To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
 
 ## Variable
 
@@ -84,7 +84,8 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contains information about the item in the player's hand.)
 5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.
-   ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+   Execute `/mineflow command add` and add the /id command.\
+   ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 
 ##### To send more information of item
 

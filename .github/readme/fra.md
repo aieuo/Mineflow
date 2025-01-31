@@ -29,7 +29,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 | command                                                                                                                                     | description                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| /mineflow language <eng &#124; jpn ind>                                                        | Change language                  |
+| /mineflow language <eng &#124; jpn &#124; ind>                             | Change language                  |
 | /mineflow recipe [add &#124; edit &#124; list]  | Manage recipes                   |
 | /mineflow command [add &#124; edit &#124; list] | Manage command triggers          |
 | /mineflow form                                                                                                                              | Manage form triggers             |
@@ -38,7 +38,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 ## ActionPermission
 
-To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. The level you give can only be used below your level. You can give a maximum level from the console.
+To change the permission, run `/mineflow permission <add|remove|list> <name> <permission>`. Only the player who has `permission` permission can change the permissions of the other players. You can give an all permission from the console.
 
 ## Variable
 

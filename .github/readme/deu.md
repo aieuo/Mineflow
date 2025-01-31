@@ -29,7 +29,7 @@ You can combine actions and create something like a plugin without any coding kn
 
 | command                                                                                                                                     | description                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| /mineflow language <eng &#124; jpn ind>                                                        | Change language                  |
+| /mineflow language <eng &#124; jpn &#124; ind>                             | Change language                  |
 | /mineflow recipe [add &#124; edit &#124; list]  | Manage recipes                   |
 | /mineflow command [add &#124; edit &#124; list] | Manage command triggers          |
 | /mineflow form                                                                                                                              | Manage form triggers             |
@@ -79,6 +79,7 @@ Send the ID of the item in the player's hand to the chat field when execute `/id
 1. Execute `/mineflow command add` and add the /id command.\
    ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
+   Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
 4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
