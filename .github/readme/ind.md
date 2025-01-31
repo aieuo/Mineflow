@@ -11,6 +11,7 @@
 ---
 
 [![Crowdin](https://badges.crowdin.net/mineflow/localized.svg)](https://crowdin.com/project/mineflow)
+
 ### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md), [Español](/.github/readme/spa.md)
 
 ---
@@ -21,27 +22,27 @@
 
 # Indonesia
 
-Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.  
+Anda dapat menggabungkan tindakan dan membuat sesuatu seperti plugin tanpa pengetahuan pengkodean apa pun.\
 **Beberapa tindakan disembunyikan secara default untuk mencegah penyalahgunaan. Untuk menampilkan semuanya, jalankan `mineflow permission add <your name> all` dari konsol.**
 
 ## Perintah
 
-| perintah                                        | deskripsi                |
-| ----------------------------------------------- | ------------------------ |
-| /mineflow language<eng &#124; jpn ind>          | Ubah bahasa              |
+| perintah                                                                                                                                    | deskripsi                |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| /mineflow language<eng &#124; jpn ind>                                                         | Ubah bahasa              |
 | /mineflow recipe [add &#124; edit &#124; list]  | Kelola resep             |
 | /mineflow command [add &#124; edit &#124; list] | Kelola pemicu perintah   |
-| /mineflow form                                  | Kelola pemicu formulir   |
-| /mineflow permission <name> <level>             | Ubah tingkat izin pemain |
-| /mineflow setting                               | Pengaturan               |
+| /mineflow form                                                                                                                              | Kelola pemicu formulir   |
+| /mineflow permission <name> <level>                                                                                                         | Ubah tingkat izin pemain |
+| /mineflow setting                                                                                                                           | Pengaturan               |
 
 ## Izin Tindakan
 
-Untuk mengubah izin, jalankan `/mineflow permission &lt;add|remove|list&gt; &lt;name&gt;&lt;permission&gt;. Hanya pemain yang memiliki izin <code>izin` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
+Untuk mengubah izin, jalankan /mineflow permission <add|remove|list> <name> <permission>`. Hanya pemain yang memiliki izin `permission\` yang dapat mengubah izin pemain lain. Kamu dapat memberikan semua izin dari konsol.
 
 ## Variabel
 
-Karakter yang diapit oleh "{" dan "}" dikenali sebagai variabel dan akan diganti.  
+Karakter yang diapit oleh "{" dan "}" dikenali sebagai variabel dan akan diganti.\
 contoh: `{target}`, `{item}`
 
 [Detail lebih lanjut](https://mineflow.github.io/docs/eng/#/variable/about)
@@ -50,7 +51,7 @@ contoh: `{target}`, `{item}`
 
 ### Buat resep
 
-Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (Nama grup boleh dikosongkan.)    
+Jalankan "/mineflow recipe add" dan masukkan nama resep dan nama grup.  (Nama grup boleh dikosongkan.)\
 Tambahkan berbagai tindakan ke resep.
 
 ### Jalankan resep
@@ -59,8 +60,8 @@ Tambahkan pemicu dari "Edit pemicu" dari bentuk. Kemudian, ketika pemicu terjadi
 
 ### Ubah pelaksananya
 
-Secara default, pemain yang memicu pemicu masuk ke variabel {target} resep.  
-Itu dapat diubah dari "Ubah target" pada formulir ke salah satu pemain yang ditentukan, semua pemain, pemain acak, atau tidak sama sekali.
+Secara default, pemain yang memicu pemicu masuk ke variabel {target} resep.\
+Itu dapat diubah dari "Ubah target" pada formulir ke salah satu pemain yang ditentukan, semua pemain, secara acak, ataupun tidak seorang pun.
 
 ### Argumen dan mengembalikan nilai
 
@@ -70,18 +71,20 @@ Anda dapat menyetel nilai yang akan diwarisi dari tindakan asli, dan nilai yang 
 
 ### Perintah CheckId
 
-Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`. [Unduh](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+Kirim ID item di tangan pemain ke kolom chat saat menjalankan `/id`.
+[Unduh](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Langkah
 
-1. Jalankan perintah `/mineflow command add` dan tambahkan perintah /id.  
+1. Jalankan perintah `/mineflow command add` dan tambahkan perintah /id.\
    ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
-2. Jalankan `/mineflow recipe add` dan tambahkan resep dengan nama pilihan Anda.  
+2. Jalankan `/mineflow recipe add` dan tambahkan resep dengan nama pilihan Anda.\
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Klik `Edit tindakan > Tambah tindakan > Pemain` untuk menambahkan `Bidang Kirim pesan ke obrolan` ke resep yang telah Anda buat.
-4. Masukkan `{target.hand.id}:{target.hand.damage}` di bidang pesan `Bidang Kirim pesan ke obrolan`.  
-   ![tambahkanTindakan](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` berisi informasi tentang item di tangan pemain.)
-5. Klik `Edit pemicu > Tambahkan pemicu > Perintah` dan masukkan `id` di bidang `nama perintah`. ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+4. Masukkan `{target.hand.id}:{target.hand.damage}` di bidang pesan `Bidang Kirim pesan ke obrolan`.\
+   ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` mengandung informasi tentang item di tangan pemain)
+5. Klik `Edit pemicu  > Tambahkan pemicu  > Perintah` dan masukkan id di bidang nama perintah.
+   ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Untuk mengirim informasi lebih lanjut tentang barang
 

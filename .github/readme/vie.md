@@ -11,6 +11,7 @@
 ---
 
 [![Crowdin](https://badges.crowdin.net/mineflow/localized.svg)](https://crowdin.com/project/mineflow)
+
 ### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md), [Español](/.github/readme/spa.md)
 
 ---
@@ -21,19 +22,19 @@
 
 # Tiếng Việt
 
-Bạn có thể kết hợp các hành động và tạo thứ gì đó giống như plugin mà không cần bất kỳ kiến thức viết mã nào.  
-**Một số tác vụ được ẩn theo mặc định để ngăn lạm dụng. Để hiển thị tất cả, vui lòng chạy `mineflow permission add <tên của bạn> all` từ bảng điều khiển.**
+You can combine actions and create something like a plugin without any coding knowledge.\
+**Some actions are hidden by default to prevent abuse. To show them all, please run `mineflow permission add <your name> all` from the console.**
 
 ## Lệnh
 
-| lệnh                                            | mô tả                                |
-| ----------------------------------------------- | ------------------------------------ |
-| /mineflow language <eng &#124; jpn ind>         | Thay đổi ngôn ngữ                    |
+| lệnh                                                                                                                                        | mô tả                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| /mineflow language <eng &#124; jpn ind>                                                        | Thay đổi ngôn ngữ                    |
 | /mineflow recipe [add &#124; edit &#124; list]  | Quản lý các công thức chế tạo        |
 | /mineflow command [add &#124; edit &#124; list] | Quản lý trình kích hoạt lệnh         |
-| /mineflow form                                  | Quản lý trình kích hoạt biểu mẫu     |
-| /mineflow permission <name> <level>             | Thay đổi cấp độ quyền của người chơi |
-| /mineflow setting                               | Cài đặt                              |
+| /mineflow form                                                                                                                              | Quản lý trình kích hoạt biểu mẫu     |
+| /mineflow permission <name> <level>                                                                                                         | Thay đổi cấp độ quyền của người chơi |
+| /mineflow setting                                                                                                                           | Cài đặt                              |
 
 ## Quyền Hành Động
 
@@ -41,7 +42,7 @@ To change the permission, run `/mineflow permission <add|remove|list> <name> <pe
 
 ## Variable
 
-Characters enclosed by "{" and "}" are recognized as variables and will be replaced.  
+Characters enclosed by "{" and "}" are recognized as variables and will be replaced.\
 examples: `{target}`, `{item}`
 
 [more details](https://mineflow.github.io/docs/eng/#/variable/about)
@@ -50,7 +51,7 @@ examples: `{target}`, `{item}`
 
 ### Create a recipe
 
-Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)    
+Execute "/mineflow recipe add" and enter the recipe name and group name. (The group name can be left blank.)\
 Add a variety of actions to the recipe.
 
 ### Execute a recipe
@@ -59,7 +60,7 @@ Add a trigger from "Edit trigger" of the form. Then, when the trigger occurs, th
 
 ### Change the executor
 
-By default, the player who fired the trigger goes into the {target} variable of the recipe.  
+By default, the player who fired the trigger goes into the {target} variable of the recipe.\
 It can be changed from "Change the target" on the form to any of the specified players, all players, random players, or none.
 
 ### Arguments and return values
@@ -70,18 +71,20 @@ You can set the value to be inherited from the original action, and the value to
 
 ### CheckId command
 
-Send the ID of the item in the player's hand to the chat field when execute `/id`. [Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+Send the ID of the item in the player's hand to the chat field when execute `/id`.
+[Download](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Steps
 
-1. Execute `/mineflow command add` and add the /id command.  
+1. Execute `/mineflow command add` and add the /id command.\
    ![addCommand](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
-2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.  
+2. Execute `/mineflow recipe add` and add a recipe with a name of your choice.\
    ![addRecipe](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Click `Edit actions > Add action > Player` to add a `Send message to chat field` to the recipe you have created.
-4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.  
+4. Enter `{target.hand.id}:{target.hand.damage}` in the message field of `Send message to chat field`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contains information about the item in the player's hand.)
-5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field. ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+5. Click `Edit trigger > Add trigger > Command` and enter `id` in the `name of command` field.
+   ![addTrigger](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### To send more information of item
 

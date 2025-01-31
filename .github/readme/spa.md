@@ -11,6 +11,7 @@
 ---
 
 [![Crowdin](https://badges.crowdin.net/mineflow/localized.svg)](https://crowdin.com/project/mineflow)
+
 ### [English](/README.md), [日本語](/.github/readme/jpn.md), [Indonesia](/.github/readme/ind.md), [Español](/.github/readme/spa.md)
 
 ---
@@ -21,27 +22,27 @@
 
 # Español
 
-Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.  
+Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.\
 **Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `mineflow permission add <your name> all` desde la consola.**
 
 ## Comando
 
-| comando                                         | descripción                           |
-| ----------------------------------------------- | ------------------------------------- |
-| /mineflow language <eng &#124; jpn ind>         | Cambiar idioma                        |
+| comando                                                                                                                                     | descripción                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| /mineflow language <eng &#124; jpn ind>                                                        | Cambiar idioma                        |
 | /mineflow recipe [add &#124; edit &#124; list]  | Administrar recetas                   |
 | /mineflow command [add &#124; edit &#124; list] | Administrar accionadores de comandos  |
-| /mineflow form                                  | Administrar accionadores de interfaz  |
-| /mineflow permission <name> <level>             | Cambiar nivel de permisos del jugador |
-| /mineflow setting                               | Ajustes                               |
+| /mineflow form                                                                                                                              | Administrar accionadores de interfaz  |
+| /mineflow permission <name> <level>                                                                                                         | Cambiar nivel de permisos del jugador |
+| /mineflow setting                                                                                                                           | Ajustes                               |
 
 ## Permiso de acción
 
-Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. El nivel que usted da sólo puede ser utilizado por debajo de su nivel. Puedes dar un nivel máximo desde la consola.
+Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. Only the player who has `permission` permission can change the permissions of the other players. Puedes dar un nivel máximo desde la consola.
 
 ## Variable
 
-Los caracteres encerrados por "{" y "}" son reconocidos como variables y serán reemplazados.  
+Los caracteres encerrados por "{" y "}" son reconocidos como variables y serán reemplazados.\
 ejemplos: `{target}`, `{item}`
 
 [Más detalles](https://mineflow.github.io/docs/eng/#/variable/about)
@@ -50,7 +51,7 @@ ejemplos: `{target}`, `{item}`
 
 ### Crear una receta
 
-Ejecuta "/mineflow recipe add" e introduce el nombre de la receta y el nombre del grupo. (El nombre del grupo puede dejarse en blanco.)  
+Ejecuta "/mineflow recipe add" e introduce el nombre de la receta y el nombre del grupo. (El nombre del grupo puede dejarse en blanco.)\
 Añade una variedad de acciones a la receta.
 
 ### Ejecutar una receta
@@ -59,7 +60,8 @@ Añadir un accionador de "Editar accionador" del formulario. Luego, cuando el ac
 
 ### Cambiar el ejecutor
 
-De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta. Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
+De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta.\
+Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
 
 ### Argumentos y devolver valores
 
@@ -69,18 +71,20 @@ Puede establecer el valor a heredar de la acción original, y el valor a devolve
 
 ### Comando CheckId
 
-Envía el ID del elemento en la mano del jugador al campo de chat cuando ejecute `/id`. [Descargar](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
+Envía el ID del elemento en la mano del jugador al campo de chat cuando ejecute `/id`.
+[Descargar](https://github.com/aieuo/MineflowExamples/blob/master/checkId.json)
 
 ##### Pasos
 
-1. Ejecuta `/mineflow comando add` y añade el comando /id.  
+1. Ejecuta `/mineflow comando add` y añade el comando /id.\
    ![AñadirComando](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
-2. Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.  
+2. Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
    ![AñadirReceta](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Haga clic en `Editar acciones > Añadir acción > Jugador` para añadir un `Enviar mensaje al campo de chat` a la receta que ha creado.
-4. Introduzca `{target.hand.id}:{target.hand.damage}` en el campo de mensaje de `Enviar mensaje al campo de chat`.  
+4. Introduzca `{target.hand.id}:{target.hand.damage}` en el campo de mensaje de `Enviar mensaje al campo de chat`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contiene información sobre el objeto en la mano del jugador.)
-5. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`. ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+5. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.
+   ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Para enviar más información del artículo
 
