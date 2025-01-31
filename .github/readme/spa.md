@@ -44,7 +44,6 @@ Para cambiar el permiso, ejecute `/mineflow permission <name> <level>`. Only the
 ## Variable
 
 Los caracteres encerrados por "{" y "}" son reconocidos como variables y serán reemplazados.\
-ejemplos: `{target}`, `{item}`\
 ejemplos: `{target}`, `{item}`
 
 [Más detalles](https://mineflow.github.io/docs/eng/#/variable/about)
@@ -62,7 +61,6 @@ Añadir un accionador de "Editar accionador" del formulario. Luego, cuando el ac
 
 ### Cambiar el ejecutor
 
-De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta.\
 De forma predeterminada, el jugador que disparó el gatillo entra en la variable {target} de la receta.\
 Se puede cambiar de "Cambiar el objetivo" en el formulario a cualquiera de los jugadores especificados, todos los jugadores, jugadores aleatorios o ninguno.
 
