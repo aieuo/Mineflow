@@ -80,15 +80,12 @@ Envía el ID del elemento en la mano del jugador al campo de chat cuando ejecute
 1. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.\
    ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 2. Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
-   Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
    ![AñadirReceta](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Haga clic en `Editar acciones > Añadir acción > Jugador` para añadir un `Enviar mensaje al campo de chat` a la receta que ha creado.
 4. Introduzca `{target.hand.id}:{target.hand.damage}` en el campo de mensaje de `Enviar mensaje al campo de chat`.\
-   Introduzca `{target.hand.id}:{target.hand.damage}` en el campo de mensaje de `Enviar mensaje al campo de chat`.\
    ![addAction](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_3.png?raw=true) (`{target.hand}` contiene información sobre el objeto en la mano del jugador.)
 5. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.
-   Ejecuta `/mineflow comando add` y añade el comando /id.\
-   ![AñadirComando](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
+   ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
 
 ##### Para enviar más información del artículo
 
