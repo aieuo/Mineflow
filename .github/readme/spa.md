@@ -78,7 +78,7 @@ Envía el ID del elemento en la mano del jugador al campo de chat cuando ejecute
 ##### Pasos
 
 1. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.\
-   ![AñadirAccionador](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_4.png?raw=true)
+   ![AñadirComando](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
    ![AñadirReceta](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
 3. Haga clic en `Editar acciones > Añadir acción > Jugador` para añadir un `Enviar mensaje al campo de chat` a la receta que ha creado.
