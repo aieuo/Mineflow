@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_6b4cfdc0a11de6c9\SOFe\AwaitGenerator;
 
 use AssertionError;
 use Closure;

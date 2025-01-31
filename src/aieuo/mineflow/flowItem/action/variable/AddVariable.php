@@ -20,7 +20,7 @@ use aieuo\mineflow\variable\DummyVariable;
 use aieuo\mineflow\variable\NumberVariable;
 use aieuo\mineflow\variable\registry\VariableRegistry;
 use aieuo\mineflow\variable\StringVariable;
-use aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator\Await;
+use aieuo\mineflow\libs\_6b4cfdc0a11de6c9\SOFe\AwaitGenerator\Await;
 use function array_unique;
 use function array_values;
 use function is_numeric;

@@ -20,10 +20,24 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_6b4cfdc0a11de6c9\SOFe\AwaitGenerator;
 
-class UnawaitedCallbackException extends AwaitException{
-	public function __construct(string $action){
-		parent::__construct("$action is disallowed when Await::RESOLVE or Await::REJECT was yielded but is not awaited through Await::ONCE, Await::ALL or Await::RACE");
+use Exception;
+
+/**
+ * The exception to throw into loser generators of
+ * a {@link Await::safeRace()}.
+ * 
+ * If your generator has side effects, please consider
+ * handling this exception by taking cancellation in a
+ * `finally` block. Otherwise, if you prefer the `catch`
+ * block, please re-throw this exception at the end.
+ * (Please refer to {@link AwaitTest::testSafeRaceCancel()}.)
+ * 
+ * NOTICE: it would not cause a crash even though your
+ * generator did not catch it.
+ */
+final class RaceLostException extends Exception{
+	public function __construct() {
 	}
 }

@@ -20,11 +20,13 @@
 
 declare(strict_types=1);
 
-namespace aieuo\mineflow\libs\_30a18b127a564f2c\SOFe\AwaitGenerator;
+namespace aieuo\mineflow\libs\_6b4cfdc0a11de6c9\SOFe\AwaitGenerator;
 
 /**
  * @template T
  * @internal
  */
-final class EmptyChannelState{
+final class ReceivingChannelState{
+	/** @var list<Closure(T): void> */
+	public array $queue = [];
 }
