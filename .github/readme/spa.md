@@ -23,6 +23,7 @@
 # Español
 
 Puedes combinar acciones y crear algo como un plugin sin ningún conocimiento de programación.\
+\*\*Algunas de las acciones se ocultan por defecto para evitar abusos.\
 **Algunas de las acciones se ocultan por defecto para evitar abusos. Para mostrarlas todas, por favor ejecuta `mineflow permission add <your name> all` desde la consola.**
 
 ## Comando
@@ -76,7 +77,7 @@ Envía el ID del elemento en la mano del jugador al campo de chat cuando ejecute
 
 ##### Pasos
 
-1. Ejecuta `/mineflow comando add` y añade el comando /id.\
+1. Haga clic en `Editar accionador > Añadir accionador > Comando` e introduzca `id` en el campo `nombre del comando`.\
    ![AñadirComando](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_1.png?raw=true)
 2. Ejecuta `/mineflow recipe add` y añade una receta con un nombre de tu elección.\
    ![AñadirReceta](https://github.com/aieuo/images/blob/master/mineflow/eng/CheckId_2.png?raw=true)
